@@ -1,0 +1,36 @@
+scripted_map_modes = {
+	LOK_species_map_mode = {
+		top = { type = none }
+		bottom = {
+			type = state
+			color = {
+				set_temp_variable = { alpha_temp = 0.95 }
+				if = {
+					limit = {
+						FROM = {
+							check_variable = { species = 1 } #Katzen
+						}
+					}
+					set_temp_variable = { red = 0.00 }
+					set_temp_variable = { green = 0.29 }
+					set_temp_variable = { blue = 0.50 }
+		 			set_temp_variable = { alpha = alpha_temp }
+				}
+				if = {
+					limit = {
+						FROM = {
+							check_variable = { species = 2 } #Sobaki
+						}
+					}
+					set_temp_variable = { red = 0.8 }
+					set_temp_variable = { green = 0.16 }
+					set_temp_variable = { blue = 0.24 }
+		 			set_temp_variable = { alpha = alpha_temp }
+				}
+			}
+		}
+		far_text = none
+		near_text = state
+		update_daily = no
+	}
+}
