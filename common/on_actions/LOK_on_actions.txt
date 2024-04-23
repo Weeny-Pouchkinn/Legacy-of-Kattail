@@ -62,6 +62,15 @@ on_actions = {
 
 			every_country = {
 				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+				if = {
+					limit = { is_ai = yes }
+					set_technology = { LOK_ai_food_tech = 1 }
+					add_equipment_to_stockpile = {
+				 		type = lok_debug_food_equipment_1
+				 		amount = 1000000
+				 	}
+					country_event = { id = LOK_food.1 days = 2 }
+				}
 			}
         }
 	}
@@ -75,6 +84,30 @@ on_actions = {
 	on_monthly = {
 		effect = {
 			force_update_map_mode = { mapmode = LOK_species_map_mode }
+		}
+	}
+
+	on_daily = {
+		effect = {
+			# if = {
+			# 	limit = { is_ai = yes }
+			# 	#This is a dummy food-costing equipment to force the AI into buying food if it lacks it.
+			# 	#Every day we check the AI's stockpile of the stuff. If there is a stockpile then it meant the AI produced some and the production line is still there. If not then it means the AI has deleted the line (because it's technically useless) and so we recreate the production line.
+			# 	#Then we delete the stockpile.
+			# 	if = {
+			# 		limit = { NOT = { has_equipment = { lok_debug_food_equipment_1 > 0 } } }
+			# 		add_equipment_production = {
+			# 			equipment = { type = lok_debug_food_equipment_1 }
+			# 			requested_factories = 1
+			# 			progress = 1
+			# 			efficiency = 100
+			# 		}
+			# 	}
+			# 	add_equipment_to_stockpile = {
+			# 		type = lok_debug_food_equipment_1
+			# 		amount = -100000
+			# 	}
+			# }
 		}
 	}
 }
