@@ -4,11 +4,18 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 	round_variable = state_food_consumption
 }
 
+calculate_food_production_in_state = {
+	set_variable = { state_food_production = resource@food }
+}
+
 calculate_total_food_consumption = {
 	set_variable = { country_food_consumption = 0 }
+	set_variable = { country_food_production = 0 }
 	every_controlled_state = {
 		calculate_food_consumption_in_state = yes
+		calculate_food_production_in_state = yes
 		ROOT = { add_to_variable = { country_food_consumption = PREV.state_food_consumption } }
+		ROOT = { add_to_variable = { country_food_production = PREV.state_food_production } }
 	}
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
 	multiply_variable = { country_food_consumption_modifier = -1}
