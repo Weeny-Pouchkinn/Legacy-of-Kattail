@@ -1,7 +1,14 @@
 calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
-	set_variable = { state_food_consumption = state_population_k }
-	divide_variable = { state_food_consumption = 100 }
-	round_variable = state_food_consumption
+	if = {
+		limit = {
+			NOT = {
+				check_variable = { species = 5 } #Nekeoxes do not eat regular food
+			}
+		}
+		set_variable = { state_food_consumption = state_population_k }
+		divide_variable = { state_food_consumption = 100 }
+		round_variable = state_food_consumption
+	}
 }
 
 calculate_food_production_in_state = {
@@ -11,12 +18,16 @@ calculate_food_production_in_state = {
 calculate_total_food_consumption = {
 	set_variable = { country_food_consumption = 0 }
 	set_variable = { country_food_production = 0 }
-	every_controlled_state = {
+	every_controlled_state = { #Fetch how much food each state eats.
 		calculate_food_consumption_in_state = yes
 		calculate_food_production_in_state = yes
 		ROOT = { add_to_variable = { country_food_consumption = PREV.state_food_consumption } }
 		ROOT = { add_to_variable = { country_food_production = PREV.state_food_production } }
 	}
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
-	multiply_variable = { country_food_consumption_modifier = -1}
+	multiply_variable = { country_food_consumption_modifier = -1 }
+	set_temp_variable = { negate_exacavation_tech_food = modifier@local_resources_factor } #This is to undo the effects of excavation techs.
+	add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
+	divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
+	round_variable = country_food_consumption_modifier
 }
