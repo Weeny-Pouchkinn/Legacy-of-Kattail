@@ -1,6 +1,26 @@
 on_actions = {
-	on_startup = { #Setup species
+	on_startup = {
 		effect = {
+			#Setup the Herzlands state array to track unification
+			global = { set_variable = { total_herzlands_state_count = 0 } }
+			every_state = {
+				limit = { CONTROLLER = { is_herzlands_warlord = yes } }
+				add_to_array = { global.herzlands_states_array = THIS }
+			}
+
+			#The treshold before unification is reached
+			set_variable = { global.herzlands_unification_state_prereq = global.herzlands_states_array^num }
+			multiply_variable = { global.herzlands_unification_state_prereq = 0.75 } #Let's go with 75% for now.
+			round_variable = global.herzlands_unification_state_prereq
+
+			#See how many states every Herzlands country has, add to their own counter
+			every_country = {
+				limit = { is_herzlands_warlord = yes }
+				set_variable = { current_herzlands_state_count = num_owned_states }
+			}
+
+
+			#Setup species
 			every_state = { set_variable = { species = 0 } }
 			every_state = { set_variable = { minority = 1000 } }
 
@@ -108,6 +128,16 @@ on_actions = {
 	on_weekly = {
 		effect = {
 			calculate_total_food_consumption = yes
+		}
+	}
+
+	on_state_control_changed = {
+		effect = {
+			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
+				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
+				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
+				FROM = { if = { limit = { is_herzlands_warlord = yes } subtract_from_variable = { current_herzlands_state_count = 1 } } }
+			}
 		}
 	}
 
