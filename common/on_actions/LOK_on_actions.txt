@@ -1,6 +1,14 @@
 on_actions = {
 	on_startup = {
 		effect = {
+			every_country = {
+				set_rule = { can_puppet = no } #Handled by decision
+				#Stab & WS stab hit from having noncore states, calculated weekly
+				set_variable = { stab_from_noncore = 0 }
+				set_variable = { ws_from_noncore = 0 }
+				add_dynamic_modifier = { modifier = lok_noncore_stab_ws_impact }
+			}
+
 			#Setup the Herzlands state array to track unification
 			global = { set_variable = { total_herzlands_state_count = 0 } }
 			every_state = {
@@ -128,6 +136,7 @@ on_actions = {
 	on_weekly = {
 		effect = {
 			calculate_total_food_consumption = yes
+			calculate_stab_ws_hit_from_noncore = yes
 		}
 	}
 
