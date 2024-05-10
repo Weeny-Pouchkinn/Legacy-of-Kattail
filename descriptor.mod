@@ -1,6 +1,7 @@
 version="3.14"
 replace_path="common/countries"
 replace_path="common/bookmarks"
+replace_path="common/national_focus"
 replace_path="events"
 replace_path="gfx/loadingscreens"
 replace_path="history/countries"
