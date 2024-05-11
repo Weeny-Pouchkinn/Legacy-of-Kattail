@@ -1,0 +1,20 @@
+add_namespace = lok_debug
+
+country_event = { #Start battle royale + give cores on all
+	id = lok_debug.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		every_country = {
+			every_country = {
+				declare_war_on = {
+				    target = PREV
+				    type = annex_everything
+				}
+			}
+			every_state = { add_core_of = PREV }
+		}
+	}
+}
