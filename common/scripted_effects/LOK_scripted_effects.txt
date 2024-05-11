@@ -31,29 +31,3 @@ calculate_total_food_consumption = {
 	divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
 	round_variable = country_food_consumption_modifier
 }
-
-#Stab/WS hit from noncore states to encourage puppeting
-calculate_stab_ws_hit_from_noncore = {
-	set_variable = { stab_from_noncore = 0 }
-	set_variable = { ws_from_noncore = 0 }
-	every_owned_state = {
-		if = { #All noncore states remove 1% from WS and STAB
-			limit = { NOT = { is_core_of = ROOT } }
-			ROOT = {
-				subtract_from_variable = { stab_from_noncore = 0.01 }
-				subtract_from_variable = { ws_from_noncore = 0.01 }
-			}
-			if = { #Claims negate the hit a bit
-				limit = { is_claimed_by = ROOT }
-				ROOT = {
-					add_to_variable = { stab_from_noncore = 0.005 }
-					add_to_variable = { ws_from_noncore = 0.005 }
-				}
-			}
-		}
-	}
-	set_variable = { stab_from_noncore_display = stab_from_noncore }
-	multiply_variable = { stab_from_noncore_display = -100 }
-	set_variable = { ws_from_noncore_display = ws_from_noncore }
-	multiply_variable = { ws_from_noncore_display = -100 }
-}
