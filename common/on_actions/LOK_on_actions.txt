@@ -1,6 +1,34 @@
 on_actions = {
-	on_startup = { #Setup species
+	on_startup = {
 		effect = {
+			every_country = {
+				set_rule = { can_puppet = no } #Handled by decision
+				#Stab & WS stab hit from having noncore states, calculated weekly
+				set_variable = { stab_from_noncore = 0 }
+				set_variable = { ws_from_noncore = 0 }
+				add_dynamic_modifier = { modifier = lok_noncore_stab_ws_impact }
+			}
+
+			#Setup the Herzlands state array to track unification
+			global = { set_variable = { total_herzlands_state_count = 0 } }
+			every_state = {
+				limit = { CONTROLLER = { is_herzlands_warlord = yes } }
+				add_to_array = { global.herzlands_states_array = THIS }
+			}
+
+			#The treshold before unification is reached
+			set_variable = { global.herzlands_unification_state_prereq = global.herzlands_states_array^num }
+			multiply_variable = { global.herzlands_unification_state_prereq = 0.75 } #Let's go with 75% for now.
+			round_variable = global.herzlands_unification_state_prereq
+
+			#See how many states every Herzlands country has, add to their own counter
+			every_country = {
+				limit = { is_herzlands_warlord = yes }
+				set_variable = { current_herzlands_state_count = num_owned_states }
+			}
+
+
+			#Setup species
 			every_state = { set_variable = { species = 0 } }
 			every_state = { set_variable = { minority = 1000 } }
 
@@ -57,13 +85,29 @@ on_actions = {
 			SOB = { every_owned_state = { set_variable = { species = 2 } } }
 			471 = { set_variable = { species = 1 } }
 			478 = { set_variable = { species = 1 } }
+			626 = { set_variable = { species = 1 } }
+			630 = { set_variable = { species = 1 } }
 			471 = { set_variable = { minority = 2 } }
 			478 = { set_variable = { minority = 2 } }
+			626 = { set_variable = { minority = 2 } }
+			630 = { set_variable = { minority = 2 } }
 
 			476 = { set_variable = { minority = 1 } }
 			472 = { set_variable = { minority = 1 } }
 			28 = { set_variable = { minority = 1 } }
 			483 = { set_variable = { minority = 1 } }
+			629 = { set_variable = { minority = 1 } }
+			632 = { set_variable = { minority = 1 } }
+			631 = { set_variable = { minority = 1 } }
+			642 = { set_variable = { minority = 1 } }
+			643 = { set_variable = { minority = 1 } }
+			472 = { set_variable = { minority = 1 } }
+			490 = { set_variable = { minority = 1 } }
+			473 = { set_variable = { minority = 1 } }
+
+			#Meorseilles
+			85 = { set_variable = { minority = 2 } }
+			644 = { set_variable = { minority = 2 } }
 
 			#Zuspris
 			ZUS = { every_owned_state = { set_variable = { species = 4 } } }
@@ -92,6 +136,17 @@ on_actions = {
 	on_weekly = {
 		effect = {
 			calculate_total_food_consumption = yes
+			calculate_stab_ws_hit_from_noncore = yes
+		}
+	}
+
+	on_state_control_changed = {
+		effect = {
+			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
+				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
+				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
+				FROM = { if = { limit = { is_herzlands_warlord = yes } subtract_from_variable = { current_herzlands_state_count = 1 } } }
+			}
 		}
 	}
 
