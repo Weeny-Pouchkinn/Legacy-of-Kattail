@@ -31,22 +31,6 @@ peace_ai_desires = {
                             is_capital = yes
                             is_coastal = yes
                         }
-<<<<<<< Updated upstream
-                        state = 738 #California
-                        state = 860 #Cote Nord
-                        state = 458 #Tunis
-                        state = 446 #Suez
-                        state = 126 #London
-                        state = 286 #Indochina
-                        AND = {
-                            ROOT.FROM = { capital_scope = { is_on_continent = europe } }
-                            OR = {
-                                state = 137 #Crimea
-                                state = 797 #Istanbul
-                                state = 118 #Gibraltar
-                            }
-                        }
-=======
                         #AND = {
                         #    ROOT.FROM = { capital_scope = { is_on_continent = europe } }
                         #    OR = {
@@ -55,7 +39,6 @@ peace_ai_desires = {
                         #        state = 118 #Gibraltar
                         #    }
                         #}
->>>>>>> Stashed changes
                     }
                 }
             } #It is not claimed by us
@@ -85,36 +68,6 @@ peace_ai_desires = {
                             is_capital = yes
                             is_coastal = yes
                         }
-<<<<<<< Updated upstream
-                        state = 738 #California
-                        state = 860 #Cote Nord
-                        state = 458 #Tunis
-                        state = 446 #Suez
-                        state = 126 #London
-                        state = 286 #Indochina
-                        AND = {
-                            ROOT.FROM = { capital_scope = { is_on_continent = europe } }
-                            OR = {
-                                state = 137 #Crimea
-                                state = 797 #Istanbul
-                                state = 118 #Gibraltar
-                            }
-                        }
-                    }
-                }
-            } #It is not claimed by us
-            #Special Japan China Handling; this has logic elsewhere which we reluctantly have to special case.
-            NOT = {
-                AND = { #NOT is sneakily NOR
-                    ROOT = {
-                        original_tag = JAP
-                    }
-                    ROOT.FROM.FROM = {
-                        original_tag = CHI
-                    }
-                }
-            }
-=======
                         #AND = {
                         #    ROOT.FROM = { capital_scope = { is_on_continent = europe } }
                         #    OR = {
@@ -126,7 +79,6 @@ peace_ai_desires = {
                     }
                 }
             } #It is not claimed by us
->>>>>>> Stashed changes
         }
         ai_desire = -1000
     }
@@ -175,11 +127,7 @@ peace_ai_desires = {
     fascist_majors_on_a_mission = {
         peace_action_type = take_states
         enable = {
-            ROOT = { 
-<<<<<<< Updated upstream
-                NOT = { tag = JAP }            #We aren't Japan (special handling)
-=======
->>>>>>> Stashed changes
+            ROOT = {
                 is_major = yes                #We are big
                 has_government = fascism    #We are the baddies
                 tag = ROOT.FROM                #We are acting for ourselves
@@ -192,11 +140,7 @@ peace_ai_desires = {
     fascist_puppet_desire = {
         peace_action_type = puppet
         enable = {
-            ROOT = { 
-<<<<<<< Updated upstream
-                NOT = { tag = JAP }            #We aren't Japan (special handling)
-=======
->>>>>>> Stashed changes
+            ROOT = {
                 is_major = yes                #We are big
                 has_government = fascism    #We are the baddies
             }
@@ -208,11 +152,7 @@ peace_ai_desires = {
     fascist_liberate_desire = {
         peace_action_type = liberate
         enable = {
-            ROOT = { 
-<<<<<<< Updated upstream
-                NOT = { tag = JAP }            #We aren't Japan (special handling)
-=======
->>>>>>> Stashed changes
+            ROOT = {
                 is_major = yes                #We are big
                 has_government = fascism    #We are the baddies
                 tag = ROOT.FROM                #We are acting for ourselves
@@ -250,12 +190,6 @@ peace_ai_desires = {
     # Breakaway countries in the Soviet Civil war don't want to liberate stuff
     breakaway_country = {
         peace_action_type = { liberate puppet force_government }
-<<<<<<< Updated upstream
-        enable = {
-           ROOT = { has_country_flag = SOV_breakaway_country_flag }
-        }
-=======
->>>>>>> Stashed changes
         ai_desire = -200  # just don't, please
     }
 
@@ -509,10 +443,6 @@ peace_ai_desires = {
         peace_action_type = { force_government puppet }
         enable = {
             ROOT = { has_government = democratic }
-<<<<<<< Updated upstream
-            ROOT.FROM.FROM = { original_tag = SOV }
-=======
->>>>>>> Stashed changes
             ROOT.FROM.FROM.FROM = {
                 any_neighbor_state = {
                     OR = {
@@ -530,13 +460,6 @@ peace_ai_desires = {
         peace_action_type = { take_states puppet }
         enable = {
             ROOT = { has_government = democratic }
-<<<<<<< Updated upstream
-            ROOT.FROM.FROM = {
-                original_tag = SOV
-                pc_is_forced_government = yes
-            }
-=======
->>>>>>> Stashed changes
             ROOT.FROM.FROM.FROM = {
                 NOT = { is_claimed_by = ROOT.FROM }
             }
@@ -670,22 +593,6 @@ peace_ai_desires = {
         ai_desire = 20
     }
 
-<<<<<<< Updated upstream
-
-    dont_resurrect_hitler = {
-        peace_action_type = liberate
-        enable = {
-            ROOT.FROM = {
-                original_tag = GER
-                has_government = fascism
-            }
-        }
-        ai_desire = -100
-    }
-
-
-=======
->>>>>>> Stashed changes
     dont_take_states_for_wrong_ideology_allies = {
         peace_action_type = take_states
         enable = {
@@ -711,12 +618,6 @@ peace_ai_desires = {
             ROOT = {
                 has_government = fascism
             }
-<<<<<<< Updated upstream
-            ROOT.FROM.FROM = {
-                tag = SOV
-            }
-=======
->>>>>>> Stashed changes
         }
         ai_desire = 25
     }
@@ -781,42 +682,6 @@ peace_ai_desires = {
         ai_desire = -75
     }
 
-<<<<<<< Updated upstream
-    no_more_spains_after_scw = {
-        peace_action_type = { force_government puppet liberate }
-        enable = {
-            ROOT = { NOT = { original_tag = SPR } }            #But we are not originally a spain
-            has_global_flag = spanish_civil_war             #And the spaindome is ongoing
-            NOT = { has_global_flag = scw_over }            #But the spaindome has not yet been resolved
-            ROOT.FROM.FROM = { original_tag = SPR }            #And it is being taken from an original spain
-            any_country = {                                    #Any country that was an original spain is on our side
-                original_tag = SPR
-                pc_is_on_same_side_as = ROOT
-            }
-        }
-        ai_desire = -200
-    }
-
-    return_the_spains = {
-        peace_action_type = take_states
-        enable = {
-            OR = {
-                any_country = {                                            #Any country that was an original spain is on our side
-                    original_tag = SPR
-                    pc_is_on_same_side_as = ROOT
-                }
-                original_tag = SPR                                        #Or we are a spain
-            }
-            ROOT.FROM = { original_tag = SPR }                            #A spain is the recipient
-            has_global_flag = spanish_civil_war                            #The spaindome is ongoing
-            NOT = { has_global_flag = scw_over }                        #But not over
-            ROOT.FROM.FROM.FROM = { owner = { original_tag = SPR } }    #The state was owned by a spain
-        }
-        ai_desire = 60
-    }
-=======
->>>>>>> Stashed changes
-
     return_puppet_cores = { #This simply has to be the highest priority.
         peace_action_type = take_states
         enable = {
@@ -837,40 +702,6 @@ peace_ai_desires = {
         ai_desire = 70 #Acceptable values
     }
 
-<<<<<<< Updated upstream
-    allies_dont_liberate_on_sov = {
-        peace_action_type = { liberate puppet }
-        enable = {
-            ROOT = {
-                OR = {
-                    has_government = democratic
-                    has_government = neutrality
-                }
-            }
-            ROOT.FROM.FROM = {
-                tag = SOV
-                is_major = yes
-            }
-        }
-        ai_desire = -50
-    }
-
-    allies_force_gov_on_sov = {
-        peace_action_type = force_government
-        enable = {
-            ROOT = {
-                has_government = democratic
-            }
-            ROOT.FROM.FROM = {
-                tag = SOV
-                is_major = yes
-            }
-        }
-        ai_desire = 30
-    }
-
-=======
->>>>>>> Stashed changes
     civil_war_participants_dont_accept_each_other = {
         peace_action_type = { force_government puppet liberate }
         enable = {
@@ -1002,10 +833,6 @@ peace_ai_desires = {
             ROOT.FROM.FROM = {
                 pc_is_puppeted = yes
                 NOT = { ROOT.FROM.FROM = { pc_is_puppeted_by = ROOT } }
-<<<<<<< Updated upstream
-                NOT = { original_tag = GER }
-=======
->>>>>>> Stashed changes
             }
         }
         ai_desire = -50
@@ -1074,10 +901,6 @@ peace_ai_desires = {
 
         enable = {
             ROOT.FROM.FROM = { check_variable = { num_owned_states > 30 } }
-<<<<<<< Updated upstream
-			ROOT.FROM.FROM = { NOT = { tag = GER } } #Special handling
-=======
->>>>>>> Stashed changes
         }
         ai_desire = -200
     }
@@ -1111,12 +934,6 @@ peace_ai_desires = {
                     pc_is_puppeted = no
                     pc_is_puppeted_by = ROOT
                 }
-<<<<<<< Updated upstream
-                overlord = {
-                    NOT = { tag = GER }
-                }
-=======
->>>>>>> Stashed changes
             }
             ROOT.FROM.FROM.FROM = {
                 NOT = { is_claimed_by = ROOT }
@@ -1167,68 +984,5 @@ peace_ai_desires = {
         }
         ai_desire = -100 #Should still allow taking claims etc
     }
-<<<<<<< Updated upstream
-	
-	try_and_finish_off_SU = {
-        peace_action_type = force_government
-        enable = {
-			ROOT.FROM.FROM = { tag = SOV }
-			ROOT.FROM.FROM.FROM = {
-				any_country_with_core = {
-					NOT = { pc_is_liberated = yes }
-				}
-			}
-            if = {
-                limit = { has_government = democratic }
-                ROOT.FROM.FROM = { pc_is_forced_government_to = democratic }
-            }
-            else_if = {
-                limit = { has_government = fascism }
-                ROOT.FROM.FROM = { pc_is_forced_government_to = fascism }
-            }
-            else_if = {
-                limit = { has_government = communism }
-                ROOT.FROM.FROM = { pc_is_forced_government_to = communism }
-            }
-            else_if = {
-                limit = { has_government = neutrality }
-                ROOT.FROM.FROM = { pc_is_forced_government_to = neutrality }
-            }
-            else = {
-                always = no
-            }
-        }
-        ai_desire = 50
-    }
-	
-	allies_try_and_have_a_unified_goal_for_eastern_europe = {
-		peace_action_type = puppet
-		enable = {
-			has_government = democratic
-			ROOT.FROM.FROM = {
-				NOT = { has_government = democratic }
-				OR = {
-					tag = CZE
-					tag = POL
-					tag = HUN
-					tag = ROM
-				}
-			}
-		}
-		ai_desire = -100
-	}
-	
-	release_ukraine_because_it_is_big_and_would_otherwise_be_messy = {
-		peace_action_type = liberate
-		enable = {
-			has_government = democratic
-			ROOT.FROM = {
-				tag = UKR
-			}
-		}
-		ai_desire = 2000
-	}
-=======
->>>>>>> Stashed changes
 
 }
