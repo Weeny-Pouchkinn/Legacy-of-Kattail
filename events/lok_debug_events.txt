@@ -1,0 +1,130 @@
+add_namespace = lok_debug
+
+country_event = { #Start battle royale + give cores on all
+	id = lok_debug.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		every_country = {
+			every_country = {
+				declare_war_on = {
+				    target = PREV
+				    type = annex_everything
+				}
+			}
+			every_state = { add_core_of = PREV }
+		}
+	}
+}
+
+country_event = { #Collapse Elwin
+	id = lok_debug.2
+	hidden = yes
+	title = "It's Elwinover"
+	desc = "Oof owie mein Elwin..."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			every_state = {
+				limit = { is_core_of = KKH }
+				transfer_state_to = KKH
+			}
+			SIL_Fritz = {
+				set_nationality = KKH
+				add_country_leader_role = {
+					country_leader = {
+						ideology = kaiserism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = KVK }
+				transfer_state_to = KVK
+			}
+			every_state = {
+				limit = { is_core_of = BLM }
+				transfer_state_to = BLM
+			}
+			every_state = {
+				limit = { is_core_of = KTW }
+				transfer_state_to = KTW
+				set_demilitarized_zone = no
+			}
+			every_state = {
+				limit = { is_core_of = AKR }
+				transfer_state_to = AKR
+			}
+			SIL_Meowtin_Hessler = {
+				set_nationality = AKR
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = KTV }
+				transfer_state_to = KTV
+			}
+			SIL_Hans = {
+				set_nationality = KTV
+				add_country_leader_role = {
+					country_leader = {
+						ideology = collectivism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = PMB }
+				transfer_state_to = PMB
+			}
+			SIL_Ulrich_Blutstein = {
+				set_nationality = PMB
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = CLE }
+				transfer_state_to = CLE
+			}
+			CLE = { drop_cosmetic_tag = yes leave_faction = yes }
+			every_state = {
+				limit = { is_core_of = PAW }
+				transfer_state_to = PAW
+			}
+			PAW = { drop_cosmetic_tag = yes leave_faction = yes }
+			SIL = {
+				set_autonomy = {
+					target = CLE
+					autonomy_state = autonomy_free
+				}
+				set_autonomy = {
+					target = PAW
+					autonomy_state = autonomy_free
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "End Elwin's misery"
+	}
+
+	option = {
+		name = "NAOOO mein Elwinreich..."
+	}
+}
