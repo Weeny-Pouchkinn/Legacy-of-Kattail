@@ -18,6 +18,10 @@ on_actions = {
 				set_variable = { lok_country_combat_deaths = 0 } #war deaths
 				set_variable = { lok_country_bombing_deaths = 0 } #Nuke/bomb deaths
 			}
+			every_state = {
+				set_variable = { lok_state_deaths = 0 }
+				set_variable = { lok_state_bombing_deaths = 0 }
+			}
 
 			#Setup the Herzlands state array to track unification
 			global = { set_variable = { total_herzlands_state_count = 0 } }  #<---- error log doesnt like this?
@@ -243,8 +247,12 @@ on_actions = {
 						end = lok_nuke_casualties
 						add_manpower = -10000
 					}
-					divide_temp_variable = { lok_nuke_casualties = 100 } #Turn to millions (if that's even possible)
+					multiply_temp_variable = { lok_nuke_casualties = 10 } #Turn to millions (if that's even possible)
 					set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
+					#Add to the state counters
+					add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }
+					add_to_variable = { lok_state_deaths = lok_recent_nuke_casualties }
+					add_to_variable = { lok_state_deaths_display = lok_recent_nuke_casualties }
 					#Add these deaths to the controller's total and the grand total
 					CONTROLLER = {
 						add_to_variable = { lok_country_bombing_deaths = PREV.lok_recent_nuke_casualties }
