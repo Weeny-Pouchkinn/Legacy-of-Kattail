@@ -13,14 +13,21 @@ on_actions = {
 			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL combat-deaths for ALL countries
 			set_variable = { global.lok_global_combat_deaths = 0 } #Sum of ALL combatt deaths for ALL countries
 			set_variable = { global.lok_global_bombing_deaths = 0 } #Sum of ALL bombing deaths for ALL countries
+
+			set_variable = { global.lok_global_deaths_display = 0 }
+
 			every_possible_country = {
 				set_variable = { lok_country_deaths = 0 } #total
 				set_variable = { lok_country_combat_deaths = 0 } #war deaths
 				set_variable = { lok_country_bombing_deaths = 0 } #Nuke/bomb deaths
+
+				set_variable = { lok_country_deaths_display = 0 }
 			}
 			every_state = {
 				set_variable = { lok_state_deaths = 0 }
 				set_variable = { lok_state_bombing_deaths = 0 }
+
+				set_variable = { lok_state_deaths_display = 0 }
 			}
 
 			#Setup the Herzlands state array to track unification
@@ -177,6 +184,20 @@ on_actions = {
 			calculate_total_food_consumption = yes
 			calculate_stab_ws_hit_from_noncore = yes
 			calculate_combat_casualties = yes
+
+			#Casualty Displays
+			every_owned_state = {
+				set_variable = { lok_state_deaths_display = lok_state_deaths }
+				round_variable = lok_state_deaths_display
+			}
+
+			set_variable = { lok_country_deaths_display = lok_country_deaths }
+			round_variable = lok_country_deaths_display
+
+			set_variable = { global.lok_global_deaths_display = global.lok_global_deaths }
+			divide_variable = { global.lok_global_deaths_display = 10 } #Turn to millions
+			round_variable = global.lok_global_deaths_display
+			divide_variable = { global.lok_global_deaths_display = 100 }
 		}
 	}
 
