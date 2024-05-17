@@ -62,10 +62,10 @@ calculate_combat_casualties = {
 	#Get thousands of casualties and divide by 1000 for millions
 	if = {
 		limit = { casualties_k > 0 }
-		set_temp_variable = { lok_country_combat_deaths_last_week = casualties_k } #Get total casualties
+		set_variable = { lok_country_combat_deaths_last_week = casualties_k } #Get total casualties
 		#divide_temp_variable = { lok_country_combat_deaths_last_week = 1000 } #Turn to millions
-		subtract_from_temp_variable = { lok_country_combat_deaths_last_week = lok_country_combat_deaths } #Remove those that we have already counted
-		clamp_temp_variable = { var = lok_country_combat_deaths_last_week min = 0 } #Avoid negative casualties if something goes wrong
+		subtract_from_variable = { lok_country_combat_deaths_last_week = lok_country_combat_deaths } #Remove those that we have already counted
+		clamp_variable = { var = lok_country_combat_deaths_last_week min = 0 } #Avoid negative casualties if something goes wrong
 		#round_temp_variable = lok_country_combat_deaths_last_week
 
 		#Add that to the various trackers

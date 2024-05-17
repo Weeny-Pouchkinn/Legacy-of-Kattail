@@ -1,0 +1,41 @@
+scripted_gui = {
+	lok_radiation_counter = {
+		context_type = selected_state_context
+		window_name = "lok_radiation_counter_window"
+		parent_window_token = selected_state_view
+		visible = {
+			always = yes
+		}
+	}
+
+	lok_thermonuclear_salvo = {
+		context_type = selected_state_context
+		window_name = "lok_thermonuclear_salvo_window"
+		parent_window_token = selected_state_view
+		visible = {
+			always = yes
+		}
+
+		effects = {
+			lok_thermonuclear_salvo_button_click = {
+				THIS = {
+					save_global_event_target_as = lok_thermonuclear_salvo_state
+				}
+				ROOT = {
+					for_loop_effect = {
+						end = 25
+						launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
+					}
+				}
+			}
+		}
+
+		properties = {
+			lok_thermonuclear_salvo_button = {
+				image = "[THIS.state_lore_get_button_gfx]"
+			}
+		}
+	}
+}
+
+

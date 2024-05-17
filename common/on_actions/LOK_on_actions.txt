@@ -28,6 +28,8 @@ on_actions = {
 				set_variable = { lok_state_bombing_deaths = 0 }
 
 				set_variable = { lok_state_deaths_display = 0 }
+
+				set_variable = { lok_radiation_level = 0 } #Radiation from nukes
 			}
 
 			#Setup the Herzlands state array to track unification
@@ -185,19 +187,103 @@ on_actions = {
 			calculate_stab_ws_hit_from_noncore = yes
 			calculate_combat_casualties = yes
 
-			#Casualty Displays
-			every_owned_state = {
+			#Casualty Displays and radiation. We round casualty displays to avoid unecessary decimals, but keep the actual precise value hidden.
+			every_controlled_state = {
+				if = {
+					limit = { check_variable = { lok_radiation_level > 0 } }
+					if = { #Below 0.2 it just goes away
+						limit = { check_variable = { lok_radiation_level < 0.2 } }
+						set_variable = { lok_radiation_level = 0 }
+					}
+					#Collapse into anarchy if radiation gets high enough
+					if = {
+						limit = { check_variable = { lok_radiation_level > 50 } }
+						transfer_state_to = AAA
+						set_demilitarized_zone = yes
+					}
+					multiply_variable = { lok_radiation_level = 0.75 } #Half life of one week
+					clamp_variable = { var = lok_radiation_level min = 0 }
+					#Random spread to neighboring states: every week there is a 50% chance that a neighboring state get contaminated with half of the fallout.
+					set_variable = { lok_radiation_spread = lok_radiation_level }
+					multiply_variable = { lok_radiation_spread = 0.50 }
+					random_neighbor_state = {
+						random_list = {
+							50 = {
+								add_to_variable = { var = lok_radiation_level value = PREV.lok_radiation_spread }
+								PREV = { subtract_from_variable = lok_radiation_spread }
+							}
+							50 = {}
+						}
+					}
+					#Kill people in the state (RIP Bozo)
+					set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
+					#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
+					divide_temp_variable = { lok_radiation_death_percent = 100 }
+					set_temp_variable = { lok_radiation_death_count = state_population_k }
+					multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
+					multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower since radiation killing 2.1M people at once is very unlikely anyways... right??????
+					add_manpower = lok_radiation_death_count #Remove the people
+					divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
+
+					#Add to the trackers
+					add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
+					add_to_variable = { lok_state_deaths = lok_radiation_death_count }
+					add_to_variable = { lok_country_radiation_deaths = lok_radiation_death_count }
+					add_to_variable = { lok_country_deaths = lok_radiation_death_count }
+					add_to_variable = { global.lok_global_radiation_deaths = lok_radiation_death_count }
+					add_to_variable = { global.lok_global_deaths = lok_radiation_death_count }
+				}
+
+				#Round the final displays
 				set_variable = { lok_state_deaths_display = lok_state_deaths }
 				round_variable = lok_state_deaths_display
+
+				set_variable = { lok_state_combat_deaths_display = lok_state_combat_deaths }
+				round_variable = lok_state_combat_deaths_display
+
+				set_variable = { lok_state_radiation_deaths_display = lok_state_radiation_deaths }
+				round_variable = lok_state_radiation_deaths_display
+
+				set_variable = { lok_state_bombing_deaths_display = lok_state_bombing_deaths }
+				round_variable = lok_state_bombing_deaths_display
+
 			}
 
+			#Round the final displays for country
 			set_variable = { lok_country_deaths_display = lok_country_deaths }
 			round_variable = lok_country_deaths_display
 
+			set_variable = { lok_country_radiation_deaths_display = lok_country_radiation_deaths }
+			round_variable = lok_country_radiation_deaths_display
+
+			set_variable = { lok_country_combat_deaths_display = lok_country_combat_deaths }
+			round_variable = lok_country_combat_deaths_display
+
+			set_variable = { lok_country_bombing_deaths_display = lok_country_bombing_deaths }
+			round_variable = lok_country_bombing_deaths_display
+
+			#Round the final displays for states
 			set_variable = { global.lok_global_deaths_display = global.lok_global_deaths }
 			divide_variable = { global.lok_global_deaths_display = 10 } #Turn to millions
 			round_variable = global.lok_global_deaths_display
 			divide_variable = { global.lok_global_deaths_display = 100 }
+
+			set_variable = { global.lok_global_radiation_deaths_display = global.lok_global_radiation_deaths }
+			divide_variable = { global.lok_global_radiation_deaths_display = 10 } #Turn to millions
+			round_variable = global.lok_global_radiation_deaths_display
+			divide_variable = { global.lok_global_radiation_deaths_display = 100 }
+
+			set_variable = { global.lok_global_combat_deaths_display = global.lok_global_combat_deaths }
+			divide_variable = { global.lok_global_combat_deaths = 10 } #Turn to millions
+			round_variable = global.lok_global_combat_deaths
+			divide_variable = { global.lok_global_combat_deaths = 100 }
+
+			set_variable = { global.lok_global_bombing_deaths_display = global.lok_global_bombing_deaths }
+			divide_variable = { global.lok_global_bombing_deaths_display = 10 } #Turn to millions
+			round_variable = global.lok_global_bombing_deaths_display
+			divide_variable = { global.lok_global_bombing_deaths_display = 100 }
+
+			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 		}
 	}
 
@@ -258,6 +344,8 @@ on_actions = {
 		effect = {
 			#Nukes take away 5% of a state's population. Calculate it and remove, then add to the total counters
 			FROM = {
+				add_to_variable = { lok_radiation_level = 1 } #Radiation level
+				every_neighbor_state = { add_to_variable = { lok_radiation_level = 0.25 } } #It spreads to neighboring states too, how fun!
 				if = {
 					limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
 					set_temp_variable = { lok_nuke_casualties = state_population_k }
