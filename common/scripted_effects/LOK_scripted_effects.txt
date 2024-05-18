@@ -1,10 +1,6 @@
 calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
 	if = {
-		limit = {
-			NOT = {
-				check_variable = { species = 5 } #Nekeoxes do not eat regular food
-			}
-		}
+		limit = { state_eats_food = yes }
 		set_variable = { state_food_consumption = state_population_k }
 		divide_variable = { state_food_consumption = 100 }
 		round_variable = state_food_consumption
@@ -57,18 +53,31 @@ calculate_total_food_consumption = {
 	#CALCULATE % THAT IS MET - This is what determines the actual effects of food deficit
 	set_variable = { country_food_needs_met_perc = country_food_production }
 	divide_variable = { country_food_needs_met_perc = country_food_consumption }
+	if = { #Nekeox and such
+		limit = { check_variable = { country_food_consumption = 0 } }
+		set_variable = { country_food_needs_met_perc = 1 }
+	}
+	set_variable = { country_food_needs_modifier = country_food_needs_met_perc } #For the modifier
 	multiply_variable = { country_food_needs_met_perc = 100 }
 	round_variable = country_food_needs_met_perc
 
-	#IF % MET IS BELOW 70% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 10% of the population will die every month until food goes back above 70%
+	#MODIFIER
+	subtract_from_variable = { country_food_needs_modifier = 1 }
+	if = {
+		limit = { check_variable = { country_food_needs_met_perc < 100 } }
+		add_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+	}
+	else = { remove_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+
+	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 70%
 	if = {
 		limit = {
-			check_variable = { country_food_needs_met_perc < 71 }
+			check_variable = { country_food_needs_met_perc < 61 }
 			check_variable = { country_food_stockpile < 1 }
 		}
 		every_controlled_state = {
 			set_variable = { lok_starvation_death_count = state_population_k }
-			multiply_variable = { lok_starvation_death_count = 0.10 } #10% of the pop perishes
+			multiply_variable = { lok_starvation_death_count = 0.03 } #3% of the pop perishes
 			round_variable = lok_starvation_death_count
 
 			#Variable shenanigans to bypass overflow issues
