@@ -1,35 +1,50 @@
 on_actions = {
 	on_startup = {
 		effect = {
-			every_country = {
+			every_possible_country = {
 				set_rule = { can_puppet = no } #Handled by decision
 				#Stab & WS stab hit from having noncore states, calculated weekly
 				set_variable = { stab_from_noncore = 0 }
 				set_variable = { ws_from_noncore = 0 }
 				add_dynamic_modifier = { modifier = lok_noncore_stab_ws_impact }
+				set_variable = { country_food_stockpile = 0 } #Food stockpiles
+				set_variable = { country_food_stockpile_max = 0 } #Food stockpile max
 			}
 
 			#Casualty counters
 			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL combat-deaths for ALL countries
+
 			set_variable = { global.lok_global_combat_deaths = 0 } #Sum of ALL combatt deaths for ALL countries
 			set_variable = { global.lok_global_bombing_deaths = 0 } #Sum of ALL bombing deaths for ALL countries
+			set_variable = { global.lok_global_starvation_deaths = 0 } #Sum of ALL starvation deaths for ALL countries
+			set_variable = { global.lok_global_radiation_deaths = 0 } #Sum of ALL radiation deaths for ALL countries
 
 			set_variable = { global.lok_global_deaths_display = 0 }
 
 			every_possible_country = {
 				set_variable = { lok_country_deaths = 0 } #total
+
 				set_variable = { lok_country_combat_deaths = 0 } #war deaths
 				set_variable = { lok_country_bombing_deaths = 0 } #Nuke/bomb deaths
+				set_variable = { lok_country_starvation_deaths = 0 } #Starvation deaths
+				set_variable = { lok_country_radiation_deaths = 0 } #Radiation deaths
 
 				set_variable = { lok_country_deaths_display = 0 }
 			}
 			every_state = {
 				set_variable = { lok_state_deaths = 0 }
+
 				set_variable = { lok_state_bombing_deaths = 0 }
+				set_variable = { lok_state_starvation_deaths = 0 }
+				set_variable = { lok_state_radiation_deaths = 0 }
+				set_variable = { lok_state_combat_deaths = 0 }
 
 				set_variable = { lok_state_deaths_display = 0 }
 
 				set_variable = { lok_radiation_level = 0 } #Radiation from nukes
+
+				set_variable = { lok_min_manpower_before_collapse = state_population_k } #Determine the population before the state collapses into anarchy
+				divide_variable = { lok_min_manpower_before_collapse = 20 } #If 50k people are left out of 1M then stuff collapses.
 			}
 
 			#Setup the Herzlands state array to track unification
@@ -183,57 +198,11 @@ on_actions = {
 
 	on_weekly = {
 		effect = {
-			calculate_total_food_consumption = yes
 			calculate_stab_ws_hit_from_noncore = yes
 			calculate_combat_casualties = yes
-
-			#Casualty Displays and radiation. We round casualty displays to avoid unecessary decimals, but keep the actual precise value hidden.
+			calculate_total_food_consumption = yes
 			every_controlled_state = {
-				if = {
-					limit = { check_variable = { lok_radiation_level > 0 } }
-					if = { #Below 0.2 it just goes away
-						limit = { check_variable = { lok_radiation_level < 0.2 } }
-						set_variable = { lok_radiation_level = 0 }
-					}
-					#Collapse into anarchy if radiation gets high enough
-					if = {
-						limit = { check_variable = { lok_radiation_level > 50 } }
-						transfer_state_to = AAA
-						set_demilitarized_zone = yes
-					}
-					multiply_variable = { lok_radiation_level = 0.75 } #Half life of one week
-					clamp_variable = { var = lok_radiation_level min = 0 }
-					#Random spread to neighboring states: every week there is a 50% chance that a neighboring state get contaminated with half of the fallout.
-					set_variable = { lok_radiation_spread = lok_radiation_level }
-					multiply_variable = { lok_radiation_spread = 0.50 }
-					random_neighbor_state = {
-						random_list = {
-							50 = {
-								add_to_variable = { var = lok_radiation_level value = PREV.lok_radiation_spread }
-								PREV = { subtract_from_variable = lok_radiation_spread }
-							}
-							50 = {}
-						}
-					}
-					#Kill people in the state (RIP Bozo)
-					set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
-					#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
-					divide_temp_variable = { lok_radiation_death_percent = 100 }
-					set_temp_variable = { lok_radiation_death_count = state_population_k }
-					multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
-					multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower since radiation killing 2.1M people at once is very unlikely anyways... right??????
-					add_manpower = lok_radiation_death_count #Remove the people
-					divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
-
-					#Add to the trackers
-					add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
-					add_to_variable = { lok_state_deaths = lok_radiation_death_count }
-					add_to_variable = { lok_country_radiation_deaths = lok_radiation_death_count }
-					add_to_variable = { lok_country_deaths = lok_radiation_death_count }
-					add_to_variable = { global.lok_global_radiation_deaths = lok_radiation_death_count }
-					add_to_variable = { global.lok_global_deaths = lok_radiation_death_count }
-				}
-
+				calculate_radiation_in_state = yes
 				#Round the final displays
 				set_variable = { lok_state_deaths_display = lok_state_deaths }
 				round_variable = lok_state_deaths_display
@@ -247,6 +216,14 @@ on_actions = {
 				set_variable = { lok_state_bombing_deaths_display = lok_state_bombing_deaths }
 				round_variable = lok_state_bombing_deaths_display
 
+				set_variable = { lok_state_starvation_deaths_display = lok_state_starvation_deaths }
+				round_variable = lok_state_starvation_deaths_display
+
+				if = { #State got so depopulated that it just collapses
+					limit = { check_variable = { state_population_k < lok_min_manpower_before_collapse } }
+					collapse_into_anarchy = yes
+					set_variable = { lok_min_manpower_before_collapse = 0 }
+				}
 			}
 
 			#Round the final displays for country
@@ -261,6 +238,9 @@ on_actions = {
 
 			set_variable = { lok_country_bombing_deaths_display = lok_country_bombing_deaths }
 			round_variable = lok_country_bombing_deaths_display
+
+			set_variable = { lok_country_starvation_deaths_display = lok_country_starvation_deaths }
+			round_variable = lok_country_starvation_deaths_display
 
 			#Round the final displays for states
 			set_variable = { global.lok_global_deaths_display = global.lok_global_deaths }
@@ -282,6 +262,12 @@ on_actions = {
 			divide_variable = { global.lok_global_bombing_deaths_display = 10 } #Turn to millions
 			round_variable = global.lok_global_bombing_deaths_display
 			divide_variable = { global.lok_global_bombing_deaths_display = 100 }
+
+			set_variable = { global.lok_global_starvation_deaths_display = global.lok_global_starvation_deaths }
+			divide_variable = { global.lok_global_starvation_deaths_display = 10 } #Turn to millions
+			round_variable = global.lok_global_starvation_deaths_display
+			divide_variable = { global.lok_global_starvation_deaths_display = 100 }
+
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 		}
@@ -305,6 +291,17 @@ on_actions = {
 
 	on_daily = {
 		effect = {
+			if = { #DEBUG NUCLEAR WAR MODE - NATIONS WILL RANDOMLY FIRE NUKES AT THE STATES OF THEIR ENEMIES!
+				limit = { has_global_flag = lok_nuclear_war_mode_on }
+				random_state = {
+					limit = { controller = { has_war_with = ROOT } }
+					random = {
+						chance = 50
+						save_global_event_target_as = lok_thermonuclear_salvo_state
+						ROOT = { fire_thermonuclear_salvo = yes }
+					}
+				}
+			}
 			# if = {
 			# 	limit = { is_ai = yes }
 			# 	#This is a dummy food-costing equipment to force the AI into buying food if it lacks it.
@@ -356,7 +353,7 @@ on_actions = {
 						end = lok_nuke_casualties
 						add_manpower = -10000
 					}
-					multiply_temp_variable = { lok_nuke_casualties = 10 } #Turn to millions (if that's even possible)
+					multiply_temp_variable = { lok_nuke_casualties = 10 } #Turn to thousands (if that's even possible)
 					set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
 					#Add to the state counters
 					add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }

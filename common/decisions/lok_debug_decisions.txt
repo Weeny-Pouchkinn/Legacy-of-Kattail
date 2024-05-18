@@ -1,0 +1,141 @@
+debug_decisions = {	
+	lok_start_battle_royale_debug = {
+		icon = generic_research
+
+		priority = 1000
+		
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			country_event = { id = lok_debug.1 }
+		}
+	}
+	lok_kill_elwin_debug = {
+		icon = generic_research
+		priority = 1000
+
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			SIL = { country_event = { id = lok_debug.2 } }
+		}
+	}
+	lok_toggle_nuclear_war_mode = {
+		icon = generic_research
+		priority = 1000
+
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			if = {
+				limit = { NOT = { has_global_flag = lok_nuclear_war_mode_on } }
+				set_global_flag = lok_nuclear_war_mode_on
+			}
+			else = {
+				clr_global_flag = lok_nuclear_war_mode_on
+			}
+		}
+	}
+}
+
+LOK_food_management_cat = {
+	lok_fill_food_stockpile_debug = {
+		icon = generic_research
+
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			set_variable = { country_food_stockpile = country_food_stockpile_max }
+		}
+	}
+	lok_empty_food_stockpile_debug = {
+		icon = generic_research
+
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			set_variable = { country_food_stockpile = 0 }
+		}
+	}
+	lok_update_food_consumption_debug = {
+		icon = generic_research
+
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			calculate_total_food_consumption = yes
+		}
+	}
+}
