@@ -9,9 +9,10 @@ country_event = { #Start battle royale + give cores on all
 	immediate = {
 		every_country = {
 			every_country = {
+				limit = { NOT = { has_war_with = PREV } }
 				declare_war_on = {
-				    target = PREV
-				    type = annex_everything
+					target = PREV
+					type = annex_everything
 				}
 			}
 			every_state = { add_core_of = PREV }
@@ -126,5 +127,27 @@ country_event = { #Collapse Elwin
 
 	option = {
 		name = "NAOOO mein Elwinreich..."
+	}
+}
+
+country_event = { #Drop 10 nukes on every state
+	id = lok_debug.3
+	hidden = yes
+	title = "Kaboom"
+	desc = "BOOOOM"
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			every_state = {
+				NEU = {
+					launch_nuke = { state = PREV use_nuke = no }
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "So long..."
 	}
 }
