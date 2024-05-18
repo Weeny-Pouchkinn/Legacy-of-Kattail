@@ -9,31 +9,8 @@ on_actions = {
 				add_dynamic_modifier = { modifier = lok_noncore_stab_ws_impact }
 			}
 
-			#Casualty counters
-			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL combat-deaths for ALL countries
-			set_variable = { global.lok_global_combat_deaths = 0 } #Sum of ALL combatt deaths for ALL countries
-			set_variable = { global.lok_global_bombing_deaths = 0 } #Sum of ALL bombing deaths for ALL countries
-
-			set_variable = { global.lok_global_deaths_display = 0 }
-
-			every_possible_country = {
-				set_variable = { lok_country_deaths = 0 } #total
-				set_variable = { lok_country_combat_deaths = 0 } #war deaths
-				set_variable = { lok_country_bombing_deaths = 0 } #Nuke/bomb deaths
-
-				set_variable = { lok_country_deaths_display = 0 }
-			}
-			every_state = {
-				set_variable = { lok_state_deaths = 0 }
-				set_variable = { lok_state_bombing_deaths = 0 }
-
-				set_variable = { lok_state_deaths_display = 0 }
-
-				set_variable = { lok_radiation_level = 0 } #Radiation from nukes
-			}
-
 			#Setup the Herzlands state array to track unification
-			global = { set_variable = { total_herzlands_state_count = 0 } }  #<---- error log doesnt like this?
+			global = { set_variable = { total_herzlands_state_count = 0 } }
 			every_state = {
 				limit = { CONTROLLER = { is_herzlands_warlord = yes } }
 				add_to_array = { global.herzlands_states_array = THIS }
@@ -60,7 +37,6 @@ on_actions = {
 			514 = { set_variable = { minority = 3 } }
 			512 = { set_variable = { minority = 3 } }
 			191 = { set_variable = { minority = 3 } }
-			192 = { set_variable = { minority = 9 } } #Macaquians in Purrlin
 
 			SIL = { every_owned_state = { set_variable = { species = 1 } } }
            	CLE = { every_owned_state = { set_variable = { species = 1 } } }
@@ -79,18 +55,12 @@ on_actions = {
            	ELO = { every_owned_state = { set_variable = { species = 1 } } }
            	AUR = { every_owned_state = { set_variable = { species = 1 } } }
            	OST = { every_owned_state = { set_variable = { species = 1 } } }
-			87 = { set_variable = { minority = 9 } } #Macaquians in Los Kibbles
-
            	WPR = { every_owned_state = { set_variable = { species = 1 } } }
            	CAT = { every_owned_state = { set_variable = { species = 1 } } }
            	LIO = { every_owned_state = { set_variable = { species = 1 } } }
            	MEW = { every_owned_state = { set_variable = { species = 1 } } }
            	STR = { every_owned_state = { set_variable = { species = 1 } } }
            	MEO = { every_owned_state = { set_variable = { species = 1 } } }
-			595 = { set_variable = { minority = 7 } }
-			197 = { set_variable = { minority = 7 } }
-			593 = { set_variable = { minority = 3 } }
-			594 = { set_variable = { minority = 3 } }
 
 			#Quarries
            	PTQ = { every_owned_state = { set_variable = { species = 1 } } }
@@ -146,24 +116,6 @@ on_actions = {
 
 			#Nekeox
 			NKC = { every_owned_state = { set_variable = { species = 5 } } }
-		
-			#Nitromethane
-			NMI = { every_owned_state = { set_variable = { species = 8 } } }
-			NMI = { every_owned_state = { set_variable = { minority = 1 } } }
-
-			#Wacegia
-			WAC = { every_owned_state = { set_variable = { species = 6 } } }
-			WAC = { every_owned_state = { set_variable = { minority = 1 } } }
-			#They have Kronks
-			619 = { set_variable = { minority = 7 } }
-			618 = { set_variable = { minority = 7 } }
-			124 = { set_variable = { minority = 7 } }
-			123 = { set_variable = { species = 7 } }
-			617 = { set_variable = { species = 7 } }
-			123 = { set_variable = { minority = 6 } }
-			617 = { set_variable = { minority = 6 } }
-			#And some Brambles (fear)
-			561 = { set_variable = { minority = 10 } }
 
 			every_country = {
 				add_ideas = LOK_katzen_aggressive
@@ -185,105 +137,6 @@ on_actions = {
 		effect = {
 			calculate_total_food_consumption = yes
 			calculate_stab_ws_hit_from_noncore = yes
-			calculate_combat_casualties = yes
-
-			#Casualty Displays and radiation. We round casualty displays to avoid unecessary decimals, but keep the actual precise value hidden.
-			every_controlled_state = {
-				if = {
-					limit = { check_variable = { lok_radiation_level > 0 } }
-					if = { #Below 0.2 it just goes away
-						limit = { check_variable = { lok_radiation_level < 0.2 } }
-						set_variable = { lok_radiation_level = 0 }
-					}
-					#Collapse into anarchy if radiation gets high enough
-					if = {
-						limit = { check_variable = { lok_radiation_level > 50 } }
-						transfer_state_to = AAA
-						set_demilitarized_zone = yes
-					}
-					multiply_variable = { lok_radiation_level = 0.75 } #Half life of one week
-					clamp_variable = { var = lok_radiation_level min = 0 }
-					#Random spread to neighboring states: every week there is a 50% chance that a neighboring state get contaminated with half of the fallout.
-					set_variable = { lok_radiation_spread = lok_radiation_level }
-					multiply_variable = { lok_radiation_spread = 0.50 }
-					random_neighbor_state = {
-						random_list = {
-							50 = {
-								add_to_variable = { var = lok_radiation_level value = PREV.lok_radiation_spread }
-								PREV = { subtract_from_variable = lok_radiation_spread }
-							}
-							50 = {}
-						}
-					}
-					#Kill people in the state (RIP Bozo)
-					set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
-					#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
-					divide_temp_variable = { lok_radiation_death_percent = 100 }
-					set_temp_variable = { lok_radiation_death_count = state_population_k }
-					multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
-					multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower since radiation killing 2.1M people at once is very unlikely anyways... right??????
-					add_manpower = lok_radiation_death_count #Remove the people
-					divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
-
-					#Add to the trackers
-					add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
-					add_to_variable = { lok_state_deaths = lok_radiation_death_count }
-					add_to_variable = { lok_country_radiation_deaths = lok_radiation_death_count }
-					add_to_variable = { lok_country_deaths = lok_radiation_death_count }
-					add_to_variable = { global.lok_global_radiation_deaths = lok_radiation_death_count }
-					add_to_variable = { global.lok_global_deaths = lok_radiation_death_count }
-				}
-
-				#Round the final displays
-				set_variable = { lok_state_deaths_display = lok_state_deaths }
-				round_variable = lok_state_deaths_display
-
-				set_variable = { lok_state_combat_deaths_display = lok_state_combat_deaths }
-				round_variable = lok_state_combat_deaths_display
-
-				set_variable = { lok_state_radiation_deaths_display = lok_state_radiation_deaths }
-				round_variable = lok_state_radiation_deaths_display
-
-				set_variable = { lok_state_bombing_deaths_display = lok_state_bombing_deaths }
-				round_variable = lok_state_bombing_deaths_display
-
-			}
-
-			#Round the final displays for country
-			set_variable = { lok_country_deaths_display = lok_country_deaths }
-			round_variable = lok_country_deaths_display
-
-			set_variable = { lok_country_radiation_deaths_display = lok_country_radiation_deaths }
-			round_variable = lok_country_radiation_deaths_display
-
-			set_variable = { lok_country_combat_deaths_display = lok_country_combat_deaths }
-			round_variable = lok_country_combat_deaths_display
-
-			set_variable = { lok_country_bombing_deaths_display = lok_country_bombing_deaths }
-			round_variable = lok_country_bombing_deaths_display
-
-			#Round the final displays for states
-			set_variable = { global.lok_global_deaths_display = global.lok_global_deaths }
-			divide_variable = { global.lok_global_deaths_display = 10 } #Turn to millions
-			round_variable = global.lok_global_deaths_display
-			divide_variable = { global.lok_global_deaths_display = 100 }
-
-			set_variable = { global.lok_global_radiation_deaths_display = global.lok_global_radiation_deaths }
-			divide_variable = { global.lok_global_radiation_deaths_display = 10 } #Turn to millions
-			round_variable = global.lok_global_radiation_deaths_display
-			divide_variable = { global.lok_global_radiation_deaths_display = 100 }
-
-			set_variable = { global.lok_global_combat_deaths_display = global.lok_global_combat_deaths }
-			divide_variable = { global.lok_global_combat_deaths = 10 } #Turn to millions
-			round_variable = global.lok_global_combat_deaths
-			divide_variable = { global.lok_global_combat_deaths = 100 }
-
-			set_variable = { global.lok_global_bombing_deaths_display = global.lok_global_bombing_deaths }
-			divide_variable = { global.lok_global_bombing_deaths_display = 10 } #Turn to millions
-			round_variable = global.lok_global_bombing_deaths_display
-			divide_variable = { global.lok_global_bombing_deaths_display = 100 }
-
-			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 		}
 	}
 
@@ -336,40 +189,6 @@ on_actions = {
 			if = {
 				limit = { original_tag = PAW }
 				drop_cosmetic_tag = yes
-			}
-		}
-	}
-
-	on_nuke_drop = {
-		effect = {
-			#Nukes take away 5% of a state's population. Calculate it and remove, then add to the total counters
-			FROM = {
-				add_to_variable = { lok_radiation_level = 1 } #Radiation level
-				every_neighbor_state = { add_to_variable = { lok_radiation_level = 0.25 } } #It spreads to neighboring states too, how fun!
-				if = {
-					limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
-					set_temp_variable = { lok_nuke_casualties = state_population_k }
-					multiply_temp_variable = { lok_nuke_casualties = 0.005 } #We divide to avoid hitting the limit of the for_loop effect
-					round_temp_variable = lok_nuke_casualties
-					clamp_temp_variable = { var = lok_nuke_casualties min = 1 } #At least 10k people gotta die sowwy
-					for_loop_effect = {
-						end = lok_nuke_casualties
-						add_manpower = -10000
-					}
-					multiply_temp_variable = { lok_nuke_casualties = 10 } #Turn to millions (if that's even possible)
-					set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
-					#Add to the state counters
-					add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }
-					add_to_variable = { lok_state_deaths = lok_recent_nuke_casualties }
-					add_to_variable = { lok_state_deaths_display = lok_recent_nuke_casualties }
-					#Add these deaths to the controller's total and the grand total
-					CONTROLLER = {
-						add_to_variable = { lok_country_bombing_deaths = PREV.lok_recent_nuke_casualties }
-						add_to_variable = { lok_country_deaths = PREV.lok_recent_nuke_casualties }
-						add_to_variable = { global.lok_global_bombing_deaths = PREV.lok_recent_nuke_casualties }
-						add_to_variable = { global.lok_global_deaths = PREV.lok_recent_nuke_casualties }
-					}
-				}
 			}
 		}
 	}
