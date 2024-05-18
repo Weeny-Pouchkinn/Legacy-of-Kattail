@@ -64,12 +64,12 @@ calculate_total_food_consumption = {
 	#MODIFIER
 	subtract_from_variable = { country_food_needs_modifier = 1 }
 	if = {
-		limit = { check_variable = { country_food_needs_met_perc < 100 } }
+		limit = { check_variable = { country_food_needs_met_perc < 100 } check_variable = { country_food_stockpile < 1 } }
 		add_dynamic_modifier = { modifier = lok_food_deficit_modifier }
 	}
 	else = { remove_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
 
-	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 70%
+	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
 	if = {
 		limit = {
 			check_variable = { country_food_needs_met_perc < 61 }
