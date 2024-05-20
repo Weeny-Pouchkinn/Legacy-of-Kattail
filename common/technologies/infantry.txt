@@ -44,6 +44,11 @@ technologies = {
 			research_cost_coeff = 1
 		}
 
+		path = {
+			leads_to_tech = laser_weapons_1
+			research_cost_coeff = 1
+		}	
+
 		research_cost = 1.5
 		start_year = 1918
 		folder = {
@@ -460,6 +465,10 @@ technologies = {
 		enable_equipments = {
 			railgun_equipment_1
 		}	
+
+		enable_subunits = {
+			railgun_motorized
+		}
 		
 		path = {
 			research_cost_coeff = 1
@@ -469,7 +478,89 @@ technologies = {
 		start_year = 1945
 		folder = {
 			name = infantry_folder
-			position = { x = 4 y = @1945 }
+			position = { x = 6 y = @1945 }
+		}
+		
+		categories = {
+			infantry_weapons
+		}
+		
+		ai_will_do = {
+			factor = 0.8
+
+			modifier = {
+				num_of_military_factories > 150
+				factor = 2.5
+			}
+			
+			modifier = {
+				num_of_military_factories < 50
+				factor = 0.5
+			}
+		}
+	}
+
+	#Lasoors
+	laser_weapons_1 = {
+
+		enable_equipments = {
+			laser_equipment_1
+		}	
+		
+		enable_subunits = {
+			laser_motorized
+		}
+
+		path = {
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = laser_weapons_2
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 1943
+		folder = {
+			name = infantry_folder
+			position = { x = 4 y = @1943 }
+		}
+		
+		categories = {
+			infantry_weapons
+		}
+		
+		ai_will_do = {
+			factor = 0.8
+
+			modifier = {
+				num_of_military_factories > 150
+				factor = 2.5
+			}
+			
+			modifier = {
+				num_of_military_factories < 50
+				factor = 0.5
+			}
+		}
+	}
+
+	laser_weapons_2 = {
+
+		enable_equipments = {
+			laser_equipment_2
+		}	
+		
+		path = {
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 1946
+		folder = {
+			name = infantry_folder
+			position = { x = 4 y = @1946 }
 		}
 		
 		categories = {
@@ -593,6 +684,7 @@ technologies = {
 
 		paratrooper = {
 			max_organisation = 5
+			max_strength = 0.1
 		}
 		
 
@@ -713,6 +805,7 @@ technologies = {
 
 		marine = {
 			max_organisation = 5
+			max_strength = 0.1
 		}
 
 		research_cost = 2.0
@@ -833,6 +926,7 @@ technologies = {
 	tech_mountaineers4 = {	
 		mountaineers = {
 			max_organisation = 5
+			max_strength = 0.1
 		}
 
 		research_cost = 2.0
