@@ -483,6 +483,7 @@ technologies = {
 		
 		categories = {
 			infantry_weapons
+			railgun_equipment
 		}
 		
 		ai_will_do = {
@@ -529,6 +530,7 @@ technologies = {
 		
 		categories = {
 			infantry_weapons
+			laser_equipment
 		}
 		
 		ai_will_do = {
@@ -565,6 +567,7 @@ technologies = {
 		
 		categories = {
 			infantry_weapons
+			laser_equipment
 		}
 		
 		ai_will_do = {
@@ -1994,6 +1997,9 @@ technologies = {
 			research_cost_coeff = 1
 		}
 
+		supply_node_range = 0.1
+		truck_attrition_factor = -0.05
+
 		research_cost = 2
 		start_year = 1936
 		folder = {
@@ -2004,10 +2010,6 @@ technologies = {
 		folder = {
 			name = support_folder
 			position = { x = 2 y = 9 }
-		}
-		
-		sub_technologies = {
-			motorized_rocket_unit
 		}
 		
 		categories = {
@@ -2041,12 +2043,6 @@ technologies = {
 	}
 
 	tech_trucks2 = {
-
-		enable_subunits = {
-			mot_anti_tank_brigade
-			mot_artillery_brigade
-			mot_anti_air_brigade
-		}
 		
 		path = {
 			leads_to_tech = tech_trucks3
@@ -2059,7 +2055,14 @@ technologies = {
 			name = infantry_folder
 			position = { x = 2 y = @1941 }
 		}
-		
+
+		supply_node_range = 0.1
+		truck_attrition_factor = -0.05
+
+		enable_equipments = {
+			motorized_equipment_2
+		}
+
 		categories = {
 			motorized_equipment
 			mio_cat_tech_all_motorized_mechanized
@@ -2091,12 +2094,6 @@ technologies = {
 	}
 
 	tech_trucks3 = {
-
-		enable_subunits = {
-			mot_anti_tank_brigade
-			mot_artillery_brigade
-			mot_anti_air_brigade
-		}
 	
 		research_cost = 1.5
 		start_year = 1945
@@ -2104,6 +2101,13 @@ technologies = {
 			name = infantry_folder
 			position = { x = 2 y = @1945 }
 		}
+
+		enable_equipments = {
+			motorized_equipment_3
+		}
+
+		supply_node_range = 0.1
+		truck_attrition_factor = -0.05
 		
 		categories = {
 			motorized_equipment
@@ -2282,10 +2286,6 @@ technologies = {
 			motorized_equipment
 			armor
 			cat_armored_cars
-		}
-		
-		sub_technologies = {
-			armored_car_at_upgrade
 		}
 
 		ai_will_do = {
@@ -2589,28 +2589,6 @@ technologies = {
 			factor = 2
 		}
 	}
-	
-	amphibious_mechanized_infantry_4 = {
-
-		enable_equipments = {
-			amphibious_mechanized_equipment_4
-		}
-
-		research_cost = 2
-		start_year = 1946
-		
-		categories = {
-			motorized_equipment
-			mio_cat_tech_all_motorized_mechanized
-			infantry_tech
-			cat_mechanized_equipment
-			tp_tech
-		}
-		
-		ai_will_do = {
-			factor = 2
-		}
-	}
 
 	mechanised_infantry2 = {
 
@@ -2658,8 +2636,8 @@ technologies = {
 		}
 
 		mechanized = {
-			soft_attack = 0.15
-			hard_attack = 0.15
+			soft_attack = 0.10
+			hard_attack = 0.10
 		}
 
 		sub_technologies = {
@@ -2692,8 +2670,8 @@ technologies = {
 		}
 
 		mechanized = {
-			soft_attack = 0.15
-			hard_attack = 0.15
+			soft_attack = 0.10
+			hard_attack = 0.10
 		}
 
 		research_cost = 3
@@ -2702,16 +2680,98 @@ technologies = {
 			name = infantry_folder
 			position = { x = 0 y = @1946 }
 		}
-
-		sub_technologies = {
-			amphibious_mechanized_infantry_4
-		}
 		
 		categories = {
 			motorized_equipment
 			mio_cat_tech_all_motorized_mechanized
 			infantry_tech
 			cat_mechanized_equipment
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	### POWER ARMOR FOR HEAVY INFANTRY
+	exoskeleton_1 = {
+
+		enable_subunits = {
+			heavy_infantry
+			heavy_motorized
+		}
+
+		enable_equipments = {
+			exoskeleton_equipment_1
+		}
+		
+		path = {
+			leads_to_tech = exoskeleton_2
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 1938
+		folder = {
+			name = infantry_folder
+			position = { x = 0 y = @1938 }
+		}
+
+		categories = {
+			exoskeleton_equipment
+			infantry_tech
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	exoskeleton_2 = {
+
+		enable_equipments = {
+			exoskeleton_equipment_2
+		}
+
+		path = {
+			leads_to_tech = exoskeleton_3
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 1942
+		folder = {
+			name = infantry_folder
+			position = { x = 0 y = @1942 }
+		}
+		
+		categories = {
+			exoskeleton_equipment
+			infantry_tech
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	#power armor
+	exoskeleton_3 = {
+
+		enable_equipments = {
+			exoskeleton_equipment_3
+		}
+
+		research_cost = 4
+		start_year = 1946
+		folder = {
+			name = infantry_folder
+			position = { x = 0 y = @1946 }
+		}
+		
+		categories = {
+			exoskeleton_equipment
+			infantry_tech
 		}
 		
 		ai_will_do = {
