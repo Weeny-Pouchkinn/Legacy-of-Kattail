@@ -1,6 +1,6 @@
 technologies = {
 	### GERMAN TANK NAMES IN COMMENTS SO YOU CAN FIND STUFF MORE EASILY
-	gwtank = { #Leichttraktor
+	gwtank = { #Prekaiser tank
 
 		enable_equipments = {
 			gw_tank_equipment
@@ -40,7 +40,12 @@ technologies = {
 			leads_to_tech = basic_light_tank
 			research_cost_coeff = 1
 		}
-	
+		
+		path = {
+			leads_to_tech = basic_medium_tank
+			research_cost_coeff = 1
+		}
+
 		path = {
 			leads_to_tech = basic_heavy_tank
 			research_cost_coeff = 1
@@ -50,7 +55,7 @@ technologies = {
 		start_year = 1918
 		folder = {
 			name = armour_folder
-			position = { x = 0 y = 0 }
+			position = { x = 0 y = -1 }
 		}
 		
 		ai_will_do = {
@@ -85,6 +90,7 @@ technologies = {
 		}
 	}	
 
+	#Light tanks are now Infantry Fighting Vehicles (IFVs)
 	basic_light_tank = { #Panzer I
 
 		enable_equipments = {
@@ -126,10 +132,10 @@ technologies = {
 		}
 		
 		research_cost = 2
-		start_year = 1934
+		start_year = 1936
 		folder = {
 			name = armour_folder
-			position = { x = -4 y = 2 }
+			position = { x = -4 y = 1 }
 		}
 		
 		sub_technologies = {
@@ -297,13 +303,8 @@ technologies = {
 			research_cost_coeff = 1
 		}
 		
-		path = {
-			leads_to_tech = basic_medium_tank
-			research_cost_coeff = 1
-		}
-		
 		research_cost = 2
-		start_year = 1936
+		start_year = 1939
 		
 		folder = {
 			name = armour_folder
@@ -537,7 +538,7 @@ technologies = {
 		}	
 		
 		research_cost = 2
-		start_year = 1941
+		start_year = 1942
 		
 		folder = {
 			name = armour_folder
@@ -550,6 +551,11 @@ technologies = {
 			advanced_light_spaa
 		}
 		
+		path = {
+			leads_to_tech = advanced_light_tank_2
+			research_cost_coeff = 1
+		}
+
 		ai_will_do = {
 			base = 0.5
 			modifier = {
@@ -653,6 +659,58 @@ technologies = {
 			mio_cat_tech_light_armor_and_modules
 		}
 	}
+
+	advanced_light_tank_2 = { #atomic panzer yipee
+
+		enable_equipments = {
+			light_tank_equipment_4
+		}	
+		
+		research_cost = 2
+		start_year = 1947
+		
+		folder = {
+			name = armour_folder
+			position = { x = -4 y = 14 }
+		}
+		
+		sub_technologies = {
+			advanced_light_td
+			advanced_light_art
+			advanced_light_spaa
+		}
+		
+		ai_will_do = {
+			base = 0.5
+			modifier = {
+				is_major = no
+				factor = 2
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1942.1.1"
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1943.1.1"
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1944.1.1"
+			}
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			cat_light_armor
+			mio_cat_tech_light_armor_and_modules
+		}
+	}
+	
 	
 	basic_medium_tank = { #Panzer III
 
@@ -670,11 +728,11 @@ technologies = {
 		}
 		
 		research_cost = 2
-		start_year = 1939
+		start_year = 1936
 
 		folder = {
 			name = armour_folder
-			position = { x = 0 y = 6 }
+			position = { x = 0 y = 1 }
 		}
 		
 		sub_technologies = {
@@ -862,17 +920,13 @@ technologies = {
 			leads_to_tech = advanced_medium_tank 
 			research_cost_coeff = 1
 		}
-		path = {
-			leads_to_tech = improved_heavy_tank 
-			research_cost_coeff = 0.9
-		}
 		
 		research_cost = 2
-		start_year = 1941
+		start_year = 1939
 		
 		folder = {
 			name = armour_folder
-			position = { x = 0 y = 8 }
+			position = { x = 0 y = 4 }
 		}
 		
 		sub_technologies = {
@@ -1056,21 +1110,17 @@ technologies = {
 			medium_tank_equipment_3 
 		}
 		
+		research_cost = 2
+		start_year = 1942
+		
 		path = {
-			leads_to_tech = main_battle_tank 
+			leads_to_tech = advanced_medium_tank_2
 			research_cost_coeff = 1
 		}
-		path = {
-			leads_to_tech = advanced_heavy_tank 
-			research_cost_coeff = 0.9
-		}
-		
-		research_cost = 2
-		start_year = 1943
-		
+
 		folder = {
 			name = armour_folder
-			position = { x = 0 y = 10 }
+			position = { x = 0 y = 8 }
 		}
 		
 		sub_technologies = {
@@ -1232,6 +1282,54 @@ technologies = {
 		}
 	}
 	
+	advanced_medium_tank_2 = { #atomic medium tank
+
+		enable_equipments = {
+			medium_tank_equipment_4
+		}
+		
+		research_cost = 2
+		start_year = 1946
+
+		folder = {
+			name = armour_folder
+			position = { x = 0 y = 12 }
+		}
+		
+		sub_technologies = {
+			advanced_medium_td
+			advanced_medium_art
+			advanced_medium_spaa
+		}
+		
+
+		ai_will_do = {
+			base = 1
+			
+			modifier = {
+				factor = 1.2
+				date > "1944.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "1945.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "1946.1.1"
+			}
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			cat_medium_armor
+			mio_cat_tech_medium_armor_and_modules
+		}
+	}
+
 	main_battle_tank = { #E-50
 
 		enable_equipments = {
@@ -1426,7 +1524,7 @@ technologies = {
 		}
 		
 		research_cost = 2
-		start_year = 1934
+		start_year = 1937
 		
 		folder = {
 			name = armour_folder
@@ -1582,22 +1680,13 @@ technologies = {
 			leads_to_tech = advanced_heavy_tank 
 			research_cost_coeff = 1
 		}
-		path = {
-			leads_to_tech = improved_medium_tank 
-			research_cost_coeff = 0.9
-		}
-		
-		path = {
-			leads_to_tech = super_heavy_tank 
-			research_cost_coeff = 1
-		}
 		
 		research_cost = 2.5
-		start_year = 1941
+		start_year = 1940
 		
 		folder = {
 			name = armour_folder
-			position = { x = 4 y = 8 }
+			position = { x = 4 y = 6 }
 		}
 		
 		sub_technologies = {
@@ -1732,18 +1821,9 @@ technologies = {
 		enable_equipments = {
 			heavy_tank_equipment_3 
 		}
-		
-		path = {
-			leads_to_tech = main_battle_tank 
-			research_cost_coeff = 1
-		}
-		path = {
-			leads_to_tech = advanced_medium_tank 
-			research_cost_coeff = 0.9
-		}
-		
+
 		research_cost = 2.5
-		start_year = 1943
+		start_year = 1944
 		
 		folder = {
 			name = armour_folder
