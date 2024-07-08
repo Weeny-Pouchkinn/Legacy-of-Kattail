@@ -221,25 +221,89 @@ calculate_radiation_in_state = {
 				50 = {}
 			}
 		}
-		#Kill people in the state (RIP Bozo)
-		set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
-		#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
-		divide_temp_variable = { lok_radiation_death_percent = 100 }
-		set_temp_variable = { lok_radiation_death_count = state_population_k }
-		multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
-		multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower since radiation killing 2.1M people at once is very unlikely anyways... right??????
-		add_manpower = lok_radiation_death_count #Remove the people
-		divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
+		if = { #Kill people in the state
+			limit = {
+				NOT = {
+					AND = { check_variable = { species = 1 } check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
+				}
+			}
+			#Kill people in the state (RIP Bozo)
+			set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
+			#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
+			divide_temp_variable = { lok_radiation_death_percent = 100 }
+			set_temp_variable = { lok_radiation_death_count = state_population_k }
+			multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
+			clamp_temp_variable = { var = lok_radiation_death_count min = 0 max = 2000 } #Avoid overflow
+			multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower
+			if = {
+				limit = { check_variable = { species = 1 } } #Only half the deaths for Katzen states
+				multiply_temp_variable = { lok_radiation_death_count = 0.5 }
+			}
+			add_manpower = lok_radiation_death_count #Remove the people
+			divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
 
-		#Add to the trackers
-		add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
-		add_to_variable = { lok_state_deaths = lok_radiation_death_count }
+			#Add to the trackers
+			add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
+			add_to_variable = { lok_state_deaths = lok_radiation_death_count }
 
-		CONTROLLER = {
-			add_to_variable = { lok_country_radiation_deaths = PREVPREV.lok_radiation_death_count }
-			add_to_variable = { lok_country_deaths = PREVPREV.lok_radiation_death_count }
-			add_to_variable = { global.lok_global_radiation_deaths = PREVPREV.lok_radiation_death_count }
-			add_to_variable = { global.lok_global_deaths = PREVPREV.lok_radiation_death_count }
+			CONTROLLER = {
+				add_to_variable = { lok_country_radiation_deaths = PREVPREV.lok_radiation_death_count }
+				add_to_variable = { lok_country_deaths = PREVPREV.lok_radiation_death_count }
+				add_to_variable = { global.lok_global_radiation_deaths = PREVPREV.lok_radiation_death_count }
+				add_to_variable = { global.lok_global_deaths = PREVPREV.lok_radiation_death_count }
+			}
 		}
+	}
+}
+
+clear_wonder_ideas = {
+	remove_ideas = wonder_idea_1_normal
+	remove_ideas = wonder_idea_1_capital
+	remove_ideas = wonder_idea_1_noncore
+	remove_ideas = wonder_idea_2_normal
+	remove_ideas = wonder_idea_2_capital
+	remove_ideas = wonder_idea_2_noncore
+	remove_ideas = wonder_idea_3_normal
+	remove_ideas = wonder_idea_3_capital
+	remove_ideas = wonder_idea_3_noncore
+}
+
+apply_wonder_effects = {
+	clear_wonder_ideas = yes
+	if = {
+		limit = { controls_state = 509 }
+		if = {
+			limit = { 509 = { is_capital = yes } }
+			add_ideas = wonder_idea_1_capital
+		}
+		else_if = {
+			limit = { 509 = { is_core_of = ROOT } }
+			add_ideas = wonder_idea_1_normal
+		}
+		else = { add_ideas = wonder_idea_1_noncore }
+	}
+	if = {
+		limit = { controls_state = 173 }
+		if = {
+			limit = { 173 = { is_capital = yes } }
+			add_ideas = wonder_idea_2_capital
+		}
+		else_if = {
+			limit = { 173 = { is_core_of = ROOT } }
+			add_ideas = wonder_idea_2_normal
+		}
+		else = { add_ideas = wonder_idea_2_noncore }
+	}
+	if = {
+		limit = { controls_state = 116 }
+		if = {
+			limit = { 116 = { is_capital = yes } }
+			add_ideas = wonder_idea_3_capital
+		}
+		else_if = {
+			limit = { 116 = { is_core_of = ROOT } }
+			add_ideas = wonder_idea_3_normal
+		}
+		else = { add_ideas = wonder_idea_3_noncore }
 	}
 }
