@@ -8,6 +8,10 @@ phases = { # phase = no is the standard phase
 	tactical_withdrawal
 	seize_bridge
 	hold_bridge
+	city_outskirts
+	inner_city
+	take_city
+	seize_fort
 }
 
 tactic_basic_attack = {
@@ -60,7 +64,10 @@ tactic_counterattack = { # counters basic attack, assault
 			has_trait = unyielding_defender
 		}
 	}
+	
 	picture = counterattack
+	
+	countered_by = tactic_elastic_offensive
 	
 	defender = 0.25
 }
@@ -230,7 +237,10 @@ tactic_delay = {
 		factor = 4
 	}
 	picture = delay
+	
 	countered_by = tactic_shock
+	countered_by = tactic_mechanized_assault
+	countered_by = tactic_piecemeal_attack
 	
 	attacker_movement_speed = -0.25		#
 	attacker = -0.25
@@ -278,6 +288,8 @@ tactic_tactical_withdrawal = { #counters encirclement
 	picture = withdraw
 	
 	phase = tactical_withdrawal
+	
+	#countered_by = tactic_vertical_envelopment
 	
 	combat_width = -0.25
 	attacker = -0.25
@@ -462,6 +474,10 @@ tactic_elastic_defense = { #counters blitz
 		factor = 4
 	}
 	picture = elastic_defence
+	
+	countered_by = tactic_mechanized_assault
+	
+	countered_by = tactic_jungle_infiltration
 	
 	attacker_movement_speed = -0.25
 	attacker = -0.15
@@ -747,8 +763,30 @@ tactic_human_wave_tactics = { #People's army attacker tactic
 	}
 	picture = tactic_human_wave_tactics
 	
+	countered_by = tactic_grit_defense
+	
 	combat_width = 0.5
 	attacker = 0.1 
+	defender = 0.1
+}
+
+tactic_banzai_charge = { #Special Japan attacker tactic
+	is_attacker = yes
+	trigger = {
+		tag = JAP
+		is_attacker = yes
+		phase = no
+	}
+	
+	active = yes
+	
+	countered_by = tactic_overwhelming_fire
+	
+	base =  { factor = 4 }
+	picture = tactic_banzai_charge
+	
+	attacker_movement_speed = 0.1
+	attacker = 0.25 
 	defender = 0.1
 }
 
@@ -820,6 +858,8 @@ tactic_unexpected_thrust = { #Mobile warfare attacker tactic
 	}
 	picture = tactic_unexpected_thrust
 	
+	countered_by = tactic_force_in_being
+	
 	attacker_movement_speed = 0.15
 	attacker = 0.15 
 }
@@ -856,6 +896,1866 @@ tactic_barrage = { #Superior firepower attacker tactic
 	}
 	picture = tactic_barrage
 	
+	countered_by = tactic_invisible_positions	
+	countered_by = tactic_counterbattery_fire
+	
 	attacker = 0.1
 	defender = -0.2	
+}
+
+tactic_masterful_blitz = { #Improved version of Blitz for Soviets
+	only_show_for = SOV
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		hardness > 0.5
+		phase = no
+		OR = {
+			skill > 2
+			has_trait = panzer_leader
+			skill_advantage > 1
+		}
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = panzer_expert
+				has_trait = combined_arms_expert
+			}
+		}
+	}
+	
+	picture = SOV_tank_desant_blitz
+	countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = 0.5
+	combat_width = 0.1
+	attacker = 0.2
+	defender = -0.2
+}
+
+tactic_piecemeal_attack = { #
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		is_fighting_in_weather = snow
+		phase = no
+		OWNER = {
+			OR = {
+				has_completed_focus = FIN_motti_tactics
+				has_tech = ski_troops
+			}
+		}
+		OR = {
+			skill > 2
+			has_trait = winter_specialist
+			skill_advantage > 1
+		}
+	}
+	
+	active = yes
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = guerilla_fighter
+				has_trait = camouflage_expert
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = winter_specialist
+			}
+		}
+	}
+	
+	picture = piecemeal_attack
+	#countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = -0.1	
+	#combat_width = 0.1
+	attacker = 0.2
+	defender = -0.05
+}
+
+tactic_elastic_offensive = { #
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		is_fighting_in_terrain = desert
+		phase = no
+		OR = {
+			skill > 2
+			has_trait = desert_fox
+			skill_advantage > 1
+		}
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = panzer_leader
+				has_trait = combined_arms_expert
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = desert_fox
+			}
+		}
+	}
+	
+	picture = elastic_offensive
+	
+	countered_by = tactic_tactical_withdrawal
+	
+	attacker_movement_speed = 0.5	
+	#combat_width = 0.1
+	attacker = 0.2
+	defender = -0.1
+}
+
+tactic_jungle_infiltration = { #
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		is_fighting_in_terrain = jungle
+		phase = no
+		OWNER = {
+			OR = {
+				has_tech = TOA_jungle_pioneers_support_tech
+				has_tech = marines_jungle_troops
+			}
+		}
+		OR = {
+			skill > 2
+			has_trait = jungle_rat
+			skill_advantage > 1
+		}
+	}
+	
+	active = yes
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = guerilla_fighter
+				has_trait = camouflage_expert
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = jungle_rat
+			}
+		}
+	}
+	
+	picture = jungle_infiltration
+	#countered_by = tactic_tactical_withdrawal
+	
+	attacker_movement_speed = -0.25	
+	combat_width = -0.2
+	attacker = 0.3
+	defender = -0.1
+}
+
+tactic_mechanized_assault = { #
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		hardness > 0.5
+		hardness < 0.79		
+		phase = no		
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = cavalry_expert
+				has_trait = combined_arms_expert
+			}
+		}
+	}
+	
+	picture = mechanized_assault
+	#countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = 0.3	
+	combat_width = 0.1
+	attacker = 0.1
+	defender = -0.2
+}
+
+tactic_modern_blitz = { 
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		hardness > 0.5
+		phase = no
+		OR = {
+			skill > 2
+			has_trait = panzer_leader
+			skill_advantage > 1
+		}
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = panzer_leader
+				has_trait = combined_arms_expert
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = panzer_expert
+			}
+		}
+	}
+	
+	picture = modern_blitz
+	
+	#countered_by = tactic_mobile_defense
+	#countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = 0.5
+	combat_width = 0.15
+	attacker = 0.25
+	defender = -0.1
+}
+
+tactic_paradrop_infiltration = { 
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		has_combat_modifier = paradrop
+		phase = no
+		OR = {
+			skill > 2
+			has_trait = paratrooper
+			skill_advantage > 1
+		}
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = paratrooper
+				has_trait = trickster
+			}
+		}
+	}
+	
+	picture = paradrop_infiltration
+		
+	#attacker_movement_speed = 0.5
+	combat_width = -0.5
+	attacker = 0.3
+	defender = -0.1
+}
+
+# tactic_vertical_envelopment = { 
+	
+	# is_attacker = yes
+	# trigger = {
+		# is_attacker = yes
+		# phase = no
+		# unit_trigger = {
+			# division_has_majority_template = airmobile
+		# }
+	# }
+	
+	# active = yes
+	
+	# base =  { 
+		# factor = 4
+	# }
+	
+	# picture = vertical_envelopment
+		
+	# attacker_movement_speed = 0.3
+	# combat_width = -0.5
+	# attacker = 0.3
+	# defender = 0.15
+# }
+
+# tactic_airmobile_flanking = { 
+	
+	# is_attacker = yes
+	# trigger = {
+		# is_attacker = yes
+		# fastest_unit > 6
+		# hardness < 0.50
+		# phase = no
+		# OR = {
+			# skill > 2
+			# skill_advantage > 1
+		# }
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 4
+			# OR = {
+				# has_trait = combined_arms_expert
+			# }
+		# }
+	# }
+	
+	# picture = airmobile_flanking
+		
+	# attacker_movement_speed = 0.3
+	# #combat_width = -0.5
+	# attacker = 0.3
+	# #defender = 0.15
+# }
+
+# tactic_airmobile_shock = { 
+	
+	# is_attacker = yes
+	# trigger = {
+		# is_attacker = yes
+		# fastest_unit > 6
+		# hardness < 0.50
+		# phase = no
+		# OR = {
+			# skill > 2
+			# skill_advantage > 1
+		# }
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 4
+			# OR = {
+				# has_trait = offensive_doctrine
+			# }
+		# }
+	# }
+	
+	# picture = airmobile_shock
+		
+	# attacker_movement_speed = 0.3
+	# combat_width = -0.2
+	# attacker = 0.2
+	# #defender = 0.15
+# }
+
+# tactic_airmobile_invasion = { 
+	
+	# is_attacker = yes
+	# trigger = {
+		# is_attacker = yes
+		# fastest_unit > 6
+		# hardness < 0.50
+		# phase = no
+		# has_combat_modifier = amphibious_attack
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 4
+			# OR = {
+				# has_trait = commando
+				# has_trait = invader
+			# }
+		# }
+	# }
+	
+	# picture = airmobile_invasion
+		
+	# attacker_movement_speed = 0.1
+	# #combat_width = -0.2
+	# attacker = 0.15
+	# defender = -0.1
+# }
+
+# tactic_air_cavalry_charge = { 
+	
+	# is_attacker = yes
+	# trigger = {
+		# is_attacker = yes
+		# fastest_unit > 6
+		# hardness < 0.50
+		# phase = no
+		# OR = {
+			# is_fighting_in_terrain = desert
+			# is_fighting_in_terrain = plains
+		# }
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 4
+			# OR = {
+				# has_trait = combined_arms_expert
+				# has_trait = offensive_doctrine
+			# }
+		# }
+	# }
+	
+	# picture = air_cavalry_charge
+		
+	# attacker_movement_speed = 0.2
+	# #combat_width = -0.2
+	# attacker = 0.15
+	# #defender = -0.1
+# }
+
+tactic_paradrop_seize_bridge = { 
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = no
+		has_combat_modifier = paradrop
+		has_combat_modifier = river_crossing
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = paratrooper
+				has_trait = commando
+			}
+		}
+	}
+	
+	picture = paradrop_seize_bridge
+	
+	phase = seize_bridge
+	
+	#attacker_movement_speed = 0.2
+	combat_width = -0.25
+	attacker = 0.3
+	defender = 0.1
+}
+
+tactic_river_fording = { 
+	
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = no
+		has_combat_modifier = river_crossing
+	}
+	
+	active = yes
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = reckless
+				has_trait = harsh_leader
+			}
+		}
+	}
+	
+	picture = river_fording
+		
+	attacker_movement_speed = 0.2
+	#combat_width = -0.2
+	attacker = 0.05
+	defender = 0.1
+}
+
+# tactic_airmobile_seize_bridge = { 
+	
+	# is_attacker = yes
+	# trigger = {
+		# is_attacker = yes
+		# phase = no
+		# has_combat_modifier = river_crossing
+		# fastest_unit > 6
+		# hardness < 0.50
+		# has_tech = utility_helicopter_1
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 4
+			# OR = {
+				# has_trait = commando
+				# has_trait = combined_arms_expert
+			# }
+		# }
+	# }
+	
+	# picture = airmobile_seize_bridge
+	
+	# phase = seize_bridge
+	
+	# attacker_movement_speed = 0.2
+	# combat_width = -0.25
+	# attacker = 0.2
+	# #defender = 0.1
+# }
+
+tactic_seize_city = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		is_fighting_in_terrain = urban
+		phase = no
+	}
+	
+	base =  {
+		factor = 100		
+	}
+	picture = seize_city
+		
+	active = yes
+
+	phase = city_outskirts
+	
+	attacker_movement_speed = -0.2
+	combat_width = -0.25
+	#attacker = 0.2
+	defender = 0.1
+}
+
+tactic_co_direct_assault = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = city_outskirts
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = reckless
+				has_trait = old_guard
+			}
+		}
+	}
+		
+	active = yes
+	
+	picture = direct_assault
+	
+	countered_by = tactic_co_prepared_defenses
+	
+	display_phase = city_outskirts
+		
+	#attacker_movement_speed = 0
+	combat_width = -0.25
+	attacker = 0.1
+	defender = 0.2
+}
+
+tactic_co_overwhelming_attack = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = city_outskirts
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = urban_assault_specialist
+			}
+		}
+	}
+		
+	active = yes
+	
+	picture = overwhelming_attack
+	
+	phase = inner_city
+	
+	display_phase = city_outskirts
+		
+	#attacker_movement_speed = 0
+	combat_width = -0.25
+	attacker = 0.1
+	defender = 0.2
+}
+
+tactic_co_urban_aerial_insertion = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = city_outskirts
+		has_combat_modifier = paradrop
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = paratrooper
+			}
+		}
+	}
+	
+	picture = urban_aerial_insertion
+	
+	phase = inner_city
+	
+	display_phase = city_outskirts
+		
+	#attacker_movement_speed = 0
+	combat_width = -0.25
+	attacker = 0.25
+	defender = 0.25
+}
+
+tactic_ic_door_to_door_advance = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = inner_city
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = cautious
+				has_trait = old_guard
+			}
+		}
+	}
+		
+	active = yes
+	
+	countered_by = tactic_ic_urban_elastic_defense
+	
+	picture = door_to_door_advance
+	
+	display_phase = inner_city
+		
+	attacker_movement_speed = -0.3
+	combat_width = -0.35
+	attacker = 0.3
+	defender = 0.3
+}
+
+tactic_ic_urban_infiltration = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = inner_city
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = urban_assault_specialist
+				has_trait = trickster
+			}
+		}
+	}
+		
+	active = yes
+	
+	countered_by = tactic_ic_urban_guerilla
+	
+	picture = urban_infiltration
+		
+	display_phase = inner_city
+		
+	attacker_movement_speed = -0.2
+	combat_width = -0.35
+	attacker = 0.4
+	defender = 0.3
+}
+
+tactic_ic_meticulous_advance = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = inner_city
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = urban_assault_specialist
+				has_trait = organizer
+				has_trait = cautious
+			}
+		}
+		modifier = {
+			add = 4
+			has_reserves = yes
+		}
+	}
+		
+	active = yes
+		
+	picture = meticulous_advance
+	
+	phase = take_city
+	
+	display_phase = inner_city
+		
+	attacker_movement_speed = -0.5
+	combat_width = -0.35
+	attacker = 0.3
+	defender = 0.2
+}
+
+tactic_tc_secure_outskirts = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = take_city
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = cautious
+			}
+		}
+	}
+		
+	active = yes
+		
+	picture = secure_outskirts
+		
+	display_phase = take_city
+		
+	attacker_movement_speed = -0.1
+	combat_width = -0.25
+	attacker = 0.1
+	defender = 0.2
+}
+
+tactic_tc_mop_up_operations = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = take_city
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = urban_assault_specialist
+			}
+		}
+	}
+		
+	active = yes
+		
+	picture = mop_up_operations
+			
+	display_phase = take_city
+		
+	attacker_movement_speed = -0.2
+	combat_width = -0.25
+	attacker = 0.1
+	defender = 0.1
+}
+
+tactic_seize_fort = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		has_combat_modifier = fort_attack
+	}
+	
+	base =  { 
+		factor = 16
+	}
+	
+	phase = seize_fort
+		
+	picture = fort_attack
+					
+	active = yes
+	
+	countered_by = tactic_sf_danger_close_support
+	
+	attacker_movement_speed = -0.1
+	combat_width = -0.4
+	attacker = 0.1
+	defender = 0.2
+}
+
+tactic_sf_fort_attack = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+	}
+		
+	picture = fort_attack
+					
+	active = yes
+	
+	display_phase = seize_fort
+	
+	countered_by = tactic_sf_danger_close_support
+	
+	#attacker_movement_speed = -0.2
+	combat_width = -0.3
+	#attacker = 0.1
+	defender = 0.2
+}
+
+tactic_sf_rush_fort = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = harsh_leader
+			}
+		}
+	}
+		
+	active = yes
+		
+	picture = rush_fort
+			
+	display_phase = seize_fort
+		
+	countered_by = tactic_sf_danger_close_support
+	
+	attacker_movement_speed = 0.1
+	combat_width = -0.3
+	attacker = 0.05
+	defender = 0.3
+}
+
+tactic_sf_storm_fort = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = reckless
+			}
+		}
+	}
+		
+	active = yes
+		
+	picture = storm_fort
+	
+	countered_by = tactic_sf_danger_close_support
+	
+	display_phase = seize_fort
+		
+	attacker_movement_speed = 0.2
+	combat_width = -0.3
+	attacker = 0.1
+	defender = 0.4
+}
+
+tactic_sf_meticulous_approach = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = fortress_buster
+				has_trait = engineer
+				has_trait = organizer
+				has_trait = cautious
+			}
+		}
+	}
+		
+	active = yes
+		
+	countered_by = tactic_sf_danger_close_support
+	
+	picture = storm_fort
+	
+	#countered_by = tactic_sf_fort_counterattack
+	
+	phase = no
+	
+	display_phase = seize_fort
+		
+	attacker_movement_speed = -0.2
+	combat_width = -0.3
+	attacker = 0.15
+	defender = 0.2
+}
+
+tactic_sf_firepower_shock = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = fortress_buster
+				has_trait = engineer
+			}
+		}
+	}
+		
+	active = no
+		
+	picture = firepower_shock
+	
+	##countered_by = tactic_sf_fort_counterattack
+	
+	phase = no
+	
+	display_phase = seize_fort
+		
+	#attacker_movement_speed = -0.2
+	combat_width = -0.3
+	attacker = 0.2
+	defender = 0.1
+}
+
+tactic_sf_paradrop_fort_defenses = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = seize_fort
+		has_combat_modifier = paradrop
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 12
+			OR = {
+				has_trait = paratrooper
+			}
+		}
+	}
+		
+	active = yes
+		
+	picture = paradrop_fort_defenses
+	
+	##countered_by = tactic_sf_fort_counterattack
+	
+	phase = no
+	
+	display_phase = seize_fort
+		
+	#attacker_movement_speed = -0.2
+	combat_width = -0.3
+	attacker = 0.2
+	defender = 0.15
+}
+
+tactic_attacker_hb_bridgelayer_bypass = { 
+	is_attacker = yes
+	trigger = {
+		is_attacker = yes
+		phase = hold_bridge
+		OWNER = {
+			has_tech = avlb_doctrine
+		}
+		OR = {
+			skill_advantage > 0
+			skill > 1
+		}
+	}
+	
+	active = no
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = engineer
+				has_trait = commando
+				has_trait = trickster
+				has_trait = invader
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = expert_improviser
+			}
+		}
+	}
+	
+	picture = bridgelayer_bypass
+	
+	display_phase = hold_bridge
+	
+	phase = no
+	
+	combat_width = 0.1
+	attacker = 0.15
+}
+
+tactic_grit_defense = { #
+	
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		is_fighting_in_weather = snow
+		phase = no
+		dig_in > 0.5
+		OR = {
+			skill > 2
+			has_trait = winter_specialist
+			skill_advantage > 1
+		}
+		OWNER = {
+			OR = {
+				has_completed_focus = FIN_motti_tactics
+				has_tech = ski_troops
+			}
+		}
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = guerilla_fighter
+				has_trait = camouflage_expert
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = winter_specialist
+			}
+		}
+	}
+	
+	picture = grit_defense
+	#countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = -0.3
+	combat_width = -0.5
+	attacker = -0.3
+	defender = 0.4
+}
+
+tactic_force_in_being = { #
+	
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		is_fighting_in_terrain = desert
+		phase = no
+		OR = {
+			skill > 1
+			has_trait = desert_fox
+			skill_advantage > 0
+		}
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = ambusher
+				has_trait = organizer
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = desert_fox
+			}
+		}
+	}
+	
+	phase = tactical_withdrawal
+	
+	picture = force_in_being
+	#countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = -0.3
+	combat_width = -0.25
+	attacker = 0.1
+	defender = 0.25
+}
+
+tactic_invisible_positions = { #
+	
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		is_fighting_in_terrain = jungle
+		phase = no
+		dig_in > 0.5
+		OR = {
+			skill > 2
+			has_trait = jungle_rat
+			skill_advantage > 1
+		}
+		OWNER = {
+			OR = {
+				has_tech = TOA_jungle_pioneers_support_tech
+				has_tech = marines_jungle_troops
+			}
+		}
+	}
+	
+	active = yes
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = guerilla_fighter
+				has_trait = camouflage_expert
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = jungle_rat
+			}
+		}
+	}
+	
+	phase = close_combat
+	
+	picture = invisible_positions
+	#countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = -0.2
+	combat_width = -0.5
+	attacker = 0.5
+	defender = -0.5
+}
+
+tactic_mechanized_counterattack = { #
+	
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		hardness > 0.50
+		hardness < 0.79
+		phase = no
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = cavalry_expert
+				has_trait = combined_arms_expert
+			}
+		}
+	}
+	
+	picture = mechanized_counterattack
+	#countered_by = tactic_elastic_defense
+	
+	#attacker_movement_speed = -0.2
+	#combat_width = -0.5
+	attacker = 0.2
+	defender = -0.2
+}
+
+# tactic_mobile_defense = { #
+	
+	# is_attacker = no
+	# trigger = {
+		# is_attacker = no
+		# fastest_unit > 10
+		# phase = no
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 4
+			# OR = {
+				# has_trait = cavalry_expert
+				# has_trait = combined_arms_expert
+			# }
+		# }
+	# }
+	
+	# picture = mobile_defense
+	
+	# countered_by = tactic_human_wave_tactics
+	
+	# phase = tactical_withdrawal
+	
+	# attacker_movement_speed = -0.25
+	# #combat_width = -0.5
+	# attacker = 0.15
+	# defender = -0.15
+# }
+
+tactic_dispersed_drop = { #
+	
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		has_combat_modifier = paradrop
+		phase = no
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = paratrooper
+				has_trait = trickster
+			}
+		}
+	}
+	
+	picture = dispersed_drop
+	
+	#countered_by = tactic_elastic_defense
+	
+	
+	attacker_movement_speed = -0.25
+	combat_width = -0.5
+	attacker = 0.2
+	defender = 0.2
+}
+
+tactic_counterbattery_fire = { #
+	
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = no
+		OR = {
+			skill > 2
+			skill_advantage > 1
+		}
+	}
+	
+	active = no
+	
+	base =  { 
+		factor = 1
+		modifier = {
+			add = 8
+			OR = {
+				has_trait = expert_improviser
+				has_trait = defensive_doctrine
+			}
+		}
+	}
+	
+	picture = counterbattery_fire
+	
+	#countered_by = tactic_elastic_defense
+		
+	#attacker_movement_speed = -0.25
+	#combat_width = -0.5
+	attacker = -0.3
+	#defender = 0.2
+}
+
+tactic_hold_city = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		is_fighting_in_terrain = urban
+		phase = no
+		dig_in > 0.5
+	}
+	
+	base =  {
+		factor = 100		
+	}
+	picture = hold_city
+		
+	active = yes
+
+	phase = city_outskirts
+	
+	attacker_movement_speed = -0.2
+	combat_width = -0.25
+	#attacker = 0.2
+	defender = 0.1
+}
+
+# tactic_aerial_withdraw = { #
+	
+	# is_attacker = no
+	# trigger = {
+		# is_attacker = no
+		# phase = no
+		# fastest_unit > 6
+		# hardness < 0.50
+		# has_tech = utility_helicopter_1
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 8
+			# OR = {
+				# has_trait = defensive_doctrine
+			# }
+		# }
+	# }
+	
+	# picture = aerial_withdraw
+	
+	# #countered_by = tactic_elastic_defense
+		
+	# attacker_movement_speed = -0.2
+	# combat_width = -0.5
+	# attacker = -0.5
+	# defender = -0.2
+# }
+
+# tactic_airmobile_reinforcements = { #
+	
+	# is_attacker = no
+	# trigger = {
+		# dig_in > 0.5
+		# is_attacker = no
+		# phase = no
+		# fastest_unit > 6
+		# hardness < 0.50
+		# has_tech = utility_helicopter_1
+	# }
+	
+	# active = no
+	
+	# base =  { 
+		# factor = 4
+		# modifier = {
+			# add = 8
+			# OR = {
+				# has_trait = defensive_doctrine
+			# }
+		# }
+	# }
+	
+	# picture = airmobile_reinforcements
+	
+	# #countered_by = tactic_elastic_defense
+		
+	# attacker_movement_speed = -0.2
+	# combat_width = -0.2
+	# attacker = -0.1
+	# defender = 0.3
+# }
+
+tactic_cc_invisible_positions = { #
+	
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		is_fighting_in_terrain = jungle
+		phase = close_combat
+		dig_in > 0.5
+		OR = {
+			skill > 2
+			has_trait = jungle_rat
+			skill_advantage > 1
+		}
+		OWNER = {
+			OR = {
+				has_tech = TOA_jungle_pioneers_support_tech
+				has_tech = marines_jungle_troops
+			}
+		}
+	}
+	
+	active = yes
+	
+	base =  { 
+		factor = 4
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = guerilla_fighter
+				has_trait = camouflage_expert
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = jungle_rat
+			}
+		}
+	}
+	
+	phase = close_combat
+	
+	picture = invisible_positions_close_combat
+	#countered_by = tactic_elastic_defense
+	
+	attacker_movement_speed = -0.25
+	combat_width = -0.5
+	attacker = 0.5
+	defender = -0.5
+}
+
+tactic_co_prepared_defenses = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = city_outskirts
+		is_fighting_in_terrain = urban
+		dig_in > 0.5
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = organizer
+				has_trait = cautious
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = defensive_doctrine
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				skill > 2
+				skill_advantage > 1
+			}
+		}
+	}
+	
+	picture = prepared_defenses	
+	
+	active = yes
+	
+	#countered_by = tactic_co_prepared_defenses
+	
+	display_phase = city_outskirts
+		
+	attacker_movement_speed = -0.2
+	combat_width = -0.25
+	#attacker = 0.1
+	defender = 0.2
+}
+
+tactic_co_unprepared_defenses = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = city_outskirts
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = organizer
+				has_trait = cautious
+			}
+		}
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = defensive_doctrine
+			}
+		}
+	}
+	
+	active = yes
+	
+	picture = unprepared_defenses
+	
+	countered_by = tactic_co_overwhelming_attack
+	
+	phase = inner_city
+	
+	display_phase = city_outskirts
+		
+	attacker_movement_speed = -0.1
+	combat_width = -0.25
+	attacker = 0.1
+	defender = 0.1
+}
+
+tactic_ic_urban_guerilla = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = inner_city
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = guerilla_fighter
+				has_trait = ambusher
+				has_trait = skirmisher
+			}
+		}
+	}
+	
+	active = yes
+	
+	picture = urban_guerilla
+	
+	#countered_by = tactic_co_prepared_defenses
+		
+	display_phase = inner_city
+		
+	attacker_movement_speed = -0.2
+	combat_width = -0.5
+	attacker = -0.4
+	defender = 0.4
+}
+
+tactic_ic_urban_elastic_defense = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = inner_city
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				has_trait = trickster
+			}
+		}
+	}
+	
+	active = yes
+	
+	picture = urban_elastic_defense
+	
+	#countered_by = tactic_co_prepared_defenses
+		
+	display_phase = inner_city
+		
+	attacker_movement_speed = -0.1
+	combat_width = -0.5
+	attacker = -0.15
+	defender = -0.05
+}
+
+tactic_ic_expel_invaders = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = inner_city
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			OR = {
+				skill > 2
+				skill_advantage > 1
+			}
+		}
+	}
+	
+	active = yes
+	
+	picture = expel_invaders
+	
+	#countered_by = tactic_co_prepared_defenses
+		
+	display_phase = inner_city
+
+	phase = city_outskirts
+		
+	#attacker_movement_speed = -0.1
+	combat_width = -0.5
+	attacker = -0.1
+	defender = 0.2
+}
+
+tactic_tc_decisive_counterattack = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = take_city
+		is_fighting_in_terrain = urban
+		has_reserves = yes
+	}
+	
+	base =  { 
+		factor = 4 
+	}
+	
+	active = yes
+	
+	picture = decisive_counterattack
+	
+	#countered_by = tactic_co_prepared_defenses
+		
+	display_phase = take_city
+	
+	phase = inner_city
+	
+	#attacker_movement_speed = -0.1
+	combat_width = -0.25
+	attacker = -0.1
+	defender = 0.3
+}
+
+tactic_tc_rush_reinforcements = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = take_city
+		is_fighting_in_terrain = urban
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			has_trait = old_guard
+		}
+	}
+	
+	active = yes
+	
+	picture = rush_reinforcements
+	
+	#countered_by = tactic_co_prepared_defenses
+		
+	display_phase = take_city
+	
+	#phase = inner_city
+	
+	#attacker_movement_speed = -0.1
+	combat_width = -0.25
+	attacker = -0.2
+	defender = 0.2
+}
+
+tactic_sf_integrated_defenses = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			has_trait = engineer
+		}
+	}
+	
+	active = yes
+		
+	picture = integrated_defenses
+			
+	display_phase = seize_fort
+		
+	attacker_movement_speed = -0.2
+	combat_width = -0.3
+	attacker = 0.1
+	defender = 0.3
+}
+
+tactic_sf_hold_fort = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			has_trait = defensive_doctrine
+		}
+	}
+	
+	active = yes
+		
+	picture = hold_fort
+			
+	display_phase = seize_fort
+		
+	attacker_movement_speed = -0.1
+	combat_width = -0.3
+	#attacker = 0.1
+	defender = 0.2
+}
+
+tactic_sf_danger_close_support = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = seize_fort
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			has_trait = trickster
+		}
+	}
+	
+	active = yes
+		
+	picture = danger_close_support
+			
+	display_phase = seize_fort
+		
+	#attacker_movement_speed = -0.1
+	combat_width = -0.3
+	attacker = 0.3
+	defender = 0.4
+}
+
+tactic_sf_fort_counterattack = { 
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = seize_fort
+		has_reserves = yes
+	}
+	
+	base =  { 
+		factor = 4 
+		modifier = {
+			add = 4
+			has_trait = trickster
+		}
+	}
+	
+	display_phase = seize_fort
+	
+	active = yes
+		
+	picture = fort_counterattack
+			
+	#display_phase = default
+		
+	#attacker_movement_speed = -0.1
+	combat_width = -0.15
+	attacker = 0.2
+	defender = 0.2
 }
