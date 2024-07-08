@@ -1,10 +1,6 @@
 calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
 	if = {
-		limit = {
-			NOT = {
-				check_variable = { species = 5 } #Nekeoxes do not eat regular food
-			}
-		}
+		limit = { state_eats_food = yes }
 		set_variable = { state_food_consumption = state_population_k }
 		divide_variable = { state_food_consumption = 100 }
 		round_variable = state_food_consumption
@@ -16,13 +12,17 @@ calculate_food_production_in_state = {
 }
 
 calculate_total_food_consumption = {
-	set_variable = { country_food_consumption = 0 }
-	set_variable = { country_food_production = 0 }
+	set_variable = { country_food_stockpile_max = 0 } #reset food stockpile capacity
+	set_variable = { country_food_consumption = 0 } #Food that is being eaten
+	set_variable = { country_food_balance = resource_produced@food } #Total food balance
+	set_variable = { country_food_imports = resource_imported@food } #Imports
+	add_to_variable = { country_food_balance = country_food_imports } #Total food balance (with imports)
 	every_controlled_state = { #Fetch how much food each state eats.
 		calculate_food_consumption_in_state = yes
-		calculate_food_production_in_state = yes
-		ROOT = { add_to_variable = { country_food_consumption = PREV.state_food_consumption } }
-		ROOT = { add_to_variable = { country_food_production = PREV.state_food_production } }
+		ROOT = {
+			add_to_variable = { country_food_consumption = PREV.state_food_consumption }
+			add_to_variable = { country_food_stockpile_max = PREV.non_damaged_building_level@infrastructure } #Every level of infra provides food storage
+		}
 	}
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
 	multiply_variable = { country_food_consumption_modifier = -1 }
@@ -30,6 +30,75 @@ calculate_total_food_consumption = {
 	add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
 	divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
 	round_variable = country_food_consumption_modifier
+	set_variable = { country_food_production = country_food_balance } #The food that we're actually producing
+	add_to_variable = { country_food_production = country_food_consumption } #We add our consumption to the balance to get production, yippe!
+
+	#FOOD STOCKPILING
+	multiply_variable = { country_food_stockpile_max = 10 } #1 level of infra = can store 10 food (or enough for 1M people for 1 month)
+
+	if = { #If balance is positive put into the stockpile
+		limit = { check_variable = { country_food_balance > 0 } }
+		set_temp_variable = { country_food_going_into_stockpile = country_food_balance }
+		multiply_temp_variable = { country_food_going_into_stockpile = 0.5 } #as the monke said not all food can be put into storage
+		add_to_variable = { country_food_stockpile = country_food_going_into_stockpile }
+		clamp_variable = {  var = country_food_stockpile max = country_food_stockpile_max } #Cant go over limit
+		round_variable = country_food_stockpile
+	}
+	else_if = { #If balance is negative take from the stockpile if it exists
+		limit = { check_variable = { country_food_balance < 0 } check_variable = { country_food_stockpile > 0 } }
+		add_to_variable = { country_food_stockpile = country_food_balance }
+		clamp_variable = {  var = country_food_stockpile min = 0 } #Cant go below 0
+	}
+
+	#CALCULATE % THAT IS MET - This is what determines the actual effects of food deficit
+	set_variable = { country_food_needs_met_perc = country_food_production }
+	divide_variable = { country_food_needs_met_perc = country_food_consumption }
+	if = { #Nekeox and such
+		limit = { check_variable = { country_food_consumption = 0 } }
+		set_variable = { country_food_needs_met_perc = 1 }
+	}
+	set_variable = { country_food_needs_modifier = country_food_needs_met_perc } #For the modifier
+	multiply_variable = { country_food_needs_met_perc = 100 }
+	round_variable = country_food_needs_met_perc
+
+	#MODIFIER
+	subtract_from_variable = { country_food_needs_modifier = 1 }
+	if = {
+		limit = { check_variable = { country_food_needs_met_perc < 100 } check_variable = { country_food_stockpile < 1 } }
+		add_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+	}
+	else = { remove_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+
+	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
+	if = {
+		limit = {
+			check_variable = { country_food_needs_met_perc < 61 }
+			check_variable = { country_food_stockpile < 1 }
+		}
+		every_controlled_state = {
+			set_variable = { lok_starvation_death_count = state_population_k }
+			multiply_variable = { lok_starvation_death_count = 0.03 } #3% of the pop perishes
+			round_variable = lok_starvation_death_count
+
+			#Variable shenanigans to bypass overflow issues
+			set_temp_variable = { lok_starvation_death_count_divided_10 = lok_starvation_death_count }
+			multiply_temp_variable = { lok_starvation_death_count_divided_10 = -100 } #Divide by 10 and multiply by 1000 to get chunks that are equal to 1/10ths of the final casualty count - should be below overflow
+			for_loop_effect = { #Now do it 10 times
+				end = 10
+				add_manpower = lok_starvation_death_count_divided_10
+			}
+			#And of course... the casualty counter
+			add_to_variable = { lok_state_starvation_deaths = lok_starvation_death_count }
+			add_to_variable = { lok_state_deaths = lok_starvation_death_count }
+
+			CONTROLLER = {
+				add_to_variable = { lok_country_starvation_deaths = PREV.lok_starvation_death_count }
+				add_to_variable = { lok_country_deaths = PREV.lok_starvation_death_count }
+				add_to_variable = { global.lok_global_starvation_deaths = PREV.lok_starvation_death_count }
+				add_to_variable = { global.lok_global_deaths = PREV.lok_starvation_death_count }
+			}
+		}
+	}
 }
 
 #Stab/WS hit from noncore states to encourage puppeting
@@ -56,4 +125,121 @@ calculate_stab_ws_hit_from_noncore = {
 	multiply_variable = { stab_from_noncore_display = -100 }
 	set_variable = { ws_from_noncore_display = ws_from_noncore }
 	multiply_variable = { ws_from_noncore_display = -100 }
+}
+
+calculate_combat_casualties = {
+	#Get thousands of casualties and divide by 1000 for millions
+	if = {
+		limit = { casualties_k > 0 }
+		set_variable = { lok_country_combat_deaths_last_week = casualties_k } #Get total casualties
+		#divide_temp_variable = { lok_country_combat_deaths_last_week = 1000 } #Turn to millions
+		subtract_from_variable = { lok_country_combat_deaths_last_week = lok_country_combat_deaths } #Remove those that we have already counted
+		clamp_variable = { var = lok_country_combat_deaths_last_week min = 0 } #Avoid negative casualties if something goes wrong
+		#round_temp_variable = lok_country_combat_deaths_last_week
+
+		#Add that to the various trackers
+		add_to_variable = { lok_country_combat_deaths = lok_country_combat_deaths_last_week } #Add the difference to the current total, getting the current total country combat deaths
+		add_to_variable = { lok_country_deaths = lok_country_combat_deaths_last_week } #Also add it to the grand total
+		add_to_variable = { global.lok_global_combat_deaths = lok_country_combat_deaths_last_week } #Add the last week difference to the global combat counter as well
+		add_to_variable = { global.lok_global_deaths = lok_country_combat_deaths_last_week } #Add the last week difference to the global counter as well
+	
+		set_variable = { lok_country_combat_deaths_last_week_2 = lok_country_combat_deaths_last_week }
+
+		#Depopulate states with these losses
+		if = {
+			limit = { check_variable = { lok_country_combat_deaths_last_week_2 > 0 } }
+			multiply_variable = { lok_country_combat_deaths_last_week_2 = 1000 }
+			# #Overall, 90% of casualties will come from cores, 10% will come from noncore. Approximation but good enough for now.
+			# set_temp_variable = { lok_core_combat_deaths = lok_country_combat_deaths_last_week }
+			# multiply_temp_variable = { lok_core_combat_deaths = 0.90 }
+			# set_temp_variable = { lok_num_core_states = 0 }
+			# every_controlled_state = { #Count core states
+			# 	limit = { is_core_of = ROOT }
+			# 	PREV = { add_to_temp_variable = { lok_num_core_states = 1 } }
+			# }
+			# divide_temp_variable = { lok_core_combat_deaths = lok_num_core_states } #The amount of deaths in each state more or less
+			every_controlled_state = {
+				set_temp_variable = { lok_combat_deaths_percent_for_state = state_population_k }
+				divide_temp_variable = { lok_combat_deaths_percent_for_state = ROOT.max_manpower_k }
+				clamp_temp_variable = {
+					var = lok_combat_deaths_percent_for_state
+					min = 0.001
+				}
+				set_temp_variable = { lok_combat_deaths_to_be_removed_for_state = ROOT.lok_country_combat_deaths_last_week_2 }
+				multiply_temp_variable = { lok_combat_deaths_to_be_removed_for_state = lok_combat_deaths_percent_for_state }
+				round_temp_variable = lok_combat_deaths_to_be_removed_for_state
+
+				multiply_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1 }
+				add_manpower = lok_combat_deaths_to_be_removed_for_state
+
+				divide_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1000 }
+				add_to_variable = { lok_state_combat_deaths = lok_combat_deaths_to_be_removed_for_state }
+				add_to_variable = { lok_state_deaths = lok_combat_deaths_to_be_removed_for_state }
+			}
+		}
+	}
+}
+
+fire_thermonuclear_salvo = {
+	for_loop_effect = {
+		end = 20
+		launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
+	}
+	event_target:lok_thermonuclear_salvo_state = {
+		add_to_variable = { lok_radiation_level = 10 } #Adds 10 more radiation (to 30) than usual.
+	}
+}
+
+collapse_into_anarchy = {
+	transfer_state_to = AAA
+	set_demilitarized_zone = yes
+}
+
+calculate_radiation_in_state = {
+	if = {
+		limit = { check_variable = { lok_radiation_level > 0 } }
+		if = { #Below 0.2 it just goes away
+			limit = { check_variable = { lok_radiation_level < 0.2 } }
+			set_variable = { lok_radiation_level = 0 }
+		}
+		#Collapse into anarchy if radiation gets high enough
+		if = {
+			limit = { check_variable = { lok_radiation_level > 50 } }
+			collapse_into_anarchy = yes
+		}
+		multiply_variable = { lok_radiation_level = 0.75 } #Half life of one week
+		clamp_variable = { var = lok_radiation_level min = 0 }
+		#Random spread to neighboring states: every week there is a 50% chance that a neighboring state get contaminated with half of the fallout.
+		set_variable = { lok_radiation_spread = lok_radiation_level }
+		multiply_variable = { lok_radiation_spread = 0.50 }
+		random_neighbor_state = {
+			random_list = {
+				50 = {
+					add_to_variable = { var = lok_radiation_level value = PREV.lok_radiation_spread }
+					PREV = { subtract_from_variable = lok_radiation_spread }
+				}
+				50 = {}
+			}
+		}
+		#Kill people in the state (RIP Bozo)
+		set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
+		#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
+		divide_temp_variable = { lok_radiation_death_percent = 100 }
+		set_temp_variable = { lok_radiation_death_count = state_population_k }
+		multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
+		multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower since radiation killing 2.1M people at once is very unlikely anyways... right??????
+		add_manpower = lok_radiation_death_count #Remove the people
+		divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
+
+		#Add to the trackers
+		add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
+		add_to_variable = { lok_state_deaths = lok_radiation_death_count }
+
+		CONTROLLER = {
+			add_to_variable = { lok_country_radiation_deaths = PREV.lok_radiation_death_count }
+			add_to_variable = { lok_country_deaths = PREV.lok_radiation_death_count }
+			add_to_variable = { global.lok_global_radiation_deaths = PREV.lok_radiation_death_count }
+			add_to_variable = { global.lok_global_deaths = PREV.lok_radiation_death_count }
+		}
+	}
 }
