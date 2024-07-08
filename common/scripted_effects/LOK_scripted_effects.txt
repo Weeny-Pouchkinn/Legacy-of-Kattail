@@ -21,7 +21,14 @@ calculate_total_food_consumption = {
 		calculate_food_consumption_in_state = yes
 		ROOT = {
 			add_to_variable = { country_food_consumption = PREV.state_food_consumption }
-			add_to_variable = { country_food_stockpile_max = PREV.non_damaged_building_level@infrastructure } #Every level of infra provides food storage
+
+			set_variable = { country_food_stockpile_from_infra = PREV.non_damaged_building_level@infrastructure }
+			multiply_variable = { country_food_stockpile_from_infra = 10 } #1 infra = 10 food or 10M people for 1 month
+			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_infra }
+
+			set_variable = { country_food_stockpile_from_silos = PREV.non_damaged_building_level@food_silo }
+			multiply_variable = { country_food_stockpile_from_silos = 50 } #1 silo = 50 food or 50M people for 1 month
+			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_silos }
 		}
 	}
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
@@ -34,7 +41,6 @@ calculate_total_food_consumption = {
 	add_to_variable = { country_food_production = country_food_consumption } #We add our consumption to the balance to get production, yippe!
 
 	#FOOD STOCKPILING
-	multiply_variable = { country_food_stockpile_max = 10 } #1 level of infra = can store 10 food (or enough for 1M people for 1 month)
 
 	if = { #If balance is positive put into the stockpile
 		limit = { check_variable = { country_food_balance > 0 } }
@@ -183,10 +189,24 @@ calculate_combat_casualties = {
 fire_thermonuclear_salvo = {
 	for_loop_effect = {
 		end = 20
-		launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
-	}
-	event_target:lok_thermonuclear_salvo_state = {
-		add_to_variable = { lok_radiation_level = 10 } #Adds 10 more radiation (to 30) than usual.
+		event_target:lok_thermonuclear_salvo_state = {
+			set_temp_variable = { anti_wmd_level = building_level@anti_wmd }
+			multiply_temp_variable = { anti_wmd_level = 18 }
+			set_temp_variable = { anti_wmd_level_negative = anti_wmd_level }
+			multiply_temp_variable = { anti_wmd_level_negative = -1 }
+		}
+		random_list = {
+			100 = {
+				launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
+				event_target:lok_thermonuclear_salvo_state = {
+					add_to_variable = { lok_radiation_level = 0.33 }
+				}
+				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level_negative }
+			}
+			0 = {
+				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level }
+			}
+		}
 	}
 }
 
@@ -257,65 +277,112 @@ calculate_radiation_in_state = {
 }
 
 clear_wonder_ideas = {
-	remove_ideas = wonder_idea_1_normal
-	remove_ideas = wonder_idea_1_capital
-	remove_ideas = wonder_idea_1_noncore
-	remove_ideas = wonder_idea_2_normal
-	remove_ideas = wonder_idea_2_capital
-	remove_ideas = wonder_idea_2_noncore
-	remove_ideas = wonder_idea_3_normal
-	remove_ideas = wonder_idea_3_capital
-	remove_ideas = wonder_idea_3_noncore
+	# remove_idea = wonder_idea_1_normal
+	# remove_idea = wonder_idea_1_capital
+	# remove_idea = wonder_idea_1_noncore
+	# remove_idea = wonder_idea_2_normal
+	# remove_idea = wonder_idea_2_capital
+	# remove_idea = wonder_idea_2_noncore
+	# remove_idea = wonder_idea_3_normal
+	# remove_idea = wonder_idea_3_capital
+	# remove_idea = wonder_idea_3_noncore
+	# remove_idea = wonder_idea_4_normal
+	# remove_idea = wonder_idea_4_capital
+	# remove_idea = wonder_idea_4_noncore
+	set_variable = { wonder_idea_removed_number = 0 }
+	while_loop_effect = {
+		limit = { check_variable = { wonder_idea_removed_number < 4 } }
+		add_to_variable = { wonder_idea_removed_number = 1 }
+		meta_effect = {
+			text = {
+				remove_ideas = wonder_idea_[WONDER_ID]_normal
+				remove_ideas = wonder_idea_[WONDER_ID]_capital
+				remove_ideas = wonder_idea_[WONDER_ID]_noncore
+			}
+			WONDER_ID = "[?ROOT.wonder_idea_removed_number]"
+		}
+	}
 }
 
 apply_wonder_effects = {
 	clear_wonder_ideas = yes
-	if = {
-		limit = { controls_state = 509 }
+	every_controlled_state = {
 		if = {
-			limit = { 509 = { is_capital = yes } }
-			add_ideas = wonder_idea_1_capital
+			limit = { check_variable = { wonder > 0 } }
+			if = {
+				limit = { is_capital = yes }
+				var:controller = {
+					meta_effect = {
+						text = { add_ideas = wonder_idea_[WONDER_ID]_capital }
+						WONDER_ID = "[?PREV.wonder]"
+					}
+				}
+			}
+			else_if = {
+				limit = { is_core_of = ROOT }
+				var:controller = {
+					meta_effect = {
+						text = { add_ideas = wonder_idea_[WONDER_ID]_normal }
+						WONDER_ID = "[?PREV.wonder]"
+					}
+				}
+			}
+			else = {
+				var:controller = {
+					meta_effect = {
+						text = { add_ideas = wonder_idea_[WONDER_ID]_noncore }
+						WONDER_ID = "[?PREV.wonder]"
+					}
+				}
+			}
 		}
-		else_if = {
-			limit = { 509 = { is_core_of = ROOT } }
-			add_ideas = wonder_idea_1_normal
-		}
-		else = { add_ideas = wonder_idea_1_noncore }
 	}
-	if = {
-		limit = { controls_state = 173 }
-		if = {
-			limit = { 173 = { is_capital = yes } }
-			add_ideas = wonder_idea_2_capital
-		}
-		else_if = {
-			limit = { 173 = { is_core_of = ROOT } }
-			add_ideas = wonder_idea_2_normal
-		}
-		else = { add_ideas = wonder_idea_2_noncore }
-	}
-	if = {
-		limit = { controls_state = 116 }
-		if = {
-			limit = { 116 = { is_capital = yes } }
-			add_ideas = wonder_idea_3_capital
-		}
-		else_if = {
-			limit = { 116 = { is_core_of = ROOT } }
-			add_ideas = wonder_idea_3_normal
-		}
-		else = { add_ideas = wonder_idea_3_noncore }
-	}
-	if = {
-		limit = { controls_state = 220 }
-		if = {
-			limit = { 220 = { is_capital = yes } }
-			add_ideas = wonder_idea_4_capital
-		}
-		else_if = {
-			limit = { 220 = { is_core_of = ROOT } }
-			add_ideas = wonder_idea_4_normal
-		}
-		else = { add_ideas = wonder_idea_4_noncore }
-	}
+	# if = {
+	# 	limit = { controls_state = 509 }
+	# 	if = {
+	# 		limit = { 509 = { is_capital = yes } }
+			
+	# 	}
+	# 	else_if = {
+	# 		limit = { 509 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_1_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_1_noncore }
+	# }
+	# if = {
+	# 	limit = { controls_state = 173 }
+	# 	if = {
+	# 		limit = { 173 = { is_capital = yes } }
+	# 		add_ideas = wonder_idea_2_capital
+	# 	}
+	# 	else_if = {
+	# 		limit = { 173 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_2_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_2_noncore }
+	# }
+	# if = {
+	# 	limit = { controls_state = 116 }
+	# 	if = {
+	# 		limit = { 116 = { is_capital = yes } }
+	# 		add_ideas = wonder_idea_3_capital
+	# 	}
+	# 	else_if = {
+	# 		limit = { 116 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_3_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_3_noncore }
+	# }
+	# if = {
+	# 	limit = { controls_state = 220 }
+	# 	if = {
+	# 		limit = { 220 = { is_capital = yes } }
+	# 		add_ideas = wonder_idea_4_capital
+	# 	}
+	# 	else_if = {
+	# 		limit = { 220 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_4_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_4_noncore }
+	# }
 }
