@@ -306,4 +306,16 @@ apply_wonder_effects = {
 		}
 		else = { add_ideas = wonder_idea_3_noncore }
 	}
+	if = {
+		limit = { controls_state = 220 }
+		if = {
+			limit = { 220 = { is_capital = yes } }
+			add_ideas = wonder_idea_4_capital
+		}
+		else_if = {
+			limit = { 220 = { is_core_of = ROOT } }
+			add_ideas = wonder_idea_4_normal
+		}
+		else = { add_ideas = wonder_idea_4_noncore }
+	}
 }
