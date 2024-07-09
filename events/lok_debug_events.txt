@@ -1,0 +1,246 @@
+add_namespace = lok_debug
+
+country_event = { #Start battle royale + give cores on all
+	id = lok_debug.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		every_country = {
+			every_country = {
+				limit = { NOT = { has_war_with = PREV } }
+				declare_war_on = {
+					target = PREV
+					type = annex_everything
+				}
+			}
+			every_state = { add_core_of = PREV }
+		}
+	}
+}
+
+country_event = { #Collapse Elwin
+	id = lok_debug.2
+	hidden = yes
+	title = "It's Elwinover"
+	desc = "Oof owie mein Elwin..."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			every_state = {
+				limit = { is_core_of = KKH }
+				transfer_state_to = KKH
+			}
+			SIL_Fritz = {
+				set_nationality = KKH
+				add_country_leader_role = {
+					country_leader = {
+						ideology = kaiserism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = KVK }
+				transfer_state_to = KVK
+			}
+			every_state = {
+				limit = { is_core_of = BLM }
+				transfer_state_to = BLM
+			}
+			every_state = {
+				limit = { is_core_of = KTW }
+				transfer_state_to = KTW
+				set_demilitarized_zone = no
+			}
+			every_state = {
+				limit = { is_core_of = AKR }
+				transfer_state_to = AKR
+			}
+			SIL_Meowtin_Hessler = {
+				set_nationality = AKR
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = KTV }
+				transfer_state_to = KTV
+			}
+			SIL_Hans = {
+				set_nationality = KTV
+				add_country_leader_role = {
+					country_leader = {
+						ideology = collectivism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = PMB }
+				transfer_state_to = PMB
+			}
+			SIL_Ulrich_Blutstein = {
+				set_nationality = PMB
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = CLE }
+				transfer_state_to = CLE
+			}
+			CLE = { drop_cosmetic_tag = yes leave_faction = yes }
+			every_state = {
+				limit = { is_core_of = PAW }
+				transfer_state_to = PAW
+			}
+			PAW = { drop_cosmetic_tag = yes leave_faction = yes }
+			SIL = {
+				set_autonomy = {
+					target = CLE
+					autonomy_state = autonomy_free
+				}
+				set_autonomy = {
+					target = PAW
+					autonomy_state = autonomy_free
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "End Elwin's misery"
+	}
+
+	option = {
+		name = "NAOOO mein Elwinreich..."
+	}
+}
+
+country_event = { #Drop 10 nukes on every state
+	id = lok_debug.3
+	hidden = yes
+	title = "Kaboom"
+	desc = "BOOOOM"
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			every_state = {
+				NEU = {
+					launch_nuke = { state = PREV use_nuke = no }
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "So long..."
+	}
+}
+
+country_event = { #Unresearch techs test
+	id = lok_debug.4
+	hidden = yes
+	title = "Bye"
+	desc = "Bye"
+	is_triggered_only = yes
+
+	immediate = {
+		set_technology = {
+			infantry_weapons = 0
+			infantry_weapons0 = 0
+			tech_support = 0
+			tech_recon = 0
+			tech_mountaineers = 0
+			motorised_infantry = 0
+			gw_artillery = 0
+			interwar_antiair = 0
+			gwtank = 0
+			basic_light_tank = 0
+			improved_light_tank = 0
+			early_fighter = 0
+			naval_bomber0 = 0
+			cv_early_fighter = 0
+			cv_naval_bomber0 = 0
+			early_bomber = 0
+			tactical_bomber0 = 0
+			CAS0 = 0
+			trench_warfare = 0
+			fleet_in_being = 0
+			fuel_silos = 0
+			fuel_refining = 0
+			basic_train = 0
+		
+			early_submarine = 0
+			basic_submarine = 0
+			early_destroyer = 0
+			basic_destroyer = 0
+			early_light_cruiser = 0
+			basic_light_cruiser = 0
+			early_heavy_cruiser = 0
+			basic_heavy_cruiser = 0
+			early_battleship = 0
+			early_battlecruiser = 0
+			basic_battlecruiser = 0
+			early_carrier = 0
+			transport = 0
+		}
+	}
+
+	option = {
+		name = "NAO mein tech"
+	}
+}
+
+#Unresearch repeatable
+country_event = {
+	id = lok_debug.5
+	hidden = yes
+	title = "tech test"
+	desc = "tech test"
+	is_triggered_only = yes
+
+	immediate = {
+		add_ideas = LOK_equipment_modifier
+	}
+
+	option = {
+		name = "So long..."
+	}
+}
+
+#Build anti-icbm everywhere
+country_event = {
+	id = lok_debug.6
+	hidden = yes
+	title = "no icbms allowed"
+	desc = "oh no"
+	is_triggered_only = yes
+
+	immediate = {
+		every_state = {
+			add_building_construction = {
+				type = anti_wmd
+				level = 1
+			}
+		}
+	}
+
+	option = {
+		name = "So long..."
+	}
+}
