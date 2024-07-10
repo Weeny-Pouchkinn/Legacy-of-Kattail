@@ -69,13 +69,38 @@ on_actions = {
 
 			#Wonders
 			#Katown Pyramid
-			509 = { set_variable = { wonder = 1 } }
+			509 = {
+				set_variable = { wonder = 1 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.15 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+			}
 			#Lionsburg Riesigerwerks
-			173 = { set_variable = { wonder = 2 } }
+			173 = {
+				set_variable = { wonder = 2 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = -0.50 }
+			}
 			#Great Shipyards of Auralia
-			116 = { set_variable = { wonder = 3 } }
+			116 = {
+				set_variable = { wonder = 3 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+			}
 			#Himezulte Airbase
-			220 = { set_variable = { wonder = 4 } }
+			220 = {
+				set_variable = { wonder = 4 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+			}
 
 			#Setup species
 			every_state = { set_variable = { species = 0 } }
@@ -204,6 +229,7 @@ on_actions = {
 			every_country = {
 				add_ideas = LOK_katzen_aggressive
 				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+				add_dynamic_modifier = { modifier = lok_wonder_modifier }
 				apply_wonder_effects = yes
 				if = {
 					limit = { is_ai = yes }
