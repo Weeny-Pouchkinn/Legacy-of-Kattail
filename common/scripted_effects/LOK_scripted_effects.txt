@@ -3,6 +3,15 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 		limit = { state_eats_food = yes }
 		set_variable = { state_food_consumption = state_population_k }
 		divide_variable = { state_food_consumption = 100 }
+		if = { #Katzens and Sobakis are carnivorous and thus eat 15% more
+			limit = {
+				OR = {
+					check_variable = { species = 1 }
+					check_variable = { species = 2 }
+				}
+			}
+			multiply_variable = { state_food_consumption = 1.15 }
+		}
 		round_variable = state_food_consumption
 	}
 }
@@ -73,7 +82,10 @@ calculate_total_food_consumption = {
 		limit = { check_variable = { country_food_needs_met_perc < 100 } check_variable = { country_food_stockpile < 1 } }
 		add_dynamic_modifier = { modifier = lok_food_deficit_modifier }
 	}
-	else = { remove_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+	else_if = {
+		limit = { has_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+		remove_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+	}
 
 	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
 	if = {
@@ -215,6 +227,7 @@ collapse_into_anarchy = {
 	set_demilitarized_zone = yes
 }
 
+#weekly check to reduce and spread radiation
 calculate_radiation_in_state = {
 	if = {
 		limit = { check_variable = { lok_radiation_level > 0 } }
@@ -241,38 +254,98 @@ calculate_radiation_in_state = {
 				50 = {}
 			}
 		}
-		if = { #Kill people in the state
-			limit = {
-				NOT = {
-					AND = { check_variable = { species = 1 } check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
+	}
+}
+
+#applied immediately when radiation is added - debuffs the state
+calculate_radiation_state_modifiers = {
+	#Apply radiation state modifiers. Calculated as a percentage, with 10 radiation = -100% to all.
+	set_variable = { lok_radiation_modifier = lok_radiation_level } #Say 5
+	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
+	if = {
+		limit = { check_variable = { species = 1 } } #-30% for Katzens
+		multiply_variable = { lok_radiation_modifier = 0.7 }
+	}
+	if = {
+		limit = { #-75% for Lithoids
+			OR = {
+				check_variable = { species = 5 }
+				check_variable = { species = 8 }		
+			}
+		} 
+		multiply_variable = { lok_radiation_modifier = 0.25 }
+	}
+	divide_variable = { lok_radiation_modifier = 10 } #Now 0.5
+	clamp_variable = { var = lok_radiation_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
+	multiply_variable = { lok_radiation_modifier = -1 } #Make negative
+}
+
+#applied weekly, kill people due to radiation
+apply_radiation_effects = {
+	if = { #Kill people in the state
+		limit = { #THIS IS THE "BASE RADIATION RESISTANCE TRAIT"
+			NOT = {
+				AND = { check_variable = { species = 1 } check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
+				AND = {
+					OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+					check_variable = { lok_radiation_level < 5 } #NMI + Nekeox don't die below 5
 				}
 			}
-			#Kill people in the state (RIP Bozo)
-			set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
-			#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
-			divide_temp_variable = { lok_radiation_death_percent = 100 }
-			set_temp_variable = { lok_radiation_death_count = state_population_k }
-			multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
-			clamp_temp_variable = { var = lok_radiation_death_count min = 0 max = 2000 } #Avoid overflow
-			multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower
-			if = {
-				limit = { check_variable = { species = 1 } } #Only half the deaths for Katzen states
-				multiply_temp_variable = { lok_radiation_death_count = 0.5 }
-			}
-			add_manpower = lok_radiation_death_count #Remove the people
-			divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
-
-			#Add to the trackers
-			add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
-			add_to_variable = { lok_state_deaths = lok_radiation_death_count }
-
-			var:CONTROLLER = {
-				add_to_variable = { lok_country_radiation_deaths = PREVPREV.lok_radiation_death_count }
-				add_to_variable = { lok_country_deaths = PREVPREV.lok_radiation_death_count }
-				add_to_variable = { global.lok_global_radiation_deaths = PREVPREV.lok_radiation_death_count }
-				add_to_variable = { global.lok_global_deaths = PREVPREV.lok_radiation_death_count }
-			}
 		}
+		#Kill people in the state (RIP Bozo)
+		set_variable = { lok_radiation_death_percent = lok_radiation_level }
+		#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
+		divide_variable = { lok_radiation_death_percent = 100 }
+
+		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
+		if = {
+			limit = { check_variable = { species = 1 } } #Only half the deaths for Katzen states
+			multiply_variable = { lok_radiation_death_percent = 0.5 }
+		}
+
+		if = {
+			limit = { #-75% for Lithoids
+				OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+			} 
+			multiply_variable = { lok_radiation_death_percent = 0.25 }
+		}
+
+		set_variable = { lok_radiation_death_count = state_population_k }
+		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }
+		clamp_variable = { var = lok_radiation_death_count min = 0 max = 2000 } #Avoid overflow
+		multiply_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower
+		add_manpower = lok_radiation_death_count #Remove the people
+		divide_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
+
+		#Add to the trackers
+		add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
+		add_to_variable = { lok_state_deaths = lok_radiation_death_count }
+
+		var:CONTROLLER = {
+			add_to_variable = { lok_country_radiation_deaths = PREV.lok_radiation_death_count }
+			add_to_variable = { lok_country_deaths = PREV.lok_radiation_death_count }
+			add_to_variable = { global.lok_global_radiation_deaths = PREV.lok_radiation_death_count }
+			add_to_variable = { global.lok_global_deaths = PREV.lok_radiation_death_count }
+		}
+	}
+}
+
+apply_state_species_modifier = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_katzen_majority } }
+		remove_dynamic_modifier = { modifier = lok_species_katzen_majority }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_sobaki_majority } }
+		remove_dynamic_modifier = { modifier = lok_species_sobaki_majority }
+	}
+	if = {
+		limit = { check_variable = { species = 1 } }
+		add_dynamic_modifier = { modifier = lok_species_katzen_majority }
+	}
+	if = {
+		limit = { check_variable = { species = 2 } }
+		add_dynamic_modifier = { modifier = lok_species_sobaki_majority }
 	}
 }
 
@@ -289,15 +362,24 @@ clear_wonder_ideas = {
 	# remove_idea = wonder_idea_4_normal
 	# remove_idea = wonder_idea_4_capital
 	# remove_idea = wonder_idea_4_noncore
-	set_variable = { wonder_idea_removed_number = 0 }
+	set_variable = { wonder_idea_removed_number = 1 }
 	while_loop_effect = {
-		limit = { check_variable = { wonder_idea_removed_number < 4 } }
+		limit = { check_variable = { wonder_idea_removed_number < 10 } }
 		add_to_variable = { wonder_idea_removed_number = 1 }
 		meta_effect = {
 			text = {
-				remove_ideas = wonder_idea_[WONDER_ID]_normal
-				remove_ideas = wonder_idea_[WONDER_ID]_capital
-				remove_ideas = wonder_idea_[WONDER_ID]_noncore
+				if = {
+					limit = { has_idea = wonder_idea_[WONDER_ID]_normal }
+					remove_ideas = wonder_idea_[WONDER_ID]_normal
+				}
+				if = {
+					limit = { has_idea = wonder_idea_[WONDER_ID]_capital }
+					remove_ideas = wonder_idea_[WONDER_ID]_capital
+				}
+				if = {
+					limit = { has_idea = wonder_idea_[WONDER_ID]_noncore }
+					remove_ideas = wonder_idea_[WONDER_ID]_noncore
+				}
 			}
 			WONDER_ID = "[?ROOT.wonder_idea_removed_number]"
 		}

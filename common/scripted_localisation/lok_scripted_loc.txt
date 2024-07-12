@@ -1,8 +1,46 @@
 
 defined_text = { # Country
-	name = GetWonderModifierQuantity
+	name = GetWonderStatus
 	text = {
-		trigger = { check_variable = { wonder = 1 } }
-		localization_key = "4"
+		trigger = { is_core_of = var:controller is_capital = no check_variable = { wonder > 0 } }
+		localization_key = "wonder_is_core"
+	}
+	text = {
+		trigger = { NOT = { is_core_of = var:controller check_variable = { wonder > 0 } } }
+		localization_key = "wonder_is_non_core"
+	}
+	text = {
+		trigger = { is_core_of = var:controller is_capital = yes check_variable = { wonder > 0 } }
+		localization_key = "wonder_is_capital"
+	}
+}
+
+defined_text = {
+	name = GetRadiationLevel
+	text = {
+		trigger = {
+			check_variable = { lok_radiation_level = 0 }
+		}
+		localization_key = "no_radiation"
+	}
+	text = {
+		trigger = {
+			check_variable = { lok_radiation_level > 0 }
+			check_variable = { lok_radiation_level < 5 }
+		}
+		localization_key = "low_radiation"
+	}
+	text = {
+		trigger = {
+			check_variable = { lok_radiation_level > 5 }
+			check_variable = { lok_radiation_level < 50 }
+		}
+		localization_key = "mid_radiation"
+	}
+	text = {
+		trigger = {
+			check_variable = { lok_radiation_level > 50 }
+		}
+		localization_key = "high_radiation"
 	}
 }
