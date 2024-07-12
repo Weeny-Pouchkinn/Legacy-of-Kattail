@@ -401,13 +401,10 @@ on_actions = {
 		effect = {
 			#Nukes take away 5% of a state's population. Calculate it and remove, then add to the total counters
 			FROM = {
-				set_variable = { lok_added_radiation = 1 }
-				multiply_variable = { lok_added_radiation = modifier@lok_nuke_radiation_factor }
-				add_to_variable = { lok_radiation_level = lok_added_radiation } #Radiation level
-				divide_variable = { lok_added_radiation = 4 }
+				add_to_variable = { lok_radiation_level = 1 } #Radiation level
 				calculate_radiation_state_modifiers = yes
 				every_neighbor_state = { #It spreads to neighboring states too, how fun!
-					add_to_variable = { lok_radiation_level = PREV.lok_added_radiation }
+					add_to_variable = { lok_radiation_level = 0.25 }
 					calculate_radiation_state_modifiers = yes
 				}
 				if = {
