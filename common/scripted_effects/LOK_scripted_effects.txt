@@ -3,7 +3,7 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 		limit = { state_eats_food = yes }
 		set_variable = { state_food_consumption = state_population_k }
 		divide_variable = { state_food_consumption = 100 }
-		if = { #Katzens and Sobakis are carnivorous and thus eat 15% more
+		if = { #Katzens and Sobakis are mostly carnivorous and thus eat 15% more
 			limit = {
 				OR = {
 					check_variable = { species = 1 }
@@ -41,10 +41,10 @@ calculate_total_food_consumption = {
 		}
 	}
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
-	multiply_variable = { country_food_consumption_modifier = -1 }
-	set_temp_variable = { negate_exacavation_tech_food = modifier@local_resources_factor } #This is to undo the effects of excavation techs.
-	add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
-	divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
+	#multiply_variable = { country_food_consumption_modifier = -1 }
+	# set_temp_variable = { negate_exacavation_tech_food = modifier@local_resources_factor } #This is to undo the effects of excavation techs.
+	# add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
+	# divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
 	round_variable = country_food_consumption_modifier
 	set_variable = { country_food_production = country_food_balance } #The food that we're actually producing
 	add_to_variable = { country_food_production = country_food_consumption } #We add our consumption to the balance to get production, yippe!
