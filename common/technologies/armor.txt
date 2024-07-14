@@ -552,7 +552,7 @@ technologies = {
 		}
 		
 		path = {
-			leads_to_tech = advanced_light_tank_2
+			leads_to_tech = nuclear_light_tank
 			research_cost_coeff = 1
 		}
 
@@ -660,14 +660,14 @@ technologies = {
 		}
 	}
 
-	advanced_light_tank_2 = { #atomic panzer yipee
+	nuclear_light_tank = { #atomic panzer yipee
 
 		enable_equipments = {
 			light_tank_equipment_4
 		}	
 		
 		research_cost = 2
-		start_year = 1947
+		start_year = 1948
 		
 		folder = {
 			name = armour_folder
@@ -675,9 +675,9 @@ technologies = {
 		}
 		
 		sub_technologies = {
-			advanced_light_td
-			advanced_light_art
-			advanced_light_spaa
+			nuclear_light_td
+			nuclear_light_art
+			nuclear_light_spaa
 		}
 		
 		ai_will_do = {
@@ -707,6 +707,79 @@ technologies = {
 			armor
 			mio_cat_tech_all_armor_and_modules
 			cat_light_armor
+			mio_cat_tech_light_armor_and_modules
+		}
+	}
+
+	nuclear_light_td = {
+
+		enable_equipments = {
+			light_tank_destroyer_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			base = 0
+
+			modifier = {
+				add = 130
+				has_war = yes
+				any_enemy_country = {
+					ROOT = {
+						estimated_intel_max_armor = {
+							tag = PREV
+							value > 27
+						}
+					}
+				}
+			}
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			mio_cat_tech_light_armor_and_modules
+		}
+	}
+	
+	nuclear_light_art = {
+
+		enable_equipments = {
+			light_tank_artillery_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+	
+		ai_will_do = {
+			base = 0.1
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			mio_cat_tech_light_armor_and_modules
+		}
+	}
+	
+	nuclear_light_spaa = {
+
+		enable_equipments = {
+			light_tank_aa_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			base = 0
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
 			mio_cat_tech_light_armor_and_modules
 		}
 	}
@@ -1114,7 +1187,7 @@ technologies = {
 		start_year = 1944
 		
 		path = {
-			leads_to_tech = advanced_medium_tank_2
+			leads_to_tech = nuclear_medium_tank
 			research_cost_coeff = 1
 		}
 
@@ -1282,24 +1355,24 @@ technologies = {
 		}
 	}
 	
-	advanced_medium_tank_2 = { #atomic medium tank
+	nuclear_medium_tank = { #atomic medium tank
 
 		enable_equipments = {
 			medium_tank_equipment_4
 		}
 		
 		research_cost = 2
-		start_year = 1946
+		start_year = 1948
 
 		folder = {
 			name = armour_folder
-			position = { x = 0 y = 12 }
+			position = { x = 0 y = 14 }
 		}
 		
 		sub_technologies = {
-			advanced_medium_td
-			advanced_medium_art
-			advanced_medium_spaa
+			nuclear_medium_td
+			nuclear_medium_art
+			nuclear_medium_spaa
 		}
 		
 
@@ -1326,6 +1399,106 @@ technologies = {
 			armor
 			mio_cat_tech_all_armor_and_modules
 			cat_medium_armor
+			mio_cat_tech_medium_armor_and_modules
+		}
+	}
+
+	nuclear_medium_td = {
+
+		enable_equipments = {
+			medium_tank_destroyer_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			base = 1
+
+			modifier = {
+				has_template_containing_unit = medium_tank_destroyer_brigade
+				factor = 3
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1944.1.1"
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1945.1.1"
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1946.1.1"
+			}
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			mio_cat_tech_medium_armor_and_modules
+		}
+	}
+	
+	nuclear_medium_art = {
+
+		enable_equipments = {
+			medium_tank_artillery_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			base = 1
+
+			modifier = {
+				has_template_containing_unit = medium_sp_artillery_brigade
+				factor = 3
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1944.1.1"
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1945.1.1"
+			}
+			
+			modifier = {
+				factor = 1.1
+				date > "1946.1.1"
+			}
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			mio_cat_tech_medium_armor_and_modules
+		}
+	}
+	
+	nuclear_medium_spaa = {
+
+		enable_equipments = {
+			medium_tank_aa_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			base = 0
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
 			mio_cat_tech_medium_armor_and_modules
 		}
 	}
@@ -1840,6 +2013,11 @@ technologies = {
 			advanced_heavy_spaa
 		}
 		
+		path = {
+			leads_to_tech = advanced_2_heavy_tank 
+			research_cost_coeff = 1
+		}
+
 		ai_will_do = {
 			base = 0.8
 			
@@ -1945,6 +2123,113 @@ technologies = {
 					is_researching_technology = main_battle_tank
 				}
 			}
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			mio_cat_tech_heavy_armor_and_modules
+		}
+	}
+
+	advanced_2_heavy_tank = {
+
+		enable_equipments = {
+			heavy_tank_equipment_4
+		}
+
+		research_cost = 2.5
+		start_year = 1948
+		
+		folder = {
+			name = armour_folder
+			position = { x = 4 y = 14 }
+		}
+		
+		sub_technologies = {
+			advanced_2_heavy_td
+			advanced_2_heavy_art
+			advanced_2_heavy_spaa
+		}
+		
+		ai_will_do = {
+			base = 0.8
+			
+			modifier = {
+				factor = 1.2
+				date > "1944.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "1945.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "1946.1.1"
+			}
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			cat_heavy_armor
+			mio_cat_tech_heavy_armor_and_modules
+		}
+	}
+
+	advanced_2_heavy_td = {
+
+		enable_equipments = {
+			heavy_tank_destroyer_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			factor = 0
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			mio_cat_tech_heavy_armor_and_modules
+		}
+	}
+	
+	advanced_2_heavy_art = {
+
+		enable_equipments = {
+			heavy_tank_artillery_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			factor = 0
+		}
+		
+		categories = {
+			armor
+			mio_cat_tech_all_armor_and_modules
+			mio_cat_tech_heavy_armor_and_modules
+		}
+	}
+	
+	advanced_2_heavy_spaa = {
+
+		enable_equipments = {
+			heavy_tank_aa_equipment_4
+		}
+	
+		research_cost = 0.5
+		start_year = 1948
+		
+		ai_will_do = {
+			factor = 0
 		}
 		
 		categories = {
