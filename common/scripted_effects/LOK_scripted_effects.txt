@@ -335,7 +335,6 @@ calculate_radiation_state_modifiers = {
 	#Apply radiation state modifiers. Calculated as a percentage, with 10 radiation = -100% to all.
 	set_variable = { lok_radiation_modifier = lok_radiation_level } #Say 5
 	divide_variable = { lok_radiation_modifier = 10 } #Now 0.5
-	clamp_variable = { var = lok_radiation_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
 	multiply_variable = { lok_radiation_modifier = -1 } #Make negative
 	set_variable = { lok_radiation_army_modifier = lok_radiation_modifier } #For armies, not affected by species
 	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
@@ -352,6 +351,8 @@ calculate_radiation_state_modifiers = {
 		} 
 		multiply_variable = { lok_radiation_modifier = 0.25 }
 	}
+	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
+	clamp_variable = { var = lok_radiation_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
 }
 
 #applied weekly, kill people due to radiation
