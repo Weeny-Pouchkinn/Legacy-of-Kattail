@@ -26,6 +26,227 @@ scripted_gui = {
 		}
 
 		effects = {
+			# lok_pick_nuke_type_button_click = {
+			# 	ROOT = {
+			# 		if = {
+			# 			limit = { NOT = { has_country_flag = lok_picking_nuke_type } }
+			# 			set_country_flag = lok_picking_nuke_type
+			# 		}
+			# 		else = { clr_country_flag = lok_picking_nuke_type }
+			# 	}
+			# }
+
+			lok_next_nuke_type_button_click = {
+				ROOT = {
+					add_to_variable = { current_nuke_type = 1 }
+					if = {
+						limit = { check_variable = { current_nuke_type = 4 } }
+						set_variable = { current_nuke_type = 0 }
+					}
+				}
+			}
+
+			lok_previous_nuke_type_button_click = {
+				ROOT = {
+					subtract_from_variable = { current_nuke_type = 1 }
+					if = {
+						limit = { check_variable = { current_nuke_type = -1 } }
+						set_variable = { current_nuke_type = 3 }
+					}
+				}
+			}
+
+			#Increase nukes being launched
+			lok_increase_nuke_count_button_click = {
+				ROOT = {
+					add_to_variable = { nuke_launch_count = 1 }
+					clamp_variable = { var = nuke_launch_count max = 500 }
+				}
+			}
+			lok_increase_nuke_count_button_control_click = {
+				ROOT = {
+					add_to_variable = { nuke_launch_count = 10 }
+					clamp_variable = { var = nuke_launch_count max = 500 }
+				}
+			}
+			lok_increase_nuke_count_button_shift_click = {
+				ROOT = {
+					add_to_variable = { nuke_launch_count = 100 }
+					clamp_variable = { var = nuke_launch_count max = 500 }
+				}
+			}
+
+			#Decrease nukes being launched
+			lok_decrease_nuke_count_button_click = {
+				ROOT = {
+					subtract_from_variable = { nuke_launch_count = 1 }
+					clamp_variable = { var = nuke_launch_count min = 0 }
+				}
+			}
+			lok_decrease_nuke_count_button_control_click = {
+				ROOT = {
+					subtract_from_variable = { nuke_launch_count = 10 }
+					clamp_variable = { var = nuke_launch_count min = 0 }
+				}
+			}
+			lok_decrease_nuke_count_button_shift_click = {
+				ROOT = { set_variable = { nuke_launch_count = 0 } }
+			}
+
+			#Fire the nukes!
+			lok_thermonuclear_salvo_button_click = {
+				THIS = {
+					save_global_event_target_as = lok_thermonuclear_salvo_state
+				}
+				ROOT = {
+					#set_country_flag = thermonuclear_strike_in_progress
+					fire_thermonuclear_salvo = yes
+					set_variable = { lok_nukes_spent = nuke_launch_count }
+					multiply_variable = { lok_nukes_spent = -1 }
+					if = {
+						limit = { check_variable = { current_nuke_type = 1 } }
+						add_equipment_to_stockpile = {
+							type = lok_fission_nuke_equipment
+							amount = lok_nukes_spent
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 2 } }
+						add_equipment_to_stockpile = {
+							type = lok_fusion_nuke_equipment
+							amount = lok_nukes_spent
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 3 } }
+						add_equipment_to_stockpile = {
+							type = lok_cobalt_nuke_equipment
+							amount = lok_nukes_spent
+						}
+					}
+				}
+			}
+		}
+
+		triggers = {
+			# lok_increase_nuke_count_button_shift_click_enabled = {
+			# 	ROOT = {
+			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
+			# 	}
+			# }
+			# lok_decrease_nuke_count_button_shift_click_enabled = {
+			# 	ROOT = {
+			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
+			# 	}
+			# }
+			# lok_next_nuke_type_button_click_enabled = {
+			# 	ROOT = {
+			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
+			# 	}
+			# }
+			# lok_previous_nuke_type_button_click_enabled = {
+			# 	ROOT = {
+			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
+			# 	}
+			# }
+			lok_thermonuclear_salvo_button_click_enabled = {
+				ROOT = {
+					check_variable = { current_nuke_type > 0 }
+					OR = {
+						AND = {
+							check_variable = { current_nuke_type = 1 }
+							AND = {
+								has_tech = nukes
+								OR = {
+									check_variable = { num_equipment@lok_fission_nuke_equipment > nuke_launch_count }
+									check_variable = { num_equipment@lok_fission_nuke_equipment = nuke_launch_count }
+								}
+							}
+						}
+						AND = {
+							check_variable = { current_nuke_type = 2 }
+							AND = {
+								has_tech = fusion_nuke
+								OR = {
+									check_variable = { num_equipment@lok_fusion_nuke_equipment > nuke_launch_count }
+									check_variable = { num_equipment@lok_fusion_nuke_equipment = nuke_launch_count }
+								}
+							}
+						}
+						AND = {
+							check_variable = { current_nuke_type = 3 }
+							AND = {
+								has_tech = dirty_nuke
+								OR = {
+									check_variable = { num_equipment@lok_cobalt_nuke_equipment > nuke_launch_count }
+									check_variable = { num_equipment@lok_cobalt_nuke_equipment = nuke_launch_count }
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# properties = {
+		# 	lok_thermonuclear_salvo_button = {
+		# 		image = "[THIS.state_lore_get_button_gfx]"
+		# 	}
+		# 	lok_increase_nuke_count_button = {
+		# 		image = "GFX_naval_increase_amount"
+		# 	}
+		# 	lok_decrease_nuke_count_button = {
+		# 		image = "GFX_naval_decrease_amount"
+		# 	}
+		# }
+	}
+
+	lok_pick_nuke_type = {
+		context_type = selected_state_context
+		window_name = "lok_pick_nuke_type_window"
+		parent_window_token = selected_state_view
+		visible = {
+			ROOT = { has_country_flag = lok_picking_nuke_type }
+		}
+
+		effects = {
+			#Increase nukes being launched
+			lok_increase_nuke_count_button_click = {
+				ROOT = {
+					add_to_variable = { nuke_launch_count = 1 }
+					clamp_variable = { var = nuke_launch_count max = 500 }
+				}
+			}
+			lok_increase_nuke_count_button_control_click = {
+				ROOT = {
+					add_to_variable = { nuke_launch_count = 10 }
+					clamp_variable = { var = nuke_launch_count max = 500 }
+				}
+			}
+			lok_increase_nuke_count_button_shift_click = {
+				ROOT = {
+					add_to_variable = { nuke_launch_count = 100 }
+					clamp_variable = { var = nuke_launch_count max = 500 }
+				}
+			}
+
+			#Decrease nukes being launched
+			lok_decrease_nuke_count_button_click = {
+				ROOT = {
+					subtract_from_variable = { nuke_launch_count = 1 }
+					clamp_variable = { var = nuke_launch_count min = 0 }
+				}
+			}
+			lok_decrease_nuke_count_button_control_click = {
+				ROOT = {
+					subtract_from_variable = { nuke_launch_count = 10 }
+					clamp_variable = { var = nuke_launch_count min = 0 }
+				}
+			}
+			lok_decrease_nuke_count_button_shift_click = {
+				ROOT = { set_variable = { nuke_launch_count = 0 } }
+			}
+
+			#Fire the nukes!
 			lok_thermonuclear_salvo_button_click = {
 				THIS = {
 					save_global_event_target_as = lok_thermonuclear_salvo_state
@@ -36,11 +257,17 @@ scripted_gui = {
 			}
 		}
 
-		properties = {
-			lok_thermonuclear_salvo_button = {
-				image = "[THIS.state_lore_get_button_gfx]"
-			}
-		}
+		# properties = {
+		# 	lok_thermonuclear_salvo_button = {
+		# 		image = "[THIS.state_lore_get_button_gfx]"
+		# 	}
+		# 	lok_increase_nuke_count_button = {
+		# 		image = "GFX_naval_increase_amount"
+		# 	}
+		# 	lok_decrease_nuke_count_button = {
+		# 		image = "GFX_naval_decrease_amount"
+		# 	}
+		# }
 	}
 
 	species_screen = {

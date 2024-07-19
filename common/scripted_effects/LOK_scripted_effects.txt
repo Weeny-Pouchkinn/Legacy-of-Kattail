@@ -271,9 +271,10 @@ calculate_combat_casualties = {
 	}
 }
 
+#Firing the nukes
 fire_thermonuclear_salvo = {
 	for_loop_effect = {
-		end = 20
+		end = nuke_launch_count
 		event_target:lok_thermonuclear_salvo_state = {
 			set_temp_variable = { anti_wmd_level = building_level@anti_wmd }
 			multiply_temp_variable = { anti_wmd_level = 18 }
@@ -284,7 +285,66 @@ fire_thermonuclear_salvo = {
 			100 = {
 				launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
 				event_target:lok_thermonuclear_salvo_state = {
-					add_to_variable = { lok_radiation_level = 0.33 }
+					if = { #Fission
+						limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
+						set_variable = { lok_added_radiation_level = 1 }
+					}
+					else_if = { #Fusion
+						limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
+						set_variable = { lok_added_radiation_level = 0.75 }
+					}
+					else_if = { #Cobalt
+						limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
+						set_variable = { lok_added_radiation_level = 10 }
+					}
+					multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
+					add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
+					divide_variable = { lok_added_radiation_level = 4 }
+					calculate_radiation_state_modifiers = yes
+					every_neighbor_state = { #It spreads to neighboring states too, how fun!
+						add_to_variable = { lok_radiation_level = PREV.lok_added_radiation_level }
+						calculate_radiation_state_modifiers = yes
+					}
+					if = {
+						limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
+						set_temp_variable = { lok_nuke_casualties = state_population_k } #Say 10M so that's 10000
+						multiply_temp_variable = { lok_nuke_casualties = 0.005 } #We divide to avoid hitting the limit of the for_loop effect. Now 50
+						if = { #Fission - 5% death
+							limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 1 }
+						}
+						else_if = { #Fusion - 10% death
+							limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 2 }
+						}
+						else_if = { #Cobalt - 2.5% death (but the rads!)
+							limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 0.5 }
+						}
+						if = { #Katown Pyramid protects!
+							limit = { check_variable = { wonder = 1 } }
+							multiply_temp_variable = { lok_nuke_casualties = 0 }
+						}
+						set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
+						round_temp_variable = lok_nuke_casualties
+						clamp_temp_variable = { var = lok_nuke_casualties min = 1 } #At least 10k people gotta die sowwy
+						for_loop_effect = { #50 times 10000 = 500000, 0.5M, 5%
+							end = lok_nuke_casualties
+							add_manpower = -10000
+						}
+						multiply_variable = { lok_recent_nuke_casualties = 10 } #Turn to thousands (if that's even possible) #Now 500 so it represents 500k
+						#Add to the state counters
+						add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }
+						add_to_variable = { lok_state_deaths = lok_recent_nuke_casualties }
+						add_to_variable = { lok_state_deaths_display = lok_recent_nuke_casualties }
+						#Add these deaths to the controller's total and the grand total
+						var:controller = {
+							add_to_variable = { lok_country_bombing_deaths = PREV.lok_recent_nuke_casualties }
+							add_to_variable = { lok_country_deaths = PREV.lok_recent_nuke_casualties }
+							add_to_variable = { global.lok_global_bombing_deaths = PREV.lok_recent_nuke_casualties }
+							add_to_variable = { global.lok_global_deaths = PREV.lok_recent_nuke_casualties }
+						}
+					}
 				}
 				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level_negative }
 			}
@@ -302,6 +362,10 @@ collapse_into_anarchy = {
 
 #weekly check to reduce and spread radiation
 calculate_radiation_in_state = {
+	if = { #Katown Pyramid protects!
+		limit = { check_variable = { wonder = 1 } }
+		set_variable = { lok_radiation_level = 0 }
+	}
 	if = {
 		limit = { check_variable = { lok_radiation_level > 0 } }
 		if = { #Below 0.2 it just goes away
@@ -332,6 +396,10 @@ calculate_radiation_in_state = {
 
 #applied immediately when radiation is added - debuffs the state
 calculate_radiation_state_modifiers = {
+	if = { #Katown Pyramid protects!
+		limit = { check_variable = { wonder = 1 } }
+		set_variable = { lok_radiation_level = 0 }
+	}
 	#Apply radiation state modifiers. Calculated as a percentage, with 10 radiation = -100% to all.
 	set_variable = { lok_radiation_modifier = lok_radiation_level } #Say 5
 	divide_variable = { lok_radiation_modifier = 10 } #Now 0.5

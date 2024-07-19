@@ -13,6 +13,8 @@ on_actions = {
 				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
 				add_dynamic_modifier = { modifier = LOK_extra_resources_modifier }
 				add_ideas = LOK_base_modifier_definitions
+				set_variable = { nuke_launch_count = 0 } #how many nukes are launched at once
+				set_variable = { current_nuke_type = 0 } #the current selected type of nuke
 			}
 
 			#Casualty counters
@@ -295,21 +297,21 @@ on_actions = {
 				}
 			}
 
-			#Round the final displays for country
-			set_variable = { lok_country_deaths_display = lok_country_deaths }
-			round_variable = lok_country_deaths_display
+			# #Round the final displays for country
+			# set_variable = { lok_country_deaths_display = lok_country_deaths }
+			# round_variable = lok_country_deaths_display
 
-			set_variable = { lok_country_radiation_deaths_display = lok_country_radiation_deaths }
-			round_variable = lok_country_radiation_deaths_display
+			# set_variable = { lok_country_radiation_deaths_display = lok_country_radiation_deaths }
+			# round_variable = lok_country_radiation_deaths_display
 
-			set_variable = { lok_country_combat_deaths_display = lok_country_combat_deaths }
-			round_variable = lok_country_combat_deaths_display
+			# set_variable = { lok_country_combat_deaths_display = lok_country_combat_deaths }
+			# round_variable = lok_country_combat_deaths_display
 
-			set_variable = { lok_country_bombing_deaths_display = lok_country_bombing_deaths }
-			round_variable = lok_country_bombing_deaths_display
+			# set_variable = { lok_country_bombing_deaths_display = lok_country_bombing_deaths }
+			# round_variable = lok_country_bombing_deaths_display
 
-			set_variable = { lok_country_starvation_deaths_display = lok_country_starvation_deaths }
-			round_variable = lok_country_starvation_deaths_display
+			# set_variable = { lok_country_starvation_deaths_display = lok_country_starvation_deaths }
+			# round_variable = lok_country_starvation_deaths_display
 
 			#Round the final displays for global
 			set_variable = { global.lok_global_deaths_display = global.lok_global_deaths }
@@ -404,41 +406,41 @@ on_actions = {
 	on_nuke_drop = {
 		effect = {
 			#Nukes take away 5% of a state's population. Calculate it and remove, then add to the total counters
-			FROM = {
-				set_variable = { lok_added_radiation_level = 1 }
-				multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
-				add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
-				divide_variable = { lok_added_radiation_level = 4 }
-				calculate_radiation_state_modifiers = yes
-				every_neighbor_state = { #It spreads to neighboring states too, how fun!
-					add_to_variable = { lok_radiation_level = PREV.lok_added_radiation_level }
-					calculate_radiation_state_modifiers = yes
-				}
-				if = {
-					limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
-					set_temp_variable = { lok_nuke_casualties = state_population_k }
-					multiply_temp_variable = { lok_nuke_casualties = 0.005 } #We divide to avoid hitting the limit of the for_loop effect
-					round_temp_variable = lok_nuke_casualties
-					clamp_temp_variable = { var = lok_nuke_casualties min = 1 } #At least 10k people gotta die sowwy
-					for_loop_effect = {
-						end = lok_nuke_casualties
-						add_manpower = -10000
-					}
-					multiply_temp_variable = { lok_nuke_casualties = 10 } #Turn to thousands (if that's even possible)
-					set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
-					#Add to the state counters
-					add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }
-					add_to_variable = { lok_state_deaths = lok_recent_nuke_casualties }
-					add_to_variable = { lok_state_deaths_display = lok_recent_nuke_casualties }
-					#Add these deaths to the controller's total and the grand total
-					CONTROLLER = {
-						add_to_variable = { lok_country_bombing_deaths = PREV.lok_recent_nuke_casualties }
-						add_to_variable = { lok_country_deaths = PREV.lok_recent_nuke_casualties }
-						add_to_variable = { global.lok_global_bombing_deaths = PREV.lok_recent_nuke_casualties }
-						add_to_variable = { global.lok_global_deaths = PREV.lok_recent_nuke_casualties }
-					}
-				}
-			}
+			# FROM = {
+			# 	set_variable = { lok_added_radiation_level = 1 }
+			# 	multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
+			# 	add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
+			# 	divide_variable = { lok_added_radiation_level = 4 }
+			# 	calculate_radiation_state_modifiers = yes
+			# 	every_neighbor_state = { #It spreads to neighboring states too, how fun!
+			# 		add_to_variable = { lok_radiation_level = PREV.lok_added_radiation_level }
+			# 		calculate_radiation_state_modifiers = yes
+			# 	}
+			# 	if = {
+			# 		limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
+			# 		set_temp_variSable = { lok_nuke_casualties = state_population_k }
+			# 		multiply_temp_variable = { lok_nuke_casualties = 0.005 } #We divide to avoid hitting the limit of the for_loop effect
+			# 		round_temp_variable = lok_nuke_casualties
+			# 		clamp_temp_variable = { var = lok_nuke_casualties min = 1 } #At least 10k people gotta die sowwy
+			# 		for_loop_effect = {
+			# 			end = lok_nuke_casualties
+			# 			add_manpower = -10000
+			# 		}
+			# 		multiply_temp_variable = { lok_nuke_casualties = 10 } #Turn to thousands (if that's even possible)
+			# 		set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
+			# 		#Add to the state counters
+			# 		add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }
+			# 		add_to_variable = { lok_state_deaths = lok_recent_nuke_casualties }
+			# 		add_to_variable = { lok_state_deaths_display = lok_recent_nuke_casualties }
+			# 		#Add these deaths to the controller's total and the grand total
+			# 		CONTROLLER = {
+			# 			add_to_variable = { lok_country_bombing_deaths = PREV.lok_recent_nuke_casualties }
+			# 			add_to_variable = { lok_country_deaths = PREV.lok_recent_nuke_casualties }
+			# 			add_to_variable = { global.lok_global_bombing_deaths = PREV.lok_recent_nuke_casualties }
+			# 			add_to_variable = { global.lok_global_deaths = PREV.lok_recent_nuke_casualties }
+			# 		}
+			# 	}
+			# }
 			#Radiation mapmode
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 		}
