@@ -151,14 +151,67 @@ calculate_total_food_consumption = {
 
 	#MODIFIER
 	subtract_from_variable = { country_food_needs_modifier = 1 }
+
+	multiply_variable = { country_food_needs_modifier = 0.75 }
+
 	if = {
-		limit = { check_variable = { country_food_needs_met_perc < 100 } check_variable = { country_food_stockpile < 1 } }
-		add_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		limit = { is_ai = yes }
+		multiply_variable = { country_food_needs_modifier = 0.75 } #AI is a bit chtewpid innit
+	}
+
+	#Round a bit
+	multiply_variable = { country_food_needs_modifier = 100 }
+	round_variable = country_food_needs_modifier
+	divide_variable = { country_food_needs_modifier = 100 }
+
+	#Apply the modifiers
+	if = {
+		limit = { check_variable = { country_food_needs_met_perc < 61 } check_variable = { country_food_stockpile < 1 } }
+		add_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		}
 	}
 	else_if = {
-		limit = { has_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
-		remove_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		limit = { check_variable = { country_food_needs_met_perc < 100 } check_variable = { country_food_stockpile < 1 } }
+		add_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_starvation_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		}
 	}
+	else = {
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_starvation_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		}
+	}
+
+	# if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 61 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_famine_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 76 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_severe_food_shortage_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 86 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_mild_food_shortage_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 96 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_small_food_shortage_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc > 119 } }
+	# 	add_ideas = lok_food_surplus
+	# }
 
 	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
 	if = {

@@ -61,7 +61,7 @@ on_actions = {
 			#Setup the Herzlands state array to track unification
 			global = { set_variable = { total_herzlands_state_count = 0 } }  #<---- error log doesnt like this?
 			every_state = {
-				limit = { CONTROLLER = { is_herzlands_warlord = yes } }
+				limit = { var:CONTROLLER = { is_herzlands_warlord = yes } }
 				add_to_array = { global.herzlands_states_array = THIS }
 			}
 
@@ -244,7 +244,10 @@ on_actions = {
 			561 = { set_variable = { minority = 10 } }
 
 			every_possible_country = {
-				add_ideas = LOK_katzen_aggressive
+				if = {
+					limit = { is_herzlands_warlord = yes }
+					add_ideas = herzlands_warlord_idea
+				}
 				every_owned_state = { apply_state_species_modifier = yes } #Species modifiers
 				apply_wonder_effects = yes
 				if = {
@@ -256,6 +259,7 @@ on_actions = {
 				 	}
 					country_event = { id = LOK_food.1 days = 2 }
 				}
+				calculate_total_food_consumption = yes
 			}
         }
 	}
@@ -266,10 +270,10 @@ on_actions = {
 				limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
 				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
 			}
-			apply_wonder_effects = yes
-			calculate_stab_ws_hit_from_noncore = yes
-			calculate_combat_casualties = yes
-			calculate_total_food_consumption = yes
+			apply_wonder_effects = yes #Wonders!
+			calculate_stab_ws_hit_from_noncore = yes #Effect of noncore states
+			calculate_combat_casualties = yes #Casualties in states
+			calculate_total_food_consumption = yes #Food effects
 			every_controlled_state = {
 				calculate_radiation_in_state = yes #First calculate the radiation spread/fallout
 				calculate_radiation_state_modifiers = yes #Then recalc the modifiers
@@ -360,7 +364,7 @@ on_actions = {
 			if = { #DEBUG NUCLEAR WAR MODE - NATIONS WILL RANDOMLY FIRE NUKES AT THE STATES OF THEIR ENEMIES!
 				limit = { has_global_flag = lok_nuclear_war_mode_on }
 				random_state = {
-					limit = { controller = { has_war_with = ROOT } }
+					limit = { var:controller = { has_war_with = ROOT } }
 					random = {
 						chance = 50
 						save_global_event_target_as = lok_thermonuclear_salvo_state

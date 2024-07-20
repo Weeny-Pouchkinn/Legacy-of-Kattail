@@ -107,7 +107,6 @@ armor_generic = {
 				engineer = 1
 				mot_recon = 1
 				artillery = 1
-				anti_tank = 1
 			}
 			
 			regiments = {
@@ -124,7 +123,6 @@ armor_generic = {
 			armored_car_recon
 			light_tank_recon
 			artillery
-			anti_tank
 		}
 		
 		replace_at_match = 0.4
@@ -197,7 +195,7 @@ armor_generic = {
 			
 			regiments = {
 				heavy_armor = 6
-				infantry = 3
+				motorized = 3
 			}
 		}
 		
@@ -210,12 +208,11 @@ armor_generic = {
 
 			#Cheaper but slower might be worth considering
 			infantry
-			artillery_brigade
+			mot_artillery_brigade
 			engineer
 			recon
 			maintenance_company
 			logistics_company
-			anti_tank
 			artillery
 
 		}
@@ -311,7 +308,6 @@ armor_generic = {
 			light_tank_recon
 			maintenance_company
 			logistics_company
-			anti_tank
 			artillery
 		}
 		
@@ -403,7 +399,6 @@ armor_generic = {
 			light_tank_recon
 			maintenance_company
 			logistics_company
-			anti_tank
 			artillery
 		}
 		
@@ -480,7 +475,7 @@ armor_generic = {
 			regiments = {
 				modern_armor = 6
 				mechanized = 4
-				modern_sp_artillery_brigade = 1
+				modern_sp_mot_artillery_brigade = 1
 			}
 		}
 		
@@ -492,9 +487,8 @@ armor_generic = {
 			recon
 			maintenance_company
 			logistics_company
-			anti_tank
 			artillery
-			modern_sp_artillery_brigade
+			modern_sp_mot_artillery_brigade
 			light_tank_recon
 			signal_company
 		}
@@ -679,7 +673,7 @@ suppression_generic = {
 			}
 			
 			regiments = {
-				cavalry = 4
+				light_infantry = 4
 			}
 		}
 		
@@ -790,7 +784,7 @@ infantry_generic = {
 			
 			regiments = {
 				infantry = 9
-				artillery_brigade = 1
+				mot_artillery_brigade = 1
 			}
 		}
 		
@@ -801,10 +795,9 @@ infantry_generic = {
 			field_hospital
 			logistics_company
 			anti_air
-			anti_tank
 			artillery
 			rocket_artillery
-			artillery_brigade
+			mot_artillery_brigade
 		}
 
 		replace_at_match = 0.9
@@ -873,12 +866,11 @@ infantry_generic = {
 				recon = 1
 				logistics_company = 1
 				anti_air = 1
-				anti_tank = 1
 			}
 			
 			regiments = {
 				infantry = 9
-				artillery_brigade = 2
+				mot_artillery_brigade = 2
 			}
 		}
 		
@@ -889,10 +881,213 @@ infantry_generic = {
 			field_hospital
 			logistics_company
 			anti_air
-			anti_tank
 			artillery
 			rocket_artillery
-			artillery_brigade
+			mot_artillery_brigade
+		}
+	}
+}
+
+motorized_generic = {
+
+	#blocked_for = {
+	#	#GER
+	#	#JAP
+	#	#ENG
+	#	#USA
+	#	#ITA
+	#	#SOV
+	#	#CHI
+	#	#PRC
+	#	#GXC
+	#	#YUN
+	#	#SHX
+	#	#XSM
+	#	#SIK
+	#	#MEN
+	#	#MAN
+	#}
+
+	roles = {
+		infantry
+	}
+	
+	upgrade_prio = {
+		factor = 2
+
+		modifier = {
+			factor = 5
+		}
+	}
+
+	match_to_count = 0.10
+	
+	infantry_default = {
+	
+		upgrade_prio = {
+			factor = 2
+
+			modifier = {
+				factor = 1
+			}
+		}
+		
+		target_width = 20.0
+		width_weight = 1.0
+		column_swap_factor = 0.5
+		
+		stat_weights = {
+			0.00 #-- default_morale
+			0.00 #-- defense
+			1.00 #-- breakthrough
+			0.00 #-- hardness
+			4.00 #-- soft_attack
+			0.00 #-- hard_attack
+			0.00 #-- recon
+			1.00 #-- entrenchment
+			0.00 #-- initiative
+			0.00 #-- casualty_trickleback
+			0.00 #-- supply_consumption_factor
+			0.00 #-- supply_consumption
+			0.00 #-- suppression
+			0.00 #-- suppression_factor
+			0.00 #-- experience_loss_factor
+			0.00 #-- equipment_capture_factor
+			0.00 #-- fuel_capacity
+			#-- Air Values
+			0.00 #-- air_attack
+			#-- Common Values
+			0.60 #-- max_organisation
+			0.40 #-- max_strength
+			0.00 #-- maximum_speed
+			0.00 #-- armor_value
+			0.20 #-- ap_attack
+			0.00 #-- reliability
+			0.00 #-- reliability_factor
+			0.00 #-- weight
+			0.00 #-- fuel_consumption
+			0.00 #-- fuel_consumption_factor
+			0.00 #-- strat_attack
+			0.00 #-- carrier_size
+			0.00 #-- acc_hot_gain
+			0.00 #-- acc_cold_gain
+			0.00 #-- build_cost_ic
+		}
+		
+		target_template = {
+			weight = 0.9
+			match_value = 3000.0
+			
+			support = {
+				engineer = 1
+				recon = 1
+				logistics_company = 1
+				anti_air = 1
+				artillery = 1
+			}
+			
+			regiments = {
+				motorized = 9
+				mot_artillery_brigade = 1
+			}
+		}
+		
+		allowed_types = {
+			infantry		
+			engineer
+			recon
+			field_hospital
+			logistics_company
+			anti_air
+			artillery
+			rocket_artillery
+			mot_artillery_brigade
+		}
+
+		replace_at_match = 0.9
+		replace_with = infantry_improved
+		target_min_match = 0.9
+	}
+
+	infantry_improved = {
+	
+		upgrade_prio = {
+			factor = 2
+
+			modifier = {
+				factor = 1
+			}
+		}
+		
+		target_width = 20.0
+		width_weight = 1.0
+		column_swap_factor = 0.5
+		
+		stat_weights = {
+			0.00 #-- default_morale
+			0.00 #-- defense
+			1.00 #-- breakthrough
+			0.00 #-- hardness
+			4.00 #-- soft_attack
+			0.00 #-- hard_attack
+			0.00 #-- recon
+			1.00 #-- entrenchment
+			0.00 #-- initiative
+			0.00 #-- casualty_trickleback
+			0.00 #-- supply_consumption_factor
+			0.00 #-- supply_consumption
+			0.00 #-- suppression
+			0.00 #-- suppression_factor
+			0.00 #-- experience_loss_factor
+			0.00 #-- equipment_capture_factor
+			0.00 #-- fuel_capacity
+			#-- Air Values
+			0.00 #-- air_attack
+			#-- Common Values
+			0.60 #-- max_organisation
+			0.40 #-- max_strength
+			0.00 #-- maximum_speed
+			0.00 #-- armor_value
+			0.20 #-- ap_attack
+			0.00 #-- reliability
+			0.00 #-- reliability_factor
+			0.00 #-- weight
+			0.00 #-- fuel_consumption
+			0.00 #-- fuel_consumption_factor
+			0.00 #-- strat_attack
+			0.00 #-- carrier_size
+			0.00 #-- acc_hot_gain
+			0.00 #-- acc_cold_gain
+			0.00 #-- build_cost_ic
+		}
+		
+		target_template = {
+			weight = 0.9
+			match_value = 4000.0
+			
+			support = {
+				engineer = 1
+				recon = 1
+				logistics_company = 1
+				anti_air = 1
+			}
+			
+			regiments = {
+				motorized = 9
+				mot_artillery_brigade = 2
+			}
+		}
+		
+		allowed_types = {
+			infantry		
+			engineer
+			recon
+			field_hospital
+			logistics_company
+			anti_air
+			artillery
+			rocket_artillery
+			mot_artillery_brigade
 		}
 	}
 }
@@ -984,13 +1179,12 @@ mountaineers_generic = {
 			support = {
 				engineer = 1
 				artillery = 1
-				anti_tank = 1
 				logistics_company = 1
 			}
 			
 			regiments = {
 				mountaineers = 8
-				artillery_brigade = 2
+				mot_artillery_brigade = 2
 			}
 		}
 		
@@ -1001,8 +1195,7 @@ mountaineers_generic = {
 			signal_company
 			field_hospital
 			logistics_company
-			anti_tank
-			artillery_brigade
+			mot_artillery_brigade
 			engineer
 		}
 	}
@@ -1289,7 +1482,6 @@ paratrooper_generic = {
 			support = {
 				engineer = 1
 				artillery = 1
-				anti_tank = 1
 			}
 			
 			regiments = {
@@ -1304,7 +1496,6 @@ paratrooper_generic = {
 			signal_company
 			field_hospital
 			logistics_company
-			anti_tank
 			military_police
 			artillery
 			anti_air
@@ -1346,9 +1537,9 @@ paratrooper_generic = {
 #maintenance_company
 #anti_tank_brigade
 #anti_air_brigade
-#artillery_brigade
+#mot_artillery_brigade
 #field_hospital
 #logistics_company
 #military_police
 #light_sp_anti_air_brigade
-#light_sp_artillery_brigade
+#light_sp_mot_artillery_brigade
