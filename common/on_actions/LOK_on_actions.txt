@@ -244,6 +244,21 @@ on_actions = {
 			561 = { set_variable = { minority = 10 } }
 
 			every_possible_country = {
+
+				#wip coring compliance threshold stuff
+				add_to_array = { array = states_coring_compliance_threshold value = 0 }
+				resize_array = { array = states_coring_compliance_threshold size = 674 } #This is for compliance coring values
+				if = {
+					limit = { is_herzlands_warlord = yes }
+					for_each_loop = {
+						array = states_coring_compliance_threshold
+						value = v
+						index = i
+						break = break
+						set_variable = { states_coring_compliance_threshold^i = 80 }
+					}
+				}
+
 				if = {
 					limit = { is_herzlands_warlord = yes }
 					add_ideas = herzlands_warlord_idea
