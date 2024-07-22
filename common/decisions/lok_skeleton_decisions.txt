@@ -1,0 +1,172 @@
+herzlands_unification_cat = {
+	MEW_invade_struken = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			date > "1937.6.1"
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			declare_war_on = {
+				target = STR
+				type = annex_everything
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	AUR_invade_elowia = {
+		icon = generic_form_nation
+		allowed = {
+			tag = AUR
+		}
+
+		available = {
+			date > "1938.1.1"
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			declare_war_on = {
+				target = ELO
+				type = annex_everything
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEO_southern_feline_league = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEO
+		}
+
+		available = {
+			date > "1938.1.1"
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			create_faction = "Southern Feline League"
+			add_to_faction = LIO
+			add_to_faction = CAT
+			add_to_faction = PRL
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEO_USSF = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEO
+		}
+
+		available = {
+			date > "1939.1.1"
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			hidden_effect = {
+				set_global_flag = ussf_formed
+			}
+			set_autonomy = {
+				target = LIO autonomy_state = autonomy_dominion
+			}
+			LIO = {
+				set_politics = { ruling_party = neutrality elections_allowed = no }
+			}
+			set_autonomy = {
+				target = CAT autonomy_state = autonomy_dominion
+			}
+			set_autonomy = {
+				target = PRL autonomy_state = autonomy_dominion
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEW_form_CSS = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			date > "1939.1.1"
+			NOT = { country_exists = STR }
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			annex_country = {
+				target = WAC
+				transfer_troops = yes
+			}
+			every_controlled_state = {
+				limit = { OR = { is_core_of = WAC is_core_of = STR } }
+				add_core_of = MEW
+			}
+			set_cosmetic_tag = MEW_CSS
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	WPR_great_game = {
+		icon = generic_form_nation
+		allowed = {
+			tag = WPR
+		}
+
+		available = {
+			date > "1939.6.1"
+			MEW = { has_cosmetic_tag = MEW_CSS }
+			has_global_flag = ussf_formed
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			118 = { transfer_state_to = MEW add_core_of = MEW }
+			133 = { transfer_state_to = MEW add_core_of = MEW }
+			528 = { transfer_state_to = MEW add_core_of = MEW }
+			MEO = { set_autonomy = { target = WPR autonomy_state = autonomy_dominion } }
+			set_politics = { ruling_party = neutrality elections_allowed = no }
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
