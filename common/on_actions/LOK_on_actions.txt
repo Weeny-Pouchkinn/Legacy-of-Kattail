@@ -275,8 +275,6 @@ on_actions = {
 				 	}
 					country_event = { id = LOK_food.1 days = 2 }
 				}
-				calculate_total_food_consumption = yes
-				set_variable = { country_food_stockpile = country_food_stockpile_max }
 			}
         }
 	}
@@ -291,6 +289,11 @@ on_actions = {
 			calculate_stab_ws_hit_from_noncore = yes #Effect of noncore states
 			calculate_combat_casualties = yes #Casualties in states
 			calculate_total_food_consumption = yes #Food effects
+			if = {
+				limit = { NOT = { has_country_flag = game_start_food_stockpile_refill_done } }
+				set_variable = { country_food_stockpile = country_food_stockpile_max }
+				set_country_flag = game_start_food_stockpile_refill_done
+			}
 			every_controlled_state = {
 				calculate_radiation_in_state = yes #First calculate the radiation spread/fallout
 				calculate_radiation_state_modifiers = yes #Then recalc the modifiers
@@ -352,7 +355,8 @@ on_actions = {
 
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
-			
+			force_update_map_mode = { mapmode = LOK_food_map_mode }
+
 			if = { #Core check for herzland warlords
 				limit = { is_herzlands_warlord = yes }
 				every_controlled_state = {

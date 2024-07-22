@@ -72,21 +72,27 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 }
 
 calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
-	if = {
-		limit = { state_eats_food = yes }
-		set_variable = { state_food_consumption = state_population_k }
-		divide_variable = { state_food_consumption = 100 }
-		if = { #Katzens and Sobakis are mostly carnivorous and thus eat 15% more
-			limit = {
-				OR = {
-					check_variable = { species = 1 }
-					check_variable = { species = 2 }
-				}
+	set_variable = { state_food_consumption = state_population_k }
+	divide_variable = { state_food_consumption = 100 }
+	if = { #Katzens and Sobakis are mostly carnivorous and thus eat 15% more
+		limit = {
+			OR = {
+				check_variable = { species = 1 }
+				check_variable = { species = 2 }
 			}
-			multiply_variable = { state_food_consumption = 1.15 }
 		}
-		round_variable = state_food_consumption
+		multiply_variable = { state_food_consumption = 1.15 }
 	}
+	if = { #Lithoids do not eat food at all
+		limit = {
+			OR = {
+				check_variable = { species = 5 }
+				check_variable = { species = 8 }
+			}
+		}
+		multiply_variable = { state_food_consumption = 0 }
+	}
+	round_variable = state_food_consumption
 }
 
 calculate_food_production_in_state = {
