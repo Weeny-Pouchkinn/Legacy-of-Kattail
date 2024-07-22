@@ -1,4 +1,62 @@
 herzlands_unification_cat = {
+	PTQ_invade_struken = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PTQ
+		}
+
+		available = {
+			MEW = {
+				has_war_with = STR
+			}
+			date > "1937.6.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = STR
+				type = annex_everything
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	PTQ_peace_with_struken = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PTQ
+		}
+
+		available = {
+			controls_state = 95
+			controls_state = 98
+			STR = { surrender_progress > 0.5 }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			STR = {
+				every_core_state = {
+					limit = { is_controlled_by = PTQ }
+					transfer_state_to = PTQ add_core_of = PTQ
+				}
+			}
+			white_peace = STR
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
 	MEW_invade_struken = {
 		icon = generic_form_nation
 		allowed = {
@@ -6,16 +64,93 @@ herzlands_unification_cat = {
 		}
 
 		available = {
+			date > "1937.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = STR
+				type = annex_everything
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEW_struken_partisans = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			has_war_with = STR
 			date > "1937.6.1"
 		}
 
 		fire_only_once = yes
 
-		complete_effect = {
+		remove_effect = {
+			STR = {
+				every_controlled_state = {
+					random = {
+						chance = 50
+						create_unit = {
+							division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+							count = 3
+							owner = MEW
+						}
+					}
+				}
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEW_trigger_quarries_civil_war = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			has_cosmetic_tag = MEW_CSS
+			country_exists = PTQ
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
 			declare_war_on = {
-				target = STR
+				target = PTQ
 				type = annex_everything
 			}
+			PTQ = {
+				every_controlled_state = {
+					add_core_of = MEW
+					random = {
+						chance = 50
+						transfer_state_to = MEW
+						create_unit = {
+							division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+							count = 6
+							owner = MEW
+						}
+					}
+				}
+			}
+			568 = { transfer_state_to = NAV add_core_of = NAV }
+			37 = { transfer_state_to = NAV add_core_of = NAV }
+			567 = { transfer_state_to = IMF add_core_of = IMF }
 		}
 
 		days_remove = 15
@@ -36,11 +171,12 @@ herzlands_unification_cat = {
 
 		fire_only_once = yes
 
-		complete_effect = {
+		remove_effect = {
 			declare_war_on = {
 				target = ELO
 				type = annex_everything
 			}
+			ELO = { every_core_state = { add_core_of = AUR } }
 		}
 
 		days_remove = 15
@@ -49,10 +185,10 @@ herzlands_unification_cat = {
 			base = 1000
 		}
 	}
-	MEO_southern_feline_league = {
+	southern_feline_league = {
 		icon = generic_form_nation
 		allowed = {
-			tag = MEO
+			tag = PRL
 		}
 
 		available = {
@@ -61,55 +197,85 @@ herzlands_unification_cat = {
 
 		fire_only_once = yes
 
-		complete_effect = {
+		remove_effect = {
 			create_faction = "Southern Feline League"
+			add_to_faction = PRL
 			add_to_faction = LIO
 			add_to_faction = CAT
-			add_to_faction = PRL
+			add_to_faction = MEO
+			add_to_faction = KPK
+			add_to_faction = HIM
 		}
-
-		days_remove = 15
 
 		ai_will_do = {
 			base = 1000
 		}
 	}
-	MEO_USSF = {
+	form_USSF = {
 		icon = generic_form_nation
+
 		allowed = {
-			tag = MEO
+			tag = PRL
+		}
+
+		visible = {
+			NOT = { has_global_flag = ussf_formed }
 		}
 
 		available = {
 			date > "1939.1.1"
 		}
 
-		fire_only_once = yes
+		#fire_only_once = yes
 
-		complete_effect = {
+		remove_effect = {
 			hidden_effect = {
 				set_global_flag = ussf_formed
 			}
-			set_autonomy = {
-				target = LIO autonomy_state = autonomy_dominion
+			save_global_event_target_as = ussf_leader
+			add_to_array = { array = ussf_countries }
+			every_country = {
+				limit = { is_in_faction_with = ROOT }
+				add_to_array = { array = ussf_countries }
+				for_each_scope_loop = {
+					array = ussf_countries
+					break = break
+					event_target:ussf_leader = {
+						set_autonomy = {
+							target = PREV
+							autonomy_state = autonomy_puppet
+						}
+					}
+					if = {
+						limit = { OR = { tag = LIO tag = KPK tag = HIM } }
+						set_politics = { ruling_party = neutrality }
+					}
+				}
 			}
-			LIO = {
-				set_politics = { ruling_party = neutrality elections_allowed = no }
+			add_to_array = { array = ussf_countries }
+			if = {
+				limit = { tag = PRL }
+				set_faction_name = "Federal Republic of the Southern Herzlands"
 			}
-			set_autonomy = {
-				target = CAT autonomy_state = autonomy_dominion
+			else_if = {
+				limit = { tag = MEO }
+				set_faction_name = "United States of Southern Felinea"
 			}
-			set_autonomy = {
-				target = PRL autonomy_state = autonomy_dominion
+			else_if = {
+				limit = { tag = LIO }
+				set_faction_name = "Feline Bulwark"
+			}
+			else_if = {
+				limit = { tag = CAT }
+				set_faction_name = "Felinean Trade Federation"
 			}
 		}
-
-		days_remove = 15
 
 		ai_will_do = {
 			base = 1000
 		}
 	}
+
 	MEW_form_CSS = {
 		icon = generic_form_nation
 		allowed = {
@@ -123,7 +289,7 @@ herzlands_unification_cat = {
 
 		fire_only_once = yes
 
-		complete_effect = {
+		remove_effect = {
 			annex_country = {
 				target = WAC
 				transfer_troops = yes
@@ -141,6 +307,7 @@ herzlands_unification_cat = {
 			base = 1000
 		}
 	}
+
 	WPR_great_game = {
 		icon = generic_form_nation
 		allowed = {
@@ -155,12 +322,706 @@ herzlands_unification_cat = {
 
 		fire_only_once = yes
 
-		complete_effect = {
+		remove_effect = {
 			118 = { transfer_state_to = MEW add_core_of = MEW }
 			133 = { transfer_state_to = MEW add_core_of = MEW }
 			528 = { transfer_state_to = MEW add_core_of = MEW }
-			MEO = { set_autonomy = { target = WPR autonomy_state = autonomy_dominion } }
-			set_politics = { ruling_party = neutrality elections_allowed = no }
+			event_target:ussf_leader = { set_autonomy = { target = WPR autonomy_state = autonomy_integrated_puppet } }
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	AUR_invade_the_south = {
+		icon = generic_form_nation
+		allowed = {
+			tag = AUR
+		}
+
+		available = {
+			date > "1940.1.1"
+			MEW = { has_cosmetic_tag = MEW_CSS }
+			has_global_flag = ussf_formed
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			hidden_effect = {
+				set_global_flag = great_southern_war_ongoing
+			}
+			MEW = {
+				diplomatic_relation = {
+					country = AUR
+					relation = non_aggression_pact
+					active = yes
+				}
+				MEW = { declare_war_on = { target = LIO type = annex_everything } }
+				MEW = { declare_war_on = { target = MEO type = annex_everything } }
+				MEW = { declare_war_on = { target = PRL type = annex_everything } }
+				MEW = { declare_war_on = { target = KPK type = annex_everything } }
+				MEW = { declare_war_on = { target = WPR type = annex_everything } }
+				MEW = { declare_war_on = { target = CAT type = annex_everything } }
+				MEW = { declare_war_on = { target = HIM type = annex_everything } }
+			}
+			AUR = { declare_war_on = { target = LIO type = annex_everything } }
+			AUR = { declare_war_on = { target = MEO type = annex_everything } }
+			AUR = { declare_war_on = { target = PRL type = annex_everything } }
+			AUR = { declare_war_on = { target = KPK type = annex_everything } }
+			AUR = { declare_war_on = { target = WPR type = annex_everything } }
+			AUR = { declare_war_on = { target = CAT type = annex_everything } }
+			AUR = { declare_war_on = { target = HIM type = annex_everything } }
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	USSF_surrender_to_MEW = {
+		icon = generic_form_nation
+		allowed = {
+			always = no
+		}
+
+		available = {
+			any_allied_country = { casualties_k > 2500 }
+			hidden_trigger = {
+				has_global_flag = great_southern_war_ongoing
+			}
+			has_war_with = MEW
+			MEW = {
+				controls_state = 136
+				controls_state = 119
+				controls_state = 527
+				controls_state = 526
+				controls_state = 142
+				controls_state = 524
+				controls_state = 548
+				controls_state = 132
+				controls_state = 549
+				controls_state = 550
+				controls_state = 135
+				controls_state = 131
+			}
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			white_peace = MEW
+			MEW = {
+				set_autonomy = { target = KPK autonomy_state = autonomy_puppet }
+				annex_country = { target = WPR }
+				524 = { transfer_state_to = MEW add_core_of = MEW }
+				548 = { transfer_state_to = MEW add_core_of = MEW }
+				132 = { transfer_state_to = MEW add_core_of = MEW }
+				549 = { transfer_state_to = MEW add_core_of = MEW }
+				550 = { transfer_state_to = MEW add_core_of = MEW }
+				135 = { transfer_state_to = MEW add_core_of = MEW }
+				131 = { transfer_state_to = MEW add_core_of = MEW }
+			}
+			LIO = {
+				set_cosmetic_tag = LIO_borderpurr
+				add_stability = -0.20
+				add_war_support = 0.20
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	USSF_surrender_to_NMI = {
+		icon = generic_form_nation
+		allowed = {
+			tag = event_target:ussf_leader
+		}
+
+		available = {
+			hidden_trigger = { has_global_flag = great_southern_war_ongoing }
+			has_war_with = NMI
+			NMI = {
+				controls_state = 206
+				controls_state = 197
+				controls_state = 595
+				controls_state = 598
+				controls_state = 599
+			}
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			white_peace = NMI
+			NMI = {
+				206 = { transfer_state_to = NMI add_core_of = NMI }
+				197 = { transfer_state_to = NMI add_core_of = NMI }
+				595 = { transfer_state_to = NMI add_core_of = NMI }
+				598 = { transfer_state_to = NMI add_core_of = NMI }
+				599 = { transfer_state_to = NMI add_core_of = NMI }
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	USSF_peace_with_NMI = {
+		icon = generic_form_nation
+		
+		visible = {
+			tag = event_target:ussf_leader
+		}
+
+		available = {
+			hidden_trigger = { has_global_flag = great_southern_war_ongoing }
+			has_war_with = NMI
+			NMI = {
+				casualties_k > 500
+				NOT = {
+					controls_state = 206
+					controls_state = 197
+					controls_state = 595
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			NMI = { white_peace = LIO }
+			NMI = { white_peace = KPK }
+			NMI = { white_peace = NMI }
+			NMI = { white_peace = PRL }
+			NMI = { white_peace = HIM }
+			NMI = { white_peace = CAT }
+			NMI = { white_peace = WPR }
+			# for_each_scope_loop = {
+			# 	array = ussf_countries
+			# 	NMI = { white_peace = PREV }
+			# }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	NAV_form_NETT = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = NAV
+		}
+
+		available = {
+			date > "1939.3.1"
+			NOT = { has_war_with = FRA }
+			country_exists = FRA
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			FRA = { every_core_state = { add_core_of = NAV } }
+			annex_country = {
+				target = FRA
+				transfer_troops = yes
+			}
+			set_cosmetic_tag = NAV_NETT
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	SIL_joe_biden_incident = {
+		icon = generic_form_nation
+
+		allowed = {
+			tag = SIL
+		}
+		
+		available = {
+			date > "1938.8.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			every_state = {
+				limit = { is_core_of = KKH }
+				transfer_state_to = KKH
+			}
+			transfer_units_fraction = {
+				target = KKH
+				stockpile_ratio = 0.3
+				army_ratio = 0.3
+				navy_ratio = 0.3
+				air_ratio = 0.3
+			}
+			SIL_Fritz = {
+				set_nationality = KKH
+				add_country_leader_role = {
+					country_leader = {
+						ideology = kaiserism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = KVK }
+				transfer_state_to = KVK
+			}
+			transfer_units_fraction = {
+				target = KVK
+				stockpile_ratio = 0.3
+				army_ratio = 0.3
+				navy_ratio = 0.3
+				air_ratio = 0.3
+			}
+			every_state = {
+				limit = { is_core_of = BLM }
+				transfer_state_to = BLM
+			}
+			transfer_units_fraction = {
+				target = BLM
+				stockpile_ratio = 0.05
+				army_ratio = 0.05
+				navy_ratio = 0.05
+				air_ratio = 0.05
+			}
+			every_state = {
+				limit = { is_core_of = AKR }
+				transfer_state_to = AKR
+			}
+			transfer_units_fraction = {
+				target = AKR
+				stockpile_ratio = 0.05
+				army_ratio = 0.05
+				navy_ratio = 0.05
+				air_ratio = 0.05
+			}
+			SIL_Meowtin_Hessler = {
+				set_nationality = AKR
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			every_state = {
+				limit = { is_core_of = KTV }
+				transfer_state_to = KTV
+			}
+			SIL_Hans = {
+				set_nationality = KTV
+				add_country_leader_role = {
+					country_leader = {
+						ideology = collectivism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			transfer_units_fraction = {
+				target = KTV
+				stockpile_ratio = 0.10
+				army_ratio = 0.10
+				navy_ratio = 0.10
+				air_ratio = 0.10
+			}
+			every_state = {
+				limit = { is_core_of = PMB }
+				transfer_state_to = PMB
+			}
+			SIL_Ulrich_Blutstein = {
+				set_nationality = PMB
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			transfer_units_fraction = {
+				target = KTV
+				stockpile_ratio = 0.075
+				army_ratio = 0.075
+				navy_ratio = 0.075
+				air_ratio = 0.075
+			}
+			every_state = {
+				limit = { is_core_of = CLE }
+				transfer_state_to = CLE
+			}
+			CLE = { drop_cosmetic_tag = yes leave_faction = yes }
+			every_state = {
+				limit = { is_core_of = PAW }
+				transfer_state_to = PAW
+			}
+			PAW = { drop_cosmetic_tag = yes leave_faction = yes }
+			SIL = {
+				set_autonomy = {
+					target = CLE
+					autonomy_state = autonomy_free
+				}
+				set_autonomy = {
+					target = PAW
+					autonomy_state = autonomy_free
+				}
+			}
+			34 = { transfer_state_to = KVK add_core_of = KVK }
+			36 = { transfer_state_to = PAW add_core_of = PAW }
+			45 = { transfer_state_to = SIL add_core_of = SIL }
+			44 = { transfer_state_to = KKH add_core_of = KKH }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CLE_demand_land_from_TAI = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = CLE
+		}
+
+		available = {
+			date > "1941.1.1"
+			is_puppet = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			TAI = {
+				every_core_state = {
+					limit = { any_neighbor_state = { is_controlled_by = CLE } }
+					transfer_state_to = CLE
+					add_core_of = CLE
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CLE_fight_PAW = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = CLE
+		}
+
+		available = {
+			date > "1941.6.1"
+			is_puppet = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = PAW
+				type = annex_everything
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PAW_annex_tailsbaden = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = PAW
+		}
+
+		available = {
+			date > "1941.3.1"
+			is_puppet = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			TAI = {
+				every_controlled_state = {
+					add_core_of = PAW
+					transfer_state_to = PAW
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	USSF_destroy_itch = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = event_target:ussf_leader
+		}
+
+		available = {
+			date > "1942.1.1"
+			country_exists = CLE
+			NOT = { has_war_with = AUR }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			for_each_scope_loop = {
+				array = ussf_countries
+				break = break
+				declare_war_on = { target = CLE type = annex_everything }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	fritz_marry_alice = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = KVK
+		}
+
+		available = {
+			date > "1941.1.1"
+			country_exists = KKH
+			NOT = { has_war_with = KKH }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			KKH = { every_core_state = { add_core_of = KKH } }
+			annex_country = {
+				target = KKH
+				transfer_troops = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	alice_destroy_silbershirts = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = KVK
+		}
+
+		available = {
+			date > "1942.1.1"
+			country_exists = SIL
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = SIL
+				type = annex_everything
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	NEU_meo_blitz = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = NEU
+		}
+
+		available = {
+			date > "1942.6.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			AKR = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = AKR type = annex_everything }
+
+			PMB = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = PMB type = annex_everything }
+
+			BLM = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = BLM type = annex_everything }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PAW_seize_the_north = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = PAW
+		}
+
+		available = {
+			date > "1943.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			KVK = { every_core_state = { add_core_of = PAW } }
+			declare_war_on = { target = KVK type = annex_everything }
+			
+			KKH = { every_core_state = { add_core_of = PAW } }
+			declare_war_on = { target = KKH type = annex_everything }
+
+			KTV = { every_core_state = { add_core_of = PAW } }
+			declare_war_on = { target = KTV type = annex_everything }
+
+			SIL = { every_core_state = { add_core_of = PAW } }
+			declare_war_on = { target = SIL type = annex_everything }
+
+			KTW = { every_core_state = { add_core_of = PAW } }
+			declare_war_on = { target = KTW type = annex_everything }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	NEU_seize_the_north = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = NEU
+		}
+
+		available = {
+			date > "1943.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			KVK = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = KVK type = annex_everything }
+			
+			KKH = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = KKH type = annex_everything }
+
+			KTV = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = KTV type = annex_everything }
+
+			SIL = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = SIL type = annex_everything }
+
+			KTW = { every_core_state = { add_core_of = NEU } }
+			declare_war_on = { target = KTW type = annex_everything }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	USSF_great_northern_war = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = event_target:ussf_leader
+		}
+
+		available = {
+			date > "1944.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = { target = NEU type = annex_everything }
+			every_country = {
+				limit = { is_in_faction_with = ROOT }
+				declare_war_on = { target = NEU type = annex_everything }
+			}
+
+			declare_war_on = { target = PAW type = annex_everything }
+			every_country = {
+				limit = { is_in_faction_with = ROOT }
+				declare_war_on = { target = PAW type = annex_everything }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
+foreign_politics = {
+	NMI_invade_meon = {
+		icon = generic_form_nation
+		allowed = {
+			tag = NMI
+		}
+
+		available = {
+			date > "1940.6.1"
+			has_global_flag = great_southern_war_ongoing
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			hidden_effect = {
+				set_global_flag = great_southern_war_ongoing
+			}
+			NMI = { declare_war_on = { target = LIO type = annex_everything } }
+			NMI = { declare_war_on = { target = MEO type = annex_everything } }
+			NMI = { declare_war_on = { target = PRL type = annex_everything } }
+			NMI = { declare_war_on = { target = KPK type = annex_everything } }
+			NMI = { declare_war_on = { target = WPR type = annex_everything } }
+			NMI = { declare_war_on = { target = CAT type = annex_everything } }
+			NMI = { declare_war_on = { target = HIM type = annex_everything } }
 		}
 
 		days_remove = 15

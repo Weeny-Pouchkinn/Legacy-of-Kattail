@@ -3,6 +3,8 @@ on_actions = {
 		effect = {
 			every_possible_country = {
 				set_rule = { can_puppet = no } #Handled by decision
+				set_rule = { can_create_factions = no }
+				set_rule = { can_join_factions = no }
 				#Stab & WS stab hit from having noncore states, calculated weekly
 				set_variable = { stab_from_noncore = 0 }
 				set_variable = { ws_from_noncore = 0 }
@@ -355,7 +357,7 @@ on_actions = {
 
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
-			force_update_map_mode = { mapmode = LOK_food_map_mode }
+			#force_update_map_mode = { mapmode = LOK_food_map_mode }
 
 			if = { #Core check for herzland warlords
 				limit = { is_herzlands_warlord = yes }
@@ -500,6 +502,20 @@ on_actions = {
 			# }
 			#Radiation mapmode
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
+		}
+	}
+
+	on_capitulation_immediate = {
+		effect = {
+			if = { #USF state
+				limit = { 
+					OR = {
+						FROM = { is_puppet_of = event_target:ussf_leader }
+						tag = event_target:ussf_leader
+					}
+				}
+				ROOT = { every_core_state = { transfer_state_to = event_target:ussf_leader } }
+			}
 		}
 	}
 }

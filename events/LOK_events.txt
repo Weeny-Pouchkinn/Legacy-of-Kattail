@@ -41,7 +41,12 @@ country_event = {
 			modifier = { #Herzland warlords will always annex one another
 				factor = 0
 				is_herzlands_warlord = yes
+				NOT = { tag = event_target:ussf_leader }
 				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
+			}
+			modifier = {
+				add = 100
+				tag = event_target:ussf_leader
 			}
 		}
 		hidden_effect = {
@@ -67,7 +72,7 @@ country_event = {
 		ai_chance = {
 			base = 1
 			modifier = { #Herzland warlords will always annex one another
-				factor = 0
+				add = -1
 				is_herzlands_warlord = yes
 				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
 			}
@@ -85,6 +90,7 @@ country_event = {
 			modifier = { #Herzland warlords will always annex one another
 				add = 100
 				is_herzlands_warlord = yes
+				NOT = { tag = event_target:ussf_leader }
 				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
 			}
 		}
