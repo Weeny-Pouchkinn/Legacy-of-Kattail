@@ -1,4 +1,5 @@
 import os
+import shutil
 
 def main():
     focus_tree = input("Enter the focus tree name: ")
@@ -29,6 +30,8 @@ def main():
     focus_ids = [block.split("id = ")[1].split()[0] for block in focus_blocks]
 
     # Set up icons and localization
+    goals_path = os.path.join("gfx", "interface", "goals", tag)
+    template_path = os.path.join("gfx", "interface", "goals", "TEMPLATE.tga")
     interface_path = os.path.join("interface", "lok_national_focus_icons.gfx")
     loc_path = os.path.join("localisation", "english", f"{tag}_l_english.yml")
 
@@ -38,49 +41,23 @@ def main():
     with open(interface_path, 'r') as file:
         interface_content = file.read()
 
+    # Extract the example block
+    example_start = interface_content.find("#EXAMPLE") + len("#EXAMPLE")
+    example_end = interface_content.find("#EXAMPLE", example_start)
+    example_block = interface_content[example_start:example_end]
+
     for focus_id in focus_ids:
         if focus_id in processed_focuses:
             continue
 
-        # Define the icon in interface
-        if f"name = \"{focus_id}\"" not in interface_content:
-            sprite_block = f"""
-SpriteType = {{ 
-    name = "{focus_id}"
-    texturefile = "gfx/interface/goals/{tag}/{focus_id}.tga"
-}}
-SpriteType = {{ 
-    name = "{focus_id}_shine"
-    texturefile = "gfx/interface/goals/{tag}/{focus_id}.tga"
-    effectFile = "gfx/FX/buttonstate.lua"
-    animation = {{
-        animationmaskfile = "gfx/interface/goals/{tag}/{focus_id}.tga"
-        animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
-        animationrotation = -90.0
-        animationlooping = no
-        animationtime = 0.75
-        animationdelay = 0
-        animationblendmode = "add"
-        animationtype = "scrolling"
-        animationrotationoffset = {{ x = 0.0 y = 0.0 }}
-        animationtexturescale = {{ x = 1.0 y = 1.0 }} 
-    }}
-    animation = {{
-        animationmaskfile = "gfx/interface/goals/{tag}/{focus_id}.tga"
-        animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
-        animationrotation = 90.0
-        animationlooping = no
-        animationtime = 0.75
-        animationdelay = 0
-        animationblendmode = "add"
-        animationtype = "scrolling"
-        animationrotationoffset = {{ x = 0.0 y = 0.0 }}
-        animationtexturescale = {{ x = 1.0 y = 1.0 }} 
-    }}
-    legacy_lazy_load = no
-}}
-"""
-            interface_content += sprite_block
+        icon_path = os.path.join(goals_path, f"{focus_id}.tga")
+        if not os.path.exists(icon_path):
+            shutil.copy(template_path, icon_path)
+
+            # Define the icon in interface
+            if f"name = \"{focus_id}\"" not in interface_content:
+                new_block = example_block.replace("[FOCUS_ID]", focus_id).replace("[TAG]", tag)
+                interface_content = interface_content[:example_end] + new_block + interface_content[example_end:]
 
         # Define the localization
         with open(loc_path, 'a') as file:
