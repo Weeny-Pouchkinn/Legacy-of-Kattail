@@ -188,7 +188,12 @@ herzlands_unification_cat = {
 	southern_feline_league = {
 		icon = generic_form_nation
 		allowed = {
-			tag = PRL
+			OR = {
+				tag = PRL
+				tag = LIO
+				tag = CAT
+				tag = MEO
+			}
 		}
 
 		available = {
@@ -215,7 +220,12 @@ herzlands_unification_cat = {
 		icon = generic_form_nation
 
 		allowed = {
-			tag = PRL
+			OR = {
+				tag = PRL
+				tag = LIO
+				tag = CAT
+				tag = MEO
+			}
 		}
 
 		visible = {
@@ -236,20 +246,19 @@ herzlands_unification_cat = {
 			add_to_array = { array = ussf_countries }
 			every_country = {
 				limit = { is_in_faction_with = ROOT }
-				add_to_array = { array = ussf_countries }
-				for_each_scope_loop = {
-					array = ussf_countries
-					break = break
-					event_target:ussf_leader = {
-						set_autonomy = {
-							target = PREV
-							autonomy_state = autonomy_puppet
-						}
+				event_target:ussf_leader = {
+					set_autonomy = {
+						target = PREV
+						autonomy_state = autonomy_puppet
 					}
-					if = {
-						limit = { OR = { tag = LIO tag = KPK tag = HIM } }
-						set_politics = { ruling_party = neutrality }
-					}
+				}
+				if = {
+					limit = { OR = { tag = LIO tag = KPK tag = HIM } }
+					set_politics = { ruling_party = neutrality }
+				}
+				if = {
+					limit = { OR = { tag = PRL tag = CAT tag = MEO } }
+					set_politics = { ruling_party = democratic }
 				}
 			}
 			add_to_array = { array = ussf_countries }
@@ -276,6 +285,39 @@ herzlands_unification_cat = {
 		}
 	}
 
+	MEW_form_eastern_communes = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			NOT = { country_exists = STR }
+			STR = { any_core_state = { is_controlled_by = MEW } }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			STR = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+				}
+			}
+			set_cosmetic_tag = MEW_eastern_communes
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
 	MEW_form_CSS = {
 		icon = generic_form_nation
 		allowed = {
@@ -293,10 +335,6 @@ herzlands_unification_cat = {
 			annex_country = {
 				target = WAC
 				transfer_troops = yes
-			}
-			every_controlled_state = {
-				limit = { OR = { is_core_of = WAC is_core_of = STR } }
-				add_core_of = MEW
 			}
 			set_cosmetic_tag = MEW_CSS
 		}
@@ -360,21 +398,17 @@ herzlands_unification_cat = {
 					relation = non_aggression_pact
 					active = yes
 				}
-				MEW = { declare_war_on = { target = LIO type = annex_everything } }
-				MEW = { declare_war_on = { target = MEO type = annex_everything } }
-				MEW = { declare_war_on = { target = PRL type = annex_everything } }
-				MEW = { declare_war_on = { target = KPK type = annex_everything } }
-				MEW = { declare_war_on = { target = WPR type = annex_everything } }
-				MEW = { declare_war_on = { target = CAT type = annex_everything } }
-				MEW = { declare_war_on = { target = HIM type = annex_everything } }
+				every_country = {
+					limit = { is_in_faction_with = event_target:ussf_leader }
+					MEW = { declare_war_on = { target = PREV type = annex_everything } }
+				}
+				MEW = { declare_war_on = { target = event_target:ussf_leader type = annex_everything } }
 			}
-			AUR = { declare_war_on = { target = LIO type = annex_everything } }
-			AUR = { declare_war_on = { target = MEO type = annex_everything } }
-			AUR = { declare_war_on = { target = PRL type = annex_everything } }
-			AUR = { declare_war_on = { target = KPK type = annex_everything } }
-			AUR = { declare_war_on = { target = WPR type = annex_everything } }
-			AUR = { declare_war_on = { target = CAT type = annex_everything } }
-			AUR = { declare_war_on = { target = HIM type = annex_everything } }
+			every_country = {
+				limit = { is_in_faction_with = event_target:ussf_leader }
+				AUR = { declare_war_on = { target = PREV type = annex_everything } }
+			}
+			AUR = { declare_war_on = { target = event_target:ussf_leader type = annex_everything } }
 		}
 
 		days_remove = 15
@@ -690,9 +724,9 @@ herzlands_unification_cat = {
 				}
 			}
 			34 = { transfer_state_to = KVK add_core_of = KVK }
-			36 = { transfer_state_to = PAW add_core_of = PAW }
+			44 = { transfer_state_to = PAW add_core_of = PAW }
 			45 = { transfer_state_to = SIL add_core_of = SIL }
-			44 = { transfer_state_to = KKH add_core_of = KKH }
+			36 = { transfer_state_to = KKH add_core_of = KKH }
 		}
 
 		ai_will_do = {
@@ -799,10 +833,16 @@ herzlands_unification_cat = {
 		fire_only_once = yes
 
 		remove_effect = {
-			for_each_scope_loop = {
-				array = ussf_countries
-				break = break
-				declare_war_on = { target = CLE type = annex_everything }
+			declare_war_on = {
+				target = CLE
+				type = annex_everything
+			}
+			every_country = {
+				limit = { is_in_faction_with = event_target:ussf_leader }
+				declare_war_on = {
+					target = CLE
+					type = annex_everything
+				}
 			}
 		}
 
@@ -1002,6 +1042,7 @@ foreign_politics = {
 		icon = generic_form_nation
 		allowed = {
 			tag = NMI
+			always = no
 		}
 
 		available = {

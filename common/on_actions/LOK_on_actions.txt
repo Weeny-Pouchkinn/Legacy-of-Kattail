@@ -246,36 +246,29 @@ on_actions = {
 			561 = { set_variable = { minority = 10 } }
 
 			every_possible_country = {
-
-				#wip coring compliance threshold stuff
-				add_to_array = { array = states_coring_compliance_threshold value = 0 }
-				resize_array = { array = states_coring_compliance_threshold size = 674 } #This is for compliance coring values
 				if = {
 					limit = { is_herzlands_warlord = yes }
-					for_each_loop = {
-						array = states_coring_compliance_threshold
-						value = v
-						index = i
+					for_each_scope_loop = {
+						array = global.herzlands_states_array
 						break = break
-						set_variable = { states_coring_compliance_threshold^i = 80 }
+						set_state_flag = compliance_80_@PREV
+						add_to_array = { array = PREV.potential_cores_array } #All the states that this nation can potentially core
 					}
 				}
 
+				#Country species
 				if = {
 					limit = { is_herzlands_warlord = yes }
 					add_ideas = herzlands_warlord_idea
 					set_variable = { country_species_1 = 1 } #Primary species
 				}
 				every_owned_state = { apply_state_species_modifier = yes } #Species modifiers
-				apply_wonder_effects = yes
+				apply_wonder_effects = yes #Wonders!
+
+				#Food tech to trick the AI into importing food
 				if = {
 					limit = { is_ai = yes }
 					set_technology = { LOK_ai_food_tech = 1 }
-					add_equipment_to_stockpile = {
-				 		type = lok_debug_food_equipment_1
-				 		amount = 1000000
-				 	}
-					country_event = { id = LOK_food.1 days = 2 }
 				}
 			}
         }
@@ -283,7 +276,7 @@ on_actions = {
 	
 	on_weekly = {
 		effect = {
-			if = {
+			if = { #Make sure to apply the food modifier if it's not there for some reason
 				limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
 				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
 			}
@@ -359,17 +352,56 @@ on_actions = {
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 			#force_update_map_mode = { mapmode = LOK_food_map_mode }
 
-			if = { #Core check for herzland warlords
-				limit = { is_herzlands_warlord = yes }
-				every_controlled_state = {
-					limit = { NOT = { is_core_of = ROOT } }
+			#Checking if cores are met
+			for_each_scope_loop = {
+				array = potential_cores_array
+				break = break
+				if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_100_@ROOT }
 					if = {
-						limit = {
-							is_in_array = { array = global.herzlands_states_array value = THIS.id }
-							check_variable = { compliance > 80 }
-						}
+						limit = { check_variable = { compliance = 100 } }
 						add_core_of = ROOT
 					}
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_90_@ROOT }
+					if = { limit = { check_variable = { compliance > 90 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_80_@ROOT }
+					if = { limit = { check_variable = { compliance > 80 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_70_@ROOT }
+					if = { limit = { check_variable = { compliance > 70 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_60_@ROOT }
+					if = { limit = { check_variable = { compliance > 60 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_50_@ROOT }
+					if = { limit = { check_variable = { compliance > 50 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_40_@ROOT }
+					if = { limit = { check_variable = { compliance > 40 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_30_@ROOT }
+					if = { limit = { check_variable = { compliance > 30 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_20_@ROOT }
+					if = { limit = { check_variable = { compliance > 20 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_10_@ROOT }
+					if = { limit = { check_variable = { compliance > 10 } } add_core_of = ROOT }
+				}
+				else_if = {
+					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_0_@ROOT }
+					if = { limit = { check_variable = { compliance > 0 } } add_core_of = ROOT }
 				}
 			}
 		}

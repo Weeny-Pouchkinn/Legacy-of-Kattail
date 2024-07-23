@@ -1,4 +1,18 @@
 scripted_gui = {
+	lok_state_coring_threshold = {
+		context_type = selected_state_context
+		window_name = "lok_state_coring_threshold_window"
+		parent_window_token = selected_state_view
+		visible = {
+			THIS = {
+				NOT = { is_core_of = var:controller }
+				var:controller = {
+					PREV = { is_in_array = { array = PREV.potential_cores_array value = THIS } }
+				}
+			}
+		}
+	}
+
 	lok_state_death_counter = {
 		context_type = selected_state_context
 		window_name = "lok_state_death_counter_window"
