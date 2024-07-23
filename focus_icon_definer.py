@@ -1,5 +1,4 @@
 import os
-import shutil
 
 def main():
     focus_tree = input("Enter the focus tree name: ")
@@ -30,31 +29,69 @@ def main():
     focus_ids = [block.split("id = ")[1].split()[0] for block in focus_blocks]
 
     # Set up icons and localization
-    goals_path = os.path.join("gfx", "interface", "goals", tag)
-    template_path = os.path.join("gfx", "interface", "goals", "TEMPLATE.tga")
-    interface_path = os.path.join("interface", "lok_national_focus_icons")
+    interface_path = os.path.join("interface", "lok_national_focus_icons.gfx")
     loc_path = os.path.join("localisation", "english", f"{tag}_l_english.yml")
 
+    processed_focuses = set()
+
+    # Read the existing interface content
+    with open(interface_path, 'r') as file:
+        interface_content = file.read()
+
     for focus_id in focus_ids:
-        icon_path = os.path.join(goals_path, f"{focus_id}.tga")
-        if not os.path.exists(icon_path):
-            shutil.copy(template_path, icon_path)
+        if focus_id in processed_focuses:
+            continue
 
-            # Define the icon in interface
-            with open(interface_path, 'r') as file:
-                interface_content = file.read()
+        # Define the icon in interface
+        if f"name = \"{focus_id}\"" not in interface_content:
+            sprite_block = f"""
+SpriteType = {{ 
+    name = "{focus_id}"
+    texturefile = "gfx/interface/goals/{tag}/{focus_id}.tga"
+}}
+SpriteType = {{ 
+    name = "{focus_id}_shine"
+    texturefile = "gfx/interface/goals/{tag}/{focus_id}.tga"
+    effectFile = "gfx/FX/buttonstate.lua"
+    animation = {{
+        animationmaskfile = "gfx/interface/goals/{tag}/{focus_id}.tga"
+        animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
+        animationrotation = -90.0
+        animationlooping = no
+        animationtime = 0.75
+        animationdelay = 0
+        animationblendmode = "add"
+        animationtype = "scrolling"
+        animationrotationoffset = {{ x = 0.0 y = 0.0 }}
+        animationtexturescale = {{ x = 1.0 y = 1.0 }} 
+    }}
+    animation = {{
+        animationmaskfile = "gfx/interface/goals/{tag}/{focus_id}.tga"
+        animationtexturefile = "gfx/interface/goals/shine_overlay.dds"
+        animationrotation = 90.0
+        animationlooping = no
+        animationtime = 0.75
+        animationdelay = 0
+        animationblendmode = "add"
+        animationtype = "scrolling"
+        animationrotationoffset = {{ x = 0.0 y = 0.0 }}
+        animationtexturescale = {{ x = 1.0 y = 1.0 }} 
+    }}
+    legacy_lazy_load = no
+}}
+"""
+            interface_content += sprite_block
 
-            example_block = interface_content.split("#EXAMPLE")[1]
-            new_block = example_block.replace("[FOCUS_ID]", focus_id).replace("[TAG]", tag)
-            interface_content = interface_content.replace("#EXAMPLE", f"#EXAMPLE{new_block}")
+        # Define the localization
+        with open(loc_path, 'a') as file:
+            file.write(f" {focus_id}:0 \"{focus_id}\"\n")
+            file.write(f" {focus_id}_desc:0 \"Glorious Kayzoo!\"\n")
 
-            with open(interface_path, 'w') as file:
-                file.write(interface_content)
+        processed_focuses.add(focus_id)
 
-            # Define the localization
-            with open(loc_path, 'a') as file:
-                file.write(f" {focus_id}:0 \"{focus_id}\"\n")
-                file.write(f" {focus_id}_desc:0 \"Glorious Kayzoo!\"\n")
+    # Write the updated interface content back to the file
+    with open(interface_path, 'w') as file:
+        file.write(interface_content)
 
 if __name__ == "__main__":
     main()
