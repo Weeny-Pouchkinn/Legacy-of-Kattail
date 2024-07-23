@@ -46,6 +46,10 @@ def main():
     example_end = interface_content.find("#EXAMPLE", example_start)
     example_block = interface_content[example_start:example_end]
 
+    # Read the existing localization content
+    with open(loc_path, 'r') as file:
+        loc_content = file.read()
+
     for focus_id in focus_ids:
         if focus_id in processed_focuses:
             continue
@@ -54,15 +58,16 @@ def main():
         if not os.path.exists(icon_path):
             shutil.copy(template_path, icon_path)
 
-            # Define the icon in interface
-            if f"name = \"{focus_id}\"" not in interface_content:
-                new_block = example_block.replace("[FOCUS_ID]", focus_id).replace("[TAG]", tag)
-                interface_content = interface_content[:example_end] + new_block + interface_content[example_end:]
+        # Define the icon in interface
+        if f"name = \"{focus_id}\"" not in interface_content:
+            new_block = example_block.replace("[FOCUS_ID]", focus_id).replace("[TAG]", tag)
+            interface_content = interface_content[:example_end] + new_block + interface_content[example_end:]
 
         # Define the localization
-        with open(loc_path, 'a') as file:
-            file.write(f" {focus_id}:0 \"{focus_id}\"\n")
-            file.write(f" {focus_id}_desc:0 \"Glorious Kayzoo!\"\n")
+        if f" {focus_id}:0 \"{focus_id}\"" not in loc_content:
+            with open(loc_path, 'a') as file:
+                file.write(f" {focus_id}:0 \"{focus_id}\"\n")
+                file.write(f" {focus_id}_desc:0 \"Glorious Kayzoo!\"\n\n")
 
         processed_focuses.add(focus_id)
 
