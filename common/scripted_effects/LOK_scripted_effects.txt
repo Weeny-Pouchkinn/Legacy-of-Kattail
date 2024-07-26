@@ -100,37 +100,45 @@ ai_fire_nuke = {
 			modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
 		}
 	}
-	random_enemy_country = { #PICK A TARGET!!! We pick a country that nuked us beforehand.
-		limit = {
-			OR = {
-				any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
-				ROOT = { has_country_flag = nuked_by_@PREV }
+	#AI will fire half of their salvo capacity
+	set_temp_variable = { ai_nukes_being_fired = lok_current_salvo_capacity }
+	divide_temp_variable = { lok_current_salvo_capacity = 2 }
+	round_temp_variable = lok_current_salvo_capacity
+	clamp_temp_variable = { var = lok_current_salvo_capacity min = 0 max = lok_total_nuke_stockpile }
+	for_loop_effect = {
+		end = ai_nukes_being_fired
+		random_enemy_country = { #PICK A TARGET!!! We pick a country that nuked us beforehand.
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
 			}
-		}
-		random_owned_state = {
-			limit = { NOT = { is_core_of = ROOT } }
-			save_global_event_target_as = lok_thermonuclear_salvo_state
-			ROOT = {
-				fire_thermonuclear_salvo = yes #FIRE!!!!
-				if = {
-					limit = { check_variable = { current_nuke_type = 1 } }
-					add_equipment_to_stockpile = {
-						type = lok_fission_nuke_equipment
-						amount = -1
+			random_owned_state = {
+				limit = { NOT = { is_core_of = ROOT } }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes #FIRE!!!!
+					if = {
+						limit = { check_variable = { current_nuke_type = 1 } }
+						add_equipment_to_stockpile = {
+							type = lok_fission_nuke_equipment
+							amount = -1
+						}
 					}
-				}
-				else_if = {
-					limit = { check_variable = { current_nuke_type = 2 } }
-					add_equipment_to_stockpile = {
-						type = lok_fusion_nuke_equipment
-						amount = -1
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 2 } }
+						add_equipment_to_stockpile = {
+							type = lok_fusion_nuke_equipment
+							amount = -1
+						}
 					}
-				}
-				else_if = {
-					limit = { check_variable = { current_nuke_type = 3 } }
-					add_equipment_to_stockpile = {
-						type = lok_cobalt_nuke_equipment
-						amount = -1
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 3 } }
+						add_equipment_to_stockpile = {
+							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
 					}
 				}
 			}
