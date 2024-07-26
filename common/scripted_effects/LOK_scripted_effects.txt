@@ -102,9 +102,9 @@ ai_fire_nuke = {
 	}
 	#AI will fire half of their salvo capacity
 	set_temp_variable = { ai_nukes_being_fired = lok_current_salvo_capacity }
-	divide_temp_variable = { lok_current_salvo_capacity = 2 }
-	round_temp_variable = lok_current_salvo_capacity
-	clamp_temp_variable = { var = lok_current_salvo_capacity min = 0 max = lok_total_nuke_stockpile }
+	divide_temp_variable = { ai_nukes_being_fired = 2 }
+	round_temp_variable = ai_nukes_being_fired
+	clamp_temp_variable = { var = ai_nukes_being_fired min = 0 max = lok_total_nuke_stockpile }
 	for_loop_effect = {
 		end = ai_nukes_being_fired
 		random_enemy_country = { #PICK A TARGET!!! We pick a country that nuked us beforehand.
@@ -641,6 +641,7 @@ calculate_radiation_state_modifiers = {
 	#Apply radiation state modifiers. Calculated as a percentage, with 10 radiation = -100% to all.
 	set_variable = { lok_radiation_modifier = lok_radiation_level } #Say 5
 	divide_variable = { lok_radiation_modifier = 10 } #Now 0.5
+	set_variable = { lok_radiation_army_attrition_modifier = lok_radiation_modifier } #For attrition
 	multiply_variable = { lok_radiation_modifier = -1 } #Make negative
 	set_variable = { lok_radiation_army_modifier = lok_radiation_modifier } #For armies, not affected by species
 	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
@@ -657,7 +658,8 @@ calculate_radiation_state_modifiers = {
 		} 
 		multiply_variable = { lok_radiation_modifier = 0.25 }
 	}
-	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
+	clamp_variable = { var = lok_radiation_army_attrition_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
+	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and -0.9
 	clamp_variable = { var = lok_radiation_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
 }
 
