@@ -62,10 +62,10 @@ on_actions = {
 
 			#Setup the Herzlands state array to track unification
 			global = { set_variable = { total_herzlands_state_count = 0 } }  #<---- error log doesnt like this?
-			# every_state = {
-			# 	limit = { var:CONTROLLER = { is_herzlands_warlord = yes } }
-			# 	add_to_array = { global.herzlands_states_array = THIS }
-			# }
+			every_country = {
+				limit = { is_herzlands_warlord = yes }
+				every_owned_state = { add_to_array = { global.herzlands_states_array = THIS } }
+			}
 
 			#The treshold before unification is reached
 			set_variable = { global.herzlands_unification_state_prereq = global.herzlands_states_array^num }
@@ -271,6 +271,10 @@ on_actions = {
 					set_technology = { LOK_ai_food_tech = 1 }
 				}
 			}
+
+			count_nukes_in_stockpile = yes
+			calculate_salvo_capacity = yes
+			set_variable = { lok_current_salvo_capacity = 0 }
         }
 	}
 	
@@ -404,6 +408,19 @@ on_actions = {
 					if = { limit = { check_variable = { compliance > 0 } } add_core_of = ROOT }
 				}
 			}
+
+			if = {
+				limit = {
+					is_ai = yes
+					has_war = yes
+					has_tech = nukes
+					any_enemy_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+				}
+				ai_fire_nuke = yes
+			}
+
+			#Salvo capacity
+			calculate_salvo_capacity = yes
 		}
 	}
 
@@ -414,8 +431,14 @@ on_actions = {
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
 				FROM = { if = { limit = { is_herzlands_warlord = yes } subtract_from_variable = { current_herzlands_state_count = 1 } } }
 			}
-			FROM = { apply_wonder_effects = yes }
-			ROOT = { apply_wonder_effects = yes }
+			FROM = { 
+				apply_wonder_effects = yes
+				calculate_salvo_capacity = yes
+			}
+			ROOT = {
+				apply_wonder_effects = yes
+				calculate_salvo_capacity = yes
+			}
 			FROM.FROM = { #Clear and apply species match modifiers
 				if = {
 					limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
@@ -440,14 +463,19 @@ on_actions = {
 	on_monthly = {
 		effect = {
 			force_update_map_mode = { mapmode = LOK_species_map_mode }
+			if = {
+				limit = { is_ai = yes has_tech = nukes }
+				calculate_ai_nuke_production = yes #script that gives nukes to the AI based on their military factory count (and reduces their mil count)
+			}
 		}
 	}
 
 	on_daily = {
 		effect = {
-			every_country = { #Replacing the original script
-				calculate_bonus_resources_from_modifiers = yes
-			}
+			calculate_bonus_resources_from_modifiers = yes
+			count_nukes_in_stockpile = yes
+
+
 			if = { #DEBUG NUCLEAR WAR MODE - NATIONS WILL RANDOMLY FIRE NUKES AT THE STATES OF THEIR ENEMIES!
 				limit = { has_global_flag = lok_nuclear_war_mode_on }
 				random_state = {
@@ -459,25 +487,6 @@ on_actions = {
 					}
 				}
 			}
-			# if = {
-			# 	limit = { is_ai = yes }
-			# 	#This is a dummy food-costing equipment to force the AI into buying food if it lacks it.
-			# 	#Every day we check the AI's stockpile of the stuff. If there is a stockpile then it meant the AI produced some and the production line is still there. If not then it means the AI has deleted the line (because it's technically useless) and so we recreate the production line.
-			# 	#Then we delete the stockpile.
-			# 	if = {
-			# 		limit = { NOT = { has_equipment = { lok_debug_food_equipment_1 > 0 } } }
-			# 		add_equipment_production = {
-			# 			equipment = { type = lok_debug_food_equipment_1 }
-			# 			requested_factories = 1
-			# 			progress = 1
-			# 			efficiency = 100
-			# 		}
-			# 	}
-			# 	add_equipment_to_stockpile = {
-			# 		type = lok_debug_food_equipment_1
-			# 		amount = -100000
-			# 	}
-			# }
 		}
 	}
 
@@ -532,6 +541,15 @@ on_actions = {
 			# 		}
 			# 	}
 			# }
+			#Remember who nuked us!
+			FROM = {
+				var:controller = {
+					if = { #So if SIL nuked SOB then SOB gets nuked_by_SIL and can rightfully retaliate against SIL.
+						limit = { NOT = { has_country_flag = nuked_by_@ROOT } }
+						set_country_flag = nuked_by_@ROOT
+					}
+				}
+			}
 			#Radiation mapmode
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 		}

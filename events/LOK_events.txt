@@ -1,3 +1,21 @@
+add_namespace = LOK_nuke
+
+#Refill salvo capacity
+country_event = {
+	id = LOK_nuke.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_nuke.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		add_to_variable = { lok_current_salvo_capacity = 1 }
+		clamp_variable = { #Can't surpass total salvo capacitu
+			var = lok_current_salvo_capacity
+			max = lok_total_salvo_capacity
+		}
+	}
+}
+
 add_namespace = LOK_food
 
 country_event = {

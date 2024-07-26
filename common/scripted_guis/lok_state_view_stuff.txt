@@ -143,58 +143,59 @@ scripted_gui = {
 		}
 
 		triggers = {
-			# lok_increase_nuke_count_button_shift_click_enabled = {
-			# 	ROOT = {
-			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
-			# 	}
-			# }
-			# lok_decrease_nuke_count_button_shift_click_enabled = {
-			# 	ROOT = {
-			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
-			# 	}
-			# }
-			# lok_next_nuke_type_button_click_enabled = {
-			# 	ROOT = {
-			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
-			# 	}
-			# }
-			# lok_previous_nuke_type_button_click_enabled = {
-			# 	ROOT = {
-			# 		NOT = { has_country_flag = thermonuclear_strike_in_progress }
-			# 	}
-			# }
 			lok_thermonuclear_salvo_button_click_enabled = {
-				THIS = { var:controller = { has_war_with = ROOT } }
-				ROOT = {
-					check_variable = { current_nuke_type > 0 }
-					OR = {
-						AND = {
-							check_variable = { current_nuke_type = 1 }
-							AND = {
-								has_tech = nukes
-								OR = {
-									check_variable = { num_equipment@lok_fission_nuke_equipment > nuke_launch_count }
-									check_variable = { num_equipment@lok_fission_nuke_equipment = nuke_launch_count }
-								}
+				custom_trigger_tooltip = {
+					tooltip = above_salvo_capacity
+					hidden_trigger = {
+						ROOT = {
+							OR = {
+								check_variable = { nuke_launch_count < lok_current_salvo_capacity }
+								check_variable = { nuke_launch_count = lok_current_salvo_capacity }
 							}
 						}
-						AND = {
-							check_variable = { current_nuke_type = 2 }
-							AND = {
-								has_tech = fusion_nuke
-								OR = {
-									check_variable = { num_equipment@lok_fusion_nuke_equipment > nuke_launch_count }
-									check_variable = { num_equipment@lok_fusion_nuke_equipment = nuke_launch_count }
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = must_be_at_war_to_nuke
+					hidden_trigger = {
+						THIS = { var:controller = { has_war_with = ROOT } }
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = not_enough_nukes
+					hidden_trigger = {
+						ROOT = {
+							check_variable = { current_nuke_type > 0 }
+							OR = {
+								AND = {
+									check_variable = { current_nuke_type = 1 }
+									AND = {
+										has_tech = nukes
+										OR = {
+											check_variable = { num_equipment@lok_fission_nuke_equipment > nuke_launch_count }
+											check_variable = { num_equipment@lok_fission_nuke_equipment = nuke_launch_count }
+										}
+									}
 								}
-							}
-						}
-						AND = {
-							check_variable = { current_nuke_type = 3 }
-							AND = {
-								has_tech = dirty_nuke
-								OR = {
-									check_variable = { num_equipment@lok_cobalt_nuke_equipment > nuke_launch_count }
-									check_variable = { num_equipment@lok_cobalt_nuke_equipment = nuke_launch_count }
+								AND = {
+									check_variable = { current_nuke_type = 2 }
+									AND = {
+										has_tech = fusion_nuke
+										OR = {
+											check_variable = { num_equipment@lok_fusion_nuke_equipment > nuke_launch_count }
+											check_variable = { num_equipment@lok_fusion_nuke_equipment = nuke_launch_count }
+										}
+									}
+								}
+								AND = {
+									check_variable = { current_nuke_type = 3 }
+									AND = {
+										has_tech = dirty_nuke
+										OR = {
+											check_variable = { num_equipment@lok_cobalt_nuke_equipment > nuke_launch_count }
+											check_variable = { num_equipment@lok_cobalt_nuke_equipment = nuke_launch_count }
+										}
+									}
 								}
 							}
 						}

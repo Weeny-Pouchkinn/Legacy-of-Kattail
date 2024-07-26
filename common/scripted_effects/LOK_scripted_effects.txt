@@ -1,3 +1,143 @@
+calculate_ai_nuke_production = {
+	set_variable = { factories_for_nukes = num_of_military_factories }
+	multiply_variable = { factories_for_nukes = 0.05 } #5% of mils are put on nukes, say 100 so now it's 20
+	if = { #Fascists like WMDs
+		limit = { has_government = fascism }
+		multiply_variable = { factories_for_nukes = 1.5 }
+	}
+	if = { #Katzens like WMDs
+		limit = { is_herzlands_warlord = yes }
+		multiply_variable = { factories_for_nukes = 2 }
+	}
+	if = { #Nations that REALLY like WMDs
+		limit = { OR = { tag = NEU tag = AKR } }
+		multiply_variable = { factories_for_nukes = 2 }
+	}
+	round_variable = factories_for_nukes
+	set_variable = { nukes_this_month = factories_for_nukes }
+	divide_variable = { nukes_this_month = 3 } #3 factories will make a nuke per month. 20/3 = 6.67 so 7 nukes
+	#Bonus from factory output
+	set_temp_variable = { nukes_bonus_factory_output = modifier@industrial_capacity_factory }
+	add_to_temp_variable = { nukes_bonus_factory_output = 1 }
+	#Bonus from efficiency cap
+	set_temp_variable = { nukes_bonus_efficiency_cap = modifier@production_efficiency_cap_factor }
+	multiply_temp_variable = { nukes_bonus_efficiency_cap = 0.5 }
+	add_to_temp_variable = { nukes_bonus_efficiency_cap = 1 }
+	#Add factory output + efficiency cap
+	multiply_variable = { nukes_this_month = nukes_bonus_factory_output }
+	multiply_variable = { nukes_this_month = nukes_bonus_efficiency_cap }
+	if = { #If we can make less than 1 then 50% of making none
+		limit = { check_variable = { nukes_this_month < 1 } }
+		random_list = {
+			1 = { set_variable = { nukes_this_month = 1 } }
+			1 = { set_variable = { nukes_this_month = 0 } }
+		}
+	}
+	round_variable = nukes_this_month
+	for_loop_effect = {
+		end = nukes_this_month
+		random_list = {
+			1 = {
+				add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 1 }
+			}
+			0 = {
+				add_equipment_to_stockpile = { type = lok_fusion_nuke_equipment_0 amount = 1 }
+				modifier = { add = 2 has_tech = fusion_nuke }
+			}
+			0 = {
+				add_equipment_to_stockpile = { type = lok_cobalt_nuke_equipment_0 amount = 1 }
+				modifier = { add = 1 has_tech = dirty_nuke }
+			}
+		}
+	}
+	multiply_variable = { factories_for_nukes = -1 }
+	add_dynamic_modifier = { modifier = LOK_nukes_factories }
+}
+
+count_nukes_in_stockpile = {
+	set_variable = { lok_total_nuke_stockpile = 0 }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fission_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fusion_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_cobalt_nuke_equipment }
+}
+
+calculate_salvo_capacity = {
+	set_temp_variable = { lok_salvo_capacity_added_last_week = lok_total_salvo_capacity } #Say 100
+	set_variable = { lok_total_salvo_capacity = 0 }
+			
+	every_controlled_state = { add_to_variable = { ROOT.lok_total_salvo_capacity = non_damaged_building_level@rocket_site } }
+	multiply_variable = { lok_total_salvo_capacity = 10 } #10 nukes per silo
+	set_temp_variable = { salvo_capacity_from_subs = num_ships_with_type@ballistic_submarine }
+
+	multiply_temp_variable = { salvo_capacity_from_subs = 20 } #10 nukes per ballistic sub
+	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_subs }
+
+	#Now let's say it's 120
+	subtract_from_temp_variable = { lok_salvo_capacity_added_last_week = lok_total_salvo_capacity } #-20
+	multiply_temp_variable = { lok_salvo_capacity_added_last_week = -1 } #20, we add that to the current capacity
+	clamp_temp_variable = { var = lok_salvo_capacity_added_last_week min = 0 }
+	add_to_variable = { lok_current_salvo_capacity = lok_salvo_capacity_added_last_week } #Add this to the current capacity
+	clamp_variable = { var = lok_current_salvo_capacity max = lok_total_salvo_capacity }
+}
+
+ai_fire_nuke = {
+	set_variable = { nuke_launch_count = 1 }
+	#Pick a nuke type.
+	random_list = {
+		0 = {
+			set_variable = { current_nuke_type = 1 }
+			modifier = { add = 1 has_tech = nukes }
+			modifier = { factor = 0 has_equipment = { lok_fission_nuke_equipment < 1 } }
+		}
+		0 = {
+			set_variable = { current_nuke_type = 2 }
+			modifier = { add = 1 has_tech = fusion_nuke }
+			modifier = { factor = 0 has_equipment = { lok_fusion_nuke_equipment < 1 } }
+		}
+		0 = {
+			set_variable = { current_nuke_type = 3 }
+			modifier = { add = 1 has_tech = dirty_nuke }
+			modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
+		}
+	}
+	random_enemy_country = { #PICK A TARGET!!! We pick a country that nuked us beforehand.
+		limit = {
+			OR = {
+				any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+				ROOT = { has_country_flag = nuked_by_@PREV }
+			}
+		}
+		random_owned_state = {
+			limit = { NOT = { is_core_of = ROOT } }
+			save_global_event_target_as = lok_thermonuclear_salvo_state
+			ROOT = {
+				fire_thermonuclear_salvo = yes #FIRE!!!!
+				if = {
+					limit = { check_variable = { current_nuke_type = 1 } }
+					add_equipment_to_stockpile = {
+						type = lok_fission_nuke_equipment
+						amount = -1
+					}
+				}
+				else_if = {
+					limit = { check_variable = { current_nuke_type = 2 } }
+					add_equipment_to_stockpile = {
+						type = lok_fusion_nuke_equipment
+						amount = -1
+					}
+				}
+				else_if = {
+					limit = { check_variable = { current_nuke_type = 3 } }
+					add_equipment_to_stockpile = {
+						type = lok_cobalt_nuke_equipment
+						amount = -1
+					}
+				}
+			}
+		}
+	}
+}
+
 reduce_compliance_coring_threshold_by_10 = {
 	if = { limit = { has_state_flag = compliance_100_@ROOT } clr_state_flag = compliance_100_@ROOT set_state_flag = compliance_90_@ROOT }
 	else_if = { limit = { has_state_flag = compliance_90_@ROOT } clr_state_flag = compliance_90_@ROOT set_state_flag = compliance_80_@ROOT }
@@ -358,6 +498,7 @@ calculate_combat_casualties = {
 
 #Firing the nukes
 fire_thermonuclear_salvo = {
+	count_nukes_in_stockpile = yes
 	for_loop_effect = {
 		end = nuke_launch_count
 		event_target:lok_thermonuclear_salvo_state = {
@@ -366,6 +507,9 @@ fire_thermonuclear_salvo = {
 			set_temp_variable = { anti_wmd_level_negative = anti_wmd_level }
 			multiply_temp_variable = { anti_wmd_level_negative = -1 }
 		}
+		subtract_from_variable = { lok_current_salvo_capacity = 1 }
+		clamp_variable = { var = lok_current_salvo_capacity min = 0 }
+		country_event = { id = LOK_nuke.1 days = 7 } #Refill salvo capacity in a bit
 		random_list = {
 			100 = {
 				launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
@@ -424,6 +568,7 @@ fire_thermonuclear_salvo = {
 						add_to_variable = { lok_state_deaths_display = lok_recent_nuke_casualties }
 						#Add these deaths to the controller's total and the grand total
 						var:controller = {
+							calculate_salvo_capacity = yes #Salvo capacity will shrink if ICBM silos are hit - beware!
 							add_to_variable = { lok_country_bombing_deaths = PREV.lok_recent_nuke_casualties }
 							add_to_variable = { lok_country_deaths = PREV.lok_recent_nuke_casualties }
 							add_to_variable = { global.lok_global_bombing_deaths = PREV.lok_recent_nuke_casualties }

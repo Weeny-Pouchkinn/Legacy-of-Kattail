@@ -289,40 +289,79 @@ country_event = {
 	is_triggered_only = yes
 
 	immediate = {
-		if = { #Add ALL herzlands states to the array
-			limit = { is_herzlands_warlord = yes }
-			every_state = {
-				limit = { var:controller = { is_herzlands_warlord = yes } }
-				add_to_array = { ROOT.states_that_can_be_cored_ids = THIS.id }
+		count_nukes_in_stockpile = yes
+		calculate_salvo_capacity = yes
+	}
+
+	option = {
+		name = "[?ROOT.calculate_salvo_capacity]"
+	}
+}
+
+#ai using nukes
+country_event = {
+	id = lok_debug.8
+	title = ""
+	desc = "debug_8"
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { nuke_launch_count = 1 }
+		#Pick a nuke type.
+		random_list = {
+			0 = {
+				set_variable = { current_nuke_type = 1 }
+				modifier = { add = 1 has_tech = nukes }
+				modifier = { factor = 0 has_equipment = { lok_fission_nuke_equipment < 1 } }
 			}
-			resize_array = { #Resize the array to fit em all
-				array = states_that_can_be_cored_threshold
-				size = states_that_can_be_cored_ids^num
+			0 = {
+				set_variable = { current_nuke_type = 2 }
+				modifier = { add = 1 has_tech = fusion_nuke }
+				modifier = { factor = 0 has_equipment = { lok_fusion_nuke_equipment < 1 } }
 			}
-			for_each_loop = {
-				array = states_that_can_be_cored_threshold
-				index = i
-				break = break
-				set_variable = { states_that_can_be_cored_threshold^i = 80 }
+			0 = {
+				set_variable = { current_nuke_type = 3 }
+				modifier = { add = 1 has_tech = dirty_nuke }
+				modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
 			}
 		}
-		every_state = {
-			limit = { is_core_of = STR }
-			add_to_temp_array = { array = states_changing_core_threshold }
-		}
-		#Set Struken to 40
-		for_each_loop = {
-			array = states_that_can_be_cored_ids
-			break = break
-			index = i
-			value = v
-			if = {
-				check_variable = {  }
+		random_country = { #PICK A TARGET!!!
+			limit = {
+				has_war_with = ROOT
+				ROOT = { has_country_flag = nuked_by_@PREV }
+			}
+			random_owned_state = {
+				limit = { NOT = { is_core_of = ROOT } }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes #FIRE!!!!
+					if = {
+						limit = { check_variable = { current_nuke_type = 1 } }
+						add_equipment_to_stockpile = {
+							type = lok_fission_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 2 } }
+						add_equipment_to_stockpile = {
+							type = lok_fusion_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 3 } }
+						add_equipment_to_stockpile = {
+							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+				}
 			}
 		}
 	}
 
 	option = {
-		name = "[?states_that_can_be_cored_ids^121] [?states_that_can_be_cored_threshold^121]"
+		name = "[?ROOT.factories_for_nukes]"
 	}
 }

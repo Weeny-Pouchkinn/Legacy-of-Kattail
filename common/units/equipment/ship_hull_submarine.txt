@@ -212,10 +212,43 @@ equipments = {
 		}
 	}
 
+	ship_hull_ballistic_submarine = {
+		year = 1922
+
+		is_archetype = yes
+		is_buildable = no
+		type = submarine
+		group_by = archetype
+		priority = 2500
+		
+		upgrades = {
+			ship_reliability_upgrade
+			sub_engine_upgrade
+			sub_stealth_upgrade
+			sub_torpedo_upgrade
+		}
+		
+		interface_category = interface_category_other_ships
+
+		fuel_consumption = 0
+		
+		resources = {
+			#oil = 1
+			steel = 1
+		}
+		
+		manpower = 200
+
+		naval_supremacy_factor = 0.8
+		naval_weather_penalty_factor = 1 #this value gets -1 before its used so 1.5 will increase the effects of weather penalties by 0.5. this is base value is required for MIO stat modifiers
+		#MIO stat modifers will factory by the unmodified stat value so here a 0.5 mio stat modifier would make this ships naval_weather_penalty_factor stat 1.5.
+		# change this from 1 at your own risk
+	}
+
 	ballistic_submarine_1 = {
 		year = 1936
 
-		archetype = ship_hull_submarine
+		archetype = ship_hull_ballistic_submarine
 		priority = 2500
 		module_slots = inherit
 		

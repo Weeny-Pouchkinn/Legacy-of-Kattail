@@ -29,7 +29,7 @@ def process_file(file_path):
                     for i, line in enumerate(lines):
                         if "buildings = {" in line:
                             # Insert the food_silo line right after the "buildings = {" line
-                            lines.insert(i + 1, "\t\t\tnuclear_reactor = 1\n")
+                            lines.insert(i + 1, "\t\t\t\n")
                             break
 
         # Write the updated content back to the file
