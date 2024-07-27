@@ -46,6 +46,7 @@ tags={
 	"Map"
 	"Gameplay"
 }
+picture="legacyofkattail.gif"
 name="Legacy of Kattail DEV"
 supported_version="1.14.4"
 path="mod/legacy-of-kattail"
