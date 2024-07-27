@@ -14,7 +14,19 @@ focus_tree = {
 		x = 10
 		y = 0
 		cost = 5
+		available = { always = no }
 		completion_reward = {
+			add_ideas = AUR_dreijahrige_idea
+			hidden_effect = {
+				country_event = { id = AUR_industry.1 days = 365 }
+				#Count pre-existing buildings in state
+				set_variable = { aur_num_infra_built = 0 }
+				set_variable = { aur_num_reactors_built = 0 }
+				every_owned_state = {
+					add_to_variable = { AUR.aur_num_infra_built = building_level@infrastructure }
+					add_to_variable = { AUR.aur_num_reactors_built = building_level@nuclear_reactor }
+				}
+			}
 		}
 	}
 	focus = {
@@ -23,9 +35,28 @@ focus_tree = {
 		x = -2
 		y = 1
 		cost = 5
+		available = { always = no }
 		relative_position_id = AUR_dreijahrige
 		prerequisite = { focus = AUR_dreijahrige }
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = AUR_dreijahrige_idea
+				add_idea = AUR_pushing_idea
+			}
+			swap_ideas = {
+				remove_idea = AUR_chaos_collapse
+				add_idea = katzen_collapse_2
+			}
+			hidden_effect = {
+				country_event = { id = AUR_industry.2 days = 365 }
+				#Count pre-existing buildings in state
+				set_variable = { aur_num_mils_built = 0 }
+				set_variable = { aur_num_civs_built = 0 }
+				every_owned_state = {
+					add_to_variable = { AUR.aur_num_mils_built = building_level@arms_factory }
+					add_to_variable = { AUR.aur_num_civs_built = building_level@industrial_complex }
+				}
+			}
 		}
 	}
 	focus = {
@@ -34,9 +65,30 @@ focus_tree = {
 		x = 0
 		y = 1
 		cost = 5
+		available = { always = no }
 		relative_position_id = AUR_pushing_pushing
 		prerequisite = { focus = AUR_pushing_pushing }
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = AUR_pushing_idea
+				add_idea = AUR_nearly_there_idea
+			}
+			swap_ideas = {
+				remove_idea = katzen_collapse_2
+				add_idea = katzen_collapse_1
+			}
+			hidden_effect = {
+				country_event = { id = AUR_industry.3 days = 365 }
+				#Count pre-existing buildings in state
+				set_variable = { aur_num_aa_built = 0 }
+				set_variable = { aur_num_radar_built = 0 }
+				set_variable = { aur_num_bunkers_built = 0 }
+				every_owned_state = {
+					add_to_variable = { AUR.aur_num_aa_built = building_level@anti_air_building }
+					add_to_variable = { AUR.aur_num_radar_built = building_level@radar_station }
+					add_to_variable = { AUR.aur_num_bunkers_built = building_level@bunker }
+				}
+			}
 		}
 	}
 	focus = {
@@ -45,9 +97,13 @@ focus_tree = {
 		x = 0
 		y = 1
 		cost = 5
+		available = { always = no }
 		relative_position_id = AUR_nearly_there
 		prerequisite = { focus = AUR_nearly_there }
 		completion_reward = {
+			remove_ideas = AUR_nearly_there_idea
+			remove_ideas = katzen_collapse_1
+			country_event = { id = AUR_event.3 }
 		}
 	}
 	focus = {
@@ -59,6 +115,39 @@ focus_tree = {
 		relative_position_id = AUR_dreijahrige
 		prerequisite = { focus = AUR_dreijahrige }
 		completion_reward = {
+			add_stability = -0.10
+			519 = {
+				add_building_construction = {
+					type = supply_node
+					level = 1
+					province = 6429
+					instant_build = yes
+				}
+			}
+			488 = {
+				add_building_construction = {
+					type = supply_node
+					level = 1
+					province = 67
+					instant_build = yes
+				}
+			}
+			build_railway = {
+				level = 2
+				path = { 3769 4295 67 3113 3237 13607 }
+			}
+			build_railway = {
+				level = 2
+				path = { 9851 13980 13917 6429 13819 10857 11038 }
+			}
+			520 = {
+				add_manpower = -5000
+				add_building_construction = { type = infrastructure level = 1 }
+			}
+			521 = {
+				add_manpower = -5000
+				add_building_construction = { type = infrastructure level = 1 }
+			}
 		}
 	}
 	focus = {
@@ -70,6 +159,8 @@ focus_tree = {
 		relative_position_id = AUR_slaves_for_roads
 		prerequisite = { focus = AUR_slaves_for_roads }
 		completion_reward = {
+			add_political_power = 100
+			add_research_slot = 1
 		}
 	}
 	focus = {
@@ -90,6 +181,7 @@ focus_tree = {
 		y = -1
 		cost = 1
 		completion_reward = {
+			country_event = { id = AUR_event.1 }
 		}
 	}
 	focus = {
@@ -372,6 +464,90 @@ focus_tree = {
 		prerequisite = { focus = AUR_reopen_auralian_docks }
 		relative_position_id = AUR_reopen_auralian_docks
 		completion_reward = {
+			custom_effect_tooltip = AUR_a_grand_fleet_effect
+			116 = { add_manpower = -20000 }
+			add_timed_idea = {
+				idea = AUR_exhausted_dockyards
+				days = 180
+			}
+			hidden_effect = {
+				create_equipment_variant = {
+					name = "Gilges-Class"
+					type = destroyer_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				create_equipment_variant = {
+					name = "Koko-Class"
+					type = submarine_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				create_equipment_variant = {
+					name = "Seesteiner-Class"
+					type = light_cruiser_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				create_equipment_variant = {
+					name = "Stammeow-Class"
+					type = battleship_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				for_loop_effect = {
+					end = 10
+					create_ship = {
+						type = destroyer_2
+						equipment_variant = "Glges-Clasis"
+						name = "Gilges-Class"
+						creator = ROOT
+					}
+				}
+				for_loop_effect = {
+					end = 10
+					create_ship = {
+						type = submarine_2
+						equipment_variant = "Koko-Class"
+						name = "Koko-Class"
+						creator = ROOT
+					}
+				}
+				for_loop_effect = {
+					end = 5
+					create_ship = {
+						type = light_cruiser_2
+						equipment_variant = "Seesteiner-Class"
+						name = "Seesteiner-Class"
+						creator = ROOT
+					}
+				}
+				for_loop_effect = {
+					end = 1
+					create_ship = {
+						type = battleship_2
+						equipment_variant = "Stammeow-Class"
+						name = "Stammeow-Class"
+						creator = ROOT
+					}
+				}
+			}
 		}
 	}
 	focus = {

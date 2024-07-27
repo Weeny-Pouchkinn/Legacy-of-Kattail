@@ -1,6 +1,12 @@
 on_actions = {
 	on_startup = {
 		effect = {
+			random_list = { #just pick a random southerner for USSF
+				1 = { CAT = { set_country_flag = will_form_ussf } }
+				1 = { LIO = { set_country_flag = will_form_ussf } }
+				1 = { MEO = { set_country_flag = will_form_ussf } }
+				1 = { PRL = { set_country_flag = will_form_ussf } }
+			}
 			every_possible_country = {
 				set_rule = { can_puppet = no } #Handled by decision
 				set_rule = { can_create_factions = no }
@@ -565,6 +571,62 @@ on_actions = {
 					}
 				}
 				ROOT = { every_core_state = { transfer_state_to = event_target:ussf_leader } }
+			}
+		}
+	}
+
+	on_weekly_AUR = {
+		effect = {
+			if = {
+				limit = { NOT = { has_country_flag = failed_dreijahrige } }
+				if = {
+					limit = {
+						has_completed_focus = AUR_dreijahrige
+						NOT = { has_completed_focus = AUR_pushing_pushing }
+					}
+					#See the new infra/reactors built
+					set_variable = { aur_num_new_infra_built = 0 }
+					set_variable = { aur_num_new_reactors_built = 0 }
+					every_owned_state = {
+						add_to_variable = { AUR.aur_num_new_infra_built = building_level@infrastructure }
+						add_to_variable = { AUR.aur_num_new_reactors_built = building_level@nuclear_reactor }
+					}
+					subtract_from_variable = { aur_num_new_infra_built = aur_num_infra_built }
+					subtract_from_variable = { aur_num_new_reactors_built = aur_num_reactors_built }
+				}
+				else_if = {
+					limit = {
+						has_completed_focus = AUR_pushing_pushing
+						NOT = { has_completed_focus = AUR_nearly_there }
+					}
+					#See the new infra/reactors built
+					set_variable = { aur_num_new_mils_built = 0 }
+					set_variable = { aur_num_new_civs_built = 0 }
+					every_owned_state = {
+						add_to_variable = { AUR.aur_num_new_mils_built = building_level@arms_factory }
+						add_to_variable = { AUR.aur_num_new_civs_built = building_level@industrial_complex }
+					}
+					subtract_from_variable = { aur_num_new_mils_built = aur_num_mils_built }
+					subtract_from_variable = { aur_num_new_civs_built = aur_num_civs_built }
+				}
+				else_if = {
+					limit = {
+						has_completed_focus = AUR_nearly_there
+						NOT = { has_completed_focus = AUR_fulfilled }
+					}
+					#See the new infra/reactors built
+					set_variable = { aur_num_new_aa_built = 0 }
+					set_variable = { aur_num_new_radar_built = 0 }
+					set_variable = { aur_num_new_bunkers_built = 0 }
+					every_owned_state = {
+						add_to_variable = { AUR.aur_num_new_aa_built = building_level@anti_air_building }
+						add_to_variable = { AUR.aur_num_new_radar_built = building_level@radar_station }
+						add_to_variable = { AUR.aur_num_new_bunkers_built = building_level@bunker }
+					}
+					subtract_from_variable = { aur_num_new_aa_built = aur_num_aa_built }
+					subtract_from_variable = { aur_num_new_radar_built = aur_num_radar_built }
+					subtract_from_variable = { aur_num_new_bunkers_built = aur_num_bunkers_built }
+				}
 			}
 		}
 	}

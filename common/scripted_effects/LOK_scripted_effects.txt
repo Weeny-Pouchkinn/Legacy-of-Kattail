@@ -1,3 +1,53 @@
+lower_ipf_resistance = {
+	if = {
+		limit = { has_idea = ipf_resistance_4_idea }
+		swap_ideas = {
+			remove_idea = ipf_resistance_4_idea
+			add_idea = ipf_resistance_3_idea
+		}
+	}
+	else_if = {
+		limit = { has_idea = ipf_resistance_3_idea }
+		swap_ideas = {
+			remove_idea = ipf_resistance_3_idea
+			add_idea = ipf_resistance_2_idea
+		}
+	}
+	else_if = {
+		limit = { has_idea = ipf_resistance_2_idea }
+		swap_ideas = {
+			remove_idea = ipf_resistance_2_idea
+			add_idea = ipf_resistance_1_idea
+		}
+	}
+	else = { remove_ideas = ipf_resistance_1_idea }
+}
+
+lower_kpk_resistance = {
+	if = {
+		limit = { has_idea = ksk_resistance_4_idea }
+		swap_ideas = {
+			remove_idea = ksk_resistance_4_idea
+			add_idea = ksk_resistance_3_idea
+		}
+	}
+	else_if = {
+		limit = { has_idea = ksk_resistance_3_idea }
+		swap_ideas = {
+			remove_idea = ksk_resistance_3_idea
+			add_idea = ksk_resistance_2_idea
+		}
+	}
+	else_if = {
+		limit = { has_idea = ksk_resistance_2_idea }
+		swap_ideas = {
+			remove_idea = ksk_resistance_2_idea
+			add_idea = ksk_resistance_1_idea
+		}
+	}
+	else = { remove_ideas = ksk_resistance_1_idea }
+}
+
 calculate_ai_nuke_production = {
 	set_variable = { factories_for_nukes = num_of_military_factories }
 	multiply_variable = { factories_for_nukes = 0.05 } #5% of mils are put on nukes, say 100 so now it's 20
