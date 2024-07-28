@@ -10,7 +10,9 @@ on_actions = {
 				set_variable = { country_food_stockpile = 0 } #Food stockpiles
 				set_variable = { country_food_stockpile_max = 0 } #Food stockpile max
 				set_variable = { construction_repeatable_buff = 0 }
-				add_dynamic_modifier = { modifier = lok_tech_buffs }
+				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+				add_dynamic_modifier = { modifier = LOK_extra_resources_modifier }
+				add_ideas = LOK_base_modifier_definitions
 			}
 
 			#Casualty counters
@@ -33,6 +35,7 @@ on_actions = {
 
 				set_variable = { lok_country_deaths_display = 0 }
 			}
+
 			every_state = {
 				set_variable = { lok_state_deaths = 0 }
 
@@ -47,6 +50,10 @@ on_actions = {
 
 				set_variable = { lok_min_manpower_before_collapse = state_population_k } #Determine the population before the state collapses into anarchy
 				divide_variable = { lok_min_manpower_before_collapse = 20 } #If 50k people are left out of 1M then stuff collapses.
+			
+				#Radiation in state
+				add_dynamic_modifier = { modifier = lok_radiation_state_modifier }
+				calculate_radiation_state_modifiers = yes
 			}
 
 			#Setup the Herzlands state array to track unification
@@ -69,13 +76,46 @@ on_actions = {
 
 			#Wonders
 			#Katown Pyramid
-			509 = { set_variable = { wonder = 1 } }
+			509 = {
+				set_variable = { wonder = 1 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.15 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+			}
 			#Lionsburg Riesigerwerks
-			173 = { set_variable = { wonder = 2 } }
+			173 = {
+				set_variable = { wonder = 2 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = -0.50 }
+			}
 			#Great Shipyards of Auralia
-			116 = { set_variable = { wonder = 3 } }
+			116 = {
+				set_variable = { wonder = 3 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+			}
 			#Himezulte Airbase
-			220 = { set_variable = { wonder = 4 } }
+			220 = {
+				set_variable = { wonder = 4 }
+
+				#We store the modifier values in an array
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+				# add_to_array = { array = wonder_modifiers_values value = 0.10 }
+			}
+
+			192 = { set_variable = { wonder = 5 } } #Lionsburg Exchange
+			595 = { set_variable = { wonder = 6 } } #Meon-U
+			13 = { set_variable = { wonder = 7 } } #Lorishaus
+			477 = { set_variable = { wonder = 8 } } #Frankfurr Institute
+			535 = { set_variable = { wonder = 9 } } #Big hole in neu-tailsbaden
+			486 = { set_variable = { wonder = 10 } } #Stronien Hub
+			583 = { set_variable = { wonder = 11 } } #Punchiestadt Orchards
 
 			#Setup species
 			every_state = { set_variable = { species = 0 } }
@@ -201,9 +241,9 @@ on_actions = {
 			#And some Brambles (fear)
 			561 = { set_variable = { minority = 10 } }
 
-			every_country = {
+			every_possible_country = {
 				add_ideas = LOK_katzen_aggressive
-				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+				every_owned_state = { apply_state_species_modifier = yes } #Species modifiers
 				apply_wonder_effects = yes
 				if = {
 					limit = { is_ai = yes }
@@ -220,12 +260,18 @@ on_actions = {
 	
 	on_weekly = {
 		effect = {
+			if = {
+				limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
+				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+			}
 			apply_wonder_effects = yes
 			calculate_stab_ws_hit_from_noncore = yes
 			calculate_combat_casualties = yes
 			calculate_total_food_consumption = yes
 			every_controlled_state = {
-				calculate_radiation_in_state = yes
+				calculate_radiation_in_state = yes #First calculate the radiation spread/fallout
+				calculate_radiation_state_modifiers = yes #Then recalc the modifiers
+				apply_radiation_effects = yes #Finally, apply casualties
 				#Round the final displays
 				set_variable = { lok_state_deaths_display = lok_state_deaths }
 				round_variable = lok_state_deaths_display
@@ -265,31 +311,21 @@ on_actions = {
 			set_variable = { lok_country_starvation_deaths_display = lok_country_starvation_deaths }
 			round_variable = lok_country_starvation_deaths_display
 
-			#Round the final displays for states
+			#Round the final displays for global
 			set_variable = { global.lok_global_deaths_display = global.lok_global_deaths }
-			divide_variable = { global.lok_global_deaths_display = 10 } #Turn to millions
-			round_variable = global.lok_global_deaths_display
-			divide_variable = { global.lok_global_deaths_display = 100 }
+			divide_variable = { global.lok_global_deaths_display = 1000 } #Turn to millions
 
 			set_variable = { global.lok_global_radiation_deaths_display = global.lok_global_radiation_deaths }
-			divide_variable = { global.lok_global_radiation_deaths_display = 10 } #Turn to millions
-			round_variable = global.lok_global_radiation_deaths_display
-			divide_variable = { global.lok_global_radiation_deaths_display = 100 }
+			divide_variable = { global.lok_global_radiation_deaths_display = 1000 } #Turn to millions
 
 			set_variable = { global.lok_global_combat_deaths_display = global.lok_global_combat_deaths }
-			divide_variable = { global.lok_global_combat_deaths = 10 } #Turn to millions
-			round_variable = global.lok_global_combat_deaths
-			divide_variable = { global.lok_global_combat_deaths = 100 }
+			divide_variable = { global.lok_global_combat_deaths = 1000 } #Turn to millions
 
 			set_variable = { global.lok_global_bombing_deaths_display = global.lok_global_bombing_deaths }
-			divide_variable = { global.lok_global_bombing_deaths_display = 10 } #Turn to millions
-			round_variable = global.lok_global_bombing_deaths_display
-			divide_variable = { global.lok_global_bombing_deaths_display = 100 }
+			divide_variable = { global.lok_global_bombing_deaths_display = 1000 } #Turn to millions
 
 			set_variable = { global.lok_global_starvation_deaths_display = global.lok_global_starvation_deaths }
-			divide_variable = { global.lok_global_starvation_deaths_display = 10 } #Turn to millions
-			round_variable = global.lok_global_starvation_deaths_display
-			divide_variable = { global.lok_global_starvation_deaths_display = 100 }
+			divide_variable = { global.lok_global_starvation_deaths_display = 1000 } #Turn to millions
 
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
@@ -316,6 +352,9 @@ on_actions = {
 
 	on_daily = {
 		effect = {
+			every_country = { #Replacing the original script
+				calculate_bonus_resources_from_modifiers = yes
+			}
 			if = { #DEBUG NUCLEAR WAR MODE - NATIONS WILL RANDOMLY FIRE NUKES AT THE STATES OF THEIR ENEMIES!
 				limit = { has_global_flag = lok_nuclear_war_mode_on }
 				random_state = {
@@ -366,8 +405,15 @@ on_actions = {
 		effect = {
 			#Nukes take away 5% of a state's population. Calculate it and remove, then add to the total counters
 			FROM = {
-				add_to_variable = { lok_radiation_level = 1 } #Radiation level
-				every_neighbor_state = { add_to_variable = { lok_radiation_level = 0.25 } } #It spreads to neighboring states too, how fun!
+				set_variable = { lok_added_radiation_level = 1 }
+				multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
+				add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
+				divide_variable = { lok_added_radiation_level = 4 }
+				calculate_radiation_state_modifiers = yes
+				every_neighbor_state = { #It spreads to neighboring states too, how fun!
+					add_to_variable = { lok_radiation_level = PREV.lok_added_radiation_level }
+					calculate_radiation_state_modifiers = yes
+				}
 				if = {
 					limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
 					set_temp_variable = { lok_nuke_casualties = state_population_k }
@@ -393,6 +439,8 @@ on_actions = {
 					}
 				}
 			}
+			#Radiation mapmode
+			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 		}
 	}
 }

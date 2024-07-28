@@ -1,8 +1,30 @@
+LOK_extra_resources_modifier = {
+	enable = { always = yes }
+	#icon = GFX_idea_lok_food_deficit_modifier
+
+	country_resource_steel = lok_total_extra_steel
+	country_resource_rubber = lok_total_extra_rubber
+	country_resource_aluminium = lok_total_extra_aluminium
+	country_resource_chromium = lok_total_extra_chromium
+	country_resource_oil = lok_total_extra_oil
+	country_resource_tungsten = lok_total_extra_tungsten
+	country_resource_food = lok_total_extra_food
+	country_resource_fissiles = lok_total_extra_fissiles
+	country_resource_supertensiles = lok_total_extra_supertensiles
+}
+
 LOK_food_consumption_modifier = {
 	enable = { always = yes }
+	#icon = GFX_idea_lok_food_deficit_modifier
 
-	country_resource_food = country_food_consumption_modifier
+	country_resource_cost_food = country_food_consumption_modifier
 }
+
+# LOK_food_production_negate_excavation_modifier = {
+# 	enable = { always = yes }
+
+# 	country_resource_food = country_food_negate_excavation_modifier
+# }
 
 lok_noncore_stab_ws_impact = {
 	enable = { always = yes }
@@ -30,8 +52,65 @@ lok_wonder_modifier = {
 	icon = GFX_idea_FRA_scw_intervention_republicans_focus
 
 	#Katown Pyramid
-	max_planning = wonder_1_modifier_1
-	army_org_regain = wonder_1_modifier_2
-	army_org_factor = wonder_1_modifier_3
-	compliance_growth = wonder_1_modifier_4
+	max_planning = wonder_1_modifier_0
+	army_org_regain = wonder_1_modifier_1
+	army_org_factor = wonder_1_modifier_2
+	compliance_growth = wonder_1_modifier_3
+
+	#Riesigerwerks
+	production_factory_efficiency_gain_factor = wonder_2_modifier_0
+	unit_heavy_armor_design_cost_factor = wonder_2_modifier_1
+
+	#Dockyards
+	refit_speed = wonder_3_modifier_0
+
+	#Himezulte
+	air_mission_efficiency = wonder_4_modifier_0
+	air_range_factor = wonder_4_modifier_1
+}
+
+#Radiation modifier - At 10 or more, states stop producing anything.
+lok_radiation_state_modifier = {
+	enable = { always = yes }
+
+	recruitable_population_factor = lok_radiation_modifier
+	local_building_slots_factor = lok_radiation_modifier
+	#industry_repair_factor = lok_radiation_modifier
+	state_resources_factor = lok_radiation_modifier
+	state_production_speed_buildings_factor = lok_radiation_modifier
+
+	local_supplies_for_controller = lok_radiation_army_modifier
+	army_speed_factor_for_controller = lok_radiation_army_modifier
+	local_org_regain = lok_radiation_army_modifier
+}
+
+lok_species_katzen_majority = {
+	enable = { always = yes }
+
+	resistance_growth = 0.30
+	resistance_target = 0.15
+	enemy_local_supplies = -0.20
+	enemy_army_speed_factor = -0.20
+}
+
+lok_species_sobaki_majority = {
+	enable = { always = yes }
+
+	state_production_speed_dockyard_factor = 0.15
+}
+
+wonder_idea_11_normal = {
+	enable = { always = yes }
+
+	state_resource_food = 100
+}
+wonder_idea_11_capital = {
+	enable = { always = yes }
+
+	state_resource_food = 200
+}
+wonder_idea_11_noncore = {
+	enable = { always = yes }
+
+	state_resource_food = 50
 }
