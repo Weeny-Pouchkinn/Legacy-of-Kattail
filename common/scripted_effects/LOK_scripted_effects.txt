@@ -1,53 +1,91 @@
-lower_ipf_resistance = {
-	if = {
-		limit = { has_idea = ipf_resistance_4_idea }
-		swap_ideas = {
-			remove_idea = ipf_resistance_4_idea
-			add_idea = ipf_resistance_3_idea
-		}
+kill_katlinin = {
+	set_global_flag = katlinin_dead
+	every_country = {
+		limit = { has_dynamic_modifier = { modifier = LOK_KSK_IPF_activity } }
+		subtract_from_variable = { ksk_strength = 2 }
+		calculate_ipf_ksk_resistance = yes
 	}
-	else_if = {
-		limit = { has_idea = ipf_resistance_3_idea }
-		swap_ideas = {
-			remove_idea = ipf_resistance_3_idea
-			add_idea = ipf_resistance_2_idea
-		}
-	}
-	else_if = {
-		limit = { has_idea = ipf_resistance_2_idea }
-		swap_ideas = {
-			remove_idea = ipf_resistance_2_idea
-			add_idea = ipf_resistance_1_idea
-		}
-	}
-	else = { remove_ideas = ipf_resistance_1_idea }
 }
 
-lower_kpk_resistance = {
-	if = {
-		limit = { has_idea = ksk_resistance_4_idea }
-		swap_ideas = {
-			remove_idea = ksk_resistance_4_idea
-			add_idea = ksk_resistance_3_idea
-		}
+kill_meowrius = {
+	set_global_flag = meowrius_dead
+	every_country = {
+		limit = { has_dynamic_modifier = { modifier = LOK_KSK_IPF_activity } }
+		subtract_from_variable = { ipf_strength = 2 }
+		calculate_ipf_ksk_resistance = yes
 	}
-	else_if = {
-		limit = { has_idea = ksk_resistance_3_idea }
-		swap_ideas = {
-			remove_idea = ksk_resistance_3_idea
-			add_idea = ksk_resistance_2_idea
-		}
-	}
-	else_if = {
-		limit = { has_idea = ksk_resistance_2_idea }
-		swap_ideas = {
-			remove_idea = ksk_resistance_2_idea
-			add_idea = ksk_resistance_1_idea
-		}
-	}
-	else = { remove_ideas = ksk_resistance_1_idea }
 }
 
+calculate_ipf_ksk_resistance = {
+	if = {
+		limit = { has_global_flag = katlinin_dead }
+		clamp_variable = { var = ksk_strength min = 0 max = 3 }
+	}
+	else = { clamp_variable = { var = ksk_strength min = 0 max = 6 } }
+
+	if = {
+		limit = { has_global_flag = meowrius_dead }
+		clamp_variable = { var = ipf_strength min = 0 max = 3 }
+	}
+	else = { clamp_variable = { var = ipf_strength min = 0 max = 6 } }
+
+	clamp_variable = { var = ipf_opinion min = -5 max = 5 }
+	clamp_variable = { var = ksk_opinion min = -5 max = 5 }
+	if = {
+		limit = { has_dynamic_modifier = { modifier = LOK_KSK_IPF_activity } }
+		set_variable = { ipf_stability_factor = 0.025 }
+		set_variable = { ipf_industrial_capacity_factory = 0.025 }
+		set_variable = { ipf_resistance_activity = -0.05 }
+		set_variable = { ipf_resistance_growth = -0.05 }
+		set_variable = { ipf_democratic_drift = 0.01 }
+
+		multiply_variable = { ipf_stability_factor = ipf_strength }
+		multiply_variable = { ipf_industrial_capacity_factory = ipf_strength }
+		multiply_variable = { ipf_resistance_activity = ipf_strength }
+		multiply_variable = { ipf_resistance_growth = ipf_strength }
+		multiply_variable = { ipf_democratic_drift = ipf_strength }
+		
+		if = {
+			limit = { check_variable = { ipf_opinion < 0 } }
+			multiply_variable = { ipf_stability_factor = -1 }
+			multiply_variable = { ipf_industrial_capacity_factory = -1 }
+			multiply_variable = { ipf_resistance_activity = -1 }
+			multiply_variable = { ipf_resistance_growth = -1 }
+		}
+
+		else_if = {
+			limit = { check_variable = { ipf_opinion = 0 } }
+			multiply_variable = { ipf_stability_factor = 0 }
+			multiply_variable = { ipf_industrial_capacity_factory = 0 }
+			multiply_variable = { ipf_resistance_activity = 0 }
+			multiply_variable = { ipf_resistance_growth = 0 }
+		}
+
+		set_variable = { ksk_war_support_factor = 0.025 }
+		set_variable = { ksk_production_factory_max_efficiency_factor = 0.025 }
+		set_variable = { ksk_compliance_gain = 0.005 }
+		set_variable = { ksk_communism_drift = 0.01 }
+
+		multiply_variable = { ksk_war_support_factor = ksk_strength }
+		multiply_variable = { ksk_production_factory_max_efficiency_factor = ksk_strength }
+		multiply_variable = { ksk_compliance_gain = ksk_strength }
+		multiply_variable = { ksk_communism_drift = ksk_strength }
+
+		if = {
+			limit = { check_variable = { ksk_opinion < 0 } }
+			multiply_variable = { ksk_war_support_factor = -1 }
+			multiply_variable = { ksk_production_factory_max_efficiency_factor = -1 }
+			multiply_variable = { ksk_compliance_gain = -1 }
+		}
+
+		else_if = {
+			limit = { check_variable = { ksk_opinion = 0 } }
+			multiply_variable = { ksk_war_support_factor = 0 }
+			multiply_variable = { ksk_production_factory_max_efficiency_factor = 0 }
+			multiply_variable = { ksk_compliance_gain = 0 }
+		}
+	}
+}
 calculate_ai_nuke_production = {
 	set_variable = { factories_for_nukes = num_of_military_factories }
 	multiply_variable = { factories_for_nukes = 0.05 } #5% of mils are put on nukes, say 100 so now it's 20

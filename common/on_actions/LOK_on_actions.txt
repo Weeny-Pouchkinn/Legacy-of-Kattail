@@ -254,12 +254,114 @@ on_actions = {
 			every_possible_country = {
 				if = {
 					limit = { is_herzlands_warlord = yes }
+					add_dynamic_modifier = { modifier = LOK_KSK_IPF_activity }
+					#Initialize KSK/IPF
+					if = {
+						limit = { has_government = fascism }
+						set_variable = { ipf_opinion = -4 }
+						set_variable = { ipf_strength = 4 }
+						set_variable = { ksk_opinion = -4 }
+						set_variable = { ksk_strength = 4 }
+					}
+					if = {
+						limit = { has_government = neutrality }
+						set_variable = { ipf_opinion = -4 }
+						set_variable = { ipf_strength = 4 }
+						set_variable = { ksk_opinion = 0 }
+						set_variable = { ksk_strength = 1 }
+					}
+					if = {
+						limit = { has_government = democratic }
+						set_variable = { ipf_opinion = 2 }
+						set_variable = { ipf_strength = 2 }
+						set_variable = { ksk_opinion = -2 }
+						set_variable = { ksk_strength = 2 }
+					}
+					if = {
+						limit = { has_government = communism }
+						set_variable = { ipf_opinion = -2 }
+						set_variable = { ipf_strength = 2 }
+						set_variable = { ksk_opinion = 2 }
+						set_variable = { ksk_strength = 2 }
+					}
+					AUR = {
+						set_variable = { ipf_opinion = -5 }
+						set_variable = { ipf_strength = 6 }
+						set_variable = { ksk_opinion = -5 }
+						set_variable = { ksk_strength = 6 }
+					}
+					SIL = {
+						set_variable = { ipf_opinion = -4 }
+						set_variable = { ipf_strength = 1 }
+						set_variable = { ksk_opinion = -4 }
+						set_variable = { ksk_strength = 2 }
+					}
+					CLE = {
+						set_variable = { ipf_opinion = -3 }
+						set_variable = { ipf_strength = 1 }
+						set_variable = { ksk_opinion = -3 }
+						set_variable = { ksk_strength = 0 }
+					}
+					PRL = {
+						set_variable = { ksk_opinion = -3 }
+						set_variable = { ksk_strength = 2 }
+					}
+					CAT = {
+						set_variable = { ksk_opinion = -3 }
+						set_variable = { ksk_strength = 2 }
+					}
+					PTQ = {
+						set_variable = { ksk_opinion = -3 }
+						set_variable = { ksk_strength = 3 }
+					}
+					STR = {
+						set_variable = { ksk_opinion = 0 }
+						set_variable = { ksk_strength = 1 }
+					}
+					IMF = {
+						set_variable = { ipf_opinion = -1 }
+						set_variable = { ipf_strength = 1 }
+						set_variable = { ksk_opinion = 0 }
+						set_variable = { ksk_strength = 0 }
+					}
+					MEW = {
+						set_variable = { ksk_opinion = 4 }
+						set_variable = { ksk_strength = 4 }
+						set_variable = { ipf_opinion = -2 }
+						set_variable = { ipf_strength = 1 }
+					}
+					ELO = {
+						set_variable = { ksk_opinion = 0 }
+						set_variable = { ksk_strength = 1 }
+						set_variable = { ipf_opinion = 4 }
+						set_variable = { ipf_strength = 4 }
+					}
+					calculate_ipf_ksk_resistance = yes
 					for_each_scope_loop = {
 						array = global.herzlands_states_array
 						break = break
 						set_state_flag = compliance_80_@PREV
 						add_to_array = { array = PREV.potential_cores_array } #All the states that this nation can potentially core
 					}
+				}
+			
+				#Where are Katlinin and Meowrius?
+				random_country = {
+					limit = {
+						is_herzlands_warlord = yes
+						NOT = { tag = SIL tag = AUR }
+						check_variable = { ipf_strength > 0 }
+					}
+					save_global_event_target_as = meowrius_country
+				}
+
+				random_country = {
+					limit = {
+						is_herzlands_warlord = yes
+						NOT = { tag = SIL tag = AUR }
+						check_variable = { ksk_strength > 0 }
+					}
+					save_global_event_target_as = katlinin_country
 				}
 
 				#Country species
@@ -469,9 +571,33 @@ on_actions = {
 	on_monthly = {
 		effect = {
 			force_update_map_mode = { mapmode = LOK_species_map_mode }
+			calculate_ipf_ksk_resistance = yes
 			if = {
 				limit = { is_ai = yes has_tech = nukes }
 				calculate_ai_nuke_production = yes #script that gives nukes to the AI based on their military factory count (and reduces their mil count)
+			}
+
+			#Katlinin and Meowrius go on an adventure. Every months they can just move somewhere else to run their operations.
+			random = {
+				chance = 50
+				random_country = {
+					limit = {
+						is_herzlands_warlord = yes
+						check_variable = { ipf_strength > 0 }
+					}
+					save_global_event_target_as = meowrius_country
+				}
+			}
+
+			random = {
+				chance = 50
+				random_country = {
+					limit = {
+						is_herzlands_warlord = yes
+						check_variable = { ksk_strength > 0 }
+					}
+					save_global_event_target_as = katlinin_country
+				}
 			}
 		}
 	}
