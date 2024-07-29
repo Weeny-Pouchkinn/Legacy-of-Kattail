@@ -160,6 +160,11 @@ calculate_salvo_capacity = {
 	multiply_temp_variable = { salvo_capacity_from_subs = 20 } #10 nukes per ballistic sub
 	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_subs }
 
+	if = {
+		limit = { is_ai = yes }
+		set_variable = { lok_total_salvo_capacity = 100 }
+	}
+
 	#Now let's say it's 120
 	subtract_from_temp_variable = { lok_salvo_capacity_added_last_week = lok_total_salvo_capacity } #-20
 	multiply_temp_variable = { lok_salvo_capacity_added_last_week = -1 } #20, we add that to the current capacity
@@ -269,6 +274,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_steel = resource_produced@steel } #Say 100
 	multiply_variable = { lok_total_extra_steel = lok_total_extra_steel_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_steel = resource_produced@steel } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_steel min = 0 }
 
 	#Calculate total bonuses for tungsten
 	set_temp_variable = { lok_total_extra_tungsten_factor = 1 } #set to 1
@@ -277,6 +283,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_tungsten = resource_produced@tungsten } #Say 100
 	multiply_variable = { lok_total_extra_tungsten = lok_total_extra_tungsten_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_tungsten = resource_produced@tungsten } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_tungsten min = 0 }
 
 	#Calculate total bonuses for chromium
 	set_temp_variable = { lok_total_extra_chromium_factor = 1 } #set to 1
@@ -285,6 +292,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_chromium = resource_produced@chromium } #Say 100
 	multiply_variable = { lok_total_extra_chromium = lok_total_extra_chromium_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_chromium = resource_produced@chromium } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_chromium min = 0 }
 
 	#Calculate total bonuses for aluminium
 	set_temp_variable = { lok_total_extra_aluminium_factor = 1 } #set to 1
@@ -293,6 +301,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_aluminium = resource_produced@aluminium } #Say 100
 	multiply_variable = { lok_total_extra_aluminium = lok_total_extra_aluminium_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_aluminium = resource_produced@aluminium } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_aluminium min = 0 }
 
 	#Calculate total bonuses for oil
 	set_temp_variable = { lok_total_extra_oil_factor = 1 } #set to 1
@@ -301,6 +310,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_oil = resource_produced@oil } #Say 100
 	multiply_variable = { lok_total_extra_oil = lok_total_extra_oil_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_oil = resource_produced@oil } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_oil min = 0 }
 
 	#Calculate total bonuses for rubber
 	set_temp_variable = { lok_total_extra_rubber_factor = 1 } #set to 1
@@ -308,6 +318,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_rubber = resource_produced@rubber } #Say 100
 	multiply_variable = { lok_total_extra_rubber = lok_total_extra_rubber_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_rubber = resource_produced@rubber } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_rubber min = 0 }
 
 	#Calculate total bonuses for food
 	set_temp_variable = { lok_total_extra_food_factor = 1 } #set to 1
@@ -315,6 +326,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_food = resource_produced@food } #Say 100
 	multiply_variable = { lok_total_extra_food = lok_total_extra_food_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_food = resource_produced@food } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_food min = 0 }
 
 	#Calculate total bonuses for fissiles
 	set_temp_variable = { lok_total_extra_fissiles_factor = 1 } #set to 1
@@ -323,6 +335,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_fissiles = resource_produced@fissiles } #Say 100
 	multiply_variable = { lok_total_extra_fissiles = lok_total_extra_fissiles_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_fissiles = resource_produced@fissiles } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_fissiles min = 0 }
 
 	#Calculate total bonuses for supertensiles
 	set_temp_variable = { lok_total_extra_supertensiles_factor = 1 } #set to 1
@@ -331,6 +344,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_supertensiles = resource_produced@supertensiles } #Say 100
 	multiply_variable = { lok_total_extra_supertensiles = lok_total_extra_supertensiles_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_supertensiles = resource_produced@supertensiles } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_supertensiles min = 0 }
 }
 
 calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
