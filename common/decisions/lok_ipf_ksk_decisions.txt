@@ -15,7 +15,7 @@ lok_IPF_KSK_cat = {
 			NOT = { has_government = neutrality }
 		}
 
-		cost = 150
+		cost = 100
 
 		days_remove = 30
 		
@@ -31,10 +31,7 @@ lok_IPF_KSK_cat = {
 			}
 			add_stability = -0.05
 			hidden_effect = {
-				random = {
-					chance = 50
-					add_to_variable = { ksk_strength = 1 }
-				}
+				add_to_variable = { ksk_strength = 1 }
 				add_to_variable = { ksk_opinion = 1 }
 				calculate_ipf_ksk_resistance = yes
 			}
@@ -191,7 +188,7 @@ lok_IPF_KSK_cat = {
 			NOT = { has_government = fascism }
 		}
 
-		cost = 150
+		cost = 100
 
 		days_remove = 30
 		
@@ -207,10 +204,7 @@ lok_IPF_KSK_cat = {
 			}
 			add_stability = -0.05
 			hidden_effect = {
-				random = {
-					chance = 50
-					add_to_variable = { ipf_strength = 1 }
-				}
+				add_to_variable = { ipf_strength = 1 }
 				add_to_variable = { ipf_opinion = 1 }
 				calculate_ipf_ksk_resistance = yes
 			}
@@ -244,7 +238,7 @@ lok_IPF_KSK_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = censor_the_ipf_tooltip
-			add_stability = -0.025
+			add_stability = 0.025
 			hidden_effect = {
 				random = {
 					chance = 50
@@ -291,12 +285,16 @@ lok_IPF_KSK_cat = {
 		remove_effect = {
 			custom_effect_tooltip = shoot_the_ipf_tooltip
 			add_manpower = -50000
-			add_stability = -0.075
+			add_stability = -0.05
 			add_equipment_to_stockpile = {
 				type = infantry_equipment
 				amount = -10000
 			}
 			hidden_effect = {
+				random = {
+					chance = 50
+					subtract_from_variable = { ipf_strength = 1 }
+				}
 				subtract_from_variable = { ipf_strength = 1 }
 				subtract_from_variable = { ipf_opinion = 2 }
 				calculate_ipf_ksk_resistance = yes
@@ -393,4 +391,183 @@ lok_IPF_KSK_cat = {
 			}
 		}
 	}
+
+	ipf_bad_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_ignite_civil_war
+		#is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ipf_strength = 0 }
+				check_variable = { ipf_opinion > -1 }
+			}
+		}
+
+		days_mission_timeout = 30
+		timeout_effect = {
+			custom_effect_tooltip = ipf_bad_action_tooltip
+			for_loop_effect = {
+				end = ipf_strength
+				random_list = {
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@industrial_complex > 0 } }
+							damage_building = { type = industrial_complex damage = 1 }
+						}
+						add_manpower = -500
+					}
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@infrastructure > 0 } }
+							damage_building = { type = infrastructure damage = 1 }
+						}
+						add_manpower = -500
+					}
+				}
+			}
+		}
+	}
+
+	ipf_good_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_military
+		#is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ipf_strength = 0 }
+				check_variable = { ipf_opinion < 1 }
+			}
+		}
+
+		days_mission_timeout = 30
+		timeout_effect = {
+			custom_effect_tooltip = ipf_good_action_tooltip
+			for_loop_effect = {
+				end = ipf_strength
+				random_list = {
+					70 = {
+						add_equipment_to_stockpile = {
+							type = infantry_equipment
+							amount = 250
+							producer = ROOT
+						}
+					}
+					25 = { add_stability = 0.01 }
+					5 = {
+						random_owned_state = {
+							add_building_construction = {
+								type = industrial_complex
+								level = 1
+							}
+							add_extra_state_shared_building_slots = 1
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ksk_bad_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_scorched_earth
+		#is_good = yes
+		days_mission_timeout = 30
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ksk_strength = 0 }
+				check_variable = { ksk_opinion > -1 }
+			}
+		}
+
+		timeout_effect = {
+			custom_effect_tooltip = ksk_bad_action_tooltip
+			for_loop_effect = {
+				end = ksk_strength
+				random_list = {
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@arms_factory > 0 } }
+							damage_building = { type = arms_factory damage = 1 }
+						}
+						add_manpower = -500
+					}
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@dockyard > 0 } }
+							damage_building = { type = dockyard damage = 1 }
+						}
+						add_manpower = -500
+						modifier = {
+							factor = 0
+							NOT = { any_owned_state = { is_coastal = yes } }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ksk_good_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_protection
+		#is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ksk_strength = 0 }
+				check_variable = { ksk_opinion < 1 }
+			}
+		}
+
+		days_mission_timeout = 30
+		timeout_effect = {
+			custom_effect_tooltip = ksk_good_action_tooltip
+			for_loop_effect = {
+				end = ipf_strength
+				random_list = {
+					70 = {
+						add_equipment_to_stockpile = {
+							type = artillery_equipment
+							amount = 50
+							producer = ROOT
+						}
+					}
+					25 = { add_war_support = 0.01 }
+					5 = {
+						random_owned_state = {
+							add_building_construction = {
+								type = arms_factory
+								level = 1
+							}
+							add_extra_state_shared_building_slots = 1
+						}
+					}
+				}
+			}
+		}
+	}
+
 }

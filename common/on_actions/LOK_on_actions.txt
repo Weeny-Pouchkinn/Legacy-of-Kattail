@@ -573,6 +573,22 @@ on_actions = {
 			force_update_map_mode = { mapmode = LOK_species_map_mode }
 			calculate_ipf_ksk_resistance = yes
 			if = {
+				limit = { check_variable = { ipf_strength > 0 } check_variable = { ipf_opinion < 0 } }
+				activate_mission = ipf_bad_action
+			}
+			if = {
+				limit = { check_variable = { ksk_strength > 0 } check_variable = { ksk_opinion < 0 } }
+				activate_mission = ksk_bad_action
+			}
+			if = {
+				limit = { check_variable = { ipf_strength > 0 } check_variable = { ipf_opinion > 0 } }
+				activate_mission = ipf_good_action
+			}
+			if = {
+				limit = { check_variable = { ksk_strength > 0 } check_variable = { ksk_opinion > 0 } }
+				activate_mission = ksk_good_action
+			}
+			if = {
 				limit = { is_ai = yes has_tech = nukes }
 				calculate_ai_nuke_production = yes #script that gives nukes to the AI based on their military factory count (and reduces their mil count)
 			}
@@ -743,15 +759,12 @@ on_actions = {
 					#See the new infra/reactors built
 					set_variable = { aur_num_new_aa_built = 0 }
 					set_variable = { aur_num_new_radar_built = 0 }
-					set_variable = { aur_num_new_bunkers_built = 0 }
 					every_owned_state = {
 						add_to_variable = { AUR.aur_num_new_aa_built = building_level@anti_air_building }
 						add_to_variable = { AUR.aur_num_new_radar_built = building_level@radar_station }
-						add_to_variable = { AUR.aur_num_new_bunkers_built = building_level@bunker }
 					}
 					subtract_from_variable = { aur_num_new_aa_built = aur_num_aa_built }
 					subtract_from_variable = { aur_num_new_radar_built = aur_num_radar_built }
-					subtract_from_variable = { aur_num_new_bunkers_built = aur_num_bunkers_built }
 				}
 			}
 		}

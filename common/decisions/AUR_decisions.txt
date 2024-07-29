@@ -7,7 +7,8 @@ AUR_industrialization_cat = {
 		}
 
 		visible = {
-			NOT = { has_completed_focus = AUR_fulfilled }
+			has_completed_focus = AUR_dreijahrige
+			NOT = { has_completed_focus = AUR_pushing_pushing }
 			FROM = { is_core_of = AUR }
 		}
 
@@ -88,7 +89,7 @@ AUR_industrialization_cat = {
 
 		visible = {
 			has_completed_focus = AUR_dreijahrige
-			NOT = { has_completed_focus = AUR_pushing_pushing }
+			NOT = { has_completed_focus = AUR_fulfilled }
 		}
 
 		cost = 50
@@ -278,6 +279,7 @@ AUR_industrialization_cat = {
 			FROM = {
 				is_core_of = AUR
 				any_neighbor_state = { NOT = { is_owned_by = AUR } }
+				NOT = { has_state_flag = aur_fortified_state }
 			}
 		}
 
@@ -295,6 +297,7 @@ AUR_industrialization_cat = {
 		}
 
 		remove_effect = {
+			hidden_effect = { add_to_variable = { aur_num_new_bunkers_built = 1 } }
 			FROM = {
 				set_building_level = {
 					type = bunker
@@ -305,6 +308,7 @@ AUR_industrialization_cat = {
 						limit_to_border = yes
 					}
 				}
+				hidden_effect = { set_state_flag = aur_fortified_state }
 			}
 		}
 
@@ -312,6 +316,88 @@ AUR_industrialization_cat = {
 
 		ai_will_do = {
 			base = 1000
+		}
+	}
+}
+
+
+lok_IPF_KSK_cat = {
+	aur_shoot_the_ipf = {
+		icon = GFX_decision_generic_police_action
+		allowed = { original_tag = AUR }
+	
+		visible = {
+			has_completed_focus = AUR_crushing_liberalism
+			has_government = fascism
+		}
+	
+		available = {
+			check_variable = {
+				ipf_strength > 0
+			}
+		}
+	
+		cost = 25
+	
+		days_remove = 30
+		
+		modifier = {
+			political_power_factor = -0.50
+			democratic_drift = -0.5
+		}
+	
+		remove_effect = {
+			custom_effect_tooltip = aur_shoot_the_ipf_tt
+			hidden_effect = { subtract_from_variable = { ipf_strength = 1 } calculate_ipf_ksk_resistance = yes }
+		}
+	
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+
+	aur_shoot_the_ksk = {
+		icon = GFX_decision_oppression
+		allowed = { original_tag = AUR }
+	
+		visible = {
+			has_completed_focus = AUR_breaking_idealism
+			has_government = fascism
+		}
+	
+		available = {
+			check_variable = {
+				ipf_strength > 0
+			}
+		}
+	
+		cost = 25
+	
+		days_remove = 30
+		
+		modifier = {
+			war_support_weekly = -0.01
+			communism_drift = -0.5
+		}
+	
+		remove_effect = {
+			custom_effect_tooltip = aur_shoot_the_ksk_tt
+			every_owned_state = {
+				add_manpower = -10000
+			}
+			hidden_effect = { subtract_from_variable = { ksk_strength = 1 } calculate_ipf_ksk_resistance = yes }
+		}
+	
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
 		}
 	}
 }

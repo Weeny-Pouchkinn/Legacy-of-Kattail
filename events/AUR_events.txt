@@ -56,7 +56,7 @@ country_event = {
 			limit = {
 				check_variable = { aur_num_new_infra_built > 2 }
 				check_variable = { aur_num_new_aa_built > 4 }
-				check_variable = { aur_num_new_bunkers_built > 11 }
+				check_variable = { aur_num_new_bunkers_built > 3 }
 			}
 			complete_national_focus = AUR_fulfilled
 		}
@@ -126,9 +126,164 @@ country_event = {
 
 	option = {
 		name = AUR_event.3.a
+		add_political_power = 250
 		add_timed_idea = {
 			idea = AUR_economic_backlash
 			days = 180
 		}
+	}
+}
+
+#Kaiser's Footsteps
+country_event = {
+	id = AUR_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.4"}
+	title = AUR_event.4.t
+	desc = AUR_event.4.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.4.a
+		add_threat = 1
+	}
+}
+
+#Pursuit of Hypermilitarism
+country_event = {
+	id = AUR_event.5
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.5"}
+	title = AUR_event.5.t
+	desc = AUR_event.5.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.5.a
+		add_stability = -0.01
+		add_war_support = 0.01
+	}
+}
+
+#Ask for Pakt
+country_event = {
+	id = AUR_event.6
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.6"}
+	title = AUR_event.6.t
+	desc = AUR_event.6.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.6.a
+		add_stability = -0.05
+		custom_effect_tooltip = AUR_event.6.a.tooltip
+		diplomatic_relation = { country = AUR relation = non_aggression_pact }
+		hidden_effect = {
+			set_country_flag = signed_regency_pakt
+			AUR = { country_event = { id = AUR_event.7 } }
+		}
+		LIO = { every_core_state = { add_claim_by = ROOT } }
+		MEO = { every_core_state = { add_claim_by = ROOT } }
+	}
+
+	option = {
+		name = AUR_event.6.b
+		add_political_power = 50
+		add_stability = 0.05
+		hidden_effect = { AUR = { country_event = { id = AUR_event.7 } } }
+		ai_chance = { base = 0 }
+	}
+}
+
+#pakt accepted
+country_event = {
+	id = AUR_event.7
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.7"}
+	title = AUR_event.7.t
+	desc = {
+		text = AUR_event.7.d.yes
+		trigger = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } }
+	}
+	desc = {
+		text = AUR_event.7.d.no
+		trigger = { NOT = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } } }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.7.a
+		diplomatic_relation = { country = event_target:regency_partner relation = non_aggression_pact }
+		trigger = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } }
+	}
+
+	option = {
+		name = AUR_event.7.b
+		trigger = { NOT = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } } }
+
+	}
+}
+
+#Regent strikes south
+country_event = {
+	id = AUR_event.8
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.8"}
+	title = AUR_event.8.t
+	desc = AUR_event.8.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.8.a
+		declare_war_on = { target = LIO type = annex_everything }
+		declare_war_on = { target = MEO type = annex_everything }
+	}
+}
+
+#Killing KSK
+country_event = {
+	id = AUR_event.9
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.9"}
+	title = AUR_event.9.t
+	desc = AUR_event.9.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.9.a
+		custom_effect_tooltip = AUR_event.9.a.tt
+		add_political_power = 50
+		add_manpower = -100000
+		add_stability = -0.05
+		hidden_effect = { subtract_from_variable = { ksk_strength = 3 } calculate_ipf_ksk_resistance = yes  }
+	}
+
+	option = {
+		name = AUR_event.9.b
+		custom_effect_tooltip = AUR_event.9.b.tt
+		add_political_power = 15
+		hidden_effect = { subtract_from_variable = { ksk_strength = 2 } calculate_ipf_ksk_resistance = yes }
+	}
+}
+
+#Jovel Luft
+country_event = {
+	id = AUR_event.10
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.10"}
+	title = AUR_event.10.t
+	desc = AUR_event.10.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.10.a
 	}
 }

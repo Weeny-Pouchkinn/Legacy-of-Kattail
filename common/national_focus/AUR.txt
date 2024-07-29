@@ -18,6 +18,7 @@ focus_tree = {
 		completion_reward = {
 			add_ideas = AUR_dreijahrige_idea
 			hidden_effect = {
+				country_event = { id = AUR_event.10 days = 30 }
 				country_event = { id = AUR_industry.1 days = 365 }
 				#Count pre-existing buildings in state
 				set_variable = { aur_num_infra_built = 0 }
@@ -26,7 +27,55 @@ focus_tree = {
 					add_to_variable = { AUR.aur_num_infra_built = building_level@infrastructure }
 					add_to_variable = { AUR.aur_num_reactors_built = building_level@nuclear_reactor }
 				}
+				if = {
+					limit = { is_ai = yes }
+					for_loop_effect = {
+						end = 5
+						random_owned_state= {
+							limit = { check_variable = { building_level@infrastructure < 5 } }
+							add_building_construction = { type = infrastructure level = 1 }
+						}
+					}
+					for_loop_effect = {
+						end = 2
+						random_owned_state= {
+							limit = { check_variable = { building_level@nuclear_reactor < 1 } }
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = { type = nuclear_reactor level = 1 }
+						}
+					}
+				}
 			}
+		}
+	}
+	focus = {
+		id = AUR_blitz_ers
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = 0
+		y = 1
+		cost = 5
+		available = { always = no }
+		relative_position_id = AUR_dreijahrige
+		prerequisite = { focus = AUR_dreijahrige }
+		completion_reward = {
+			remove_ideas = AUR_nearly_there_idea
+			remove_ideas = katzen_collapse_1
+			country_event = { id = AUR_event.3 }
+		}
+	}
+	focus = {
+		id = AUR_emergency_konvert
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = 0
+		y = 1
+		cost = 5
+		available = { always = no }
+		relative_position_id = AUR_dreijahrige
+		prerequisite = { focus = AUR_dreijahrige }
+		completion_reward = {
+			remove_ideas = AUR_nearly_there_idea
+			remove_ideas = katzen_collapse_1
+			country_event = { id = AUR_event.3 }
 		}
 	}
 	focus = {
@@ -56,7 +105,39 @@ focus_tree = {
 					add_to_variable = { AUR.aur_num_mils_built = building_level@arms_factory }
 					add_to_variable = { AUR.aur_num_civs_built = building_level@industrial_complex }
 				}
+				if = {
+					limit = { is_ai = yes }
+					for_loop_effect = {
+						end = 16
+						random_owned_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = { type = arms_factory level = 1 }
+						}
+					}
+					for_loop_effect = {
+						end = 10
+						random_owned_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = { type = industrial_complex level = 1 }
+						}
+					}
+				}
 			}
+		}
+	}
+	focus = {
+		id = AUR_blitz_aus
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = 0
+		y = 1
+		cost = 5
+		available = { always = no }
+		relative_position_id = AUR_pushing_pushing
+		prerequisite = { focus = AUR_pushing_pushing }
+		completion_reward = {
+			remove_ideas = AUR_nearly_there_idea
+			remove_ideas = katzen_collapse_1
+			country_event = { id = AUR_event.3 }
 		}
 	}
 	focus = {
@@ -82,13 +163,70 @@ focus_tree = {
 				#Count pre-existing buildings in state
 				set_variable = { aur_num_aa_built = 0 }
 				set_variable = { aur_num_radar_built = 0 }
-				set_variable = { aur_num_bunkers_built = 0 }
+				set_variable = { aur_num_new_bunkers_built = 0 }
 				every_owned_state = {
 					add_to_variable = { AUR.aur_num_aa_built = building_level@anti_air_building }
 					add_to_variable = { AUR.aur_num_radar_built = building_level@radar_station }
-					add_to_variable = { AUR.aur_num_bunkers_built = building_level@bunker }
+				}
+				if = {
+					limit = { is_ai = yes }
+					set_variable = { aur_num_new_bunkers_built = 4 }
+					for_loop_effect = {
+						end = 5
+						random_owned_state = {
+							limit = { check_variable = { building_level@anti_air_building < 5 } }
+							add_building_construction = { type = anti_air_building level = 1 }
+						}
+					}
+					for_loop_effect = {
+						end = 3
+						random_owned_state = {
+							add_building_construction = { type = radar_station level = 1 }
+						}
+					}
+					every_owned_state = {
+						set_building_level = {
+							type = bunker
+							level = 2
+							instant_build = yes
+							province = {
+								all_provinces = yes
+								limit_to_border = yes
+							}
+						}
+					}
 				}
 			}
+		}
+	}
+	focus = {
+		id = AUR_gross_bewaff
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = 0
+		y = 1
+		cost = 5
+		available = { always = no }
+		relative_position_id = AUR_nearly_there
+		prerequisite = { focus = AUR_nearly_there }
+		completion_reward = {
+			remove_ideas = AUR_nearly_there_idea
+			remove_ideas = katzen_collapse_1
+			country_event = { id = AUR_event.3 }
+		}
+	}
+	focus = {
+		id = AUR_emergency_wieder
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = 0
+		y = 1
+		cost = 5
+		available = { always = no }
+		relative_position_id = AUR_nearly_there
+		prerequisite = { focus = AUR_nearly_there }
+		completion_reward = {
+			remove_ideas = AUR_nearly_there_idea
+			remove_ideas = katzen_collapse_1
+			country_event = { id = AUR_event.3 }
 		}
 	}
 	focus = {
@@ -115,7 +253,7 @@ focus_tree = {
 		relative_position_id = AUR_dreijahrige
 		prerequisite = { focus = AUR_dreijahrige }
 		completion_reward = {
-			add_stability = -0.10
+			add_stability = -0.05
 			519 = {
 				add_building_construction = {
 					type = supply_node
@@ -172,6 +310,12 @@ focus_tree = {
 		relative_position_id = AUR_controlled_thought
 		prerequisite = { focus = AUR_controlled_thought }
 		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
 		}
 	}
 	focus = {
@@ -206,6 +350,15 @@ focus_tree = {
 		relative_position_id = AUR_the_wait_for_him
 		prerequisite = { focus = AUR_he_did_not_have_dissent }
 		completion_reward = {
+			custom_effect_tooltip = AUR_crushing_liberalism_tt
+			hidden_effect = {
+				subtract_from_variable = { ipf_strength = 1 }
+				if = {
+					limit = { is_ai = yes }
+					subtract_from_variable = { ipf_strength = 4 }
+				}
+				calculate_ipf_ksk_resistance = yes
+			}
 		}
 	}
 	focus = {
@@ -214,11 +367,25 @@ focus_tree = {
 		x = -2
 		y = 3
 		cost = 5
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_loot_their_reserves_prereq
+				hidden_trigger = { check_variable = { ipf_strength < 2 } }
+			}
+		}
 		prerequisite = { focus = AUR_crushing_liberalism }
 		relative_position_id = AUR_the_wait_for_him
 		completion_reward = {
 			add_equipment_to_stockpile = { type = infantry_equipment_1 amount = 2000 }
 			add_equipment_to_stockpile = { type = motorized_equipment_1 amount = 500 }
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = industrial_complex level = 1 }
+			}
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = industrial_complex level = 1 }
+			}
 		}
 	}
 	focus = {
@@ -230,6 +397,15 @@ focus_tree = {
 		relative_position_id = AUR_the_wait_for_him
 		prerequisite = { focus = AUR_he_did_not_have_dissent }
 		completion_reward = {
+			custom_effect_tooltip = AUR_breaking_idealism_tt
+			hidden_effect = {
+				subtract_from_variable = { ksk_strength = 1 }
+				if = {
+					limit = { is_ai = yes }
+					subtract_from_variable = { ksk_strength = 4 }
+				}
+				calculate_ipf_ksk_resistance = yes
+			}
 		}
 	}
 	focus = {
@@ -238,9 +414,16 @@ focus_tree = {
 		x = 2
 		y = 3
 		cost = 5
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_shatter_their_spirits_prereq
+				hidden_trigger = { check_variable = { ksk_strength < 4 } }
+			}
+		}
 		prerequisite = { focus = AUR_breaking_idealism }
 		relative_position_id = AUR_the_wait_for_him
 		completion_reward = {
+			country_event = { id = AUR_event.9 }
 			add_stability = 0.05
 			add_war_support = 0.10
 		}
@@ -254,6 +437,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_he_did_not_have_dissent }
 		relative_position_id = AUR_the_wait_for_him
 		completion_reward = {
+			country_event = { id = AUR_event.4 }
 		}
 	}
 	focus = {
@@ -265,6 +449,11 @@ focus_tree = {
 		prerequisite = { focus = AUR_the_kaisers_footsteps }
 		relative_position_id = AUR_the_wait_for_him
 		completion_reward = {
+			custom_effect_tooltip = AUR_building_better_imperium_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_production_speed_arms_factory_factor = 0.05 }
+				add_to_variable = { AUR_the_kaiser_must_return_production_speed_industrial_complex_factor = -0.05 }
+			}
 		}
 	}
 	focus = {
@@ -276,6 +465,10 @@ focus_tree = {
 		prerequisite = { focus = AUR_building_better_imperium }
 		relative_position_id = AUR_building_better_imperium
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = AUR_split_auralia
+				add_idea = AUR_split_auralia_2
+			}
 		}
 	}
 	focus = {
@@ -298,6 +491,11 @@ focus_tree = {
 		prerequisite = { focus = AUR_herzlands_darkspot }
 		relative_position_id = AUR_herzlands_darkspot
 		completion_reward = {
+			every_country = {
+				limit = { has_government = fascism NOT = { tag = AUR } }
+				add_opinion_modifier = { target = AUR modifier = AUR_with_some_light }
+				AUR = { add_opinion_modifier = { target = PREV modifier = AUR_with_some_light } }
+			}
 		}
 	}
 	focus = {
@@ -306,10 +504,42 @@ focus_tree = {
 		x = -1
 		y = 2
 		cost = 5
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = rival_must_exist
+				hidden_trigger = {
+					OR = { #CSS gotta exist
+						MEW = { has_cosmetic_tag = MEW_CSS }
+						WAC = { has_cosmetic_tag = MEW_CSS }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = ussf_must_exist
+				hidden_trigger = {
+					OR = {
+						PRL = { is_in_faction = yes }
+						CAT = { is_in_faction = yes }
+					}
+				}
+			}
+		}
 		mutually_exclusive = { focus = AUR_turn_to_the_nmi }
 		prerequisite = { focus = AUR_with_some_lights }
 		relative_position_id = AUR_with_some_lights
 		completion_reward = {
+			if = {
+				limit = { MEW = { has_cosmetic_tag = MEW_CSS } }
+				MEW = { save_global_event_target_as = regency_partner }
+				add_opinion_modifier = { target = MEW modifier = AUR_uneasy_compromise }
+				MEW = { add_opinion_modifier = { target = AUR modifier = AUR_uneasy_compromise } }
+			}
+			else_if = {
+				limit = { WAC = { has_cosmetic_tag = MEW_CSS } }
+				WAC = { save_global_event_target_as = regency_partner }
+				add_opinion_modifier = { target = WAC modifier = AUR_uneasy_compromise }
+				WAC = { add_opinion_modifier = { target = AUR modifier = AUR_uneasy_compromise } }
+			}
 		}
 	}
 	focus = {
@@ -318,10 +548,23 @@ focus_tree = {
 		x = 1
 		y = 2
 		cost = 5
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ussf_must_exist
+				hidden_trigger = {
+					OR = {
+						PRL = { is_in_faction = yes }
+						CAT = { is_in_faction = yes }
+					}
+				}
+			}
+		}
 		mutually_exclusive = { focus = AUR_appease_felinean_rival }
 		prerequisite = { focus = AUR_with_some_lights }
 		relative_position_id = AUR_with_some_lights
 		completion_reward = {
+			add_opinion_modifier = { target = NMI modifier = AUR_uneasy_compromise }
+			NMI = { add_opinion_modifier = { target = AUR modifier = AUR_uneasy_compromise } }
 		}
 	}
 	focus = {
@@ -344,6 +587,10 @@ focus_tree = {
 		prerequisite = { focus = AUR_appease_felinean_rival }
 		relative_position_id = AUR_appease_felinean_rival
 		completion_reward = {
+			custom_effect_tooltip = AUR_meolowtof_ribbawtrop_tooltip
+			hidden_effect = {
+				event_target:regency_partner = { country_event = { id = AUR_event.6 days = 2 } }
+			}
 		}
 	}
 	focus = {
@@ -355,6 +602,13 @@ focus_tree = {
 		prerequisite = { focus = AUR_building_better_imperium }
 		relative_position_id = AUR_building_better_imperium
 		completion_reward = {
+			custom_effect_tooltip = AUR_remake_work_ethic_tt
+			add_stability = -0.05
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_production_speed_arms_factory_factor = 0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_production_speed_industrial_complex_factor = 0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_industrial_capacity_factory = 0.10 }	
+			}
 		}
 	}
 	focus = {
@@ -366,6 +620,10 @@ focus_tree = {
 		prerequisite = { focus = AUR_remake_work_ethic }
 		relative_position_id = AUR_remake_work_ethic
 		completion_reward = {
+			add_ideas = extensive_conscription
+			add_stability = -0.10
+			country_event = { id = AUR_event.5 }
+			add_to_variable = { AUR_the_kaiser_must_return_war_support_weekly = 0.002 }
 		}
 	}
 	focus = {
@@ -377,6 +635,8 @@ focus_tree = {
 		prerequisite = { focus = AUR_pursuit_of_hypermilitarism }
 		relative_position_id = AUR_pursuit_of_hypermilitarism
 		completion_reward = {
+			add_stability = -0.05
+			add_ideas = war_economy
 		}
 	}
 	focus = {
@@ -388,6 +648,11 @@ focus_tree = {
 		prerequisite = { focus = AUR_mobilize_greater }
 		relative_position_id = AUR_mobilize_greater
 		completion_reward = {
+			custom_effect_tooltip = AUR_almost_as_good_as_him_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_army_defence_factor = 0.05 }
+				add_to_variable = { AUR_the_kaiser_must_return_army_attack_factor = 0.05 }
+			}
 		}
 	}
 	focus = {
@@ -399,7 +664,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_mobilize_greater }
 		relative_position_id = AUR_mobilize_greater
 		completion_reward = {
-			create_wargoal = { target = ELO type = annex_everything }
+			declare_war_on = { target = ELO type = annex_everything }
 		}
 	}
 	focus = {
@@ -416,6 +681,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_almost_as_good_as_him }
 		relative_position_id = AUR_mobilize_greater
 		completion_reward = {
+			add_threat = 5
 			ELO = {
 				every_core_state = {
 					add_resistance = 20
@@ -515,7 +781,7 @@ focus_tree = {
 					end = 10
 					create_ship = {
 						type = destroyer_2
-						equipment_variant = "Glges-Clasis"
+						equipment_variant = "Gilges-Class"
 						name = "Gilges-Class"
 						creator = ROOT
 					}
@@ -559,6 +825,8 @@ focus_tree = {
 		prerequisite = { focus = AUR_a_grand_fleet }
 		relative_position_id = AUR_a_grand_fleet
 		completion_reward = {
+			add_stability = -0.05
+			add_ideas = AUR_every_katzen_a_gun_idea
 		}
 	}
 	focus = {
@@ -571,6 +839,14 @@ focus_tree = {
 		prerequisite = { focus = AUR_a_dark_night }
 		relative_position_id = AUR_a_dark_night
 		completion_reward = {
+			if = {
+				limit = { OR = { has_idea = disarmed_nation has_idea = volunteer_only has_idea = limited_conscription has_idea = extensive_conscription } }
+				add_ideas = extensive_conscription
+			}
+			swap_ideas = {
+				remove_idea = AUR_every_katzen_a_gun_idea
+				add_idea = AUR_every_gun_a_katzen
+			}
 		}
 	}
 	focus = {
@@ -582,6 +858,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_every_gun_a_katzen }
 		relative_position_id = AUR_every_gun_a_katzen
 		completion_reward = {
+			add_ideas = tot_economic_mobilisation
 		}
 	}
 	focus = {
@@ -593,6 +870,20 @@ focus_tree = {
 		prerequisite = { focus = AUR_every_gun_a_katzen }
 		relative_position_id = AUR_every_gun_a_katzen
 		completion_reward = {
+			custom_effect_tooltip = AUR_eyes_on_the_south_tooltip
+			add_threat = 5
+			PRL = { every_core_state = { add_claim_by = AUR } }
+			CAT = { every_core_state = { add_claim_by = AUR } }
+			for_loop_effect = {
+				end = 8
+				random_owned_state = {
+					create_unit = {
+						division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 1.0"
+						count = 1
+						owner = AUR
+					}
+				}
+			}
 		}
 	}
 	focus = {
@@ -605,6 +896,13 @@ focus_tree = {
 		prerequisite = { focus = AUR_last_preparations }
 		relative_position_id = AUR_every_gun_a_katzen
 		completion_reward = {
+			add_war_support = 0.10
+			declare_war_on = { target = PRL type = annex_everything }
+			declare_war_on = { target = CAT type = annex_everything }
+			random_country = {
+				limit = { has_country_flag = signed_regency_pakt }
+				country_event = { id = AUR_event.8 }
+			}
 		}
 	}
 	focus = {

@@ -159,31 +159,6 @@ herzlands_unification_cat = {
 			base = 1000
 		}
 	}
-	AUR_invade_elowia = {
-		icon = generic_form_nation
-		allowed = {
-			tag = AUR
-		}
-
-		available = {
-			date > "1938.1.1"
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			declare_war_on = {
-				target = ELO
-				type = annex_everything
-			}
-		}
-
-		days_remove = 15
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
 	southern_feline_league = {
 		icon = generic_form_nation
 		allowed = {
@@ -374,49 +349,49 @@ herzlands_unification_cat = {
 		}
 	}
 
-	AUR_invade_the_south = {
-		icon = generic_form_nation
-		allowed = {
-			tag = AUR
-		}
+	# AUR_invade_the_south = {
+	# 	icon = generic_form_nation
+	# 	allowed = {
+	# 		tag = AUR
+	# 	}
 
-		available = {
-			date > "1940.1.1"
-			MEW = { has_cosmetic_tag = MEW_CSS }
-			has_global_flag = ussf_formed
-		}
+	# 	available = {
+	# 		date > "1940.1.1"
+	# 		MEW = { has_cosmetic_tag = MEW_CSS }
+	# 		has_global_flag = ussf_formed
+	# 	}
 
-		fire_only_once = yes
+	# 	fire_only_once = yes
 
-		remove_effect = {
-			hidden_effect = {
-				set_global_flag = great_southern_war_ongoing
-			}
-			MEW = {
-				diplomatic_relation = {
-					country = AUR
-					relation = non_aggression_pact
-					active = yes
-				}
-				every_country = {
-					limit = { is_in_faction_with = event_target:ussf_leader }
-					MEW = { declare_war_on = { target = PREV type = annex_everything } }
-				}
-				MEW = { declare_war_on = { target = event_target:ussf_leader type = annex_everything } }
-			}
-			every_country = {
-				limit = { is_in_faction_with = event_target:ussf_leader }
-				AUR = { declare_war_on = { target = PREV type = annex_everything } }
-			}
-			AUR = { declare_war_on = { target = event_target:ussf_leader type = annex_everything } }
-		}
+	# 	remove_effect = {
+	# 		hidden_effect = {
+	# 			set_global_flag = great_southern_war_ongoing
+	# 		}
+	# 		MEW = {
+	# 			diplomatic_relation = {
+	# 				country = AUR
+	# 				relation = non_aggression_pact
+	# 				active = yes
+	# 			}
+	# 			every_country = {
+	# 				limit = { is_in_faction_with = event_target:ussf_leader }
+	# 				MEW = { declare_war_on = { target = PREV type = annex_everything } }
+	# 			}
+	# 			MEW = { declare_war_on = { target = event_target:ussf_leader type = annex_everything } }
+	# 		}
+	# 		every_country = {
+	# 			limit = { is_in_faction_with = event_target:ussf_leader }
+	# 			AUR = { declare_war_on = { target = PREV type = annex_everything } }
+	# 		}
+	# 		AUR = { declare_war_on = { target = event_target:ussf_leader type = annex_everything } }
+	# 	}
 
-		days_remove = 15
+	# 	days_remove = 15
 
-		ai_will_do = {
-			base = 1000
-		}
-	}
+	# 	ai_will_do = {
+	# 		base = 1000
+	# 	}
+	# }
 
 	USSF_surrender_to_MEW = {
 		icon = generic_form_nation
@@ -1029,6 +1004,44 @@ herzlands_unification_cat = {
 			every_country = {
 				limit = { is_in_faction_with = ROOT }
 				declare_war_on = { target = PAW type = annex_everything }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	USSF_federalize = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = event_target:ussf_leader
+		}
+
+		available = {
+			OR = {
+				AUR = { any_core_state = { is_controlled_by = ROOT } }
+				AUR = { is_puppet_of = ROOT }
+				MEW = { any_core_state = { is_controlled_by = ROOT } }
+				MEW = { is_puppet_of = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			if = { limit = { tag = LIO } set_cosmetic_tag = LIO_USSF }
+			else_if = { limit = { tag = CAT } set_cosmetic_tag = CAT_USSF }
+			else_if = { limit = { tag = PRL } set_cosmetic_tag = PRL_USSF }
+			else_if = { limit = { tag = MEO } set_cosmetic_tag = MEO_USSF }
+			every_country = {
+				limit = { is_in_faction_with = ROOT OR = { tag = LIO tag = PRL tag = MEO tag = CAT } }
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+			every_country = {
+				limit = { is_in_faction_with = ROOT }
+				ROOT = { annex_country = { target = PREV transfer_troops = no } }
 			}
 		}
 
