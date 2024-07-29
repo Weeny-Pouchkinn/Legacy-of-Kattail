@@ -1,3 +1,21 @@
+add_namespace = LOK_nuke
+
+#Refill salvo capacity
+country_event = {
+	id = LOK_nuke.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_nuke.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		add_to_variable = { lok_current_salvo_capacity = 1 }
+		clamp_variable = { #Can't surpass total salvo capacitu
+			var = lok_current_salvo_capacity
+			max = lok_total_salvo_capacity
+		}
+	}
+}
+
 add_namespace = LOK_food
 
 country_event = {
@@ -41,7 +59,12 @@ country_event = {
 			modifier = { #Herzland warlords will always annex one another
 				factor = 0
 				is_herzlands_warlord = yes
+				NOT = { tag = event_target:ussf_leader }
 				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
+			}
+			modifier = {
+				add = 100
+				tag = event_target:ussf_leader
 			}
 		}
 		hidden_effect = {
@@ -67,7 +90,7 @@ country_event = {
 		ai_chance = {
 			base = 1
 			modifier = { #Herzland warlords will always annex one another
-				factor = 0
+				add = -1
 				is_herzlands_warlord = yes
 				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
 			}
@@ -85,6 +108,7 @@ country_event = {
 			modifier = { #Herzland warlords will always annex one another
 				add = 100
 				is_herzlands_warlord = yes
+				NOT = { tag = event_target:ussf_leader }
 				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
 			}
 		}

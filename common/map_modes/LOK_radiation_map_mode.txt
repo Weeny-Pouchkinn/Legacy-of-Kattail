@@ -1,0 +1,46 @@
+scripted_map_modes = {
+	LOK_radiation_map_mode = {
+		top = {
+			type = none
+		}
+		bottom = {
+			type = state
+			color = {
+				set_temp_variable = { alpha = 1 }
+				set_temp_variable = { red = 0 }
+				set_temp_variable = { green = 0 }
+				set_temp_variable = { blue = 0 }
+				if = {
+					limit = { FROM = { check_variable = { lok_radiation_level = 0 } } }
+					set_temp_variable = { blue = 1 }
+				}
+				else_if = { #Some radiation
+					limit = {
+						FROM = {
+							check_variable = { lok_radiation_level > 0 }
+							check_variable = { lok_radiation_level < 5 }
+						}
+					}
+					set_temp_variable = { green = 1 }
+				}
+				else_if = { #High radiation
+				limit = {
+					FROM = {
+						check_variable = { lok_radiation_level > 5 }
+						check_variable = { lok_radiation_level < 50 }
+					}
+				}
+					set_temp_variable = { green = 1 }
+					set_temp_variable = { red = 1 }
+				}
+				else_if = { #Deadly radiation
+					limit = { FROM = { check_variable = { lok_radiation_level > 50 } } }
+					set_temp_variable = { red = 1 }
+				}
+			}
+		}
+		far_text = none
+		near_text = state
+		update_daily = no
+	}
+}

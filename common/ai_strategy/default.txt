@@ -1,6 +1,66 @@
 # Written by Henrik "Groogy" Hansson
 # Modified by Daniel "Da9L" Sjöberg
 
+stockpile_food_equipment = {
+	enable = {
+		always = yes
+	}
+
+	ai_strategy = {
+		type = equipment_variant_production_factor
+		id = lok_debug_food_equipment
+		value = 10
+	}
+
+	abort = { always = no }
+}
+
+build_up_some_civs_early_game = {
+	enable = {
+		always = yes
+	}
+
+	ai_strategy = {
+		type = building_target
+		id = industrial_complex
+		value = 50
+	}
+
+	abort = { date > "1939.1.1" }
+}
+
+keep_logistics_buffer = {
+	enable = {
+		always = yes
+	}
+
+	ai_strategy = {
+		type = min_wanted_supply_trains
+		value = 20
+	}
+	
+	ai_strategy = {
+		type = min_wanted_supply_trucks
+		value = 500
+	}
+
+	abort = { always = no }
+}
+
+herzland_warlord_prep_for_krieg = {
+	enable = {
+		is_herzlands_warlord = yes
+	}
+
+	ai_strategy = {
+		type = force_build_armies
+		value = 30
+	}
+
+	abort = { always = no }
+}
+
+
 default_unit_production = {
 	# If adding country-unique ones, bear in mind that they STACK unless excluding countries in the enable
 	enable = {

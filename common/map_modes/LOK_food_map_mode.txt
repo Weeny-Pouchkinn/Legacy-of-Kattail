@@ -1,0 +1,40 @@
+scripted_map_modes = {
+	LOK_food_map_mode = {
+		top = {
+			type = none
+		}
+		bottom = {
+			type = country
+			color = {
+				set_temp_variable = { alpha = 1 }
+				set_temp_variable = { red = 0 }
+				set_temp_variable = { green = 0 }
+				set_temp_variable = { blue = 0 }
+				if = { #STARVING
+					limit = { FROM = { check_variable = { country_food_needs_met_perc < 61 } } }
+					set_temp_variable = { red = 1 }
+				}
+				else_if = { #Major shortages
+					limit = { FROM = { check_variable = { country_food_needs_met_perc < 75 } } }
+					set_temp_variable = { red = 1 }
+					set_temp_variable = { green = 0.65 }
+				}
+				else_if = { #Shortages
+					limit = { FROM = { check_variable = { country_food_needs_met_perc < 95 } } }
+					set_temp_variable = { red = 1 }
+					set_temp_variable = { green = 1 }
+				}
+				else_if = { #Needs are met
+					limit = { FROM = { check_variable = { country_food_needs_met_perc < 120 } } }
+					set_temp_variable = { green = 1 }
+				}
+				else = { #excess food
+					set_temp_variable = { blue = 1 }
+				}
+			}
+		}
+		far_text = none
+		near_text = country
+		update_daily = no
+	}
+}

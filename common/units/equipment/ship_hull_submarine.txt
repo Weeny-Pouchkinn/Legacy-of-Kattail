@@ -1,0 +1,319 @@
+equipments = {
+
+	ship_hull_submarine = {
+		year = 1922
+
+		is_archetype = yes
+		is_buildable = no
+		type = submarine
+		group_by = archetype
+		priority = 2500
+		
+		upgrades = {
+			ship_reliability_upgrade
+			sub_engine_upgrade
+			sub_stealth_upgrade
+			sub_torpedo_upgrade
+		}
+		
+		interface_category = interface_category_other_ships
+		
+		lg_armor_piercing = 0
+		lg_attack = 0
+		
+		hg_armor_piercing = 0
+		hg_attack = 0
+		
+		torpedo_attack = 0
+		sub_attack = 0
+		
+		anti_air_attack = 0
+		
+		armor_value = 0
+
+		
+		surface_detection = 20
+		sub_detection = 0
+		surface_visibility = 1
+		sub_visibility = 25
+		naval_speed = 13
+		reliability = 0.60
+		
+		naval_range = 2500
+		
+		max_strength = 10
+		
+
+		fuel_consumption = 1
+		
+		build_cost_ic = 320
+		resources = {
+			#oil = 1
+			steel = 1
+		}
+		
+		manpower = 200
+
+		naval_supremacy_factor = 0.8
+		naval_weather_penalty_factor = 1 #this value gets -1 before its used so 1.5 will increase the effects of weather penalties by 0.5. this is base value is required for MIO stat modifiers
+		#MIO stat modifers will factory by the unmodified stat value so here a 0.5 mio stat modifier would make this ships naval_weather_penalty_factor stat 1.5.
+		# change this from 1 at your own risk
+	}
+
+	submarine_1 = {
+		year = 1922
+
+		archetype = ship_hull_submarine
+		priority = 2500
+		
+		module_slots = inherit
+
+		lg_armor_piercing = 0
+		lg_attack = 0 # Their main weapon is torpedo_attack.
+		torpedo_attack = 16
+		
+		anti_air_attack = 0
+		
+		armor_value = 0
+
+		
+		surface_detection = 30
+		sub_detection = 0
+		surface_visibility = 1
+		sub_visibility = 30
+		naval_speed = 13
+		reliability = 0.60
+		
+		naval_range = 2500
+		
+		max_strength = 10
+		
+
+		fuel_consumption = 1
+		
+		build_cost_ic = 360
+		resources = {
+			#oil = 1
+			steel = 1
+		}
+		
+		manpower = 200
+	}
+	
+	submarine_2 = {
+		year = 1936
+
+		archetype = ship_hull_submarine
+		priority = 2500
+		parent = submarine_1
+		module_slots = inherit
+		
+		lg_armor_piercing = 0
+		lg_attack = 0
+		torpedo_attack = 28
+		
+		anti_air_attack = 0
+		
+		armor_value = 0
+
+		
+		surface_detection = 40
+		sub_detection = 0
+		surface_visibility = 1
+		sub_visibility = 25
+		naval_speed = 17
+		reliability = 0.70
+
+		naval_range = 4000
+		
+		max_strength = 20
+		
+
+		
+		build_cost_ic = 450
+		resources = {
+			#oil = 1
+			steel = 2
+		}
+	}
+	
+	submarine_3 = {
+		year = 1940
+
+		archetype = ship_hull_submarine
+		priority = 2500
+		parent = submarine_2
+		module_slots = inherit
+		
+		lg_armor_piercing = 0
+		lg_attack = 0
+		torpedo_attack = 44
+		
+		anti_air_attack = 0
+		
+		armor_value = 0
+
+		
+		surface_detection = 50
+		sub_detection = 0
+		surface_visibility = 1
+		sub_visibility = 15
+		naval_speed = 18
+		reliability = 0.75
+		
+		naval_range = 5000
+		
+		max_strength = 30
+
+		naval_torpedo_hit_chance_factor = 0.01
+		
+		build_cost_ic = 580
+		resources = {
+			#oil = 2
+			steel = 2
+		}
+	}
+	
+	submarine_4 = {
+		year = 1944
+
+		archetype = ship_hull_submarine
+		priority = 2500
+		parent = submarine_3
+		module_slots = inherit
+		
+		lg_armor_piercing = 0
+		lg_attack = 0
+		torpedo_attack = 56
+		
+		anti_air_attack = 0
+		
+		armor_value = 0
+
+		
+		surface_detection = 70
+		sub_detection = 0
+		surface_visibility = 1
+		sub_visibility = 10
+		naval_speed = 18
+		reliability = 0.80
+
+		naval_range = 6000
+		
+		max_strength = 35
+		
+		naval_torpedo_hit_chance_factor = 0.02
+		
+		build_cost_ic = 660
+		resources = {
+			#oil = 2
+			steel = 3
+			chromium = 1
+		}
+	}
+
+	ship_hull_ballistic_submarine = {
+		year = 1922
+
+		is_archetype = yes
+		is_buildable = no
+		type = submarine
+		group_by = archetype
+		priority = 2500
+		
+		upgrades = {
+			ship_reliability_upgrade
+			sub_engine_upgrade
+			sub_stealth_upgrade
+			sub_torpedo_upgrade
+		}
+		
+		interface_category = interface_category_other_ships
+
+		fuel_consumption = 0
+		
+		resources = {
+			#oil = 1
+			steel = 1
+		}
+		
+		manpower = 200
+
+		naval_supremacy_factor = 0.8
+		naval_weather_penalty_factor = 1 #this value gets -1 before its used so 1.5 will increase the effects of weather penalties by 0.5. this is base value is required for MIO stat modifiers
+		#MIO stat modifers will factory by the unmodified stat value so here a 0.5 mio stat modifier would make this ships naval_weather_penalty_factor stat 1.5.
+		# change this from 1 at your own risk
+	}
+
+	ballistic_submarine_1 = {
+		year = 1936
+
+		archetype = ship_hull_ballistic_submarine
+		priority = 2500
+		module_slots = inherit
+		
+		lg_armor_piercing = 0
+		lg_attack = 0
+		torpedo_attack = 50
+		
+		anti_air_attack = 0
+		
+		armor_value = 10
+
+		
+		surface_detection = 40
+		sub_detection = 0
+		surface_visibility = 0
+		sub_visibility = 25
+		naval_speed = 10
+		reliability = 0.70
+
+		naval_range = 20000
+		
+		max_strength = 20
+			
+		build_cost_ic = 2000
+		resources = {
+			#oil = 1
+			steel = 4
+			chromium = 1
+			fissiles = 1
+		}
+	}
+	
+	ballistic_submarine_2 = {
+		year = 1944
+
+		archetype = ship_hull_submarine
+		priority = 2500
+		module_slots = inherit
+		
+		lg_armor_piercing = 0
+		lg_attack = 0
+		torpedo_attack = 80
+		
+		anti_air_attack = 0
+		
+		armor_value = 15
+
+		
+		surface_detection = 40
+		sub_detection = 0
+		surface_visibility = 0
+		sub_visibility = 25
+		naval_speed = 10
+		reliability = 0.70
+
+		naval_range = 20000
+		
+		max_strength = 20
+		
+		build_cost_ic = 3000
+		resources = {
+			#oil = 1
+			steel = 5
+			chromium = 2
+			fissiles = 2
+		}
+	}
+}

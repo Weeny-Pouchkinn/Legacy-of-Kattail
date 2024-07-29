@@ -1,0 +1,134 @@
+add_namespace = AUR_industry
+
+#Check if 1st term is done
+country_event = {
+	id = AUR_industry.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_industry.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				check_variable = { aur_num_new_infra_built > 4 }
+				check_variable = { aur_num_new_reactors_built > 1 }
+			}
+			complete_national_focus = AUR_pushing_pushing
+		}
+		else = {
+			set_country_flag = failed_dreijahrige
+			country_event = { id = AUR_event.2 }
+		}
+	}
+}
+
+#Check if 2nd term is done
+country_event = {
+	id = AUR_industry.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_industry.2"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				check_variable = { aur_num_new_civs_built > 9 }
+				check_variable = { aur_num_new_mils_built > 15 }
+			}
+			complete_national_focus = AUR_nearly_there
+		}
+		else = {
+			set_country_flag = failed_dreijahrige
+			country_event = { id = AUR_event.2 }
+		}
+	}
+}
+
+#Check if 3rd term is done
+country_event = {
+	id = AUR_industry.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_industry.3"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				check_variable = { aur_num_new_infra_built > 2 }
+				check_variable = { aur_num_new_aa_built > 4 }
+				check_variable = { aur_num_new_bunkers_built > 11 }
+			}
+			complete_national_focus = AUR_fulfilled
+		}
+		else = {
+			set_country_flag = failed_dreijahrige
+			country_event = { id = AUR_event.2 }
+		}
+	}
+}
+
+add_namespace = AUR_event
+country_event = {
+	id = AUR_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.1"}
+	title = AUR_event.1.t
+	desc = AUR_event.1.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.1.a
+		complete_national_focus = AUR_dreijahrige
+	}
+}
+
+#industry plan failed
+country_event = {
+	id = AUR_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.2"}
+	title = AUR_event.2.t
+	desc = AUR_event.2.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.2.a
+		if = {
+			limit = { has_idea = katzen_collapse_1 }
+			remove_ideas = katzen_collapse_1
+		}
+		else_if = {
+			limit = { has_idea = katzen_collapse_2 }
+			remove_ideas = katzen_collapse_2
+		}
+		else_if = {
+			limit = { has_idea = AUR_chaos_collapse }
+			remove_ideas = AUR_chaos_collapse
+		}
+		add_timed_idea = {
+			idea = AUR_total_economic_collapse
+			days = 1095
+		}
+	}
+}
+
+#industry plan successful
+country_event = {
+	id = AUR_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.3"}
+	title = AUR_event.3.t
+	desc = AUR_event.3.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.3.a
+		add_timed_idea = {
+			idea = AUR_economic_backlash
+			days = 180
+		}
+	}
+}

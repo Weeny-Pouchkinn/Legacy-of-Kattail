@@ -15,6 +15,14 @@ herzlands_unification_cat = {
 
 		complete_effect = {
 			set_cosmetic_tag = KTZ_UNITED
+			custom_effect_tooltip = reduce_herzland_state_coring_threshold
+			hidden_effect = {
+				every_state = {
+					limit = { is_in_array = { global.herzlands_states_array = THIS } }
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
 		}
 
 		ai_will_do = {
@@ -42,6 +50,7 @@ lok_peace_decisions_cat = {
 		days_remove = 0
 
 		visible = {
+			NOT = { tag = AAA }
 			NOT = { has_country_flag = decided_fate_of_@FROM }
 			FROM = {
 				NOT = { country_exists = THIS }
