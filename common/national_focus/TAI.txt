@@ -1,0 +1,151 @@
+focus_tree = {
+	id = TAI_TREE
+	continuous_focus_position = { x = 2700 y = 300 }
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = TAI
+		}
+	}
+	focus = {
+		id = TAI_state_of_tailsbaden
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 12
+		y = 0
+		cost = 5
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_brawnner_admin
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 0
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_state_of_tailsbaden }
+		relative_position_id = TAI_state_of_tailsbaden
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_captain_of_our_nation
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 0
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_brawnner_admin }
+		relative_position_id = TAI_brawnner_admin
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_return_to_the_old
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_captain_of_our_nation }
+		relative_position_id = TAI_captain_of_our_nation
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_the_heir_debacle
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_return_to_the_old }
+		relative_position_id = TAI_return_to_the_old
+		completion_reward = {
+		}
+	}
+	#Klaus of Purrgundy
+	focus = {
+		id = TAI_local_heir
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_the_heir_debacle }
+		mutually_exclusive = { focus = TAI_the_legitimate_heir }
+		relative_position_id = TAI_the_heir_debacle
+		completion_reward = {
+		}
+	}
+	#Mewtail king of Cat Kingdom
+	focus = {
+		id = TAI_the_legitimate_heir
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_the_heir_debacle }
+		mutually_exclusive = { focus = TAI_local_heir }
+		relative_position_id = TAI_the_heir_debacle
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_reinstate_noble_titles
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_the_legitimate_heir }
+		relative_position_id = TAI_the_legitimate_heir
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_mewtail_propaganda
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_the_legitimate_heir }
+		relative_position_id = TAI_the_legitimate_heir
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_mewtail_guard
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_the_legitimate_heir }
+		relative_position_id = TAI_the_legitimate_heir
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = TAI_proclaim_the_corronation
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -1
+		y = -3
+		cost = 5
+		prerequisite = { focus = TAI_the_legitimate_heir }
+		prerequisite = { focus = TAI_mewtail_guard }
+		prerequisite = { focus = TAI_mewtail_propaganda }
+		relative_position_id = TAI_the_legitimate_heir
+		completion_reward = {
+			hidden_effect = {
+				clr_country_flag = herzlands_warlord_independentist
+				set_country_flag = herzlands_warlord_uniter
+			}
+		}
+	}
+	focus = { #get monarchists from across the herzlands
+		id = TAI_summon_the_monarchists
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 0
+		y = -1
+		cost = 5
+		prerequisite = { focus = TAI_proclaim_the_corronation }
+		relative_position_id = TAI_proclaim_the_corronation
+		completion_reward = {
+		}
+	}
+}

@@ -29,6 +29,42 @@ herzlands_unification_cat = {
 			base = 1000
 		}
 	}
+
+	fix_collapse_debuff = {
+		icon = generic_form_nation
+		allowed = { is_herzlands_warlord = yes NOT = { tag = AUR } }
+
+		visible = {
+			OR = {
+				has_idea = katzen_collapse_3
+				has_idea = katzen_collapse_2
+				has_idea = katzen_collapse_1
+			}
+		}
+
+		cost = 150
+
+		days_remove = 270
+		
+		remove_effect = {
+			if = {
+				limit = { has_idea = katzen_collapse_3 }
+				swap_ideas = { remove_idea = katzen_collapse_3 add_idea = katzen_collapse_2 }
+			}
+			else_if = {
+				limit = { has_idea = katzen_collapse_2 }
+				swap_ideas = { remove_idea = katzen_collapse_2 add_idea = katzen_collapse_1 }
+			}
+			else_if = {
+				limit = { has_idea = katzen_collapse_1 }
+				remove_ideas = katzen_collapse_1
+			}
+		}
+
+		ai_will_do = {
+			base = 10000
+		}
+	}
 }
 
 lok_peace_decisions_cat = {
