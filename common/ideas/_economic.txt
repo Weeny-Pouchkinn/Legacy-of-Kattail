@@ -6,7 +6,7 @@ ideas = {
 
 		undisturbed_isolation = {
 		
-		
+			level = 7
 			allowed = {
 				always = no
 			}
@@ -32,7 +32,7 @@ ideas = {
 			allowed_to_remove = {
 				IF = {
 					limit = {
-						original_tag = USA
+						original_tag = AUR
 					}
 					OR = {
 						has_war_support > 0.5
@@ -52,7 +52,8 @@ ideas = {
 		}
 
 		isolation = {
-		
+			
+			level = 6
 			allowed = {
 				always = no
 			}
@@ -98,16 +99,19 @@ ideas = {
 
 		civilian_economy = {
 
-
-			cost = 150
+			level = 5
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
 				consumer_goods_expected_value = 0.35
-				production_speed_industrial_complex_factor = -0.3
+				production_speed_industrial_complex_factor = 0.20
+				research_speed_factor = 0.08
+				stability_factor = 0.10
+				production_factory_efficiency_gain_factor = 0.10
 				production_speed_arms_factory_factor = -0.3
-				conversion_cost_civ_to_mil_factor= 0.3
-				conversion_cost_mil_to_civ_factor = 0.3
+				conversion_cost_civ_to_mil_factor = 0.2
+				conversion_cost_mil_to_civ_factor = -0.2
 				max_fuel_factor = -0.25
 				fuel_gain_factor = -0.4
 			}
@@ -119,18 +123,24 @@ ideas = {
 
 		low_economic_mobilisation = {
 
+			level = 4
 			available = {
 				has_war_support > 0.15
 			}
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
 				consumer_goods_expected_value = 0.3
-				production_speed_industrial_complex_factor = -0.1
+				production_speed_industrial_complex_factor = 0.10
+				research_speed_factor = 0.04
+				stability_factor = 0.05
+				production_factory_efficiency_gain_factor = 0.05
 				production_speed_arms_factory_factor = -0.1
 				fuel_gain_factor = -0.25
+				conversion_cost_civ_to_mil_factor = 0.1
+				conversion_cost_mil_to_civ_factor = -0.1
 			}
 
 			cancel_if_invalid = no
@@ -152,18 +162,23 @@ ideas = {
 
 		partial_economic_mobilisation = {
 
+			level = 3
 			available = {
 				has_war_support > 0.25
 			}
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
 				consumer_goods_expected_value = 0.25
 				production_speed_arms_factory_factor = 0.1
+				production_speed_industrial_complex_factor = -0.1
+				research_speed_factor = -0.04
+				stability_factor = -0.05
+				production_factory_efficiency_gain_factor = -0.05
 				conversion_cost_civ_to_mil_factor= -0.1
-				conversion_cost_mil_to_civ_factor = -0.1
+				conversion_cost_mil_to_civ_factor = 0.1
 				fuel_gain_factor = -0.1
 			}
 
@@ -182,7 +197,7 @@ ideas = {
 
 		war_economy = {
 
-
+			level = 2
 			available = {
 				has_war_support > 0.5
 				OR = {
@@ -201,13 +216,17 @@ ideas = {
 				}
 			}
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
+				production_speed_industrial_complex_factor = -0.2
+				research_speed_factor = -0.08
+				stability_factor = -0.10
+				production_factory_efficiency_gain_factor = -0.10
 				consumer_goods_expected_value = 0.2
 				production_speed_arms_factory_factor = 0.2
-				conversion_cost_civ_to_mil_factor= -0.2
+				conversion_cost_civ_to_mil_factor = 0.2
 				conversion_cost_mil_to_civ_factor = -0.2
 			}
 
@@ -249,7 +268,7 @@ ideas = {
 
 		tot_economic_mobilisation = {
 
-
+			level = 1
 			available = {
 				has_war = yes
 				has_war_support > 0.8
@@ -287,18 +306,29 @@ ideas = {
 				}
    			}
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
+				production_speed_industrial_complex_factor = -0.40
+				research_speed_factor = -0.20
+				stability_factor = -0.20
+				production_factory_efficiency_gain_factor = -0.20
 				consumer_goods_expected_value = 0.10
 				conscription = -0.03
 				production_speed_arms_factory_factor = 0.3
-				conversion_cost_civ_to_mil_factor= -0.3
+				conversion_cost_civ_to_mil_factor = 0.3
 				conversion_cost_mil_to_civ_factor = -0.3
 			}
 
 			cancel_if_invalid = no
+
+			allowed_to_remove = {
+				if = {
+					limit = { original_tag = AUR }
+					NOT = { has_completed_focus = AUR_last_preparations }
+				}
+			}
 		}
 
 		new_economic_policy = {
@@ -434,7 +464,7 @@ ideas = {
 		#}
 
 		free_trade = {
-
+			level = 4
 			available = {
 				#if = {
 				#	limit = {
@@ -446,7 +476,7 @@ ideas = {
 				always = yes
 			}
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
@@ -473,8 +503,9 @@ ideas = {
 				always = yes # remove if necessary, not sure if its even necessary
 			}
 
+			level = 3
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
@@ -506,6 +537,7 @@ ideas = {
 		}
 
 		limited_exports = {
+			level = 2
 			available = {
 				OR = {
 					AND = {
@@ -529,7 +561,7 @@ ideas = {
 				}
 			}
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
@@ -583,7 +615,7 @@ ideas = {
 
 		closed_economy = {
 
-
+			level = 1
 			available = {
 				has_war = yes
 				OR = {
@@ -601,7 +633,7 @@ ideas = {
 				desc = can_not_access_market_closed_economy
 			}
 
-			cost = 150
+			cost = 100
 			removal_cost = -1
 
 			modifier = {
