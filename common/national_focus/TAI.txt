@@ -40,11 +40,132 @@ focus_tree = {
 		}
 	}
 	focus = {
-		id = TAI_return_to_the_old
-		icon = GFX_focus_CHL_the_scouts_monarchist_youth_organization
-		x = -3
+		id = TAI_a_strongman
+		icon = GFX_focus_BRA_air_force
+		x = 6
 		y = 1
 		cost = 5
+		available = {
+			fascism > 0.60
+		}
+		prerequisite = { focus = TAI_captain_of_our_nation }
+		relative_position_id = TAI_captain_of_our_nation
+		completion_reward = {
+			custom_effect_tooltip = TAI_a_strongman_tt
+			add_war_support = 0.10
+			hidden_effect = {
+				TAI_increase_militarist_opinion_10 = yes
+				TAI_increase_militarist_opinion_10 = yes
+			}
+		}
+	}
+	focus = {
+		id = TAI_seize_executive_authority
+		icon = GFX_focus_ARG_keep_it_in_the_party
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = TAI_a_strongman }
+		relative_position_id = TAI_a_strongman
+		completion_reward = {
+			custom_effect_tooltip = TAI_seize_executive_authority_tt
+			add_political_power = 200
+			add_popularity = { ideology = fascism popularity = -0.05 }
+			hidden_effect = {
+				TAI_decrease_monarchist_opinion_10 = yes
+				TAI_decrease_monarchist_opinion_10 = yes
+				TAI_decrease_monarchist_opinion_10 = yes
+				TAI_decrease_monarchist_opinion_10 = yes
+			}
+		}
+	}
+	focus = {
+		id = TAI_indoctrination
+		icon = GFX_goal_support_fascism
+		x = -1
+		y = 1
+		cost = 5
+		available = {
+			fascism > 0.75
+		}
+		prerequisite = { focus = TAI_seize_executive_authority }
+		relative_position_id = TAI_seize_executive_authority
+		completion_reward = {
+			custom_effect_tooltip = TAI_indoctrination_tt
+			hidden_effect = {
+				add_to_variable = { modifier_fascism_drift = 0.02 }
+			}
+		}
+	}
+	focus = {
+		id = TAI_secret_police
+		icon = GFX_focus_ger_oppose_hitler
+		x = 1
+		y = 1
+		cost = 5
+		available = {
+			fascism > 0.75
+		}
+		prerequisite = { focus = TAI_seize_executive_authority }
+		relative_position_id = TAI_seize_executive_authority
+		completion_reward = {
+			custom_effect_tooltip = TAI_secret_police_tt
+			hidden_effect = {
+				add_to_variable = { modifier_neutrality_drift = -0.02 }
+			}
+		}
+	}
+	focus = {
+		id = TAI_rise_of_purrgundy
+		icon = GFX_focus_BRA_air_force
+		x = 0
+		y = 2
+		cost = 5
+		available = {
+			fascism > 0.75
+		}
+		prerequisite = { focus = TAI_secret_police }
+		prerequisite = { focus = TAI_indoctrination }
+		relative_position_id = TAI_seize_executive_authority
+		completion_reward = {
+			set_politics = { ruling_party = fascism }
+			TAI_Kibbler = {
+				add_country_leader_role = {
+					country_leader={
+						expire = "1965.1.1"
+						ideology = ultranationalism
+					}
+					promote_leader = yes
+				}
+			}
+			set_cosmetic_tag = TAI_PURRGUND
+		}
+	}
+	focus = {
+		id = TAI_keep_the_course
+		icon = GFX_focus_ARG_strengthening_the_concordancia
+		x = 0
+		y = 1
+		cost = 5
+		available = {
+			neutrality < 0.30
+			fascism < 0.30
+		}
+		prerequisite = { focus = TAI_captain_of_our_nation }
+		relative_position_id = TAI_captain_of_our_nation
+		completion_reward = {
+			increase_kpk_strength_1 = yes
+		}
+	}
+	focus = {
+		id = TAI_return_to_the_old
+		icon = GFX_focus_CHL_the_scouts_monarchist_youth_organization
+		x = -6
+		y = 1
+		cost = 5
+		available = {
+			neutrality > 0.75
+		}
 		prerequisite = { focus = TAI_captain_of_our_nation }
 		relative_position_id = TAI_captain_of_our_nation
 		completion_reward = {
@@ -73,6 +194,11 @@ focus_tree = {
 		mutually_exclusive = { focus = TAI_the_legitimate_heir }
 		relative_position_id = TAI_the_heir_debacle
 		completion_reward = {
+			custom_effect_tooltip = TAI_local_heir_tt
+			hidden_effect = {
+				TAI_increase_monarchist_opinion_10 = yes
+				TAI_calculate_monachist_militarist_effects = yes
+			}
 		}
 	}
 	#Mewtail king of Cat Kingdom
@@ -86,6 +212,12 @@ focus_tree = {
 		mutually_exclusive = { focus = TAI_local_heir }
 		relative_position_id = TAI_the_heir_debacle
 		completion_reward = {
+			custom_effect_tooltip = TAI_the_legitimate_heir_tt
+			hidden_effect = {
+				TAI_decrease_monarchist_opinion_10 = yes
+				TAI_decrease_monarchist_opinion_10 = yes
+				TAI_calculate_monachist_militarist_effects = yes
+			}
 		}
 	}
 	focus = {
@@ -108,6 +240,7 @@ focus_tree = {
 		prerequisite = { focus = TAI_local_heir focus = TAI_the_legitimate_heir }
 		relative_position_id = TAI_the_heir_debacle
 		completion_reward = {
+			add_popularity = { ideology = neutrality popularity = 0.10 }
 		}
 	}
 	focus = {
@@ -119,6 +252,24 @@ focus_tree = {
 		prerequisite = { focus = TAI_local_heir focus = TAI_the_legitimate_heir }
 		relative_position_id = TAI_the_heir_debacle
 		completion_reward = {
+			custom_effect_tooltip = TAI_mewtail_guard_tt
+			add_popularity = { ideology = fascism popularity = 0.05 }
+			hidden_effect = {
+				TAI_increase_monarchist_opinion_10 = yes
+				TAI_increase_militarist_opinion_10 = yes
+				TAI_calculate_monachist_militarist_effects = yes
+			}
+		}
+	}
+	focus = {
+		id = TAI_find_mewtail
+		icon = GFX_focus_generic_monarchy_2
+		x = 1
+		y = 2
+		cost = 5
+		prerequisite = { focus = TAI_the_legitimate_heir }
+		relative_position_id = TAI_the_legitimate_heir
+		completion_reward = {
 		}
 	}
 	focus = {
@@ -127,8 +278,8 @@ focus_tree = {
 		x = 0
 		y = 4
 		cost = 5
-		prerequisite = { focus = TAI_the_legitimate_heir }
 		prerequisite = { focus = TAI_summon_the_monarchists }
+		prerequisite = { focus = TAI_find_mewtail }
 		relative_position_id = TAI_the_legitimate_heir
 		completion_reward = {
 			retire_character = TAI_Eliaw_Brawnner
@@ -141,6 +292,7 @@ focus_tree = {
 					promote_leader = yes
 				}
 			}
+			load_focus_tree = CAT_KINGDOM_TREE
 		}
 	}
 	focus = { #get monarchists from across the herzlands
@@ -154,6 +306,8 @@ focus_tree = {
 		prerequisite = { focus = TAI_reinstate_noble_titles }
 		relative_position_id = TAI_the_heir_debacle
 		completion_reward = {
+			every_other_country = { add_popularity = { ideology = neutrality popularity = -0.01 } }
+			add_popularity = { ideology = neutrality popularity = 0.05 }
 		}
 	}
 }

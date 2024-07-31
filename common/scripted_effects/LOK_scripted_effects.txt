@@ -1,3 +1,41 @@
+TAI_calculate_monachist_militarist_effects = {
+	#If the monarchists have 60% support you'll get +60% stability
+	#But if only 50% of the monarchists like the goverment then you only get +30%
+	set_variable = { TAI_monarchist_stability_factor = party_popularity@neutrality }
+	set_variable = { TAI_monarchist_political_power_factor = party_popularity@neutrality }
+
+	multiply_variable = { TAI_monarchist_stability_factor = tai_monarchist_opinion }
+	multiply_variable = { TAI_monarchist_political_power_factor = tai_monarchist_opinion }
+	multiply_variable = { TAI_monarchist_political_power_factor = 5 }
+
+	set_variable = { TAI_militarist_stability_factor = party_popularity@fascism }
+	set_variable = { TAI_militarist_political_power_factor = party_popularity@fascism }
+
+	multiply_variable = { TAI_militarist_stability_factor = tai_militarist_opinion }
+	multiply_variable = { TAI_militarist_political_power_factor = tai_militarist_opinion }
+	multiply_variable = { TAI_militarist_political_power_factor = 5 }
+}
+
+TAI_decrease_monarchist_opinion_10 = {
+	subtract_from_variable = { tai_monarchist_opinion = 0.10 }
+	clamp_variable = { var = tai_monarchist_opinion min = 0 max = 1 }
+}
+
+TAI_increase_monarchist_opinion_10 = {
+	add_to_variable = { tai_monarchist_opinion = 0.10 }
+	clamp_variable = { var = tai_monarchist_opinion min = 0 max = 1 }
+}
+
+TAI_decrease_militarist_opinion_10 = {
+	subtract_from_variable = { tai_militarist_opinion = 0.10 }
+	clamp_variable = { var = tai_militarist_opinion min = 0 max = 1 }
+}
+
+TAI_increase_militarist_opinion_10 = {
+	add_to_variable = { tai_militarist_opinion = 0.10 }
+	clamp_variable = { var = tai_militarist_opinion min = 0 max = 1 }
+}
+
 increase_kpk_strength_1 = {
 	add_to_variable = { kpk_strength = 1 }
 }

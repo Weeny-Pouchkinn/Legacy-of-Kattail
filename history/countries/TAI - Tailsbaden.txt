@@ -3,7 +3,7 @@
 set_oob = "TAI_1936"
 
 set_research_slots = 3
-set_stability = 0.5
+set_stability = 0
 set_war_support = 0.5
 
 # Starting tech
@@ -92,10 +92,22 @@ set_technology = {
 }
 set_convoys = 300
 
+#The share of each party that likes the government
+set_variable = { tai_monarchist_opinion = 0.5 }
+set_variable = { tai_militarist_opinion = 0.15 }
+
+set_variable = { TAI_base_pp_gain = -2 }
+set_variable = { TAI_fascism_drift = 0.1 }
+set_variable = { TAI_neutrality_drift = 0.1 }
+
 add_ideas = {
 	herzlands_warlord_idea
 	katzen_collapse_2
 }
+
+add_dynamic_modifier = { modifier = TAI_political_fluctuations }
+add_dynamic_modifier = { modifier = TAI_monarchist_stability }
+add_dynamic_modifier = { modifier = TAI_militarist_stability }
 
 set_politics = {
 	ruling_party = neutrality
@@ -105,11 +117,14 @@ set_politics = {
 }
 
 set_popularities = {
-	neutrality = 65
-	fascism = 25
-	communism = 5
+	neutrality = 50
+	fascism = 45
+	communism = 0
 	democratic = 5
 }
 
+TAI_calculate_monachist_militarist_effects = yes
+
 recruit_character = TAI_King_Mewtail
+recruit_character = TAI_Kibbler
 recruit_character = TAI_Eliaw_Brawnner
