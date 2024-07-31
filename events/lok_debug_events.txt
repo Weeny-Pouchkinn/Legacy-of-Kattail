@@ -33,6 +33,13 @@ country_event = { #Collapse Elwin
 				limit = { is_core_of = KKH }
 				transfer_state_to = KKH
 			}
+			transfer_units_fraction = {
+				target = KKH
+				stockpile_ratio = 0.3
+				army_ratio = 0.3
+				navy_ratio = 0.3
+				air_ratio = 0.3
+			}
 			SIL_Fritz = {
 				set_nationality = KKH
 				add_country_leader_role = {
@@ -47,18 +54,34 @@ country_event = { #Collapse Elwin
 				limit = { is_core_of = KVK }
 				transfer_state_to = KVK
 			}
+			transfer_units_fraction = {
+				target = KVK
+				stockpile_ratio = 0.3
+				army_ratio = 0.3
+				navy_ratio = 0.3
+				air_ratio = 0.3
+			}
 			every_state = {
 				limit = { is_core_of = BLM }
 				transfer_state_to = BLM
 			}
-			every_state = {
-				limit = { is_core_of = KTW }
-				transfer_state_to = KTW
-				set_demilitarized_zone = no
+			transfer_units_fraction = {
+				target = BLM
+				stockpile_ratio = 0.05
+				army_ratio = 0.05
+				navy_ratio = 0.05
+				air_ratio = 0.05
 			}
 			every_state = {
 				limit = { is_core_of = AKR }
 				transfer_state_to = AKR
+			}
+			transfer_units_fraction = {
+				target = AKR
+				stockpile_ratio = 0.05
+				army_ratio = 0.05
+				navy_ratio = 0.05
+				air_ratio = 0.05
 			}
 			SIL_Meowtin_Hessler = {
 				set_nationality = AKR
@@ -84,6 +107,13 @@ country_event = { #Collapse Elwin
 					promote_leader = yes
 				}
 			}
+			transfer_units_fraction = {
+				target = KTV
+				stockpile_ratio = 0.10
+				army_ratio = 0.10
+				navy_ratio = 0.10
+				air_ratio = 0.10
+			}
 			every_state = {
 				limit = { is_core_of = PMB }
 				transfer_state_to = PMB
@@ -97,6 +127,13 @@ country_event = { #Collapse Elwin
 					}
 					promote_leader = yes
 				}
+			}
+			transfer_units_fraction = {
+				target = KTV
+				stockpile_ratio = 0.075
+				army_ratio = 0.075
+				navy_ratio = 0.075
+				air_ratio = 0.075
 			}
 			every_state = {
 				limit = { is_core_of = CLE }
@@ -149,5 +186,178 @@ country_event = { #Drop 10 nukes on every state
 
 	option = {
 		name = "So long..."
+	}
+}
+
+country_event = { #Unresearch techs test
+	id = lok_debug.4
+	hidden = yes
+	title = "Bye"
+	desc = "Bye"
+	is_triggered_only = yes
+
+	immediate = {
+		set_technology = {
+			infantry_weapons = 0
+			infantry_weapons0 = 0
+			tech_support = 0
+			tech_recon = 0
+			tech_mountaineers = 0
+			motorised_infantry = 0
+			gw_artillery = 0
+			interwar_antiair = 0
+			gwtank = 0
+			basic_light_tank = 0
+			improved_light_tank = 0
+			early_fighter = 0
+			naval_bomber0 = 0
+			cv_early_fighter = 0
+			cv_naval_bomber0 = 0
+			early_bomber = 0
+			tactical_bomber0 = 0
+			CAS0 = 0
+			trench_warfare = 0
+			fleet_in_being = 0
+			fuel_silos = 0
+			fuel_refining = 0
+			basic_train = 0
+		
+			early_submarine = 0
+			basic_submarine = 0
+			early_destroyer = 0
+			basic_destroyer = 0
+			early_light_cruiser = 0
+			basic_light_cruiser = 0
+			early_heavy_cruiser = 0
+			basic_heavy_cruiser = 0
+			early_battleship = 0
+			early_battlecruiser = 0
+			basic_battlecruiser = 0
+			early_carrier = 0
+			transport = 0
+		}
+	}
+
+	option = {
+		name = "NAO mein tech"
+	}
+}
+
+#Unresearch repeatable
+country_event = {
+	id = lok_debug.5
+	hidden = yes
+	title = "tech test"
+	desc = "tech test"
+	is_triggered_only = yes
+
+	immediate = {
+		add_ideas = LOK_equipment_modifier
+	}
+
+	option = {
+		name = "So long..."
+	}
+}
+
+#Build anti-icbm everywhere
+country_event = {
+	id = lok_debug.6
+	hidden = yes
+	title = "no icbms allowed"
+	desc = "oh no"
+	is_triggered_only = yes
+
+	immediate = {
+		every_state = {
+			add_building_construction = {
+				type = anti_wmd
+				level = 1
+			}
+		}
+	}
+
+	option = {
+		name = "So long..."
+	}
+}
+
+country_event = {
+	id = lok_debug.7
+	title = ""
+	desc = "debug_7"
+	is_triggered_only = yes
+
+	option = {
+		name = "[?AUR.aur_num_reactors_built]"
+		set_country_flag = forming_cat_kingdom
+	}
+}
+
+#ai using nukes
+country_event = {
+	id = lok_debug.8
+	title = ""
+	desc = "debug_8"
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { nuke_launch_count = 1 }
+		#Pick a nuke type.
+		random_list = {
+			0 = {
+				set_variable = { current_nuke_type = 1 }
+				modifier = { add = 1 has_tech = nukes }
+				modifier = { factor = 0 has_equipment = { lok_fission_nuke_equipment < 1 } }
+			}
+			0 = {
+				set_variable = { current_nuke_type = 2 }
+				modifier = { add = 1 has_tech = fusion_nuke }
+				modifier = { factor = 0 has_equipment = { lok_fusion_nuke_equipment < 1 } }
+			}
+			0 = {
+				set_variable = { current_nuke_type = 3 }
+				modifier = { add = 1 has_tech = dirty_nuke }
+				modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
+			}
+		}
+		random_country = { #PICK A TARGET!!!
+			limit = {
+				has_war_with = ROOT
+				ROOT = { has_country_flag = nuked_by_@PREV }
+			}
+			random_owned_state = {
+				limit = { NOT = { is_core_of = ROOT } }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes #FIRE!!!!
+					if = {
+						limit = { check_variable = { current_nuke_type = 1 } }
+						add_equipment_to_stockpile = {
+							type = lok_fission_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 2 } }
+						add_equipment_to_stockpile = {
+							type = lok_fusion_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 3 } }
+						add_equipment_to_stockpile = {
+							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "[?ROOT.factories_for_nukes]"
 	}
 }

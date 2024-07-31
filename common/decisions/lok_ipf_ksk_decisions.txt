@@ -1,0 +1,573 @@
+lok_IPF_KSK_cat = {
+
+	#Concede to the KSK
+	concessions_to_ksk = {
+		icon = generic_form_nation
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			check_variable = { ksk_strength > 0 }
+			check_variable = { ksk_opinion < 5 }
+		}
+
+		available = {
+			NOT = { has_government = fascism }
+			NOT = { has_government = neutrality }
+		}
+
+		cost = 100
+
+		days_remove = 30
+		
+		modifier = {
+			communism_drift = 0.02
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = concessions_to_ksk_tooltip
+			add_popularity = {
+				ideology = communism
+				popularity = 0.10
+			}
+			add_stability = -0.05
+			hidden_effect = {
+				add_to_variable = { ksk_strength = 1 }
+				add_to_variable = { ksk_opinion = 1 }
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ksk_opinion > 1 }
+			}
+		}
+	}
+
+	raid_ksk_hideouts = {
+		icon = GFX_decision_generic_scorched_earth
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			check_variable = { ksk_strength > 0 }
+		}
+
+		available = {
+			has_equipment = { infantry_equipment > 4999 }
+		}
+
+		cost = 50
+
+		days_remove = 30
+		
+		modifier = {
+			communism_drift = -0.01
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = raid_ksk_hideouts_tooltip
+			add_stability = -0.025
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -5000
+			}
+			hidden_effect = {
+				random = {
+					chance = 50
+					subtract_from_variable = { ksk_strength = 1 }
+				}
+				random = {
+					chance = 10
+					set_country_flag = knows_where_katlinin_is
+				}
+				subtract_from_variable = { ksk_opinion = 2 }
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ksk_opinion > 0 }
+			}
+		}
+	}
+
+	look_for_katlinin = {
+		icon = GFX_decision_generic_arrest
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			NOT = { has_country_flag = knows_where_katlinin_is }
+			check_variable = { ksk_opinion < 0 }
+			check_variable = { ksk_strength > 0 }
+			NOT = { has_global_flag = katlinin_dead }
+		}
+
+		cost = 100
+
+		days_remove = 120
+		
+		modifier = {
+			political_power_factor = -0.25
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = look_for_katlinin_tooltip
+			hidden_effect = {
+				random = {
+					chance = 50
+					set_country_flag = knows_where_katlinin_is
+				}
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+
+	try_to_kill_katlinin = {
+		icon = GFX_decision_generic_assassination
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			check_variable = { ksk_opinion < 0 }
+			check_variable = { ksk_strength > 0 }
+			NOT = { has_global_flag = katlinin_dead }
+		}
+
+		available = {
+			has_equipment = { infantry_equipment > 2499 }
+		}
+
+		cost = 50
+
+		remove_effect = {
+			custom_effect_tooltip = try_to_kill_katlinin_tooltip
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -2500
+			}
+			hidden_effect = {
+				if = {
+					limit = { TAG = event_target:katlinin_country }
+					kill_katlinin = yes
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ksk_opinion > 0 }
+			}
+		}
+	}
+
+
+	concessions_to_ipf = {
+		icon = GFX_decision_SWI_swiss_democratic_tradition_campaign
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			check_variable = { ipf_strength > 0 }
+			check_variable = { ipf_opinion < 5 }
+		}
+
+		available = {
+			NOT = { has_government = fascism }
+		}
+
+		cost = 100
+
+		days_remove = 30
+		
+		modifier = {
+			democratic_drift = 0.02
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = concessions_to_ipf_tooltip
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.10
+			}
+			add_stability = -0.05
+			hidden_effect = {
+				add_to_variable = { ipf_strength = 1 }
+				add_to_variable = { ipf_opinion = 1 }
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 1 }
+			}
+		}
+	}
+
+	censor_the_ipf = {
+		icon = GFX_decision_generic_speech
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			check_variable = { ipf_strength > 0 }
+		}
+
+		cost = 50
+
+		days_remove = 90
+		
+		modifier = {
+			democratic_drift = -0.01
+			political_power_factor = -0.50
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = censor_the_ipf_tooltip
+			add_stability = 0.025
+			hidden_effect = {
+				random = {
+					chance = 50
+					subtract_from_variable = { ipf_strength = 1 }
+				}
+				subtract_from_variable = { ipf_opinion = 1 }
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+
+	shoot_the_ipf = {
+		icon = GFX_decision_generic_police_action
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			check_variable = { ipf_strength > 0 }
+		}
+
+		available = {
+			OR = {
+				has_government = fascism
+				has_government = neutrality
+			}
+			has_equipment = { infantry_equipment > 9999 }
+		}
+
+		cost = 100
+
+		days_remove = 90
+		
+		modifier = {
+			democratic_drift = -0.1
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = shoot_the_ipf_tooltip
+			add_manpower = -50000
+			add_stability = -0.05
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -10000
+			}
+			hidden_effect = {
+				random = {
+					chance = 50
+					subtract_from_variable = { ipf_strength = 1 }
+				}
+				subtract_from_variable = { ipf_strength = 1 }
+				subtract_from_variable = { ipf_opinion = 2 }
+				calculate_ipf_ksk_resistance = yes
+				random = {
+					chance = 15
+					set_country_flag = knows_where_meowrius_is
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+
+	look_for_meowrius = {
+		icon = GFX_decision_generic_arrest
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			NOT = { has_country_flag = knows_where_meowrius_is }
+			check_variable = { ipf_opinion < 0 }
+			check_variable = { ipf_strength > 0 }
+			NOT = { has_global_flag = meowrius_dead }
+		}
+
+		cost = 100
+
+		days_remove = 120
+		
+		modifier = {
+			political_power_factor = -0.25
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = look_for_meowrius_tooltip
+			hidden_effect = {
+				random = {
+					chance = 50
+					set_country_flag = knows_where_meowrius_is
+				}
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+
+	try_to_kill_meowrius = {
+		icon = GFX_decision_generic_assassination
+		allowed = { is_herzlands_warlord = yes }
+
+		visible = {
+			check_variable = { ipf_opinion < 0 }
+			check_variable = { ipf_strength > 0 }
+			NOT = { has_global_flag = meowrius_dead }
+		}
+
+		available = {
+			has_equipment = { infantry_equipment > 2499 }
+		}
+
+		cost = 50
+
+		remove_effect = {
+			custom_effect_tooltip = try_to_kill_meowrius_tooltip
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -2500
+			}
+			hidden_effect = {
+				if = {
+					limit = { TAG = event_target:meowrius_country }
+					kill_meowrius = yes
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+
+	ipf_bad_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_ignite_civil_war
+		#is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ipf_strength = 0 }
+				check_variable = { ipf_opinion > -1 }
+			}
+		}
+
+		days_mission_timeout = 30
+		timeout_effect = {
+			custom_effect_tooltip = ipf_bad_action_tooltip
+			for_loop_effect = {
+				end = ipf_strength
+				random_list = {
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@industrial_complex > 0 } }
+							damage_building = { type = industrial_complex damage = 1 }
+						}
+						add_manpower = -500
+					}
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@infrastructure > 0 } }
+							damage_building = { type = infrastructure damage = 1 }
+						}
+						add_manpower = -500
+					}
+				}
+			}
+		}
+	}
+
+	ipf_good_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_military
+		#is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ipf_strength = 0 }
+				check_variable = { ipf_opinion < 1 }
+			}
+		}
+
+		days_mission_timeout = 30
+		timeout_effect = {
+			custom_effect_tooltip = ipf_good_action_tooltip
+			for_loop_effect = {
+				end = ipf_strength
+				random_list = {
+					70 = {
+						add_equipment_to_stockpile = {
+							type = infantry_equipment
+							amount = 250
+							producer = ROOT
+						}
+					}
+					25 = { add_stability = 0.01 }
+					5 = {
+						random_owned_state = {
+							add_building_construction = {
+								type = industrial_complex
+								level = 1
+							}
+							add_extra_state_shared_building_slots = 1
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ksk_bad_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_scorched_earth
+		#is_good = yes
+		days_mission_timeout = 30
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ksk_strength = 0 }
+				check_variable = { ksk_opinion > -1 }
+			}
+		}
+
+		timeout_effect = {
+			custom_effect_tooltip = ksk_bad_action_tooltip
+			for_loop_effect = {
+				end = ksk_strength
+				random_list = {
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@arms_factory > 0 } }
+							damage_building = { type = arms_factory damage = 1 }
+						}
+						add_manpower = -500
+					}
+					1 = {
+						random_owned_state = {
+							limit = { check_variable = { building_level@dockyard > 0 } }
+							damage_building = { type = dockyard damage = 1 }
+						}
+						add_manpower = -500
+						modifier = {
+							factor = 0
+							NOT = { any_owned_state = { is_coastal = yes } }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	ksk_good_action = {
+		activation  = {
+			always = no
+		} # activated by effect
+		available = {
+			always = no
+		}
+		icon = GFX_decision_generic_protection
+		#is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				check_variable = { ksk_strength = 0 }
+				check_variable = { ksk_opinion < 1 }
+			}
+		}
+
+		days_mission_timeout = 30
+		timeout_effect = {
+			custom_effect_tooltip = ksk_good_action_tooltip
+			for_loop_effect = {
+				end = ipf_strength
+				random_list = {
+					70 = {
+						add_equipment_to_stockpile = {
+							type = artillery_equipment
+							amount = 50
+							producer = ROOT
+						}
+					}
+					25 = { add_war_support = 0.01 }
+					5 = {
+						random_owned_state = {
+							add_building_construction = {
+								type = arms_factory
+								level = 1
+							}
+							add_extra_state_shared_building_slots = 1
+						}
+					}
+				}
+			}
+		}
+	}
+
+}

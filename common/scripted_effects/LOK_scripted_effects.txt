@@ -1,10 +1,416 @@
-calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
-	if = {
-		limit = { state_eats_food = yes }
-		set_variable = { state_food_consumption = state_population_k }
-		divide_variable = { state_food_consumption = 100 }
-		round_variable = state_food_consumption
+TAI_calculate_monachist_militarist_effects = {
+	#If the monarchists have 60% support you'll get +60% stability
+	#But if only 50% of the monarchists like the goverment then you only get +30%
+	set_variable = { TAI_monarchist_stability_factor = party_popularity@neutrality }
+	set_variable = { TAI_monarchist_political_power_factor = party_popularity@neutrality }
+
+	multiply_variable = { TAI_monarchist_stability_factor = tai_monarchist_opinion }
+	multiply_variable = { TAI_monarchist_political_power_factor = tai_monarchist_opinion }
+	multiply_variable = { TAI_monarchist_political_power_factor = 5 }
+
+	set_variable = { TAI_militarist_stability_factor = party_popularity@fascism }
+	set_variable = { TAI_militarist_political_power_factor = party_popularity@fascism }
+
+	multiply_variable = { TAI_militarist_stability_factor = tai_militarist_opinion }
+	multiply_variable = { TAI_militarist_political_power_factor = tai_militarist_opinion }
+	multiply_variable = { TAI_militarist_political_power_factor = 5 }
+}
+
+TAI_decrease_monarchist_opinion_10 = {
+	subtract_from_variable = { tai_monarchist_opinion = 0.10 }
+	clamp_variable = { var = tai_monarchist_opinion min = 0 max = 1 }
+}
+
+TAI_increase_monarchist_opinion_10 = {
+	add_to_variable = { tai_monarchist_opinion = 0.10 }
+	clamp_variable = { var = tai_monarchist_opinion min = 0 max = 1 }
+}
+
+TAI_decrease_militarist_opinion_10 = {
+	subtract_from_variable = { tai_militarist_opinion = 0.10 }
+	clamp_variable = { var = tai_militarist_opinion min = 0 max = 1 }
+}
+
+TAI_increase_militarist_opinion_10 = {
+	add_to_variable = { tai_militarist_opinion = 0.10 }
+	clamp_variable = { var = tai_militarist_opinion min = 0 max = 1 }
+}
+
+increase_kpk_strength_1 = {
+	add_to_variable = { kpk_strength = 1 }
+}
+
+kill_katlinin = {
+	set_global_flag = katlinin_dead
+	every_country = {
+		limit = { has_dynamic_modifier = { modifier = LOK_KSK_IPF_activity } }
+		subtract_from_variable = { ksk_strength = 2 }
+		calculate_ipf_ksk_resistance = yes
 	}
+}
+
+kill_meowrius = {
+	set_global_flag = meowrius_dead
+	every_country = {
+		limit = { has_dynamic_modifier = { modifier = LOK_KSK_IPF_activity } }
+		subtract_from_variable = { ipf_strength = 2 }
+		calculate_ipf_ksk_resistance = yes
+	}
+}
+
+calculate_ipf_ksk_resistance = {
+	if = {
+		limit = { has_global_flag = katlinin_dead }
+		clamp_variable = { var = ksk_strength min = 0 max = 3 }
+	}
+	else = { clamp_variable = { var = ksk_strength min = 0 max = 6 } }
+
+	if = {
+		limit = { has_global_flag = meowrius_dead }
+		clamp_variable = { var = ipf_strength min = 0 max = 3 }
+	}
+	else = { clamp_variable = { var = ipf_strength min = 0 max = 6 } }
+
+	clamp_variable = { var = ipf_opinion min = -5 max = 5 }
+	clamp_variable = { var = ksk_opinion min = -5 max = 5 }
+	if = {
+		limit = { has_dynamic_modifier = { modifier = LOK_KSK_IPF_activity } }
+		set_variable = { ipf_stability_factor = 0.025 }
+		set_variable = { ipf_industrial_capacity_factory = 0.025 }
+		set_variable = { ipf_resistance_activity = -0.05 }
+		set_variable = { ipf_resistance_growth = -0.05 }
+		set_variable = { ipf_democratic_drift = 0.01 }
+
+		multiply_variable = { ipf_stability_factor = ipf_strength }
+		multiply_variable = { ipf_industrial_capacity_factory = ipf_strength }
+		multiply_variable = { ipf_resistance_activity = ipf_strength }
+		multiply_variable = { ipf_resistance_growth = ipf_strength }
+		multiply_variable = { ipf_democratic_drift = ipf_strength }
+		
+		if = {
+			limit = { check_variable = { ipf_opinion < 0 } }
+			multiply_variable = { ipf_stability_factor = -1 }
+			multiply_variable = { ipf_industrial_capacity_factory = -1 }
+			multiply_variable = { ipf_resistance_activity = -1 }
+			multiply_variable = { ipf_resistance_growth = -1 }
+		}
+
+		else_if = {
+			limit = { check_variable = { ipf_opinion = 0 } }
+			multiply_variable = { ipf_stability_factor = 0 }
+			multiply_variable = { ipf_industrial_capacity_factory = 0 }
+			multiply_variable = { ipf_resistance_activity = 0 }
+			multiply_variable = { ipf_resistance_growth = 0 }
+		}
+
+		set_variable = { ksk_war_support_factor = 0.025 }
+		set_variable = { ksk_production_factory_max_efficiency_factor = 0.025 }
+		set_variable = { ksk_compliance_gain = 0.005 }
+		set_variable = { ksk_communism_drift = 0.01 }
+
+		multiply_variable = { ksk_war_support_factor = ksk_strength }
+		multiply_variable = { ksk_production_factory_max_efficiency_factor = ksk_strength }
+		multiply_variable = { ksk_compliance_gain = ksk_strength }
+		multiply_variable = { ksk_communism_drift = ksk_strength }
+
+		if = {
+			limit = { check_variable = { ksk_opinion < 0 } }
+			multiply_variable = { ksk_war_support_factor = -1 }
+			multiply_variable = { ksk_production_factory_max_efficiency_factor = -1 }
+			multiply_variable = { ksk_compliance_gain = -1 }
+		}
+
+		else_if = {
+			limit = { check_variable = { ksk_opinion = 0 } }
+			multiply_variable = { ksk_war_support_factor = 0 }
+			multiply_variable = { ksk_production_factory_max_efficiency_factor = 0 }
+			multiply_variable = { ksk_compliance_gain = 0 }
+		}
+	}
+}
+calculate_ai_nuke_production = {
+	set_variable = { factories_for_nukes = num_of_military_factories }
+	multiply_variable = { factories_for_nukes = 0.05 } #5% of mils are put on nukes, say 100 so now it's 20
+	if = { #Fascists like WMDs
+		limit = { has_government = fascism }
+		multiply_variable = { factories_for_nukes = 1.5 }
+	}
+	if = { #Katzens like WMDs
+		limit = { is_herzlands_warlord = yes }
+		multiply_variable = { factories_for_nukes = 2 }
+	}
+	if = { #Nations that REALLY like WMDs
+		limit = { OR = { tag = NEU tag = AKR } }
+		multiply_variable = { factories_for_nukes = 2 }
+	}
+	round_variable = factories_for_nukes
+	set_variable = { nukes_this_month = factories_for_nukes }
+	divide_variable = { nukes_this_month = 3 } #3 factories will make a nuke per month. 20/3 = 6.67 so 7 nukes
+	#Bonus from factory output
+	set_temp_variable = { nukes_bonus_factory_output = modifier@industrial_capacity_factory }
+	add_to_temp_variable = { nukes_bonus_factory_output = 1 }
+	#Bonus from efficiency cap
+	set_temp_variable = { nukes_bonus_efficiency_cap = modifier@production_efficiency_cap_factor }
+	multiply_temp_variable = { nukes_bonus_efficiency_cap = 0.5 }
+	add_to_temp_variable = { nukes_bonus_efficiency_cap = 1 }
+	#Add factory output + efficiency cap
+	multiply_variable = { nukes_this_month = nukes_bonus_factory_output }
+	multiply_variable = { nukes_this_month = nukes_bonus_efficiency_cap }
+	if = { #If we can make less than 1 then 50% of making none
+		limit = { check_variable = { nukes_this_month < 1 } }
+		random_list = {
+			1 = { set_variable = { nukes_this_month = 1 } }
+			1 = { set_variable = { nukes_this_month = 0 } }
+		}
+	}
+	round_variable = nukes_this_month
+	for_loop_effect = {
+		end = nukes_this_month
+		random_list = {
+			1 = {
+				add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 1 }
+			}
+			0 = {
+				add_equipment_to_stockpile = { type = lok_fusion_nuke_equipment_0 amount = 1 }
+				modifier = { add = 2 has_tech = fusion_nuke }
+			}
+			0 = {
+				add_equipment_to_stockpile = { type = lok_cobalt_nuke_equipment_0 amount = 1 }
+				modifier = { add = 1 has_tech = dirty_nuke }
+			}
+		}
+	}
+	multiply_variable = { factories_for_nukes = -1 }
+	add_dynamic_modifier = { modifier = LOK_nukes_factories }
+}
+
+count_nukes_in_stockpile = {
+	set_variable = { lok_total_nuke_stockpile = 0 }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fission_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fusion_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_cobalt_nuke_equipment }
+}
+
+calculate_salvo_capacity = {
+	set_temp_variable = { lok_salvo_capacity_added_last_week = lok_total_salvo_capacity } #Say 100
+	set_variable = { lok_total_salvo_capacity = 0 }
+			
+	every_controlled_state = { add_to_variable = { ROOT.lok_total_salvo_capacity = non_damaged_building_level@rocket_site } }
+	multiply_variable = { lok_total_salvo_capacity = 10 } #10 nukes per silo
+	set_temp_variable = { salvo_capacity_from_subs = num_ships_with_type@ballistic_submarine }
+
+	multiply_temp_variable = { salvo_capacity_from_subs = 20 } #10 nukes per ballistic sub
+	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_subs }
+
+	if = {
+		limit = { is_ai = yes }
+		set_variable = { lok_total_salvo_capacity = 100 }
+	}
+
+	#Now let's say it's 120
+	subtract_from_temp_variable = { lok_salvo_capacity_added_last_week = lok_total_salvo_capacity } #-20
+	multiply_temp_variable = { lok_salvo_capacity_added_last_week = -1 } #20, we add that to the current capacity
+	clamp_temp_variable = { var = lok_salvo_capacity_added_last_week min = 0 }
+	add_to_variable = { lok_current_salvo_capacity = lok_salvo_capacity_added_last_week } #Add this to the current capacity
+	clamp_variable = { var = lok_current_salvo_capacity max = lok_total_salvo_capacity }
+}
+
+ai_fire_nuke = {
+	set_variable = { nuke_launch_count = 1 }
+	#Pick a nuke type.
+	random_list = {
+		0 = {
+			set_variable = { current_nuke_type = 1 }
+			modifier = { add = 1 has_tech = nukes }
+			modifier = { factor = 0 has_equipment = { lok_fission_nuke_equipment < 1 } }
+		}
+		0 = {
+			set_variable = { current_nuke_type = 2 }
+			modifier = { add = 1 has_tech = fusion_nuke }
+			modifier = { factor = 0 has_equipment = { lok_fusion_nuke_equipment < 1 } }
+		}
+		0 = {
+			set_variable = { current_nuke_type = 3 }
+			modifier = { add = 1 has_tech = dirty_nuke }
+			modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
+		}
+	}
+	#AI will fire half of their salvo capacity
+	set_temp_variable = { ai_nukes_being_fired = lok_current_salvo_capacity }
+	divide_temp_variable = { ai_nukes_being_fired = 2 }
+	round_temp_variable = ai_nukes_being_fired
+	clamp_temp_variable = { var = ai_nukes_being_fired min = 0 max = lok_total_nuke_stockpile }
+	for_loop_effect = {
+		end = ai_nukes_being_fired
+		random_enemy_country = { #PICK A TARGET!!! We pick a country that nuked us beforehand.
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
+			}
+			random_owned_state = {
+				limit = { NOT = { is_core_of = ROOT } }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes #FIRE!!!!
+					if = {
+						limit = { check_variable = { current_nuke_type = 1 } }
+						add_equipment_to_stockpile = {
+							type = lok_fission_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 2 } }
+						add_equipment_to_stockpile = {
+							type = lok_fusion_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 3 } }
+						add_equipment_to_stockpile = {
+							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+reduce_compliance_coring_threshold_by_10 = {
+	if = { limit = { has_state_flag = compliance_100_@ROOT } clr_state_flag = compliance_100_@ROOT set_state_flag = compliance_90_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_90_@ROOT } clr_state_flag = compliance_90_@ROOT set_state_flag = compliance_80_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_80_@ROOT } clr_state_flag = compliance_80_@ROOT set_state_flag = compliance_70_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_70_@ROOT } clr_state_flag = compliance_70_@ROOT set_state_flag = compliance_60_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_60_@ROOT } clr_state_flag = compliance_60_@ROOT set_state_flag = compliance_50_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_50_@ROOT } clr_state_flag = compliance_50_@ROOT set_state_flag = compliance_40_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_40_@ROOT } clr_state_flag = compliance_40_@ROOT set_state_flag = compliance_30_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_30_@ROOT } clr_state_flag = compliance_30_@ROOT set_state_flag = compliance_20_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_20_@ROOT } clr_state_flag = compliance_20_@ROOT set_state_flag = compliance_10_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_10_@ROOT } clr_state_flag = compliance_10_@ROOT set_state_flag = compliance_0_@ROOT }
+}
+
+increase_compliance_coring_threshold_by_10 = {
+	if = { limit = { has_state_flag = compliance_0_@ROOT } clr_state_flag = compliance_0_@ROOT set_state_flag = compliance_10_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_10_@ROOT } clr_state_flag = compliance_10_@ROOT set_state_flag = compliance_20_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_20_@ROOT } clr_state_flag = compliance_20_@ROOT set_state_flag = compliance_30_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_30_@ROOT } clr_state_flag = compliance_30_@ROOT set_state_flag = compliance_40_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_40_@ROOT } clr_state_flag = compliance_40_@ROOT set_state_flag = compliance_50_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_50_@ROOT } clr_state_flag = compliance_50_@ROOT set_state_flag = compliance_60_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_60_@ROOT } clr_state_flag = compliance_60_@ROOT set_state_flag = compliance_70_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_70_@ROOT } clr_state_flag = compliance_70_@ROOT set_state_flag = compliance_80_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_80_@ROOT } clr_state_flag = compliance_80_@ROOT set_state_flag = compliance_90_@ROOT }
+	else_if = { limit = { has_state_flag = compliance_90_@ROOT } clr_state_flag = compliance_90_@ROOT set_state_flag = compliance_100_@ROOT }
+}
+
+calculate_bonus_resources_from_modifiers = { #Example with +50%
+
+	#Calculate total bonuses for STEEL
+	set_temp_variable = { lok_total_extra_steel_factor = 1 } #set to 1
+	add_to_temp_variable = { lok_total_extra_steel_factor = modifier@lok_mineral_resources_factor } #minerals
+	#Calculate total extra steel
+	set_variable = { lok_total_extra_steel = resource_produced@steel } #Say 100
+	multiply_variable = { lok_total_extra_steel = lok_total_extra_steel_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_steel = resource_produced@steel } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_steel min = 0 }
+
+	#Calculate total bonuses for tungsten
+	set_temp_variable = { lok_total_extra_tungsten_factor = 1 } #set to 1
+	add_to_temp_variable = { lok_total_extra_tungsten_factor = modifier@lok_mineral_resources_factor } #minerals
+	#Calculate total extra tungsten
+	set_variable = { lok_total_extra_tungsten = resource_produced@tungsten } #Say 100
+	multiply_variable = { lok_total_extra_tungsten = lok_total_extra_tungsten_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_tungsten = resource_produced@tungsten } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_tungsten min = 0 }
+
+	#Calculate total bonuses for chromium
+	set_temp_variable = { lok_total_extra_chromium_factor = 1 } #set to 1
+	add_to_temp_variable = { lok_total_extra_chromium_factor = modifier@lok_mineral_resources_factor } #minerals
+	#Calculate total extra chromium
+	set_variable = { lok_total_extra_chromium = resource_produced@chromium } #Say 100
+	multiply_variable = { lok_total_extra_chromium = lok_total_extra_chromium_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_chromium = resource_produced@chromium } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_chromium min = 0 }
+
+	#Calculate total bonuses for aluminium
+	set_temp_variable = { lok_total_extra_aluminium_factor = 1 } #set to 1
+	add_to_temp_variable = { lok_total_extra_aluminium_factor = modifier@lok_mineral_resources_factor } #minerals
+	#Calculate total extra aluminium
+	set_variable = { lok_total_extra_aluminium = resource_produced@aluminium } #Say 100
+	multiply_variable = { lok_total_extra_aluminium = lok_total_extra_aluminium_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_aluminium = resource_produced@aluminium } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_aluminium min = 0 }
+
+	#Calculate total bonuses for oil
+	set_temp_variable = { lok_total_extra_oil_factor = 1 } #set to 1
+	add_to_temp_variable = { lok_total_extra_oil_factor = modifier@lok_mineral_resources_factor } #minerals
+	#Calculate total extra oil
+	set_variable = { lok_total_extra_oil = resource_produced@oil } #Say 100
+	multiply_variable = { lok_total_extra_oil = lok_total_extra_oil_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_oil = resource_produced@oil } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_oil min = 0 }
+
+	#Calculate total bonuses for rubber
+	set_temp_variable = { lok_total_extra_rubber_factor = 1 } #set to 1
+	#Calculate total extra rubber
+	set_variable = { lok_total_extra_rubber = resource_produced@rubber } #Say 100
+	multiply_variable = { lok_total_extra_rubber = lok_total_extra_rubber_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_rubber = resource_produced@rubber } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_rubber min = 0 }
+
+	#Calculate total bonuses for food
+	set_temp_variable = { lok_total_extra_food_factor = 1 } #set to 1
+	#Calculate total extra food
+	set_variable = { lok_total_extra_food = resource_produced@food } #Say 100
+	multiply_variable = { lok_total_extra_food = lok_total_extra_food_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_food = resource_produced@food } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_food min = 0 }
+
+	#Calculate total bonuses for fissiles
+	set_temp_variable = { lok_total_extra_fissiles_factor = 1 } #set to 1
+	add_to_temp_variable = { lok_total_extra_fissiles_factor = modifier@lok_mineral_resources_factor } #minerals
+	#Calculate total extra fissiles
+	set_variable = { lok_total_extra_fissiles = resource_produced@fissiles } #Say 100
+	multiply_variable = { lok_total_extra_fissiles = lok_total_extra_fissiles_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_fissiles = resource_produced@fissiles } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_fissiles min = 0 }
+
+	#Calculate total bonuses for supertensiles
+	set_temp_variable = { lok_total_extra_supertensiles_factor = 1 } #set to 1
+	add_to_temp_variable = { lok_total_extra_supertensiles_factor = modifier@lok_mineral_resources_factor } #minerals
+	#Calculate total extra supertensiles
+	set_variable = { lok_total_extra_supertensiles = resource_produced@supertensiles } #Say 100
+	multiply_variable = { lok_total_extra_supertensiles = lok_total_extra_supertensiles_factor } #we get the factor, if its 1.5 then 150
+	subtract_from_variable = { lok_total_extra_supertensiles = resource_produced@supertensiles } #Remove current production to get the extra we need to add
+	clamp_variable = { var = lok_total_extra_supertensiles min = 0 }
+}
+
+calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
+	set_variable = { state_food_consumption = state_population_k }
+	divide_variable = { state_food_consumption = 100 }
+	if = { #Katzens and Sobakis are mostly carnivorous and thus eat 15% more
+		limit = {
+			OR = {
+				check_variable = { species = 1 }
+				check_variable = { species = 2 }
+			}
+		}
+		multiply_variable = { state_food_consumption = 1.15 }
+	}
+	if = { #Lithoids do not eat food at all
+		limit = {
+			OR = {
+				check_variable = { species = 5 }
+				check_variable = { species = 8 }
+			}
+		}
+		multiply_variable = { state_food_consumption = 0 }
+	}
+	round_variable = state_food_consumption
 }
 
 calculate_food_production_in_state = {
@@ -21,20 +427,26 @@ calculate_total_food_consumption = {
 		calculate_food_consumption_in_state = yes
 		ROOT = {
 			add_to_variable = { country_food_consumption = PREV.state_food_consumption }
-			add_to_variable = { country_food_stockpile_max = PREV.non_damaged_building_level@infrastructure } #Every level of infra provides food storage
+
+			set_variable = { country_food_stockpile_from_infra = PREV.non_damaged_building_level@infrastructure }
+			multiply_variable = { country_food_stockpile_from_infra = 10 } #1 infra = 10 food or 10M people for 1 month
+			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_infra }
+
+			set_variable = { country_food_stockpile_from_silos = PREV.non_damaged_building_level@food_silo }
+			multiply_variable = { country_food_stockpile_from_silos = 50 } #1 silo = 50 food or 50M people for 1 month
+			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_silos }
 		}
 	}
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
-	multiply_variable = { country_food_consumption_modifier = -1 }
-	set_temp_variable = { negate_exacavation_tech_food = modifier@local_resources_factor } #This is to undo the effects of excavation techs.
-	add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
-	divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
+	#multiply_variable = { country_food_consumption_modifier = -1 }
+	# set_temp_variable = { negate_exacavation_tech_food = modifier@local_resources_factor } #This is to undo the effects of excavation techs.
+	# add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
+	# divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
 	round_variable = country_food_consumption_modifier
 	set_variable = { country_food_production = country_food_balance } #The food that we're actually producing
 	add_to_variable = { country_food_production = country_food_consumption } #We add our consumption to the balance to get production, yippe!
 
 	#FOOD STOCKPILING
-	multiply_variable = { country_food_stockpile_max = 10 } #1 level of infra = can store 10 food (or enough for 1M people for 1 month)
 
 	if = { #If balance is positive put into the stockpile
 		limit = { check_variable = { country_food_balance > 0 } }
@@ -63,11 +475,67 @@ calculate_total_food_consumption = {
 
 	#MODIFIER
 	subtract_from_variable = { country_food_needs_modifier = 1 }
+
+	multiply_variable = { country_food_needs_modifier = 0.75 }
+
 	if = {
+		limit = { is_ai = yes }
+		multiply_variable = { country_food_needs_modifier = 0.75 } #AI is a bit chtewpid innit
+	}
+
+	#Round a bit
+	multiply_variable = { country_food_needs_modifier = 100 }
+	round_variable = country_food_needs_modifier
+	divide_variable = { country_food_needs_modifier = 100 }
+
+	#Apply the modifiers
+	if = {
+		limit = { check_variable = { country_food_needs_met_perc < 61 } check_variable = { country_food_stockpile < 1 } }
+		add_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		}
+	}
+	else_if = {
 		limit = { check_variable = { country_food_needs_met_perc < 100 } check_variable = { country_food_stockpile < 1 } }
 		add_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_starvation_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		}
 	}
-	else = { remove_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+	else = {
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_food_deficit_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_starvation_deficit_modifier } }
+			remove_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		}
+	}
+
+	# if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 61 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_famine_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 76 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_severe_food_shortage_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 86 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_mild_food_shortage_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc < 96 } check_variable = { country_food_stockpile < 1 } }
+	# 	add_ideas = lok_small_food_shortage_idea
+	# }
+	# else_if = {
+	# 	limit = { check_variable = { country_food_needs_met_perc > 119 } }
+	# 	add_ideas = lok_food_surplus
+	# }
 
 	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
 	if = {
@@ -91,7 +559,7 @@ calculate_total_food_consumption = {
 			add_to_variable = { lok_state_starvation_deaths = lok_starvation_death_count }
 			add_to_variable = { lok_state_deaths = lok_starvation_death_count }
 
-			CONTROLLER = {
+			var:CONTROLLER = {
 				add_to_variable = { lok_country_starvation_deaths = PREV.lok_starvation_death_count }
 				add_to_variable = { lok_country_deaths = PREV.lok_starvation_death_count }
 				add_to_variable = { global.lok_global_starvation_deaths = PREV.lok_starvation_death_count }
@@ -180,13 +648,92 @@ calculate_combat_casualties = {
 	}
 }
 
+#Firing the nukes
 fire_thermonuclear_salvo = {
+	count_nukes_in_stockpile = yes
 	for_loop_effect = {
-		end = 20
-		launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
-	}
-	event_target:lok_thermonuclear_salvo_state = {
-		add_to_variable = { lok_radiation_level = 10 } #Adds 10 more radiation (to 30) than usual.
+		end = nuke_launch_count
+		event_target:lok_thermonuclear_salvo_state = {
+			set_temp_variable = { anti_wmd_level = building_level@anti_wmd }
+			multiply_temp_variable = { anti_wmd_level = 18 }
+			set_temp_variable = { anti_wmd_level_negative = anti_wmd_level }
+			multiply_temp_variable = { anti_wmd_level_negative = -1 }
+		}
+		subtract_from_variable = { lok_current_salvo_capacity = 1 }
+		clamp_variable = { var = lok_current_salvo_capacity min = 0 }
+		country_event = { id = LOK_nuke.1 days = 7 } #Refill salvo capacity in a bit
+		random_list = {
+			100 = {
+				launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
+				event_target:lok_thermonuclear_salvo_state = {
+					if = { #Fission
+						limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
+						set_variable = { lok_added_radiation_level = 1 }
+					}
+					else_if = { #Fusion
+						limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
+						set_variable = { lok_added_radiation_level = 0.75 }
+					}
+					else_if = { #Cobalt
+						limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
+						set_variable = { lok_added_radiation_level = 10 }
+					}
+					multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
+					add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
+					divide_variable = { lok_added_radiation_level = 4 }
+					calculate_radiation_state_modifiers = yes
+					every_neighbor_state = { #It spreads to neighboring states too, how fun!
+						add_to_variable = { lok_radiation_level = PREV.lok_added_radiation_level }
+						calculate_radiation_state_modifiers = yes
+					}
+					if = {
+						limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
+						set_temp_variable = { lok_nuke_casualties = state_population_k } #Say 10M so that's 10000
+						multiply_temp_variable = { lok_nuke_casualties = 0.005 } #We divide to avoid hitting the limit of the for_loop effect. Now 50
+						if = { #Fission - 5% death
+							limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 1 }
+						}
+						else_if = { #Fusion - 10% death
+							limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 2 }
+						}
+						else_if = { #Cobalt - 2.5% death (but the rads!)
+							limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 0.5 }
+						}
+						if = { #Katown Pyramid protects!
+							limit = { check_variable = { wonder = 1 } }
+							multiply_temp_variable = { lok_nuke_casualties = 0 }
+						}
+						set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
+						round_temp_variable = lok_nuke_casualties
+						clamp_temp_variable = { var = lok_nuke_casualties min = 1 } #At least 10k people gotta die sowwy
+						for_loop_effect = { #50 times 10000 = 500000, 0.5M, 5%
+							end = lok_nuke_casualties
+							add_manpower = -10000
+						}
+						multiply_variable = { lok_recent_nuke_casualties = 10 } #Turn to thousands (if that's even possible) #Now 500 so it represents 500k
+						#Add to the state counters
+						add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }
+						add_to_variable = { lok_state_deaths = lok_recent_nuke_casualties }
+						add_to_variable = { lok_state_deaths_display = lok_recent_nuke_casualties }
+						#Add these deaths to the controller's total and the grand total
+						var:controller = {
+							calculate_salvo_capacity = yes #Salvo capacity will shrink if ICBM silos are hit - beware!
+							add_to_variable = { lok_country_bombing_deaths = PREV.lok_recent_nuke_casualties }
+							add_to_variable = { lok_country_deaths = PREV.lok_recent_nuke_casualties }
+							add_to_variable = { global.lok_global_bombing_deaths = PREV.lok_recent_nuke_casualties }
+							add_to_variable = { global.lok_global_deaths = PREV.lok_recent_nuke_casualties }
+						}
+					}
+				}
+				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level_negative }
+			}
+			0 = {
+				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level }
+			}
+		}
 	}
 }
 
@@ -195,7 +742,12 @@ collapse_into_anarchy = {
 	set_demilitarized_zone = yes
 }
 
+#weekly check to reduce and spread radiation
 calculate_radiation_in_state = {
+	if = { #Katown Pyramid protects!
+		limit = { check_variable = { wonder = 1 } }
+		set_variable = { lok_radiation_level = 0 }
+	}
 	if = {
 		limit = { check_variable = { lok_radiation_level > 0 } }
 		if = { #Below 0.2 it just goes away
@@ -221,25 +773,325 @@ calculate_radiation_in_state = {
 				50 = {}
 			}
 		}
+	}
+}
+
+#applied immediately when radiation is added - debuffs the state
+calculate_radiation_state_modifiers = {
+	if = { #Katown Pyramid protects!
+		limit = { check_variable = { wonder = 1 } }
+		set_variable = { lok_radiation_level = 0 }
+	}
+	#Apply radiation state modifiers. Calculated as a percentage, with 10 radiation = -100% to all.
+	set_variable = { lok_radiation_modifier = lok_radiation_level } #Say 5
+	divide_variable = { lok_radiation_modifier = 10 } #Now 0.5
+	set_variable = { lok_radiation_army_attrition_modifier = lok_radiation_modifier } #For attrition
+	multiply_variable = { lok_radiation_modifier = -1 } #Make negative
+	set_variable = { lok_radiation_army_modifier = lok_radiation_modifier } #For armies, not affected by species
+	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
+	if = {
+		limit = { check_variable = { species = 1 } } #-30% for Katzens
+		multiply_variable = { lok_radiation_modifier = 0.7 }
+	}
+	if = {
+		limit = { #-75% for Lithoids
+			OR = {
+				check_variable = { species = 5 }
+				check_variable = { species = 8 }		
+			}
+		} 
+		multiply_variable = { lok_radiation_modifier = 0.25 }
+	}
+	clamp_variable = { var = lok_radiation_army_attrition_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
+	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and -0.9
+	clamp_variable = { var = lok_radiation_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
+}
+
+#applied weekly, kill people due to radiation
+apply_radiation_effects = {
+	if = { #Kill people in the state
+		limit = { #THIS IS THE "BASE RADIATION RESISTANCE TRAIT"
+			NOT = {
+				AND = { check_variable = { species = 1 } check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
+				AND = {
+					OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+					check_variable = { lok_radiation_level < 5 } #NMI + Nekeox don't die below 5
+				}
+			}
+		}
 		#Kill people in the state (RIP Bozo)
-		set_temp_variable = { lok_radiation_death_percent = lok_radiation_level }
+		set_variable = { lok_radiation_death_percent = lok_radiation_level }
 		#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
-		divide_temp_variable = { lok_radiation_death_percent = 100 }
-		set_temp_variable = { lok_radiation_death_count = state_population_k }
-		multiply_temp_variable = { lok_radiation_death_count = lok_radiation_death_percent }
-		multiply_temp_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower since radiation killing 2.1M people at once is very unlikely anyways... right??????
+		divide_variable = { lok_radiation_death_percent = 100 }
+
+		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
+		if = {
+			limit = { check_variable = { species = 1 } } #Only half the deaths for Katzen states
+			multiply_variable = { lok_radiation_death_percent = 0.5 }
+		}
+
+		if = {
+			limit = { #-75% for Lithoids
+				OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+			} 
+			multiply_variable = { lok_radiation_death_percent = 0.25 }
+		}
+
+		set_variable = { lok_radiation_death_count = state_population_k }
+		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }
+		clamp_variable = { var = lok_radiation_death_count min = 0 max = 2000 } #Avoid overflow
+		multiply_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower
 		add_manpower = lok_radiation_death_count #Remove the people
-		divide_temp_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
+		divide_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
 
 		#Add to the trackers
 		add_to_variable = { lok_state_radiation_deaths = lok_radiation_death_count }
 		add_to_variable = { lok_state_deaths = lok_radiation_death_count }
 
-		CONTROLLER = {
+		var:CONTROLLER = {
 			add_to_variable = { lok_country_radiation_deaths = PREV.lok_radiation_death_count }
 			add_to_variable = { lok_country_deaths = PREV.lok_radiation_death_count }
 			add_to_variable = { global.lok_global_radiation_deaths = PREV.lok_radiation_death_count }
 			add_to_variable = { global.lok_global_deaths = PREV.lok_radiation_death_count }
 		}
+	}
+}
+
+apply_state_species_modifier = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_katzen_majority } }
+		remove_dynamic_modifier = { modifier = lok_species_katzen_majority }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_sobaki_majority } }
+		remove_dynamic_modifier = { modifier = lok_species_sobaki_majority }
+	}
+	if = {
+		limit = { check_variable = { species = 1 } }
+		add_dynamic_modifier = { modifier = lok_species_katzen_majority }
+	}
+	if = {
+		limit = { check_variable = { species = 2 } }
+		add_dynamic_modifier = { modifier = lok_species_sobaki_majority }
+	}
+}
+
+clear_wonder_ideas = {
+	# remove_idea = wonder_idea_1_normal
+	# remove_idea = wonder_idea_1_capital
+	# remove_idea = wonder_idea_1_noncore
+	# remove_idea = wonder_idea_2_normal
+	# remove_idea = wonder_idea_2_capital
+	# remove_idea = wonder_idea_2_noncore
+	# remove_idea = wonder_idea_3_normal
+	# remove_idea = wonder_idea_3_capital
+	# remove_idea = wonder_idea_3_noncore
+	# remove_idea = wonder_idea_4_normal
+	# remove_idea = wonder_idea_4_capital
+	# remove_idea = wonder_idea_4_noncore
+	set_variable = { wonder_idea_removed_number = 0 }
+	while_loop_effect = {
+		limit = { check_variable = { wonder_idea_removed_number < 11 } }
+		add_to_variable = { wonder_idea_removed_number = 1 }
+		meta_effect = {
+			text = {
+				if = {
+					limit = { has_idea = wonder_idea_[WONDER_ID]_normal }
+					remove_ideas = wonder_idea_[WONDER_ID]_normal
+				}
+				if = {
+					limit = { has_idea = wonder_idea_[WONDER_ID]_capital }
+					remove_ideas = wonder_idea_[WONDER_ID]_capital
+				}
+				if = {
+					limit = { has_idea = wonder_idea_[WONDER_ID]_noncore }
+					remove_ideas = wonder_idea_[WONDER_ID]_noncore
+				}
+			}
+			WONDER_ID = "[?ROOT.wonder_idea_removed_number]"
+		}
+	}
+	if = { #state-bound modifiers
+		limit = {
+			any_controlled_state = {
+				check_variable = { wonder = 11 }
+			}
+		}
+		every_controlled_state = {
+			limit = {
+				check_variable = { wonder = 11 }
+			}
+			if = {
+				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_normal } }
+				remove_dynamic_modifier = { modifier = wonder_idea_11_normal }
+			}
+			else_if = {
+				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_capital } }
+				remove_dynamic_modifier = { modifier = wonder_idea_11_capital }
+			}
+			else_if = {
+				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_noncore } }
+				remove_dynamic_modifier = { modifier = wonder_idea_11_noncore }
+			}
+		}
+	}
+}
+
+apply_wonder_effects = {
+	# every_controlled_state = {
+	# 	if = {
+	# 		limit = { check_variable = { wonder > 0 } }
+	# 		for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
+	# 			array = wonder_modifiers_values
+	# 			value = v
+	# 			index = i
+	# 			break = break
+	# 			set_variable = { wonder_modifier_id = i }
+	# 			set_variable = { wonder_modifier_value = v }
+	# 			meta_effect = {
+	# 				debug = yes
+	# 				text = {
+	# 					set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = [WONDER_MODIFIER_VALUE] }
+	# 					if = {
+	# 						limit = { is_capital = yes }
+	# 						multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 2 }
+	# 					}
+	# 					else_if = {
+	# 						limit = { NOT = { is_core_of = var:controller } }
+	# 						multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0.5 }
+	# 					}
+	# 					var:controller = {
+	# 						set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = PREV.wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] }
+	# 					}
+	# 				}
+	# 				WONDER_ID = "[?wonder]"
+	# 				WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
+	# 				WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
+	# 			}
+	# 		}
+	# 	}
+	# }
+
+
+	clear_wonder_ideas = yes
+	every_controlled_state = {
+		if = {
+			limit = { check_variable = { wonder > 0 } }
+			if = {
+				limit = { is_capital = yes }
+				var:controller = {
+					meta_effect = {
+						text = { add_ideas = wonder_idea_[WONDER_ID]_capital }
+						WONDER_ID = "[?PREV.wonder]"
+					}
+				}
+			}
+			else_if = {
+				limit = { is_core_of = ROOT }
+				var:controller = {
+					meta_effect = {
+						text = { add_ideas = wonder_idea_[WONDER_ID]_normal }
+						WONDER_ID = "[?PREV.wonder]"
+					}
+				}
+			}
+			else = {
+				var:controller = {
+					meta_effect = {
+						text = { add_ideas = wonder_idea_[WONDER_ID]_noncore }
+						WONDER_ID = "[?PREV.wonder]"
+					}
+				}
+			}
+			if = {
+				limit = { #state-bound wonder modifiers
+					check_variable = { wonder = 11 }
+				}
+				if = {
+					limit = { is_capital = yes }
+					add_dynamic_modifier = { modifier = wonder_idea_11_capital }
+				}
+				else_if = {
+					limit = { is_core_of = ROOT }
+					add_dynamic_modifier = { modifier = wonder_idea_11_normal }
+				}
+				else = {
+					add_dynamic_modifier = { modifier = wonder_idea_11_noncore }
+				}
+			}
+		}
+	}
+	# if = {
+	# 	limit = { controls_state = 509 }
+	# 	if = {
+	# 		limit = { 509 = { is_capital = yes } }
+			
+	# 	}
+	# 	else_if = {
+	# 		limit = { 509 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_1_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_1_noncore }
+	# }
+	# if = {
+	# 	limit = { controls_state = 173 }
+	# 	if = {
+	# 		limit = { 173 = { is_capital = yes } }
+	# 		add_ideas = wonder_idea_2_capital
+	# 	}
+	# 	else_if = {
+	# 		limit = { 173 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_2_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_2_noncore }
+	# }
+	# if = {
+	# 	limit = { controls_state = 116 }
+	# 	if = {
+	# 		limit = { 116 = { is_capital = yes } }
+	# 		add_ideas = wonder_idea_3_capital
+	# 	}
+	# 	else_if = {
+	# 		limit = { 116 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_3_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_3_noncore }
+	# }
+	# if = {
+	# 	limit = { controls_state = 220 }
+	# 	if = {
+	# 		limit = { 220 = { is_capital = yes } }
+	# 		add_ideas = wonder_idea_4_capital
+	# 	}
+	# 	else_if = {
+	# 		limit = { 220 = { is_core_of = ROOT } }
+	# 		add_ideas = wonder_idea_4_normal
+	# 	}
+	# 	else = { add_ideas = wonder_idea_4_noncore }
+	# }
+}
+
+generate_generic_small_katzen_portrait = {
+	random_list = {
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_1_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_2_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_3_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_4_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_5_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_6_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_7_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_8_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_9_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_19_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_11_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_12_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_13_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_14_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_15_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_16_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_17_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_18_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_19_small }
+		1 = { set_leader_portrait = GFX_portrait_katzen_generic_20_small }
 	}
 }

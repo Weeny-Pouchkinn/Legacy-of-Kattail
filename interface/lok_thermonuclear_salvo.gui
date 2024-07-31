@@ -1,15 +1,91 @@
 guiTypes = {
 	containerWindowType = {
 		name = "lok_thermonuclear_salvo_window"
-		position = { x = 20 y = 435 }
+		position = { x = 18 y = 425 }
+
+		iconType = {
+			name = "lok_thermonuclear_salvo_background"
+			position = {x=54 y= 2}
+			spriteType = GFX_unit_stats_list_bg
+			scale = 0.135
+			alwaystransparent = yes
+		}
+
 		buttonType = {
 			name = "lok_thermonuclear_salvo_button"
-			position = { x= 90 y = -11 }
+			position = { x= 0 y = 0 }
+			scale = 0.9
 			quadTextureSprite ="GFX_thermonuclear_salvo_button"
 			buttonFont = "Main_14_black"
 			Orientation = "UPPER_RIGHT"
 			clicksound = click_close
 			pdx_tooltip = "lok_thermonuclear_salvo_button_tooltip"
+		}
+
+		buttonType = {
+			name = "lok_increase_nuke_count_button"
+			position = { x= 66 y = 2 }
+			quadTextureSprite ="GFX_naval_increase_amount"
+			buttonFont = "Main_14_black"
+			Orientation = "CENTER"
+			scale = 0.6
+			clicksound = click_close
+			pdx_tooltip = "lok_increase_nuke_count_button_tooltip"
+		}
+
+		buttonType = {
+			name = "lok_decrease_nuke_count_button"
+			position = { x= 66 y = 33 }
+			scale = 0.6
+			quadTextureSprite ="GFX_naval_decrease_amount"
+			buttonFont = "Main_14_black"
+			Orientation = "CENTER"
+			clicksound = click_close
+			pdx_tooltip = "lok_decrease_nuke_count_button_tooltip"
+		}
+
+		instantTextboxType = { #how many nukes are set up to be launched
+			name = "lok_nuke_count"
+			position = { x = 59 y = 16 }
+			font = "hoi_18mbs"
+			text = "lok_nuke_launch_count"
+			maxWidth = 30
+			maxHeight = 10
+			format = center
+		}
+
+		buttonType = {
+			name = "lok_next_nuke_type_button"
+			position = { x= 72 y = -17 }
+			quadTextureSprite ="button_right"
+			buttonFont = "Main_14_black"
+			Orientation = "CENTER"
+			scale = 0.8
+			clicksound = click_close
+			pdx_tooltip = "lok_increase_nuke_count_button_tooltip"
+		}
+		
+		buttonType = {
+			name = "lok_previous_nuke_type_button"
+			position = { x= 15 y = -17 }
+			quadTextureSprite ="button_left"
+			buttonFont = "Main_14_black"
+			Orientation = "CENTER"
+			scale = 0.8
+			clicksound = click_close
+			pdx_tooltip = "lok_increase_nuke_count_button_tooltip"
+		}
+
+		instantTextBoxType = {
+			name ="lok_nuke_type"
+			position = { x = 2 y = -17 }
+			font = "hoi_16mbs"
+			text = "[ROOT.GetNukeType]"
+			format = center
+			maxWidth = 100
+			maxHeight = 10
+			fixedsize = yes
+			pdx_tooltip = "lok_nuke_type_tooltip"
 		}
 	}
 }
