@@ -1,3 +1,53 @@
+TAI_political_fluctuations = {
+	enable = { always = yes }
+	icon = GFX_idea_generic_morale_bonus
+
+	fascism_drift = TAI_fascism_drift
+	neutrality_drift = TAI_neutrality_drift
+	political_power_gain = TAI_base_pp_gain
+}
+
+TAI_monarchist_stability = {
+	enable = { always = yes }
+	#icon = GFX_idea_AUR_the_kaiser_must_return
+
+	stability_factor = TAI_monarchist_stability_factor
+	political_power_gain = TAI_monarchist_political_power_factor
+}
+
+TAI_militarist_stability = {
+	enable = { always = yes }
+	#icon = GFX_idea_AUR_the_kaiser_must_return
+
+	stability_factor = TAI_militarist_stability_factor
+	political_power_gain = TAI_militarist_political_power_factor
+}
+
+LOK_KSK_IPF_activity = {
+	enable = { always = yes }
+	#icon = GFX_idea_lok_food_deficit_modifier
+
+	#IPF
+	stability_factor = ipf_stability_factor
+	industrial_capacity_factory = ipf_industrial_capacity_factory
+	resistance_activity = ipf_resistance_activity
+	resistance_growth = ipf_resistance_growth
+	democratic_drift = ipf_democratic_drift
+
+	#KSK
+	war_support_factor = ksk_war_support_factor
+	production_factory_max_efficiency_factor = ksk_production_factory_max_efficiency_factor
+	compliance_gain = ksk_compliance_gain
+	communism_drift = ksk_communism_drift
+}
+
+LOK_nukes_factories = {
+	enable = { always = yes }
+	#icon = GFX_idea_lok_food_deficit_modifier
+
+	military_factory_donations = factories_for_nukes
+}
+
 LOK_extra_resources_modifier = {
 	enable = { always = yes }
 	#icon = GFX_idea_lok_food_deficit_modifier
@@ -35,16 +85,32 @@ lok_noncore_stab_ws_impact = {
 
 lok_food_deficit_modifier = {
 	enable = { always = yes }
+	icon = GFX_idea_lok_light_food_deficit_modifier
+
+	monthly_population = -0.50
+	research_speed_factor = country_food_needs_modifier
+	stability_factor = country_food_needs_modifier
+	war_support_factor = country_food_needs_modifier
+	production_speed_buildings_factor = country_food_needs_modifier
+	# industrial_capacity_factory = country_food_needs_modifier
+	# industrial_capacity_dockyard = country_food_needs_modifier
+	recruitable_population_factor = country_food_needs_modifier
+}
+
+lok_starvation_deficit_modifier = {
+	enable = { always = yes }
 	icon = GFX_idea_lok_food_deficit_modifier
 
+	lok_starvation_yes = 2
 	monthly_population = -1
 	research_speed_factor = country_food_needs_modifier
 	stability_factor = country_food_needs_modifier
 	war_support_factor = country_food_needs_modifier
 	production_speed_buildings_factor = country_food_needs_modifier
-	industrial_capacity_factory = country_food_needs_modifier
-	industrial_capacity_dockyard = country_food_needs_modifier
+	# industrial_capacity_factory = country_food_needs_modifier
+	# industrial_capacity_dockyard = country_food_needs_modifier
 	recruitable_population_factor = country_food_needs_modifier
+	stability_weekly = -0.01
 }
 
 lok_wonder_modifier = {
@@ -82,6 +148,7 @@ lok_radiation_state_modifier = {
 	local_supplies_for_controller = lok_radiation_army_modifier
 	army_speed_factor_for_controller = lok_radiation_army_modifier
 	local_org_regain = lok_radiation_army_modifier
+	attrition_for_controller = lok_radiation_army_attrition_modifier
 }
 
 lok_species_katzen_majority = {
@@ -113,4 +180,47 @@ wonder_idea_11_noncore = {
 	enable = { always = yes }
 
 	state_resource_food = 50
+}
+
+lok_matching_species = {
+	enable = { always = yes }
+
+	resistance_growth = -0.30
+	compliance_growth = 0.30
+}
+
+lok_matching_minority = {
+	enable = { always = yes }
+
+	resistance_growth = -0.15
+	compliance_growth = 0.15
+}
+
+MEW_birth_of_communism = {
+	enable = { always = yes }
+	icon = GFX_idea_MEW_birth_of_communism
+
+	cat_mass_assault_cost_factor = -0.25
+	industrial_capacity_factory = -0.10
+	communism_drift = 0.05
+	communism_acceptance = 10
+	drift_defence_factor = 0.50
+	army_attack_factor = MEW_birth_of_communism_army_attack_factor
+	army_defence_factor = MEW_birth_of_communism_army_defence_factor
+	war_support_factor = MEW_birth_of_communism_war_support_factor
+	stability_factor = MEW_birth_of_communism_stability_factor
+}
+
+AUR_the_kaiser_must_return = {
+	enable = { always = yes }
+	icon = GFX_idea_AUR_the_kaiser_must_return
+
+	war_support_factor = AUR_the_kaiser_must_return_war_support_factor
+	stability_factor = AUR_the_kaiser_must_return_stability_factor
+	army_attack_factor = AUR_the_kaiser_must_return_army_attack_factor
+	army_defence_factor = AUR_the_kaiser_must_return_army_defence_factor
+	production_speed_industrial_complex_factor = AUR_the_kaiser_must_return_production_speed_industrial_complex_factor
+	production_speed_arms_factory_factor = AUR_the_kaiser_must_return_production_speed_arms_factory_factor
+	war_support_weekly = AUR_the_kaiser_must_return_war_support_weekly
+	industrial_capacity_factory = AUR_the_kaiser_must_return_industrial_capacity_factory
 }

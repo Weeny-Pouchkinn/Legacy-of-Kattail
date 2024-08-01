@@ -33,6 +33,13 @@ country_event = { #Collapse Elwin
 				limit = { is_core_of = KKH }
 				transfer_state_to = KKH
 			}
+			transfer_units_fraction = {
+				target = KKH
+				stockpile_ratio = 0.3
+				army_ratio = 0.3
+				navy_ratio = 0.3
+				air_ratio = 0.3
+			}
 			SIL_Fritz = {
 				set_nationality = KKH
 				add_country_leader_role = {
@@ -47,18 +54,34 @@ country_event = { #Collapse Elwin
 				limit = { is_core_of = KVK }
 				transfer_state_to = KVK
 			}
+			transfer_units_fraction = {
+				target = KVK
+				stockpile_ratio = 0.3
+				army_ratio = 0.3
+				navy_ratio = 0.3
+				air_ratio = 0.3
+			}
 			every_state = {
 				limit = { is_core_of = BLM }
 				transfer_state_to = BLM
 			}
-			every_state = {
-				limit = { is_core_of = KTW }
-				transfer_state_to = KTW
-				set_demilitarized_zone = no
+			transfer_units_fraction = {
+				target = BLM
+				stockpile_ratio = 0.05
+				army_ratio = 0.05
+				navy_ratio = 0.05
+				air_ratio = 0.05
 			}
 			every_state = {
 				limit = { is_core_of = AKR }
 				transfer_state_to = AKR
+			}
+			transfer_units_fraction = {
+				target = AKR
+				stockpile_ratio = 0.05
+				army_ratio = 0.05
+				navy_ratio = 0.05
+				air_ratio = 0.05
 			}
 			SIL_Meowtin_Hessler = {
 				set_nationality = AKR
@@ -84,6 +107,13 @@ country_event = { #Collapse Elwin
 					promote_leader = yes
 				}
 			}
+			transfer_units_fraction = {
+				target = KTV
+				stockpile_ratio = 0.10
+				army_ratio = 0.10
+				navy_ratio = 0.10
+				air_ratio = 0.10
+			}
 			every_state = {
 				limit = { is_core_of = PMB }
 				transfer_state_to = PMB
@@ -97,6 +127,13 @@ country_event = { #Collapse Elwin
 					}
 					promote_leader = yes
 				}
+			}
+			transfer_units_fraction = {
+				target = KTV
+				stockpile_ratio = 0.075
+				army_ratio = 0.075
+				navy_ratio = 0.075
+				air_ratio = 0.075
 			}
 			every_state = {
 				limit = { is_core_of = CLE }
@@ -252,9 +289,75 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = "[?modifier@lok_nuke_radiation_factor]"
-		583 = {
-			add_dynamic_modifier = { modifier = wonder_idea_11_normal }
+		name = "[?AUR.aur_num_reactors_built]"
+		set_country_flag = forming_cat_kingdom
+	}
+}
+
+#ai using nukes
+country_event = {
+	id = lok_debug.8
+	title = ""
+	desc = "debug_8"
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { nuke_launch_count = 1 }
+		#Pick a nuke type.
+		random_list = {
+			0 = {
+				set_variable = { current_nuke_type = 1 }
+				modifier = { add = 1 has_tech = nukes }
+				modifier = { factor = 0 has_equipment = { lok_fission_nuke_equipment < 1 } }
+			}
+			0 = {
+				set_variable = { current_nuke_type = 2 }
+				modifier = { add = 1 has_tech = fusion_nuke }
+				modifier = { factor = 0 has_equipment = { lok_fusion_nuke_equipment < 1 } }
+			}
+			0 = {
+				set_variable = { current_nuke_type = 3 }
+				modifier = { add = 1 has_tech = dirty_nuke }
+				modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
+			}
 		}
+		random_country = { #PICK A TARGET!!!
+			limit = {
+				has_war_with = ROOT
+				ROOT = { has_country_flag = nuked_by_@PREV }
+			}
+			random_owned_state = {
+				limit = { NOT = { is_core_of = ROOT } }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes #FIRE!!!!
+					if = {
+						limit = { check_variable = { current_nuke_type = 1 } }
+						add_equipment_to_stockpile = {
+							type = lok_fission_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 2 } }
+						add_equipment_to_stockpile = {
+							type = lok_fusion_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 3 } }
+						add_equipment_to_stockpile = {
+							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "[?ROOT.factories_for_nukes]"
 	}
 }
