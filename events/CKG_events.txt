@@ -1,0 +1,90 @@
+add_namespace = CKG_event
+
+#Absolute or Constitutional?
+country_event = {
+	id = CKG_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_event.1"}
+	title = CKG_event.1.t
+	desc = CKG_event.1.d
+	is_triggered_only = yes
+
+	immediate = {
+		else = {
+			set_country_flag = failed_dreijahrige
+			country_event = { id = AUR_event.2 }
+		}
+	}
+
+	option = { #Constitutional
+		name = CKG_event.1.a
+		set_country_flag = ckg_constitutional
+		country_event = { id = CKG_event.2 days = 365 }
+	}
+
+	option = { #Absolute
+		name = CKG_event.1.b
+		set_country_flag = ckg_absolute
+	}
+}
+
+#Elections
+country_event = {
+	id = CKG_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_event.2"}
+	title = CKG_event.2.t
+	desc = CKG_event.2.d
+	is_triggered_only = yes
+
+	immediate = {
+		CKG_clear_pms = yes
+		random_list = {
+			1 = {
+				add_ideas = CKG_Eliaw_Brawnner_PM
+				modifier = {
+					factor = 0
+					NOT = { has_completed_focus = CKG_house_of_chameownix }
+				}
+			}
+			1 = {
+				add_ideas = CKG_Loris_PM
+				modifier = {
+					factor = 0
+					NOT = { has_completed_focus = CKG_reinstate_the_kattensbach }
+				}
+			}
+			1 = {
+				add_ideas = CKG_Rex_PM
+				modifier = {
+					factor = 0
+					NOT = { has_completed_focus = CKG_southern_breadbasket }
+				}
+			}
+			1 = {
+				add_ideas = CKG_Growlzi_PM
+				modifier = {
+					factor = 0
+					NOT = { has_completed_focus = CKG_southern_center_of_learning }
+				}
+			}
+			1 = {
+				add_ideas = CKG_Pawllas_PM
+				modifier = {
+					factor = 0
+					NOT = { has_completed_focus = CKG_modern_institute }
+				}
+			}
+			1 = {
+				add_ideas = CKG_Meorner_PM
+				modifier = {
+					factor = 0
+					NOT = { has_completed_focus = CKG_a_modern_knightly_order }
+				}
+			}
+		}
+	}
+
+	option = {
+		name = CKG_event.2.a
+		country_event = { id = CKG_event.2 days = 365 }
+	}
+}

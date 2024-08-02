@@ -123,7 +123,7 @@ on_actions = {
 			595 = { set_variable = { wonder = 6 } } #Meon-U
 			13 = { set_variable = { wonder = 7 } } #Lorishaus
 			477 = { set_variable = { wonder = 8 } } #Frankfurr Institute
-			535 = { set_variable = { wonder = 9 } } #Big hole in neu-tailsbaden
+			84 = { set_variable = { wonder = 9 } } #Big hole in neu-tailsbaden
 			486 = { set_variable = { wonder = 10 } } #Stronien Hub
 			583 = { set_variable = { wonder = 11 } } #Punchiestadt Orchards
 
@@ -763,7 +763,15 @@ on_actions = {
 
 	on_weekly_TAI = {
 		effect = {
-			TAI_calculate_monachist_militarist_effects = yes
+			if = {
+				limit = { NOT = { has_focus_tree = CAT_KINGDOM_TREE } }
+				TAI_calculate_monachist_militarist_effects = yes
+			}
+			else_if = {
+				limit = { has_dynamic_modifier = { modifier = TAI_militarist_stability } }
+				remove_dynamic_modifier = { modifier = TAI_militarist_stability }
+				remove_dynamic_modifier = { modifier = TAI_monarchist_stability }
+			}
 		}
 	}
 
