@@ -120,6 +120,7 @@ focus_tree = {
 		# 	focus = CKG_utilize_the_bunkers
 		# 	focus = CKG_northern_minerals
 		# }
+		will_lead_to_war_with = HYP
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_core_of = HYP }
@@ -129,6 +130,13 @@ focus_tree = {
 			create_wargoal = {
 				target = HYP
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -187,6 +195,7 @@ focus_tree = {
 				any_neighbor_state = { is_core_of = KKH }
 			}
 		}
+		will_lead_to_war_with = KKH
 		completion_reward = {
 			create_wargoal = {
 				target = KKH
@@ -204,6 +213,13 @@ focus_tree = {
 				}
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	focus = {
 		id = CKG_a_deal_with_alice
@@ -217,13 +233,30 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			if = {
-				limit = { country_exists = KVK }
-				annex_country = { target = KVK transfer_troops = yes }
-			}
 			KVK = {
+				if = {
+					limit = { country_exists = THIS }
+					custom_effect_tooltip = tt_more_likely_to_accept_if_stronger
+					country_event = { id = CKG_demands.3 days = 1 }
+				}
+				else = {
+					KVK = {
+						remove_country_leader_role = {
+							character = KVK_Alice_Clatz
+							ideology = absolutism
+						}
+					}
+					KVK_Alice_Clatz = { set_nationality = event_target:cat_kingdom_country }
+					ROOT = { country_event = { id = CKG_event.3 days = 60 } }
+				}
 				every_core_state = {
-					add_core_of = ROOT
+					custom_effect_tooltip = state_core_threshold_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
 				}
 			}
 		}
@@ -248,6 +281,14 @@ focus_tree = {
 		# }
 		completion_reward = {
 			create_wargoal = { target = 509.owner type = annex_everything }
+		}
+		will_lead_to_war_with = 509.owner
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
 		}
 	}
 	focus = {
@@ -295,6 +336,8 @@ focus_tree = {
 				}
 			}
 		}
+		will_lead_to_war_with = BLM
+		will_lead_to_war_with = PMB
 		completion_reward = {
 			create_wargoal = {
 				target = 662.owner
@@ -316,6 +359,13 @@ focus_tree = {
 				}
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	focus = {
 		id = CKG_destroy_the_katzenvolk
@@ -328,6 +378,7 @@ focus_tree = {
 				any_neighbor_state = { is_core_of = KTV }
 			}
 		}
+		will_lead_to_war_with = KTV
 		completion_reward = {
 			add_popularity = {
 				ideology = communism
@@ -349,6 +400,13 @@ focus_tree = {
 				}
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	focus = {
 		id = CKG_stamp_out_elwins_influence
@@ -368,6 +426,7 @@ focus_tree = {
 				any_neighbor_state = { is_owned_by = SIL }
 			}
 		}
+		will_lead_to_war_with = SIL
 		completion_reward = {
 			create_wargoal = { target = SIL type = annex_everything }
 			659 = {
@@ -389,6 +448,13 @@ focus_tree = {
 			39 = {
 				custom_effect_tooltip = state_core_threshold_40
 				hidden_effect = { reduce_compliance_coring_threshold_by_10 = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -457,6 +523,7 @@ focus_tree = {
 				any_neighbor_state = { is_owned_by = CLE }
 			}
 		}
+		will_lead_to_war_with = CLE
 		completion_reward = {
 			if = {
 				limit = { country_exists = CLE }
@@ -475,6 +542,13 @@ focus_tree = {
 						reduce_compliance_coring_threshold_by_10 = yes
 					}
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -512,6 +586,7 @@ focus_tree = {
 				any_neighbor_state = { is_owned_by = PAW }
 			}
 		}
+		will_lead_to_war_with = PAW
 		completion_reward = {
 			create_wargoal = {
 				target = PAW
@@ -529,6 +604,13 @@ focus_tree = {
 				}
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	#TAILSBADEN
 	focus = {
@@ -542,6 +624,7 @@ focus_tree = {
 				any_neighbor_state = { is_owned_by = TAI }
 			}
 		}
+		will_lead_to_war_with = TAI
 		completion_reward = {
 			#PM
 			custom_effect_tooltip = CKG_house_of_chameownix_tt
@@ -567,6 +650,13 @@ focus_tree = {
 						}
 					}
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -649,9 +739,12 @@ focus_tree = {
 		# 	focus = CKG_integrate_the_rattish
 		# 	focus = CKG_rally_northern_monarchists
 		# }
-		any_owned_state = {
-			any_neighbor_state = { is_owned_by = ELO }
+		available = {
+			any_owned_state = {
+				any_neighbor_state = { is_owned_by = ELO }
+			}
 		}
+		will_lead_to_war_with = ELO
 		completion_reward = {
 			if = {
 				limit = { country_exists = ELO }
@@ -676,6 +769,13 @@ focus_tree = {
 				}
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	#REGENCY
 	focus = {
@@ -690,9 +790,12 @@ focus_tree = {
 		# 	focus = CKG_reconnecting_south_and_center
 		# 	focus = CKG_healing_the_scars_of_kaiserism
 		# }
-		any_owned_state = {
-			any_neighbor_state = { is_owned_by = AUR }
+		available = {
+			any_owned_state = {
+				any_neighbor_state = { is_owned_by = AUR }
+			}
 		}
+		will_lead_to_war_with = AUR
 		completion_reward = {
 			if = {
 				limit = { country_exists = AUR }
@@ -700,6 +803,13 @@ focus_tree = {
 					target = AUR
 					type = annex_everything
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -818,6 +928,7 @@ focus_tree = {
 				any_neighbor_state = { is_core_of = PRL }
 			}
 		}
+		will_lead_to_war_with = PRL
 		completion_reward = {
 			if = {
 				limit = { country_exists = PRL }
@@ -825,6 +936,13 @@ focus_tree = {
 					target = PRL
 					type = annex_everything
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1063,10 +1181,18 @@ focus_tree = {
 				any_neighbor_state = { is_owned_by = CAT }
 			}
 		}
+		will_lead_to_war_with = CAT
 		completion_reward = {
 			create_wargoal = {
 				target = CAT
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1089,10 +1215,18 @@ focus_tree = {
 				}
 			}
 		}
+		will_lead_to_war_with = HIM
 		completion_reward = {
 			create_wargoal = {
 				target = HIM
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1151,6 +1285,7 @@ focus_tree = {
 		x = 17
 		y = 10
 		cost = 5
+		will_lead_to_war_with = MEO
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_core_of = MEO }
@@ -1160,6 +1295,13 @@ focus_tree = {
 			create_wargoal = {
 				target = MEO
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1227,6 +1369,7 @@ focus_tree = {
 		x = 19
 		y = 8
 		cost = 5
+		will_lead_to_war_with = LIO
 		available = {
 			OR = {
 				any_owned_state = {
@@ -1267,6 +1410,13 @@ focus_tree = {
 						is_in_faction = yes
 					}
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1479,6 +1629,7 @@ focus_tree = {
 		x = 21
 		y = 6
 		cost = 5
+		will_lead_to_war_with = MEW
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_core_of = MEW }
@@ -1491,6 +1642,13 @@ focus_tree = {
 					target = MEW
 					type = annex_everything
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1592,6 +1750,7 @@ focus_tree = {
 		x = 23
 		y = 6
 		cost = 5
+		will_lead_to_war_with = STR
 		available = {
 			OR = {
 				any_owned_state = {
@@ -1621,6 +1780,13 @@ focus_tree = {
 						reduce_compliance_coring_threshold_by_10 = yes
 					}
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1748,6 +1914,7 @@ focus_tree = {
 		x = 24
 		y = 5
 		cost = 5
+		will_lead_to_war_with = PTQ
 		available = {
 			OR = {
 				any_owned_state = {
@@ -1765,6 +1932,13 @@ focus_tree = {
 			create_wargoal = {
 				target = PTQ
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -1866,6 +2040,7 @@ focus_tree = {
 				}
 			}
 		}
+		will_lead_to_war_with = IMF
 		completion_reward = {
 			if = {
 				limit = { country_exists = IMF IMF = { is_ai = yes } }
@@ -1898,6 +2073,13 @@ focus_tree = {
 				}	
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	#ZUSPRI
 	focus = {
@@ -1909,6 +2091,7 @@ focus_tree = {
 		mutually_exclusive = {
 			focus = CKG_an_alliance_with_the_zuspri
 		}
+		will_lead_to_war_with = ZUS
 		available = {
 			OR = {
 				any_owned_state = {
@@ -1926,6 +2109,13 @@ focus_tree = {
 			create_wargoal = {
 				target = ZUS
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -2048,6 +2238,7 @@ focus_tree = {
 				any_neighbor_state = { is_core_of = WAC }
 			}
 		}
+		will_lead_to_war_with = WAC
 		completion_reward = {
 			if = {
 				limit = { country_exists = WAC }
@@ -2057,6 +2248,13 @@ focus_tree = {
 				}
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	focus = {
 		id = CKG_onto_the_mountains
@@ -2064,6 +2262,7 @@ focus_tree = {
 		x = 14
 		y = 8
 		cost = 5
+		will_lead_to_war_with = WPR
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_core_of = WPR }
@@ -2073,6 +2272,13 @@ focus_tree = {
 			create_wargoal = {
 				target = WPR
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -2137,6 +2343,11 @@ focus_tree = {
 		}
 		completion_reward = {
 			OST = {
+				if = {
+					limit = { country_exists = THIS }
+					custom_effect_tooltip = tt_more_likely_to_accept_if_stronger
+					country_event = { id = CKG_demands.1 days = 1 }
+				}
 				every_core_state = {
 					custom_effect_tooltip = state_core_threshold_40
 					add_compliance = 20
@@ -2147,11 +2358,6 @@ focus_tree = {
 						reduce_compliance_coring_threshold_by_10 = yes
 					}
 				}
-				every_unit_leader = { set_nationality = ROOT }
-			}
-			annex_country = {
-				target = OST
-				transfer_troops = yes
 			}
 		}
 	}
@@ -2243,6 +2449,7 @@ focus_tree = {
 		x = 16
 		y = 4
 		cost = 5
+		will_lead_to_war_with = NKB
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_owned_by = NKB }
@@ -2254,10 +2461,17 @@ focus_tree = {
 				type = annex_everything
 			}
 		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
 	}
 	focus = {
 		id = CKG_restore_purrsia
-		icon = GFX_goal_generic_alliance
+		icon = CKG_restore_purrsia
 		x = 15
 		y = 3
 		cost = 5
@@ -2272,14 +2486,9 @@ focus_tree = {
 			add_stability = 0.15
 			add_war_support = 0.15
 			
-			FRA = {
-				every_character = {
-					set_nationality = event_target:cat_kingdom_purrsia
-				}
-			}
 			hidden_effect = {
 				create_dynamic_country = {
-					original_tag = FRA
+					original_tag = NKB
 	
 					save_global_event_target_as = cat_kingdom_purrsia
 	
@@ -2292,10 +2501,17 @@ focus_tree = {
 						every_core_state = { add_core_of = event_target:cat_kingdom_purrsia }
 					}
 
+					FRA = {
+						every_core_state = { add_core_of = event_target:cat_kingdom_purrsia }
+					}
+
+					set_capital = {
+						state = 477
+					}
 
 					ROOT = {
 						every_controlled_state = {
-							limit = { OR = { is_core_of = FRA is_core_of = NKB } }
+							limit = { is_core_of = event_target:cat_kingdom_purrsia }
 	
 							event_target:cat_kingdom_purrsia = {
 								transfer_state = PREV
@@ -2311,14 +2527,18 @@ focus_tree = {
 						}
 					}
 				}
-				FRA_Frederick_Pawlliam = {
+				FRA = { every_character = { set_nationality = event_target:cat_kingdom_purrsia } }
+				event_target:cat_kingdom_purrsia = {
+					retire_country_leader = yes
 					add_country_leader_role = {
-						country_leader={
+						character = FRA_Frederick_Pawlliam
+						country_leader = {
 							expire = "1965.1.1"
 							ideology = absolutism
 						}
 						promote_leader = yes
 					}
+
 				}
 			}
 		}
@@ -2365,6 +2585,7 @@ focus_tree = {
 		x = 5
 		y = 4
 		cost = 5
+		will_lead_to_war_with = MEC
 		available = {
 			OR = {
 				any_owned_state = {
@@ -2384,6 +2605,13 @@ focus_tree = {
 			create_wargoal = {
 				target = MEC
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -2406,6 +2634,8 @@ focus_tree = {
 				any_neighbor_state = { is_owned_by = NEU }
 			}
 		}
+		will_lead_to_war_with = NEU
+		will_lead_to_war_with = AKR
 		completion_reward = {
 			create_wargoal = {
 				target = NEU
@@ -2425,6 +2655,13 @@ focus_tree = {
 						reduce_compliance_coring_threshold_by_10 = yes
 					}
 				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -2479,24 +2716,29 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			if = {
-				limit = {
-					country_exists = NAV
-					NAV = { NOT = { has_cosmetic_tag = NAV_NETT } }
+			NAV = {
+				if = {
+					limit = { country_exists = THIS }
+					custom_effect_tooltip = tt_more_likely_to_accept_if_stronger
+					country_event = { id = CKG_demands.5 days = 1 }
 				}
-				annex_country = {
-					target = NAV
-					transfer_troops = yes
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
 				}
 			}
-			else_if = {
-				limit = {
-					country_exists = NAV
-				}
-				create_wargoal = {
-					target = NAV
-					type = annex_everything
-				}
+		}
+		will_lead_to_war_with = NAV
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
@@ -2506,6 +2748,7 @@ focus_tree = {
 		x = 16
 		y = 2
 		cost = 5
+		will_lead_to_war_with = 477.owner
 		available = {
 			any_owned_state = { any_neighbor_state = { is_owned_by = FRA } }
 		}
@@ -2513,6 +2756,13 @@ focus_tree = {
 			create_wargoal = {
 				target = 477.owner
 				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
 	}
