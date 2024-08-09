@@ -965,89 +965,94 @@ clear_wonder_ideas = {
 }
 
 apply_wonder_effects = {
-	# every_controlled_state = {
-	# 	if = {
-	# 		limit = { check_variable = { wonder > 0 } }
-	# 		for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
-	# 			array = wonder_modifiers_values
-	# 			value = v
-	# 			index = i
-	# 			break = break
-	# 			set_variable = { wonder_modifier_id = i }
-	# 			set_variable = { wonder_modifier_value = v }
-	# 			meta_effect = {
-	# 				debug = yes
-	# 				text = {
-	# 					set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = [WONDER_MODIFIER_VALUE] }
-	# 					if = {
-	# 						limit = { is_capital = yes }
-	# 						multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 2 }
-	# 					}
-	# 					else_if = {
-	# 						limit = { NOT = { is_core_of = var:controller } }
-	# 						multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0.5 }
-	# 					}
-	# 					var:controller = {
-	# 						set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = PREV.wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] }
-	# 					}
-	# 				}
-	# 				WONDER_ID = "[?wonder]"
-	# 				WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
-	# 				WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
-	# 			}
-	# 		}
-	# 	}
-	# }
+	#First we gotta reset all the effects!
 
-
-	clear_wonder_ideas = yes
 	every_controlled_state = {
 		if = {
 			limit = { check_variable = { wonder > 0 } }
-			if = {
-				limit = { is_capital = yes }
-				var:controller = {
-					meta_effect = {
-						text = { add_ideas = wonder_idea_[WONDER_ID]_capital }
-						WONDER_ID = "[?PREV.wonder]"
+			for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
+				array = wonder_modifiers_values
+				value = v
+				index = i
+				break = break
+				set_variable = { wonder_modifier_id = i }
+				set_variable = { wonder_modifier_value = v }
+				meta_effect = {
+					debug = yes
+					text = {
+						every_country = {
+							limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }
+							set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0 }
+						}
+						set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = [WONDER_MODIFIER_VALUE] }
+						if = {
+							limit = { is_capital = yes }
+							multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 2 }
+						}
+						else_if = {
+							limit = { NOT = { is_core_of = var:controller } }
+							multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0.5 }
+						}
+						var:controller = {
+							set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = PREV.wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] }
+						}
 					}
-				}
-			}
-			else_if = {
-				limit = { is_core_of = ROOT }
-				var:controller = {
-					meta_effect = {
-						text = { add_ideas = wonder_idea_[WONDER_ID]_normal }
-						WONDER_ID = "[?PREV.wonder]"
-					}
-				}
-			}
-			else = {
-				var:controller = {
-					meta_effect = {
-						text = { add_ideas = wonder_idea_[WONDER_ID]_noncore }
-						WONDER_ID = "[?PREV.wonder]"
-					}
-				}
-			}
-			if = {
-				limit = { #state-bound wonder modifiers
-					check_variable = { wonder = 11 }
-				}
-				if = {
-					limit = { is_capital = yes }
-					add_dynamic_modifier = { modifier = wonder_idea_11_capital }
-				}
-				else_if = {
-					limit = { is_core_of = ROOT }
-					add_dynamic_modifier = { modifier = wonder_idea_11_normal }
-				}
-				else = {
-					add_dynamic_modifier = { modifier = wonder_idea_11_noncore }
+					WONDER_ID = "[?wonder]"
+					WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
+					WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
 				}
 			}
 		}
 	}
+
+	# clear_wonder_ideas = yes
+	# every_controlled_state = {
+	# 	if = {
+	# 		limit = { check_variable = { wonder > 0 } }
+	# 		if = {
+	# 			limit = { is_capital = yes }
+	# 			var:controller = {
+	# 				meta_effect = {
+	# 					text = { add_ideas = wonder_idea_[WONDER_ID]_capital }
+	# 					WONDER_ID = "[?PREV.wonder]"
+	# 				}
+	# 			}
+	# 		}
+	# 		else_if = {
+	# 			limit = { is_core_of = ROOT }
+	# 			var:controller = {
+	# 				meta_effect = {
+	# 					text = { add_ideas = wonder_idea_[WONDER_ID]_normal }
+	# 					WONDER_ID = "[?PREV.wonder]"
+	# 				}
+	# 			}
+	# 		}
+	# 		else = {
+	# 			var:controller = {
+	# 				meta_effect = {
+	# 					text = { add_ideas = wonder_idea_[WONDER_ID]_noncore }
+	# 					WONDER_ID = "[?PREV.wonder]"
+	# 				}
+	# 			}
+	# 		}
+	# 		if = {
+	# 			limit = { #state-bound wonder modifiers
+	# 				check_variable = { wonder = 11 }
+	# 			}
+	# 			if = {
+	# 				limit = { is_capital = yes }
+	# 				add_dynamic_modifier = { modifier = wonder_idea_11_capital }
+	# 			}
+	# 			else_if = {
+	# 				limit = { is_core_of = ROOT }
+	# 				add_dynamic_modifier = { modifier = wonder_idea_11_normal }
+	# 			}
+	# 			else = {
+	# 				add_dynamic_modifier = { modifier = wonder_idea_11_noncore }
+	# 			}
+	# 		}
+	# 	}
+	# }
 	# if = {
 	# 	limit = { controls_state = 509 }
 	# 	if = {

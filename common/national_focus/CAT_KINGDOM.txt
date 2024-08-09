@@ -228,8 +228,14 @@ focus_tree = {
 		y = 2
 		cost = 5
 		available = {
-			any_owned_state = {
-				any_neighbor_state = { is_core_of = KVK }
+			if = {
+				limit = { KVK = { country_exists = THIS } }
+				any_owned_state = {
+					any_neighbor_state = { is_core_of = KVK }
+				}
+			}
+			else = {
+				any_owned_state = { is_core_of = KVK }
 			}
 		}
 		completion_reward = {
@@ -2044,11 +2050,11 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = IMF IMF = { is_ai = yes } }
+				set_autonomy = {
+					target = IMF
+					autonomy_state = autonomy_puppet
+				}
 				IMF = {
-					set_autonomy = {
-						target = ROOT
-						autonomy_state = autonomy_puppet
-					}
 					set_cosmetic_tag = IMF_ZUSPRI
 					ZUS = { every_core_state = { add_core_of = IMF } }
 				}
