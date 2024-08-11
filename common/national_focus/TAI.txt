@@ -45,6 +45,7 @@ focus_tree = {
 		x = 6
 		y = 1
 		cost = 5
+		mutually_exclusive = { focus = TAI_keep_the_course focus = TAI_return_to_the_old }
 		available = {
 			fascism > 0.60
 		}
@@ -147,6 +148,7 @@ focus_tree = {
 		x = 0
 		y = 1
 		cost = 5
+		mutually_exclusive = { focus = TAI_return_to_the_old focus = TAI_a_strongman }
 		available = {
 			neutrality < 0.30
 			fascism < 0.30
@@ -163,8 +165,9 @@ focus_tree = {
 		x = -6
 		y = 1
 		cost = 5
+		mutually_exclusive = { focus = TAI_keep_the_course focus = TAI_a_strongman }
 		available = {
-			neutrality > 0.75
+			neutrality > 0.3
 		}
 		prerequisite = { focus = TAI_captain_of_our_nation }
 		relative_position_id = TAI_captain_of_our_nation
@@ -283,6 +286,8 @@ focus_tree = {
 		relative_position_id = TAI_the_legitimate_heir
 		completion_reward = {
 			retire_character = TAI_Eliaw_Brawnner
+			remove_dynamic_modifier = { modifier = TAI_political_fluctuations }
+			add_stability = 0.50
 			TAI_King_Mewtail = {
 				add_country_leader_role = {
 					country_leader={
@@ -295,6 +300,8 @@ focus_tree = {
 			set_country_flag = forming_cat_kingdom
 			set_cosmetic_tag = CAT_KINGDOM_EARLY
 			load_focus_tree = CAT_KINGDOM_TREE
+			complete_national_focus = CKG_house_of_chameownix
+			add_ideas = CKG_Eliaw_Brawnner_PM
 		}
 	}
 	focus = { #get monarchists from across the herzlands

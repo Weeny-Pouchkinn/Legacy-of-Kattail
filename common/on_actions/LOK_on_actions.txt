@@ -123,7 +123,7 @@ on_actions = {
 			595 = { set_variable = { wonder = 6 } } #Meon-U
 			13 = { set_variable = { wonder = 7 } } #Lorishaus
 			477 = { set_variable = { wonder = 8 } } #Frankfurr Institute
-			535 = { set_variable = { wonder = 9 } } #Big hole in neu-tailsbaden
+			84 = { set_variable = { wonder = 9 } } #Big hole in neu-tailsbaden
 			486 = { set_variable = { wonder = 10 } } #Stronien Hub
 			583 = { set_variable = { wonder = 11 } } #Punchiestadt Orchards
 
@@ -571,6 +571,107 @@ on_actions = {
 
 	on_state_control_changed = {
 		effect = {
+			#ELWIN COLLAPSE - PEACE OUT WHEN STATES ARE ACQUIRED
+			if = {
+				limit = { tag = KKH every_core_state = { is_controlled_by = KKH } has_war_with = SIL }
+				white_peace = SIL
+				SIL = { every_owned_state = { limit = { is_core_of = KKH } transfer_state_to = KKH } add_to_variable = { elwin_lost_count = 1 } }
+			}
+			if = {
+				limit = { tag = KVK every_core_state = { is_controlled_by = KVK } has_war_with = SIL }
+				white_peace = SIL
+				SIL = { every_owned_state = { limit = { is_core_of = KVK } transfer_state_to = KVK } add_to_variable = { elwin_lost_count = 1 } }
+			}
+			if = {
+				limit = { tag = CLE every_core_state = { is_controlled_by = CLE } has_war_with = SIL }
+				white_peace = SIL
+				SIL = { every_owned_state = { limit = { is_core_of = CLE } transfer_state_to = CLE } add_to_variable = { elwin_lost_count = 1 } }
+			}
+			if = {
+				limit = { tag = PAW every_core_state = { is_controlled_by = PAW } has_war_with = SIL }
+				white_peace = SIL
+				SIL = { every_owned_state = { limit = { is_core_of = PAW } transfer_state_to = PAW } add_to_variable = { elwin_lost_count = 1 } }
+			}
+			if = {
+				limit = { SIL = { check_variable = { elwin_lost_count = 4 } } }
+				SIL = {
+					every_controlled_state = {
+						limit = { is_core_of = BLM }
+						transfer_state_to = BLM
+					}
+					transfer_units_fraction = {
+						target = BLM
+						stockpile_ratio = 0.05
+						army_ratio = 0.05
+						navy_ratio = 0.05
+						air_ratio = 0.05
+					}
+					every_controlled_state = {
+						limit = { is_core_of = AKR }
+						transfer_state_to = AKR
+					}
+					transfer_units_fraction = {
+						target = AKR
+						stockpile_ratio = 0.05
+						army_ratio = 0.05
+						navy_ratio = 0.05
+						air_ratio = 0.05
+					}
+					SIL_Meowtin_Hessler = {
+						set_nationality = AKR
+						add_country_leader_role = {
+							country_leader = {
+								ideology = despotism
+								expire = "1965.1.1.1"
+							}
+							promote_leader = yes
+						}
+					}
+					every_controlled_state = {
+						limit = { is_core_of = KTV }
+						transfer_state_to = KTV
+					}
+					SIL_Hans = {
+						set_nationality = KTV
+						add_country_leader_role = {
+							country_leader = {
+								ideology = collectivism
+								expire = "1965.1.1.1"
+							}
+							promote_leader = yes
+						}
+					}
+					transfer_units_fraction = {
+						target = KTV
+						stockpile_ratio = 0.10
+						army_ratio = 0.10
+						navy_ratio = 0.10
+						air_ratio = 0.10
+					}
+					every_controlled_state = {
+						limit = { is_core_of = PMB }
+						transfer_state_to = PMB
+					}
+					SIL_Ulrich_Blutstein = {
+						set_nationality = PMB
+						add_country_leader_role = {
+							country_leader = {
+								ideology = despotism
+								expire = "1965.1.1.1"
+							}
+							promote_leader = yes
+						}
+					}
+					transfer_units_fraction = {
+						target = KTV
+						stockpile_ratio = 0.075
+						army_ratio = 0.075
+						navy_ratio = 0.075
+						air_ratio = 0.075
+					}
+				}
+			}
+
 			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
@@ -763,7 +864,15 @@ on_actions = {
 
 	on_weekly_TAI = {
 		effect = {
-			TAI_calculate_monachist_militarist_effects = yes
+			if = {
+				limit = { NOT = { has_focus_tree = CAT_KINGDOM_TREE } }
+				TAI_calculate_monachist_militarist_effects = yes
+			}
+			else_if = {
+				limit = { has_dynamic_modifier = { modifier = TAI_militarist_stability } }
+				remove_dynamic_modifier = { modifier = TAI_militarist_stability }
+				remove_dynamic_modifier = { modifier = TAI_monarchist_stability }
+			}
 		}
 	}
 

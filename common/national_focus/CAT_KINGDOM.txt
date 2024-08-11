@@ -12,7 +12,7 @@ focus_tree = {
 	focus = {
 		id = CKG_background
 		icon = CKG_the_mewtails_mistake
-		x = 16
+		x = 170
 		y = 6
 		cost = 5
 		completion_reward = {
@@ -21,14 +21,14 @@ focus_tree = {
 	focus = {
 		id = CKG_northern_minerals
 		icon = GFX_focus_generic_resource_extraction
-		x = 12
+		x = 11
 		y = -1
 		cost = 5
-		prerequisite = {
-			focus = CKG_reinstate_the_kattensbach
-			focus = CKG_utilize_the_bunkers
-			focus = CKG_crush_silly_mechanists
-		}
+		# prerequisite = {
+		# 	focus = CKG_reinstate_the_kattensbach
+		# 	focus = CKG_utilize_the_bunkers
+		# 	focus = CKG_crush_silly_mechanists
+		# }
 		available = {
 			controls_state = 661
 			controls_state = 662
@@ -63,14 +63,14 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_the_northern_naval_base
-		icon = CKG_the_northern_naval_base
+		icon = GFX_focus_NORDIC_dem_navy
 		x = 15
-		y = -2
+		y = -1
 		cost = 5
-		prerequisite = {
-			focus = CKG_crush_silly_mechanists
-			focus = CKG_crush_silly_mechanists
-		}
+		# prerequisite = {
+		# 	focus = CKG_crush_silly_mechanists
+		# 	focus = CKG_crush_silly_mechanists
+		# }
 		available = {
 			NOT = { country_exists = HYP }
 			controls_state = 14
@@ -114,12 +114,12 @@ focus_tree = {
 		id = CKG_crush_silly_mechanists
 		icon = CKG_crush_silly_mechanists
 		x = 13
-		y = -2
+		y = -1
 		cost = 5
-		prerequisite = {
-			focus = CKG_utilize_the_bunkers
-			focus = CKG_northern_minerals
-		}
+		# prerequisite = {
+		# 	focus = CKG_utilize_the_bunkers
+		# 	focus = CKG_northern_minerals
+		# }
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_core_of = HYP }
@@ -139,13 +139,13 @@ focus_tree = {
 		x = 12
 		y = 1
 		cost = 5
-		prerequisite = {
-			focus = CKG_reinstate_the_kattensbach
-			focus = CKG_the_heart_of_the_herzlands
-			focus = CKG_a_deal_with_alice
-			focus = CKG_utilize_the_bunkers
-			focus = CKG_stamp_out_elwins_influence
-		}
+		# prerequisite = {
+		# 	focus = CKG_reinstate_the_kattensbach
+		# 	focus = CKG_the_heart_of_the_herzlands
+		# 	focus = CKG_a_deal_with_alice
+		# 	focus = CKG_utilize_the_bunkers
+		# 	focus = CKG_stamp_out_elwins_influence
+		# }
 		available = {
 			controls_state = 29
 			controls_state = 509
@@ -239,13 +239,13 @@ focus_tree = {
 				any_neighbor_state = { is_core_of = KTW }
 			}
 		}
-		prerequisite = {
-			focus = CKG_reinstate_the_kattensbach
-			focus = CKG_a_deal_with_fritz
-			focus = CKG_destroy_the_katzenvolk
-			focus = CKG_stamp_out_elwins_influence
-			focus = CKG_rally_northern_monarchists
-		}
+		# prerequisite = {
+		# 	focus = CKG_reinstate_the_kattensbach
+		# 	focus = CKG_a_deal_with_fritz
+		# 	focus = CKG_destroy_the_katzenvolk
+		# 	focus = CKG_stamp_out_elwins_influence
+		# 	focus = CKG_rally_northern_monarchists
+		# }
 		completion_reward = {
 			create_wargoal = { target = 509.owner type = annex_everything }
 		}
@@ -260,6 +260,13 @@ focus_tree = {
 			controls_state = 13
 		}
 		completion_reward = {
+			#PM
+			custom_effect_tooltip = CKG_reinstate_the_kattensbach_tt
+			if = {
+				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
+				set_country_flag = ckg_picked_abs_const
+				country_event = { id = CKG_event.1 }
+			}
 			13 = { add_core_of = ROOT }
 			add_political_power = 200
 			add_popularity = {
@@ -274,12 +281,12 @@ focus_tree = {
 		x = 13
 		y = 0
 		cost = 5
-		prerequisite = {
-			focus = CKG_crush_northern_racism
-			focus = CKG_the_mewtails_heritage
-			focus = CKG_a_deal_with_alice
-			focus = CKG_reinstate_the_kattensbach
-		}
+		# prerequisite = {
+		# 	focus = CKG_crush_northern_racism
+		# 	focus = CKG_the_mewtails_heritage
+		# 	focus = CKG_a_deal_with_alice
+		# 	focus = CKG_reinstate_the_kattensbach
+		# }
 		available = {
 			any_owned_state = {
 				OR = {
@@ -349,13 +356,13 @@ focus_tree = {
 		x = 10
 		y = 2
 		cost = 5
-		prerequisite = {
-			focus = CKG_integrate_the_rattish
-			focus = CKG_the_northern_breadbasket
-			focus = CKG_the_heart_of_the_herzlands
-			focus = CKG_rally_northern_monarchists
-			focus = CKG_a_deal_with_alice
-		}
+		# prerequisite = {
+		# 	focus = CKG_integrate_the_rattish
+		# 	focus = CKG_the_northern_breadbasket
+		# 	focus = CKG_the_heart_of_the_herzlands
+		# 	focus = CKG_rally_northern_monarchists
+		# 	focus = CKG_a_deal_with_alice
+		# }
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_owned_by = SIL }
@@ -391,11 +398,11 @@ focus_tree = {
 		x = 8
 		y = 2
 		cost = 5
-		prerequisite = {
-			focus = CKG_destroy_the_katzenvolk
-			focus = CKG_integrate_the_rattish
-			focus = CKG_stamp_out_elwins_influence
-		}
+		# prerequisite = {
+		# 	focus = CKG_destroy_the_katzenvolk
+		# 	focus = CKG_integrate_the_rattish
+		# 	focus = CKG_stamp_out_elwins_influence
+		# }
 		completion_reward = {
 			custom_effect_tooltip = CKG_rally_northern_monarchists_tt
 			add_stability = 0.05
@@ -439,12 +446,12 @@ focus_tree = {
 		x = 9
 		y = 3
 		cost = 5
-		prerequisite = {
-			focus = CKG_stamp_out_elwins_influence
-			focus = CKG_the_northern_breadbasket
-			focus = CKG_eastern_purrgundy
-			focus = CKG_rally_northern_monarchists
-		}
+		# prerequisite = {
+		# 	focus = CKG_stamp_out_elwins_influence
+		# 	focus = CKG_the_northern_breadbasket
+		# 	focus = CKG_eastern_purrgundy
+		# 	focus = CKG_rally_northern_monarchists
+		# }
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_owned_by = CLE }
@@ -477,13 +484,13 @@ focus_tree = {
 		x = 11
 		y = 3
 		cost = 5
-		prerequisite = {
-			focus = CKG_house_of_chameownix
-			focus = CKG_integrate_the_rattish
-			focus = CKG_stamp_out_elwins_influence
-			focus = CKG_eastern_purrgundy
-			focus = CKG_northern_purrgundy
-		}
+		# prerequisite = {
+		# 	focus = CKG_house_of_chameownix
+		# 	focus = CKG_integrate_the_rattish
+		# 	focus = CKG_stamp_out_elwins_influence
+		# 	focus = CKG_eastern_purrgundy
+		# 	focus = CKG_northern_purrgundy
+		# }
 		available = {
 			controls_state = 583
 		}
@@ -496,7 +503,7 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_northern_purrgundy
-		icon = GFX_goal_generic_occupy_states_ongoing_war_shine
+		icon = GFX_goal_generic_occupy_states_ongoing_war
 		x = 13
 		y = 3
 		cost = 5
@@ -536,18 +543,28 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = TAI
-				type = annex_everything
-			}
-			TAI = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_40
-					hidden_effect = {
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
+			#PM
+			custom_effect_tooltip = CKG_house_of_chameownix_tt
+			if = {
+				limit = { NOT = { has_country_flag = forming_cat_kingdom } }
+				if = {
+					limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
+					set_country_flag = ckg_picked_abs_const
+					country_event = { id = CKG_event.1 }
+				}
+				create_wargoal = {
+					target = TAI
+					type = annex_everything
+				}
+				TAI = {
+					every_core_state = {
+						custom_effect_tooltip = state_core_threshold_40
+						hidden_effect = {
+							reduce_compliance_coring_threshold_by_10 = yes
+							reduce_compliance_coring_threshold_by_10 = yes
+							reduce_compliance_coring_threshold_by_10 = yes
+							reduce_compliance_coring_threshold_by_10 = yes
+						}
 					}
 				}
 			}
@@ -576,15 +593,15 @@ focus_tree = {
 			}
 		}
 	}
-	focus = {
-		id = CKG_southern_purrgundy
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 13
-		y = 6
-		cost = 5
-		completion_reward = {
-		}
-	}
+	# focus = {
+	# 	id = CKG_southern_purrgundy
+	# 	icon = GFX_focus_hol_the_foundations_of_defense
+	# 	x = 13
+	# 	y = 6
+	# 	cost = 5
+	# 	completion_reward = {
+	# 	}
+	# }
 	focus = {
 		id = CKG_royal_ski_resort
 		icon = GFX_focus_SMB_a_land_of_mountains
@@ -626,12 +643,12 @@ focus_tree = {
 		x = 8
 		y = 4
 		cost = 5
-		prerequisite = {
-			focus = CKG_crush_the_mad_herald
-			focus = CKG_house_of_chameownix
-			focus = CKG_integrate_the_rattish
-			focus = CKG_rally_northern_monarchists
-		}
+		# prerequisite = {
+		# 	focus = CKG_crush_the_mad_herald
+		# 	focus = CKG_house_of_chameownix
+		# 	focus = CKG_integrate_the_rattish
+		# 	focus = CKG_rally_northern_monarchists
+		# }
 		any_owned_state = {
 			any_neighbor_state = { is_owned_by = ELO }
 		}
@@ -667,12 +684,12 @@ focus_tree = {
 		x = 8
 		y = 5
 		cost = 5
-		prerequisite = {
-			focus = CKG_eastern_purrgundy
-			focus = CKG_riches_of_meopinstaat
-			focus = CKG_reconnecting_south_and_center
-			focus = CKG_healing_the_scars_of_kaiserism
-		}
+		# prerequisite = {
+		# 	focus = CKG_eastern_purrgundy
+		# 	focus = CKG_riches_of_meopinstaat
+		# 	focus = CKG_reconnecting_south_and_center
+		# 	focus = CKG_healing_the_scars_of_kaiserism
+		# }
 		any_owned_state = {
 			any_neighbor_state = { is_owned_by = AUR }
 		}
@@ -696,16 +713,16 @@ focus_tree = {
 			controls_state = 94
 			controls_state = 521
 		}
-		prerequisite = {
-			focus = CKG_the_northern_breadbasket
-			focus = CKG_integrate_the_rattish
-			focus = CKG_eastern_purrgundy
-			focus = CKG_crush_the_mad_herald
-			focus = CKG_healing_the_scars_of_kaiserism
-			focus = CKG_reconnecting_south_and_center
-			focus = CKG_stamp_out_elwins_influence
-			focus = CKG_drilling_ever_deeper
-		}
+		# prerequisite = {
+		# 	focus = CKG_the_northern_breadbasket
+		# 	focus = CKG_integrate_the_rattish
+		# 	focus = CKG_eastern_purrgundy
+		# 	focus = CKG_crush_the_mad_herald
+		# 	focus = CKG_healing_the_scars_of_kaiserism
+		# 	focus = CKG_reconnecting_south_and_center
+		# 	focus = CKG_stamp_out_elwins_influence
+		# 	focus = CKG_drilling_ever_deeper
+		# }
 		completion_reward = {
 			94 = {
 				add_core_of = ROOT
@@ -735,11 +752,11 @@ focus_tree = {
 		x = 8
 		y = 6
 		cost = 5
-		prerequisite = {
-			focus = CKG_crush_the_mad_herald
-			focus = CKG_reconnecting_south_and_center
-			focus = CKG_riches_of_meopinstaat
-		}
+		# prerequisite = {
+		# 	focus = CKG_crush_the_mad_herald
+		# 	focus = CKG_reconnecting_south_and_center
+		# 	focus = CKG_riches_of_meopinstaat
+		# }
 		available = {
 			NOT = { country_exists = AUR }
 			AUR = { any_core_state = { is_owned_by = ROOT } }
@@ -766,15 +783,27 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_reconnecting_south_and_center
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_goal_generic_positive_trade_relations
 		x = 11
 		y = 6
 		cost = 5
+		available = {
+			115 = { is_controlled_by_ROOT_or_subject = yes }
+			520 = { is_controlled_by_ROOT_or_subject = yes }
+			116 = { is_controlled_by_ROOT_or_subject = yes }
+			562 = { is_controlled_by_ROOT_or_subject = yes }
+			551 = { is_controlled_by_ROOT_or_subject = yes }
+			522 = { is_controlled_by_ROOT_or_subject = yes }
+			517 = { is_controlled_by_ROOT_or_subject = yes }
+		}
 		completion_reward = {
-			create_wargoal = {
-				target = AUR
-				type = annex_everything
-			}
+			115 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
+			116 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
+			520 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
+			562 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
+			551 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
+			522 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
+			517 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
 		}
 	}
 	#PURRLIN
@@ -782,7 +811,7 @@ focus_tree = {
 		id = CKG_down_south_in_capitalism_land
 		icon = AUR_eyes_on_the_south
 		x = 10
-		y = 8
+		y = 9
 		cost = 5
 		available = {
 			any_owned_state = {
@@ -803,14 +832,14 @@ focus_tree = {
 		id = CKG_the_forges_roar
 		icon = CKG_the_forges_roar
 		x = 10
-		y = 9
+		y = 10
 		cost = 5
 		available = {
 			controls_state = 173
 		}
 		completion_reward = {
 			173 = { 
-				add_core_of = ROOT
+				add_compliance = 20
 				add_extra_state_shared_building_slots = 6
 				add_building_construction = {
 					type = arms_factory
@@ -858,7 +887,7 @@ focus_tree = {
 	focus = {
 		id = CKG_gateway_to_solakea
 		icon = CKG_gateway_to_solakea
-		x = 9
+		x = 8
 		y = 10
 		cost = 5
 		available = {
@@ -870,7 +899,7 @@ focus_tree = {
 				amount = 500
 			}
 			192 = { 
-				add_core_of = ROOT
+				add_compliance = 20
 				add_extra_state_shared_building_slots = 4
 				add_building_construction = {
 					type = industrial_complex
@@ -890,7 +919,7 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_securing_the_channel
-		icon = GFX_focus_generic_coastal_fort
+		icon = GFX_focus_FIN_coastal_defense
 		x = 12
 		y = 10
 		cost = 5
@@ -984,7 +1013,7 @@ focus_tree = {
 	focus = {
 		id = CKG_southern_breadbasket
 		icon = GFX_focus_generic_farmland
-		x = 14
+		x = 15
 		y = 10
 		cost = 5
 		available = {
@@ -992,6 +1021,13 @@ focus_tree = {
 			CAT = { any_core_state = { is_controlled_by = CAT } }
 		}
 		completion_reward = {
+			#PM
+			custom_effect_tooltip = CKG_southern_breadbasket_tt
+			if = {
+				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
+				set_country_flag = ckg_picked_abs_const
+				country_event = { id = CKG_event.1 }
+			}
 			CAT = {
 				every_core_state = {
 					custom_effect_tooltip = state_core_threshold_40
@@ -1035,19 +1071,84 @@ focus_tree = {
 		}
 	}
 	focus = {
-		id = CKG_a_modern_airbase_for_a_modern_kingdom
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 15
-		y = 11
+		id = CKG_strike_at_himezulte
+		icon = GFX_goal_generic_air_bomber
+		x = 17
+		y = 12
 		cost = 5
+		available = {
+			OR = {
+				any_owned_state = {
+					any_neighbor_state = { is_core_of = HIM }
+				}
+				any_country = {
+					is_puppet_of = ROOT
+					any_owned_state = {
+						any_neighbor_state = { is_core_of = HIM }
+					}
+				}
+			}
+		}
 		completion_reward = {
+			create_wargoal = {
+				target = HIM
+				type = annex_everything
+			}
+		}
+	}
+	focus = {
+		id = CKG_a_modern_airbase_for_a_modern_kingdom
+		icon = CKG_a_modern_airbase_for_a_modern_kingdom
+		x = 19
+		y = 12
+		cost = 5
+		available = {
+			NOT = {
+				country_exists = HIM
+			}
+			HIM = { any_core_state = { is_controlled_by_ROOT_or_subject = yes } }
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = air_bonus
+				ahead_reduction = 0.5
+				bonus = 1
+				uses = 2
+				category = air_equipment
+			}
+			HIM = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
+				every_unit_leader = { set_nationality = ROOT }
+			}
+			596 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = air_base
+					level = 5
+				}
+			}
+			592 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = air_base
+					level = 5
+				}
+			}
 		}
 	}
 	#MEON
 	focus = {
 		id = CKG_towards_the_frontier
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 16
+		icon = GFX_focus_generic_annex_country
+		x = 17
 		y = 10
 		cost = 5
 		available = {
@@ -1064,8 +1165,8 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_southern_center_of_learning
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 18
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 19
 		y = 10
 		cost = 5
 		available = {
@@ -1076,6 +1177,12 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_research_slot = 1
+			#PM
+			if = {
+				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
+				set_country_flag = ckg_picked_abs_const
+				country_event = { id = CKG_event.1 }
+			}
 			custom_effect_tooltip = CKG_southern_center_of_learning_tt
 			hidden_effect = {
 				create_dynamic_country = {
@@ -1116,55 +1223,261 @@ focus_tree = {
 	#LIONITA
 	focus = {
 		id = CKG_the_staunch_defenders_of_katzenkind
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_focus_generic_full_social_mobilization
 		x = 19
 		y = 8
 		cost = 5
+		available = {
+			OR = {
+				any_owned_state = {
+					any_neighbor_state = { is_core_of = LIO }
+				}
+				any_country = {
+					is_puppet_of = ROOT
+					any_owned_state = {
+						any_neighbor_state = { is_core_of = LIO }
+					}
+				}
+			}
+		}
 		completion_reward = {
+			random_list = {
+				60 = {
+					create_wargoal = {
+						target = LIO
+						type = annex_everything
+					}
+				}
+				30 = {
+					LIO = {
+						set_autonomy = {
+							target = ROOT
+							autonomy_state = autonomy_puppet
+						}
+						set_cosmetic_tag = LIO_KNIGHT
+					}
+				}
+				10 = {
+					annex_country = {
+						target = LIO
+						transfer_troops = yes
+					}
+					modifier = {
+						factor = 0
+						is_in_faction = yes
+					}
+				}
+			}
 		}
 	}
 	focus = {
 		id = CKG_a_modern_knightly_order
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_focus_generic_strike_at_democracy1
 		x = 17
 		y = 9
 		cost = 5
+		available = {
+			NOT = { country_exists = LIO }
+			LIO = { any_core_state = { is_owned_by = ROOT } }
+		}
 		completion_reward = {
+			#PM
+			custom_effect_tooltip = CKG_a_modern_knightly_order_tt
+			if = {
+				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
+				set_country_flag = ckg_picked_abs_const
+				country_event = { id = CKG_event.1 }
+			}
+			LIO = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+					if = {
+						limit = { is_controlled_by = ROOT }
+						add_compliance = 10
+					}
+				}
+				every_unit_leader = {
+					set_nationality = ROOT
+				}
+			}
 		}
 	}
 	focus = {
 		id = CKG_southern_logging
 		icon = GFX_focus_BRA_amazon_colonization
-		x = 16
-		y = 8
+		x = 15
+		y = 11
 		cost = 5
+		available = {
+			controls_state = 206
+			controls_state = 532
+			controls_state = 531
+		}
 		completion_reward = {
+			add_stability = 0.10
+			206 = {
+				add_resistance = 20
+				add_resource = {
+					type = food
+					amount = 10
+				}
+				add_extra_state_shared_building_slots = 2
+			}
+			532 = {
+				add_resistance = 20
+				add_resource = {
+					type = food
+					amount = 10
+				}
+				add_extra_state_shared_building_slots = 2
+			}
+			531 = {
+				add_resistance = 20
+				add_resource = {
+					type = food
+					amount = 10
+				}
+				add_extra_state_shared_building_slots = 2
+			}
 		}
 	}
 	focus = {
 		id = CKG_drakwald_dams
 		icon = CKG_drakwald_dams
-		x = 20
+		x = 21
 		y = 9
 		cost = 5
+		available = {
+			492 = { is_controlled_by_ROOT_or_subject = yes }
+			132 = { is_controlled_by_ROOT_or_subject = yes }
+			593 = { is_controlled_by_ROOT_or_subject = yes }
+			596 = { is_controlled_by_ROOT_or_subject = yes }
+		}
 		completion_reward = {
+			492 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = { type = infrastructure level = 2 }
+				add_building_construction = { type = industrial_complex level = 4 }
+			}
+			132 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = { type = infrastructure level = 2 }
+				add_building_construction = { type = industrial_complex level = 4 }
+			}
+			593 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = { type = infrastructure level = 2 }
+				add_building_construction = { type = industrial_complex level = 4 }
+			}
+			596 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = { type = infrastructure level = 2 }
+				add_building_construction = { type = industrial_complex level = 4 }
+			}
 		}
 	}
 	#MEOWNICH
 	focus = {
 		id = CKG_feline_sea_ports
 		icon = GFX_focus_POL_develop_polish_shipbuilding
-		x = 18
-		y = 7
+		x = 19
+		y = 6
 		cost = 5
+		available = {
+			controls_state = 486
+			controls_state = 110
+			controls_state = 118
+			controls_state = 122
+			controls_state = 557
+		}
 		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = convoy
+				amount = 250
+			}
+			486 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = naval_base
+					level = 4
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = dockyard level = 2 }
+			}
+			110 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = naval_base
+					level = 4
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = dockyard level = 2 }
+			}
+			118 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = naval_base
+					level = 4
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = dockyard level = 2 }
+			}
+			122 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = naval_base
+					level = 4
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = dockyard level = 2 }
+			}
+			557 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = naval_base
+					level = 4
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = dockyard level = 2 }
+			}
 		}
 	}
 	focus = {
 		id = CKG_stamp_out_communism
 		icon = GFX_goal_anti_comintern_pact
-		x = 20
-		y = 7
+		x = 21
+		y = 6
 		cost = 5
 		available = {
 			any_owned_state = {
@@ -1208,8 +1521,8 @@ focus_tree = {
 	focus = {
 		id = CKG_restore_bavawria
 		icon = GFX_focus_generic_monarchy_2
-		x = 24
-		y = 7
+		x = 25
+		y = 6
 		cost = 5
 		available = {
 			STR = { every_core_state = { is_controlled_by = ROOT } }
@@ -1240,6 +1553,15 @@ focus_tree = {
 						every_core_state = { add_core_of = event_target:cat_kingdom_struken }
 					}
 
+					if = {
+						limit = { ROOT = { has_completed_focus = CKG_an_alliance_with_the_zuspri } }
+						PTQ = {
+							every_core_state = {
+								limit = { NOT = { check_variable = { minority = 4 } } }
+								add_core_of = event_target:cat_kingdom_struken
+							}
+						}
+					}
 					set_capital = { state = 121 }
 
 					ROOT = {
@@ -1266,86 +1588,460 @@ focus_tree = {
 	#STRUKEN
 	focus = {
 		id = CKG_restore_order_to_the_east
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_focus_generic_military_dictatorship
 		x = 23
 		y = 6
 		cost = 5
+		available = {
+			OR = {
+				any_owned_state = {
+					any_neighbor_state = { is_core_of = STR }
+				}
+				any_country = {
+					is_puppet_of = ROOT
+					any_owned_state = {
+						any_neighbor_state = { is_core_of = STR }
+					}
+				}
+			}
+		}
 		completion_reward = {
+			if = {
+				limit = { country_exists = STR }
+				create_wargoal = {
+					target = STR
+					type = annex_everything
+				}
+			}
+			STR = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_20
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
+			}
 		}
 	}
 	#QUARRIES
 	focus = {
 		id = CKG_the_ludenclaws
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 23
-		y = 5
+		icon = CKG_our_lifeblood
+		x = 24
+		y = 4
 		cost = 5
+		mutually_exclusive = {
+			focus = CKG_an_alliance_with_the_zuspri
+		}
+		available = {
+			NOT = { country_exists = PTQ }
+			PTQ = {
+				any_core_state = { is_controlled_by_ROOT_or_subject = yes }
+			}
+		}
 		completion_reward = {
+			custom_effect_tooltip = CKG_the_ludenclaws_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = PTQ
+	
+					save_global_event_target_as = cat_kingdom_quarries
+
+					PTQ = {
+						every_core_state = { add_core_of = event_target:cat_kingdom_quarries }
+					}
+
+					set_capital = { state = 481 }
+
+					set_cosmetic_tag = PTQ_ZUSPRI
+
+					ROOT = {
+						every_controlled_state = {
+							limit = { is_core_of = event_target:cat_kingdom_quarries }
+	
+							event_target:cat_kingdom_quarries = {
+								transfer_state = PREV
+							}
+						}
+	
+						puppet = event_target:cat_kingdom_quarries
+	
+						set_autonomy = {
+							target = event_target:cat_kingdom_quarries
+							autonomy_state = autonomy_integrated_puppet
+							freedom_level = 0.5
+						}
+					}
+				}
+			}
 		}
 	}
 	focus = {
-		id = CKG_our_lifeblood
-		icon = GFX_focus_hol_the_foundations_of_defense
+		id = CKG_an_alliance_with_the_zuspri
+		icon = CKG_the_ludenclaws
 		x = 23
 		y = 3
 		cost = 5
+		mutually_exclusive = {
+			focus = CKG_the_ludenclaws
+			focus = CKG_reclaim_the_frontier
+			focus = CKG_the_zuspri_march
+		}
+		available = {
+			NOT = { country_exists = PTQ }
+			PTQ = { any_core_state = { is_controlled_by_ROOT_or_subject = yes } }
+			ZUS = {
+				country_exists = THIS
+				NOT = { is_puppet_of = ROOT }
+				NOT = { has_war_with = ROOT }
+			}
+		}
 		completion_reward = {
+			create_faction = "Katzen Pact"
+			add_political_power = 250
+			add_threat = -5
+			PTQ = {
+				every_core_state = {
+					limit = {
+						is_controlled_by_ROOT_or_subject = yes
+						check_variable = { minority = 4 }
+					}
+					transfer_state_to = ZUS
+					add_core_of = ZUS
+				}
+			}
+			IMF = {
+				every_core_state = {
+					limit = { is_controlled_by_ROOT_or_subject = yes }
+					transfer_state_to = ZUS
+					add_core_of = ZUS
+				}
+			}
+			if = {
+				limit = { country_exists = IMF }
+				declare_war_on = {
+					target = IMF
+					type = annex_everything
+				}
+				ZUS = {
+					declare_war_on = {
+						target = IMF
+						type = annex_everything
+					}
+				}
+			}
+			add_to_faction = ZUS
+			if = {
+				limit = { has_completed_focus = CKG_restore_bavawria }
+				every_owned_state = {
+					limit = { is_core_of = PTQ }
+					transfer_state_to = STR
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = CKG_our_lifeblood
+		icon = GFX_focus_generic_public_works
+		x = 24
+		y = 5
+		cost = 5
+		available = {
+			OR = {
+				any_owned_state = {
+					any_neighbor_state = { is_core_of = PTQ }
+				}
+				any_country = {
+					is_puppet_of = ROOT
+					any_owned_state = {
+						any_neighbor_state = { is_core_of = PTQ }
+					}
+				}
+			}
+		}
+		completion_reward = {
+			create_wargoal = {
+				target = PTQ
+				type = annex_everything
+			}
 		}
 	}
 	focus = {
 		id = CKG_the_great_dockyards
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_goal_generic_construct_naval_dockyard
 		x = 21
 		y = 1
 		cost = 5
+		available = {
+			controls_state = 32
+		}
 		completion_reward = {
+			32 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = naval_base
+					level = 10
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 6
+				add_building_construction = {
+					type = fuel_silo
+					level = 3
+				}
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 3
+				}
+			}
+		}
+	}
+	focus = {
+		id = CKG_the_great_airbase
+		icon = GFX_focus_generic_long_range_aircraft
+		x = 23
+		y = 2
+		cost = 5
+		available = {
+			37 = { is_controlled_by_ROOT_or_ally = yes }
+		}
+		completion_reward = {
+			37 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+				}
+			}
+			add_tech_bonus = {
+				name = air_bonus
+				ahead_reduction = 1
+				bonus = 2
+				uses = 1
+				category = heavy_air
+			}
 		}
 	}
 	#FRONTIER
 	focus = {
 		id = CKG_reclaim_the_frontier
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_focus_CHL_a_french_alliance
 		x = 24
-		y = 1
+		y = 0
 		cost = 5
+		mutually_exclusive = {
+			focus = CKG_an_alliance_with_the_zuspri
+		}
+		available = {
+			if = {
+				limit = { country_exists = IMF }
+				OR = {
+					any_owned_state = {
+						any_neighbor_state = { is_core_of = IMF }
+					}
+					any_country = {
+						is_puppet_of = ROOT
+						any_owned_state = {
+							any_neighbor_state = { is_core_of = IMF }
+						}
+					}
+				}
+			}
+			else = {
+				OR = {
+					any_owned_state = {
+						is_core_of = IMF
+					}
+					any_country = {
+						is_puppet_of = ROOT
+						any_owned_state = {
+							is_core_of = IMF
+						}
+					}
+				}
+			}
+		}
 		completion_reward = {
+			if = {
+				limit = { country_exists = IMF IMF = { is_ai = yes } }
+				IMF = {
+					set_autonomy = {
+						target = ROOT
+						autonomy_state = autonomy_puppet
+					}
+					set_cosmetic_tag = IMF_ZUSPRI
+					ZUS = { every_core_state = { add_core_of = IMF } }
+				}
+			}
+			else_if = {
+				limit = { country_exists = IMF IMF = { is_ai = no } }
+				create_wargoal = {
+					target = IMF
+					type = annex_everything
+				}
+			}
+			else = {
+				release_puppet_on_controlled = IMF
+				IMF = {
+					set_cosmetic_tag = IMF_ZUSPRI
+					ZUS = { every_core_state = { add_core_of = IMF } }
+				}
+				set_autonomy = {
+					target = IMF
+					autonomy_state = autonomy_integrated_puppet
+					freedom_level = 0.5
+				}	
+			}
 		}
 	}
 	#ZUSPRI
 	focus = {
 		id = CKG_the_zuspri_march
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_focus_RAJ_lions_of_the_great_war
 		x = 27
 		y = 0
 		cost = 5
+		mutually_exclusive = {
+			focus = CKG_an_alliance_with_the_zuspri
+		}
+		available = {
+			OR = {
+				any_owned_state = {
+					is_core_of = ZUS
+				}
+				any_country = {
+					is_puppet_of = ROOT
+					any_owned_state = {
+						is_core_of = ZUS
+					}
+				}
+			}
+		}
 		completion_reward = {
+			create_wargoal = {
+				target = ZUS
+				type = annex_everything
+			}
 		}
 	}
 	#NEKEOX
 	focus = {
 		id = CKG_fortify_against_the_nekeox
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_goal_generic_fortify_city
 		x = 25
-		y = 4
+		y = 3
 		cost = 5
+		available = {
+			54 = { is_controlled_by_ROOT_or_ally = yes }
+			70 = { is_controlled_by_ROOT_or_ally = yes }
+		}
 		completion_reward = {
+			54 = {
+				set_building_level = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_border = yes
+					}
+				}
+			}
+			70 = {
+				set_building_level = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_border = yes
+					}
+				}
+			}
 		}
 	}
 	focus = {
 		id = CKG_the_riches_of_the_katpines
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 22
-		y = 8
+		icon = GFX_focus_generic_mining_industry
+		x = 24
+		y = 7
 		cost = 5
+		available = {
+			553 = { is_controlled_by_ROOT_or_subject = yes }
+			552 = { is_controlled_by_ROOT_or_subject = yes }
+			554 = { is_controlled_by_ROOT_or_subject = yes }
+			111 = { is_controlled_by_ROOT_or_subject = yes }
+		}
 		completion_reward = {
+			553 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+				add_resource = { type = chromium amount = 25 }
+				custom_effect_tooltip = CKG_the_riches_of_the_katpines_tt
+				hidden_effect = {
+					if = {
+						limit = { owner = { is_puppet_of = ROOT } }
+						add_building_construction = { type = industrial_complex level = 2 }
+						add_building_construction = { type = arms_factory level = 2 }
+						add_extra_state_shared_building_slots = 4
+					}
+				}
+			}
+			552 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+				add_resource = { type = fissiles amount = 20 }
+				custom_effect_tooltip = CKG_the_riches_of_the_katpines_tt
+				hidden_effect = {
+					if = {
+						limit = { owner = { is_puppet_of = ROOT } }
+						add_building_construction = { type = industrial_complex level = 2 }
+						add_building_construction = { type = arms_factory level = 2 }
+						add_extra_state_shared_building_slots = 4
+					}
+				}
+			}
+			554 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+				add_resource = { type = steel amount = 40 }
+				custom_effect_tooltip = CKG_the_riches_of_the_katpines_tt
+				hidden_effect = {
+					if = {
+						limit = { owner = { is_puppet_of = ROOT } }
+						add_building_construction = { type = industrial_complex level = 2 }
+						add_building_construction = { type = arms_factory level = 2 }
+						add_extra_state_shared_building_slots = 4
+					}
+				}
+			}
+			111 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+				add_resource = { type = aluminium amount = 30 }
+				custom_effect_tooltip = CKG_the_riches_of_the_katpines_tt
+				hidden_effect = {
+					if = {
+						limit = { owner = { is_puppet_of = ROOT } }
+						add_building_construction = { type = industrial_complex level = 2 }
+						add_building_construction = { type = arms_factory level = 2 }
+						add_extra_state_shared_building_slots = 4
+					}
+				}
+			}
 		}
 	}
 	#WACEGIA
 	focus = {
 		id = CKG_liberate_katzens_of_wacegia
 		icon = CKG_liberate_katzens_of_wacegia
-		x = 25
-		y = 8
+		x = 27
+		y = 7
 		cost = 5
 		available = {
 			any_owned_state = {
@@ -1382,19 +2078,57 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_to_connect_our_kingdom
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = CKG_to_connect_our_kingdom
 		x = 15
 		y = 7
 		cost = 5
+		available = {
+			controls_state = 118
+			controls_state = 528
+			controls_state = 525
+			controls_state = 136
+			controls_state = 168
+			controls_state = 524
+			controls_state = 486
+		}
 		completion_reward = {
+			118 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+			}
+			528 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+			}
+			525 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+			}
+			136 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+			}
+			168 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+			}
+			524 = {
+				add_compliance = 20
+				add_building_construction = { type = infrastructure level = 2 }
+			}
+			build_railway = {
+				level = 3
+				start_province = 13790
+				target_province = 14823
+			}
 		}
 	}
 	#STRONIEN
 	focus = {
 		id = CKG_royal_logistics_clique
 		icon = GFX_goal_generic_construct_infrastructure
-		x = 16
-		y = 6
+		x = 15
+		y = 5
 		cost = 5
 		available = {
 			any_owned_state = {
@@ -1424,8 +2158,8 @@ focus_tree = {
 	focus = {
 		id = CKG_the_royal_superhighwah
 		icon = GFX_focus_POL_warsaw_main_station
-		x = 14
-		y = 5
+		x = 17
+		y = 6
 		cost = 5
 		available = {
 			controls_state = 486
@@ -1436,11 +2170,28 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_mend_macaquian_ties
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 16
+		icon = CKG_mend_macaquian_ties
+		x = 17
 		y = 5
 		cost = 5
+		available = {
+			controls_state = 87
+		}
 		completion_reward = {
+			add_political_power = 150
+			add_stability = 0.05
+			87 = {
+				add_compliance = 20
+				add_building_construction = {
+					type = naval_base
+					level = 2
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
 		}
 	}
 	focus = {
@@ -1449,14 +2200,14 @@ focus_tree = {
 		x = 10
 		y = 7
 		cost = 5
-		prerequisite = {
-			focus = CKG_healing_the_scars_of_kaiserism
-			focus = CKG_down_south_in_capitalism_land
-			focus = CKG_reconnecting_south_and_center
-			focus = CKG_royal_ski_resort
-			focus = CKG_hand_out_noble_titles
-			focus = CKG_southern_purrgundy
-		}
+		# prerequisite = {
+		# 	focus = CKG_healing_the_scars_of_kaiserism
+		# 	focus = CKG_down_south_in_capitalism_land
+		# 	focus = CKG_reconnecting_south_and_center
+		# 	focus = CKG_royal_ski_resort
+		# 	focus = CKG_hand_out_noble_titles
+		# 	focus = CKG_southern_purrgundy
+		# }
 		available = {
 			controls_state = 116
 			controls_state = 115
@@ -1465,22 +2216,22 @@ focus_tree = {
 		}
 		completion_reward = {
 			116 = {
-				add_core_of = ROOT
+				add_compliance = 10
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = { type = dockyard level = 2 }
 			}
 			115 = {
-				add_core_of = ROOT
+				add_compliance = 10
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = { type = dockyard level = 2 }
 			}
 			562 = {
-				add_core_of = ROOT
+				add_compliance = 10
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = { type = dockyard level = 2 }
 			}
 			520 = {
-				add_core_of = ROOT
+				add_compliance = 10
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = { type = dockyard level = 2 }
 			}
@@ -1488,8 +2239,8 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_march_to_purrsia
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 15
+		icon = GFX_goal_generic_military_sphere
+		x = 16
 		y = 4
 		cost = 5
 		available = {
@@ -1506,7 +2257,7 @@ focus_tree = {
 	}
 	focus = {
 		id = CKG_restore_purrsia
-		icon = GFX_focus_hol_the_foundations_of_defense
+		icon = GFX_goal_generic_alliance
 		x = 15
 		y = 3
 		cost = 5
@@ -1520,6 +2271,12 @@ focus_tree = {
 			custom_effect_tooltip = CKG_restore_purrsia_tt
 			add_stability = 0.15
 			add_war_support = 0.15
+			
+			FRA = {
+				every_character = {
+					set_nationality = event_target:cat_kingdom_purrsia
+				}
+			}
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = FRA
@@ -1534,6 +2291,7 @@ focus_tree = {
 					NKB = {
 						every_core_state = { add_core_of = event_target:cat_kingdom_purrsia }
 					}
+
 
 					ROOT = {
 						every_controlled_state = {
@@ -1552,15 +2310,24 @@ focus_tree = {
 							freedom_level = 0.5
 						}
 					}
-				}		
+				}
+				FRA_Frederick_Pawlliam = {
+					add_country_leader_role = {
+						country_leader={
+							expire = "1965.1.1"
+							ideology = absolutism
+						}
+						promote_leader = yes
+					}
+				}
 			}
 		}
 	}
 	focus = {
 		id = CKG_modern_institute
 		icon = GFX_goal_tfv_generic_tech_sharing
-		x = 17
-		y = 1
+		x = 18
+		y = 2
 		cost = 5
 		available = {
 			OR = {
@@ -1572,6 +2339,13 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
+			#PM
+			custom_effect_tooltip = CKG_modern_institute_tt
+			if = {
+				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
+				set_country_flag = ckg_picked_abs_const
+				country_event = { id = CKG_event.1 }
+			}
 			add_research_slot = 1
 			FRA = {
 				every_core_state = {
@@ -1584,6 +2358,35 @@ focus_tree = {
 			}
 		}
 	}
+	#Meorseilles
+	focus = {
+		id = CKG_cross_high_sea
+		icon = GFX_goal_generic_amphibious_assault
+		x = 5
+		y = 4
+		cost = 5
+		available = {
+			OR = {
+				any_owned_state = {
+					any_neighbor_state = { is_owned_by = MEC }
+				}
+				controls_state = 577
+				controls_state = 90
+				controls_state = 488
+				controls_state = 519
+				controls_state = 584
+				controls_state = 74
+				controls_state = 66
+				controls_state = 653
+			}
+		}
+		completion_reward = {
+			create_wargoal = {
+				target = MEC
+				type = annex_everything
+			}
+		}
+	}
 	#Neumayer
 	focus = {
 		id = CKG_crush_northern_racism
@@ -1591,13 +2394,13 @@ focus_tree = {
 		x = 15
 		y = 1
 		cost = 5
-		prerequisite = {
-			focus = CKG_reinstate_king_walter
-			focus = CKG_modern_institute
-			focus = CKG_strike_at_frankfurr
-			focus = CKG_a_deal_with_alice
-			focus = CKG_the_mewtails_heritage
-		}
+		# prerequisite = {
+		# 	focus = CKG_reinstate_king_walter
+		# 	focus = CKG_modern_institute
+		# 	focus = CKG_strike_at_frankfurr
+		# 	focus = CKG_a_deal_with_alice
+		# 	focus = CKG_the_mewtails_heritage
+		# }
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_owned_by = NEU }
@@ -1608,18 +2411,33 @@ focus_tree = {
 				target = NEU
 				type = annex_everything
 			}
+			create_wargoal = {
+				target = AKR
+				type = annex_everything
+			}
+			AKR = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
+			}
 		}
 	}
 	focus = {
 		id = CKG_reinstate_king_walter
-		icon = GFX_focus_generic_monarchy_1
+		icon = CKG_reinstate_king_walter
 		x = 16
 		y = 0
 		cost = 5
-		prerequisite = {
-			focus = CKG_crush_northern_racism
-			focus = CKG_modern_institute
-		}
+		# prerequisite = {
+		# 	focus = CKG_crush_northern_racism
+		# 	focus = CKG_modern_institute
+		# }
 		available = {
 			NOT = { country_exists = NEU }
 			NEU = {
@@ -1647,10 +2465,38 @@ focus_tree = {
 		x = 18
 		y = 3
 		cost = 5
+		available = {
+			OR = {
+				any_owned_state = {
+					any_neighbor_state = { is_core_of = NAV }
+				}
+				any_country = {
+					is_puppet_of = ROOT
+					any_owned_state = {
+						any_neighbor_state = { is_core_of = NAV }
+					}
+				}
+			}
+		}
 		completion_reward = {
-			create_wargoal = {
-				target = NAV
-				type = annex_everything
+			if = {
+				limit = {
+					country_exists = NAV
+					NAV = { NOT = { has_cosmetic_tag = NAV_NETT } }
+				}
+				annex_country = {
+					target = NAV
+					transfer_troops = yes
+				}
+			}
+			else_if = {
+				limit = {
+					country_exists = NAV
+				}
+				create_wargoal = {
+					target = NAV
+					type = annex_everything
+				}
 			}
 		}
 	}
