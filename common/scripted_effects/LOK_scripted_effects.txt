@@ -1,3 +1,164 @@
+calculate_muno_colonies_stats = {
+	set_variable = { lok_muno_colonies_upkeep = 0 }
+	set_variable = { lok_muno_colonies_level = 0 }
+	set_variable = { lok_muno_colonies_pop = 0 }
+	every_controlled_state = {
+		limit = { is_core_of = MUN }
+		add_to_variable = { ROOT.lok_muno_colonies_level = space_colony_level }
+		add_to_variable = { ROOT.lok_muno_colonies_pop = state_population_k }
+
+		set_temp_variable = { state_colony_upkeep = space_colony_level }
+		multiply_temp_variable = { state_colony_upkeep = 50 } #50 logistics per level
+		add_to_variable = { ROOT.lok_muno_colonies_upkeep = state_colony_upkeep }
+
+
+		if = {
+			limit = { NOT = { has_state_flag = lok_muno_state_surveyed_by_@ROOT } }
+			set_state_flag = lok_muno_state_surveyed_by_@ROOT
+		}
+	}
+}
+
+calculate_orbital_logistics_capacity = {
+	set_variable = { orbital_logistics_capacity = 0 }
+
+	#heavy chemical (Starships)
+	set_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = num_equipment@lok_reusable_heavy_chemical_rocket }
+	multiply_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = 1 } #1 logistic per level
+	
+	add_to_variable = { orbital_logistics_capacity = orbital_logistics_from_lok_reusable_heavy_chemical_rocket }
+
+
+	set_variable = { orbital_logistics_demand = 0 }
+	add_to_variable = { orbital_logistics_demand = lok_muno_colonies_upkeep }
+}
+
+damage_muno_colonies = {
+	if = {
+		limit = { check_variable = { orbital_logistics_capacity < lok_muno_colonies_upkeep } }
+		every_controlled_state = {
+			limit = { is_core_of = MUN }
+			random = {
+				chance = 50
+				subtract_from_variable = { space_colony_level = 1 }
+				add_manpower = -2500
+				add_extra_state_shared_building_slots = -1
+				destroy_random_building = yes
+			}
+			if = {
+				limit = { check_variable = { space_colony_level = 0 } }
+				add_manpower = -1000000
+				remove_core_of = ROOT
+				transfer_state_to = MUN
+			}
+		}
+	}
+}
+
+destroy_random_building = {
+	random_list = {
+		0 = {
+			remove_building = { type = arms_factory level = 1 }
+			modifier = { add = 1 check_variable = { building_level@arms_factory > 0 } }
+		}
+		0 = {
+			remove_building = { type = industrial_complex level = 1 }
+			modifier = { add = 1 check_variable = { building_level@industrial_complex > 0 } }
+		}
+		0 = {
+			remove_building = { type = synthetic_refinery level = 1 }
+			modifier = { add = 1 check_variable = { building_level@synthetic_refinery > 0 } }
+		}
+		0 = {
+			remove_building = { type = dockyard level = 1 }
+			modifier = { add = 1 check_variable = { building_level@dockyard > 0 } }
+		}
+		0 = {
+			remove_building = { type = fuel_silo level = 1 }
+			modifier = { add = 1 check_variable = { building_level@fuel_silo > 0 } }
+		}
+		0 = {
+			remove_building = { type = rocket_site level = 1 }
+			modifier = { add = 1 check_variable = { building_level@rocket_site > 0 } }
+		}
+		0 = {
+			remove_building = { type = nuclear_reactor level = 1 }
+			modifier = { add = 1 check_variable = { building_level@nuclear_reactor > 0 } }
+		}
+		0 = {
+			remove_building = { type = supertensiles_workshop level = 1 }
+			modifier = { add = 1 check_variable = { building_level@supertensiles_workshop > 0 } }
+		}
+		0 = {
+			remove_building = { type = food_silo level = 1 }
+			modifier = { add = 1 check_variable = { building_level@food_silo > 0 } }
+		}
+		0 = {
+			remove_building = { type = hydroponics_farm level = 1 }
+			modifier = { add = 1 check_variable = { building_level@hydroponics_farm > 0 } }
+		}
+		0 = {
+			remove_building = { type = fusion_power_plant level = 1 }
+			modifier = { add = 1 check_variable = { building_level@fusion_power_plant > 0 } }
+		}
+	}
+}
+
+calculate_flusion_mission_success_odds = {
+	set_temp_variable = { mission_success_odds = space_exp } #2
+	divide_temp_variable = { mission_success_odds = 2 } #1
+	add_to_temp_variable = { mission_success_odds = flusion_exp } #1
+	divide_temp_variable = { mission_success_odds = mission_difficulty } #2/3 = 0.66
+	multiply_temp_variable = { mission_success_odds = 100 } #66%
+	set_temp_variable = { mission_failure_odds = mission_success_odds } #66
+	subtract_from_temp_variable = { mission_failure_odds = 100 } #-33
+	multiply_temp_variable = { mission_failure_odds = -1 } #33
+	
+	clamp_temp_variable = { var = mission_success_odds min = 5 max = 95 }
+	clamp_temp_variable = { var = mission_failure_odds min = 5 max = 95 }
+}
+
+calculate_muno_mission_success_odds = {
+	set_temp_variable = { mission_success_odds = space_exp } #2
+	divide_temp_variable = { mission_success_odds = 2 } #1
+	add_to_temp_variable = { mission_success_odds = muno_exp } #1
+	divide_temp_variable = { mission_success_odds = mission_difficulty } #2/3 = 0.66
+	multiply_temp_variable = { mission_success_odds = 100 } #66%
+	set_temp_variable = { mission_failure_odds = mission_success_odds } #66
+	subtract_from_temp_variable = { mission_failure_odds = 100 } #-33
+	multiply_temp_variable = { mission_failure_odds = -1 } #33
+	
+	clamp_temp_variable = { var = mission_success_odds min = 5 max = 95 }
+	clamp_temp_variable = { var = mission_failure_odds min = 5 max = 95 }
+}
+
+CKG_clear_pms = {
+	if = {
+		limit = { has_idea = CKG_Eliaw_Brawnner_PM }
+		remove_ideas = CKG_Eliaw_Brawnner_PM
+	}
+	if = {
+		limit = { has_idea = CKG_Loris_PM }
+		remove_ideas = CKG_Loris_PM
+	}
+	if = {
+		limit = { has_idea = CKG_Rex_PM }
+		remove_ideas = CKG_Rex_PM
+	}
+	if = {
+		limit = { has_idea = CKG_Growlzi_PM }
+		remove_ideas = CKG_Growlzi_PM
+	}
+	if = {
+		limit = { has_idea = CKG_Pawllas_PM }
+		remove_ideas = CKG_Pawllas_PM
+	}
+	if = {
+		limit = { has_idea = CKG_Meorner_PM }
+		remove_ideas = CKG_Meorner_PM
+	}
+}
+
 TAI_calculate_monachist_militarist_effects = {
 	#If the monarchists have 60% support you'll get +60% stability
 	#But if only 50% of the monarchists like the goverment then you only get +30%
@@ -249,7 +410,7 @@ ai_fire_nuke = {
 					ROOT = { has_country_flag = nuked_by_@PREV }
 				}
 			}
-			random_owned_state = {
+			random_controlled_state = {
 				limit = { NOT = { is_core_of = ROOT } }
 				save_global_event_target_as = lok_thermonuclear_salvo_state
 				ROOT = {
@@ -938,89 +1099,94 @@ clear_wonder_ideas = {
 }
 
 apply_wonder_effects = {
-	# every_controlled_state = {
-	# 	if = {
-	# 		limit = { check_variable = { wonder > 0 } }
-	# 		for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
-	# 			array = wonder_modifiers_values
-	# 			value = v
-	# 			index = i
-	# 			break = break
-	# 			set_variable = { wonder_modifier_id = i }
-	# 			set_variable = { wonder_modifier_value = v }
-	# 			meta_effect = {
-	# 				debug = yes
-	# 				text = {
-	# 					set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = [WONDER_MODIFIER_VALUE] }
-	# 					if = {
-	# 						limit = { is_capital = yes }
-	# 						multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 2 }
-	# 					}
-	# 					else_if = {
-	# 						limit = { NOT = { is_core_of = var:controller } }
-	# 						multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0.5 }
-	# 					}
-	# 					var:controller = {
-	# 						set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = PREV.wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] }
-	# 					}
-	# 				}
-	# 				WONDER_ID = "[?wonder]"
-	# 				WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
-	# 				WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
-	# 			}
-	# 		}
-	# 	}
-	# }
+	#First we gotta reset all the effects!
 
-
-	clear_wonder_ideas = yes
 	every_controlled_state = {
 		if = {
 			limit = { check_variable = { wonder > 0 } }
-			if = {
-				limit = { is_capital = yes }
-				var:controller = {
-					meta_effect = {
-						text = { add_ideas = wonder_idea_[WONDER_ID]_capital }
-						WONDER_ID = "[?PREV.wonder]"
+			for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
+				array = wonder_modifiers_values
+				value = v
+				index = i
+				break = break
+				set_variable = { wonder_modifier_id = i }
+				set_variable = { wonder_modifier_value = v }
+				meta_effect = {
+					debug = yes
+					text = {
+						every_country = {
+							limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }
+							set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0 }
+						}
+						set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = [WONDER_MODIFIER_VALUE] }
+						if = {
+							limit = { is_capital = yes }
+							multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 2 }
+						}
+						else_if = {
+							limit = { NOT = { is_core_of = var:controller } }
+							multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0.5 }
+						}
+						var:controller = {
+							set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = PREV.wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] }
+						}
 					}
-				}
-			}
-			else_if = {
-				limit = { is_core_of = ROOT }
-				var:controller = {
-					meta_effect = {
-						text = { add_ideas = wonder_idea_[WONDER_ID]_normal }
-						WONDER_ID = "[?PREV.wonder]"
-					}
-				}
-			}
-			else = {
-				var:controller = {
-					meta_effect = {
-						text = { add_ideas = wonder_idea_[WONDER_ID]_noncore }
-						WONDER_ID = "[?PREV.wonder]"
-					}
-				}
-			}
-			if = {
-				limit = { #state-bound wonder modifiers
-					check_variable = { wonder = 11 }
-				}
-				if = {
-					limit = { is_capital = yes }
-					add_dynamic_modifier = { modifier = wonder_idea_11_capital }
-				}
-				else_if = {
-					limit = { is_core_of = ROOT }
-					add_dynamic_modifier = { modifier = wonder_idea_11_normal }
-				}
-				else = {
-					add_dynamic_modifier = { modifier = wonder_idea_11_noncore }
+					WONDER_ID = "[?wonder]"
+					WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
+					WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
 				}
 			}
 		}
 	}
+
+	# clear_wonder_ideas = yes
+	# every_controlled_state = {
+	# 	if = {
+	# 		limit = { check_variable = { wonder > 0 } }
+	# 		if = {
+	# 			limit = { is_capital = yes }
+	# 			var:controller = {
+	# 				meta_effect = {
+	# 					text = { add_ideas = wonder_idea_[WONDER_ID]_capital }
+	# 					WONDER_ID = "[?PREV.wonder]"
+	# 				}
+	# 			}
+	# 		}
+	# 		else_if = {
+	# 			limit = { is_core_of = ROOT }
+	# 			var:controller = {
+	# 				meta_effect = {
+	# 					text = { add_ideas = wonder_idea_[WONDER_ID]_normal }
+	# 					WONDER_ID = "[?PREV.wonder]"
+	# 				}
+	# 			}
+	# 		}
+	# 		else = {
+	# 			var:controller = {
+	# 				meta_effect = {
+	# 					text = { add_ideas = wonder_idea_[WONDER_ID]_noncore }
+	# 					WONDER_ID = "[?PREV.wonder]"
+	# 				}
+	# 			}
+	# 		}
+	# 		if = {
+	# 			limit = { #state-bound wonder modifiers
+	# 				check_variable = { wonder = 11 }
+	# 			}
+	# 			if = {
+	# 				limit = { is_capital = yes }
+	# 				add_dynamic_modifier = { modifier = wonder_idea_11_capital }
+	# 			}
+	# 			else_if = {
+	# 				limit = { is_core_of = ROOT }
+	# 				add_dynamic_modifier = { modifier = wonder_idea_11_normal }
+	# 			}
+	# 			else = {
+	# 				add_dynamic_modifier = { modifier = wonder_idea_11_noncore }
+	# 			}
+	# 		}
+	# 	}
+	# }
 	# if = {
 	# 	limit = { controls_state = 509 }
 	# 	if = {
