@@ -21,16 +21,101 @@ calculate_muno_colonies_stats = {
 
 calculate_orbital_logistics_capacity = {
 	set_variable = { orbital_logistics_capacity = 0 }
-
-	#heavy chemical (Starships)
-	set_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = num_equipment@lok_reusable_heavy_chemical_rocket }
-	multiply_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = 1 } #1 logistic per level
-	
-	add_to_variable = { orbital_logistics_capacity = orbital_logistics_from_lok_reusable_heavy_chemical_rocket }
-
-
 	set_variable = { orbital_logistics_demand = 0 }
-	add_to_variable = { orbital_logistics_demand = lok_muno_colonies_upkeep }
+
+	set_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = 0 }
+	set_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = 0 }
+
+	set_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = 0 }
+	set_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = 0 }
+	
+	add_to_variable = { orbital_logistics_demand = lok_muno_colonies_upkeep } #Say 100.
+	add_to_variable = { orbital_logistics_demand = 1 } #Say 100.
+
+	set_variable = { remaining_orbital_logistics_demand = orbital_logistics_demand } #How many we need now.
+
+	#We iterate through every equipment that can provide orbital logistics, in descending order.
+	#Heavy Chemical (Starships)
+	set_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = remaining_orbital_logistics_demand }
+	divide_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = 2 } #How many Starships do we need to fulfill this?
+	
+	#So how many we're actually getting from those rockets.
+	set_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = num_equipment@lok_reusable_heavy_chemical_rocket }
+	multiply_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = 2 }
+
+	clamp_variable = {
+		var = orbital_logistics_from_lok_reusable_heavy_chemical_rocket
+		max = remaining_orbital_logistics_demand
+	}
+
+	subtract_from_variable = { remaining_orbital_logistics_demand = orbital_logistics_from_lok_reusable_heavy_chemical_rocket }
+
+	#Rounding stuff
+	set_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo = lok_reusable_heavy_chemical_rocket_for_orbital_logistics }
+	multiply_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo = 10 }
+	modulo_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo = 10 }
+	if = {
+		limit = { check_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo > 0 } }
+		add_to_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = 0.5 }
+		round_variable = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
+	}
+
+	if = {
+		limit = { #We have enough! We put up however many we need.
+			OR = {
+				check_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics < num_equipment@lok_reusable_heavy_chemical_rocket }
+				check_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = num_equipment@lok_reusable_heavy_chemical_rocket }
+			}
+		}
+		#something here i guess
+	}
+
+	else = { #We don't have enough. Let's hit into the F9 stockpile.
+		#Light Chemical (F9s)
+		set_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = remaining_orbital_logistics_demand }
+		divide_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = 0.05 } #How many F9s do we need to fulfill this?
+		
+		#So how many we're actually getting from those rockets.
+		set_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = num_equipment@lok_reusable_light_chemical_rocket }
+		multiply_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = 0.05 }
+	
+		clamp_variable = {
+			var = orbital_logistics_from_lok_reusable_light_chemical_rocket
+			max = remaining_orbital_logistics_demand
+		}
+
+		subtract_from_variable = { remaining_orbital_logistics_demand = orbital_logistics_from_lok_reusable_light_chemical_rocket }
+
+		
+		#Rounding stuff
+		set_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics_modulo = lok_reusable_light_chemical_rocket_for_orbital_logistics }
+		modulo_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics_modulo = 1 }
+		if = {
+			limit = { check_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics_modulo > 0 } }
+			add_to_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = 0.5 }
+			round_variable = lok_reusable_light_chemical_rocket_for_orbital_logistics
+		}
+
+		if = {
+			limit = { #We have enough! We put up however many we need.
+				OR = {
+					check_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics < num_equipment@lok_reusable_light_chemical_rocket }
+					check_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = num_equipment@lok_reusable_light_chemical_rocket }
+				}
+			}
+			#something here i guess
+		}
+	}
+
+	clamp_variable = {
+		var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
+		max = num_equipment@lok_reusable_heavy_chemical_rocket
+	}
+
+	clamp_variable = {
+		var = lok_reusable_light_chemical_rocket_for_orbital_logistics
+		max = num_equipment@lok_reusable_light_chemical_rocket
+	}
 }
 
 damage_muno_colonies = {
