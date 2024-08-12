@@ -8,23 +8,30 @@ lok_space_program_cat = {
 	lok_flusion_suborbital_flight = {
 		icon = GFX_decision_generic_nationalism
 		
-		days_remove = 1
+		days_remove = 10
 
 		visible = {
 			has_tech = rocket_engines
 		}
 
 		available = {
-			num_of_civilian_factories_available_for_projects > 0
+			custom_trigger_tooltip = {
+				tooltip = lok_has_02_orbital_logistics
+				check_variable = { orbital_logistics_spare > 0.1 }
+			}
+			num_of_civilian_factories_available_for_projects > 1
 		}
 
 		modifier = {
-			civilian_factory_use = 1
+			lok_orbital_logistics_extra = 0.2
+			civilian_factory_use = 2
+		}
+
+		complete_effect = {
+			calculate_orbital_logistics_capacity = yes
 		}
 
 		remove_effect = {
-			add_to_variable = { total_launches = 1 }
-
 			set_temp_variable = { mission_difficulty = 3 }
 			calculate_flusion_mission_success_odds = yes
 
@@ -68,6 +75,7 @@ lok_space_program_cat = {
 					country_event = { id = LOK_space.1 }
 				}
 			}
+			calculate_orbital_logistics_capacity = yes
 		}
 
 		ai_will_do = {
@@ -78,26 +86,33 @@ lok_space_program_cat = {
 	lok_flusion_orbital_flight = {
 		icon = GFX_decision_generic_nationalism
 		
-		days_remove = 1
+		days_remove = 10
 
 		visible = {
 			has_tech = rocket_engines
 		}
 
 		available = {
-			has_equipment = { lok_light_chemical_rocket_0 > 0 }
-			num_of_civilian_factories_available_for_projects > 0
+			custom_trigger_tooltip = {
+				tooltip = lok_has_02_orbital_logistics
+				check_variable = { orbital_logistics_spare > 0.1 }
+			}
+			num_of_civilian_factories_available_for_projects > 3
 		}
 
 		modifier = {
-			civilian_factory_use = 1
+			lok_orbital_logistics_extra = 0.2
+		}
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		complete_effect = {
+			calculate_orbital_logistics_capacity = yes
 		}
 
 		remove_effect = {
-			add_equipment_to_stockpile = { type = lok_light_chemical_rocket_0 amount = -1 }
-
-			add_to_variable = { total_launches = 1 }
-
 			set_temp_variable = { mission_difficulty = 6 }
 			calculate_flusion_mission_success_odds = yes
 
@@ -141,6 +156,7 @@ lok_space_program_cat = {
 					country_event = { id = LOK_space.1 }
 				}
 			}
+			calculate_orbital_logistics_capacity = yes
 		}
 
 		ai_will_do = {
@@ -148,7 +164,115 @@ lok_space_program_cat = {
 		}
 	}
 
-	lok_flusion_spy_satellite = {
+	# lok_flusion_spy_satellite = {
+	# 	icon = GFX_decision_generic_nationalism
+		
+	# 	days_remove = 10
+
+	# 	visible = {
+	# 		has_tech = rocket_engines
+	# 	}
+
+	# 	available = {
+	# 		custom_trigger_tooltip = {
+	# 			tooltip = lok_has_5_orbital_logistics
+	# 			check_variable = { orbital_logistics_spare > 4.9 }
+	# 		}
+	# 	}
+
+	# 	modifier = {
+	# 		lok_orbital_logistics_extra = 5
+	# 	}
+
+	# 	complete_effect = {
+	# 		calculate_orbital_logistics_capacity = yes
+	# 	}
+
+	# 	remove_effect = {
+	# 		calculate_orbital_logistics_capacity = yes
+	# 		add_to_variable = { total_launches = 1 }
+
+	# 		set_temp_variable = { mission_difficulty = 10 }
+	# 		calculate_flusion_mission_success_odds = yes
+
+	# 		random_list = {
+	# 			mission_success_odds = {
+	# 				custom_effect_tooltip = lok_space_mission_success
+	# 				custom_effect_tooltip = lok_flusion_spy_satellite_tt
+
+	# 				add_to_variable = { spy_sat_count = 1 }
+
+	# 				set_temp_variable = { space_exp_gained = 0.5 }
+	# 				add_to_variable = { space_exp = space_exp_gained }
+	# 				custom_effect_tooltip = lok_add_space_exp_tooltip
+				
+	# 				set_temp_variable = { flusion_exp_gained = 0.5 }
+	# 				add_to_variable = { flusion_exp = flusion_exp_gained }
+	# 				custom_effect_tooltip = lok_add_flusion_exp_tooltip
+					
+	# 				# if = { #The rocket comes back! Yippee!
+	# 				# 	limit = { has_country_flag = lok_flusion_spy_satellite_reusable }
+	# 				# 	add_equipment_to_stockpile = { type = lok_reusable_light_chemical_rocket_0 amount = 1 }
+	# 				# }
+
+	# 				custom_effect_tooltip = lok_space_mission_spacer
+	# 			}
+	# 			mission_failure_odds = {
+	# 				custom_effect_tooltip = lok_space_mission_failure
+
+	# 				set_temp_variable = { space_exp_gained = 1 }
+	# 				add_to_variable = { space_exp = space_exp_gained }
+	# 				custom_effect_tooltip = lok_add_space_exp_tooltip
+
+	# 				country_event = { id = LOK_space.1 }
+	# 			}
+	# 		}
+
+	# 		if = {
+	# 			limit = { has_country_flag = lok_flusion_spy_satellite_reusable }
+	# 			clr_country_flag = lok_flusion_spy_satellite_reusable
+	# 		}
+	# 	}
+
+	# 	ai_will_do = {
+	# 		factor = 200
+	# 	}
+	# }
+
+	#Muno
+	lok_prepare_muno_landing = {
+		icon = GFX_decision_generic_nationalism
+		
+		days_remove = 10
+
+		visible = {
+			has_tech = rocket_engines
+			NOT = { has_country_flag = lok_muno_landing_done }
+		}
+
+		available = {
+			NOT = { has_country_flag = muno_landing_prepared }
+			hidden_trigger = { NOT = { has_country_flag = lok_muno_landing_done } }
+			num_of_civilian_factories_available_for_projects > 15
+		}
+
+		modifier = {
+			civilian_factory_use = 15
+		}
+
+		remove_effect = {
+			set_country_flag = muno_landing_prepared
+			set_temp_variable = { muno_exp_gained = 3 }
+			add_to_variable = { muno_exp = muno_exp_gained }
+			custom_effect_tooltip = lok_add_muno_exp_tooltip
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	lok_muno_landing = {
 		icon = GFX_decision_generic_nationalism
 		
 		days_remove = 10
@@ -159,56 +283,73 @@ lok_space_program_cat = {
 
 		available = {
 			OR = {
-				has_equipment = { lok_light_chemical_rocket > 0 }
-				has_equipment = { lok_reusable_light_chemical_rocket > 0 }
+				has_country_flag = muno_landing_prepared
+				has_country_flag = lok_muno_landing_done
 			}
-			num_of_civilian_factories_available_for_projects > 0
+			custom_trigger_tooltip = {
+				tooltip = lok_has_1_orbital_logistics
+				check_variable = { orbital_logistics_spare > 0.9 }
+			}
 		}
 
 		modifier = {
-			civilian_factory_use = 10
+			lok_orbital_logistics_extra = 1
+			civilian_factory_use = 4
 		}
 
 		complete_effect = {
-			if = { #Use the expendable rockets if we have em
-				limit = {
-					has_equipment = { lok_light_chemical_rocket_0 > 0 }
-				}
-				add_equipment_to_stockpile = { type = lok_light_chemical_rocket_0 amount = -1 }
-			}	
-			else_if = { #Send up the Reusable rockets if we have 'em
-				limit = {
-					has_equipment = { lok_reusable_light_chemical_rocket_0 > 0 }
-				}
-				set_country_flag = lok_flusion_spy_satellite_reusable
-				add_equipment_to_stockpile = { type = lok_reusable_light_chemical_rocket_0 amount = -1 }
-			}
+			calculate_orbital_logistics_capacity = yes
 		}
 
 		remove_effect = {
-			add_to_variable = { total_launches = 1 }
+			set_temp_variable = { mission_difficulty = 25 }
+			calculate_muno_mission_success_odds = yes
 
-			set_temp_variable = { mission_difficulty = 10 }
-			calculate_flusion_mission_success_odds = yes
+			clr_country_flag = muno_landing_prepared
 
 			random_list = {
 				mission_success_odds = {
 					custom_effect_tooltip = lok_space_mission_success
-					custom_effect_tooltip = lok_flusion_spy_satellite_tt
 
-					add_to_variable = { spy_sat_count = 1 }
-
-					set_temp_variable = { space_exp_gained = 0.5 }
+					set_temp_variable = { space_exp_gained = 1 }
 					add_to_variable = { space_exp = space_exp_gained }
 					custom_effect_tooltip = lok_add_space_exp_tooltip
 				
-					set_temp_variable = { flusion_exp_gained = 0.5 }
-					add_to_variable = { flusion_exp = flusion_exp_gained }
-					custom_effect_tooltip = lok_add_flusion_exp_tooltip
+					set_temp_variable = { muno_exp_gained = 2 }
+					add_to_variable = { muno_exp = muno_exp_gained }
+					custom_effect_tooltip = lok_add_muno_exp_tooltip
 					
-					if = { #The rocket comes back! Yippee!
-						limit = { has_country_flag = lok_flusion_spy_satellite_reusable }
-						add_equipment_to_stockpile = { type = lok_reusable_light_chemical_rocket_0 amount = 1 }
+					if = {
+						limit = { NOT = { has_country_flag = lok_muno_landing_done } }
+						custom_effect_tooltip = lok_first_time_we_do_mission
+						set_country_flag = lok_muno_landing_done
+
+						country_event = { id = LOK_space.2 days = 1 }
+
+						set_temp_variable = { space_exp_gained = 2 }
+						add_to_variable = { space_exp = flusion_exp_gained }
+						custom_effect_tooltip = lok_add_space_exp_tooltip
+
+						set_temp_variable = { muno_exp_gained = 3 }
+						add_to_variable = { muno_exp = muno_exp_gained }
+						custom_effect_tooltip = lok_add_muno_exp_tooltip
+
+						add_political_power = 25	
+					}
+
+					if = {
+						limit = { NOT = { any_country = { has_country_flag = lok_muno_landing_done } } }
+						custom_effect_tooltip = lok_first_time_we_do_mission_ever
+
+
+						save_global_event_target_as = lok_muno_landing_first_country
+						news_event = { id = LOK_space.3 days = 1 }
+
+						add_political_power = 250
+
+						set_temp_variable = { muno_exp_gained = 3 }
+						add_to_variable = { muno_exp = muno_exp_gained }
+						custom_effect_tooltip = lok_add_muno_exp_tooltip
 					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
@@ -216,18 +357,18 @@ lok_space_program_cat = {
 				mission_failure_odds = {
 					custom_effect_tooltip = lok_space_mission_failure
 
-					set_temp_variable = { space_exp_gained = 1 }
+					set_temp_variable = { space_exp_gained = 2 }
 					add_to_variable = { space_exp = space_exp_gained }
 					custom_effect_tooltip = lok_add_space_exp_tooltip
+
+					set_temp_variable = { muno_exp_gained = 2 }
+					add_to_variable = { muno_exp = muno_exp_gained }
+					custom_effect_tooltip = lok_add_muno_exp_tooltip
 
 					country_event = { id = LOK_space.1 }
 				}
 			}
-
-			if = {
-				limit = { has_country_flag = lok_flusion_spy_satellite_reusable }
-				clr_country_flag = lok_flusion_spy_satellite_reusable
-			}
+			calculate_orbital_logistics_capacity = yes
 		}
 
 		ai_will_do = {
@@ -238,9 +379,9 @@ lok_space_program_cat = {
 	lok_survey_state_on_muno = {
 		icon = GFX_decision_generic_survey
 
-		state_target = yes
+		state_target = muno
 		
-		days_remove = 120
+		days_remove = 30
 
 		visible = {
 			FROM = {
@@ -253,37 +394,28 @@ lok_space_program_cat = {
 		on_map_mode = map_only
 
 		available = {
-			OR = {
-				has_equipment = { lok_heavy_chemical_rocket > 4 }
-				has_equipment = { lok_reusable_heavy_chemical_rocket > 4 }
-			}
 			num_of_civilian_factories_available_for_projects > 9
 			custom_trigger_tooltip = {
 				tooltip = lok_survey_state_on_muno_only_one
 				hidden_trigger = { NOT = { has_country_flag = lok_surveying_muno } }
 			}
+			custom_trigger_tooltip = {
+				tooltip = lok_has_10_orbital_logistics
+				check_variable = { orbital_logistics_spare > 9.9 }
+			}
 		}
 
+		cancel_trigger = {
+			check_variable = { remaining_orbital_logistics_demand > 0 }
+		}
 
 		modifier = {
+			lok_orbital_logistics_extra = 10
 			civilian_factory_use = 10
 		}
 
 		complete_effect = {
 			set_country_flag = lok_surveying_muno
-			if = { #Use the expendable rockets if we have em
-				limit = {
-					has_equipment = { lok_heavy_chemical_rocket > 4 }
-				}
-				add_equipment_to_stockpile = { type = lok_heavy_chemical_rocket amount = -5 }
-			}	
-			else_if = { #Send up the Reusable rockets if we have 'em
-				limit = {
-					has_equipment = { lok_reusable_heavy_chemical_rocket > 4 }
-				}
-				set_country_flag = lok_muno_state_survey_reusable
-				add_equipment_to_stockpile = { type = lok_reusable_heavy_chemical_rocket amount = -5 }
-			}
 		}
 
 		cancel_trigger = {
@@ -309,11 +441,6 @@ lok_space_program_cat = {
 					set_temp_variable = { muno_exp_gained = 2 }
 					add_to_variable = { muno_exp = muno_exp_gained }
 					custom_effect_tooltip = lok_add_muno_exp_tooltip
-
-					if = { #The rockets comes back! Yippee!
-						limit = { has_country_flag = lok_muno_state_survey_reusable }
-						add_equipment_to_stockpile = { type = lok_reusable_heavy_chemical_rocket amount = 5 }
-					}
 
 					FROM = {
 						set_state_flag = lok_muno_state_surveyed_by_@ROOT
@@ -342,11 +469,10 @@ lok_space_program_cat = {
 		}
 	}
 
-
 	lok_colonize_state_on_muno = {
 		icon = GFX_decision_generic_space_base
 
-		state_target = yes
+		state_target = muno
 		
 		days_remove = 120
 
@@ -361,16 +487,20 @@ lok_space_program_cat = {
 		on_map_mode = map_only
 
 		available = {
-			has_equipment = { lok_reusable_heavy_chemical_rocket_0 > 49 }
+			custom_trigger_tooltip = {
+				tooltip = lok_has_100_orbital_logistics
+				check_variable = { orbital_logistics_spare > 100 }
+			}
 			num_of_civilian_factories_available_for_projects > 10
 		}
 
 		modifier = {
 			civilian_factory_use = 10
+			lok_orbital_logistics_extra = 100
 		}
 
 		complete_effect = {
-			add_equipment_to_stockpile = { type = lok_reusable_heavy_chemical_rocket amount = -50 }
+			hidden_effect = { calculate_orbital_logistics_capacity = yes }
 		}
 	
 		cancel_trigger = {
@@ -441,7 +571,6 @@ lok_space_program_cat = {
 			}
 			hidden_effect = {
 				calculate_muno_colonies_stats = yes
-				calculate_orbital_logistics_capacity = yes
 			}
 		}
 
@@ -453,14 +582,14 @@ lok_space_program_cat = {
 	lok_build_up_muno_colony = {
 		icon = GFX_decision_generic_expand_space_base
 
-		state_target = any_owned_state
+		state_target = muno
 		
 		days_remove = 120
 
 		visible = {
 			FROM = {
 				impassable = no
-				is_core_of = MUN
+				is_on_continent = muno
 				is_controlled_by = ROOT
 				check_variable = { space_colony_level < 25 } 
 			}
@@ -469,16 +598,20 @@ lok_space_program_cat = {
 		on_map_mode = map_only
 
 		available = {
-			has_equipment = { lok_reusable_heavy_chemical_rocket > 49 }
+			custom_trigger_tooltip = {
+				tooltip = lok_has_50_orbital_logistics
+				check_variable = { orbital_logistics_spare > 50 }
+			}
 			num_of_civilian_factories_available_for_projects > 10
 		}
 
 		modifier = {
 			civilian_factory_use = 10
+			lok_orbital_logistics_extra = 50
 		}
 
 		complete_effect = {
-			add_equipment_to_stockpile = { type = lok_reusable_heavy_chemical_rocket_0 amount = -50 }
+			hidden_effect = { calculate_orbital_logistics_capacity = yes }
 		}
 
 		cancel_trigger = {
@@ -536,7 +669,6 @@ lok_space_program_cat = {
 			}
 			hidden_effect = {
 				calculate_muno_colonies_stats = yes
-				calculate_orbital_logistics_capacity = yes
 			}
 		}
 
@@ -549,7 +681,7 @@ lok_space_program_cat = {
 	lok_colonize_state_on_xenon = {
 		icon = GFX_decision_generic_nationalism
 
-		state_target = yes
+		state_target = xenon
 		
 		days_remove = 120
 
@@ -558,6 +690,10 @@ lok_space_program_cat = {
 				impassable = no
 				is_owned_by = XEN
 			}
+		}
+
+		available = {
+			always = no
 		}
 
 		on_map_mode = map_only
@@ -593,7 +729,7 @@ lok_space_program_cat = {
 	lok_build_up_xenon_colony = {
 		icon = GFX_decision_generic_nationalism
 
-		state_target = any_owned_state
+		state_target = xenon
 		
 		days_remove = 120
 
@@ -603,6 +739,10 @@ lok_space_program_cat = {
 				is_core_of = XEN
 				is_controlled_by = ROOT
 			}
+		}
+
+		available = {
+			always = no
 		}
 
 		on_map_mode = map_only

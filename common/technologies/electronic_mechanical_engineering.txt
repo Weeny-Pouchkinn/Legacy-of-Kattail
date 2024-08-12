@@ -1267,6 +1267,7 @@ technologies = {
 	light_chemical_rocket = {
 
 		on_research_complete = {
+			custom_effect_tooltip = light_chemical_rocket_tt
 			set_temp_variable = { space_exp_gained = 2 }
 			add_to_variable = { space_exp = space_exp_gained }
 			custom_effect_tooltip = lok_add_space_exp_tooltip
@@ -1302,6 +1303,7 @@ technologies = {
 	heavy_chemical_rocket = {
 
 		on_research_complete = {
+			custom_effect_tooltip = heavy_chemical_rocket_tt
 			set_temp_variable = { space_exp_gained = 2 }
 			add_to_variable = { space_exp = space_exp_gained }
 			custom_effect_tooltip = lok_add_space_exp_tooltip
@@ -1346,6 +1348,11 @@ technologies = {
 			research_cost_coeff = 1
 		}
 
+		path = {
+			leads_to_tech = advanced_rocket_engines 
+			research_cost_coeff = 1
+		}
+
 		research_cost = 1.5
 		start_year = 1945
 		
@@ -1366,6 +1373,7 @@ technologies = {
 	reusable_light_chemical_rocket = {
 
 		on_research_complete = {
+			custom_effect_tooltip = reusable_light_chemical_rocket_tt
 			set_temp_variable = { space_exp_gained = 2 }
 			add_to_variable = { space_exp = space_exp_gained }
 			custom_effect_tooltip = lok_add_space_exp_tooltip
@@ -1400,6 +1408,7 @@ technologies = {
 	reusable_heavy_chemical_rocket = {
 
 		on_research_complete = {
+			custom_effect_tooltip = reusable_heavy_chemical_rocket_tt
 			set_temp_variable = { space_exp_gained = 2 }
 			add_to_variable = { space_exp = space_exp_gained }
 			custom_effect_tooltip = lok_add_space_exp_tooltip
@@ -1430,16 +1439,28 @@ technologies = {
 
 		show_equipment_icon = yes
 		
+		research_cost = 1.5
+		start_year = 1944
+
 		on_research_complete = {
-			custom_effect_tooltip = ADVANCED_ROCKET_ENGINES_RESEARCHED
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		enable_building = {
+			building = rocket_site
+			level = 4
 		}
 		
-		research_cost = 1.5
-		start_year = 1946
-		
+		path = {
+			leads_to_tech = nerva_heavy_rocket 
+			research_cost_coeff = 1
+		}
+
 		folder = {
 			name = electronics_folder
-			position = { x = 0 y = 60 }
+			position = { x = -2 y = 10 }
 		}
 		
 		ai_will_do = {
@@ -1449,6 +1470,36 @@ technologies = {
 		categories = {
 			rocketry
 		}
+	}
+
+	nerva_heavy_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = nerva_heavy_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 1945
+		
+		folder = {
+			name = electronics_folder
+			position = { x = 2 y = 11 }
+		}
+		
+		enable_equipments = {
+			lok_nerva_heavy_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
 	}
 	
 	jet_engines = {
