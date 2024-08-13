@@ -10,6 +10,12 @@ scripted_gui = {
 					PREV = { is_in_array = { array = PREV.potential_cores_array value = THIS } }
 				}
 			}
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 	}
 
@@ -18,7 +24,12 @@ scripted_gui = {
 		window_name = "lok_state_death_counter_window"
 		parent_window_token = selected_state_view
 		visible = {
-			always = yes
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 	}
 
@@ -27,7 +38,12 @@ scripted_gui = {
 		window_name = "lok_radiation_counter_window"
 		parent_window_token = selected_state_view
 		visible = {
-			always = yes
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 	}
 
@@ -36,7 +52,12 @@ scripted_gui = {
 		window_name = "lok_thermonuclear_salvo_window"
 		parent_window_token = selected_state_view
 		visible = {
-			always = yes
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 
 		effects = {
@@ -222,6 +243,15 @@ scripted_gui = {
 		window_name = "species_icon_container"
 		parent_window_token = selected_state_view
 		dirty = species
+
+		visible = {
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
+		}
 		
 		properties = {
 			species_icon = {
@@ -236,6 +266,15 @@ scripted_gui = {
 		window_name = "minority_icon_container"
 		parent_window_token = selected_state_view
 		dirty = minority
+
+		visible = {
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
+		}
 		
 		properties = {
 			minority_icon = {
@@ -252,6 +291,12 @@ scripted_gui = {
 		dirty = wonder
 
 		visible = {
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 			check_variable = { wonder > 0 }
 		}
 		
