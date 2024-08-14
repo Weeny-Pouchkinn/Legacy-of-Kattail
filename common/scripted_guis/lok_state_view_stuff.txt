@@ -257,26 +257,6 @@ scripted_gui = {
 			species_icon = {
 				image = "GFX_species_[?species]"
 			}
-		}
-	}
-	
-	minority_screen = {
-		context_type = selected_state_context
-
-		window_name = "minority_icon_container"
-		parent_window_token = selected_state_view
-		dirty = minority
-
-		visible = {
-			NOT = {
-				AND = {
-					is_space_state = yes
-					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
-				}
-			}
-		}
-		
-		properties = {
 			minority_icon = {
 				image = "GFX_species_[?minority]"
 			}
@@ -303,6 +283,30 @@ scripted_gui = {
 		properties = {
 			wonder_icon = {
 				image = "GFX_wonder_[?wonder]"
+			}
+		}
+	}
+
+	stratres_screen = {
+		context_type = selected_state_context
+
+		window_name = "stratres_icon_container"
+		parent_window_token = selected_state_view
+		dirty = stratres
+
+		visible = {
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
+			check_variable = { stratres > 0 }
+		}
+		
+		properties = {
+			strat_resource_icon = {
+				image = "GFX_stratres_[?stratres]"
 			}
 		}
 	}

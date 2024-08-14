@@ -191,6 +191,22 @@ on_actions = {
 				add_to_array = { array = wonder_modifiers_values value = -0.10 }
 			}
 
+			#RESOURCES
+			MUN = {
+				every_owned_state = {
+					limit = { impassable = no }
+					set_variable = { stratres = 1 }
+					random_list = {
+						2 = {
+							set_variable = { stratres_count = 1 }
+						}
+						1 = {
+							set_variable = { stratres_count = 2 }
+						}
+					}
+				}
+			}			
+
 			#Setup species
 			every_state = { set_variable = { species = 0 } }
 			every_state = { set_variable = { minority = 1000 } }
