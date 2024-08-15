@@ -1,3 +1,41 @@
+calculate_strategic_resource_modifiers = {
+	remove_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+
+	set_variable = { stratres_1_modifier = 2 } #He3
+	set_variable = { stratres_2_modifier = -0.50 } #Gold!
+
+	set_variable = { stratres_modifier_intensity = num_controlled_states }
+	subtract_from_variable = { stratres_modifier_intensity = 1 }
+	divide_variable = { stratres_modifier_intensity = 5 }
+	add_to_variable = { stratres_modifier_intensity = 1 }
+
+	#Count resources
+	set_variable = { stratres_1_count = 0 } #He3
+	set_variable = { stratres_2_count = 0 } #Gold!
+
+	every_controlled_state = {
+		if = {
+			limit = { check_variable = { stratres = 1 } }
+			add_to_variable = { ROOT.stratres_1_count = 1 }
+		}
+		if = {
+			limit = { check_variable = { stratres = 2 } }
+			add_to_variable = { ROOT.stratres_2_count = 1 }
+		}
+	}
+
+	multiply_variable = { stratres_1_modifier = stratres_1_count } #He3
+	multiply_variable = { stratres_2_modifier = stratres_2_count } #Gold!
+
+	divide_variable = { stratres_1_modifier = stratres_modifier_intensity }
+	divide_variable = { stratres_2_modifier = stratres_modifier_intensity }
+
+	if = {
+		limit = { OR = { check_variable = { stratres_1_count > 0 } check_variable = { stratres_2_count > 0 } } }
+		add_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+	}
+}
+
 calculate_muno_colonies_stats = {
 	set_variable = { lok_muno_colonies_upkeep = 0 }
 	set_variable = { lok_muno_colonies_level = 0 }
@@ -1093,6 +1131,7 @@ fire_thermonuclear_salvo = {
 }
 
 collapse_into_anarchy = {
+	every_state_division = { destroy_unit = yes }
 	transfer_state_to = AAA
 	set_demilitarized_zone = yes
 }
