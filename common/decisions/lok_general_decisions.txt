@@ -178,3 +178,102 @@ lok_peace_decisions_cat = {
 		}
 	}
 }
+
+political_actions = {
+	dismantle_unterflusionian_monument = {
+		icon = GFX_decision_generic_ignite_civil_war
+
+		allowed = { NOT = { tag = NEU } }
+
+		visible = {
+			controls_state = 602
+			602 = { check_variable = { wonder = 14 } }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		cost = 50
+
+		modifier = { civilian_factory_use = 2 }
+
+		days_remove = 15
+
+		cancel_trigger = {
+			NOT = { controls_state = 602 }
+		}
+
+		remove_effect = {
+			602 = { dismantle_wonder = yes }
+			add_political_power = 50
+		}
+	}
+
+	close_tailsbaden_hole = {
+		icon = GFX_decision_generic_construction
+
+		visible = {
+			controls_state = 84
+			84 = { check_variable = { wonder = 9 } }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 10
+		}
+
+		modifier = { civilian_factory_use = 10 }
+
+		cost = 50
+
+		days_remove = 30
+
+		cancel_trigger = {
+			NOT = { controls_state = 84 }
+		}
+
+		remove_effect = {
+			84 = { dismantle_wonder = yes }
+		}
+
+		ai_will_do = {
+			base = 0
+		}
+	}
+
+	shut_down_kiffrance_labs = {
+		icon = GFX_decision_generic_police_action
+
+		allowed = { NOT = { tag = MEC } }
+
+		visible = {
+			controls_state = 644
+			644 = { check_variable = { wonder = 12 } }
+		}
+
+		cost = 50
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+			has_equipment = { infantry_equipment > 4999 }
+		}
+
+		complete_effect = {
+			add_equipment_to_stockpile = { type = infantry_equipment amount = 5000 }
+		}
+
+		modifier = { civilian_factory_use = 5 }
+
+		days_remove = 30
+
+		cancel_trigger = {
+			NOT = { controls_state = 644 }
+		}
+
+		remove_effect = {
+			644 = { dismantle_wonder = yes add_manpower = -25000 }
+			add_political_power = 50
+			add_stability = 0.05
+		}
+	}
+}

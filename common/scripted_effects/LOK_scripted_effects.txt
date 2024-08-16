@@ -1,3 +1,27 @@
+dismantle_wonder = {
+	custom_effect_tooltip = dismantle_wonder_tt
+	for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
+		array = wonder_modifiers_values
+		value = v
+		index = i
+		break = break
+		set_variable = { wonder_modifier_id = i }
+		set_variable = { wonder_modifier_value = v }
+		meta_effect = {
+			debug = yes
+			text = {
+				ROOT.var:controller = {
+					limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }
+					set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0 }
+				}
+			}
+			WONDER_ID = "[?wonder]"
+			WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
+		}
+	}
+	set_variable = { wonder = 0 }
+}
+
 calculate_strategic_resource_modifiers = {
 	remove_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
 
@@ -1345,7 +1369,6 @@ apply_wonder_effects = {
 				set_variable = { wonder_modifier_id = i }
 				set_variable = { wonder_modifier_value = v }
 				meta_effect = {
-					debug = yes
 					text = {
 						every_country = {
 							limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }
