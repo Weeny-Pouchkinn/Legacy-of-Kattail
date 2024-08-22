@@ -1,0 +1,1369 @@
+focus_tree = {
+    id = zuspri
+    country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = ZUS
+		}
+	}
+	default = no
+
+	continuous_focus_position = { 
+		x = 150
+		y = 3500
+	}
+	    
+	########   #######  ##       #### ######## ####  ######     ###    ##       
+	##     ## ##     ## ##        ##     ##     ##  ##    ##   ## ##   ##       
+	##     ## ##     ## ##        ##     ##     ##  ##        ##   ##  ##       
+	########  ##     ## ##        ##     ##     ##  ##       ##     ## ##       
+	##        ##     ## ##        ##     ##     ##  ##       ######### ##       
+	##        ##     ## ##        ##     ##     ##  ##    ## ##     ## ##       
+	##         #######  ######## ####    ##    ####  ######  ##     ## ########
+
+	
+	focus = {
+		id = ZUS_decade_long_debate
+		icon = GFX_Focus_Meme_NGTGYU
+		x = 5
+		y = 0
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_legacy_of_kaiser
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_decade_long_debate
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_legacy_of_kaiser
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+	
+	focus = {
+		id = ZUS_settle_debate
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_legacy_of_kaiser
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_legacy_of_kaiser
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+	
+	focus = {
+		id = ZUS_why_did_we_resist
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_settle_debate
+		x = -1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_settle_debate
+		}
+
+		mutually_exclusive = {
+			focus = ZUS_learn_from_past
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_repair_broken_bonds
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_why_did_we_resist
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 9
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_why_did_we_resist
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_learn_from_past
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_settle_debate
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_settle_debate
+		}
+
+		mutually_exclusive = {
+			focus = ZUS_why_did_we_resist
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_force_industrialisation
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_learn_from_past
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_learn_from_past
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_trade_with_nekeox
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_repair_broken_bonds
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_repair_broken_bonds
+			focus = ZUS_force_industrialisation
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_increase_Trade
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_trade_with_nekeox
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_trade_with_nekeox
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_adapt_or_die
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_force_industrialisation
+		x = 4
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_force_industrialisation
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_preemptive_defence
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_adapt_or_die
+		x = -3
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_adapt_or_die
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_hold_free_elections
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_adapt_or_die
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_adapt_or_die
+		}
+
+		mutually_exclusive = {
+			focus = ZUS_face_reality
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_deal_with_fascism
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_hold_free_elections
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_hold_free_elections
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_address_kaiserirsts
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_deal_with_fascism
+		x = -2
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_deal_with_fascism
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_listen_to_insanity
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_address_kaiserirsts
+		x = -1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_address_kaiserirsts
+		}
+
+		mutually_exclusive = {
+			focus = ZUS_play_kaiserists_against_nationalists
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_play_kaiserists_against_nationalists
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_address_kaiserirsts
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_address_kaiserirsts
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_rearm_slowly
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_deal_with_fascism
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_deal_with_fascism
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_finish_rearmament
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_rearm_slowly
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_rearm_slowly
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+
+
+	focus = {
+		id = ZUS_face_reality
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_adapt_or_die
+		x = 3
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_adapt_or_die
+		}
+
+		mutually_exclusive = {
+			focus = ZUS_hold_free_elections
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_deal_with_commies
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_face_reality
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_face_reality
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_embrace_militarism
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_deal_with_commies
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_deal_with_commies
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_address_felt
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_finish_rearmament
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_finish_rearmament
+			focus = ZUS_embrace_militarism
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_seek_compromise
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_address_felt
+		x = -3
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_address_felt
+		}
+
+		prerequisite = {
+			focus = ZUS_play_kaiserists_against_nationalists
+		}
+
+		mutually_exclusive ={
+			focus = ZUS_push_zawrich_meoneva
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_zuspri_katzen_vanguard
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_seek_compromise
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_north_east_coalition
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_zuspri_katzen_vanguard
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_zuspri_katzen_vanguard
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_push_nekeox_inclusion
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_north_east_coalition
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_north_east_coalition
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_provoke_quarries
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_push_nekeox_inclusion
+		x = -1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_push_nekeox_inclusion
+		}
+
+		available = {
+			# put nekeox accepts flag here
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_push_against_seetruppen
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_provoke_quarries
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_provoke_quarries
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_new_intermarium
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_push_against_seetruppen
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_push_against_seetruppen
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_push_intermarums_borders
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_push_nekeox_inclusion
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_push_nekeox_inclusion
+		}
+
+		available = {
+			# put nekeox disable flag here
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_subdue_nekeox_partisans
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_push_intermarums_borders
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_push_intermarums_borders
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_alled_enotia
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_subdue_nekeox_partisans
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_subdue_nekeox_partisans
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_push_zawrich_meoneva
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_address_felt
+		x = 3
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_address_felt
+		}
+
+		mutually_exclusive = {
+			focus = ZUS_seek_compromise
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_end_feltreich
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_push_zawrich_meoneva
+		x = -1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_push_zawrich_meoneva
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_copy_katzenpanzer
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_end_feltreich
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_end_feltreich
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_HISTORICAL
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_demand_nekeox_subjugation
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_copy_katzenpanzer
+		x = -1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_copy_katzenpanzer
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_achieve_natural_borders
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_demand_nekeox_subjugation
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_demand_nekeox_subjugation
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_push_south
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_achieve_natural_borders
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_achieve_natural_borders
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_embrace_guerilla_fighters
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_push_zawrich_meoneva
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_push_zawrich_meoneva
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_storm_quarries
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_copy_katzenpanzer
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_copy_katzenpanzer
+		}
+
+		prerequisite = {
+			focus = ZUS_embrace_guerilla_fighters
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_taste_of_own_medicine
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_storm_quarries
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_storm_quarries
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_march_on_seetruppen
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_taste_of_own_medicine
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_taste_of_own_medicine
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_intermarium_reborn
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_push_south
+		x = 1
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_push_south
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = ZUS_own_colonies
+		icon = GFX_Focus_Meme_NGTGYU
+		relative_position_id = ZUS_intermarium_reborn
+		x = 0
+		y = 1
+		cost = 10
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		prerequisite = {
+			focus = ZUS_intermarium_reborn
+		}
+
+		search_filters = { 
+			FOCUS_FILTER_INTERNAL_AFFAIRS
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+
+		}
+	}
+
+}
