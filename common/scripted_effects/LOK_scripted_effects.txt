@@ -827,6 +827,14 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 		}
 		multiply_variable = { state_food_consumption = 0 }
 	}
+	if = { #Estalai eat a lot
+		limit = {
+			OR = {
+				check_variable = { species = 12 }
+			}
+		}
+		multiply_variable = { state_food_consumption = 1.25 }
+	}
 	round_variable = state_food_consumption
 }
 
