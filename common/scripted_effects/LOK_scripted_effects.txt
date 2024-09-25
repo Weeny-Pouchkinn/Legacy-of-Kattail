@@ -1,9 +1,71 @@
+dismantle_wonder = {
+	custom_effect_tooltip = dismantle_wonder_tt
+	for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
+		array = wonder_modifiers_values
+		value = v
+		index = i
+		break = break
+		set_variable = { wonder_modifier_id = i }
+		set_variable = { wonder_modifier_value = v }
+		meta_effect = {
+			debug = yes
+			text = {
+				ROOT.var:controller = {
+					limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }
+					set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0 }
+				}
+			}
+			WONDER_ID = "[?wonder]"
+			WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
+		}
+	}
+	set_variable = { wonder = 0 }
+}
+
+calculate_strategic_resource_modifiers = {
+	remove_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+
+	set_variable = { stratres_1_modifier = 2 } #He3
+	set_variable = { stratres_2_modifier = -0.50 } #Gold!
+
+	set_variable = { stratres_modifier_intensity = num_controlled_states }
+	subtract_from_variable = { stratres_modifier_intensity = 1 }
+	divide_variable = { stratres_modifier_intensity = 5 }
+	add_to_variable = { stratres_modifier_intensity = 1 }
+
+	#Count resources
+	set_variable = { stratres_1_count = 0 } #He3
+	set_variable = { stratres_2_count = 0 } #Gold!
+
+	every_controlled_state = {
+		if = {
+			limit = { check_variable = { stratres = 1 } }
+			add_to_variable = { ROOT.stratres_1_count = 1 }
+		}
+		if = {
+			limit = { check_variable = { stratres = 2 } }
+			add_to_variable = { ROOT.stratres_2_count = 1 }
+		}
+	}
+
+	multiply_variable = { stratres_1_modifier = stratres_1_count } #He3
+	multiply_variable = { stratres_2_modifier = stratres_2_count } #Gold!
+
+	divide_variable = { stratres_1_modifier = stratres_modifier_intensity }
+	divide_variable = { stratres_2_modifier = stratres_modifier_intensity }
+
+	if = {
+		limit = { OR = { check_variable = { stratres_1_count > 0 } check_variable = { stratres_2_count > 0 } } }
+		add_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+	}
+}
+
 calculate_muno_colonies_stats = {
 	set_variable = { lok_muno_colonies_upkeep = 0 }
 	set_variable = { lok_muno_colonies_level = 0 }
 	set_variable = { lok_muno_colonies_pop = 0 }
 	every_controlled_state = {
-		limit = { is_core_of = MUN }
+		limit = { is_on_continent = muno }
 		add_to_variable = { ROOT.lok_muno_colonies_level = space_colony_level }
 		add_to_variable = { ROOT.lok_muno_colonies_pop = state_population_k }
 
@@ -13,46 +75,240 @@ calculate_muno_colonies_stats = {
 
 
 		if = {
-			limit = { NOT = { has_state_flag = lok_muno_state_surveyed_by_@ROOT } }
-			set_state_flag = lok_muno_state_surveyed_by_@ROOT
+			limit = { NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT } }
+			set_state_flag = lok_space_state_surveyed_by_@ROOT
 		}
 	}
+}
+
+attrition_space_rockets = {
+	if = {
+		limit = { check_variable = { lok_light_chemical_rocket_for_orbital_logistics > 0 } }
+		set_temp_variable = { lok_light_chemical_rocket_for_orbital_logistics_removed = lok_light_chemical_rocket_for_orbital_logistics }
+		multiply_temp_variable = { lok_light_chemical_rocket_for_orbital_logistics_removed = -1 }
+		add_equipment_to_stockpile = { type = lok_light_chemical_rocket amount = lok_light_chemical_rocket_for_orbital_logistics_removed }
+	}
+	if = {
+		limit = { check_variable = { lok_heavy_chemical_rocket_for_orbital_logistics > 0 } }
+		set_temp_variable = { lok_heavy_chemical_rocket_for_orbital_logistics_removed = lok_heavy_chemical_rocket_for_orbital_logistics }
+		multiply_temp_variable = { lok_heavy_chemical_rocket_for_orbital_logistics_removed = -1 }
+		add_equipment_to_stockpile = { type = lok_heavy_chemical_rocket amount = lok_heavy_chemical_rocket_for_orbital_logistics_removed }
+	}
+	calculate_orbital_logistics_capacity = yes
 }
 
 calculate_orbital_logistics_capacity = {
-	set_variable = { orbital_logistics_capacity = 0 }
+	set_variable = { orbital_logistics_damage_odds = 0 }
+	set_variable = { orbital_logistics_demand = 0 } #How much we NEED
+	set_variable = { orbital_logistics_max = 0 } #How much we can provide at MAX
+	set_variable = { orbital_logistics_spare = 0 } #How much we have left rn
+	set_variable = { orbital_logistics_current = 0 } #How much we are providing rn
 
-	#heavy chemical (Starships)
-	set_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = num_equipment@lok_reusable_heavy_chemical_rocket }
-	multiply_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = 1 } #1 logistic per level
+	set_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = 0 }
+	set_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = 0 }
+
+	set_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = 0 }
+	set_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = 0 }
 	
-	add_to_variable = { orbital_logistics_capacity = orbital_logistics_from_lok_reusable_heavy_chemical_rocket }
+	add_to_variable = { orbital_logistics_demand = lok_muno_colonies_upkeep } #Say 100.
+	add_to_variable = { orbital_logistics_demand = modifier@lok_orbital_logistics_extra }
 
+	set_variable = { remaining_orbital_logistics_demand = orbital_logistics_demand } #How many we need now.
 
-	set_variable = { orbital_logistics_demand = 0 }
-	add_to_variable = { orbital_logistics_demand = lok_muno_colonies_upkeep }
+	#We iterate through every equipment that can provide orbital logistics, in descending order.
+	
+	#NERVA
+	set_variable = { lok_nerva_heavy_rocket_for_orbital_logistics = remaining_orbital_logistics_demand }
+	divide_variable = { lok_nerva_heavy_rocket_for_orbital_logistics = 3 } #How many NERVs do we need to fulfill this?
+	
+	#So how many we're actually getting from those rockets.
+	set_variable = { orbital_logistics_from_lok_nerva_heavy_rocket = num_equipment@lok_nerva_heavy_rocket }
+	multiply_variable = { orbital_logistics_from_lok_nerva_heavy_rocket = 3 }
+
+	add_to_variable = { orbital_logistics_max = orbital_logistics_from_lok_nerva_heavy_rocket }
+
+	clamp_variable = {
+		var = orbital_logistics_from_lok_nerva_heavy_rocket
+		max = remaining_orbital_logistics_demand
+	}
+
+	subtract_from_variable = { remaining_orbital_logistics_demand = orbital_logistics_from_lok_nerva_heavy_rocket }
+
+	#Rounding stuff
+	set_variable = { lok_nerva_heavy_rocket_for_orbital_logistics_modulo = lok_nerva_heavy_rocket_for_orbital_logistics }
+	multiply_variable = { lok_nerva_heavy_rocket_for_orbital_logistics_modulo = 100 }
+	modulo_variable = { lok_nerva_heavy_rocket_for_orbital_logistics_modulo = 100 }
+	if = {
+		limit = { check_variable = { lok_nerva_heavy_rocket_for_orbital_logistics_modulo > 0 } }
+		add_to_variable = { lok_nerva_heavy_rocket_for_orbital_logistics = 0.5 }
+		round_variable = lok_nerva_heavy_rocket_for_orbital_logistics
+	}
+	
+	#HEAVY CHEMICAL (Starship)
+	set_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = remaining_orbital_logistics_demand }
+	divide_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = 1 } #How many Starships do we need to fulfill this?
+	
+	#So how many we're actually getting from those rockets.
+	set_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = num_equipment@lok_reusable_heavy_chemical_rocket }
+	multiply_variable = { orbital_logistics_from_lok_reusable_heavy_chemical_rocket = 1 }
+
+	add_to_variable = { orbital_logistics_max = orbital_logistics_from_lok_reusable_heavy_chemical_rocket }
+
+	clamp_variable = {
+		var = orbital_logistics_from_lok_reusable_heavy_chemical_rocket
+		max = remaining_orbital_logistics_demand
+	}
+
+	subtract_from_variable = { remaining_orbital_logistics_demand = orbital_logistics_from_lok_reusable_heavy_chemical_rocket }
+
+	#Rounding stuff
+	set_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo = lok_reusable_heavy_chemical_rocket_for_orbital_logistics }
+	multiply_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	modulo_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	if = {
+		limit = { check_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics_modulo > 0 } }
+		add_to_variable = { lok_reusable_heavy_chemical_rocket_for_orbital_logistics = 0.5 }
+		round_variable = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
+	}
+	
+
+	#LIGHT CHEMICAL (F9)
+	set_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = remaining_orbital_logistics_demand }
+	divide_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = 0.2 } #How many F9s do we need to fulfill this?
+	
+	#So how many we're actually getting from those rockets.
+	set_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = num_equipment@lok_reusable_light_chemical_rocket }
+	multiply_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = 0.2 }
+
+	add_to_variable = { orbital_logistics_max = orbital_logistics_from_lok_reusable_light_chemical_rocket }
+
+	clamp_variable = {
+		var = orbital_logistics_from_lok_reusable_light_chemical_rocket
+		max = remaining_orbital_logistics_demand
+	}
+
+	subtract_from_variable = { remaining_orbital_logistics_demand = orbital_logistics_from_lok_reusable_light_chemical_rocket }
+
+	
+	#Rounding stuff
+	set_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics_modulo = lok_reusable_light_chemical_rocket_for_orbital_logistics }
+	multiply_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	modulo_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	if = {
+		limit = { check_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics_modulo > 0 } }
+		add_to_variable = { lok_reusable_light_chemical_rocket_for_orbital_logistics = 0.5 }
+		round_variable = lok_reusable_light_chemical_rocket_for_orbital_logistics
+	}
+
+	#HEAVY NON-REUSABLE (Saturn V)
+	set_variable = { lok_heavy_chemical_rocket_for_orbital_logistics = remaining_orbital_logistics_demand }
+	divide_variable = { lok_heavy_chemical_rocket_for_orbital_logistics = 1 } #How many do we need to fulfill this?
+	
+	#So how many we're actually getting from those rockets.
+	set_variable = { orbital_logistics_from_lok_heavy_chemical_rocket = num_equipment@lok_heavy_chemical_rocket }
+	multiply_variable = { orbital_logistics_from_lok_heavy_chemical_rocket = 1 }
+
+	add_to_variable = { orbital_logistics_max = orbital_logistics_from_lok_heavy_chemical_rocket }
+
+	clamp_variable = {
+		var = orbital_logistics_from_lok_heavy_chemical_rocket
+		max = remaining_orbital_logistics_demand
+	}
+
+	subtract_from_variable = { remaining_orbital_logistics_demand = orbital_logistics_from_lok_heavy_chemical_rocket }
+
+	
+	#Rounding stuff
+	set_variable = { lok_heavy_chemical_rocket_for_orbital_logistics_modulo = lok_heavy_chemical_rocket_for_orbital_logistics }
+	multiply_variable = { lok_heavy_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	modulo_variable = { lok_heavy_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	if = {
+		limit = { check_variable = { lok_heavy_chemical_rocket_for_orbital_logistics_modulo > 0 } }
+		add_to_variable = { lok_heavy_chemical_rocket_for_orbital_logistics = 0.5 }
+		round_variable = lok_heavy_chemical_rocket_for_orbital_logistics
+	}
+
+	#LIGHT NON-REUSABLE
+	set_variable = { lok_light_chemical_rocket_for_orbital_logistics = remaining_orbital_logistics_demand }
+	divide_variable = { lok_light_chemical_rocket_for_orbital_logistics = 0.2 } #How many do we need to fulfill this?
+	
+	#So how many we're actually getting from those rockets.
+	set_variable = { orbital_logistics_from_lok_light_chemical_rocket = num_equipment@lok_light_chemical_rocket }
+	multiply_variable = { orbital_logistics_from_lok_light_chemical_rocket = 0.2 }
+
+	add_to_variable = { orbital_logistics_max = orbital_logistics_from_lok_light_chemical_rocket }
+
+	clamp_variable = {
+		var = orbital_logistics_from_lok_light_chemical_rocket
+		max = remaining_orbital_logistics_demand
+	}
+
+	subtract_from_variable = { remaining_orbital_logistics_demand = orbital_logistics_from_lok_light_chemical_rocket }
+
+	
+	#Rounding stuff
+	set_variable = { lok_light_chemical_rocket_for_orbital_logistics_modulo = lok_light_chemical_rocket_for_orbital_logistics }
+	multiply_variable = { lok_light_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	modulo_variable = { lok_light_chemical_rocket_for_orbital_logistics_modulo = 100 }
+	if = {
+		limit = { check_variable = { lok_light_chemical_rocket_for_orbital_logistics_modulo > 0 } }
+		add_to_variable = { lok_light_chemical_rocket_for_orbital_logistics = 0.5 }
+		round_variable = lok_light_chemical_rocket_for_orbital_logistics
+	}
+
+	#Calc damage odds
+	if = {
+		limit = { check_variable = { remaining_orbital_logistics_demand > 0 } }
+		set_variable = { orbital_logistics_damage_odds = remaining_orbital_logistics_demand }
+		divide_variable = { orbital_logistics_damage_odds = orbital_logistics_demand }
+		multiply_variable = { orbital_logistics_damage_odds = 100 } #Odds of shit breaking every week	
+	}
+
+	set_variable = { orbital_logistics_spare = orbital_logistics_max }
+	subtract_from_variable = { orbital_logistics_spare = orbital_logistics_demand }
+
+	set_variable = { orbital_logistics_current = orbital_logistics_max }
+	subtract_from_variable = { orbital_logistics_current = orbital_logistics_spare }
+
+	clamp_variable = {
+		var = orbital_logistics_spare
+		min = 0
+	}
+
+	clamp_variable = {
+		var = lok_nerva_heavy_rocket_for_orbital_logistics
+		max = num_equipment@lok_nerva_heavy_rocket
+	}
+
+	clamp_variable = {
+		var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
+		max = num_equipment@lok_reusable_heavy_chemical_rocket
+	}
+
+	clamp_variable = {
+		var = lok_reusable_light_chemical_rocket_for_orbital_logistics
+		max = num_equipment@lok_reusable_light_chemical_rocket
+	}
 }
 
 damage_muno_colonies = {
-	if = {
-		limit = { check_variable = { orbital_logistics_capacity < lok_muno_colonies_upkeep } }
-		every_controlled_state = {
-			limit = { is_core_of = MUN }
-			random = {
-				chance = 50
-				subtract_from_variable = { space_colony_level = 1 }
-				add_manpower = -2500
-				add_extra_state_shared_building_slots = -1
-				destroy_random_building = yes
-			}
-			if = {
-				limit = { check_variable = { space_colony_level = 0 } }
-				add_manpower = -1000000
-				remove_core_of = ROOT
-				transfer_state_to = MUN
-			}
+	every_controlled_state = {
+		limit = { is_on_continent = muno }
+		random = {
+			chance = ROOT.orbital_logistics_damage_odds
+			subtract_from_variable = { space_colony_level = 1 }
+			add_manpower = -2500
+			add_extra_state_shared_building_slots = -1
+			destroy_random_building = yes
+		}
+		if = {
+			limit = { check_variable = { space_colony_level = 0 } }
+			add_manpower = -1000000
+			remove_core_of = ROOT
+			transfer_state_to = MUN
 		}
 	}
+	calculate_muno_colonies_stats = yes
 }
 
 destroy_random_building = {
@@ -411,7 +667,7 @@ ai_fire_nuke = {
 				}
 			}
 			random_controlled_state = {
-				limit = { NOT = { is_core_of = ROOT } }
+				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
 				save_global_event_target_as = lok_thermonuclear_salvo_state
 				ROOT = {
 					fire_thermonuclear_salvo = yes #FIRE!!!!
@@ -570,6 +826,14 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 			}
 		}
 		multiply_variable = { state_food_consumption = 0 }
+	}
+	if = { #Estalai eat a lot
+		limit = {
+			OR = {
+				check_variable = { species = 12 }
+			}
+		}
+		multiply_variable = { state_food_consumption = 1.25 }
 	}
 	round_variable = state_food_consumption
 }
@@ -899,6 +1163,7 @@ fire_thermonuclear_salvo = {
 }
 
 collapse_into_anarchy = {
+	every_state_division = { destroy_unit = yes }
 	transfer_state_to = AAA
 	set_demilitarized_zone = yes
 }
@@ -1112,7 +1377,6 @@ apply_wonder_effects = {
 				set_variable = { wonder_modifier_id = i }
 				set_variable = { wonder_modifier_value = v }
 				meta_effect = {
-					debug = yes
 					text = {
 						every_country = {
 							limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }

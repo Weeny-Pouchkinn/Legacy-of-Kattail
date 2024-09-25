@@ -120,17 +120,20 @@ country_event = {
 	title = CKG_event.4.t
 	desc = CKG_event.4.d
 		
-	fire_only_once = yes
-
 	trigger = {
+		NOT = { has_country_flag = mewtail_got_cucked }
 		has_idea = CKG_queen_alice
 		OR = {
 			AND = {
 				NOT = { country_exists = KKH }
-				KKH = { any_core_state = { is_owned_by = CKG } }
+				KKH = { any_core_state = { is_owned_by = TAI } }
 			}
 			KKH = { is_puppet_of = ROOT }
 		}
+	}
+
+	immediate = {
+		set_country_flag = mewtail_got_cucked
 	}
 
 	option = { #Undo the wedding.

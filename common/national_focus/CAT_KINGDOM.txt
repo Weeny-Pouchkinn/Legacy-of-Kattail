@@ -127,9 +127,12 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = HYP
-				type = annex_everything
+			if = {
+				limit = { country_exists = HYP }
+				declare_war_on = {
+					target = HYP
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -197,9 +200,12 @@ focus_tree = {
 		}
 		will_lead_to_war_with = KKH
 		completion_reward = {
-			create_wargoal = {
-				target = KKH
-				type = annex_everything
+			if = {
+				limit = { country_exists = KKH }
+				declare_war_on = {
+					target = KKH
+					type = annex_everything
+				}
 			}
 			KKH = {
 				every_core_state = {
@@ -286,9 +292,17 @@ focus_tree = {
 		# 	focus = CKG_rally_northern_monarchists
 		# }
 		completion_reward = {
-			create_wargoal = { target = 509.owner type = annex_everything }
+			if = {
+				limit = {
+					country_exists = 509.owner
+					509.owner = { NOT = { tag = ROOT } }
+				}
+				declare_war_on = {
+					target = 509.owner
+					type = annex_everything
+				}
+			}
 		}
-		will_lead_to_war_with = 509.owner
 		ai_will_do = {
 			factor = 1
 			modifier = {
@@ -345,13 +359,19 @@ focus_tree = {
 		will_lead_to_war_with = BLM
 		will_lead_to_war_with = PMB
 		completion_reward = {
-			create_wargoal = {
-				target = 662.owner
-				type = annex_everything
+			if = {
+				limit = { country_exists = PMB }
+				declare_war_on = {
+					target = PMB
+					type = annex_everything
+				}
 			}
-			create_wargoal = {
-				target = 19.owner
-				type = annex_everything
+			if = {
+				limit = { country_exists = BLM }
+				declare_war_on = {
+					target = BLM
+					type = annex_everything
+				}
 			}
 			PMB = {
 				every_core_state = {
@@ -390,7 +410,7 @@ focus_tree = {
 				ideology = communism
 				popularity = -0.10
 			}
-			create_wargoal = {
+			declare_war_on = {
 				target = KTV
 				type = annex_everything
 			}
@@ -434,7 +454,10 @@ focus_tree = {
 		}
 		will_lead_to_war_with = SIL
 		completion_reward = {
-			create_wargoal = { target = SIL type = annex_everything }
+			declare_war_on = {
+				target = SIL
+				type = annex_everything
+			}
 			659 = {
 				custom_effect_tooltip = state_core_threshold_40
 				hidden_effect = { reduce_compliance_coring_threshold_by_10 = yes }
@@ -533,7 +556,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = CLE }
-				create_wargoal = {
+				declare_war_on = {
 					target = CLE
 					type = annex_everything
 				}
@@ -588,15 +611,20 @@ focus_tree = {
 		y = 3
 		cost = 5
 		available = {
-			any_owned_state = {
-				any_neighbor_state = { is_owned_by = PAW }
+			if = {
+				limit = { country_exists = PAW }
+				any_owned_state = { any_neighbor_state = { is_owned_by = PAW } }
 			}
+			else = { any_owned_state = { is_core_of = PAW } }
 		}
 		will_lead_to_war_with = PAW
 		completion_reward = {
-			create_wargoal = {
-				target = PAW
-				type = annex_everything
+			if = {
+				limit = { country_exists = PAW }
+				declare_war_on = {
+					target = PAW
+					type = annex_everything
+				}
 			}
 			PAW = {
 				every_core_state = {
@@ -641,9 +669,12 @@ focus_tree = {
 					set_country_flag = ckg_picked_abs_const
 					country_event = { id = CKG_event.1 }
 				}
-				create_wargoal = {
-					target = TAI
-					type = annex_everything
+				if = {
+					limit = { country_exists = TAI }
+					declare_war_on = {
+						target = TAI
+						type = annex_everything
+					}
 				}
 				TAI = {
 					every_core_state = {
@@ -754,7 +785,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = ELO }
-				create_wargoal = {
+				declare_war_on = {
 					target = ELO
 					type = annex_everything
 				}
@@ -805,7 +836,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = AUR }
-				create_wargoal = {
+				declare_war_on = {
 					target = AUR
 					type = annex_everything
 				}
@@ -938,7 +969,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = PRL }
-				create_wargoal = {
+				declare_war_on = {
 					target = PRL
 					type = annex_everything
 				}
@@ -1189,9 +1220,12 @@ focus_tree = {
 		}
 		will_lead_to_war_with = CAT
 		completion_reward = {
-			create_wargoal = {
-				target = CAT
-				type = annex_everything
+			if = {
+				limit = { country_exists = CAT }
+				declare_war_on = {
+					target = CAT
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -1223,9 +1257,12 @@ focus_tree = {
 		}
 		will_lead_to_war_with = HIM
 		completion_reward = {
-			create_wargoal = {
-				target = HIM
-				type = annex_everything
+			if = {
+				limit = { country_exists = HIM }
+				declare_war_on = {
+					target = HIM
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -1298,9 +1335,12 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = MEO
-				type = annex_everything
+			if = {
+				limit = { country_exists = MEO }
+				declare_war_on = {
+					target = MEO
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -1392,9 +1432,12 @@ focus_tree = {
 		completion_reward = {
 			random_list = {
 				60 = {
-					create_wargoal = {
-						target = LIO
-						type = annex_everything
+					if = {
+						limit = { country_exists = LIO }
+						declare_war_on = {
+							target = LIO
+							type = annex_everything
+						}
 					}
 				}
 				30 = {
@@ -1644,7 +1687,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = MEW }
-				create_wargoal = {
+				declare_war_on = {
 					target = MEW
 					type = annex_everything
 				}
@@ -1773,7 +1816,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = STR }
-				create_wargoal = {
+				declare_war_on = {
 					target = STR
 					type = annex_everything
 				}
@@ -1935,9 +1978,12 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = PTQ
-				type = annex_everything
+			if = {
+				limit = { country_exists = PTQ }
+				declare_war_on = {
+					target = PTQ
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -2061,7 +2107,7 @@ focus_tree = {
 			}
 			else_if = {
 				limit = { country_exists = IMF IMF = { is_ai = no } }
-				create_wargoal = {
+				declare_war_on = {
 					target = IMF
 					type = annex_everything
 				}
@@ -2112,9 +2158,12 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = ZUS
-				type = annex_everything
+			if = {
+				limit = { country_exists = ZUS }
+				declare_war_on = {
+					target = ZUS
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -2248,7 +2297,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { country_exists = WAC }
-				create_wargoal = {
+				declare_war_on = {
 					target = WAC
 					type = annex_everything
 				}
@@ -2275,9 +2324,12 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = WPR
-				type = annex_everything
+			if = {
+				limit = { country_exists = WPR }
+				declare_war_on = {
+					target = WPR
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -2462,9 +2514,12 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = NKB
-				type = annex_everything
+			if = {
+				limit = { country_exists = NKB }
+				declare_war_on = {
+					target = NKB
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
@@ -2608,9 +2663,23 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = MEC
-				type = annex_everything
+			if = {
+				limit = { country_exists = MEC }
+				declare_war_on = {
+					target = MEC
+					type = annex_everything
+				}
+			}
+			MEC = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
 			}
 		}
 		ai_will_do = {
@@ -2643,13 +2712,19 @@ focus_tree = {
 		will_lead_to_war_with = NEU
 		will_lead_to_war_with = AKR
 		completion_reward = {
-			create_wargoal = {
-				target = NEU
-				type = annex_everything
+			if = {
+				limit = { country_exists = NEU }
+				declare_war_on = {
+					target = NEU
+					type = annex_everything
+				}
 			}
-			create_wargoal = {
-				target = AKR
-				type = annex_everything
+			if = {
+				limit = { country_exists = AKR }
+				declare_war_on = {
+					target = AKR
+					type = annex_everything
+				}
 			}
 			AKR = {
 				every_core_state = {
@@ -2759,9 +2834,12 @@ focus_tree = {
 			any_owned_state = { any_neighbor_state = { is_owned_by = FRA } }
 		}
 		completion_reward = {
-			create_wargoal = {
-				target = 477.owner
-				type = annex_everything
+			if = {
+				limit = { country_exists = FRA }
+				declare_war_on = {
+					target = FRA
+					type = annex_everything
+				}
 			}
 		}
 		ai_will_do = {
