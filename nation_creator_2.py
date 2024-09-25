@@ -60,6 +60,9 @@ def calculate_state_value(provinces, terrain_values, seafaringness, hotspots, co
 def round_value(value):
     return int(value) + (1 if random.random() >= 0.5 else 0)
 
+def round_value_2(value):
+    return round(value, 0)
+
 # Function to round manpower up to the nearest ten thousand
 def round_manpower(manpower):
     return (manpower // 10000 + (1 if manpower % 10000 > 0 else 0)) * 10000
@@ -304,15 +307,15 @@ def create_nation():
 
             # Retrieve the resource allocations for this state
             random_resource_factor = random.uniform(0.5, 2)
-            oil_for_state = round_value((oil_distribution.get(state_id, 0) * random_resource_factor))
-            steel_for_state = round_value((steel_distribution.get(state_id, 0) * random_resource_factor))
-            tungsten_for_state = round_value((tungsten_distribution.get(state_id, 0) * random_resource_factor))
-            chromium_for_state = round_value((chromium_distribution.get(state_id, 0) * random_resource_factor))
-            food_for_state = round_value((food_distribution.get(state_id, 0) * random_resource_factor))
-            supertensiles_for_state = round_value((supertensiles_distribution.get(state_id, 0) * random_resource_factor))
-            fissiles_for_state = round_value((fissiles_distribution.get(state_id, 0) * random_resource_factor))
-            rubber_for_state = round_value((rubber_distribution.get(state_id, 0) * random_resource_factor))
-            aluminium_for_state = round_value((aluminium_distribution.get(state_id, 0) * random_resource_factor))
+            oil_for_state = round_value_2((oil_distribution.get(state_id, 0) * random_resource_factor))
+            steel_for_state = round_value_2((steel_distribution.get(state_id, 0) * random_resource_factor))
+            tungsten_for_state = round_value_2((tungsten_distribution.get(state_id, 0) * random_resource_factor))
+            chromium_for_state = round_value_2((chromium_distribution.get(state_id, 0) * random_resource_factor))
+            food_for_state = round_value_2((food_distribution.get(state_id, 0) * random_resource_factor))
+            supertensiles_for_state = round_value_2((supertensiles_distribution.get(state_id, 0) * random_resource_factor))
+            fissiles_for_state = round_value_2((fissiles_distribution.get(state_id, 0) * random_resource_factor))
+            rubber_for_state = round_value_2((rubber_distribution.get(state_id, 0) * random_resource_factor))
+            aluminium_for_state = round_value_2((aluminium_distribution.get(state_id, 0) * random_resource_factor))
 
             # Write state info to the output file
             file.write(f"[{state_id}] has {adjusted_military_factories} Military Factories, "
