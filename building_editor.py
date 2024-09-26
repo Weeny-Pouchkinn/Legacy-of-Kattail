@@ -30,7 +30,7 @@ def modify_infrastructure(directory):
                         # Subtract 1 from the infrastructure value
                         new_value = current_value - 1 if current_value > 0 else 0  # Ensure it doesn't go below 0
                         # Replace the old infrastructure line with the new one
-                        line = f"infrastructure = {new_value}\n"
+                        line = f"\t\t\tinfrastructure = {new_value}\n"
                         modified = True
                 
                 new_lines.append(line)
