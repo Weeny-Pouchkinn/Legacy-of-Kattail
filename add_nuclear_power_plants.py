@@ -18,8 +18,7 @@ def process_file(file_path):
                 for line in lines
             )
             contains_excluded_tags = any(
-                "ZUS" in line or
-                "NKC" in line
+                "FSR" in line or
                 for line in lines
             )
 
