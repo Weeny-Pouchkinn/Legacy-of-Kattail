@@ -19,7 +19,7 @@ def process_file(file_path):
             )
             contains_excluded_tags = any(
                 "FSR" in line or
-                "NKC" in line
+                for line in lines
             )
 
             if contains_owner and contains_state_category and not contains_excluded_tags:
