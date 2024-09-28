@@ -151,7 +151,6 @@ class PortraitManager:
             f'\t'
             f'spriteType = {{ name = "GFX_portrait_{species_name}_generic_{category}_{idx}" '
             f'textureFile = "gfx/leaders/{country_tag}/{species_name}_generic_{category}_{idx}.tga" }}\n'
-            f'\t'
             f'spriteType = {{ name = "GFX_portrait_{species_name}_generic_{category}_{idx}_small" '
             f'textureFile = "gfx/interface/ministers/{country_tag}/{species_name}_generic_{category}_{idx}.tga" }}\n'
         )
