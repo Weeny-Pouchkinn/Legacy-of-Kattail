@@ -129,6 +129,7 @@ calculate_orbital_logistics_capacity = {
 
 	clamp_variable = {
 		var = orbital_logistics_from_lok_nerva_heavy_rocket
+		min = 0
 		max = remaining_orbital_logistics_demand
 	}
 
@@ -156,6 +157,7 @@ calculate_orbital_logistics_capacity = {
 
 	clamp_variable = {
 		var = orbital_logistics_from_lok_reusable_heavy_chemical_rocket
+		min = 0
 		max = remaining_orbital_logistics_demand
 	}
 
@@ -184,6 +186,7 @@ calculate_orbital_logistics_capacity = {
 
 	clamp_variable = {
 		var = orbital_logistics_from_lok_reusable_light_chemical_rocket
+		min = 0
 		max = remaining_orbital_logistics_demand
 	}
 
@@ -212,6 +215,7 @@ calculate_orbital_logistics_capacity = {
 
 	clamp_variable = {
 		var = orbital_logistics_from_lok_heavy_chemical_rocket
+		min = 0
 		max = remaining_orbital_logistics_demand
 	}
 
@@ -240,6 +244,7 @@ calculate_orbital_logistics_capacity = {
 
 	clamp_variable = {
 		var = orbital_logistics_from_lok_light_chemical_rocket
+		min = 0
 		max = remaining_orbital_logistics_demand
 	}
 
@@ -273,20 +278,24 @@ calculate_orbital_logistics_capacity = {
 	clamp_variable = {
 		var = orbital_logistics_spare
 		min = 0
+		max = 1000000
 	}
 
 	clamp_variable = {
 		var = lok_nerva_heavy_rocket_for_orbital_logistics
+		min = 0
 		max = num_equipment@lok_nerva_heavy_rocket
 	}
 
 	clamp_variable = {
 		var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
+		min = 0
 		max = num_equipment@lok_reusable_heavy_chemical_rocket
 	}
 
 	clamp_variable = {
 		var = lok_reusable_light_chemical_rocket_for_orbital_logistics
+		min = 0
 		max = num_equipment@lok_reusable_light_chemical_rocket
 	}
 }
@@ -733,7 +742,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_steel = resource_produced@steel } #Say 100
 	multiply_variable = { lok_total_extra_steel = lok_total_extra_steel_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_steel = resource_produced@steel } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_steel min = 0 }
+	clamp_variable = { var = lok_total_extra_steel min = 0 max = 1000000  }
 
 	#Calculate total bonuses for tungsten
 	set_temp_variable = { lok_total_extra_tungsten_factor = 1 } #set to 1
@@ -742,7 +751,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_tungsten = resource_produced@tungsten } #Say 100
 	multiply_variable = { lok_total_extra_tungsten = lok_total_extra_tungsten_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_tungsten = resource_produced@tungsten } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_tungsten min = 0 }
+	clamp_variable = { var = lok_total_extra_tungsten min = 0 max = 1000000 }
 
 	#Calculate total bonuses for chromium
 	set_temp_variable = { lok_total_extra_chromium_factor = 1 } #set to 1
@@ -751,7 +760,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_chromium = resource_produced@chromium } #Say 100
 	multiply_variable = { lok_total_extra_chromium = lok_total_extra_chromium_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_chromium = resource_produced@chromium } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_chromium min = 0 }
+	clamp_variable = { var = lok_total_extra_chromium min = 0 max = 1000000 }
 
 	#Calculate total bonuses for aluminium
 	set_temp_variable = { lok_total_extra_aluminium_factor = 1 } #set to 1
@@ -760,7 +769,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_aluminium = resource_produced@aluminium } #Say 100
 	multiply_variable = { lok_total_extra_aluminium = lok_total_extra_aluminium_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_aluminium = resource_produced@aluminium } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_aluminium min = 0 }
+	clamp_variable = { var = lok_total_extra_aluminium min = 0 max = 1000000 }
 
 	#Calculate total bonuses for oil
 	set_temp_variable = { lok_total_extra_oil_factor = 1 } #set to 1
@@ -769,7 +778,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_oil = resource_produced@oil } #Say 100
 	multiply_variable = { lok_total_extra_oil = lok_total_extra_oil_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_oil = resource_produced@oil } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_oil min = 0 }
+	clamp_variable = { var = lok_total_extra_oil min = 0 max = 1000000 }
 
 	#Calculate total bonuses for rubber
 	set_temp_variable = { lok_total_extra_rubber_factor = 1 } #set to 1
@@ -777,7 +786,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_rubber = resource_produced@rubber } #Say 100
 	multiply_variable = { lok_total_extra_rubber = lok_total_extra_rubber_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_rubber = resource_produced@rubber } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_rubber min = 0 }
+	clamp_variable = { var = lok_total_extra_rubber min = 0 max = 1000000 }
 
 	#Calculate total bonuses for food
 	set_temp_variable = { lok_total_extra_food_factor = 1 } #set to 1
@@ -785,7 +794,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_food = resource_produced@food } #Say 100
 	multiply_variable = { lok_total_extra_food = lok_total_extra_food_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_food = resource_produced@food } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_food min = 0 }
+	clamp_variable = { var = lok_total_extra_food min = 0 max = 1000000 }
 
 	#Calculate total bonuses for fissiles
 	set_temp_variable = { lok_total_extra_fissiles_factor = 1 } #set to 1
@@ -794,7 +803,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_fissiles = resource_produced@fissiles } #Say 100
 	multiply_variable = { lok_total_extra_fissiles = lok_total_extra_fissiles_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_fissiles = resource_produced@fissiles } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_fissiles min = 0 }
+	clamp_variable = { var = lok_total_extra_fissiles min = 0 max = 1000000 }
 
 	#Calculate total bonuses for supertensiles
 	set_temp_variable = { lok_total_extra_supertensiles_factor = 1 } #set to 1
@@ -803,7 +812,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	set_variable = { lok_total_extra_supertensiles = resource_produced@supertensiles } #Say 100
 	multiply_variable = { lok_total_extra_supertensiles = lok_total_extra_supertensiles_factor } #we get the factor, if its 1.5 then 150
 	subtract_from_variable = { lok_total_extra_supertensiles = resource_produced@supertensiles } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_supertensiles min = 0 }
+	clamp_variable = { var = lok_total_extra_supertensiles min = 0 max = 1000000 }
 }
 
 calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
@@ -886,13 +895,13 @@ calculate_total_food_consumption = {
 		set_temp_variable = { country_food_going_into_stockpile = country_food_balance }
 		multiply_temp_variable = { country_food_going_into_stockpile = 0.5 } #as the monke said not all food can be put into storage
 		add_to_variable = { country_food_stockpile = country_food_going_into_stockpile }
-		clamp_variable = {  var = country_food_stockpile max = country_food_stockpile_max } #Cant go over limit
+		clamp_variable = {  var = country_food_stockpile min = 0 max = country_food_stockpile_max } #Cant go over limit
 		round_variable = country_food_stockpile
 	}
 	else_if = { #If balance is negative take from the stockpile if it exists
 		limit = { check_variable = { country_food_balance < 0 } check_variable = { country_food_stockpile > 0 } }
 		add_to_variable = { country_food_stockpile = country_food_balance }
-		clamp_variable = {  var = country_food_stockpile min = 0 } #Cant go below 0
+		clamp_variable = {  var = country_food_stockpile min = 0 max = 1000000 } #Cant go below 0
 	}
 
 	#CALCULATE % THAT IS MET - This is what determines the actual effects of food deficit
@@ -1035,7 +1044,7 @@ calculate_combat_casualties = {
 		set_variable = { lok_country_combat_deaths_last_week = casualties_k } #Get total casualties
 		#divide_temp_variable = { lok_country_combat_deaths_last_week = 1000 } #Turn to millions
 		subtract_from_variable = { lok_country_combat_deaths_last_week = lok_country_combat_deaths } #Remove those that we have already counted
-		clamp_variable = { var = lok_country_combat_deaths_last_week min = 0 } #Avoid negative casualties if something goes wrong
+		clamp_variable = { var = lok_country_combat_deaths_last_week min = 0 max = 1000000 } #Avoid negative casualties if something goes wrong
 		#round_temp_variable = lok_country_combat_deaths_last_week
 
 		#Add that to the various trackers
@@ -1093,7 +1102,7 @@ fire_thermonuclear_salvo = {
 			multiply_temp_variable = { anti_wmd_level_negative = -1 }
 		}
 		subtract_from_variable = { lok_current_salvo_capacity = 1 }
-		clamp_variable = { var = lok_current_salvo_capacity min = 0 }
+		clamp_variable = { var = lok_current_salvo_capacity min = 0 max = 100000 }
 		country_event = { id = LOK_nuke.1 days = 7 } #Refill salvo capacity in a bit
 		random_list = {
 			100 = {
@@ -1194,7 +1203,7 @@ calculate_radiation_in_state = {
 			collapse_into_anarchy = yes
 		}
 		multiply_variable = { lok_radiation_level = 0.75 } #Half life of one week
-		clamp_variable = { var = lok_radiation_level min = 0 }
+		clamp_variable = { var = lok_radiation_level min = 0 max = 100000 }
 		#Random spread to neighboring states: every week there is a 50% chance that a neighboring state get contaminated with half of the fallout.
 		set_variable = { lok_radiation_spread = lok_radiation_level }
 		multiply_variable = { lok_radiation_spread = 0.50 }
