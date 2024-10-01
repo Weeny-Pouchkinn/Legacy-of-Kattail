@@ -18,9 +18,8 @@ def process_file(file_path):
                 for line in lines
             )
             contains_excluded_tags = any(
-                "ZUS" in line or
+                "FSR" in line or
                 "NKC" in line
-                for line in lines
             )
 
             if contains_owner and contains_state_category and not contains_excluded_tags:

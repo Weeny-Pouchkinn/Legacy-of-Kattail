@@ -10,6 +10,12 @@ scripted_gui = {
 					PREV = { is_in_array = { array = PREV.potential_cores_array value = THIS } }
 				}
 			}
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 	}
 
@@ -18,7 +24,12 @@ scripted_gui = {
 		window_name = "lok_state_death_counter_window"
 		parent_window_token = selected_state_view
 		visible = {
-			always = yes
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 	}
 
@@ -27,7 +38,12 @@ scripted_gui = {
 		window_name = "lok_radiation_counter_window"
 		parent_window_token = selected_state_view
 		visible = {
-			always = yes
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 	}
 
@@ -36,7 +52,12 @@ scripted_gui = {
 		window_name = "lok_thermonuclear_salvo_window"
 		parent_window_token = selected_state_view
 		visible = {
-			always = yes
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 		}
 
 		effects = {
@@ -94,13 +115,13 @@ scripted_gui = {
 			lok_decrease_nuke_count_button_click = {
 				ROOT = {
 					subtract_from_variable = { nuke_launch_count = 1 }
-					clamp_variable = { var = nuke_launch_count min = 0 }
+					clamp_variable = { var = nuke_launch_count min = 0 max =  }
 				}
 			}
 			lok_decrease_nuke_count_button_control_click = {
 				ROOT = {
 					subtract_from_variable = { nuke_launch_count = 10 }
-					clamp_variable = { var = nuke_launch_count min = 0 }
+					clamp_variable = { var = nuke_launch_count min = 0 max = 10000 }
 				}
 			}
 			lok_decrease_nuke_count_button_shift_click = {
@@ -222,22 +243,20 @@ scripted_gui = {
 		window_name = "species_icon_container"
 		parent_window_token = selected_state_view
 		dirty = species
+
+		visible = {
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
+		}
 		
 		properties = {
 			species_icon = {
 				image = "GFX_species_[?species]"
 			}
-		}
-	}
-	
-	minority_screen = {
-		context_type = selected_state_context
-
-		window_name = "minority_icon_container"
-		parent_window_token = selected_state_view
-		dirty = minority
-		
-		properties = {
 			minority_icon = {
 				image = "GFX_species_[?minority]"
 			}
@@ -252,12 +271,42 @@ scripted_gui = {
 		dirty = wonder
 
 		visible = {
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
 			check_variable = { wonder > 0 }
 		}
 		
 		properties = {
 			wonder_icon = {
 				image = "GFX_wonder_[?wonder]"
+			}
+		}
+	}
+
+	stratres_screen = {
+		context_type = selected_state_context
+
+		window_name = "stratres_icon_container"
+		parent_window_token = selected_state_view
+		dirty = stratres
+
+		visible = {
+			NOT = {
+				AND = {
+					is_space_state = yes
+					NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+				}
+			}
+			check_variable = { stratres > 0 }
+		}
+		
+		properties = {
+			strat_resource_icon = {
+				image = "GFX_stratres_[?stratres]"
 			}
 		}
 	}

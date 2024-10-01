@@ -8,22 +8,19 @@ country_event = {
 	desc = CKG_event.1.d
 	is_triggered_only = yes
 
-	immediate = {
-		else = {
-			set_country_flag = failed_dreijahrige
-			country_event = { id = AUR_event.2 }
-		}
-	}
-
 	option = { #Constitutional
 		name = CKG_event.1.a
+		custom_effect_tooltip = CKG_event.1.a.tt
 		set_country_flag = ckg_constitutional
 		country_event = { id = CKG_event.2 days = 365 }
+		add_ideas = CKG_constitutional_monarchy
 	}
 
 	option = { #Absolute
 		name = CKG_event.1.b
+		custom_effect_tooltip = CKG_event.1.b.tt
 		set_country_flag = ckg_absolute
+		add_ideas = CKG_absolute_monarchy
 	}
 }
 
@@ -36,55 +33,408 @@ country_event = {
 	is_triggered_only = yes
 
 	immediate = {
-		CKG_clear_pms = yes
-		random_list = {
-			1 = {
-				add_ideas = CKG_Eliaw_Brawnner_PM
-				modifier = {
-					factor = 0
-					NOT = { has_completed_focus = CKG_house_of_chameownix }
+		hidden_effect = {
+			CKG_clear_pms = yes
+			random_list = {
+				1 = {
+					add_ideas = CKG_Eliaw_Brawnner_PM
+					modifier = {
+						factor = 0
+						NOT = { has_completed_focus = CKG_house_of_chameownix }
+					}
 				}
-			}
-			1 = {
-				add_ideas = CKG_Loris_PM
-				modifier = {
-					factor = 0
-					NOT = { has_completed_focus = CKG_reinstate_the_kattensbach }
+				1 = {
+					add_ideas = CKG_Loris_PM
+					modifier = {
+						factor = 0
+						NOT = { has_completed_focus = CKG_reinstate_the_kattensbach }
+					}
 				}
-			}
-			1 = {
-				add_ideas = CKG_Rex_PM
-				modifier = {
-					factor = 0
-					NOT = { has_completed_focus = CKG_southern_breadbasket }
+				1 = {
+					add_ideas = CKG_Rex_PM
+					modifier = {
+						factor = 0
+						NOT = { has_completed_focus = CKG_southern_breadbasket }
+					}
 				}
-			}
-			1 = {
-				add_ideas = CKG_Growlzi_PM
-				modifier = {
-					factor = 0
-					NOT = { has_completed_focus = CKG_southern_center_of_learning }
+				1 = {
+					add_ideas = CKG_Growlzi_PM
+					modifier = {
+						factor = 0
+						NOT = { has_completed_focus = CKG_southern_center_of_learning }
+					}
 				}
-			}
-			1 = {
-				add_ideas = CKG_Pawllas_PM
-				modifier = {
-					factor = 0
-					NOT = { has_completed_focus = CKG_modern_institute }
+				1 = {
+					add_ideas = CKG_Pawllas_PM
+					modifier = {
+						factor = 0
+						NOT = { has_completed_focus = CKG_modern_institute }
+					}
 				}
-			}
-			1 = {
-				add_ideas = CKG_Meorner_PM
-				modifier = {
-					factor = 0
-					NOT = { has_completed_focus = CKG_a_modern_knightly_order }
+				1 = {
+					add_ideas = CKG_Meorner_PM
+					modifier = {
+						factor = 0
+						NOT = { has_completed_focus = CKG_a_modern_knightly_order }
+					}
 				}
 			}
 		}
+
 	}
 
 	option = {
 		name = CKG_event.2.a
 		country_event = { id = CKG_event.2 days = 365 }
+	}
+}
+
+#Marry Clatz????
+country_event = {
+	id = CKG_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_event.3"}
+	title = CKG_event.3.t
+	desc = CKG_event.3.d
+	is_triggered_only = yes
+
+	option = { #Calm down
+		name = CKG_event.3.a
+		custom_effect_tooltip = CKG_event.3.a.tt
+		TAI_King_Mewtail = { add_trait = { trait = mewtail_sad } }
+		add_stability = -0.05
+		add_political_power = 50
+	}
+
+	option = { #Yes!!!!
+		name = CKG_event.3.b
+		custom_effect_tooltip = CKG_event.3.b.tt
+		add_ideas = CKG_queen_alice
+		add_political_power = -50
+	}
+}
+
+#Mewtail gets CUCKED
+country_event = {
+	id = CKG_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_event.4"}
+	title = CKG_event.4.t
+	desc = CKG_event.4.d
+		
+	trigger = {
+		NOT = { has_country_flag = mewtail_got_cucked }
+		has_idea = CKG_queen_alice
+		OR = {
+			AND = {
+				NOT = { country_exists = KKH }
+				KKH = { any_core_state = { is_owned_by = TAI } }
+			}
+			KKH = { is_puppet_of = ROOT }
+		}
+	}
+
+	immediate = {
+		set_country_flag = mewtail_got_cucked
+	}
+
+	option = { #Undo the wedding.
+		name = CKG_event.4.a
+		TAI_King_Mewtail = { add_country_leader_trait = { trait = mewtail_sad } }
+		add_stability = -0.10
+		add_political_power = 100
+		remove_ideas = CKG_queen_alice
+	}
+
+	option = { #Who cares.
+		name = CKG_event.4.b
+		TAI_King_Mewtail = { add_country_leader_trait = { trait = mewtail_cucked } }
+		add_political_power = 50
+	}
+
+	option = { #Banish them!!!!!!!
+		name = CKG_event.4.c
+		remove_ideas = CKG_queen_alice
+		add_stability = -0.15
+		add_political_power = 200
+	}
+
+	option = { #KILL THEM
+		name = CKG_event.4.kill
+		custom_effect_tooltip = CKG_event.4.kill.tt
+		remove_ideas = CKG_queen_alice
+		hidden_effect = {
+			KVK_Alice_Clatz = { retire = yes }
+			SIL_Fritz = { retire = yes }	
+		}
+		trigger = { has_idea = CKG_absolute_monarchy }
+		add_stability = -0.20
+		add_political_power = -100
+	}
+
+	option = { #abdicate
+		name = CKG_event.4.abdicate
+		custom_effect_tooltip = CKG_event.4.abdicate.tt
+		remove_ideas = CKG_queen_alice
+		add_stability = -0.20
+		add_political_power = -200
+		TAI_King_Mewtail = { retire = yes }
+		KVK_Alice_Clatz = {
+			add_country_leader_role = {
+				country_leader = {
+					expire = "1960.1.1"
+					ideology = absolutism
+				}
+				promote_leader = yes
+			}			
+		}
+		set_character_name = {
+			character = KVK_Alice_Clatz
+			name = KVK_Alice_Mewtail
+		}
+		trigger = { has_idea = CKG_constitutional_monarchy }
+	}
+}
+
+
+add_namespace = CKG_demands
+#Ask Stronien to join
+country_event = {
+	id = CKG_demands.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.1"}
+	title = CKG_demands.1.t
+	desc = CKG_demands.1.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_demands.1.a
+		custom_effect_tooltip = tt_this_will_end_the_game
+		event_target:cat_kingdom_country = {
+			country_event = { id = CKG_demands.2 days = 1 }
+			set_country_flag = stronien_accepted_integration
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.8 }
+				factor = 2
+			}
+			modifier = {
+				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.5 }
+				factor = 10
+			}
+		}
+	}
+
+	option = {
+		name = CKG_demands.1.b
+		add_political_power = 50
+		event_target:cat_kingdom_country = {
+			country_event = { id = CKG_demands.2 }
+			set_country_flag = stronien_refused_integration
+		}
+	}
+}
+
+#Stronien response
+country_event = {
+	id = CKG_demands.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.2"}
+	title = CKG_demands.2.t
+	desc = {
+		text = CKG_demands.2.d.yes
+		trigger = { has_country_flag = stronien_accepted_integration }
+	}
+	desc = {
+		text = CKG_demands.2.d.no
+		trigger = { has_country_flag = stronien_refused_integration }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_demands.2.a
+		annex_country = { target = OST transfer_troops = yes }
+		OST = { every_unit_leader = { set_nationality = event_target:cat_kingdom_country } }
+		trigger = { has_country_flag = stronien_accepted_integration }
+	}
+
+	option = {
+		name = CKG_demands.2.b
+		create_wargoal = {
+			target = OST
+			type = annex_everything
+		}
+		trigger = { has_country_flag = stronien_refused_integration }
+
+	}
+}
+
+#Clatz marriage
+country_event = {
+	id = CKG_demands.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.3"}
+	title = CKG_demands.3.t
+	desc = CKG_demands.3.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_demands.3.a
+		custom_effect_tooltip = tt_this_will_end_the_game
+		event_target:cat_kingdom_country = {
+			country_event = { id = CKG_demands.4 days = 1 }
+			set_country_flag = alice_accepted_integration
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.8 }
+				factor = 2
+			}
+			modifier = {
+				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.5 }
+				factor = 10
+			}
+		}
+	}
+
+	option = {
+		name = CKG_demands.3.b
+		add_political_power = 50
+		event_target:cat_kingdom_country = {
+			country_event = { id = CKG_demands.4 }
+			set_country_flag = alice_refused_integration
+		}
+	}
+}
+
+#Clatz Response
+country_event = {
+	id = CKG_demands.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.4"}
+	title = CKG_demands.4.t
+	desc = {
+		text = CKG_demands.4.d.yes
+		trigger = { has_country_flag = alice_accepted_integration }
+	}
+	desc = {
+		text = CKG_demands.4.d.no
+		trigger = { has_country_flag = alice_refused_integration }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_demands.4.a
+		annex_country = { target = KVK transfer_troops = yes }
+		KVK = {
+			remove_country_leader_role = {
+				character = KVK_Alice_Clatz
+				ideology = absolutism
+			}
+			KVK_Alice_Clatz = {
+				set_nationality = event_target:cat_kingdom_country
+			}
+			every_unit_leader = { set_nationality = event_target:cat_kingdom_country }
+		}
+		trigger = { has_country_flag = alice_accepted_integration }
+		country_event = { id = CKG_event.3 days = 60 }
+	}
+
+	#Sorry she said no lol
+	option = {
+		name = CKG_demands.4.b
+		add_stability = -0.05
+		add_political_power = -50
+		create_wargoal = {
+			target = KVK
+			type = annex_everything
+		}
+		trigger = { has_country_flag = alice_refused_integration }
+	}
+}
+
+#Navy request
+country_event = {
+	id = CKG_demands.5
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.5"}
+	title = CKG_demands.5.t
+	desc = CKG_demands.5.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_demands.5.a
+		custom_effect_tooltip = tt_this_will_end_the_game
+		event_target:cat_kingdom_country = {
+			country_event = { id = CKG_demands.6 days = 1 }
+			set_country_flag = nav_accepted_integration
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.8 }
+				factor = 2
+			}
+			modifier = {
+				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.5 }
+				factor = 10
+			}
+		}
+	}
+
+	option = {
+		name = CKG_demands.5.b
+		add_political_power = 50
+		event_target:cat_kingdom_country = {
+			country_event = { id = CKG_demands.2 }
+			set_country_flag = nav_refused_integration
+		}
+	}
+}
+
+#Navy response
+country_event = {
+	id = CKG_demands.6
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.6"}
+	title = CKG_demands.6.t
+	desc = {
+		text = CKG_demands.6.d.yes
+		trigger = { has_country_flag = nav_accepted_integration }
+	}
+	desc = {
+		text = CKG_demands.6.d.no
+		trigger = { has_country_flag = nav_refused_integration }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_demands.6.a
+		NAV = {
+			transfer_units_fraction = { target = event_target:cat_kingdom_country stockpile_ratio = 1 army_ratio = 1 navy_ratio = 1 air_ratio = 1 }
+			every_unit_leader = { set_nationality = event_target:cat_kingdom_country }
+		}
+		annex_country = { target = NAV transfer_troops = yes }
+		trigger = { has_country_flag = nav_accepted_integration }
+	}
+
+	option = {
+		name = CKG_demands.6.b
+		create_wargoal = {
+			target = NAV
+			type = annex_everything
+		}
+		trigger = { has_country_flag = nav_refused_integration }
+
 	}
 }

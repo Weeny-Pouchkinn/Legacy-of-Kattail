@@ -1,4 +1,11 @@
+name="Legacy of Kattail DEV"
 version="3.14"
+tags={
+	"Gameplay"
+	"Map"
+	"Alternative History"
+}
+picture="thumbnail.png"
 replace_path="common/abilities"
 replace_path="common/ai_equipment"
 replace_path="common/ai_focuses"
@@ -42,10 +49,4 @@ replace_path="map/supplyareas"
 replace_path="gfx/flags"
 replace_path="gfx/interface/equipmentdesigner/graphic_db"
 replace_path="gfx/train_gfx_database"
-tags={
-	"Map"
-	"Gameplay"
-}
-name="Legacy of Kattail DEV"
-supported_version="1.14.4"
-remote_file_id="3297932931"
+supported_version="1.14.*"

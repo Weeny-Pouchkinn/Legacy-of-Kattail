@@ -1,3 +1,63 @@
+add_namespace = LOK_space
+
+#a mission has failed
+country_event = {
+	id = LOK_space.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.1"}
+	title = "LOK_space.1.t"
+	desc = "LOK_space.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.1.a"
+	}
+}
+
+#Success!
+country_event = {
+	id = LOK_space.4
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.4"}
+	title = "LOK_space.4.t"
+	desc = "LOK_space.4.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.4.a"
+	}
+}
+
+#Muno landing!
+country_event = {
+	id = LOK_space.2
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.2"}
+	title = "LOK_space.2.t"
+	desc = "LOK_space.2.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.2.a"
+	}
+}
+
+#Muno landing! (news)
+news_event = {
+	id = LOK_space.3
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.3"}
+	title = "LOK_space.3.t"
+	desc = "LOK_space.3.d"
+	is_triggered_only = yes
+	major = yes
+	picture = GFX_news_event_muno_landing
+
+	option = {
+		name = "LOK_space.3.a"
+	}
+}
+
+
 add_namespace = LOK_nuke
 
 #Refill salvo capacity
@@ -9,8 +69,9 @@ country_event = {
 
 	immediate = {
 		add_to_variable = { lok_current_salvo_capacity = 1 }
-		clamp_variable = { #Can't surpass total salvo capacitu
+		clamp_variable = { #Can't surpass total salvo capacity
 			var = lok_current_salvo_capacity
+			min = 0
 			max = lok_total_salvo_capacity
 		}
 	}
