@@ -23,7 +23,10 @@ dismantle_wonder = {
 }
 
 calculate_strategic_resource_modifiers = {
-	remove_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_strategic_resource_modifier } }
+		remove_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+	}
 
 	set_variable = { stratres_1_modifier = 2 } #He3
 	set_variable = { stratres_2_modifier = -0.50 } #Gold!
