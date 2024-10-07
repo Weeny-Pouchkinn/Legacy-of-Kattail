@@ -108,6 +108,10 @@ technology_categories = {
 	cat_mountaineers_doctrine
 	cat_marines_doctrine
 	cat_paratroopers_doctrine
+	mech
+	cat_light_mech
+	cat_medium_mech
+	cat_heavy_mech
 
 	mio_cat_tech_all_armor_and_modules #Includes modules and chassis (DOES NOT INCLUDE ARMORED CARS)
 	mio_cat_tech_light_armor_and_modules #Includes modules and stand-alone Amphibious Chassis
@@ -127,18 +131,28 @@ technology_categories = {
 	mio_cat_tech_all_cruiser_and_modules #Includes all CA (+ Coastal etc.), CL (Torpedo Cruiser) and all related modules
 	mio_cat_tech_all_destroyer_and_modules #Includes all DD and all related modules
 	mio_cat_tech_all_motorized_mechanized #Includes all Motorized (incl. Motorized Rocket Artillery) and Mechanized Equipment. (DOES NOT INCLUDE ARMORED CARS)
+
+	#NEW
+	exoskeleton_equipment
+	railgun_equipment
 }
 
 technology_folders = {
+	paluush_folder = {
+		ledger = civilian
+		available = { is_paluush_state = yes }
+	}
 	infantry_folder = {
 		ledger = army
+		available = { always = yes is_paluush_state = no }
 	}
 	support_folder = {
 		ledger = army
+		available = { always = yes is_paluush_state = no }
 	}
 	armour_folder = {
 		ledger = army
-		available = { always = yes }
+		available = { always = yes is_paluush_state = no }
 	}
 	nsb_armour_folder = {
 		ledger = army
@@ -146,9 +160,10 @@ technology_folders = {
 	}
 	artillery_folder = {
 		ledger = army
+		available = { always = yes is_paluush_state = no }
 	}
 	air_techs_folder = {
-		available = { always = yes }
+		available = { always = yes is_paluush_state = no }
 		ledger = air
 	}
 	bba_air_techs_folder = {
@@ -156,7 +171,7 @@ technology_folders = {
 		ledger = air
 	}
 	naval_folder = {
-		available = { always = yes }
+		available = { always = yes is_paluush_state = no }
 		ledger = navy
 	}
 	mtgnavalfolder = {
@@ -168,6 +183,7 @@ technology_folders = {
 		ledger = navy
 	}
 	industry_folder = {
+		available = { always = yes is_paluush_state = no }
 		ledger = civilian
 	}
 	land_doctrine_folder = {
@@ -190,6 +206,7 @@ technology_folders = {
 		doctrine = yes
 	}
 	electronics_folder = {
+		available = { always = yes is_paluush_state = no }
 		ledger = civilian
 	}
 	#secret_weapons_folder

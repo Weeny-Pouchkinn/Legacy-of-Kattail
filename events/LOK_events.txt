@@ -1,3 +1,82 @@
+add_namespace = LOK_space
+
+#a mission has failed
+country_event = {
+	id = LOK_space.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.1"}
+	title = "LOK_space.1.t"
+	desc = "LOK_space.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.1.a"
+	}
+}
+
+#Success!
+country_event = {
+	id = LOK_space.4
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.4"}
+	title = "LOK_space.4.t"
+	desc = "LOK_space.4.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.4.a"
+	}
+}
+
+#Muno landing!
+country_event = {
+	id = LOK_space.2
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.2"}
+	title = "LOK_space.2.t"
+	desc = "LOK_space.2.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.2.a"
+	}
+}
+
+#Muno landing! (news)
+news_event = {
+	id = LOK_space.3
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.3"}
+	title = "LOK_space.3.t"
+	desc = "LOK_space.3.d"
+	is_triggered_only = yes
+	major = yes
+	picture = GFX_news_event_muno_landing
+
+	option = {
+		name = "LOK_space.3.a"
+	}
+}
+
+
+add_namespace = LOK_nuke
+
+#Refill salvo capacity
+country_event = {
+	id = LOK_nuke.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_nuke.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		add_to_variable = { lok_current_salvo_capacity = 1 }
+		clamp_variable = { #Can't surpass total salvo capacity
+			var = lok_current_salvo_capacity
+			min = 0
+			max = lok_total_salvo_capacity
+		}
+	}
+}
+
 add_namespace = LOK_food
 
 country_event = {
@@ -24,7 +103,7 @@ country_event = {
 
 	is_triggered_only = yes
 
-	#Release friendly puppet
+	#Release friendly puppet EVERYWHERE
 	option = {
 		name = "lok_peace.1.a"
 		every_owned_state = {
@@ -37,11 +116,21 @@ country_event = {
 		puppet = event_target:peace_puppet_country
 		set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
 		ai_chance = {
-			base = 0
-			modifier = { #Herzland warlords will always annex one another
-				factor = 0
-				is_herzlands_warlord = yes
-				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
+			base = 1
+			modifier = {
+				factor = 0 #If we can just annex more stuff then do that instead
+				event_target:peace_puppet_country = {
+					any_core_state = {
+						OR = {
+							is_core_of = ROOT
+							is_claimed_by = ROOT
+							is_in_array = { ROOT.potential_cores_array = THIS }
+							any_neighbor_state = { is_core_of = ROOT }
+							any_neighbor_state = { is_claimed_by = ROOT } 
+							any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
+						}
+					}
+				}
 			}
 		}
 		hidden_effect = {
@@ -49,16 +138,28 @@ country_event = {
 		}
 	}
 
-	#Release friendly puppet + annex border regions
+	#Release friendly puppet + annex cores and coreable regions
 	option = {
 		name = "lok_peace.1.b"
 		trigger = {
-			event_target:peace_puppet_country = { any_core_state = { any_neighbor_state = { OR = { is_core_of = ROOT is_claimed_by = ROOT } } } }
+			event_target:peace_puppet_country = {
+				any_core_state = {
+					OR = {
+						is_core_of = ROOT
+						is_claimed_by = ROOT
+						is_in_array = { ROOT.potential_cores_array = THIS } 
+					}
+				}
+			}
 		}
 		every_owned_state = {
 			limit = {
 				is_core_of = event_target:peace_puppet_country
-				NOT = { is_core_of = ROOT is_claimed_by = ROOT any_neighbor_state = { is_core_of = ROOT } any_neighbor_state = { is_claimed_by = ROOT }  }
+				NOT = {
+					is_core_of = ROOT
+					is_claimed_by = ROOT
+					is_in_array = { ROOT.potential_cores_array = THIS } 
+				}
 			}
 			event_target:peace_puppet_country = { transfer_state = PREV }
 		}
@@ -66,10 +167,15 @@ country_event = {
 		set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
 		ai_chance = {
 			base = 1
-			modifier = { #Herzland warlords will always annex one another
+			modifier = { #If we CAN annex more stuff then do it
 				factor = 0
-				is_herzlands_warlord = yes
-				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
+				event_target:peace_puppet_country = {
+					OR = {
+						any_neighbor_state = { is_core_of = ROOT }
+						any_neighbor_state = { is_claimed_by = ROOT } 
+						any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
+					}
+				}
 			}
 		}
 		hidden_effect = {
@@ -77,16 +183,50 @@ country_event = {
 		}
 	}
 
-	#Just annex
+	#Release friendly puppet + annex cores and coreable regions, and then go one state beyond that
 	option = {
 		name = "lok_peace.1.c"
+		trigger = {
+			event_target:peace_puppet_country = {
+				any_core_state = {
+					any_neighbor_state = {
+						OR = {
+							is_core_of = ROOT
+							is_claimed_by = ROOT
+							is_in_array = { ROOT.potential_cores_array = THIS } 
+						}
+					}
+				}
+			}
+		}
+		every_owned_state = {
+			limit = {
+				is_core_of = event_target:peace_puppet_country
+				NOT = {
+					is_core_of = ROOT
+					is_claimed_by = ROOT
+					is_in_array = { ROOT.potential_cores_array = THIS } 
+					any_neighbor_state = { is_core_of = ROOT }
+					any_neighbor_state = { is_claimed_by = ROOT } 
+					any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
+				}
+			}
+			event_target:peace_puppet_country = { transfer_state = PREV }
+		}
+		puppet = event_target:peace_puppet_country
+		set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
+		ai_chance = {
+			base = 10
+		}
+		hidden_effect = {
+			clr_country_flag = deciding_nation_fate
+		}
+	}
+	#Just annex
+	option = {
+		name = "lok_peace.1.d"
 		ai_chance = {
 			base = 0
-			modifier = { #Herzland warlords will always annex one another
-				add = 100
-				is_herzlands_warlord = yes
-				event_target:peace_puppet_country = { is_herzlands_warlord = yes }
-			}
 		}
 		hidden_effect = {
 			clr_country_flag = deciding_nation_fate

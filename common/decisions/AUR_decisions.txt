@@ -1,0 +1,412 @@
+AUR_industrialization_cat = {
+	#1st term
+	AUR_aggressive_industrialization = {
+		icon = GFX_decision_generic_construction
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_dreijahrige
+			NOT = { has_completed_focus = AUR_pushing_pushing }
+			FROM = { is_core_of = AUR }
+			check_variable = { building_level@infrastructure < 5 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 20
+
+		modifier = {
+			civilian_factory_use = 5
+		}
+
+		remove_effect = {
+			FROM = {
+				add_building_construction = { type = infrastructure level = 1 }
+				add_extra_state_shared_building_slots = 2
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	AUR_nuclear_salvation = {
+		icon = GFX_decision_generic_electricity
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_dreijahrige
+			NOT = { has_completed_focus = AUR_pushing_pushing }
+			FROM = {
+				is_core_of = AUR
+				check_variable = { building_level@nuclear_reactor < 1 } 
+			}
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 6
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 20
+
+		modifier = {
+			civilian_factory_use = 7
+		}
+
+		remove_effect = {
+			FROM = {
+				add_building_construction = { type = nuclear_reactor level = 1 }
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+
+		days_remove = 90
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	AUR_mass_worker_conscription = {
+		icon = GFX_decision_generic_merge_plant_materiel
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_dreijahrige
+			NOT = { has_completed_focus = AUR_fulfilled }
+		}
+
+		cost = 50
+
+		modifier = {
+			consumer_goods_factor = -0.50
+		}
+
+		remove_effect = {
+			add_stability = -0.05
+			add_manpower = -1000
+		}
+
+		days_remove = 60
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	#2nd term
+	AUR_expand_mil_factories = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_pushing_pushing
+			NOT = { has_completed_focus = AUR_nearly_there }
+			FROM = { is_core_of = AUR NOT = { has_state_flag = aur_expanded_mils } }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 15
+
+		modifier = {
+			civilian_factory_use = 5
+		}
+
+		remove_effect = {
+			FROM = {
+				add_building_construction = { type = arms_factory level = 2 }
+				add_extra_state_shared_building_slots = 2
+				hidden_effect = { set_state_flag = aur_expanded_mils }
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	AUR_civilian_factories = {
+		icon = GFX_decision_generic_factory
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_pushing_pushing
+			NOT = { has_completed_focus = AUR_nearly_there }
+			FROM = { is_core_of = AUR NOT = { has_state_flag = aur_expanded_civs } }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 15
+
+		modifier = {
+			civilian_factory_use = 5
+		}
+
+		remove_effect = {
+			FROM = {
+				add_building_construction = { type = industrial_complex level = 2 }
+				add_extra_state_shared_building_slots = 2
+				hidden_effect = { set_state_flag = aur_expanded_civs }
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	#3rd term
+	AUR_katzen_lifestyle = {
+		icon = GFX_decision_generic_army_support
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_nearly_there
+			NOT = { has_completed_focus = AUR_fulfilled }
+			FROM = { is_core_of = AUR }
+			check_variable = { building_level@anti_air_building < 3 }
+		}
+
+		available = {
+			has_equipment = { anti_air_equipment > 99 }
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 10
+
+		modifier = {
+			industrial_capacity_factory = -0.30
+		}
+
+		remove_effect = {
+			add_war_support = 0.025
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.025
+			}
+			add_equipment_to_stockpile = { type = anti_air_equipment amount = -100 }
+			FROM = {
+				add_building_construction = { type = anti_air_building level = 2 }
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	AUR_projekt_seer = {
+		icon = GFX_decision_generic_electricity
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_nearly_there
+			NOT = { has_completed_focus = AUR_fulfilled }
+			FROM = { is_core_of = AUR }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 10
+
+		modifier = {
+			civilian_factory_use = 5
+		}
+
+		remove_effect = {
+			FROM = {
+				add_building_construction = { type = radar_station level = 2 }
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	AUR_plan_for_the_worst = {
+		icon = GFX_decision_generic_fortification
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_nearly_there
+			NOT = { has_completed_focus = AUR_fulfilled }
+			FROM = {
+				is_core_of = AUR
+				any_neighbor_state = { NOT = { is_owned_by = AUR } }
+				NOT = { has_state_flag = aur_fortified_state }
+			}
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 10
+
+		modifier = {
+			civilian_factory_use = 5
+		}
+
+		remove_effect = {
+			hidden_effect = { add_to_variable = { aur_num_new_bunkers_built = 1 } }
+			FROM = {
+				set_building_level = {
+					type = bunker
+					level = 2
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_border = yes
+					}
+				}
+				hidden_effect = { set_state_flag = aur_fortified_state }
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
+
+lok_IPF_KSK_cat = {
+	aur_shoot_the_ipf = {
+		icon = GFX_decision_generic_police_action
+		allowed = { original_tag = AUR }
+	
+		visible = {
+			has_completed_focus = AUR_crushing_liberalism
+			has_government = fascism
+		}
+	
+		available = {
+			check_variable = {
+				ipf_strength > 0
+			}
+		}
+	
+		cost = 25
+	
+		days_remove = 30
+		
+		modifier = {
+			political_power_factor = -0.50
+			democratic_drift = -0.5
+		}
+	
+		remove_effect = {
+			custom_effect_tooltip = aur_shoot_the_ipf_tt
+			hidden_effect = { subtract_from_variable = { ipf_strength = 1 } calculate_ipf_ksk_resistance = yes }
+		}
+	
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+
+	aur_shoot_the_ksk = {
+		icon = GFX_decision_oppression
+		allowed = { original_tag = AUR }
+	
+		visible = {
+			has_completed_focus = AUR_breaking_idealism
+			has_government = fascism
+		}
+	
+		available = {
+			check_variable = {
+				ksk_strength > 0
+			}
+		}
+	
+		cost = 25
+	
+		days_remove = 30
+		
+		modifier = {
+			war_support_weekly = -0.01
+			communism_drift = -0.5
+		}
+	
+		remove_effect = {
+			custom_effect_tooltip = aur_shoot_the_ksk_tt
+			every_owned_state = {
+				add_manpower = -10000
+			}
+			hidden_effect = { subtract_from_variable = { ksk_strength = 1 } calculate_ipf_ksk_resistance = yes }
+		}
+	
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				check_variable = { ipf_opinion > 0 }
+			}
+		}
+	}
+}

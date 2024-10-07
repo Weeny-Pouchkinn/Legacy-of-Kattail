@@ -1,36 +1,73 @@
 ﻿capital = 84
 
-oob = "KAT_1936"
+set_oob = "TAI_1936"
 
 set_research_slots = 3
-set_stability = 0.5
+set_stability = 0
 set_war_support = 0.5
 
 # Starting tech
 set_technology = {
 	infantry_weapons = 1
 	infantry_weapons1 = 1
+	night_vision = 1
+	interwar_antitank = 1
+	mechanised_infantry = 1
+	tech_trucks = 1
+	marines = 1
+	paratroopers = 1
+	tech_engineers = 1
+	tech_maintenance_company = 1
+	tech_signal_company = 1
+	tech_logistics_company = 1
+	tech_field_hospital = 1
+	wartime_train = 1
+	armored_train = 1
+	rocket_artillery = 1
+	gw_artillery = 1
+	interwar_artillery = 1
+	basic_medium_tank = 1
+	basic_heavy_tank = 1
+	improved_heavy_tank = 1
 	tech_support = 1
 	tech_recon = 1
 	tech_mountaineers = 1
 	motorised_infantry = 1
-	gw_artillery = 1
 	interwar_antiair = 1
 	gwtank = 1
 	basic_light_tank = 1
-	improved_light_tank = 1
 	early_fighter = 1
-	naval_bomber1 = 1
-	cv_early_fighter = 1
-	cv_naval_bomber1 = 1
 	early_bomber = 1
 	tactical_bomber1 = 1
-	CAS1 = 1
-	trench_warfare = 1
+	electronic_mechanical_engineering = 1
+	radio = 1
+	mechanical_computing = 1
+	atomic_research = 1
+	
+	nukes = 1
+	nuclear_power_plant_tech = 1
+	naval_nuclear_power = 1
+	heavy_fighter1 = 1
+	strategic_bomber1 = 1
 	fleet_in_being = 1
+	basic_machine_tools = 1
+	construction1 = 1
+	synth_oil_experiments = 1
+	rubber_processing = 1
+	oil_processing = 1
+	excavation1 = 1
 	fuel_silos = 1
 	fuel_refining = 1
 	basic_train = 1
+	tech_military_police = 1
+	basic_light_spaa = 1
+	basic_heavy_art = 1
+	improved_heavy_art = 1
+	basic_medium_td = 1
+	naval_bomber1 = 1
+	fighter1 = 1
+	CAS1 = 1
+	amphibious_mechanized_infantry = 1
 
 	early_submarine = 1
 	basic_submarine = 1
@@ -45,9 +82,32 @@ set_technology = {
 	basic_battlecruiser = 1
 	early_carrier = 1
 	transport = 1
+
+	#Katzen nation - thus mobile warfare
+	mobile_warfare = 1
+	delay = 1
+	elastic_defence = 1
+	armored_spearhead = 1
+	schwerpunk = 1
+}
+set_convoys = 300
+
+#The share of each party that likes the government
+set_variable = { tai_monarchist_opinion = 0.5 }
+set_variable = { tai_militarist_opinion = 0.15 }
+
+set_variable = { TAI_base_pp_gain = -2 }
+set_variable = { TAI_fascism_drift = 0.1 }
+set_variable = { TAI_neutrality_drift = 0.1 }
+
+add_ideas = {
+	herzlands_warlord_idea
+	katzen_collapse_2
 }
 
-set_convoys = 300
+add_dynamic_modifier = { modifier = TAI_political_fluctuations }
+add_dynamic_modifier = { modifier = TAI_monarchist_stability }
+add_dynamic_modifier = { modifier = TAI_militarist_stability }
 
 set_politics = {
 	ruling_party = neutrality
@@ -57,10 +117,14 @@ set_politics = {
 }
 
 set_popularities = {
-	neutrality = 25
-	fascism = 25
-	communism = 25
-	democratic = 25
+	neutrality = 50
+	fascism = 45
+	communism = 0
+	democratic = 5
 }
 
+TAI_calculate_monachist_militarist_effects = yes
+
+recruit_character = TAI_King_Mewtail
+recruit_character = TAI_Kibbler
 recruit_character = TAI_Eliaw_Brawnner

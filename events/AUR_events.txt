@@ -1,0 +1,393 @@
+add_namespace = AUR_industry
+
+#Check if 1st term is done
+country_event = {
+	id = AUR_industry.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_industry.1"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				check_variable = { aur_num_new_infra_built > 4 }
+				check_variable = { aur_num_new_reactors_built > 1 }
+			}
+			complete_national_focus = AUR_pushing_pushing
+		}
+		else = {
+			set_country_flag = failed_dreijahrige
+			country_event = { id = AUR_event.2 }
+		}
+	}
+}
+
+#Check if 2nd term is done
+country_event = {
+	id = AUR_industry.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_industry.2"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				check_variable = { aur_num_new_civs_built > 9 }
+				check_variable = { aur_num_new_mils_built > 15 }
+			}
+			complete_national_focus = AUR_nearly_there
+		}
+		else = {
+			set_country_flag = failed_dreijahrige
+			country_event = { id = AUR_event.2 }
+		}
+	}
+}
+
+#Check if 3rd term is done
+country_event = {
+	id = AUR_industry.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_industry.3"}
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				check_variable = { aur_num_new_infra_built > 2 }
+				check_variable = { aur_num_new_aa_built > 4 }
+				check_variable = { aur_num_new_bunkers_built > 3 }
+			}
+			complete_national_focus = AUR_fulfilled
+		}
+		else = {
+			set_country_flag = failed_dreijahrige
+			country_event = { id = AUR_event.2 }
+		}
+	}
+}
+
+add_namespace = AUR_event
+country_event = {
+	id = AUR_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.1"}
+	title = AUR_event.1.t
+	desc = AUR_event.1.d
+	picture = GFX_report_event_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.1.a
+		complete_national_focus = AUR_dreijahrige
+	}
+}
+
+#industry plan failed
+country_event = {
+	id = AUR_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.2"}
+	title = AUR_event.2.t
+	desc = AUR_event.2.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	immediate = {
+		add_popularity = { ideology = communism popularity = 0.50 }
+	}
+
+	option = {
+		name = AUR_event.2.a
+		if = {
+			limit = { has_idea = katzen_collapse_1 }
+			remove_ideas = katzen_collapse_1
+		}
+		else_if = {
+			limit = { has_idea = katzen_collapse_2 }
+			remove_ideas = katzen_collapse_2
+		}
+		else_if = {
+			limit = { has_idea = AUR_chaos_collapse }
+			remove_ideas = AUR_chaos_collapse
+		}
+		add_timed_idea = {
+			idea = AUR_total_economic_collapse
+			days = 1095
+		}
+		start_civil_war = { ideology = communism }
+	}
+
+	option = {
+		name = AUR_event.2.b
+		if = {
+			limit = { has_idea = katzen_collapse_1 }
+			remove_ideas = katzen_collapse_1
+		}
+		else_if = {
+			limit = { has_idea = katzen_collapse_2 }
+			remove_ideas = katzen_collapse_2
+		}
+		else_if = {
+			limit = { has_idea = AUR_chaos_collapse }
+			remove_ideas = AUR_chaos_collapse
+		}
+		add_timed_idea = {
+			idea = AUR_total_economic_collapse
+			days = 1095
+		}
+		start_civil_war = { ideology = communism }
+	}
+}
+
+#industry plan successful
+country_event = {
+	id = AUR_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.3"}
+	title = AUR_event.3.t
+	desc = AUR_event.3.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.3.a
+		add_political_power = 250
+		add_timed_idea = {
+			idea = AUR_economic_backlash
+			days = 180
+		}
+	}
+}
+
+#Kaiser's Footsteps
+country_event = {
+	id = AUR_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.4"}
+	title = AUR_event.4.t
+	desc = AUR_event.4.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.4.a
+		add_threat = 1
+	}
+}
+
+#Pursuit of Hypermilitarism
+country_event = {
+	id = AUR_event.5
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.5"}
+	title = AUR_event.5.t
+	desc = AUR_event.5.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.5.a
+		add_stability = -0.01
+		add_war_support = 0.01
+	}
+}
+
+#Ask for Pakt
+country_event = {
+	id = AUR_event.6
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.6"}
+	title = AUR_event.6.t
+	desc = AUR_event.6.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.6.a
+		add_stability = -0.05
+		custom_effect_tooltip = AUR_event.6.a.tooltip
+		diplomatic_relation = { country = AUR relation = non_aggression_pact }
+		hidden_effect = {
+			set_country_flag = signed_regency_pakt
+			AUR = { country_event = { id = AUR_event.7 } }
+		}
+		LIO = { every_core_state = { add_claim_by = ROOT } }
+		MEO = { every_core_state = { add_claim_by = ROOT } }
+	}
+
+	option = {
+		name = AUR_event.6.b
+		add_political_power = 50
+		add_stability = 0.05
+		hidden_effect = { AUR = { country_event = { id = AUR_event.7 } } }
+		ai_chance = { base = 0 }
+	}
+}
+
+#pakt accepted
+country_event = {
+	id = AUR_event.7
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.7"}
+	title = AUR_event.7.t
+	desc = {
+		text = AUR_event.7.d.yes
+		trigger = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } }
+	}
+	desc = {
+		text = AUR_event.7.d.no
+		trigger = { NOT = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } } }
+	}
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.7.a
+		diplomatic_relation = { country = event_target:regency_partner relation = non_aggression_pact }
+		trigger = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } }
+	}
+
+	option = {
+		name = AUR_event.7.b
+		trigger = { NOT = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } } }
+
+	}
+}
+
+#Regent strikes south
+country_event = {
+	id = AUR_event.8
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.8"}
+	title = AUR_event.8.t
+	desc = AUR_event.8.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.8.a
+		declare_war_on = { target = LIO type = annex_everything }
+		declare_war_on = { target = MEO type = annex_everything }
+	}
+}
+
+#Killing KSK
+country_event = {
+	id = AUR_event.9
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.9"}
+	title = AUR_event.9.t
+	desc = AUR_event.9.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.9.a
+		custom_effect_tooltip = AUR_event.9.a.tt
+		add_political_power = 50
+		add_manpower = -100000
+		add_stability = -0.05
+		hidden_effect = { subtract_from_variable = { ksk_strength = 3 } calculate_ipf_ksk_resistance = yes  }
+	}
+
+	option = {
+		name = AUR_event.9.b
+		custom_effect_tooltip = AUR_event.9.b.tt
+		add_political_power = 15
+		hidden_effect = { subtract_from_variable = { ksk_strength = 2 } calculate_ipf_ksk_resistance = yes }
+	}
+}
+
+#Jovel Luft
+country_event = {
+	id = AUR_event.10
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.10"}
+	title = AUR_event.10.t
+	desc = AUR_event.10.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.10.a
+	}
+}
+
+#What would he do?
+country_event = {
+	id = AUR_event.11
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.11"}
+	title = AUR_event.11.t
+	desc = AUR_event.11.d
+	picture = GFX_report_event_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.11.a
+		AUR_Herald = {
+			remove_country_leader_trait = { trait = reckless_totalitarian }
+			add_country_leader_trait = { trait = reckless_totalitarian_2 }
+		}
+	}
+
+	option = {
+		name = AUR_event.11.b
+		AUR_Herald = {
+			add_country_leader_trait = { trait = herald_demagogue }
+		}
+	}
+}
+
+#Kleine Luft
+country_event = {
+	id = AUR_event.12
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.12"}
+	title = AUR_event.12.t
+	desc = AUR_event.12.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.12.a
+		add_stability = 0.025
+		add_political_power = -5
+	}
+}
+
+#Kleine Luft
+country_event = {
+	id = AUR_event.12
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.12"}
+	title = AUR_event.12.t
+	desc = AUR_event.12.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.12.a
+		add_stability = 0.025
+		add_political_power = -5
+	}
+}
+
+#RIP Kitti Luft :(
+country_event = {
+	id = AUR_event.13
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.13"}
+	title = AUR_event.13.t
+	desc = AUR_event.13.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.13.a
+		add_stability = 0.05
+		add_war_support = -0.05
+		add_political_power = -25
+	}
+}

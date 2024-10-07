@@ -171,12 +171,7 @@ technologies = {
 			leads_to_tech = improved_light_cruiser 
 			research_cost_coeff = 1
 		}
-		
-		path = {
-			leads_to_tech = basic_heavy_cruiser 
-			research_cost_coeff = 0.75
-		}
-		
+
 		research_cost = 2
 		
 		start_year = 1936
@@ -208,11 +203,7 @@ technologies = {
 			leads_to_tech = advanced_light_cruiser 
 			research_cost_coeff = 1
 		}
-		path = {
-			leads_to_tech = improved_heavy_cruiser 
-			research_cost_coeff = 0.75
-		}
-		
+
 		research_cost = 2
 
 		start_year = 1940
@@ -238,11 +229,6 @@ technologies = {
 
 		enable_equipments = { 
 			light_cruiser_4
-		}
-		
-		path = {
-			leads_to_tech = advanced_heavy_cruiser 
-			research_cost_coeff = 0.75
 		}
 		
 		research_cost = 2
@@ -316,7 +302,7 @@ technologies = {
 		}
 		
 		path = {
-			leads_to_tech = basic_light_cruiser 
+			leads_to_tech = early_battlecruiser 
 			research_cost_coeff = 0.75
 		}
 		
@@ -351,10 +337,6 @@ technologies = {
 			leads_to_tech = advanced_heavy_cruiser 
 			research_cost_coeff = 1
 		}
-		path = {
-			leads_to_tech = improved_light_cruiser 
-			research_cost_coeff = 0.75
-		}
 		
 		research_cost = 2
 
@@ -384,7 +366,7 @@ technologies = {
 		}
 
 		path = {
-			leads_to_tech = advanced_light_cruiser 
+			leads_to_tech = basic_battlecruiser 
 			research_cost_coeff = 0.75
 		}
 		
@@ -424,11 +406,11 @@ technologies = {
 		
 		research_cost = 1.5
 
-		start_year = 1922
+		start_year = 1936
 		
 		folder = {
 			name = naval_folder
-			position = { x = -1 y = 1 }
+			position = { x = 3 y = 7 }
 		}
 		
 		ai_will_do = {
@@ -448,18 +430,13 @@ technologies = {
 			battle_cruiser_2
 		}
 		
-		path = {
-			leads_to_tech = improved_battleship 
-			research_cost_coeff = 0.75
-		}
-		
 		research_cost = 2
 
-		start_year = 1940
+		start_year = 1944
 		
 		folder = {
 			name = naval_folder
-			position = { x = -1 y = 13 }
+			position = { x = 3 y = 19 }
 		}
 		
 		ai_will_do = {
@@ -483,7 +460,6 @@ technologies = {
 			leads_to_tech = basic_battleship 
 			research_cost_coeff = 1
 		}
-		
 		
 		research_cost = 1.5
 		start_year = 1922
@@ -805,6 +781,11 @@ technologies = {
 			leads_to_tech = improved_carrier 
 			research_cost_coeff = 1
 		}
+
+		path = {
+			leads_to_tech = heavy_carrier 
+			research_cost_coeff = 0.75
+		}
 		
 		research_cost = 2
 		start_year = 1936
@@ -864,6 +845,10 @@ technologies = {
 			carrier_4
 		}
 
+		path = {
+			leads_to_tech = heavy_carrier2
+			research_cost_coeff = 0.75
+		}
 		
 		research_cost = 2
 
@@ -886,6 +871,62 @@ technologies = {
 		}
 	}
 	
+	heavy_carrier = {
+
+		enable_equipments = { 
+			super_carrier_1
+		}
+		
+		path = {
+			leads_to_tech = heavy_carrier2 
+			research_cost_coeff = 1
+		}
+		
+		research_cost = 2
+		start_year = 1936
+		
+		folder = {
+			name = naval_folder
+			position = { x = 2 y = 7 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			naval_equipment
+			shbb_tech
+			mio_cat_tech_all_capital_ship_and_modules
+		}
+	}
+	
+	heavy_carrier2 = {
+
+		enable_equipments = { 
+			super_carrier_2
+		}
+		
+		research_cost = 2
+
+		start_year = 1944
+		
+		folder = {
+			name = naval_folder
+			position = { x = 2 y = 19 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			naval_equipment
+			shbb_tech
+			mio_cat_tech_all_capital_ship_and_modules
+		}
+	}
+
 	early_submarine = {
 
 		enable_equipments = { 
@@ -926,6 +967,12 @@ technologies = {
 		
 		path = {
 			leads_to_tech = improved_submarine 
+			research_cost_coeff = 1
+		}
+
+	
+		path = {
+			leads_to_tech = heavy_submarine
 			research_cost_coeff = 1
 		}
 		
@@ -986,6 +1033,11 @@ technologies = {
 		enable_equipments = { 
 			submarine_4
 		}
+
+		path = {
+			leads_to_tech = heavy_submarine2 
+			research_cost_coeff = 1
+		}
 		
 		research_cost = 2
 
@@ -1008,6 +1060,61 @@ technologies = {
 		}
 	}
 
+	heavy_submarine = {
+
+		enable_equipments = { 
+			ballistic_submarine_1
+		}
+		
+		path = {
+			leads_to_tech = heavy_submarine2 
+			research_cost_coeff = 1
+		}
+		
+		research_cost = 2
+		start_year = 1936
+		
+		folder = {
+			name = naval_folder
+			position = { x = 2 y = 7 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			naval_equipment
+			shbb_tech
+			mio_cat_tech_all_capital_ship_and_modules
+		}
+	}
+	
+	heavy_submarine2 = {
+
+		enable_equipments = { 
+			ballistic_submarine_2
+		}
+		
+		research_cost = 2
+
+		start_year = 1944
+		
+		folder = {
+			name = naval_folder
+			position = { x = 2 y = 19 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			naval_equipment
+			shbb_tech
+			mio_cat_tech_all_capital_ship_and_modules
+		}
+	}
 	
 
 	######## JAPAN FOCUS TREE UNLOCK ########

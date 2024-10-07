@@ -1,0 +1,143 @@
+add_namespace = LOK_DOM
+
+country_event = {
+	id = LOK_DOM.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_DOM.1"}
+	title = "LOK_DOM.1.t"
+	desc = "LOK_DOM.1.d"
+	is_triggered_only = yes
+
+	#Ok
+	option = {
+		name = "LOK_DOM.1.a"
+		if = {
+			limit = { is_ai = no DOM = { is_ai = yes } }
+			DOM = { change_tag_from = ROOT }
+		}
+		FSR = { every_character = { set_nationality = DOM } }
+		DOM = { annex_country = { target = FSR transfer_troops = yes } set_capital = { state = 730 } }
+		DOM = { country_event = LOK_proposal.1 }
+
+		ai_chance = {
+			base = 3
+		}
+	}
+
+	#How about no
+	option = {
+		name = "LOK_DOM.2.a"
+		add_war_support = 0.10
+		DOM = { country_event = LOK_proposal.2 }
+		declare_war_on = {
+			target = DOM
+			type = annex_everything
+		}
+
+		ai_chance = {
+			base = 1
+		}
+	}
+}
+
+
+add_namespace = LOK_NEK
+
+#Peace out for Akiba
+country_event = {
+	id = LOK_NEK.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_NEK.1"}
+	title = "LOK_NEK.1.t"
+	desc = "LOK_NEK.1.d"
+	is_triggered_only = yes
+
+	immediate = {
+		save_global_event_target_as = proposal_recipient
+	}
+
+	#Ok
+	option = {
+		name = "LOK_NEK.1.a"
+		white_peace = NEK
+		229 = {
+			transfer_state_to = NEK
+			custom_effect_tooltip = state_core_threshold_set_60
+			set_state_flag = compliance_60_@ROOT
+			add_to_array = { array = ROOT.potential_cores_array }
+			add_compliance = 10
+		}
+		225 = { set_demilitarized_zone = yes }
+		NEK = {
+			add_stability = 0.10
+			add_war_support = 0.05
+			add_political_power = 150
+		}
+		add_stability = 0.05
+		add_war_support = -0.05
+		NEK = { country_event = LOK_proposal.1 }
+
+		ai_chance = {
+			base = 3
+		}
+	}
+
+	#How about no
+	option = {
+		name = "LOK_NEK.2.a"
+		add_stability = -0.05
+		add_war_support = 0.05
+		NEK = { country_event = LOK_proposal.2 }
+
+		ai_chance = {
+			base = 1
+		}
+	}
+}
+
+add_namespace = LOK_TAK
+country_event = {
+	id = LOK_TAK.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_TAK.1"}
+	title = "LOK_TAK.1.t"
+	desc = "LOK_TAK.1.d"
+	is_triggered_only = yes
+
+	#Ok
+	option = {
+		name = "LOK_TAK.1.a"
+		white_peace = NEK
+		ROQ = {
+			set_autonomy = {
+				target = TAK
+				autonomy_state = autonomy_puppet
+			}
+		}
+		340 = { transfer_state_to = ROQ }
+		hidden_effect = { set_politics = { ruling_party = neutrality } }
+		ROQ = { country_event = LOK_proposal.1 }
+		add_stability = -0.10
+		ai_chance = {
+			base = 1
+		}
+	}
+
+	#How about no
+	option = {
+		name = "LOK_TAK.1.b"
+		add_war_support = 0.20
+		ROQ = {
+			create_wargoal = {
+				type = annex_everything
+				target = TAK
+			}
+			country_event = LOK_proposal.2
+		}
+		if = {
+			limit = { is_in_faction_with = ROQ }
+			leave_faction = yes
+		}
+
+		ai_chance = {
+			base = 1
+		}
+	}
+}

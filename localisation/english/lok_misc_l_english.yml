@@ -1,7 +1,12 @@
 ﻿l_english:
+ 
+ is_controlled_by_ROOT_or_subject:0 "Controlled by §H[ROOT.GetName]§! or a §Hpuppet§!."
 
  LOK_BK_NAME:0 "Legacy Of Kattail"
  LOK_BK_DESC:0 "Flusion is victorious, the Herzlands lie shattered and the megalomaniac Kaiser is gone. The world rests in an uneasy balance as new powers play with the power to decimate Flusion as we know it..."
+
+ GRAND_CANAL:0 "Grand Canal"
+ PINK_SEA_CANAL:0 "Pink Sea Canal"
 
  #Continents
  felinea:0 "Felinea"
@@ -35,15 +40,192 @@
  frozen:0 "Glacial"
  frozen_desc:0 "§gVast expanses of snow and ice often battered by harsh blizzard and snowstorms.§!"
 
+ space:0 "Space"
+ space_desc:0 ""
+
+ muno:0 "Muno"
+ muno_desc:0 ""
+
+ xenon:0 "Xenon"
+ xenon_desc:0 ""
+
+ water_space:0 "Outer Space"
+ water_space_desc:0 ""
+
  #Adjacencies
  BLASTERIAN_CANAL:0 "Blasterian Canal"
 
  #UI Stuff
- lok_state_death_counter_value_tooltip:0 "From §RCombat§! - [?lok_state_combat_deaths_display]K\nFrom §YBombing§! - [?lok_state_bombing_deaths_display]K\nFrom §GRadiation§! - [?lok_state_radiation_deaths_display]K\nFrom §OStarvation§! - [?lok_state_starvation_deaths_display]K"
+ lok_state_death_counter_value_tooltip:0 "From §RCombat§! - [?lok_state_combat_deaths|0]K\nFrom §YBombing§! - [?lok_state_bombing_deaths|0]K\nFrom §GRadiation§! - [?lok_state_radiation_deaths|0]K\nFrom §OStarvation§! - [?lok_state_starvation_deaths|0]K"
 
- lok_country_death_counter_value_tooltip:0 "From §RCombat§! - [?lok_country_combat_deaths_display]K\nFrom §YBombing§! - [?lok_country_bombing_deaths_display]K\nFrom §GRadiation§! - [?lok_country_radiation_deaths_display]K\nFrom §OStarvation§! - [?lok_country_starvation_deaths_display]K"
+ lok_country_death_counter_value_tooltip:0 "From §RCombat§! - [?lok_country_combat_deaths|0]K\nFrom §YBombing§! - [?lok_country_bombing_deaths|0]K\nFrom §GRadiation§! - [?lok_country_radiation_deaths|0]K\nFrom §OStarvation§! - [?lok_country_starvation_deaths|0]K"
 
- lok_global_death_counter_value_tooltip:0 "From §RCombat§! - [?global.lok_global_combat_deaths_display]M\nFrom §YBombing§! - [?global.lok_global_bombing_deaths_display]M\nFrom §GRadiation§! - [?global.lok_global_radiation_deaths_display]M\nFrom §OStarvation§! - [?global.lok_global_starvation_deaths_display]M"
+ lok_global_death_counter_value_tooltip:0 "From §RCombat§! - [?global.lok_global_combat_deaths_display|2]M\nFrom §YBombing§! - [?global.lok_global_bombing_deaths_display|2]M\nFrom §GRadiation§! - [?global.lok_global_radiation_deaths_display|2]M\nFrom §OStarvation§! - [?global.lok_global_starvation_deaths_display|2]M"
 
+ lok_radiation_counter_value_tooltip:0 "§LRadiation represents the buildup of radioactive elements in a state, generally deposited by nuclear weapon strikes. Every week, the radiation level will drop by §H25%§! as the radioactive isotopes decay, but a percentage of the state's population, equal to the current radiation level, will §Rdie§!. Due to various environmental factors such as rain and wind, there is a §H50%§! chance of a neighboring state gaining §Hhalf§! of this state's radiation level.§!\n\n§HState Radiation Effects§!\nState Casualties Last Week: [?lok_radiation_death_percent|%-2] (§H[?lok_radiation_death_count|0]K§! people)\nRecruitable Population: [?lok_radiation_modifier|=%+0]\nState Building Slots: [?lok_radiation_modifier|=%+0]\nState Resources: [?lok_radiation_modifier|=%+0]\nState Construction Speed: [?lok_radiation_modifier|=%+0]\n\n§HArmy Radiation Effects§!\nLocal Supplies: [?lok_radiation_army_modifier|=%+0]\nRecovery Rate: [?lok_radiation_army_modifier|=%+0]\nDivisions Speed: [?lok_radiation_army_modifier|=%+0]\nAttrition: [?lok_radiation_army_attrition_modifier|=%-0]"
+
+ lok_radiation_state_modifier:0 "Local Radiation"
+
+ #Nukes
  NUKE_BUTTON_CLICK:0 "§GClick§! to drop a §YNuclear Bomb§!"
- lok_thermonuclear_salvo_button_tooltip:0 "§GClick§! to launch a §RThermonuclear Salvo§!"
+ lok_thermonuclear_salvo_button_tooltip:0 "§GClick§! to launch §Y[?ROOT.nuke_launch_count]§! §RICBMs§! of the selected type.\nSaid type must be unlocked."
+ 
+ lok_nuke_launch_count:0 " [?ROOT.nuke_launch_count]"
+ 
+ lok_increase_nuke_count_button_tooltip:0 "§GClick§! to add §Y1§! ICBM to be launched.\n§GCtrl-Click§! to add §Y10§! ICBMs to be launched.\n§GShift-Click§! to add the §Ymax§! amount of ICBMs to be launched."
+
+ lok_decrease_nuke_count_button_tooltip:0 "§GClick§! to remove §Y1§! ICBM to be launched.\n§GCtrl-Click§! to remove §Y10§! ICBMs to be launched.\n§GShift-Click§! to set the ICBM to be launched to §Y0§!."
+
+ lok_no_nuke:0 "None"
+ lok_fission_nuke:0 "§8Fission§!"
+ lok_cobalt_nuke:0 "§2Cobalt§!"
+ lok_fusion_nuke:0 "§tFusion§!"
+
+ lok_nuke_type_tooltip:0 "[ROOT.GetNukeTypeDesc]"
+
+ lok_no_nuke_desc:0 "No WMDs selected."
+ 
+ lok_fission_nuke_desc:0 "§8Fission Warhead§! (§Y[?ROOT.num_equipment@lok_fission_nuke_equipment]§! in stockpile)\nPopulation Casualties from Blast: §Y5%§!\nBase Emitted Radiation: §Y1§!\n§LFission bombs derive their destructive force purely from fission reactions. Their yields range from a few kilotons to half a megaton and they are particularly radioactive.§!"
+
+ lok_fusion_nuke_desc:0 "§tFusion Warhead§! (§Y[?ROOT.num_equipment@lok_fusion_nuke_equipment]§! in stockpile)\nBase Population Casualties from Blast: §Y10%§!\nBase Emitted Radiation: §Y0.75§!\n§LFusion warheads derive their destructive force from a fusion upper stage ignited by fission reactions. Their yields range from hundreds of kilotons to dozens of megatons and they emit comparatively less fallout than fission designs for their power. The literal power of the sun at our fingertips.§!"
+
+ lok_cobalt_nuke_desc:0 "§2Cobalt Warhead§! (§Y[?ROOT.num_equipment@lok_cobalt_nuke_equipment]§! in stockpile)\nBase Population Casualties from Blast: §Y2.5%§!\nBase Emitted Radiation: §Y10§!\n§LCobalt bombs are 'salted' or 'dirty' bombs - warheads specifically designed to produce enhanced amounts of fallout and contaminate a large area with radioactive material.§!"
+
+ lok_fission_nuke_equipment:0 "Fission Warhead"
+ lok_fission_nuke_equipment_0:0 "Fission Warhead"
+ lok_fission_nuke_equipment_0_desc:0 "Fission bombs derive their destructive force purely from fission reactions. Their yields range from a few kilotons to half a megaton and they are particularly radioactive."
+
+ lok_fusion_nuke_equipment:0 "Fusion Warhead"
+ lok_fusion_nuke_equipment_0:0 "Fusion Warhead"
+ lok_fusion_nuke_equipment_0_desc:0 "Fusion warheads derive their destructive force from a fusion upper stage ignited by fission reactions. Their yields range from hundreds of kilotons to dozens of megatons and they emit comparatively less fallout than fission designs for their power. The literal power of the sun at our fingertips."
+
+ lok_cobalt_nuke_equipment:0 "Cobalt Warhead"
+ lok_cobalt_nuke_equipment_0:0 "Cobalt Warhead"
+ lok_cobalt_nuke_equipment_0_desc:0 "Cobalt bombs are 'salted' or 'dirty' bombs - warheads specifically designed to produce enhanced amounts of fallout and contaminate a large area with radioactive material."
+
+ lok_coring_value_tooltip:0 "§Y[?THIS.GetName]§! will be cored by [?var:controller.GetFlag] §Y[?var:controller.GetName]§! at §Y[?THIS.GetStateCoringThreshold]%§! compliance."
+
+ LOK_nukes_factories:0 "\nMilitary Factories Producing Nuclear Warheads"
+
+ lok_nuke_stockpile_text:0 "[?lok_total_nuke_stockpile]"
+ lok_salvo_capacity_text:0 "[?lok_current_salvo_capacity]/[?lok_total_salvo_capacity]"
+
+ lok_nuke_stockpile_tooltip:0 "We currently have §Y[?lok_total_nuke_stockpile]§! nuclear warheads in stockpile.\n§8Fission Warheads§! - §Y[?num_equipment@lok_fission_nuke_equipment]§!\n§tFusion Warheads§! - §Y[?num_equipment@lok_fusion_nuke_equipment]§!\n§2Cobalt Warheads§! - §Y[?num_equipment@lok_cobalt_nuke_equipment]§!"
+ lok_salvo_capacity_tooltip:0 "Our total §2Salvo Capacity§! is §Y[?lok_total_salvo_capacity]§!, with §Y[?lok_current_salvo_capacity]§! available. This represents how many nuclear ICBMs are deployed and can thus be fired at once.\n\nIf we fire nuclear IBCMs, we will have to wait §Yone week§! for our salvo capacity to recharge as dormant IBCMs are pulled out of our stockpile and readied.\n\nOur capacity can be increased with §YRocket Silos§! (10 capacity per) and §YBallistic Submarines§! (20 capacity per)."
+
+ above_salvo_capacity:0 "Insufficient Salvo Capacity!"
+ must_be_at_war_to_nuke:0 "We must be at war with the target nation to fire nuclear ICBMs."
+ not_enough_nukes:0 "Insufficient ICBMs in stockpile."
+
+
+ #Modifiers
+ country_resource_food:0 "Food"
+ country_resource_fissiles:0 "Fissiles"
+ country_resource_supertensiles:0 "Supertensiles"
+ lok_nuke_radiation_factor:0 "Radiation from Nukes"
+ lok_mineral_resources_factor:0 "Mineral Resources Gain"
+ lok_starvation_yes:0 "Population Decline from Starvation"
+
+ LOK_extra_resources_modifier:0 "Extra Resources from Tech & Buffs"
+ lok_matching_species:0 "Matching Species"
+ lok_matching_minority:0 "Matching Minority"
+
+ #General Spirits
+ herzlands_warlord_idea:0 "Herzlands Warlord State"
+ herzlands_warlord_idea_desc:0 "This state, [?ROOT.GetNameDef], is a nation born from the ashes of the Katzenartig Imperium and had to endure the bloody chaos of its total disintegration before being able to establish itself as a proper nation. Thus, the prospect of war and conflict, whether defensive or offensive, does not scare its people."
+
+ lok_food_deficit_modifier:0 "Food Shortages"
+ lok_food_deficit_modifier_desc:0 "There are food shortages throughout our nation. This will impact our economy and government until it is resolved."
+
+ lok_starvation_deficit_modifier:0 "Catastrophic Famine"
+ lok_starvation_deficit_modifier_desc:0 "Our people are starving! This will have a drastic effect on our nation and the population of our states will steadily drop as people starve to death until the shortage is resolved."
+
+ ipf_resistance_idea_desc:0 "Dictators of the Herzlands are confronted with a continent-wide network of organized democrat terrorists plotting carbombs on military governors and shootings for rallies by fascist demagogues. They are notoriously hard to get rid of and find funding from the righteous and proud."
+
+ ksk_resistance_idea_desc:0 "Dictators of the Herzlands are confronted with a continent-wide network of organized socialist terrorists plotting carbombs on military governors and shootings for rallies by fascist demagogues. They are notoriously hard to get rid of and find funding from the righteous and proud."
+
+ lok_IPF_KSK_cat:0 "The IPF and KSK"
+ lok_IPF_KSK_cat_desc:0 "Two powerful partisan networks known as the §2Interne Partisanenfront§! or §2IPF§! and the §RKatzensoldaten der Kernländer§! or §RKSK§! operate across the Herzlands. They have been brought together into a loose §gCoalition§! known as the §gIPF-KSK§!, led by §HOberkommandant Katalia Pawnth§!.\n\nEach of the networks has an §Yopinion§! of our government as well as a §Yactivity§! level in our nation. If their opinion is §G1§! or more, they will provide us with §Gbuffs§!, whereas if it is §R-1§! or less, they will instead work §Ragainst us§!.\n\nTheir leaders §Yfrequently move across the Herzlands§! between countries where their networks are established. Managing to strike them down will reduce their network's strength by §Y2§! everywhere and cap its max strength at §Y3§!.\n\n§2INTERNE PARTISANEFRONT§!\nOPINION: [?ROOT.ipf_opinion|+0]\nNETWORK ACTIVITY: §Y[?ROOT.ipf_strength]/6§!\nStability: [?ROOT.ipf_stability_factor|1%=+]\nFactory Output: [?ROOT.ipf_industrial_capacity_factory|1%=+]\nResistance Activity: [?ROOT.ipf_resistance_activity|1%=-]\nResistance Growth: [?ROOT.ipf_resistance_growth|1%=-]\nDaily Democracy Support: §Y[?ROOT.ipf_democratic_drift|=]§!\n\n§RKATZENSOLDATEN DER KERNLÄNDER§!\nOPINION: [?ROOT.ksk_opinion|+0]\nNETWORK ACTIVITY: §Y[?ROOT.ksk_strength]/6§!\nWar Support: [?ROOT.ksk_war_support_factor|1%=+]\nProduction Efficiency Cap: [?ROOT.ksk_production_factory_max_efficiency_factor|1%=+]\nCompliance Gain: [?ROOT.ksk_compliance_gain|3=+]\nDaily Communism Support: §Y[?ROOT.ksk_communism_drift|=]§!"
+
+ katlinin_name:0 "§HMEOWKHAIL KATLININ§!\nLeader of the §RKSK§!\nStatus: [ROOT.GetKatlininAliveOrDead]\n[ROOT.GetKatlininLocation]"
+ katlinin_desc:0 "The §Rsocialist faction§! of the §gIPF/KSK§! is made up of those who seek to establish a §Ycommunist state§! in the Katzen Herzlands. Originally led by Pawel Katezsky, the socialists are now led by the fervent communist revolutionary Meowkhail Katlinin.\n\nHe has brought with him a considerable amount of Katzen rebels to join the Herzland insurgency and usurp the leadership role within the far-left coalition.\n\nHis rather vanguardist beliefs puts him at odds with some of the moderates within the faction but he still holds majority support among the reds and should he lead the socialist faction to the top of the IPF/KSK, the Herzlands could possibly face the rise of a new iron-fisted communist power."
+
+ meowrius_name:0 "§HMEOWRIUS KIBBLESBY§!\nLeader of the §2IPF§!\nStatus: [ROOT.GetMeowriusAliveOrDead]\n[ROOT.GetMeowriusLocation]"
+ meowrius_desc:0 "The §2liberalist faction§! of the §gIPF/KSK§! is made up of those who seek to establish a §Ydemocratic nation§! in the Katzen Herzlands that is built on the ideas of freedom and liberty.\n\nWhile a truly free society does sound appealing, Meowrius had a difficult time convincing people to share his vision when the world around them is controlled by tyrannical warlords and opportunistic capitalists alike.\n\nRegardless, he has gained himself a sizable following that puts the liberalists above the socialists but still far below the loyalists in terms of popularity. If they come out on top of the other factions, we may be well on our way to seeing the rise of a new shining democracy in the Herzlands..."
+
+ ipf_ksk_unknown_location:0 "Location: §RUNKNOWN§!"
+ katlinin_location:0 "Location: §H[global.katlinin_country.GetName]§!"
+ meowrius_location:0 "Location: §H[global.meowrius_country.GetName]§!"
+
+ LOK_KSK_IPF_activity:0 "IPF-KSK Activity"
+
+ ksk_name:0 "§RKatzensoldaten der Kernländers§!"
+ ksk_strength:0 "§RKSK Activity§!"
+ ksk_opinion:0 "§RKSK Opinion§!"
+
+ ipf_name:0 "§2Interne Partisanefront§!"
+ ipf_strength:0 "§2IPF Activity§!"
+ ipf_opinion:0 "§2IPF Opinion§!"
+
+ raid_ksk_hideouts:0 "Storm §RKSK§! Hideouts"
+ raid_ksk_hideouts_tooltip:0 "§Y50%§! chance that $ksk_strength$ decreases by §Y1§!.\n$ksk_opinion$ decreases by §Y2§!.\nHas a §Y10%§! chance of permanently revealing §HMeowkhail Katlinin§!'s location."
+
+ concessions_to_ksk:0 "Concessions to the §RKSK§!"
+ concessions_to_ksk_tooltip:0 "$ksk_strength$ increases by §Y1§!.\n$ksk_opinion$ increases by §Y1§!."
+
+ censor_the_ipf:0 "Enact Censorship against the §2IPF§!"
+ censor_the_ipf_tooltip:0 "§Y50%§! chance that $ipf_strength$ decreases by §Y1§!.\n$ipf_opinion$ decreases by §Y1§!."
+
+ shoot_the_ipf:0 "Massive §2IPF§! Crackdown Campaign"
+ shoot_the_ipf_tooltip:0 "$ipf_strength$ decreases by §Y1§! or §Y2§! (§Y50%§! chance).\n$ipf_opinion$ decreases by §Y2§!.\nHas a §Y15%§! chance of permanently revealing §HMeowrius Kibblesby§!'s location."
+
+ concessions_to_ipf:0 "Collaborate with the §2IPF§!"
+ concessions_to_ipf_tooltip:0 "$ipf_strength$ increases by §Y1§!.\n$ipf_opinion$ increases by §Y1§!."
+
+ look_for_meowrius:0 "Attempt to locate §2Meowrius Kibblesby§!"
+ look_for_meowrius_tooltip:0 "Has a §Y50%§! chance of permanently revealing §HMeowrius Kibblesby§!'s location."
+
+ look_for_katlinin:0 "Attempt to locate §RMeowkhail Katlinin§!"
+ look_for_katlinin_tooltip:0 "Has a §Y50%§! chance of permanently revealing §HMeowkhail Katlinin§!'s location."
+
+ try_to_kill_katlinin:0 "Strike against §RKatlinin§!"
+ try_to_kill_katlinin_tooltip:0 "If §HKatlinin§! happens to be in our territory, he will be §Rkilled!§! This will decrease $ksk_strength$ everywhere by §Y2§! and cap it at §Y3§!."
+
+ try_to_kill_meowrius:0 "Strike against §2Meowrius§!"
+ try_to_kill_meowrius_tooltip:0 "If §HMeowrius§! happens to be in our territory, he will be §Rkilled!§! This will decrease $ipf_strength$ everywhere by §Y2§! and cap it at §Y3§!."
+
+ ipf_ksk_alive:0 "§GALIVE§!"
+ ipf_ksk_dead:0 "§RDEAD§!"
+
+ ipf_bad_action:0 "Incoming §2IPF§! Terrorist Attack!"
+ ipf_bad_action_tooltip:0 "§2[?ROOT.ipf_strength]§! §HCivilian Factories§! or §HInfrastructure§! will be §Rsabotaged!§!"
+ ksk_bad_action:0 "Incoming §RKSK§! Military Sabotage!"
+ ksk_bad_action_tooltip:0 "§2[?ROOT.ksk_strength]§! §HMilitary Factories§! or §HDockyards§! will be §Rsabotaged!§!"
+
+ ipf_good_action:0 "Incoming §2IPF§! Support!"
+ ipf_good_action_tooltip:0 "§Y70%§! chance of getting §2250§! §YInfantry Equipment§!\n§Y25%§! chance of getting §G1%§! §YStability§!\n§Y5%§! chance of having a §YCivilian Factory§! built in a state.\nThis will happen §2[?ROOT.ipf_strength]§! times."
+
+ ksk_good_action:0 "Incoming §RKSK§! Support!"
+ ksk_good_action_tooltip:0 "§Y70%§! chance of getting §250§! §YArtillery§!\n§Y25%§! chance of getting §G1%§! §YWar Support§!\n§Y5%§! chance of having a §YMilitary Factory§! built in a state.\nThis will happen §2[?ROOT.ksk_strength]§! times."
+
+#  lok_IPF_KSK_cat_desc:0 "Two powerful partisan networks known as the §2Interne Partisanenfront§! and the §RKatzensoldaten der Kernländer§! operate across the Herzlands.\n\nThe Interne Partisanenkräfte or Interne Partisanenfront (IPF) and originally known as the Anti-Kaiser Front (AKF) was formed about a decade ago by mid-ranking members of the Katzen imperial military who were disillusioned by the policies of the Imperium's leadership. Operations carried out by the AKF were mostly comprised of inside sabotage missions, propagandization, backroom assassinations, and misinformation among other things. Following the collapse of the Katzenartig Imperium and the Kaiser's subsequent disappearance, leadership within the AKF had no direction of what to do next. This quickly changed however, as the power vacuum left behind by the Imperium's collapse paved the way for new powers to rise up across Flusion, the most alarming being the Katsilbershirts and the Imperial Regency. Thus, the Anti-Kaiser Front reogranized into the IPF and made it their mission to fight these tyrannical powers within the Herzlands.\n\nFollowing the IPF's reorganization, the group transitioned from a secret backroom organization into a fighting force, even managing to carve out a territory of their own at one point. In the last couple years, the IPF fought several groups in the Katzen Herzlands including ultranationalist fanatics, marauder warbands, cultist alien worshippers, and more. Eventually the IPF came across another group, the §RKatzensoldaten der Kernländer§! (KSK), which was also made up of ex-imperial soldiers who had a similar goal of fighting off tyrannical warlords. Not long after, the two groups united and became what's known today as the §HIPF/KSK§!. As the years went on, warlords in the Herzlands begun to consolidate power and the IPF/KSK found themselves on the defensive against the larger forces in the region. The IPF/KSK were finally forced into hiding just a year ago following a terrible defeat in the §HBattle of Meowsden§! where, after bloody fighting across the streets of Meowsden, Silbershirt forces stormed their headquarters and killed off most of their leadership."
+ 
+ katzen_collapse_3:0 "Pandemonium of the Collapse"
+ katzen_collapse_3_desc:0 "Oh by all the gods of Flusion and all the past demagogues, the Herzlands are broken. Every facet of the Kaiser's empire that stretched half the planet started and ended here. Our wealth was immeasurable, our power incomprehensible, and our prestige greater than the gods. We must reclaim it. "
+
+ katzen_collapse_2:0 "Chaos of the Collapse"
+ katzen_collapse_2_desc:0 "The mighty Katzenartig Imperium is dead and gone. It's economic grasp on the entire world has been unleashed and the immense amount of resources that flowed to and from the Herzlands have withered to a trickle. Vast interstate connections are all replaced with suspicion and simple-minded hatred. Truly, this is the worst of times."
+
+ katzen_collapse_1:0 "Disarray of the Collapse"
+ katzen_collapse_1_desc:0 "Dead! Dead! The Imperium is dead! From its engorged belly, a new order must be made from its guts and ours will be the greatest. Some time is needed to fix the brain drain, rebuild infrastructure damage by the war, and the political dissent of far too many groups. But it can be done."
+
+ #Space View
+ LOK_PLANET_DATA:0 "[GetPlanetData]"
+
+ xenon_planet_data:0 "§HDESCRIPTION§!\nXenon is Flusion's largest and closest moon. Although larger than Muno, it remains rather small as far as moons go, yet somehow possesses a thin, wispy atmosphere, in part due to volcanic activity spewing gases over the surface.\n\n§HPHYSICAL PARAMETERS§!\nDiameter: 1 544 km\nGravity: 0.169 G\nTemperature: 21 °C\nDay Length: 12.8 days\nMagnetic Field: Weak\n\n§HORBITAL PARAMETERS§!\nParent Body: Flusion\nOrbital Distance: 63 000 km\nOrbital Period: 2.84 days\nInclination: 2.66 ° - Negligible\nEccentricity: 0.104 - Slightly eccentric\n\n§HSURFACE PARAMETERS§!\nType: Rocky\nAtmosphere Present: Yes\nAtmospheric Pressure: 0.01 atm\nAtmospheric Composition: Carbon Dioxide, Sulphur, Argon, Xenon\nGeological Activity: Low-intensity but moon-wide sulphur volcanism, main contributor to atmosphere\nNative Life: None"
+
+ muno_planet_data:0 "§HDESCRIPTION§!\nMuno is Flusion's smallest and furthest moon. Its low gravity and relatively close orbit makes it an attractive target for early missions. Its surface mostly consists of grey, dusty barren landscapes.\n\n§HPHYSICAL PARAMETERS§!\nDiameter: 786 km\nGravity: 0.05 G\nTemperature: -33 °C\nDay Length: 2.56 days\nMagnetic Field: None\n\n§HORBITAL PARAMETERS§!\nParent Body: Flusion\nOrbital Distance: 120 000 km\nOrbital Period: 8.36 days\nInclination: 1.93 ° - Negligible\nEccentricity: 0.129 - Slightly eccentric\n\n§HSURFACE PARAMETERS§!\nType: Rocky\nAtmosphere Present: No\nGeological Activity: None\nNative Life: None"
+
+ lok_space_state_not_surveyed:0 "§RThis state is unsurveyed!§!"
+
+ lok_send_mission_to_space_state:0 "Send a survey mission to reveal information about it."
