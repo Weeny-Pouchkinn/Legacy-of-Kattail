@@ -1410,9 +1410,19 @@ clear_wonder_ideas = {
 apply_wonder_effects = {
 	#First we gotta reset all the effects!
 
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_wonder_modifier } }
+		remove_dynamic_modifier = { modifier = lok_wonder_modifier }
+	}
 	every_controlled_state = {
 		if = {
 			limit = { check_variable = { wonder > 0 } }
+			ROOT = {
+				if = {
+					limit = { NOT = { has_dynamic_modifier = { modifier = lok_wonder_modifier } } }
+					add_dynamic_modifier = { modifier = lok_wonder_modifier }
+				}
+			}
 			for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
 				array = wonder_modifiers_values
 				value = v
