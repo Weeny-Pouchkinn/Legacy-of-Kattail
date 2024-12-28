@@ -654,8 +654,16 @@ on_actions = {
 			
 			#SPACE DEGRADATION
 			attrition_space_rockets = yes
+			
+			if = {
+				limit = { check_variable = { orbital_logistics_damage_odds > 0 } }
+				damage_muno_colonies = yes
+				damage_xenon_colonies = yes
+			}
+
+			calculate_xenon_colonies_stats = yes
 			calculate_muno_colonies_stats = yes
-			damage_muno_colonies = yes
+
 			calculate_orbital_logistics_capacity = yes
 
 			if = { #Make sure to apply the food modifier if it's not there for some reason
