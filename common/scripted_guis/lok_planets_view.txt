@@ -2,7 +2,7 @@ scripted_gui = {
 	lok_planet_data_view = {
 		context_type = selected_country_context
 		window_name = "lok_planet_data_view"
-		parent_window_token = selected_country_view_diplomacy
+		parent_window_token = selected_country_view
 
 		visible = {
 			OR = {
@@ -28,7 +28,7 @@ scripted_gui = {
 		visible = {
 			is_space_state = yes
 			is_on_continent = muno
-			NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+			NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT }
 		}
 		
 		properties = {
@@ -43,12 +43,14 @@ scripted_gui = {
 
 		window_name = "lok_planet_survey_view"
 		parent_window_token = selected_state_view
+		parent_window_token = selected_country_view_info
+
 		dirty = wonder
 
 		visible = {
 			is_space_state = yes
 			is_on_continent = xenon
-			NOT = { has_state_flag = lok_space_state_surveyed_by_@FROM }
+			NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT }
 		}
 		
 		properties = {
