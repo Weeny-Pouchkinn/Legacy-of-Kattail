@@ -878,8 +878,27 @@ on_actions = {
 		}
 	}
 
+	on_monthly_AAA = {
+		effect = {
+			generate_warlord_state = yes
+		}
+	}
+
 	on_monthly = {
 		effect = {
+			#Recolonize wasteland
+			if = {
+				limit = { any_controlled_state = { any_neighbor_state = { is_controlled_by = AAA } } }
+				random_controlled_state = {
+					limit = { any_neighbor_state = { is_controlled_by = AAA } }
+					random_neighbor_state = {
+						limit = { is_controlled_by = AAA NOT = { check_variable = { state_actions_recolonize_button_status = 2 } } }
+						set_variable = { state_actions_recolonize_button_status = 2 }
+						set_variable = { state_actions_recolonize_weeks_left = 4 }
+						state_event = { id = LOK_state_actions.1 days = 7 trigger_for = ROOT }}
+					}
+				}
+			}
 			force_update_map_mode = { mapmode = LOK_species_map_mode }
 			calculate_ipf_ksk_resistance = yes
 			if = {
