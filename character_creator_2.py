@@ -48,47 +48,35 @@ def save_input():
 
     data += "\t}\n"
 
-    # Handle character file
-    char_file = f"common/characters/{country_tag} - characters.txt"
-    ensure_file_exists(char_file, "characters = {\n}")
-
-    with open(char_file, 'r') as f:
-        lines = f.readlines()
-
-    if not lines:
-        lines = ["characters = {\n", "}\n"]
-    elif not any("characters = {" in line for line in lines):
-        lines.insert(0, "characters = {\n")
-        lines.append("}\n")
-
-    # Insert character data before the closing brace
-    closing_brace_index = next((i for i, line in reversed(list(enumerate(lines))) if "}" in line), len(lines))
-    lines.insert(closing_brace_index, data)
-
-    with open(char_file, 'w') as f:
-        f.writelines(lines)
-
     # Handle localization file
     loc_file = 'localisation/english/characters_l_english.yml'
     
     if not os.path.exists(loc_file):
         ensure_file_exists(loc_file, 'l_english:\n')
-        with open(loc_file, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-    else:
-        with open(loc_file, 'r', encoding='utf-8') as f:
-            lines = f.readlines() or ['l_english:\n']
+    
+    with open(loc_file, 'r', encoding='utf-8') as f:
+        lines = f.readlines() or ['l_english:\n']
 
-    tag_header = f" #{country_tag}\n"
-    if not any(line == tag_header for line in lines):
-        # Insert tag header before any other tag headers or at the end
-        other_tag_header = next((i for i, line in enumerate(lines) if line.strip().startswith('#')), len(lines))
-        lines.insert(other_tag_header, tag_header)
+    # Find existing tag section or prepare to create new one
+    tag_header_index = None
+    for i, line in enumerate(lines):
+        if line.strip().startswith(f"#{country_tag}"):
+            tag_header_index = i
+            break
 
-    # Find where to insert the new name
-    tag_header_index = next(i for i, line in enumerate(lines) if line == tag_header)
-    next_tag_index = next((i for i, line in enumerate(lines[tag_header_index + 1:], tag_header_index + 1) 
-                          if line.strip().startswith('#')), len(lines))
+    if tag_header_index is None:
+        # Remove trailing empty lines and add new section at end
+        while lines and lines[-1].strip() == '':
+            lines.pop()
+        lines.extend(['\n', f" #{country_tag}\n"])
+        tag_header_index = len(lines) - 1
+    
+    # Find where to insert the new name (before next tag or at end)
+    next_tag_index = len(lines)
+    for i in range(tag_header_index + 1, len(lines)):
+        if lines[i].strip().startswith('#'):
+            next_tag_index = i
+            break
     
     lines.insert(next_tag_index, f" {country_tag}_{code_name}:0 \"{proper_name}\"\n")
 
@@ -105,40 +93,54 @@ def save_input():
     if not any("spriteTypes = {" in line for line in lines):
         lines = ["spriteTypes = {\n", "}"]
 
-    tag_header = f"\t#{country_tag}\n"
-    if not any(line == tag_header for line in lines):
-        # Insert before the closing brace
-        lines.insert(-1, tag_header)
+    # Find existing tag section or prepare to create new one
+    tag_header_index = None
+    for i, line in enumerate(lines):
+        if line.strip().startswith(f"#{country_tag}"):
+            tag_header_index = i
+            break
 
-    insert_index = next(i for i, line in enumerate(lines) if line == tag_header) + 1
+    if tag_header_index is None:
+        # Insert new section before closing brace with blank line
+        lines.insert(-1, f"\n\t#{country_tag}\n")
+        tag_header_index = len(lines) - 2
+
     new_entries = f"\tspriteType = {{ name = \"GFX_portrait_{country_tag}_{code_name}\" texturefile = \"gfx/leaders/{country_tag}/{country_tag}_{code_name}.tga\" }}\n"
     new_entries += f"\tspriteType = {{ name = \"GFX_portrait_{country_tag}_{code_name}_Small\" texturefile = \"gfx/interface/ministers/{country_tag}/{country_tag}_{code_name}.tga\" }}\n\n"
     
-    lines.insert(insert_index, new_entries)
+    # Insert after tag header
+    lines.insert(tag_header_index + 1, new_entries)
 
     with open(gfx_file, 'w') as f:
         f.writelines(lines)
 
-    # Handle country history file
-    history_dir = "history/countries"
-    country_file = next((f for f in os.listdir(history_dir) if f.startswith(f"{country_tag} - ")), None)
+    # Handle character file - find existing or use default
+    char_filename = None
+    for f in os.listdir("common/characters"):
+        if f.startswith(f"{country_tag} -"):
+            char_filename = f
+            break
     
-    if not country_file:
-        return
-        
-    history_file = os.path.join(history_dir, country_file)
+    if char_filename is None:
+        char_filename = f"{country_tag} - characters.txt"
     
-    with open(history_file, 'r') as f:
-        lines = f.readlines()
-    
-    # Remove any trailing empty lines
-    while lines and lines[-1].strip() == '':
-        lines.pop()
-    
-    # Add recruit character line and final newline
-    lines.append(f"recruit_character = {country_tag}_{code_name}\n\n")
+    char_file = os.path.join("common/characters", char_filename)
+    ensure_file_exists(char_file, "characters = {\n}")
 
-    with open(history_file, 'w') as f:
+    with open(char_file, 'r') as f:
+        lines = f.readlines()
+
+    if not lines:
+        lines = ["characters = {\n", "}\n"]
+    elif not any("characters = {" in line for line in lines):
+        lines.insert(0, "characters = {\n")
+        lines.append("}\n")
+
+    # Insert character data before the closing brace
+    closing_brace_index = next((i for i, line in reversed(list(enumerate(lines))) if "}" in line), len(lines))
+    lines.insert(closing_brace_index, data)
+
+    with open(char_file, 'w') as f:
         f.writelines(lines)
 
 def upload_large_image():

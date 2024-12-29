@@ -1,20 +1,6 @@
 # Written by Henrik "Groogy" Hansson
 # Modified by Daniel "Da9L" Sjöberg
 
-stockpile_food_equipment = {
-	enable = {
-		always = yes
-	}
-
-	ai_strategy = {
-		type = equipment_variant_production_factor
-		id = lok_debug_food_equipment
-		value = 10
-	}
-
-	abort = { always = no }
-}
-
 build_up_some_civs_early_game = {
 	enable = {
 		always = yes
@@ -27,6 +13,18 @@ build_up_some_civs_early_game = {
 	}
 
 	abort = { date > "1939.1.1" }
+}
+
+build_up_nuclear_reactors = {
+	enable = {
+		has_tech = nuclear_reactor
+	}
+
+	ai_strategy = {
+		type = building_target
+		id = nuclear_reactor
+		value = 50
+	}
 }
 
 keep_logistics_buffer = {

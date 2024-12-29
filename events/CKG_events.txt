@@ -194,7 +194,6 @@ country_event = {
 	}
 }
 
-
 add_namespace = CKG_demands
 #Ask Stronien to join
 country_event = {
@@ -210,18 +209,18 @@ country_event = {
 	option = {
 		name = CKG_demands.1.a
 		custom_effect_tooltip = tt_this_will_end_the_game
-		event_target:cat_kingdom_country = {
+		FROM = {
 			country_event = { id = CKG_demands.2 days = 1 }
 			set_country_flag = stronien_accepted_integration
 		}
 		ai_chance = {
 			base = 1
 			modifier = {
-				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.8 }
+				strength_ratio = { tag = FROM ratio < 0.8 }
 				factor = 2
 			}
 			modifier = {
-				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.5 }
+				strength_ratio = { tag = FROM ratio < 0.5 }
 				factor = 10
 			}
 		}
@@ -230,7 +229,7 @@ country_event = {
 	option = {
 		name = CKG_demands.1.b
 		add_political_power = 50
-		event_target:cat_kingdom_country = {
+		FROM = {
 			country_event = { id = CKG_demands.2 }
 			set_country_flag = stronien_refused_integration
 		}
@@ -257,7 +256,7 @@ country_event = {
 	option = {
 		name = CKG_demands.2.a
 		annex_country = { target = OST transfer_troops = yes }
-		OST = { every_unit_leader = { set_nationality = event_target:cat_kingdom_country } }
+		OST = { every_unit_leader = { set_nationality = ROOT } }
 		trigger = { has_country_flag = stronien_accepted_integration }
 	}
 
@@ -286,18 +285,18 @@ country_event = {
 	option = {
 		name = CKG_demands.3.a
 		custom_effect_tooltip = tt_this_will_end_the_game
-		event_target:cat_kingdom_country = {
+		FROM = {
 			country_event = { id = CKG_demands.4 days = 1 }
 			set_country_flag = alice_accepted_integration
 		}
 		ai_chance = {
 			base = 1
 			modifier = {
-				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.8 }
+				strength_ratio = { tag = FROM ratio < 0.8 }
 				factor = 2
 			}
 			modifier = {
-				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.5 }
+				strength_ratio = { tag = FROM ratio < 0.5 }
 				factor = 10
 			}
 		}
@@ -306,7 +305,7 @@ country_event = {
 	option = {
 		name = CKG_demands.3.b
 		add_political_power = 50
-		event_target:cat_kingdom_country = {
+		FROM = {
 			country_event = { id = CKG_demands.4 }
 			set_country_flag = alice_refused_integration
 		}
@@ -339,12 +338,15 @@ country_event = {
 				ideology = absolutism
 			}
 			KVK_Alice_Clatz = {
-				set_nationality = event_target:cat_kingdom_country
+				set_nationality = ROOT
 			}
-			every_unit_leader = { set_nationality = event_target:cat_kingdom_country }
+			every_unit_leader = { set_nationality = ROOT }
 		}
 		trigger = { has_country_flag = alice_accepted_integration }
-		country_event = { id = CKG_event.3 days = 60 }
+		if = {
+			limit = { has_country_leader = { character = TAI_King_Mewtail } }
+			ROOT = { country_event = { id = CKG_event.3 days = 60 } }
+		}
 	}
 
 	#Sorry she said no lol
@@ -374,18 +376,18 @@ country_event = {
 	option = {
 		name = CKG_demands.5.a
 		custom_effect_tooltip = tt_this_will_end_the_game
-		event_target:cat_kingdom_country = {
+		FROM = {
 			country_event = { id = CKG_demands.6 days = 1 }
 			set_country_flag = nav_accepted_integration
 		}
 		ai_chance = {
 			base = 1
 			modifier = {
-				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.8 }
+				strength_ratio = { tag = FROM ratio < 0.8 }
 				factor = 2
 			}
 			modifier = {
-				strength_ratio = { tag = event_target:cat_kingdom_country ratio < 0.5 }
+				strength_ratio = { tag = FROM ratio < 0.5 }
 				factor = 10
 			}
 		}
@@ -394,7 +396,7 @@ country_event = {
 	option = {
 		name = CKG_demands.5.b
 		add_political_power = 50
-		event_target:cat_kingdom_country = {
+		FROM = {
 			country_event = { id = CKG_demands.2 }
 			set_country_flag = nav_refused_integration
 		}
@@ -421,8 +423,8 @@ country_event = {
 	option = {
 		name = CKG_demands.6.a
 		NAV = {
-			transfer_units_fraction = { target = event_target:cat_kingdom_country stockpile_ratio = 1 army_ratio = 1 navy_ratio = 1 air_ratio = 1 }
-			every_unit_leader = { set_nationality = event_target:cat_kingdom_country }
+			transfer_units_fraction = { target = FROM stockpile_ratio = 1 army_ratio = 1 navy_ratio = 1 air_ratio = 1 }
+			every_unit_leader = { set_nationality = FROM }
 		}
 		annex_country = { target = NAV transfer_troops = yes }
 		trigger = { has_country_flag = nav_accepted_integration }
@@ -436,5 +438,208 @@ country_event = {
 		}
 		trigger = { has_country_flag = nav_refused_integration }
 
+	}
+}
+
+add_namespace = CKG_pretree
+# country_event = {
+# 	id = CKG_pretree.1
+# 	title = CKG_pretree.1.t
+# 	desc = CKG_pretree.1.d
+# 	picture = GFX_event_aby_af_kattail
+
+# 	is_triggered_only = yes
+
+# 	#Sure ig
+# 	option = {
+# 		name = CKG_pretree.1.a
+# 		set_country_flag = doing_cat_kingdom_path
+# 		set_variable = { global.nations_seeking_mewtail = -1 }
+# 	}
+
+# 	option = {
+# 		name = CKG_pretree.1.b
+# 	}
+# }
+
+country_event = {
+	id = CKG_pretree.2
+	title = CKG_pretree.2.t
+	desc = CKG_pretree.2.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.2.a
+		trigger = { NOT = { has_global_flag = mewtail_recovered } }
+		set_country_flag = doing_cat_kingdom_path_mewtail
+		add_to_variable = { global.nations_seeking_mewtail = 1 }
+	}
+
+	option = {
+		name = CKG_pretree.2.b
+		set_country_flag = doing_cat_kingdom_path_local
+	}
+}
+
+country_event = {
+	id = CKG_pretree.3
+	title = CKG_pretree.3.t
+	desc = CKG_pretree.3.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.3.a
+		FROM = { clr_country_flag = trying_to_get_mewtail_back set_country_flag = mewtail_recovered save_global_event_target_as = mewtail_nation country_event = LOK_proposal.1 }
+		set_global_flag = mewtail_recovered
+		hidden_effect = {
+			TAI = { TAI_King_Mewtail = { set_nationality = ROOT.FROM } }
+			every_country = {
+				limit = {
+					NOT = { tag = FROM }
+					has_country_flag = doing_cat_kingdom_path_mewtail
+				}
+				country_event = { id = CKG_pretree.33 days = 2 }
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 3
+				has_government = neutrality
+			}
+		}
+	}
+
+	option = {
+		name = CKG_pretree.3.b
+		FROM = { clr_country_flag = trying_to_get_mewtail_back country_event = LOK_proposal.2 }
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+
+#got mewtail
+country_event = {
+	id = CKG_pretree.31
+	title = CKG_pretree.31.t
+	desc = CKG_pretree.31.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.31.a
+		set_country_flag = mewtail_recovered
+		set_global_flag = mewtail_recovered
+		save_global_event_target_as = mewtail_nation
+		hidden_effect = {
+			TAI = { TAI_King_Mewtail = { set_nationality = ROOT } }
+			every_country = {
+				limit = {
+					NOT = { tag = ROOT }
+					has_country_flag = doing_cat_kingdom_path_mewtail
+				}
+				country_event = { id = CKG_pretree.33 days = 2 }
+			}
+		}
+	}
+}
+
+#failed mewtail
+country_event = {
+	id = CKG_pretree.32
+	title = CKG_pretree.32.t
+	desc = CKG_pretree.32.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.32.a
+	}
+}
+
+#mewtail found by someone, announce to all
+country_event = {
+	id = CKG_pretree.33
+	title = CKG_pretree.33.t
+	desc = CKG_pretree.33.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.33.a
+		complete_national_focus = KTZ_local_heir
+		activate_mission = CKG_looking_for_heir
+	}
+}
+
+#search results - No heir
+country_event = {
+	id = CKG_pretree.4
+	title = CKG_pretree.4.t
+	desc = CKG_pretree.4.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.4.a
+		custom_effect_tooltip = CKG_pretree.4.a.tt
+		set_country_flag = ckg_country_leader_heir
+		ai_chance = {
+			base = 1
+		}
+	}
+}
+
+#search results - Pawlliam
+country_event = {
+	id = CKG_pretree.5
+	title = CKG_pretree.5.t
+	desc = CKG_pretree.5.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.5.a
+		set_country_flag = pawlliam_heir
+		ai_chance = {
+			base = 1
+		}
+	}
+}
+
+#search results - Klaus
+country_event = {
+	id = CKG_pretree.6
+	title = CKG_pretree.6.t
+	desc = CKG_pretree.6.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_pretree.6.a
+		set_country_flag = pawlliam_heir
+		ai_chance = {
+			base = 1
+		}
 	}
 }

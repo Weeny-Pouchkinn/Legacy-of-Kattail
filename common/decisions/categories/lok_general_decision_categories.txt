@@ -73,8 +73,14 @@ TAI_political_tensions_cat = {
 
 #Cat Kingdom
 CKG_politics_cat = {
-	icon = GFX_decision_category_generic_industry
-	visible = { has_focus_tree = CAT_KINGDOM_TREE }
+	icon = GFX_decision_category_generic_monarchism
+	visible = {
+		OR = {
+			has_focus_tree = CAT_KINGDOM_TREE 
+			has_completed_focus = KTZ_the_legitimate_heir
+			has_completed_focus = KTZ_local_heir
+		}
+	}
 	priority = 1100
 	visible_when_empty = yes
 }
