@@ -258,8 +258,11 @@ focus_tree = {
 							ideology = absolutism
 						}
 					}
-					KVK_Alice_Clatz = { set_nationality = event_target:cat_kingdom_country }
-					ROOT = { country_event = { id = CKG_event.3 days = 60 } }
+					KVK_Alice_Clatz = { set_nationality = ROOT }
+					if = {
+						limit = { has_country_leader = { character = TAI_King_Mewtail } }
+						ROOT = { country_event = { id = CKG_event.3 days = 60 } }
+					}
 				}
 				every_core_state = {
 					custom_effect_tooltip = state_core_threshold_40
@@ -1416,6 +1419,9 @@ focus_tree = {
 		y = 8
 		cost = 5
 		will_lead_to_war_with = LIO
+		bypass = {
+			tag = LIO
+		}
 		available = {
 			OR = {
 				any_owned_state = {
@@ -1475,13 +1481,16 @@ focus_tree = {
 		x = 17
 		y = 9
 		cost = 5
+		bypass = {
+			tag = LIO
+		}
 		available = {
 			NOT = { country_exists = LIO }
 			LIO = { any_core_state = { is_owned_by = ROOT } }
 		}
 		completion_reward = {
 			#PM
-			custom_effect_tooltip = CKG_a_modern_knightly_order_tt
+			#custom_effect_tooltip = CKG_a_modern_knightly_order_tt
 			if = {
 				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
 				set_country_flag = ckg_picked_abs_const
@@ -2318,6 +2327,9 @@ focus_tree = {
 		x = 14
 		y = 8
 		cost = 5
+		bypass = {
+			tag = WPR
+		}
 		will_lead_to_war_with = WPR
 		available = {
 			any_owned_state = {
@@ -2395,6 +2407,9 @@ focus_tree = {
 		x = 15
 		y = 5
 		cost = 5
+		bypass = {
+			tag = OST
+		}
 		available = {
 			any_owned_state = {
 				any_neighbor_state = { is_core_of = OST }
@@ -2537,6 +2552,9 @@ focus_tree = {
 		x = 15
 		y = 3
 		cost = 5
+		bypass = {
+			tag = FRA
+		}
 		available = {
 			OR = {
 				FRA = { any_core_state = { is_controlled_by = ROOT } }
@@ -2830,6 +2848,9 @@ focus_tree = {
 		y = 2
 		cost = 5
 		will_lead_to_war_with = 477.owner
+		bypass = {
+			tag = FRA
+		}
 		available = {
 			any_owned_state = { any_neighbor_state = { is_owned_by = FRA } }
 		}

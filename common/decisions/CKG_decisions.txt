@@ -1,4 +1,304 @@
 CKG_politics_cat = {
+	CKG_expand_our_domain = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			NOT = { is_in_faction_with = FROM }
+			NOT = { has_war_with = FROM }
+			FROM = { NOT = { is_puppet_of = ROOT } }
+			has_completed_focus = KTZ_a_new_monarchy
+		}
+
+		fire_only_once = yes
+
+		target_array = ROOT.ktz_kingdom_targets
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = CKG_expand_our_domain_ongoing
+					has_war = yes
+				}
+			}
+		}
+
+		cost = 50
+
+		days_remove = 30
+
+		complete_effect = {
+			set_country_flag = CKG_expand_our_domain_ongoing
+		}
+
+		remove_effect = {
+			clr_country_flag = CKG_expand_our_domain_ongoing
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
+
+	CKG_integrate_our_domain = {
+		icon = GFX_decision_generic_pickelhaube
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			has_completed_focus = KTZ_a_new_monarchy
+			NOT = { country_exists = FROM }
+			FROM = { any_core_state = { is_controlled_by = ROOT } }
+		}
+
+		fire_only_once = yes
+
+		target_non_existing = yes
+
+		target_array = ROOT.ktz_kingdom_targets
+
+		days_remove = 90
+
+		cost = 150
+
+		remove_effect = {
+			FROM = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_60
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+					if = {
+						limit = { is_controlled_by = ROOT }
+						add_compliance = 10
+					}
+				}
+			}
+		}
+	}
+
+	#Kindly ask Elwin to give Mewtail back (she won't.)
+	CKG_demand_mewtail = {
+		icon = GFX_decision_generic_monarchy
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			has_completed_focus = KTZ_the_legitimate_heir
+			NOT = { has_global_flag = mewtail_recovered }
+		}
+
+		available = {
+			NOT = { has_country_flag = trying_to_get_mewtail_back }
+		}
+
+		fire_only_once = yes
+
+		cost = 100
+
+		complete_effect = {
+			set_country_flag = trying_to_get_mewtail_back
+			29 = {
+				var:controller = {
+					country_event = { id = CKG_pretree.3 days = 5 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	CKG_break_mewtail_out = {
+		icon = GFX_decision_infiltrate_state
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			has_completed_focus = KTZ_the_legitimate_heir
+			NOT = { has_global_flag = mewtail_recovered }
+		}
+
+		available = {
+			NOT = { has_country_flag = trying_to_get_mewtail_back }
+			has_equipment = { infantry_equipment > 3000 }
+			has_manpower > 10000
+		}
+
+		cost = 50
+
+		days_remove = 90
+
+		complete_effect = {
+			set_country_flag = trying_to_get_mewtail_back
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -3000
+			}
+			add_manpower = -10000
+		}
+
+		remove_effect = {
+			random_list = {
+				1 = { country_event = { id = CKG_pretree.31 } }
+				1 = { country_event = { id = CKG_pretree.32 } }
+			}
+		}
+
+		cancel_trigger = {
+			has_global_flag = mewtail_recovered
+		}
+		
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	CKG_acquire_mewtail = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			NOT = { has_country_flag = trying_to_get_mewtail_back }
+			has_completed_focus = KTZ_the_legitimate_heir
+			NOT = { has_global_flag = mewtail_recovered }
+		}
+
+		available = {
+			controls_state = 29
+		}
+
+		complete_effect = {
+			set_global_flag = mewtail_recovered
+			set_country_flag = mewtail_recovered
+			save_global_event_target_as = mewtail_nation
+			hidden_effect = {
+				TAI = { TAI_King_Mewtail = { set_nationality = ROOT } }
+				every_country = {
+					limit = {
+						NOT = { tag = ROOT }
+						has_country_flag = doing_cat_kingdom_path_mewtail
+					}
+					country_event = { id = CKG_pretree.33 days = 2 }
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+	}
+
+	CKG_give_up_on_mewtail = {
+		icon = GFX_decision_SWI_elect_confederation_president
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			NOT = { has_country_flag = trying_to_get_mewtail_back }
+			has_completed_focus = KTZ_the_legitimate_heir
+			NOT = { has_global_flag = mewtail_recovered }
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 0
+		}
+
+		complete_effect = {
+			clr_country_flag = doing_cat_kingdom_path_mewtail
+			complete_national_focus = KTZ_local_heir
+			activate_mission = CKG_looking_for_heir
+		}
+	}
+
+	#Looking for an heir
+	CKG_looking_for_heir = {
+		activation  = {
+			always = no
+		} # activated by effect
+		icon = GFX_decision_generic_military
+		is_good = yes
+
+		available = {
+			always = no
+		}
+
+		days_mission_timeout = 360
+		selectable_mission = no
+		timeout_effect = {
+			#Frankfurr gets Pawlliam, high legitimacy
+			#Tailsbaden gets Chameownix, mid legitimacy
+			#The others have no heir
+			hidden_effect = {
+				if = {
+					limit = { tag = FRA }
+					country_event = { id = CKG_pretree.5 }
+				}
+				# else_if = {
+				# 	limit = { tag = TAI }
+				# 	country_event = { id = CKG_pretree.6 }
+				# }
+				else = {
+					country_event = { id = CKG_pretree.4 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+	}
+
+	CKG_speed_up_the_search = {
+		icon = GFX_decision_SWI_elect_confederation_president
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			has_active_mission = CKG_looking_for_heir
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		cost = 150
+
+		complete_effect = {
+			add_days_mission_timeout = {
+				mission = CKG_looking_for_heir
+				days = -120
+			}
+		}
+	}
+
 	CKG_Eliaw_Brawnner_PM_decision = {
 		icon = GFX_decision_SWI_elect_confederation_president
 
