@@ -1,10 +1,48 @@
 ﻿capital = 825
 
-set_oob = "KTZ_1936"
+set_oob = "SPQ_1936"
+set_naval_oob = "SPQ_1936_naval_legacy"
+set_air_oob = "SPQ_1936_air"
+
+
+create_equipment_variant = {
+	name = "Virtus Class"
+	type = light_cruiser_2
+	upgrades = {
+		ship_reliability_upgrade = 1
+		ship_engine_upgrade = 2
+		ship_gun_upgrade = 5
+		ship_anti_air_upgrade = 1
+	}
+}
+
+create_equipment_variant = {
+	name = "Clarus Class"
+	type = destroyer_2
+	upgrades = {
+		destroyer_engine_upgrade = 1
+		ship_ASW_upgrade = 3
+		ship_anti_air_upgrade = 3
+	}
+}
+
+create_equipment_variant = {
+	name = "Archilles Class"
+	type = carrier_1
+	upgrades = {
+				ship_reliability_upgrade = 1
+		ship_deckspace_upgrade = 5
+	}
+}
+
+
+
+
+
 
 set_research_slots = 3
-set_stability = 0.5
-set_war_support = 0.5
+set_stability = 1.0
+set_war_support = 0.15
 
 # Starting tech
 set_technology = {
@@ -83,21 +121,103 @@ set_technology = {
 	early_carrier = 1
 	transport = 1
 
-	#Katzen nation - thus mobile warfare
-	mobile_warfare = 1
-	delay = 1
-	elastic_defence = 1
-	armored_spearhead = 1
-	schwerpunk = 1
+	# Doctrines
+	superior_firepower = 1
+	sup_delay = 1
+	mobile_defence = 1
+	intergrated_support = 1
+	regimental_combat_teams = 1
 }
 
-set_convoys = 300
+set_convoys = 500
+
+add_ideas = {
+	civilian_economy
+	free_trade
+
+}
+
+
+
+create_import = {
+	resource = steel
+	factories = 1
+	exporter = ROQ
+}
+create_import = {
+	resource = steel
+	factories = 2
+	exporter = KEP
+}
+create_import = {
+	resource = steel
+	factories = 1
+	exporter = SLR
+}
+create_import = {
+	resource = tungsten
+	factories = 1
+	exporter = SLR
+}
+create_import = {
+	resource = aluminium
+	factories = 1
+	exporter = MCF
+}
+create_import = {
+	resource = food
+	factories = 4
+	exporter = ROQ
+}
+
+
+# country_event = {
+# 	id = SPQ_launch.1
+# }
+
+
+add_equipment_to_stockpile = {
+	type = infantry_equipment_1
+	amount = 1400
+	producer = SPQ
+}
+add_equipment_to_stockpile = {
+	type = anti_air_equipment_1
+	amount = 35
+	producer = SPQ
+}
+add_equipment_to_stockpile = {
+	type = artillery_equipment_1
+	amount = 100
+	producer = SPQ
+}
+add_equipment_to_stockpile = {
+	type = support_equipment_1
+	amount = 25
+	producer = SPQ
+}
+
+825 = {
+	add_dynamic_modifier = {
+		modifier = excapature_industries
+	}
+}
+826 = {
+	add_dynamic_modifier = {
+		modifier = excapature_industries
+	}
+}
+
+
+
+recruit_character = SPQ_lucius_quinctius_cincinnatus
+
 
 set_politics = {
 	ruling_party = democratic
-	last_election = "1932.5.1"
-	election_frequency = 48
-	elections_allowed = no
+	last_election = "1934.5.1"
+	election_frequency = 24
+	elections_allowed = yes
 }
 
 set_popularities = {
