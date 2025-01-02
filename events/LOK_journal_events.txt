@@ -661,3 +661,58 @@ country_event = {
 		}
 	}
 }
+
+add_namespace = LOK_ELO
+news_event = {
+	id = LOK_ELO.1
+	title = "LOK_ELO.1.t"
+	desc = "LOK_ELO.1.desc"
+	is_triggered_only = yes
+
+	major = no
+
+	picture = GFX_news_event_victory
+
+	option = { # Democratic/Commie response (Yippee!)
+		name = "LOK_ELO.1.a"
+		trigger = { OR = { has_government = democratic has_government = communism } }
+	}
+
+	option = { # SFL Response (Oh wow they lived?)
+		name = "LOK_ELO.1.b"
+		trigger = { is_in_array = { global.sfl_members_array = this } }
+		custom_effect_tooltip = LOK_ELO.1.b.tt
+	}
+
+	option = { # Fascist response (pitiful idealist fools)
+		name = "LOK_ELO_1.c"
+		trigger = { has_government = fascism }
+	}
+
+	option = { # Neutral Response (Oh neat)
+		name = "LOK_ELO_1.d"
+		trigger = { has_government = neutrality }
+	}
+}
+country_event = {
+	id = LOK_ELO.2
+	title = LOK_ELO.2.t
+	desc = LOK_ELO.2.d
+	is_triggered_only = yes
+
+	immediate = { set_country_flag = ELO_chosen_capital }
+
+	option = {
+		name = "LOK_ELO.2.Elowia"
+		set_victory_points = { province = 13344 value = 25 }
+	}
+	option = {
+		name = "LOK_ELO.2.Auralia"
+		set_capital = { state = 116 remember_old_capital = yes }
+	}
+	option = {
+		name = "LOK_ELO.2.Pawrdeaux"
+		set_capital = { state = 577 remember_old_capital = yes }
+		set_victory_points = { province = 7845 value = 25 }
+	}
+}
