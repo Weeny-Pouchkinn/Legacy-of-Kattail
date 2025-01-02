@@ -231,6 +231,17 @@ herzlands_unification_cat = {
 			add_to_faction = MEO
 			add_to_faction = KPK
 			add_to_faction = HIM
+			hidden_effect = {
+				every_country = {
+					limit = {
+						is_in_faction_with = root
+					}
+					add_to_array = {
+						array = global.sfl_members_array
+						value = THIS
+					}
+				}
+			}
 		}
 
 		ai_will_do = {
@@ -241,12 +252,11 @@ herzlands_unification_cat = {
 		icon = generic_form_nation
 
 		allowed = {
-			OR = {
-				tag = PRL
-				tag = LIO
-				tag = CAT
-				tag = MEO
-			}
+			tag = PRL
+			tag = LIO
+			tag = CAT
+			tag = MEO
+			tag = ELO
 		}
 
 		visible = {
@@ -265,9 +275,9 @@ herzlands_unification_cat = {
 				set_global_flag = ussf_formed
 			}
 			save_global_event_target_as = ussf_leader
-			add_to_array = { array = ussf_countries }
 			every_country = {
-				limit = { is_in_faction_with = ROOT }
+				limit = { is_in_array = { global.sfl_members_array = this } }
+				add_to_array = { array = ussf_countries }
 				event_target:ussf_leader = {
 					set_autonomy = {
 						target = PREV
@@ -279,11 +289,11 @@ herzlands_unification_cat = {
 					set_politics = { ruling_party = neutrality }
 				}
 				if = {
-					limit = { OR = { tag = PRL tag = CAT tag = MEO } }
+					limit = { OR = { tag = PRL tag = CAT tag = MEO tag = ELO } }
 					set_politics = { ruling_party = democratic }
 				}
 			}
-			add_to_array = { array = ussf_countries }
+			add_to_array = { array = ussf_countriesvalue }
 			if = {
 				limit = { tag = PRL }
 				set_faction_name = "Federal Republic of the Southern Herzlands"
@@ -299,6 +309,10 @@ herzlands_unification_cat = {
 			else_if = {
 				limit = { tag = CAT }
 				set_faction_name = "Felinean Trade Federation"
+			}
+			else_if = {
+				limit = { tag = ELO }
+				set_faction_name = "Democratic Commonwealth of Southern Felinea"
 			}
 		}
 
