@@ -71,7 +71,7 @@ on_actions = {
 			}
 
 			#Setup the Herzlands state array to track unification
-			global = { set_variable = { total_herzlands_state_count = 0 } }  #<---- error log doesnt like this?
+			set_variable = { global.total_herzlands_state_count = 0 }
 			every_country = {
 				limit = { is_herzlands_warlord = yes }
 				every_owned_state = { add_to_array = { global.herzlands_states_array = THIS } }
@@ -543,6 +543,12 @@ on_actions = {
 						set_variable = { ipf_opinion = 4 }
 						set_variable = { ipf_strength = 4 }
 					}
+					KTW = {
+						set_variable = { ksk_opinion = 0 }
+						set_variable = { ksk_strength = 0 }
+						set_variable = { ipf_opinion = 0 }
+						set_variable = { ipf_strength = 0 }
+					}
 					calculate_ipf_ksk_resistance = yes
 					for_each_scope_loop = {
 						array = global.herzlands_states_array
@@ -615,7 +621,7 @@ on_actions = {
 			KTV = { set_country_flag = herzlands_warlord_uniter }
 			PMB = { set_country_flag = herzlands_warlord_independentist }
 
-			TKW = { set_country_flag = herzlands_warlord_uniter }
+			# TKW = { set_country_flag = herzlands_warlord_uniter }
 
 
 			count_nukes_in_stockpile = yes
@@ -628,8 +634,14 @@ on_actions = {
 				news_event = { id = LOK_KEP.2 days = 360 }
 			}
 
+			#Mewtail
+			set_variable = { global.nations_seeking_mewtail = -1 }
+
 			every_country = {
-				limit = { NOT = { has_government = gestalt } }
+				limit = {
+					NOT = { has_government = gestalt }
+					NOT = { tag = ZZZ }
+				}
 				set_country_leader_name = {
 					ideology = gestalt
 					name = GESTALT_PARTY_DEFAULT_LEADER
@@ -644,6 +656,10 @@ on_actions = {
 					long_name = "GESTALT_PARTY_DEFAULT_NAME"
 				}
 			}
+
+			# Offmap shitpost guis
+			966 = { set_variable = { meogartha = 1 } }
+			967 = { set_variable = { glongland = 1 } }
         }
 	}
 	
@@ -654,8 +670,16 @@ on_actions = {
 			
 			#SPACE DEGRADATION
 			attrition_space_rockets = yes
+			
+			if = {
+				limit = { check_variable = { orbital_logistics_damage_odds > 0 } }
+				damage_muno_colonies = yes
+				damage_xenon_colonies = yes
+			}
+
+			calculate_xenon_colonies_stats = yes
 			calculate_muno_colonies_stats = yes
-			damage_muno_colonies = yes
+
 			calculate_orbital_logistics_capacity = yes
 
 			if = { #Make sure to apply the food modifier if it's not there for some reason
@@ -870,8 +894,31 @@ on_actions = {
 		}
 	}
 
+	on_monthly_AAA = {
+		effect = {
+			generate_warlord_state = yes
+			every_owned_state = {
+				set_resistance = 40
+				set_compliance = 0
+			}
+		}
+	}
+
 	on_monthly = {
 		effect = {
+			#Recolonize wasteland
+			if = {
+				limit = { any_controlled_state = { any_neighbor_state = { is_controlled_by = AAA } } }
+				random_controlled_state = {
+					limit = { any_neighbor_state = { is_controlled_by = AAA } }
+					random_neighbor_state = {
+						limit = { is_controlled_by = AAA NOT = { check_variable = { state_actions_recolonize_button_status = 2 } } }
+						set_variable = { state_actions_recolonize_button_status = 2 }
+						set_variable = { state_actions_recolonize_weeks_left = 4 }
+						state_event = { id = LOK_state_actions.1 days = 7 trigger_for = ROOT }
+					}
+				}
+			}
 			force_update_map_mode = { mapmode = LOK_species_map_mode }
 			calculate_ipf_ksk_resistance = yes
 			if = {

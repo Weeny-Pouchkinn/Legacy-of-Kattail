@@ -1,3 +1,53 @@
+generate_warlord_state = {
+	random_controlled_state = {
+		limit = { NOT = { check_variable = { state_actions_recolonize_button_status = 2 } } }
+		save_global_event_target_as = new_warlord_state
+		random_scope_in_array = {
+			array = global.countries
+			limit = { PREV = { is_core_of = PREV } }
+			set_temp_variable = { global.country_to_initiate = THIS }
+		}
+		create_dynamic_country = {
+			original_tag = global.country_to_initiate
+
+			set_temp_variable = { new_country = this }
+			event_target:new_warlord_state = { transfer_state_to = var:new_country }
+			
+			meta_effect = {
+				debug = yes
+				text = { var:new_country = { set_cosmetic_tag = WARLORD_TAG_STATE_[STATE_ID] } }
+				STATE_ID = "[?event_target:new_warlord_state.GetStateID]"
+			}
+
+			var:new_country = {
+				set_country_flag = lok_anarchy_warlord_country
+				random_list = {
+					1 = { set_politics = { ruling_party = fascism } add_popularity = { ideology = fascism popularity = 1 } }
+					1 = { set_politics = { ruling_party = neutrality } add_popularity = { ideology = neutrality popularity = 1 } }
+					1 = { set_politics = { ruling_party = communism } add_popularity = { ideology = communism popularity = 1 } }
+				}
+				division_template = {
+					name = "Wasteland Militias"
+	
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+					}
+				}
+				random_owned_controlled_state = {
+					create_unit = {
+						division = "division_template = \"Wasteland Militias\" start_experience_factor = 0.2 start_equipment_factor = 1.0"
+						count = 3
+						owner = PREV
+					}
+				}
+			}
+		}
+	}
+}
+
 SIL_collapse_elwin = {
 	SIL = {
 		every_controlled_state = {
@@ -277,6 +327,27 @@ calculate_muno_colonies_stats = {
 	}
 }
 
+calculate_xenon_colonies_stats = {
+	set_variable = { lok_xenon_colonies_upkeep = 0 }
+	set_variable = { lok_xenon_colonies_level = 0 }
+	set_variable = { lok_xenon_colonies_pop = 0 }
+	every_controlled_state = {
+		limit = { is_on_continent = xenon }
+		add_to_variable = { ROOT.lok_xenon_colonies_level = space_colony_level }
+		add_to_variable = { ROOT.lok_xenon_colonies_pop = state_population_k }
+
+		set_temp_variable = { state_colony_upkeep = space_colony_level }
+		multiply_temp_variable = { state_colony_upkeep = 50 } #50 logistics per level
+		add_to_variable = { ROOT.lok_xenon_colonies_upkeep = state_colony_upkeep }
+
+
+		if = {
+			limit = { NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT } }
+			set_state_flag = lok_space_state_surveyed_by_@ROOT
+		}
+	}
+}
+
 attrition_space_rockets = {
 	if = {
 		limit = { check_variable = { lok_light_chemical_rocket_for_orbital_logistics > 0 } }
@@ -525,6 +596,26 @@ damage_muno_colonies = {
 	calculate_muno_colonies_stats = yes
 }
 
+damage_xenon_colonies = {
+	every_controlled_state = {
+		limit = { is_on_continent = xenon }
+		random = {
+			chance = ROOT.orbital_logistics_damage_odds
+			subtract_from_variable = { space_colony_level = 1 }
+			add_manpower = -2500
+			add_extra_state_shared_building_slots = -1
+			destroy_random_building = yes
+		}
+		if = {
+			limit = { check_variable = { space_colony_level = 0 } }
+			add_manpower = -1000000
+			remove_core_of = ROOT
+			transfer_state_to = XEN
+		}
+	}
+	calculate_xenon_colonies_stats = yes
+}
+
 destroy_random_building = {
 	random_list = {
 		0 = {
@@ -601,6 +692,21 @@ calculate_muno_mission_success_odds = {
 	clamp_temp_variable = { var = mission_success_odds min = 5 max = 95 }
 	clamp_temp_variable = { var = mission_failure_odds min = 5 max = 95 }
 }
+
+calculate_xenon_mission_success_odds = {
+	set_temp_variable = { mission_success_odds = space_exp } #2
+	divide_temp_variable = { mission_success_odds = 2 } #1
+	add_to_temp_variable = { mission_success_odds = xenon_exp } #1
+	divide_temp_variable = { mission_success_odds = mission_difficulty } #2/3 = 0.66
+	multiply_temp_variable = { mission_success_odds = 100 } #66%
+	set_temp_variable = { mission_failure_odds = mission_success_odds } #66
+	subtract_from_temp_variable = { mission_failure_odds = 100 } #-33
+	multiply_temp_variable = { mission_failure_odds = -1 } #33
+	
+	clamp_temp_variable = { var = mission_success_odds min = 5 max = 95 }
+	clamp_temp_variable = { var = mission_failure_odds min = 5 max = 95 }
+}
+
 
 CKG_clear_pms = {
 	if = {

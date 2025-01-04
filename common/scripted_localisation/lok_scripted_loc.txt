@@ -1,4 +1,60 @@
 defined_text = { # Country
+	name = GetCatKingdomMonarchName
+	text = {
+		trigger = { has_country_flag = mewtail_recovered }
+		localization_key = "Mewtail"
+	}
+	text = {
+		trigger = { has_country_flag = chameownix_heir }
+		localization_key = "Klaus"
+	}
+	text = {
+		trigger = { has_country_flag = pawlliam_heir }
+		localization_key = "Pawlliam"
+	}
+	text = {
+		trigger = { has_country_flag = ckg_country_leader_heir }
+		localization_key = [GetLeader]
+	}
+	text = {
+		trigger = {
+			NOT = {
+				has_country_flag = ckg_country_leader_heir
+				has_country_flag = pawlliam_heir
+				has_country_flag = chameownix_heir
+				has_country_flag = mewtail_recovered
+			}
+		}
+		localization_key = "the"
+	}
+}
+
+defined_text = { # Country
+	name = GetCatKingdomDecisionSecondPart
+	text = {
+		trigger = { has_completed_focus = KTZ_the_legitimate_heir NOT = { has_focus_tree = CAT_KINGDOM_TREE } }
+		localization_key = "CKG_politics_cat_desc_2"
+	}
+}
+
+defined_text = { # Country
+	name = GetStateActionRecolonizeStatus
+	text = {
+		trigger = { check_variable = { state_actions_recolonize_button_status = 2 } }
+		localization_key = "lok_state_actions_recolonize_status"
+	}
+}
+
+defined_text = { # Country
+	name = GetStateActionStimulusStatus
+	text = {
+		trigger = { check_variable = { state_actions_stimulus_button_status = 2 } }
+		localization_key = "lok_state_actions_stimulus_status"
+	}
+}
+
+
+defined_text = { # Country
 	name = GetCKGPrimeMinister
 	text = {
 		trigger = { has_idea = CKG_Eliaw_Brawnner_PM }

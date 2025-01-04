@@ -47,6 +47,61 @@ scripted_gui = {
 		}
 	}
 
+	lok_state_actions = {
+		context_type = selected_state_context
+		window_name = "lok_state_actions_window"
+		parent_window_token = selected_state_view
+
+		effects = {
+			lok_state_actions_recolonize_button_click = {
+				if = {
+					limit = { NOT = { check_variable = { state_actions_recolonize_button_status = 2 } } }
+					ROOT = { add_political_power = -74 }
+					set_variable = { state_actions_recolonize_button_status = 2 }
+					set_variable = { state_actions_recolonize_weeks_left = 24 }
+					state_event = { id = LOK_state_actions.1 days = 7 trigger_for = ROOT }
+				}
+			}
+			lok_state_actions_stimulus_button_click = {
+				if = {
+					limit = { NOT = { check_variable = { state_actions_stimulus_button_status = 2 } } }
+					ROOT = { add_political_power = -50 }
+					add_dynamic_modifier = { modifier = lok_state_actions_stimulus_modifier }
+					set_variable = { state_actions_stimulus_button_status = 2 }
+					state_event = { id = LOK_state_actions.2 days = 180 trigger_for = controller }
+				}
+			}
+		}
+
+		properties = {
+			lok_state_actions_recolonize_button = {
+				frame = THIS.state_actions_recolonize_button_status
+			}
+			lok_state_actions_stimulus_button = {
+				frame = THIS.state_actions_stimulus_button_status
+			}
+		}
+
+		triggers = {
+			lok_state_actions_recolonize_button_visible = {
+				is_owned_by = AAA
+			}
+			lok_state_actions_recolonize_button_click_enabled = {
+				is_owned_by = AAA
+				check_variable = { lok_radiation_level < 50 }
+				any_neighbor_state = { is_controlled_by = ROOT }
+				ROOT = { has_political_power > 74 }
+			}
+			lok_state_actions_stimulus_button_visible = {
+				is_owned_by = ROOT
+			}
+			lok_state_actions_stimulus_button_click_enabled = {
+				ROOT = { has_political_power > 49 }
+				is_owned_by = ROOT
+			}
+		}
+	}
+
 	lok_thermonuclear_salvo = {
 		context_type = selected_state_context
 		window_name = "lok_thermonuclear_salvo_window"
@@ -115,7 +170,7 @@ scripted_gui = {
 			lok_decrease_nuke_count_button_click = {
 				ROOT = {
 					subtract_from_variable = { nuke_launch_count = 1 }
-					clamp_variable = { var = nuke_launch_count min = 0 max =  }
+					clamp_variable = { var = nuke_launch_count min = 0 max = 10000 }
 				}
 			}
 			lok_decrease_nuke_count_button_control_click = {
@@ -324,6 +379,30 @@ scripted_gui = {
 	# 		}
 	# 	}
 	# }
+	meogartha_screen = {
+		context_type = selected_state_context
+
+		window_name = "lok_meogartha_screen"
+		parent_window_token = selected_state_view
+		dirty = meogartha
+
+		visible = {
+			is_offmap_state = yes
+			check_variable = { meogartha = 1 }
+		}
+	}
+	glongland_screen = {
+		context_type = selected_state_context
+
+		window_name = "lok_glongland_screen"
+		parent_window_token = selected_state_view
+		dirty = glongland
+
+		visible = {
+			is_offmap_state = yes
+			check_variable = { glongland = 1 }
+		}
+	}
 }
 
 

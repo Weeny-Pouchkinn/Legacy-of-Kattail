@@ -1,3 +1,50 @@
+add_namespace = LOK_state_actions
+
+state_event = { #recolonisation
+	id = LOK_state_actions.1
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		save_event_target_as = state_target
+		event_target:state_target = {
+			subtract_from_variable = { state_actions_recolonize_weeks_left = 1 }
+			if = { #If someone else took control of the state just abort this
+				limit = { is_controlled_by = AAA }
+				if = {
+					limit = { check_variable = { state_actions_recolonize_weeks_left = 0 } }
+					set_variable = { state_actions_recolonize_button_status = 1 }
+					transfer_state_to = ROOT
+					if = {
+						limit = { NOT = { is_core_of = ROOT } }
+						add_compliance = 50
+					}
+				}
+				else = {
+					state_event = { id = LOK_state_actions.1 days = 7 trigger_for = ROOT }
+				}
+			}
+			else = {
+				set_variable = { state_actions_recolonize_button_status = 1 }
+			}
+		}
+	}
+}
+
+state_event = { #stimulus
+	id = LOK_state_actions.2
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		save_event_target_as = state_target
+		event_target:state_target = {
+			set_variable = { state_actions_stimulus_button_status = 1 }
+			remove_dynamic_modifier = { modifier = lok_state_actions_stimulus_modifier }
+		}
+	}
+}
+
 add_namespace = LOK_space
 
 #a mission has failed
@@ -79,19 +126,7 @@ country_event = {
 
 add_namespace = LOK_food
 
-country_event = {
-	id = LOK_food.1
-	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_food.1"}
-	hidden = yes
-	is_triggered_only = yes
 
-	immediate = {
-		add_equipment_to_stockpile = {
-			type = lok_debug_food_equipment_1
-			amount = -1000000
-		}
-	}
-}
 
 #Events regarding post-war peacedeals with decisions
 add_namespace = lok_peace
