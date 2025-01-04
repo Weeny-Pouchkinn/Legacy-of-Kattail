@@ -1,0 +1,767 @@
+focus_tree = {
+	id = spq_focus
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = SPQ
+		}
+	}
+	continuous_focus_position = { x = 50 y = 3600 }
+
+	default = no
+
+	# focus = {
+	# 	id = SPQ_focus_
+	# 	icon = SPQ_focus_placeholder
+
+	# 	prerequisite = {
+	# 		focus = SPQ_focus_
+	# 	}
+
+	# 	x= 0
+	# 	y = 1
+	# 	relative_position_id = SPQ_focus_
+
+	# 	cost = 2.9
+
+	# 	ai_will_do = {
+	# 		factor = 1
+	# 	}
+
+	# 	available = {
+			
+	# 	}
+
+	# 	bypass = {
+
+	# 	}
+
+	# 	completion_reward = {
+			
+	# 	}
+	# }
+
+########   #######  ##       #### ######## ####  ######   ######  
+##     ## ##     ## ##        ##     ##     ##  ##    ## ##    ## 
+##     ## ##     ## ##        ##     ##     ##  ##       ##       
+########  ##     ## ##        ##     ##     ##  ##        ######  
+##        ##     ## ##        ##     ##     ##  ##             ## 
+##        ##     ## ##        ##     ##     ##  ##    ## ##    ## 
+##         #######  ######## ####    ##    ####  ######   ######  
+# POLITICS
+
+	focus = {
+		id = SPQ_focus_perpetual_senate
+		icon = SPQ_focus_placeholder
+
+		x= 0
+		y = 0
+
+		cost = 1
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+		bypass = {
+
+		}
+
+		completion_reward = {
+			country_event = {
+				id = SPQ_event_pol.1
+			}
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_steady_as_she_goes
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_perpetual_senate
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_aurelian_ambition
+		}
+
+		x= -4
+		y = 1
+		relative_position_id = SPQ_focus_perpetual_senate
+
+		cost = 3.6
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = SPQ_idea_aurelian_democracy
+				add_idea = SPQ_idea_aurelian_democracy_s
+			}	
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_election_of_3136_AVC
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_steady_as_she_goes
+		}
+		
+		x= -6
+		y = 1
+		relative_position_id = SPQ_focus_steady_as_she_goes
+		
+		cost = 1
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			has_country_flag = SPQ_election_1936
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_northern_avians
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_election_of_3136_AVC
+		}
+
+		x= -4
+		y = 1
+		relative_position_id = SPQ_focus_election_of_3136_AVC
+
+		cost = 1.5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_coastal_defence_bill
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_northern_avians
+		}
+
+		x= -1
+		y = 1
+		relative_position_id = SPQ_focus_northern_avians
+
+		cost = 1.5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# 2 railway guns, and costal forts, inc consumer good factor
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_cohors_classis_purpura
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_northern_avians
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_northern_avians
+
+		cost = 1.5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# 10 destroyers, 20 frigates, inc consumer goods factor
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_the_aurelian_marketplace
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_election_of_3136_AVC
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_election_of_3136_AVC
+
+		cost = 5.8
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_cnill_negotiations
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_the_aurelian_marketplace
+		}
+
+		x= -2
+		y = 1
+		relative_position_id = SPQ_focus_the_aurelian_marketplace
+
+		cost = 2.9
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# bonus to AA, AA research bonus
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_rocky_business
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_the_aurelian_marketplace
+		}
+
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_the_aurelian_marketplace
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# add 2 consumer good factory for corebound, reduce aurelian consumer good factor for 365 days, decaying bonus
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_south_solakean_defence_agreement
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_coastal_defence_bill
+		}
+		prerequisite = {
+			focus = SPQ_focus_cohors_classis_purpura
+		}
+		prerequisite = {
+			focus = SPQ_focus_cnill_negotiations
+		}
+		prerequisite = {
+			focus = SPQ_focus_rocky_business
+		}
+
+		x= 3
+		y = 1
+		relative_position_id = SPQ_focus_coastal_defence_bill
+
+		cost = 2.2
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# joins SSDA, if too early for SSDA formation, change focus to guarantee of independence with corebound, alkroa, and cnil, joins ssda later
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_penguin_medicare
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_election_of_3136_AVC
+		}
+
+		x= 4
+		y = 1
+		relative_position_id = SPQ_focus_election_of_3136_AVC
+
+		cost = 2.9
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# consumer goods factor for pop growth
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_southern_neighbours
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_the_aurelian_marketplace
+		}
+		prerequisite = {
+			focus= SPQ_focus_penguin_medicare
+		}
+
+		x= 2
+		y = 1
+		relative_position_id = SPQ_focus_the_aurelian_marketplace
+
+		cost = 1.5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# trade opinion with kepler
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_democratic_communists
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_southern_neighbours
+		}
+
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_southern_neighbours
+
+		cost = 1.5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# opinion with solaria
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_the_imperator
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_steady_as_she_goes
+			focus = SPQ_focus_aurelian_ambition
+		}
+		
+		x= 0
+		y = 2
+		relative_position_id = SPQ_focus_perpetual_senate
+		
+		cost = 2.2
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+
+		}
+		
+		bypass = {
+
+		}
+		
+		completion_reward = {
+			
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_realpolitik
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_the_imperator
+		}
+
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_the_imperator
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_balancing_the_scales
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_realpolitik
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_asserting_influence
+		}
+
+		x= -5
+		y = 1
+		relative_position_id = SPQ_focus_realpolitik
+
+		cost = 2.9
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# makes senate influence decision cheaper, but longer cooldown 
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_asserting_influence
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_realpolitik
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_balancing_the_scales
+		}
+
+		x= -3
+		y = 1
+		relative_position_id = SPQ_focus_realpolitik
+
+		cost = 2.9
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# opposite of balancing the scales
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_alastor_accord
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_balancing_the_scales
+			focus = SPQ_focus_asserting_influence
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_balancing_the_scales
+
+		cost = 4.3
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# makes industrial senate decisions cheaper
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_nitromethanes_methane
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_realpolitik
+		}
+
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_realpolitik
+
+		cost = 5.8
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# removes trade with roq, adds with NMI, gains opinion modifier, NMI gets offmap consumer factories, SPQA gets consumer factor bonus for 365 days, decaying
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_empty_vow
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_nitromethanes_methane
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_a_silent_partner
+		}
+
+		x= -2
+		y = 1
+		relative_position_id = SPQ_focus_nitromethanes_methane
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# guarantee of independence, gains BIG consumer factor bonus, 730 days, decaying, adds mechanic of hiding the partnership
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_a_silent_partner
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_nitromethanes_methane
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_empty_vow
+		}
+
+		x= 2
+		y = 1
+		relative_position_id = SPQ_focus_nitromethanes_methane
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# improves relations, guarantee of independence consumer goods bonus for 365 days decaying
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_aurelian_ambition
+		icon = SPQ_focus_placeholder
+	
+		prerequisite = {
+			focus = SPQ_focus_perpetual_senate
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_steady_as_she_goes
+		}
+	
+		x= 4
+		y = 1
+		relative_position_id = SPQ_focus_perpetual_senate
+	
+		cost = 2.9
+	
+		ai_will_do = {
+			factor = 1
+		}
+	
+		available = {
+			always = no
+		}
+	
+		bypass = {
+	
+		}
+	
+		completion_reward = {
+			
+		}
+	}
+}
