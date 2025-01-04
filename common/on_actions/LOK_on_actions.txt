@@ -790,7 +790,7 @@ on_actions = {
 				round_variable = lok_state_starvation_deaths_display
 
 				if = { #State got so depopulated that it just collapses
-					limit = { is_non_playable_country = no check_variable = { state_population_k < lok_min_manpower_before_collapse } }
+					limit = { var:controller = { is_non_playable_country = no } check_variable = { state_population_k < lok_min_manpower_before_collapse } }
 					collapse_into_anarchy = yes
 					set_variable = { lok_min_manpower_before_collapse = 0 }
 				}
