@@ -72,6 +72,7 @@ focus_tree = {
 
 		}
 
+		
 		completion_reward = {
 			country_event = {
 				id = SPQ_event_pol.1
@@ -143,7 +144,7 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			
+
 		}
 	}
 	
@@ -174,7 +175,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			
+			# TODO Opinion with Alkroa
 		}
 	}
 
@@ -205,7 +206,58 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# 2 railway guns, and costal forts, inc consumer good factor
+			set_technology = {
+				railway_gun = 1
+			}
+			create_railway_gun = {
+				equipment = railway_gun_equipment_1
+				name = "Aurelian Defence Battery 1"
+				location = 20911
+			}
+			create_railway_gun = {
+				equipment = railway_gun_equipment_1
+					name = "Aurelian Defence Battery 2"
+					location = 20923
+			}
+			825 = {
+				add_building_construction = {
+					type = bunker
+					level = 5
+					instant_build = yes
+					province = 20911
+				}
+			}
+			825 = {
+				add_building_construction = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = 20912
+				}
+			}
+			826 = {
+				add_building_construction = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = 20915
+				}
+			}
+			827 = {
+				add_building_construction = {
+					type = bunker
+					level = 1
+					instant_build = yes
+					province = 20918
+				}
+			}
+
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = 0.15
+			}
+			custom_effect_tooltip = SPQ_focus_costal_defence_bill_tt
+
+			# TODO Aurelian Cash national spirit for Alkroa, 15% decaying at 2.5% per month using SPQ_idea_aurelian_payment
 		}
 	}
 
@@ -236,7 +288,15 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# 10 destroyers, 20 frigates, inc consumer goods factor
+			custom_effect_tooltip = SPQ_focus_cohors_classis_purpura_tt
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = 0.25
+			}
+			hidden_effect = {
+				load_oob = "SPQ_cohors_classis_purpura"
+			}
+
+			# TODO Aurelian Cash national spirit for Alkroa, 25% decaying at 2.5% per month using SPQ_idea_aurelian_payment
 		}
 	}
 
@@ -252,7 +312,7 @@ focus_tree = {
 		y = 1
 		relative_position_id = SPQ_focus_election_of_3136_AVC
 
-		cost = 5.8
+		cost = 7.2
 
 		ai_will_do = {
 			factor = 1
@@ -267,7 +327,13 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			
+			custom_effect_tooltip = SPQ_focus_the_aurelian_marketplace_tt
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.15
+			}
+			add_to_variable = {
+				SPQ_consumer_goods_base = -0.1
+			}
 		}
 	}
 
@@ -298,7 +364,13 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# bonus to AA, AA research bonus
+			add_tech_bonus = {
+				name = "Cnil Anti-Air Technology"
+				bonus = 0.35
+				ahead_reduction = 1.5
+				uses = 2
+				category = cat_anti_air
+			}
 		}
 	}
 
@@ -329,7 +401,12 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# add 2 consumer good factory for corebound, reduce aurelian consumer good factor for 365 days, decaying bonus
+			custom_effect_tooltip = SPQ_focus_rocky_business_tt
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.075
+			}
+
+			# TODO 7.5% consumer factor for corebound, decaying at 2.5% a month using SPQ_idea_aurelian_payment, gains 2 consumer goods factory
 		}
 	}
 
@@ -369,7 +446,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# joins SSDA, if too early for SSDA formation, change focus to guarantee of independence with corebound, alkroa, and cnil, joins ssda later
+			# TODO joins SSDA, if too early for SSDA formation, change focus to guarantee of independence with corebound, alkroa, and cnil, joins ssda later
 		}
 	}
 
@@ -392,7 +469,20 @@ focus_tree = {
 		}
 
 		available = {
-			# requires opinion with ZETO members
+			KTN = {
+				has_opinion = {
+					target = SPQ
+					value > 49
+				}
+			}
+			KTN = {
+				all_allied_country = {
+					has_opinion = {
+						target = SPQ
+						value > 39
+					}
+				}
+			}
 		}
 
 		bypass = {
@@ -400,7 +490,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# adds pp
+			add_political_power = 75
 		}
 	}
 	
@@ -426,7 +516,7 @@ focus_tree = {
 		}
 
 		available = {
-			# requires opinion
+
 		}
 
 		bypass = {
@@ -434,7 +524,38 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# guarantee from BK, guarantees BK in turn, ZETO subsidies added - consumer factor reduction, pernament, ZETO free trade added - minor consumer factor reductin, pernament, flusiomark mint decision added, reduces consumer goods for PP
+			set_country_flag = SPQ_in_ZETO
+
+			every_country = {
+				limit = {
+					is_in_faction_with = KTN
+				}
+				give_guarantee = SPQ
+				diplomatic_relation = {
+					country = SPQ
+					relation = non_aggression_pact
+				}
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = KTN
+				}
+				SPQ = {
+					give_guarantee = PREV
+					diplomatic_relation = {
+						country = PREV
+						relation = non_aggression_pact
+					}
+				}
+			}
+
+			custom_effect_tooltip = SPQ_focus_ZETO_membership_tt
+
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.35
+				SPQ_consumer_goods_base = -0.25
+			}
+			# TODO flusiomark mint decision added, temp reduces consumer goods factor for PP
 		}
 	}
 	
@@ -468,7 +589,36 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# non aggression pact with ZETO, ZETO free trade, decision later down the line to join ZETO as full member, costs PP
+			set_country_flag = SPQ_in_ZETO
+
+			every_country = {
+				limit = {
+					is_in_faction_with = KTN
+				}
+				diplomatic_relation = {
+					country = SPQ
+					relation = non_aggression_pact
+				}
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = KTN
+				}
+				SPQ = {
+					diplomatic_relation = {
+						country = PREV
+						relation = non_aggression_pact
+					}
+				}
+			}
+
+			custom_effect_tooltip = SPQ_focus_ZETO_association_tt
+
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.125
+				SPQ_consumer_goods_base = -0.075
+			}
+			# TODO decision later down the line to join ZETO as full member, costs PP, which uncompletes this focus, and completes SPQ_focus_ZETO_membership, modifying current variables to match
 		}
 	}
 
@@ -499,7 +649,12 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# trade opinion with kepler
+			KEP = {
+				add_opinion_modifier = {
+					target = SPQ
+					modifier = SPQ_aurelian_embassy
+				}
+			}
 		}
 	}
 
@@ -530,7 +685,12 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# opinion with solaria
+			SLR = {
+				add_opinion_modifier = {
+					target = SPQ
+					modifier = SPQ_aurelian_embassy
+				}
+			}
 		}
 	}
 		
@@ -564,7 +724,55 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# research bonus on industry tech, consumer goods factor decrease 5% and daily communism gain pernament, gains a consumer goods factor decrease of 25% for 365 days, solarian future demands event, loans also unlocked, reduces relations with roqualia, if ZETO audit, solarian hiding funds with laons unlocked
+			# TODO Move these to events, Solaria can accept the deal fully, or partial with just tech sharing
+			add_tech_bonus = {
+				name = "Solarian Industrial Technology"
+				bonus = 1.5
+				ahead_reduction = 1.5
+				uses = 1
+				category = industry
+			}
+			SLR = {
+				add_tech_bonus = {
+					name = "Excapature Industries Technology"
+					bonus = 1.5
+					ahead_reduction = 1.5
+					uses = 1
+					category = industry
+				}
+			}
+
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.25
+			}
+			add_to_variable = {
+				SPQ_consumer_goods_base = -0.05
+			}
+			custom_effect_tooltip = SPQ_focus_joint_market_tt
+
+			set_country_flag = SPQ_solaria_joint_market
+
+			SLR = {
+				set_variable = {
+					SPQ_aurelian_payment = 0.1
+				}
+				add_dynamic_modifier = {
+					modifier = SPQ_idea_aurelian_payment
+					days = 300
+				}
+				add_political_power = 250
+				custom_effect_tooltip = SPQ_focus_SLR_joint_market_tt
+			}
+
+			add_ideas = {
+				SPQ_solaria_joint_market
+			}
+
+			add_popularity = {
+				ideology = communism
+				popularity = 0.075
+			}
+			# TODO solarian future demands event, loans also unlocked, reduces relations with roqualia, if ZETO audit, solarian hiding funds with laons unlocked, 
 		}
 	}
 		
@@ -583,7 +791,7 @@ focus_tree = {
 		cost = 2.9
 
 		ai_will_do = {
-			factor = 1
+			factor = 0
 		}
 
 		available = {
@@ -621,7 +829,9 @@ focus_tree = {
 		}
 
 		available = {
-			# no ZETO audit
+			NOT = {
+				has_country_flag = SPQ_ZETO_audit_started
+			}
 		}
 
 		bypass = {
@@ -629,7 +839,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# decisions to take loans to reduce consumer goods factor
+			# TODO decisions to take loans to reduce consumer goods factor
 		}
 	}
 	
@@ -661,7 +871,8 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			
+			add_political_power = 75
+			# TODO Event on Cincinnatus's lore
 		}
 	}
 	
@@ -692,7 +903,11 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			
+			add_political_power = 50
+			add_ideas = {
+				SPQ_idea_realpolitik
+			}
+			# TODO Event explaining Aurelian Realpolitik of playing both sides
 		}
 	}
 	
@@ -723,7 +938,12 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			# add opinion with NMI, XIR and Brambiles
+			NMI = {
+				add_opinion_modifier = {
+					target = SPQ
+					modifier = SPQ_aurelian_embassy
+				}
+			}
 		}
 	}
 	
@@ -754,7 +974,7 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			# opinion with XIR
+			# TODO opinion with XIR
 		}
 	}
 	
@@ -785,7 +1005,7 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			# ahead of time and research bonus for droids
+			# TODO ahead of time and research bonus for droids
 		}
 	}
 
@@ -820,9 +1040,65 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# 25% consumer goods factor for 365 days, makes province 20917 Excapature Robotics and Computing, renames 20922 to Former Excapature Robotics and Computing, moves all factories from Southern Porro to Scippio, reduces Southern Porro level to rural, makes Scippio and Northern Aurelia Megalopolis, adds Excapature Industries to both states, changes construction speed to 15% 
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = 0.25
+			}
+			set_victory_points = {
+				province = 20922
+				value = 0
+			}
+			set_victory_points = {
+				province = 20917
+				value = 30
+			}
+			set_province_name = {
+				id = 20917
+				name = "Excapature Robotics and Computing"
+			}
+			set_province_name = {
+				id = 20922
+				name = "Former Excapature Robotics and Computing"
+			}
+			829 = {
+				set_variable = {
+					SPQ_south_porro_civ_fact = THIS.num_of_civilian_factories
+				}
+				set_variable = {
+					SPQ_south_porro_mil_fact = THIS.num_of_military_factories
+				}
+				set_building_level = {
+					type = arms_factory
+					level = 0
+				}
+				set_building_level = {
+					type = industrial_complex
+					level = 0
+				}
+				set_state_category = rural
+			}
+			827 = {
+				set_building_level = {
+					type = arms_factory
+					level = SPQ_south_porro_mil_fact
+				}
+				set_building_level = {
+					type = industrial_complex
+					level = SPQ_south_porro_civ_fact
+				}
+				add_resource = {
+					type = food
+					amount = -22
+				}
+				set_state_category = megalopolis
+			}
+			826 = {
+				set_state_category = megalopolis
+			}
+			# TODO moves all factories from Southern Porro to Scippio (broken), Excapature Industries to both states, changes construction speed to 15% 
 		}
 	}
+	
+	# TODO EVERYTHING AFTER THIS IS INCOMPLETE BECAUSE ITS 3 AM SOMEONE SEND HELP JUST GONNA SPAM A BUNCH OF # TO MAKE IT OBVIOUS YEP YEP ############################################## #############################################################################################################################################################################################################################################################################
 	
 	focus = {
 		id = SPQ_focus_viexaer_mour
