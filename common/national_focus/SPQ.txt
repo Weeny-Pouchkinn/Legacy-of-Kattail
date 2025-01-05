@@ -124,7 +124,7 @@ focus_tree = {
 			focus = SPQ_focus_steady_as_she_goes
 		}
 		
-		x= -6
+		x= -10
 		y = 1
 		relative_position_id = SPQ_focus_steady_as_she_goes
 		
@@ -155,7 +155,7 @@ focus_tree = {
 			focus = SPQ_focus_election_of_3136_AVC
 		}
 
-		x= -4
+		x= -3
 		y = 1
 		relative_position_id = SPQ_focus_election_of_3136_AVC
 
@@ -248,7 +248,7 @@ focus_tree = {
 			focus = SPQ_focus_election_of_3136_AVC
 		}
 
-		x= 1
+		x= 2
 		y = 1
 		relative_position_id = SPQ_focus_election_of_3136_AVC
 
@@ -374,16 +374,84 @@ focus_tree = {
 	}
 
 	focus = {
-		id = SPQ_focus_penguin_medicare
+		id = SPQ_focus_ZETO_ties
 		icon = SPQ_focus_placeholder
 
 		prerequisite = {
-			focus = SPQ_focus_election_of_3136_AVC
+			focus = SPQ_focus_south_solakean_defence_agreement
 		}
 
-		x= 4
+		x= 0
 		y = 1
-		relative_position_id = SPQ_focus_election_of_3136_AVC
+		relative_position_id = SPQ_focus_south_solakean_defence_agreement
+
+		cost = 2.9
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			# requires opinion with ZETO members
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# adds pp
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_ZETO_membership
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_ZETO_ties
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_ZETO_association
+		}
+
+		x= -1
+		y = 1
+		relative_position_id = SPQ_focus_ZETO_ties
+
+		cost = 5.8
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			# requires opinion
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# guarantee from BK, guarantees BK in turn, ZETO subsidies added - consumer factor reduction, pernament, ZETO free trade added - minor consumer factor reductin, pernament, flusiomark mint decision added, reduces consumer goods for PP
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_ZETO_association
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_ZETO_ties
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_ZETO_membership
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_ZETO_ties
 
 		cost = 2.9
 
@@ -400,7 +468,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# consumer goods factor for pop growth
+			# non aggression pact with ZETO, ZETO free trade, decision later down the line to join ZETO as full member, costs PP
 		}
 	}
 
@@ -410,9 +478,6 @@ focus_tree = {
 
 		prerequisite = {
 			focus = SPQ_focus_the_aurelian_marketplace
-		}
-		prerequisite = {
-			focus= SPQ_focus_penguin_medicare
 		}
 
 		x= 2
@@ -468,50 +533,21 @@ focus_tree = {
 			# opinion with solaria
 		}
 	}
-
+		
 	focus = {
-		id = SPQ_focus_the_imperator
+		id = SPQ_focus_joint_market
 		icon = SPQ_focus_placeholder
 
 		prerequisite = {
-			focus = SPQ_focus_steady_as_she_goes
-			focus = SPQ_focus_aurelian_ambition
+			focus = SPQ_focus_democratic_communists
 		}
-		
-		x= 0
-		y = 2
-		relative_position_id = SPQ_focus_perpetual_senate
-		
-		cost = 2.2
-		
-		ai_will_do = {
-			factor = 1
-		}
-		
-		available = {
-
-		}
-		
-		bypass = {
-
-		}
-		
-		completion_reward = {
-			
-		}
-	}
-
-	focus = {
-		id = SPQ_focus_realpolitik
-		icon = SPQ_focus_placeholder
-
-		prerequisite = {
-			focus = SPQ_focus_the_imperator
+		mutually_exclusive = {
+			focus = SPQ_focus_simple_loans
 		}
 
-		x= 0
+		x= -1
 		y = 1
-		relative_position_id = SPQ_focus_the_imperator
+		relative_position_id = SPQ_focus_democratic_communists
 
 		cost = 5
 
@@ -528,7 +564,470 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			# research bonus on industry tech, consumer goods factor decrease 5% and daily communism gain pernament, gains a consumer goods factor decrease of 25% for 365 days, solarian future demands event, loans also unlocked, reduces relations with roqualia, if ZETO audit, solarian hiding funds with laons unlocked
+		}
+	}
+		
+	focus = {
+		id = SPQ_focus_start_of_communist_path_WIP
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_joint_market
+		}
+
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_joint_market
+
+		cost = 2.9
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			always = no
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
 			
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_simple_loans
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_democratic_communists
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_joint_market
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_democratic_communists
+
+		cost = 1.5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			# no ZETO audit
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# decisions to take loans to reduce consumer goods factor
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_the_imperator
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_steady_as_she_goes
+			focus = SPQ_focus_aurelian_ambition
+		}
+		
+		x= 0
+		y = 2
+		relative_position_id = SPQ_focus_perpetual_senate
+		
+		cost = 2.2
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_realpolitik
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_the_imperator
+		}
+		
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_the_imperator
+		
+		cost = 5
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_west_flusionea
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_realpolitik
+		}
+		
+		x= -2
+		y = 1
+		relative_position_id = SPQ_focus_realpolitik
+		
+		cost = 1.5
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			# add opinion with NMI, XIR and Brambiles
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_xealeaviu_industrial_regime
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_west_flusionea
+		}
+		
+		x= -4
+		y = 1
+		relative_position_id = SPQ_focus_west_flusionea
+		
+		cost = 2.2
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			# opinion with XIR
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_droid_development
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_xealeaviu_industrial_regime
+		}
+		
+		x= -1
+		y = 1
+		relative_position_id = SPQ_focus_xealeaviu_industrial_regime
+		
+		cost = 5
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			# ahead of time and research bonus for droids
+		}
+	}
+
+	focus = {
+		id = SPQ_focus_industrial_overhaul
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_simple_loans
+			focus = SPQ_focus_joint_market
+		}
+		prerequisite = {
+			focus = SPQ_focus_droid_development
+		}
+
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_simple_loans
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# 25% consumer goods factor for 365 days, makes province 20917 Excapature Robotics and Computing, renames 20922 to Former Excapature Robotics and Computing, moves all factories from Southern Porro to Scippio, reduces Southern Porro level to rural, makes Scippio and Northern Aurelia Megalopolis, adds Excapature Industries to both states, changes construction speed to 15% 
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_viexaer_mour
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_xealeaviu_industrial_regime
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_xealeaviu_industrial_regime
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# 5% research bonus
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_nitromethanes_methane
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_west_flusionea
+		}
+		
+		x= 0
+		y = 1
+		relative_position_id = SPQ_focus_west_flusionea
+		
+		cost = 5.8
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			# removes trade with roq, adds with NMI, gains opinion modifier, NMI gets offmap consumer factories, SPQA gets consumer factor bonus for 365 days, decaying
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_empty_vow
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_nitromethanes_methane
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_a_silent_partner
+		}
+		
+		x= -1
+		y = 1
+		relative_position_id = SPQ_focus_nitromethanes_methane
+		
+		cost = 10
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		available = {
+			
+		}
+		
+		bypass = {
+			
+		}
+		
+		completion_reward = {
+			# guarantee of independence, "NMI Funds" BIG consumer factor bonus, 730 days, decaying, adds mechanic of hiding the partnership, adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech.
+		}
+	}
+		
+	focus = {
+		id = SPQ_focus_station_vespera
+		icon = SPQ_focus_placeholder
+
+		prerequisite = {
+			focus = SPQ_focus_viexaer_mour
+		}
+		prerequisite = {
+			focus = SPQ_focus_droid_development
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_station_eclipse
+		}
+
+		x= -1
+		y = 1
+		relative_position_id = SPQ_focus_viexaer_mour
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# 10% PP, 15% research once complete, medium consumer goods factor, PP reduction for 365 days
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_station_eclipse
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_viexaer_mour
+		}
+		prerequisite = {
+			focus = SPQ_focus_empty_vow
+		}
+		prerequisite = {
+			focus = SPQ_focus_droid_development
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_station_vespera
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_viexaer_mour
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# 25% pp bonus, 25% research bonus pernament once complete, big consumer goods factor 365 days decaying, triggers audit event with ZETO drains all your PP if in ZETO, increase PP cost of hiding NMI activities for 720 days
+		}
+	}
+	
+	focus = {
+		id = SPQ_focus_a_silent_partner
+		icon = SPQ_focus_placeholder
+		
+		prerequisite = {
+			focus = SPQ_focus_nitromethanes_methane
+		}
+		mutually_exclusive = {
+			focus = SPQ_focus_empty_vow
+		}
+
+		x= 1
+		y = 1
+		relative_position_id = SPQ_focus_nitromethanes_methane
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		completion_reward = {
+			# improves relations, guarantee of independence consumer goods bonus for 365 days decaying, adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech.
 		}
 	}
 
@@ -543,7 +1042,7 @@ focus_tree = {
 			focus = SPQ_focus_asserting_influence
 		}
 
-		x= -5
+		x= 0
 		y = 1
 		relative_position_id = SPQ_focus_realpolitik
 
@@ -577,7 +1076,7 @@ focus_tree = {
 			focus = SPQ_focus_balancing_the_scales
 		}
 
-		x= -3
+		x= 2
 		y = 1
 		relative_position_id = SPQ_focus_realpolitik
 
@@ -629,105 +1128,6 @@ focus_tree = {
 
 		completion_reward = {
 			# makes industrial senate decisions cheaper
-		}
-	}
-
-	focus = {
-		id = SPQ_focus_nitromethanes_methane
-		icon = SPQ_focus_placeholder
-
-		prerequisite = {
-			focus = SPQ_focus_realpolitik
-		}
-
-		x= 0
-		y = 1
-		relative_position_id = SPQ_focus_realpolitik
-
-		cost = 5.8
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		completion_reward = {
-			# removes trade with roq, adds with NMI, gains opinion modifier, NMI gets offmap consumer factories, SPQA gets consumer factor bonus for 365 days, decaying
-		}
-	}
-
-	focus = {
-		id = SPQ_focus_empty_vow
-		icon = SPQ_focus_placeholder
-
-		prerequisite = {
-			focus = SPQ_focus_nitromethanes_methane
-		}
-		mutually_exclusive = {
-			focus = SPQ_focus_a_silent_partner
-		}
-
-		x= -2
-		y = 1
-		relative_position_id = SPQ_focus_nitromethanes_methane
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		completion_reward = {
-			# guarantee of independence, gains BIG consumer factor bonus, 730 days, decaying, adds mechanic of hiding the partnership
-		}
-	}
-
-	focus = {
-		id = SPQ_focus_a_silent_partner
-		icon = SPQ_focus_placeholder
-
-		prerequisite = {
-			focus = SPQ_focus_nitromethanes_methane
-		}
-		mutually_exclusive = {
-			focus = SPQ_focus_empty_vow
-		}
-
-		x= 2
-		y = 1
-		relative_position_id = SPQ_focus_nitromethanes_methane
-
-		cost = 5
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		completion_reward = {
-			# improves relations, guarantee of independence consumer goods bonus for 365 days decaying
 		}
 	}
 
