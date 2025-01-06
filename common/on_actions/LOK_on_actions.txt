@@ -1147,11 +1147,38 @@ on_actions = {
 			else_if = {
 				limit = {
 					check_variable = {
-						SPQ_consumer_goods_base < SPQ_consumer_goods_base
+						SPQ_consumer_goods_factor_var < SPQ_consumer_goods_base
 					}
 				}
-				add_to_variable = {
-					SPQ_consumer_goods_factor_var = SPQ_consumer_goods_increase
+				set_variable = {
+					SPQ_consumer_goods_diff = SPQ_consumer_goods_base
+				}
+				subtract_from_variable = {
+					SPQ_consumer_goods_diff = SPQ_consumer_goods_factor_var
+				}
+				if = {
+					limit = {
+						check_variable = {
+							SPQ_consumer_goods_diff > 0.5
+						}
+					}
+					set_variable = {
+						SPQ_consumer_goods_increase_2 = SPQ_consumer_goods_increase
+					}
+					multiply_variable = {
+						SPQ_consumer_goods_increase_2 = 3
+					}
+					add_to_variable = {
+						SPQ_consumer_goods_factor_var = SPQ_consumer_goods_increase_2
+					}
+					clear_variable = SPQ_consumer_goods_diff
+					clear_variable = SPQ_consumer_goods_increase_2
+				}
+				else = {
+					add_to_variable = {
+						SPQ_consumer_goods_factor_var = SPQ_consumer_goods_increase
+					}
+					clear_variable = SPQ_consumer_goods_diff
 				}
 			}
 		}

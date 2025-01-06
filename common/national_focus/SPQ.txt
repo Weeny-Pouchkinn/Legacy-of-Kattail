@@ -51,7 +51,7 @@ focus_tree = {
 ##        ##     ## ##        ##     ##     ##  ##    ## ##    ## 
 ##         #######  ######## ####    ##    ####  ######   ######  
 # POLITICS
-
+	# TODO MOVE ALL FOREIGN NATION TO EVENT WITH ACCEPTANCE OPTIONS
 	focus = {
 		id = SPQ_focus_perpetual_senate
 		icon = SPQ_focus_placeholder
@@ -75,7 +75,7 @@ focus_tree = {
 		
 		completion_reward = {
 			country_event = {
-				id = SPQ_event_pol.1
+				id = SPQ_pol_focus.1
 			}
 		}
 	}
@@ -535,6 +535,7 @@ focus_tree = {
 					country = SPQ
 					relation = non_aggression_pact
 				}
+				give_market_access = SPQ
 			}
 			every_country = {
 				limit = {
@@ -553,7 +554,7 @@ focus_tree = {
 
 			add_to_variable = {
 				SPQ_consumer_goods_factor_var = -0.35
-				SPQ_consumer_goods_base = -0.25
+				SPQ_consumer_goods_base = -0.15
 			}
 			# TODO flusiomark mint decision added, temp reduces consumer goods factor for PP
 		}
@@ -599,6 +600,7 @@ focus_tree = {
 					country = SPQ
 					relation = non_aggression_pact
 				}
+				give_market_access = SPQ
 			}
 			every_country = {
 				limit = {
@@ -616,7 +618,7 @@ focus_tree = {
 
 			add_to_variable = {
 				SPQ_consumer_goods_factor_var = -0.125
-				SPQ_consumer_goods_base = -0.075
+				SPQ_consumer_goods_base = -0.05
 			}
 			# TODO decision later down the line to join ZETO as full member, costs PP, which uncompletes this focus, and completes SPQ_focus_ZETO_membership, modifying current variables to match
 		}
@@ -740,6 +742,7 @@ focus_tree = {
 					uses = 1
 					category = industry
 				}
+				give_market_access = SPQ
 			}
 
 			add_to_variable = {
@@ -752,13 +755,13 @@ focus_tree = {
 
 			set_country_flag = SPQ_solaria_joint_market
 
-			SLR = {
+			SLR = { # For optimisation reasons, not decaying
 				set_variable = {
-					SPQ_aurelian_payment = 0.1
+					SPQ_aurelian_payment = 0.125
 				}
 				add_dynamic_modifier = {
 					modifier = SPQ_idea_aurelian_payment
-					days = 300
+					days = 315
 				}
 				add_political_power = 250
 				custom_effect_tooltip = SPQ_focus_SLR_joint_market_tt
@@ -839,6 +842,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			custom_effect_tooltip = SPQ_focus_simple_loans_tt
 			# TODO decisions to take loans to reduce consumer goods factor
 		}
 	}
@@ -1043,6 +1047,8 @@ focus_tree = {
 			add_to_variable = {
 				SPQ_consumer_goods_factor_var = 0.25
 			}
+			custom_effect_tooltip = SPQ_focus_industrial_overhaul_tt
+
 			set_victory_points = {
 				province = 20922
 				value = 0
@@ -1059,12 +1065,20 @@ focus_tree = {
 				id = 20922
 				name = "Former Excapature Robotics and Computing"
 			}
-			829 = {
-				set_variable = {
-					SPQ_south_porro_civ_fact = THIS.num_of_civilian_factories
+			825 = {
+				remove_dynamic_modifier = {
+					modifier = excapature_industries
 				}
-				set_variable = {
-					SPQ_south_porro_mil_fact = THIS.num_of_military_factories
+				add_dynamic_modifier = {
+					modifier = excapature_industries_2
+				}
+			}
+			829 = {
+				set_temp_variable = {
+					SPQ_south_porro_civ_fact = industrial_complex_level
+				}
+				set_temp_variable = {
+					SPQ_south_porro_mil_fact = arms_factory_level
 				}
 				set_building_level = {
 					type = arms_factory
@@ -1090,15 +1104,22 @@ focus_tree = {
 					amount = -22
 				}
 				set_state_category = megalopolis
+				add_dynamic_modifier = {
+					modifier = excapature_industries_2
+				}
 			}
 			826 = {
 				set_state_category = megalopolis
+				remove_dynamic_modifier = {
+					modifier = excapature_industries
+				}
+				add_dynamic_modifier = {
+					modifier = excapature_industries_2
+				}
 			}
-			# TODO moves all factories from Southern Porro to Scippio (broken), Excapature Industries to both states, changes construction speed to 15% 
+			# TODO add said consumer good factor to XIR
 		}
 	}
-	
-	# TODO EVERYTHING AFTER THIS IS INCOMPLETE BECAUSE ITS 3 AM SOMEONE SEND HELP JUST GONNA SPAM A BUNCH OF # TO MAKE IT OBVIOUS YEP YEP ############################################## #############################################################################################################################################################################################################################################################################
 	
 	focus = {
 		id = SPQ_focus_viexaer_mour
@@ -1127,7 +1148,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# 5% research bonus
+			add_research_slot = 1
 		}
 	}
 	
@@ -1158,7 +1179,32 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			# removes trade with roq, adds with NMI, gains opinion modifier, NMI gets offmap consumer factories, SPQA gets consumer factor bonus for 365 days, decaying
+			NMI = {
+				add_opinion_modifier = {
+					target = SPQ
+					modifier = SPQ_aurelian_trade
+				}
+				add_offsite_building = {
+					type = industrial_complex
+					level = 3
+				}
+				set_variable = {
+					SPQ_aurelian_payment = 0.05
+				}
+				add_dynamic_modifier = {
+					modifier = SPQ_idea_aurelian_payment
+					days = 122
+				}
+				custom_effect_tooltip = SPQ_focus_NMI_nitromethanes_methane_tt
+				
+			}
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.1
+			}
+			add_to_variable = {
+				SPQ_consumer_goods_base = -0.05	
+			}
+			custom_effect_tooltip = SPQ_focus_nitromethanes_methane
 		}
 	}
 	
@@ -1184,7 +1230,12 @@ focus_tree = {
 		}
 		
 		available = {
-			
+			NMI = {
+				has_opinion = {
+					target = SPQ
+					value > 99
+				}
+			}
 		}
 		
 		bypass = {
@@ -1192,7 +1243,61 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			# guarantee of independence, "NMI Funds" BIG consumer factor bonus, 730 days, decaying, adds mechanic of hiding the partnership, adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech.
+			set_variable = {
+				SPQ_communist_support_before_change = SPQ.party_popularity_100@communism
+			}
+			set_variable = {
+				SPQ_democratic_support_before_change = SPQ.party_popularity_100@democratic
+			}
+			set_variable = {
+				SPQ_fascist_support_before_change = SPQ.party_popularity_100@fascism
+			}
+			set_variable = {
+				SPQ_neutrality_support_before_change = SPQ.party_popularity_100@neutrality
+			}
+
+			NMI = {
+				set_autonomy = {
+					target = SPQ
+					autonomous_state = autonomy_SPQ_NMI
+				}
+				add_to_variable = {
+					SPQ_aurelian_payment = 0.2
+				}
+				add_dynamic_modifier = {
+					modifier = SPQ_idea_aurelian_payment
+					days = 200
+				}
+				# custom_effect_tooltip = SPQ_focus_NMI_empty_vow_tt
+				add_ideas = {
+					SPQ_idea_NMI_excapature_science_1
+				}
+				# TODO add check for Excapature Science logo by checking for focus completion
+			}
+			hidden_effect = {
+				# Reset popluarities and party to what they were before puppeting 
+				set_popularities = {
+					communism = SPQ_communist_support_before_change
+					democratic = SPQ_democratic_support_before_change
+					fascism = SPQ_fascist_support_before_change
+					neutrality = SPQ_neutrality_support_before_change
+				}
+				clear_variable = SPQ_communist_support_before_change
+				clear_variable = SPQ_democratic_support_before_change
+				clear_variable = SPQ_fascist_support_before_change
+				clear_variable = SPQ_neutrality_support_before_change
+				set_politics = {
+					ruling_party = democratic
+				}
+			}
+
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.5
+			}
+			custom_effect_tooltip = SPQ_focus_empty_vow_tt
+
+			set_country_flag = SPQ_NMI_vassal
+			# TODO adds mechanic of hiding the partnership, adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech. MOVE ACCEPTANCE TO EVENT
 		}
 	}
 		
@@ -1221,7 +1326,7 @@ focus_tree = {
 		}
 
 		available = {
-			
+
 		}
 
 		bypass = {
@@ -1229,6 +1334,14 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = 0.2
+			}
+			
+			add_timed_idea = {
+				idea = SPQ_constructing_vespera
+				days = 365
+			}
 			# 10% PP, 15% research once complete, medium consumer goods factor, PP reduction for 365 days
 		}
 	}
@@ -1269,7 +1382,22 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# 25% pp bonus, 25% research bonus pernament once complete, big consumer goods factor 365 days decaying, triggers audit event with ZETO drains all your PP if in ZETO, increase PP cost of hiding NMI activities for 720 days
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = 0.5
+			}
+
+			set_country_flag = SPQ_station_eclipse
+
+			# country_event = {
+			# 	id = SPQ_
+			# }
+
+			add_ideas = {
+				SPQ_station_eclipse
+			}
+
+			custom_effect_tooltip = SPQ_station_eclipse_tt
+			# TODO triggers audit event with ZETO drains all your PP if in ZETO, increase PP cost of hiding NMI activities for 720 days, move SPQ station eclipse to event that fires in 2 years, change custom tt to reflect this
 		}
 	}
 	
@@ -1295,7 +1423,12 @@ focus_tree = {
 		}
 
 		available = {
-			
+			NMI = {
+				has_opinion = {
+					target = SPQ
+					value > 39
+				}
+			}
 		}
 
 		bypass = {
@@ -1303,7 +1436,21 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			# improves relations, guarantee of independence consumer goods bonus for 365 days decaying, adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech.
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.15
+			}
+			custom_effect_tooltip = SPQ_focus_a_silent_partner_tt
+
+			set_country_flag = SPQ_NMI_easy_vassal_alt
+
+			NMI = {
+				diplomatic_relation = {
+					country = SPQ
+					relation = non_aggression_pact
+				}
+				give_guarantee = SPQ
+			}
+			# TODO adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech. MOVE ACCEPTANCE TO EVENT
 		}
 	}
 
