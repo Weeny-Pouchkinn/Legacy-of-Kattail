@@ -35,136 +35,68 @@
 	}
 
 	focus = {
-		id = ELO_appeal_south
-		icon = GFX_focus_ELO_handshake_south
-		prerequisite = { focus = ELO_oh_shit_oh_god }
+		id = ELO_find_our_allies
+		icon = GFX_focus_ELO_find_our_allies
 		relative_position_id = ELO_oh_shit_oh_god
+
+		prerequisite = { focus = ELO_oh_shit_oh_god }
 		x = 0
 		y = 1
-		cost = 5
-		mutually_exclusive = { focus = ELO_cries_workers focus = ELO_give_in_evil }
+		cost = 1
 		search_filters = { FOCUS_FILTER_POLITICAL }
-		
 		available_if_capitulated = no
-
-		completion_reward = {
-			add_political_power = 50
-			add_popularity = { ideology = democratic popularity = 0.10 }
-		}
 	}
 
 	focus = {
-		id = ELO_give_in_evil
-		icon = GFX_focus_ITA_generic_fascist_workers
-		prerequisite = { focus = ELO_oh_shit_oh_god }
+		id = ELO_the_dreamers
+		icon = GFX_focus_BDR_ZETO_icon
 		relative_position_id = ELO_oh_shit_oh_god
-		x = -3
-		y = 1
-		cost = 5
-		mutually_exclusive = { focus = ELO_appeal_south focus = ELO_cries_workers }
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		
-		available_if_capitulated = no
 
-		completion_reward = {
-			add_political_power = 50
-			add_popularity = { ideology = fascism popularity = 0.10 }
-			add_timed_idea = { idea = fascist_influence_weak days = 365 }
-		}
-	}
-
-	focus = {
-		id = ELO_cries_workers
-		icon = GFX_focus_SOV_builder_of_the_red_army
-		prerequisite = { focus = ELO_oh_shit_oh_god }
-		relative_position_id = ELO_oh_shit_oh_god
-		x = 3
-		y = 1
-		cost = 5
-		mutually_exclusive = { focus = ELO_appeal_south focus = ELO_give_in_evil }
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_political_power = 50
-			add_popularity = { ideology = communism popularity = 0.10 }
-			add_timed_idea = { idea = communist_influence_weak days = 365 }
-		}
-	}
-
-
-	focus = {
-		id = ELO_reject_nordherzland
-		icon = GFX_focus_focus_fra_fascist_threat
-		prerequisite = { focus = ELO_appeal_south }
-		relative_position_id = ELO_appeal_south
-		x = 0
-		y = 1
-		cost = 5
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_political_power = 50
-			add_opinion_modifier = {
-				target = SIL
-				modifier = anti_fascist_diplomacy_fascists
-			}
-			add_opinion_modifier = {
-				target = NEU
-				modifier = anti_fascist_diplomacy_fascists
-			}
-		}
-	}
-
-	focus = {
-		id = ELO_forging_ties
-		icon = GFX_goal_generic_alliance
-		prerequisite = { focus = ELO_reject_nordherzland }
-		relative_position_id = ELO_reject_nordherzland
-		x = 2
-		y = 1
-		cost = 5
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_political_power = 100
-		}
-	}
-
-	focus = {
-		id = ELO_prepare_counterattack
-		icon = GFX_focus_prc_infiltration
-		prerequisite = { focus = ELO_reject_nordherzland }
-		relative_position_id = ELO_reject_nordherzland
+		prerequisite = { focus = ELO_find_our_allies }
 		x = -2
-		y = 1
-		cost = 5
+		y = 2
+		cost = 2
 		search_filters = { FOCUS_FILTER_POLITICAL }
-		
 		available_if_capitulated = no
+	}
 
-		completion_reward = {
-			add_political_power = 100
-		}
+	focus = {
+		id = ELO_appeal_to_nieuw_pawsterdam
+		icon = GFX_focus_ELO_appeal_to_nieuw_pawsterdam
+		relative_position_id = ELO_oh_shit_oh_god
+
+		prerequisite = { focus = ELO_the_dreamers }
+		x = -2
+		y = 3
+		cost = 2
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
+	}
+
+	focus = {
+		id = ELO_the_rebels
+		icon = GFX_focus_ELO_the_rebels
+		relative_position_id = ELO_oh_shit_oh_god
+
+		prerequisite = { focus = ELO_find_our_allies }
+		x = 0
+		y = 2
+		cost = 2
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
 	}
 
 	focus = {
 		id = ELO_home_ipf_ksk
 		icon = GFX_focus_ETH_freedom_at_gunpoint
-		prerequisite = { focus = ELO_reject_nordherzland }
-		prerequisite = { focus = ELO_prepare_counterattack }
-		prerequisite = { focus = ELO_forging_ties }
-		relative_position_id = ELO_reject_nordherzland
+		prerequisite = { focus = ELO_the_rebels }
+
+		relative_position_id = ELO_oh_shit_oh_god
 		x = 0
-		y = 2
-		cost = 5
+		y = 3
+		cost = 2
 		search_filters = { FOCUS_FILTER_POLITICAL }
-		
+
 		available_if_capitulated = no
 
 		completion_reward = {
@@ -184,7 +116,7 @@
 					add_to_variable = { ipf_opinion = 4 }
 				}
 				calculate_ipf_ksk_resistance = yes
-			}			
+			}
 			hidden_effect = {
 				add_to_variable = { ksk_strength = 2 }
 				if = {
@@ -205,219 +137,467 @@
 	}
 
 	focus = {
-		id = ELO_sfl_epic_fail
-		icon = GFX_goal_generic_alliance
-		prerequisite = { focus = ELO_forging_ties }
-		relative_position_id = ELO_forging_ties
+		id = ELO_the_felineans
+		icon = USF_focus_USFF
+		relative_position_id = ELO_oh_shit_oh_god
+
+		prerequisite = { focus = ELO_find_our_allies }
 		x = 2
-		y = 1
-		cost = 5
+		y = 2
+		cost = 2
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
+	}
+
+
+	focus = {
+		id = ELO_appeal_south
+		icon = GFX_focus_ELO_the_felineans
+		prerequisite = { focus = ELO_the_felineans }
+		relative_position_id = ELO_oh_shit_oh_god
+		x = 2
+		y = 3
+		cost = 2
+
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		
 		available_if_capitulated = no
 
 		completion_reward = {
-			add_political_power = 100
+			add_political_power = 50
+			add_popularity = { ideology = democratic popularity = 0.10 }
 		}
 	}
 
 	focus = {
-		id = ELO_expanding_army
-		icon = GFX_focus_chi_army_reform
+		id = ELO_reject_nordherzland
+		icon = GFX_focus_focus_fra_fascist_threat
+		prerequisite = { focus = ELO_appeal_south focus = ELO_appeal_to_nieuw_pawsterdam }
 		prerequisite = { focus = ELO_home_ipf_ksk }
-		relative_position_id = ELO_home_ipf_ksk
-		x = -2
-		y = 1
-		cost = 5
-		search_filters = { FOCUS_FILTER_MANPOWER }
-		
+		relative_position_id = ELO_oh_shit_oh_god
+		x = 0
+		y = 4
+		cost = 2
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
 		available_if_capitulated = no
 
 		completion_reward = {
-			add_manpower = 15000
-		}
-	}
-
-	focus = {
-		id = ELO_internal_line
-		icon = GFX_goal_fortify_the_westwall
-		prerequisite = { focus = ELO_home_ipf_ksk }
-		relative_position_id = ELO_home_ipf_ksk
-		x = 2
-		y = 1
-		mutually_exclusive = { focus = ELO_brunner_line }
-		cost = 10
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			custom_effect_tooltip = ELO_internal_line_tt
-			random_owned_controlled_state = {
-				prioritize = { 90 }
-					add_building_construction = {
-  						type = bunker
-   						level = 2
-  						instant_build = yes
-						province = { 
-							id = 10027
-							id = 13318
-							id = 13386
-							id = 11020
-							id = 7106
-						}
-					}				
+			add_political_power = 50
+			add_opinion_modifier = {
+				target = SIL
+				modifier = anti_fascist_diplomacy_fascists
+			}
+			add_opinion_modifier = {
+				target = NEU
+				modifier = anti_fascist_diplomacy_fascists
 			}
 		}
 	}
+	
+	focus = {
+		id = ELO_address_reality
+		icon = GFX_focus_ELO_address_reality
+
+		prerequisite = { focus = ELO_reject_nordherzland }
+		relative_position_id = ELO_reject_nordherzland
+		x = 0
+		y = 1
+		cost = 3
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
+	}
 
 	focus = {
-		id = ELO_clermeowth_line
-		icon = GFX_goal_fortify_the_westwall
-		prerequisite = { focus = ELO_internal_line }
-		relative_position_id = ELO_internal_line
+		id = ELO_alone_in_a_sea_of_tyranny
+		icon = AUR_almost_as_good_as_him
+		prerequisite = { focus = ELO_address_reality }
+		relative_position_id = ELO_reject_nordherzland
+		x = -1
+		y = 2
+		cost = 3
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
+	}
+
+	focus = {
+		id = ELO_with_a_motley_crew_of_rebels
+		icon = GFX_focus_ELO_with_a_motley_crew_of_rebels
+		prerequisite = { focus = ELO_address_reality }
+		relative_position_id = ELO_reject_nordherzland
+		x = 1
+		y = 2
+		cost = 3
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
+	}
+
+	focus = {
+		id = ELO_the_light_dims
+		icon = GFX_focus_ELO_the_light_dims
+		prerequisite = { focus = ELO_alone_in_a_sea_of_tyranny }
+		prerequisite = { focus = ELO_with_a_motley_crew_of_rebels }
+		relative_position_id = ELO_reject_nordherzland
+		x = 0
+		y = 3
+		cost = 3
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
+	}
+
+	focus = {
+		id = ELO_hope_extuingished
+		icon = AUR_herzlands_darkspot
+		prerequisite = { focus = ELO_the_light_dims }
+		relative_position_id = ELO_the_light_dims
 		x = -1
 		y = 1
-		cost = 10
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
+		cost = 3
 
-		completion_reward = {
-			custom_effect_tooltip = ELO_clermeowth_line_tt
-			random_owned_controlled_state = {
-				prioritize = { 90 578 579 }
-					add_building_construction = {
-  						type = bunker
-   						level = 2
-  						instant_build = yes
-						province = { 
-							id = 11008
-							id = 2504
-							id = 2133
-							id = 6214
-							id = 8897
-							id = 13307
-							id = 7484
-							id = 13308
-						}
-					}				
-			}
+		allow_branch = {
+			NOT = { has_country_flag = ELO_hope_blazes }
 		}
+
+		mutually_exclusive = { focus = ELO_hope_blazing }
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
 	}
 
 	focus = {
-		id = ELO_auralia_line
-		icon = GFX_goal_fortify_the_westwall
-		prerequisite = { focus = ELO_internal_line }
-		relative_position_id = ELO_internal_line
+		id = ELO_hope_blazing
+		icon = GFX_focus_ELO_hope_blazing
+		prerequisite = { focus = ELO_the_light_dims }
+		relative_position_id = ELO_the_light_dims
 		x = 1
 		y = 1
-		cost = 10
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
+		cost = 3
 
-		completion_reward = {
-			custom_effect_tooltip = ELO_auralia_line_tt
-			random_owned_controlled_state = {
-				prioritize = { 577 283 }
-					add_building_construction = {
-  						type = bunker
-   						level = 2
-  						instant_build = yes
-						province = { 
-							id = 448
-							id = 2563
-							id = 13562
-							id = 13535
-							id = 8024
-							id = 6697
-							id = 13593
-							id = 2687
-							id = 1721
-						}
-					}				
+		offset = {
+			x = -1
+			trigger = {
+				has_country_flag = ELO_hope_blazes
 			}
 		}
+		mutually_exclusive = { focus = ELO_hope_extuingished  }
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
 	}
 
 	focus = {
-		id = ELO_brunner_line
-		icon = GFX_goal_fortify_the_westwall
-		prerequisite = { focus = ELO_home_ipf_ksk }
-		relative_position_id = ELO_home_ipf_ksk
-		x = 5
-		y = 1
-		mutually_exclusive = { focus = ELO_internal_line }
-		cost = 25
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
-
-		select_effect = { add_ideas = ELO_brunner_malus }
-
-		completion_reward = {
-			custom_effect_tooltip = ELO_brunner_line_tt
-			random_owned_controlled_state = {
-				prioritize = { 577 90 283 579 }
-					add_building_construction = {
-  						type = bunker
-   						level = 3
-  						instant_build = yes
-						province = { 
-							id = 7845
-							id = 9087
-							id = 568
-							id = 9015
-							id = 13470
-							id = 13494
-							id = 11363
-							id = 5228
-							id = 13513
-							id = 13522
-							id = 13549
-							id = 805
-							id = 13516
-							id = 3062
-							id = 9002
-							id = 13345
-						}
-					}	
-			}
-			hidden_effect = { remove_ideas = ELO_brunner_malus }
-		}
-	}
-
-	focus = {
-		id = ELO_defense_militia
-		icon = GFX_focus_generic_manpower
-		prerequisite = { focus = ELO_clermeowth_line focus = ELO_auralia_line focus = ELO_brunner_line }
-		relative_position_id = ELO_internal_line
-		x = 0
-		y = 2
+		id = ELO_stand_and_fight
+		allow_branch = { has_country_flag = ELO_hope_blazes }
+		relative_position_id = ELO_oh_shit_oh_god
+		icon = GFX_focus_ELO_stand_and_fight
+		x = 6
+		y = 0
 		cost = 5
-		search_filters = { FOCUS_FILTER_MANPOWER }
-		
-		available_if_capitulated = no
 
-		completion_reward = {
-			add_manpower = 15000
-			custom_effect_tooltip = ELO_defense_militia_tt
-			hidden_effect = {
-				random_owned_controlled_state = {
-					prioritize = { 90 }
-						create_unit = {
-							division = "name = \"Elowien-Volkssturm\" division_template = \"Katzen-Garnison\" start_manpower_factor = 0.8"
-							owner = ELO
-							count = 3
-							allow_spawning_on_enemy_provs = yes
-							prioritize_location = 13344
-						}
-				}
-			}
-		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		available_if_capitulated = no
 	}
+
+	# focus = {
+	# 	id = ELO_give_in_evil
+	# 	icon = GFX_focus_ITA_generic_fascist_workers
+	# 	prerequisite = { focus = ELO_oh_shit_oh_god }
+	# 	relative_position_id = ELO_oh_shit_oh_god
+	# 	x = -3
+	# 	y = 1
+	# 	cost = 5
+	# 	mutually_exclusive = { focus = ELO_appeal_south focus = ELO_cries_workers }
+	# 	search_filters = { FOCUS_FILTER_POLITICAL }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_political_power = 50
+	# 		add_popularity = { ideology = fascism popularity = 0.10 }
+	# 		add_timed_idea = { idea = fascist_influence_weak days = 365 }
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_cries_workers
+	# 	icon = GFX_focus_SOV_builder_of_the_red_army
+	# 	prerequisite = { focus = ELO_oh_shit_oh_god }
+	# 	relative_position_id = ELO_oh_shit_oh_god
+	# 	x = 3
+	# 	y = 5
+	# 	cost = 5
+	# 	mutually_exclusive = {
+	# 		focus = ELO_appeal_south
+	# 		#focus = ELO_give_in_evil
+	# 	}
+	# 	search_filters = { FOCUS_FILTER_POLITICAL }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_political_power = 50
+	# 		add_popularity = { ideology = communism popularity = 0.10 }
+	# 		add_timed_idea = { idea = communist_influence_weak days = 365 }
+	# 	}
+	# }
+
+
+
+
+	# focus = {
+	# 	id = ELO_forging_ties
+	# 	icon = GFX_goal_generic_alliance
+	# 	prerequisite = { focus = ELO_reject_nordherzland }
+	# 	relative_position_id = ELO_reject_nordherzland
+	# 	x = 2
+	# 	y = 1
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_POLITICAL }
+	#	
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_political_power = 100
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_prepare_counterattack
+	# 	icon = GFX_focus_prc_infiltration
+	# 	prerequisite = { focus = ELO_reject_nordherzland }
+	# 	relative_position_id = ELO_reject_nordherzland
+	# 	x = -2
+	# 	y = 1
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_POLITICAL }
+	#	
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_political_power = 100
+	# 	}
+	# }
+	#
+	#
+	#
+	# focus = {
+	# 	id = ELO_sfl_epic_fail
+	# 	icon = GFX_goal_generic_alliance
+	# 	prerequisite = { focus = ELO_forging_ties }
+	# 	relative_position_id = ELO_forging_ties
+	# 	x = 2
+	# 	y = 1
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_POLITICAL }
+	#	
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_political_power = 100
+	# 	}
+	# }
+
+	# focus = {
+	# 	id = ELO_expanding_army
+	# 	icon = GFX_focus_chi_army_reform
+	# 	prerequisite = { focus = ELO_home_ipf_ksk }
+	# 	relative_position_id = ELO_home_ipf_ksk
+	# 	x = -2
+	# 	y = 1
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_MANPOWER }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_manpower = 15000
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_internal_line
+	# 	icon = GFX_goal_fortify_the_westwall
+	# 	prerequisite = { focus = ELO_home_ipf_ksk }
+	# 	relative_position_id = ELO_home_ipf_ksk
+	# 	x = 2
+	# 	y = 1
+	# 	mutually_exclusive = { focus = ELO_brunner_line }
+	# 	cost = 10
+	# 	search_filters = { FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		custom_effect_tooltip = ELO_internal_line_tt
+	# 		random_owned_controlled_state = {
+	# 			prioritize = { 90 }
+	# 				add_building_construction = {
+  	# 					type = bunker
+   	# 					level = 2
+  	# 					instant_build = yes
+	# 					province = {
+	# 						id = 10027
+	# 						id = 13318
+	# 						id = 13386
+	# 						id = 11020
+	# 						id = 7106
+	# 					}
+	# 				}
+	# 		}
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_clermeowth_line
+	# 	icon = GFX_goal_fortify_the_westwall
+	# 	prerequisite = { focus = ELO_internal_line }
+	# 	relative_position_id = ELO_internal_line
+	# 	x = -1
+	# 	y = 1
+	# 	cost = 10
+	# 	search_filters = { FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		custom_effect_tooltip = ELO_clermeowth_line_tt
+	# 		random_owned_controlled_state = {
+	# 			prioritize = { 90 578 579 }
+	# 				add_building_construction = {
+  	# 					type = bunker
+   	# 					level = 2
+  	# 					instant_build = yes
+	# 					province = {
+	# 						id = 11008
+	# 						id = 2504
+	# 						id = 2133
+	# 						id = 6214
+	# 						id = 8897
+	# 						id = 13307
+	# 						id = 7484
+	# 						id = 13308
+	# 					}
+	# 				}
+	# 		}
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_auralia_line
+	# 	icon = GFX_goal_fortify_the_westwall
+	# 	prerequisite = { focus = ELO_internal_line }
+	# 	relative_position_id = ELO_internal_line
+	# 	x = 1
+	# 	y = 1
+	# 	cost = 10
+	# 	search_filters = { FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		custom_effect_tooltip = ELO_auralia_line_tt
+	# 		random_owned_controlled_state = {
+	# 			prioritize = { 577 283 }
+	# 				add_building_construction = {
+  	# 					type = bunker
+   	# 					level = 2
+  	# 					instant_build = yes
+	# 					province = {
+	# 						id = 448
+	# 						id = 2563
+	# 						id = 13562
+	# 						id = 13535
+	# 						id = 8024
+	# 						id = 6697
+	# 						id = 13593
+	# 						id = 2687
+	# 						id = 1721
+	# 					}
+	# 				}
+	# 		}
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_brunner_line
+	# 	icon = GFX_goal_fortify_the_westwall
+	# 	prerequisite = { focus = ELO_home_ipf_ksk }
+	# 	relative_position_id = ELO_home_ipf_ksk
+	# 	x = 5
+	# 	y = 1
+	# 	mutually_exclusive = { focus = ELO_internal_line }
+	# 	cost = 25
+	# 	search_filters = { FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	select_effect = { add_ideas = ELO_brunner_malus }
+	#
+	# 	completion_reward = {
+	# 		custom_effect_tooltip = ELO_brunner_line_tt
+	# 		random_owned_controlled_state = {
+	# 			prioritize = { 577 90 283 579 }
+	# 				add_building_construction = {
+  	# 					type = bunker
+   	# 					level = 3
+  	# 					instant_build = yes
+	# 					province = {
+	# 						id = 7845
+	# 						id = 9087
+	# 						id = 568
+	# 						id = 9015
+	# 						id = 13470
+	# 						id = 13494
+	# 						id = 11363
+	# 						id = 5228
+	# 						id = 13513
+	# 						id = 13522
+	# 						id = 13549
+	# 						id = 805
+	# 						id = 13516
+	# 						id = 3062
+	# 						id = 9002
+	# 						id = 13345
+	# 					}
+	# 				}
+	# 		}
+	# 		hidden_effect = { remove_ideas = ELO_brunner_malus }
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_defense_militia
+	# 	icon = GFX_focus_generic_manpower
+	# 	prerequisite = { focus = ELO_clermeowth_line focus = ELO_auralia_line focus = ELO_brunner_line }
+	# 	relative_position_id = ELO_internal_line
+	# 	x = 0
+	# 	y = 2
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_MANPOWER }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_manpower = 15000
+	# 		custom_effect_tooltip = ELO_defense_militia_tt
+	# 		hidden_effect = {
+	# 			random_owned_controlled_state = {
+	# 				prioritize = { 90 }
+	# 					create_unit = {
+	# 						division = "name = \"Elowien-Volkssturm\" division_template = \"Katzen-Garnison\" start_manpower_factor = 0.8"
+	# 						owner = ELO
+	# 						count = 3
+	# 						allow_spawning_on_enemy_provs = yes
+	# 						prioritize_location = 13344
+	# 					}
+	# 			}
+	# 		}
+	# 	}
+	# }
 
 	#################################
 	#		INDUSTRIAL TREE			#

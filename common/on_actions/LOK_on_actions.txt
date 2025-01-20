@@ -657,6 +657,27 @@ on_actions = {
 				}
 			}
 
+			#Bridges
+			set_global_flag = EZIKATZEN_CANAL_DISABLED
+			set_global_flag = FISHY_PASS_CANAL_DISABLED
+			set_global_flag = SOLKATZIA_SOLAKEA_EAST_BRIDGE
+			set_global_flag = NORWEGEN_BRIDGE_DISABLED
+			set_global_flag = KOTIJGRAD_BRIDGE_DISABLED
+
+			# 715 = { set_state_flag = LOK_BRIDGE_DISABLED }
+			# 235 = { set_state_flag = LOK_BRIDGE_DISABLED }
+			# 903 = { set_state_flag = LOK_BRIDGE_DISABLED }
+			# 334 = { set_state_flag = LOK_BRIDGE_DISABLED }
+			# 553 = { set_state_flag = EZIKATZEN_CANAL_DISABLED }
+			# 566 = { set_state_flag = FISHY_PASS_CANAL_DISABLED }
+
+			# 894 = { set_state_flag = LOK_HAS_BRIDGE }
+			# 32 = { set_state_flag = LOK_HAS_BRIDGE }
+			# 913 = { set_state_flag = LOK_HAS_BRIDGE }
+			# 192 = { set_state_flag = LOK_HAS_BRIDGE }
+			# 116 = { set_state_flag = LOK_HAS_BRIDGE }
+			# 213 = { set_state_flag = LOK_HAS_BRIDGE }
+
 			# Offmap shitpost guis
 			966 = { set_variable = { meogartha = 1 } }
 			967 = { set_variable = { glongland = 1 } }
@@ -665,36 +686,110 @@ on_actions = {
 	
 	on_weekly = {
 		effect = {
-			#Strategic Resources
-			calculate_strategic_resource_modifiers = yes
-			
-			#SPACE DEGRADATION
-			attrition_space_rockets = yes
-			
 			if = {
-				limit = { check_variable = { orbital_logistics_damage_odds > 0 } }
-				damage_muno_colonies = yes
-				damage_xenon_colonies = yes
+				limit = { NOT = { tag = ZZZ tag = MUN tag = XEN } }
+				if = { #Make sure to apply the food modifier if it's not there for some reason
+					limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
+					add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+				}
+				calculate_total_food_consumption = yes #Food effects
+				if = {
+					limit = { NOT = { has_country_flag = game_start_food_stockpile_refill_done } }
+					set_variable = { country_food_stockpile = country_food_stockpile_max }
+					set_country_flag = game_start_food_stockpile_refill_done
+				}
 			}
 
-			calculate_xenon_colonies_stats = yes
-			calculate_muno_colonies_stats = yes
-
-			calculate_orbital_logistics_capacity = yes
-
-			if = { #Make sure to apply the food modifier if it's not there for some reason
-				limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
-				add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
-			}
-			apply_wonder_effects = yes #Wonders!
-			calculate_stab_ws_hit_from_noncore = yes #Effect of noncore states
-			calculate_combat_casualties = yes #Casualties in states
-			calculate_total_food_consumption = yes #Food effects
 			if = {
-				limit = { NOT = { has_country_flag = game_start_food_stockpile_refill_done } }
-				set_variable = { country_food_stockpile = country_food_stockpile_max }
-				set_country_flag = game_start_food_stockpile_refill_done
+				limit = { is_non_playable_country = no }
+
+				#Various calculations
+				calculate_combat_casualties = yes #Casualties in states
+				calculate_stab_ws_hit_from_noncore = yes #Effect of noncore states
+				apply_wonder_effects = yes #Wonders!
+				calculate_strategic_resource_modifiers = yes #Strategic resources!
+
+				#Space Stuff
+				attrition_space_rockets = yes
+				calculate_orbital_logistics_capacity = yes
+				calculate_xenon_colonies_stats = yes
+				calculate_muno_colonies_stats = yes
+				if = {
+					limit = { check_variable = { orbital_logistics_damage_odds > 0 } }
+					damage_muno_colonies = yes
+					damage_xenon_colonies = yes
+				}
+
+				#Checking if cores are met
+				for_each_scope_loop = {
+					array = potential_cores_array
+					break = break
+					if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_100_@ROOT }
+						if = {
+							limit = { check_variable = { compliance = 100 } }
+							add_core_of = ROOT
+						}
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_90_@ROOT }
+						if = { limit = { check_variable = { compliance > 90 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_80_@ROOT }
+						if = { limit = { check_variable = { compliance > 80 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_70_@ROOT }
+						if = { limit = { check_variable = { compliance > 70 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_60_@ROOT }
+						if = { limit = { check_variable = { compliance > 60 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_50_@ROOT }
+						if = { limit = { check_variable = { compliance > 50 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_40_@ROOT }
+						if = { limit = { check_variable = { compliance > 40 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_30_@ROOT }
+						if = { limit = { check_variable = { compliance > 30 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_20_@ROOT }
+						if = { limit = { check_variable = { compliance > 20 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_10_@ROOT }
+						if = { limit = { check_variable = { compliance > 10 } } add_core_of = ROOT }
+					}
+					else_if = {
+						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_0_@ROOT }
+						if = { limit = { check_variable = { compliance > 0 } } add_core_of = ROOT }
+					}
+				}
+
+				#Fire nukes
+				if = {
+					limit = {
+						is_ai = yes
+						has_war = yes
+						has_tech = nukes
+						check_variable = { lok_total_nuke_stockpile > 0 }
+						any_enemy_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					}
+					ai_fire_nuke = yes
+				}
+
+				#Salvo capacity
+				calculate_salvo_capacity = yes
 			}
+			
+			#Casualties and Radiation
 			every_controlled_state = {
 				calculate_radiation_in_state = yes #First calculate the radiation spread/fallout
 				calculate_radiation_state_modifiers = yes #Then recalc the modifiers
@@ -716,27 +811,11 @@ on_actions = {
 				round_variable = lok_state_starvation_deaths_display
 
 				if = { #State got so depopulated that it just collapses
-					limit = { check_variable = { state_population_k < lok_min_manpower_before_collapse } }
+					limit = { var:controller = { is_non_playable_country = no } check_variable = { state_population_k < lok_min_manpower_before_collapse } }
 					collapse_into_anarchy = yes
 					set_variable = { lok_min_manpower_before_collapse = 0 }
 				}
 			}
-
-			# #Round the final displays for country
-			# set_variable = { lok_country_deaths_display = lok_country_deaths }
-			# round_variable = lok_country_deaths_display
-
-			# set_variable = { lok_country_radiation_deaths_display = lok_country_radiation_deaths }
-			# round_variable = lok_country_radiation_deaths_display
-
-			# set_variable = { lok_country_combat_deaths_display = lok_country_combat_deaths }
-			# round_variable = lok_country_combat_deaths_display
-
-			# set_variable = { lok_country_bombing_deaths_display = lok_country_bombing_deaths }
-			# round_variable = lok_country_bombing_deaths_display
-
-			# set_variable = { lok_country_starvation_deaths_display = lok_country_starvation_deaths }
-			# round_variable = lok_country_starvation_deaths_display
 
 			#Round the final displays for global
 			set_variable = { global.lok_global_deaths_display = global.lok_global_deaths }
@@ -757,100 +836,11 @@ on_actions = {
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 			#force_update_map_mode = { mapmode = LOK_food_map_mode }
-
-			#Checking if cores are met
-			for_each_scope_loop = {
-				array = potential_cores_array
-				break = break
-				if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_100_@ROOT }
-					if = {
-						limit = { check_variable = { compliance = 100 } }
-						add_core_of = ROOT
-					}
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_90_@ROOT }
-					if = { limit = { check_variable = { compliance > 90 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_80_@ROOT }
-					if = { limit = { check_variable = { compliance > 80 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_70_@ROOT }
-					if = { limit = { check_variable = { compliance > 70 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_60_@ROOT }
-					if = { limit = { check_variable = { compliance > 60 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_50_@ROOT }
-					if = { limit = { check_variable = { compliance > 50 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_40_@ROOT }
-					if = { limit = { check_variable = { compliance > 40 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_30_@ROOT }
-					if = { limit = { check_variable = { compliance > 30 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_20_@ROOT }
-					if = { limit = { check_variable = { compliance > 20 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_10_@ROOT }
-					if = { limit = { check_variable = { compliance > 10 } } add_core_of = ROOT }
-				}
-				else_if = {
-					limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_0_@ROOT }
-					if = { limit = { check_variable = { compliance > 0 } } add_core_of = ROOT }
-				}
-			}
-
-			if = {
-				limit = {
-					is_ai = yes
-					has_war = yes
-					has_tech = nukes
-					check_variable = { lok_total_nuke_stockpile > 0 }
-					any_enemy_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
-				}
-				ai_fire_nuke = yes
-			}
-
-			#Salvo capacity
-			calculate_salvo_capacity = yes
 		}
 	}
 
 	on_state_control_changed = {
 		effect = {
-			#ELWIN COLLAPSE - PEACE OUT WHEN STATES ARE ACQUIRED
-			# if = {
-			# 	limit = { tag = KKH every_core_state = { is_fully_controlled_by = KKH } has_war_with = SIL }
-			# 	white_peace = SIL
-			# 	SIL = { every_owned_state = { limit = { is_core_of = KKH } transfer_state_to = KKH } add_to_variable = { elwin_lost_count = 1 } }
-			# }
-			# if = {
-			# 	limit = { tag = KVK every_core_state = { is_fully_controlled_by = KVK } has_war_with = SIL }
-			# 	white_peace = SIL
-			# 	SIL = { every_owned_state = { limit = { is_core_of = KVK } transfer_state_to = KVK } add_to_variable = { elwin_lost_count = 1 } }
-			# }
-			# if = {
-			# 	limit = { tag = CLE every_core_state = { is_fully_controlled_by = CLE } has_war_with = SIL }
-			# 	white_peace = SIL
-			# 	SIL = { every_owned_state = { limit = { is_core_of = CLE } transfer_state_to = CLE } add_to_variable = { elwin_lost_count = 1 } }
-			# }
-			# if = {
-			# 	limit = { tag = PAW every_core_state = { is_fully_controlled_by = PAW } has_war_with = SIL }
-			# 	white_peace = SIL
-			# 	SIL = { every_owned_state = { limit = { is_core_of = PAW } transfer_state_to = PAW } add_to_variable = { elwin_lost_count = 1 } }
-			# }
-
 			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
