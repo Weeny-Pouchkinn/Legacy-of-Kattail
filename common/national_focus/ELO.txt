@@ -1,6 +1,6 @@
 ﻿focus_tree = {
 	id = elowia_focus_tree
-	continuous_focus_position = { x = 2700 y = 300 }
+	continuous_focus_position = { x = 300 y = 1500 }
 	country = {
 		factor = 0
 		modifier = {
@@ -75,7 +75,7 @@
 
 	focus = {
 		id = ELO_the_rebels
-		icon = GFX_focus_ELO_the_rebels
+		icon = GFX_focus_ETH_freedom_at_gunpoint
 		relative_position_id = ELO_oh_shit_oh_god
 
 		prerequisite = { focus = ELO_find_our_allies }
@@ -88,7 +88,7 @@
 
 	focus = {
 		id = ELO_home_ipf_ksk
-		icon = GFX_focus_ETH_freedom_at_gunpoint
+		icon = GFX_focus_ELO_the_rebels
 		prerequisite = { focus = ELO_the_rebels }
 
 		relative_position_id = ELO_oh_shit_oh_god
@@ -138,7 +138,7 @@
 
 	focus = {
 		id = ELO_the_felineans
-		icon = USF_focus_USFF
+		icon = GFX_focus_USF_USSF
 		relative_position_id = ELO_oh_shit_oh_god
 
 		prerequisite = { focus = ELO_find_our_allies }
@@ -171,7 +171,7 @@
 
 	focus = {
 		id = ELO_reject_nordherzland
-		icon = GFX_focus_focus_fra_fascist_threat
+		icon = GFX_focus_ELO_reject_nordherzland
 		prerequisite = { focus = ELO_appeal_south focus = ELO_appeal_to_nieuw_pawsterdam }
 		prerequisite = { focus = ELO_home_ipf_ksk }
 		relative_position_id = ELO_oh_shit_oh_god
@@ -211,7 +211,7 @@
 
 	focus = {
 		id = ELO_alone_in_a_sea_of_tyranny
-		icon = AUR_almost_as_good_as_him
+		icon = GFX_focus_ELO_alone_in_a_sea_of_tyranny
 		prerequisite = { focus = ELO_address_reality }
 		relative_position_id = ELO_reject_nordherzland
 		x = -1
@@ -289,17 +289,248 @@
 		available_if_capitulated = no
 	}
 
+	#######################
+	### War Prep Branch ###
+	#######################
+
 	focus = {
 		id = ELO_stand_and_fight
 		allow_branch = { has_country_flag = ELO_hope_blazes }
 		relative_position_id = ELO_oh_shit_oh_god
 		icon = GFX_focus_ELO_stand_and_fight
-		x = 6
+		x = 9
 		y = 0
 		cost = 5
 
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		available_if_capitulated = no
+	}
+
+	# Army Expansion Subtree #
+	focus = {
+		id = ELO_organize_national_guard
+		icon = REPLACE_ME
+		cost = 5
+		x = 3
+		y = 1
+		prerequisite = { focus = ELO_stand_and_fight }
+		relative_position_id = ELO_stand_and_fight
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = ELO_expand_the_national_guard
+		icon = REPLACE_ME
+		cost = 5
+		x = -1
+		y = 1
+		prerequisite = { focus = ELO_organize_national_guard }
+		relative_position_id = ELO_organize_national_guard
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+		mutually_exclusive = { focus = ELO_expand_militias }
+	}
+	focus = {
+		id = ELO_expand_militias
+		icon = REPLACE_ME
+		cost = 5
+		x = 1
+		y = 1
+		prerequisite = { focus = ELO_organize_national_guard }
+		relative_position_id = ELO_organize_national_guard
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+		mutually_exclusive = { focus = ELO_expand_the_national_guard }
+	}
+	focus = {
+		id = ELO_anti_tank_focus
+		icon = REPLACE_ME
+		cost = 5
+		x = 0
+		y = 2
+		prerequisite = { focus = ELO_expand_militias focus = ELO_expand_the_national_guard }
+		relative_position_id = ELO_organize_national_guard
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+
+	# Industry prep subtree #
+	focus = {
+		id = ELO_create_forges
+		icon = GFX_focus_spa_the_spanish_miracle
+		x = -3
+		y = 1
+		cost = 5
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		available_if_capitulated = no
+
+		prerequisite = { focus = ELO_stand_and_fight }
+		relative_position_id = ELO_stand_and_fight
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				prioritize = { 90 578 577 }
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_extra_state_shared_building_slots = 2
+			}
+		}
+	}
+	focus = {
+		id = ELO_civilian_backbone
+		icon = REPLACE_ME
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = ELO_create_forges }
+		relative_position_id = ELO_create_forges
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+		mutually_exclusive = { focus = ELO_expand_arms_production }
+	}
+	focus = {
+		id = ELO_expand_arms_production
+		icon = REPLACE_ME
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = ELO_create_forges }
+		relative_position_id = ELO_create_forges
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+		mutually_exclusive = { focus = ELO_civilian_backbone }
+	}
+	focus = {
+		id = ELO_protect_our_factories
+		icon = REPLACE_ME
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = { focus = ELO_expand_arms_production focus = ELO_civilian_backbone }
+		relative_position_id = ELO_create_forges
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+
+	# Rebel Subbranch #
+	focus = {
+		id = ELO_fund_rebels
+		icon = REPLACE_ME
+		x = 0
+		y = 1
+		cost = 5
+
+		prerequisite = { focus = ELO_stand_and_fight }
+		relative_position_id = ELO_stand_and_fight
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = ELO_make_supply_caches
+		icon = REPLACE_ME
+		x = 0
+		y = 2
+		cost = 5
+
+		prerequisite = { focus = ELO_fund_rebels }
+		relative_position_id = ELO_stand_and_fight
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = ELO_establish_ipf_sleepers
+		icon = REPLACE_ME
+		x = -1
+		y = 3
+		cost = 5
+
+		prerequisite = { focus = ELO_make_supply_caches }
+		relative_position_id = ELO_stand_and_fight
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = ELO_fund_ksk_activity
+		icon = REPLACE_ME
+		x = 1
+		y = 3
+		cost = 5
+
+		prerequisite = { focus = ELO_make_supply_caches }
+		relative_position_id = ELO_stand_and_fight
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+	# IPF-Industry Tree #
+	focus = {
+		id = ELO_establish_bunker_lines
+		icon = REPLACE_ME
+		x = -2
+		y = 4
+
+		prerequisite = { focus = ELO_establish_ipf_sleepers }
+		prerequisite = { focus = ELO_protect_our_factories }
+		relative_position_id = ELO_stand_and_fight
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+	# KSK-Military Tree #
+	focus = {
+		id = ELO_raid_armories
+		icon = REPLACE_ME
+		x = 2
+		y = 4
+
+		prerequisite = { focus = ELO_fund_ksk_activity }
+		prerequisite = { focus = ELO_anti_tank_focus }
+		relative_position_id = ELO_stand_and_fight
+		available_if_capitulated = no
+		completion_reward = {
+
+		}
+	}
+	# End Of War Prep #
+	focus = {
+		id = ELO_come_and_get_us
+		icon = REPLACE_ME
+		x = 0
+		y = 6
+		cost = 5
+
+		relative_position_id = ELO_stand_and_fight
 	}
 
 	# focus = {
@@ -603,155 +834,129 @@
 	#		INDUSTRIAL TREE			#
 	#################################
 
-	focus = {
-		id = ELO_create_forges
-		icon = GFX_focus_spa_the_spanish_miracle
-		x = 4
-		y = 2
-		cost = 10
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
 
-		completion_reward = {
-			random_owned_controlled_state = {
-				prioritize = { 90 578 577 }
-				add_building_construction = {
-  				  type = arms_factory
-  				  level = 2
-  				  instant_build = yes
-				}
-				add_building_construction = {
-  			 	 type = industrial_complex
-  			 	 level = 2
-  			 	 instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 4
-			}			
-		}
-	}
 
-	focus = {
-		id = ELO_clearing_debris
-		icon = GFX_focus_SOV_organize_wreckers
-		prerequisite = { focus = ELO_create_forges }
-		relative_position_id = ELO_create_forges
-		x = 1
-		y = 1
-		cost = 10
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			random_owned_controlled_state = {
-				prioritize = { 577 578 90 283 579 }
-				add_building_construction = {
-  				  type = infrastructure
-  				  level = 1
-  				  instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-			random_owned_controlled_state = {
-				prioritize = { 577 578 90 283 579 }
-				add_building_construction = {
-  				  type = infrastructure
-  				  level = 1
-  				  instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-		}
-	}
-
-	focus = {
-		id = ELO_unrising_poverty
-		icon = GFX_focus_usa_guarantee_the_american_dream
-		prerequisite = { focus = ELO_clearing_debris }
-		relative_position_id = ELO_clearing_debris
-		x = 0
-		y = 1
-		cost = 10
-		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_political_power = 25
-			add_timed_idea = {
-    			idea = ELO_eliminating_poverty
-   				days = 365
-			}
-		}
-	}
-
-	focus = {
-		id = ELO_bunkerhouse
-		icon = GFX_goal_generic_fortify_city
-		prerequisite = { focus = ELO_create_forges }
-		relative_position_id = ELO_create_forges
-		x = -1
-		y = 1
-		cost = 5
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_ideas = ELO_bunkerhausen
-		}
-	}
-
-	focus = {
-		id = ELO_fortress_lab
-		icon = GFX_focus_research
-		prerequisite = { focus = ELO_bunkerhouse }
-		relative_position_id = ELO_bunkerhouse
-		x = 0
-		y = 1
-		cost = 5
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_research_slot = 1
-			add_ideas = ELO_fortress_laboratories
-			random_owned_controlled_state = {
-				prioritize = { 577 }
-					add_building_construction = {
-  						type = bunker
-   						level = 1
-  						instant_build = yes
-						province = { 
-							id = 7845
-							id = 9087
-						}
-					}
-			}
-		}
-	}
-
-	focus = {
-		id = ELO_new_industry
-		icon = GFX_focus_generic_modernize_industry
-		prerequisite = { focus = ELO_fortress_lab }
-		relative_position_id = ELO_fortress_lab
-		x = 0
-		y = 1
-		cost = 5
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
-		
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_tech_bonus = {
-  			 	bonus = 1
-   				uses = 2
-    			category = industry
-			}
-		}
-	}
+	# focus = {
+	# 	id = ELO_clearing_debris
+	# 	icon = GFX_focus_SOV_organize_wreckers
+	# 	prerequisite = { focus = ELO_create_forges }
+	# 	relative_position_id = ELO_create_forges
+	# 	x = 1
+	# 	y = 1
+	# 	cost = 10
+	# 	search_filters = { FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		random_owned_controlled_state = {
+	# 			prioritize = { 577 578 90 283 579 }
+	# 			add_building_construction = {
+  	# 			  type = infrastructure
+  	# 			  level = 1
+  	# 			  instant_build = yes
+	# 			}
+	# 			add_extra_state_shared_building_slots = 1
+	# 		}
+	# 		random_owned_controlled_state = {
+	# 			prioritize = { 577 578 90 283 579 }
+	# 			add_building_construction = {
+  	# 			  type = infrastructure
+  	# 			  level = 1
+  	# 			  instant_build = yes
+	# 			}
+	# 			add_extra_state_shared_building_slots = 1
+	# 		}
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_unrising_poverty
+	# 	icon = GFX_focus_usa_guarantee_the_american_dream
+	# 	prerequisite = { focus = ELO_clearing_debris }
+	# 	relative_position_id = ELO_clearing_debris
+	# 	x = 0
+	# 	y = 1
+	# 	cost = 10
+	# 	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_political_power = 25
+	# 		add_timed_idea = {
+    # 			idea = ELO_eliminating_poverty
+   	# 			days = 365
+	# 		}
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_bunkerhouse
+	# 	icon = GFX_goal_generic_fortify_city
+	# 	prerequisite = { focus = ELO_create_forges }
+	# 	relative_position_id = ELO_create_forges
+	# 	x = -1
+	# 	y = 1
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_ideas = ELO_bunkerhausen
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_fortress_lab
+	# 	icon = GFX_focus_research
+	# 	prerequisite = { focus = ELO_bunkerhouse }
+	# 	relative_position_id = ELO_bunkerhouse
+	# 	x = 0
+	# 	y = 1
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_research_slot = 1
+	# 		add_ideas = ELO_fortress_laboratories
+	# 		random_owned_controlled_state = {
+	# 			prioritize = { 577 }
+	# 				add_building_construction = {
+  	# 					type = bunker
+   	# 					level = 1
+  	# 					instant_build = yes
+	# 					province = {
+	# 						id = 7845
+	# 						id = 9087
+	# 					}
+	# 				}
+	# 		}
+	# 	}
+	# }
+	#
+	# focus = {
+	# 	id = ELO_new_industry
+	# 	icon = GFX_focus_generic_modernize_industry
+	# 	prerequisite = { focus = ELO_fortress_lab }
+	# 	relative_position_id = ELO_fortress_lab
+	# 	x = 0
+	# 	y = 1
+	# 	cost = 5
+	# 	search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
+	#
+	# 	available_if_capitulated = no
+	#
+	# 	completion_reward = {
+	# 		add_tech_bonus = {
+  	# 		 	bonus = 1
+   	# 			uses = 2
+    # 			category = industry
+	# 		}
+	# 	}
+	# }
 
 }
