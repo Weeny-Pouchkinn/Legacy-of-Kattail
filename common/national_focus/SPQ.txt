@@ -257,7 +257,7 @@ focus_tree = {
 			}
 			custom_effect_tooltip = SPQ_focus_costal_defence_bill_tt
 
-			# TODO Aurelian Cash national spirit for Alkroa, 15% decaying at 2.5% per month using SPQ_idea_aurelian_payment
+			# TODO Aurelian Cash national spirit for Alkroa, 15% decaying at 2.5% per month using SPQ_idea_aurelian_payment, move to event when Alkroa added
 		}
 	}
 
@@ -296,7 +296,7 @@ focus_tree = {
 				load_oob = "SPQ_cohors_classis_purpura"
 			}
 
-			# TODO Aurelian Cash national spirit for Alkroa, 25% decaying at 2.5% per month using SPQ_idea_aurelian_payment
+			# TODO Aurelian Cash national spirit for Alkroa, 25% decaying at 2.5% per month using SPQ_idea_aurelian_payment, move to event when Alkroa added
 		}
 	}
 
@@ -334,6 +334,12 @@ focus_tree = {
 			add_to_variable = {
 				SPQ_consumer_goods_base = -0.1
 			}
+
+			country_event ={
+				id = SPQ_pol_focus.2
+			}
+
+			# TODO Add flavour event detailing Aurelian foreign policy
 		}
 	}
 
@@ -406,7 +412,7 @@ focus_tree = {
 				SPQ_consumer_goods_factor_var = -0.075
 			}
 
-			# TODO 7.5% consumer factor for corebound, decaying at 2.5% a month using SPQ_idea_aurelian_payment, gains 2 consumer goods factory
+			# TODO 7.5% consumer factor for Corebound, decaying at 2.5% a month using SPQ_idea_aurelian_payment, gains 2 consumer goods factory, move to event when Corebound added
 		}
 	}
 
@@ -524,39 +530,48 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			set_country_flag = SPQ_in_ZETO
-
-			every_country = {
-				limit = {
-					is_in_faction_with = KTN
+			KTN = {
+				country_event = {
+					id = SPQ_pol_focus.3
 				}
-				give_guarantee = SPQ
-				diplomatic_relation = {
-					country = SPQ
-					relation = non_aggression_pact
-				}
-				give_market_access = SPQ
 			}
-			every_country = {
-				limit = {
-					is_in_faction_with = KTN
-				}
-				SPQ = {
-					give_guarantee = PREV
+			
+			effect_tooltip = {
+
+				custom_effect_tooltip = SPQ_focus_ZETO_membership_tt
+
+				set_country_flag = SPQ_in_ZETO
+
+				every_country = {
+					limit = {
+						is_in_faction_with = KTN
+					}
+					give_guarantee = SPQ
 					diplomatic_relation = {
-						country = PREV
+						country = SPQ
 						relation = non_aggression_pact
 					}
+					give_market_access = SPQ
 				}
-			}
+				every_country = {
+					limit = {
+						is_in_faction_with = KTN
+					}
+					SPQ = {
+						give_guarantee = PREV
+						diplomatic_relation = {
+							country = PREV
+							relation = non_aggression_pact
+						}
+					}
+				}
 
-			custom_effect_tooltip = SPQ_focus_ZETO_membership_tt
-
-			add_to_variable = {
-				SPQ_consumer_goods_factor_var = -0.35
-				SPQ_consumer_goods_base = -0.15
+				add_to_variable = {
+					SPQ_consumer_goods_factor_var = -0.35
+					SPQ_consumer_goods_base = -0.15
+				}
+				# TODO flusiomark mint decision added, temp reduces consumer goods factor for PP
 			}
-			# TODO flusiomark mint decision added, temp reduces consumer goods factor for PP
 		}
 	}
 	
@@ -590,35 +605,44 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			set_country_flag = SPQ_in_ZETO
 
-			every_country = {
-				limit = {
-					is_in_faction_with = KTN
+			KTN = {
+				country_event = {
+					id = SPQ_pol_focus.4
 				}
-				diplomatic_relation = {
-					country = SPQ
-					relation = non_aggression_pact
-				}
-				give_market_access = SPQ
 			}
-			every_country = {
-				limit = {
-					is_in_faction_with = KTN
-				}
-				SPQ = {
+
+			effect_tooltip = {
+				set_country_flag = SPQ_in_ZETO
+
+				every_country = {
+					limit = {
+						is_in_faction_with = KTN
+					}
 					diplomatic_relation = {
-						country = PREV
+						country = SPQ
 						relation = non_aggression_pact
 					}
+					give_market_access = SPQ
 				}
-			}
-
-			custom_effect_tooltip = SPQ_focus_ZETO_association_tt
-
-			add_to_variable = {
-				SPQ_consumer_goods_factor_var = -0.125
-				SPQ_consumer_goods_base = -0.05
+				every_country = {
+					limit = {
+						is_in_faction_with = KTN
+					}
+					SPQ = {
+						diplomatic_relation = {
+							country = PREV
+							relation = non_aggression_pact
+						}
+					}
+				}
+	
+				custom_effect_tooltip = SPQ_focus_ZETO_association_tt
+	
+				add_to_variable = {
+					SPQ_consumer_goods_factor_var = -0.125
+					SPQ_consumer_goods_base = -0.05
+				}
 			}
 			# TODO decision later down the line to join ZETO as full member, costs PP, which uncompletes this focus, and completes SPQ_focus_ZETO_membership, modifying current variables to match
 		}

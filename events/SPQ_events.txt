@@ -1,13 +1,140 @@
 ﻿add_namespace = SPQ_pol_focus
 
+# country_event = {
+# 	id = SPQ_pol_focus.
+# 	title = "SPQ_pol_focus..t"
+# 	desc = "SPQ_pol_focus..desc"
+
+# 	is_triggered_only = yes
+
+# 	option = {
+# 		name = SPQ_pol_focus..a
+# 	}
+# }
+
 country_event = {
 	id = SPQ_pol_focus.1 # Perpetual Senate
 	title = "SPQ_pol_focus.1.t"
-	desc = "SPQ_pol_focus.1.a"
+	desc = "SPQ_pol_focus.1.desc"
 
 	is_triggered_only = yes
 
 	option = {
 		name = SPQ_pol_focus.1.a
+	}
+}
+
+country_event = {
+	id = SPQ_pol_focus.2 # Aurelian Marketplace
+	title = "SPQ_pol_focus.2.t"
+	desc = "SPQ_pol_focus.2.desc"
+
+	is_triggered_only = yes
+
+	option = {
+		name = SPQ_pol_focus.2.a
+	}
+}
+
+country_event = {
+	id = SPQ_pol_focus.3 # ZETO Membership
+	title = "SPQ_pol_focus.3.t"
+	desc = "SPQ_pol_focus.3.desc"
+	picture = GFX_
+
+	is_triggered_only = yes
+
+	option = {
+		name = SPQ_pol_focus.3.a
+
+		every_country = {
+			limit = {
+				is_in_faction_with = KTN
+			}
+			give_guarantee = SPQ
+			diplomatic_relation = {
+				country = SPQ
+				relation = non_aggression_pact
+			}
+			give_market_access = SPQ
+		}
+		every_country = {
+			limit = {
+				is_in_faction_with = KTN
+			}
+			SPQ = {
+				give_guarantee = PREV
+				diplomatic_relation = {
+					country = PREV
+					relation = non_aggression_pact
+				}
+			}
+		}
+
+		add_to_variable = {
+			SPQ_consumer_goods_factor_var = -0.35
+			SPQ_consumer_goods_base = -0.15
+		}
+
+		SPQ = {
+			set_country_flag = SPQ_in_ZETO
+		}
+		
+		ai_chance = {
+			factor = 5
+		}
+	}
+	option = {
+		name = SPQ_pol_focus.3.b
+		
+	}
+}
+
+country_event = {
+	id = SPQ_pol_focus.4 # SPQA ZETO Associate
+	title = "SPQ_pol_focus.4.t"
+	desc = "SPQ_pol_focus.4.desc"
+	picture = GFX_
+
+	is_triggered_only = yes
+
+	option = {
+		name = SPQ_pol_focus.4.a
+		
+		SPQ = {
+			set_country_flag = SPQ_in_ZETO
+		}
+
+		every_country = {
+			limit = {
+				is_in_faction_with = KTN
+			}
+			diplomatic_relation = {
+				country = SPQ
+				relation = non_aggression_pact
+			}
+			give_market_access = SPQ
+		}
+		every_country = {
+			limit = {
+				is_in_faction_with = KTN
+			}
+			SPQ = {
+				diplomatic_relation = {
+					country = PREV
+					relation = non_aggression_pact
+				}
+			}
+		}
+
+		add_to_variable = {
+			SPQ_consumer_goods_factor_var = -0.125
+			SPQ_consumer_goods_base = -0.05
+		}
+
+	}
+	option = {
+		name = SPQ_pol_focus.4.b
+		
 	}
 }
