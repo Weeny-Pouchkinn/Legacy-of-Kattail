@@ -51,9 +51,9 @@ def add_buildings():
         with open(filepath, 'r+', encoding='utf-8') as file:
             content = file.read()
 
-            if f"owner = {country_tag}" in content:
+            if any(line.strip().lower().replace(" ", "").startswith(f"owner={country_tag.lower()}") for line in content.split('\n')):
                 for category in selected_categories:
-                    if f"state_category={category}" in content:
+                    if any(line.strip().lower().replace(" ", "").startswith(f"state_category={category.lower()}") for line in content.split('\n')):
                         # Apply odds of adding
                         if random.random() <= odds_of_adding:
                             state_processed = True
