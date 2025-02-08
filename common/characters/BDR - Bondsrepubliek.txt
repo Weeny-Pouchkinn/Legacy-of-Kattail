@@ -194,4 +194,52 @@ characters = {
             traits = { BDR_unpopular_prime_minister }
         }
     }
+    
+    #################
+    ### Muldvarpe ###
+    #################
+
+    BDR_Eadgar_Molesen = {
+        name = BDR_Eadgar_Molesen
+
+        portraits = {
+            civilian = {
+                large = GFX_portrait_BDR_Eadgar_Molesen
+                small = GFX_portrait_BDR_Eadgar_Molesen_Small
+            }
+        }
+
+        advisor = {
+            slot = political_advisor
+            idea_token = Eadgar_Molesen
+            allowed = {
+                OR = {
+                    original_tag = MUL
+                    # tag = BDR
+                }
+            }
+            traits = {
+                BDR_economic_reformist
+            }
+            available = {
+                NOT = {
+                    has_country_leader = {
+                        ruling_only = yes
+                        character = BDR_Eadgar_Molesen
+                    }
+                }
+            }
+            cost = 150
+            ai_will_do = {
+                base = 1
+            }
+        }
+
+        country_leader = {
+            desc = BDR_Eadgar_Molesen_DESC
+            expire = 1965.1.1
+            ideology = technocracy
+            traits = { BDR_pragmatic_reformer }
+        }
+    }
 }
