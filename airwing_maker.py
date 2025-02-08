@@ -9,6 +9,7 @@ def create_gui():
     root = tk.Tk()
     root.title("HOI4 Air Wing Setup")
 
+    # Country TAG entry
     ttk.Label(root, text="Country TAG (3-letter code):").grid(row=0, column=0, padx=5, pady=5)
     tag_entry = ttk.Entry(root)
     tag_entry.grid(row=0, column=1, padx=5, pady=5)
