@@ -10,7 +10,7 @@ focus_tree = {
 	}
 	focus = {
 		id = ROQ_celebrate_the_liberation
-		icon = GFX_goal_generic_propaganda
+		icon = GFX_focus_generic_low_cost_housing
 		x = 10
 		y = 0
 		cost = 5
@@ -18,249 +18,19 @@ focus_tree = {
 
 		}
 	}
-	focus = {
-		id = ROQ_address_the_federal_crisis
-		icon = GFX_focus_SWE_organize_a_putsch
-		relative_position_id = ROQ_celebrate_the_liberation
-		prerequisite = {
-			focus = ROQ_celebrate_the_liberation
-		}
-		x = 0
-		y = 1
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_the_votation_is_on
-		icon = GFX_focus_usa_voter_registration_act
-		relative_position_id = ROQ_address_the_federal_crisis
-		prerequisite = {
-			focus = ROQ_address_the_federal_crisis
-		}
-		x = 0
-		y = 1
-		cost = 5
-		completion_reward = {
-			hidden_effect = {
-				RQA = {
-					every_owned_state = {
-						set_variable = { roq_federal_approval = -2 }
-						random_list = {
-							2 = {}
-							1 = { add_to_variable = { roq_federal_approval = 1 } }
-							1 = { add_to_variable = { roq_federal_approval = -1 } }
-						}
-						clamp_variable = { var = roq_federal_approval min = -2 max = 2 }
-					}
-				}
-				LMB = {
-					every_owned_state = {
-						set_variable = { roq_federal_approval = 1 }
-						random_list = {
-							2 = {}
-							1 = { add_to_variable = { roq_federal_approval = 1 } }
-							1 = { add_to_variable = { roq_federal_approval = -1 } }
-						}
-						clamp_variable = { var = roq_federal_approval min = -2 max = 2 }
-					}
-				}
-				PER = {
-					every_owned_state = {
-						set_variable = { roq_federal_approval = -2 }
-						random_list = {
-							2 = {}
-							1 = { add_to_variable = { roq_federal_approval = 1 } }
-							1 = { add_to_variable = { roq_federal_approval = -1 } }
-						}
-						clamp_variable = { var = roq_federal_approval min = -2 max = 2 }
-					}
-				}
-				ROQ = {
-					every_owned_state = {
-						set_variable = { roq_federal_approval = 1 }
-						random_list = {
-							2 = {}
-							1 = { add_to_variable = { roq_federal_approval = 1 } }
-							1 = { add_to_variable = { roq_federal_approval = -1 } }
-						}
-						clamp_variable = { var = roq_federal_approval min = -2 max = 2 }
-					}
-				}
-				285 = { set_variable = { roq_federal_approval = -2 } }
-				320 = { set_variable = { roq_federal_approval = 2 } }
-			}
-		}
-	}
-
-	focus = {
-		id = ROQ_address_demotagne
-		icon = GFX_focus_BRA_end_the_state_of_emergency
-		relative_position_id = ROQ_the_votation_is_on
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = -1
-		y = 1
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_a_musical_question
-		icon = GFX_focus_generic_low_cost_housing
-		relative_position_id = ROQ_the_votation_is_on
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = 1
-		y = 1
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_on_persona
-		icon = GFX_focus_generic_low_cost_housing
-		relative_position_id = ROQ_the_votation_is_on
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = 0
-		y = 2
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_reconstruction_funds
-		icon = GFX_focus_DEN_no_regulations
-		relative_position_id = ROQ_the_votation_is_on
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = -2
-		y = 2
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_on_minorities
-		icon = GFX_focus_generic_low_cost_housing
-		relative_position_id = ROQ_the_votation_is_on
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = 2
-		y = 2
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_on_culture
-		icon = GFX_focus_spr_torchbearers_of_tomorrow
-		relative_position_id = ROQ_the_votation_is_on
-		mutually_exclusive = {
-			focus = ROQ_on_culture_2
-		}
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = 1
-		y = 3
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_on_culture_2
-		icon = GFX_focus_spr_torchbearers_of_tomorrow
-		relative_position_id = ROQ_the_votation_is_on
-		mutually_exclusive = {
-			focus = ROQ_on_culture
-		}
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = 3
-		y = 3
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_on_splinters
-		icon = GFX_goal_tfv_saf_anti_colonialist_crusade
-		relative_position_id = ROQ_the_votation_is_on
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		mutually_exclusive = {
-			focus = ROQ_on_splinters_2
-		}
-		x = -1
-		y = 3
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-	focus = {
-		id = ROQ_on_splinters_2
-		icon = GFX_focus_GER_integration_of_puppet_economies
-		relative_position_id = ROQ_the_votation_is_on
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		mutually_exclusive = {
-			focus = ROQ_on_splinters
-		}
-		x = -3
-		y = 3
-		cost = 5
-		completion_reward = {
-
-		}
-	}
-
 	#Decentralized Roqualia
 	focus = {
-		id = ROQ_towards_roqualian_pluralism
+		id = ROQ_roqualian_pluralism
 		icon = GFX_focus_generic_low_cost_housing
 		relative_position_id = ROQ_celebrate_the_liberation
 		prerequisite = {
 			focus = ROQ_celebrate_the_liberation
 		}
-		x = -4
-		y = 6
+		x = -2
+		y = 1
 		cost = 5
 		completion_reward = {
-			custom_effect_tooltip = ROQ_towards_roqualian_pluralism_effect_tt
-		}
-	}
-	#No consensus...
-	focus = {
-		id = ROQ_no_consensus
-		icon = GFX_focus_generic_low_cost_housing
-		relative_position_id = ROQ_celebrate_the_liberation
-		prerequisite = {
-			focus = ROQ_the_votation_is_on
-		}
-		x = 0
-		y = 6
-		cost = 5
-		completion_reward = {
-			custom_effect_tooltip = ROQ_no_consensus_effect_tt
+
 		}
 	}
 	#Unitary Roqualia - Towards Dofus Dictatorship
@@ -271,11 +41,11 @@ focus_tree = {
 		prerequisite = {
 			focus = ROQ_celebrate_the_liberation
 		}
-		x = 4
-		y = 6
+		x = 2
+		y = 1
 		cost = 5
 		completion_reward = {
-			custom_effect_tooltip = ROQ_towards_a_united_federation_effect_tt
+
 		}
 	}
 	focus = {
