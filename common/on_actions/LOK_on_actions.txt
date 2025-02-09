@@ -677,6 +677,12 @@ on_actions = {
 			set_global_flag = NORWEGEN_BRIDGE_DISABLED
 			set_global_flag = KOTIJGRAD_BRIDGE_DISABLED
 
+			ROQ = { activate_advisor = ROQ_Saxeton }
+			ROQ = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
+			PER = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
+			LMB = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
+			RQA = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
+
 			# 715 = { set_state_flag = LOK_BRIDGE_DISABLED }
 			# 235 = { set_state_flag = LOK_BRIDGE_DISABLED }
 			# 903 = { set_state_flag = LOK_BRIDGE_DISABLED }
@@ -697,6 +703,15 @@ on_actions = {
         }
 	}
 	
+	on_weekly_ROQ = {
+		effect = {
+			if = {
+				limit = { has_completed_focus = ROQ_the_votation_is_on }
+				roq_count_votation_results = yes
+			}
+		}
+	}
+
 	on_weekly = {
 		effect = {
 			if = {
