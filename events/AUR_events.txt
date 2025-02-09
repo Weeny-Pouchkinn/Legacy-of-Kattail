@@ -115,7 +115,7 @@ country_event = {
 			idea = AUR_total_economic_collapse
 			days = 1095
 		}
-		start_civil_war = { ideology = communism size = 0.6 }
+		start_civil_war = { ideology = communism }
 	}
 
 	option = {
@@ -136,7 +136,7 @@ country_event = {
 			idea = AUR_total_economic_collapse
 			days = 1095
 		}
-		start_civil_war = { ideology = communism size = 0.6 }
+		start_civil_war = { ideology = communism }
 	}
 }
 
@@ -390,81 +390,5 @@ country_event = {
 		add_stability = 0.05
 		add_war_support = -0.05
 		add_political_power = -25
-	}
-}
-
-#Kaiser Jumpscare
-country_event = {
-	id = AUR_event.14
-	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.14"}
-	title = AUR_event.14.t
-	desc = AUR_event.14.d
-	picture = GFX_report_event_herald
-
-	is_triggered_only = yes
-
-	option = {
-		name = AUR_event.14.a
-		country_event = { id = AUR_event.15 }
-	}
-
-	option = {
-		name = AUR_event.14.b
-	}
-}
-
-country_event = {
-	id = AUR_event.15
-	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.15"}
-	title = AUR_event.15.t
-	desc = AUR_event.15.d
-	picture = GFX_report_event_herald
-
-	is_triggered_only = yes
-
-	option = {
-		name = AUR_event.15.a
-	}
-	
-	option = {
-		name = AUR_event.15.b
-		country_event = { id = AUR_event.16 }
-	}
-}
-
-country_event = {
-	id = AUR_event.16
-	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.16"}
-	title = AUR_event.16.t
-	desc = AUR_event.16.d
-	picture = GFX_report_event_herald
-
-	is_triggered_only = yes
-
-	option = {
-		name = AUR_event.16.a
-		custom_effect_tooltip = AUR_event.16.a.tt
-		hidden_effect = {
-			every_owned_state = {
-				ROOT = {
-					launch_nuke = {
-						state = PREV
-						use_nuke = no
-					}
-				}
-				transfer_state_to = AAA
-				set_variable = { lok_radiation_level = 100 }
-				if = {
-					limit = {
-						OR = {
-							has_state_category = large_city
-							has_state_category = metropolis
-							has_state_category = megalopolis
-						}
-					}
-					set_variable = { lok_radiation_level = 500 }
-				}
-			}
-		}
 	}
 }
