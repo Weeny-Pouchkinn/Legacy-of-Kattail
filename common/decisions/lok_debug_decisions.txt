@@ -1,4 +1,98 @@
-debug_decisions = {	
+debug_decisions = {
+	lok_refill_great_lake = {
+		icon = generic_research
+
+		priority = 1000
+		
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			1018 = {
+				remove_building = {
+					type = dam
+					level = 1
+				}
+			}
+			#Test water
+			create_entity = {
+				entity = great_lake_filled_entity
+				id = 9999999
+				var = great_lake_filled
+				x = -1
+				y = 0.5
+				z = 0
+				state = 1022
+				province = 3463
+				scale = 11.5
+				rotation = 0
+				min_zoom = 3000.0
+			}
+			1022 = {
+				transfer_state_to = WWW
+				set_building_level = { type = arms_factory level = 0 }
+				set_building_level = { type = dockyard level = 0 }
+				set_building_level = { type = industrial_complex level = 0 }
+			}
+			1023 = {
+				transfer_state_to = WWW
+				set_building_level = { type = arms_factory level = 0 }
+				set_building_level = { type = dockyard level = 0 }
+				set_building_level = { type = industrial_complex level = 0 }
+			}
+			1024 = {
+				transfer_state_to = WWW
+				set_building_level = { type = arms_factory level = 0 }
+				set_building_level = { type = dockyard level = 0 }
+				set_building_level = { type = industrial_complex level = 0 }
+			}
+			1025 = {
+				transfer_state_to = WWW
+				set_building_level = { type = arms_factory level = 0 }
+				set_building_level = { type = dockyard level = 0 }
+				set_building_level = { type = industrial_complex level = 0 }
+			}
+		}
+	}
+	lok_drain_great_lake = {
+		icon = generic_research
+
+		priority = 1000
+		
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			destroy_entity = 9999999
+			1022 = { transfer_state_to = CAN }
+			1023 = { transfer_state_to = CAN }
+			1024 = { transfer_state_to = CAN }
+			1025 = { transfer_state_to = CAN }
+		}
+	}
+
 	lok_start_battle_royale_debug = {
 		icon = generic_research
 
