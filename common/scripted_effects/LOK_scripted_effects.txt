@@ -1,3 +1,18 @@
+change_state_majority_species = {
+	custom_effect_tooltip = change_state_majority_species_tooltip
+	hidden_effect = {
+		set_variable = { species = species_temp }
+		apply_state_species_modifier = yes
+	}
+}
+
+change_state_minority_species = {
+	custom_effect_tooltip = change_state_minority_species_tooltip
+	hidden_effect = {
+		set_variable = { minority = species_temp }
+	}
+}
+
 dismantle_wonder = {
 	custom_effect_tooltip = dismantle_wonder_tt
 	for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
@@ -23,7 +38,10 @@ dismantle_wonder = {
 }
 
 calculate_strategic_resource_modifiers = {
-	remove_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_strategic_resource_modifier } }
+		remove_dynamic_modifier = { modifier = lok_strategic_resource_modifier }
+	}
 
 	set_variable = { stratres_1_modifier = 2 } #He3
 	set_variable = { stratres_2_modifier = -0.50 } #Gold!
@@ -281,22 +299,31 @@ calculate_orbital_logistics_capacity = {
 		max = 1000000
 	}
 
-	clamp_variable = {
-		var = lok_nerva_heavy_rocket_for_orbital_logistics
-		min = 0
-		max = num_equipment@lok_nerva_heavy_rocket
+	if = {
+		limit = { has_equipment = { lok_nerva_heavy_rocket > 0 } }
+		clamp_variable = {
+			var = lok_nerva_heavy_rocket_for_orbital_logistics
+			min = 0
+			max = num_equipment@lok_nerva_heavy_rocket
+		}
 	}
 
-	clamp_variable = {
-		var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
-		min = 0
-		max = num_equipment@lok_reusable_heavy_chemical_rocket
+	if = {
+		limit = { has_equipment = { lok_reusable_heavy_chemical_rocket > 0 } }
+		clamp_variable = {
+			var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
+			min = 0
+			max = num_equipment@lok_reusable_heavy_chemical_rocket
+		}
 	}
 
-	clamp_variable = {
-		var = lok_reusable_light_chemical_rocket_for_orbital_logistics
-		min = 0
-		max = num_equipment@lok_reusable_light_chemical_rocket
+	if = {
+		limit = { has_equipment = { lok_reusable_light_chemical_rocket > 0 } }
+		clamp_variable = {
+			var = lok_reusable_light_chemical_rocket_for_orbital_logistics
+			min = 0
+			max = num_equipment@lok_reusable_light_chemical_rocket
+		}
 	}
 }
 
@@ -1383,9 +1410,19 @@ clear_wonder_ideas = {
 apply_wonder_effects = {
 	#First we gotta reset all the effects!
 
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_wonder_modifier } }
+		remove_dynamic_modifier = { modifier = lok_wonder_modifier }
+	}
 	every_controlled_state = {
 		if = {
 			limit = { check_variable = { wonder > 0 } }
+			ROOT = {
+				if = {
+					limit = { NOT = { has_dynamic_modifier = { modifier = lok_wonder_modifier } } }
+					add_dynamic_modifier = { modifier = lok_wonder_modifier }
+				}
+			}
 			for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
 				array = wonder_modifiers_values
 				value = v
