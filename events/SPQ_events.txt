@@ -80,13 +80,14 @@ country_event = {
 			set_country_flag = SPQ_in_ZETO
 		}
 		
-		ai_chance = {
-			factor = 5
-		}
+
 	}
 	option = {
 		name = SPQ_pol_focus.3.b
-		
+
+		ai_chance = {
+			factor = 0
+		}
 	}
 }
 
@@ -136,6 +137,9 @@ country_event = {
 	option = {
 		name = SPQ_pol_focus.4.b
 		
+		ai_chance = {
+			factor = 0
+		}
 	}
 }
 
@@ -154,6 +158,9 @@ country_event = {
 	option = {
 		name = SPQ_pol_focus.5.b
 		
+		ai_chance = {
+			factor = 0
+		}
 	}
 }
 
@@ -199,10 +206,76 @@ country_event = {
 
 	option = {
 		name = SPQ_pol_focus.8.a
+
+		SPQ = {
+			set_variable = {
+				SPQ_communist_support_before_change = SPQ.party_popularity_100@communism
+			}
+			set_variable = {
+				SPQ_democratic_support_before_change = SPQ.party_popularity_100@democratic
+			}
+			set_variable = {
+				SPQ_fascist_support_before_change = SPQ.party_popularity_100@fascism
+			}
+			set_variable = {
+				SPQ_neutrality_support_before_change = SPQ.party_popularity_100@neutrality
+			}
+		}
+
+		NMI = {
+			set_autonomy = {
+				target = SPQ
+				autonomous_state = autonomy_SPQ_NMI
+			}
+			add_to_variable = {
+				SPQ_aurelian_payment = 0.2
+			}
+			add_dynamic_modifier = {
+				modifier = SPQ_idea_aurelian_payment
+				days = 200
+			}
+			# custom_effect_tooltip = SPQ_focus_NMI_empty_vow_tt
+			add_ideas = {
+				SPQ_idea_NMI_excapature_science_1
+			}
+			# TODO add check for Excapature Science logo by checking for focus completion
+		}
+		SPQ = {
+			hidden_effect = {
+				# Reset popluarities and party to what they were before puppeting 
+				set_popularities = {
+					communism = SPQ_communist_support_before_change
+					democratic = SPQ_democratic_support_before_change
+					fascism = SPQ_fascist_support_before_change
+					neutrality = SPQ_neutrality_support_before_change
+				}
+				clear_variable = SPQ_communist_support_before_change
+				clear_variable = SPQ_democratic_support_before_change
+				clear_variable = SPQ_fascist_support_before_change
+				clear_variable = SPQ_neutrality_support_before_change
+				set_politics = {
+					ruling_party = democratic
+				}
+			}
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.5
+			}
+			
+			set_country_flag = SPQ_NMI_vassal
+		}
+
+		# TODO ADD NMI VER
+		custom_effect_tooltip = SPQ_focus_empty_vow_tt
+
+
 		
 	}
 	option = {
 		name = SPQ_pol_focus.8.b
+
+		ai_chance = {
+			factor = 0
+		}
 		
 	}
 }
@@ -230,11 +303,30 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = SPQ_pol_focus.10.a
+		SPQ = {
+			name = SPQ_pol_focus.10.a
+			add_to_variable = {
+				SPQ_consumer_goods_factor_var = -0.15
+			}
+			custom_effect_tooltip = SPQ_focus_a_silent_partner_tt
+	
+			set_country_flag = SPQ_NMI_easy_vassal_alt
+		}
+
+		NMI = {
+			diplomatic_relation = {
+				country = SPQ
+				relation = non_aggression_pact
+			}
+			give_guarantee = SPQ
+		}
 		
 	}
 	option = {
 		name = SPQ_pol_focus.10.b
+		ai_chance = {
+			factor = 0
+		}
 		
 	}
 }

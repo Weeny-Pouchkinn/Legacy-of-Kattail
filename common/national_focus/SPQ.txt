@@ -1267,60 +1267,41 @@ focus_tree = {
 		}
 		
 		completion_reward = {
-			set_variable = {
-				SPQ_communist_support_before_change = SPQ.party_popularity_100@communism
-			}
-			set_variable = {
-				SPQ_democratic_support_before_change = SPQ.party_popularity_100@democratic
-			}
-			set_variable = {
-				SPQ_fascist_support_before_change = SPQ.party_popularity_100@fascism
-			}
-			set_variable = {
-				SPQ_neutrality_support_before_change = SPQ.party_popularity_100@neutrality
-			}
-
+			
 			NMI = {
-				set_autonomy = {
-					target = SPQ
-					autonomous_state = autonomy_SPQ_NMI
+				country_event = {
+					id = SPQ_pol_focus.8
 				}
+			}
+
+			effect_tooltip = {
+	
+				NMI = {
+					set_autonomy = {
+						target = SPQ
+						autonomous_state = autonomy_SPQ_NMI
+					}
+					add_to_variable = {
+						SPQ_aurelian_payment = 0.2
+					}
+					add_dynamic_modifier = {
+						modifier = SPQ_idea_aurelian_payment
+						days = 200
+					}
+					# custom_effect_tooltip = SPQ_focus_NMI_empty_vow_tt
+					add_ideas = {
+						SPQ_idea_NMI_excapature_science_1
+					}
+					# TODO add check for Excapature Science logo by checking for focus completion
+				}
+	
 				add_to_variable = {
-					SPQ_aurelian_payment = 0.2
+					SPQ_consumer_goods_factor_var = -0.5
 				}
-				add_dynamic_modifier = {
-					modifier = SPQ_idea_aurelian_payment
-					days = 200
-				}
-				# custom_effect_tooltip = SPQ_focus_NMI_empty_vow_tt
-				add_ideas = {
-					SPQ_idea_NMI_excapature_science_1
-				}
-				# TODO add check for Excapature Science logo by checking for focus completion
+				custom_effect_tooltip = SPQ_focus_empty_vow_tt
+	
+				set_country_flag = SPQ_NMI_vassal
 			}
-			hidden_effect = {
-				# Reset popluarities and party to what they were before puppeting 
-				set_popularities = {
-					communism = SPQ_communist_support_before_change
-					democratic = SPQ_democratic_support_before_change
-					fascism = SPQ_fascist_support_before_change
-					neutrality = SPQ_neutrality_support_before_change
-				}
-				clear_variable = SPQ_communist_support_before_change
-				clear_variable = SPQ_democratic_support_before_change
-				clear_variable = SPQ_fascist_support_before_change
-				clear_variable = SPQ_neutrality_support_before_change
-				set_politics = {
-					ruling_party = democratic
-				}
-			}
-
-			add_to_variable = {
-				SPQ_consumer_goods_factor_var = -0.5
-			}
-			custom_effect_tooltip = SPQ_focus_empty_vow_tt
-
-			set_country_flag = SPQ_NMI_vassal
 			# TODO adds mechanic of hiding the partnership, adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech. MOVE ACCEPTANCE TO EVENT
 		}
 	}
@@ -1460,19 +1441,27 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			add_to_variable = {
-				SPQ_consumer_goods_factor_var = -0.15
+			effect_tooltip = {
+				add_to_variable = {
+					SPQ_consumer_goods_factor_var = -0.15
+				}
+				custom_effect_tooltip = SPQ_focus_a_silent_partner_tt
+	
+				set_country_flag = SPQ_NMI_easy_vassal_alt
+	
+				NMI = {
+					diplomatic_relation = {
+						country = SPQ
+						relation = non_aggression_pact
+					}
+					give_guarantee = SPQ
+				}
 			}
-			custom_effect_tooltip = SPQ_focus_a_silent_partner_tt
-
-			set_country_flag = SPQ_NMI_easy_vassal_alt
 
 			NMI = {
-				diplomatic_relation = {
-					country = SPQ
-					relation = non_aggression_pact
+				country_event = {
+					id = SPQ_pol_focus.10
 				}
-				give_guarantee = SPQ
 			}
 			# TODO adds ability to ask NMI for factories when tech is researched ahead of NMI, gives NMI big research bonus in said tech. MOVE ACCEPTANCE TO EVENT
 		}
@@ -1508,6 +1497,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			set_country_flag = SPQ_balancing_scales
 			# makes senate influence decision cheaper, but longer cooldown 
 		}
 	}
@@ -1542,6 +1532,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			set_country_flag = SPQ_asserting_influence
 			# opposite of balancing the scales
 		}
 	}
@@ -1574,6 +1565,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			set_country_flag = SPQ_alastor_accord
 			# makes industrial senate decisions cheaper
 		}
 	}
