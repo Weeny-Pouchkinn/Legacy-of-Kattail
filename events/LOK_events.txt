@@ -149,7 +149,14 @@ country_event = {
 			event_target:peace_puppet_country = { transfer_state = PREV }
 		}
 		puppet = event_target:peace_puppet_country
-		set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
+		if = {
+			limit = { NOT = { tag = ROQ } }
+			set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
+		}
+		else_if = {
+			limit = { tag = ROQ }
+			set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_roqualian_puppet }
+		}
 		ai_chance = {
 			base = 1
 			modifier = {
@@ -182,7 +189,9 @@ country_event = {
 					OR = {
 						is_core_of = ROOT
 						is_claimed_by = ROOT
-						is_in_array = { ROOT.potential_cores_array = THIS } 
+						is_in_array = { ROOT.potential_cores_array = THIS }
+						#Roqualia
+						is_in_array = { ROOT.departments_array = THIS } 
 					}
 				}
 			}
@@ -198,12 +207,31 @@ country_event = {
 			}
 			event_target:peace_puppet_country = { transfer_state = PREV }
 		}
-		puppet = event_target:peace_puppet_country
-		set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
+		if = {
+			limit = { country_exists = event_target:peace_puppet_country }
+			puppet = event_target:peace_puppet_country
+			if = {
+				limit = { NOT = { tag = ROQ } }
+				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
+			}
+			else_if = {
+				limit = { tag = ROQ }
+				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_roqualian_puppet }
+			}
+		}
 		ai_chance = {
 			base = 1
+			modifier = {
+				factor = 1000
+				tag = ROQ
+				has_government = fascism
+			}
 			modifier = { #If we CAN annex more stuff then do it
 				factor = 0
+				NOT = {
+					tag = ROQ
+					has_government = fascism
+				}
 				event_target:peace_puppet_country = {
 					OR = {
 						any_neighbor_state = { is_core_of = ROOT }
@@ -248,10 +276,25 @@ country_event = {
 			}
 			event_target:peace_puppet_country = { transfer_state = PREV }
 		}
-		puppet = event_target:peace_puppet_country
-		set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
+		if = {
+			limit = { country_exists = event_target:peace_puppet_country }
+			puppet = event_target:peace_puppet_country
+			if = {
+				limit = { NOT = { tag = ROQ } }
+				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
+			}
+			else_if = {
+				limit = { tag = ROQ }
+				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_roqualian_puppet }
+			}
+		}
 		ai_chance = {
 			base = 10
+			modifier = {
+ 				factor = 0
+				tag = ROQ
+				has_government = fascism
+			}
 		}
 		hidden_effect = {
 			clr_country_flag = deciding_nation_fate

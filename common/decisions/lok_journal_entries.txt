@@ -59,7 +59,7 @@ lok_journal_entries_cat = {
 			set_cosmetic_tag = EAST_FELINEA
 			STR = {
 				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_40
+					custom_effect_tooltip = state_core_threshold_lower_40
 					hidden_effect = {
 						reduce_compliance_coring_threshold_by_10 = yes
 						reduce_compliance_coring_threshold_by_10 = yes					reduce_compliance_coring_threshold_by_10 = yes
@@ -72,7 +72,7 @@ lok_journal_entries_cat = {
 			}
 			MEW = {
 				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_40
+					custom_effect_tooltip = state_core_threshold_lower_40
 					hidden_effect = {
 						reduce_compliance_coring_threshold_by_10 = yes
 						reduce_compliance_coring_threshold_by_10 = yes					reduce_compliance_coring_threshold_by_10 = yes
@@ -85,7 +85,7 @@ lok_journal_entries_cat = {
 			}
 			PTQ = {
 				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_40
+					custom_effect_tooltip = state_core_threshold_lower_40
 					hidden_effect = {
 						reduce_compliance_coring_threshold_by_10 = yes
 						reduce_compliance_coring_threshold_by_10 = yes					reduce_compliance_coring_threshold_by_10 = yes
@@ -590,16 +590,13 @@ lok_journal_entries_cat = {
 			tag = ROQ
 		}
 
-		visible = {
-			has_war = yes
-		}
-
 		available = {
-			casualties_inflicted_by = {
-				opponent = FSR
-				thousands < 100
-			}
-			FSR = { NOT = { any_core_state = { NOT = { is_controlled_by = ROQ } } } }
+			# casualties_inflicted_by = {
+			# 	opponent = FSR
+			# 	thousands < 100
+			# }
+			244 = { is_controlled_by = ROQ }
+			730 = { is_controlled_by = ROQ }
 		}
 
 		fire_only_once = yes
@@ -647,9 +644,6 @@ lok_journal_entries_cat = {
 		fire_only_once = yes
 
 		remove_effect = {
-			MCF = { every_core_state = { add_claim_by = ROQ } }
-			KUS = { every_core_state = { add_claim_by = ROQ } }
-			NEK = { every_core_state = { add_claim_by = ROQ } }
 			if = {
 				limit = { country_exists = MCF NOT = { is_in_faction_with = MCF } }
 				declare_war_on = { target = MCF type = annex_everything }
@@ -659,11 +653,58 @@ lok_journal_entries_cat = {
 				declare_war_on = { target = KUS type = annex_everything }
 			}
 			if = {
+				limit = { country_exists = SLR NOT = { is_in_faction_with = SLR } }
+				declare_war_on = { target = SLR type = annex_everything }
+			}
+			if = {
 				limit = { country_exists = NEK NOT = { is_in_faction_with = NEK } }
 				declare_war_on = { target = NEK type = annex_everything }
 			}
+			if = {
+				limit = { country_exists = KHA NOT = { is_in_faction_with = KHA } }
+				declare_war_on = { target = KHA type = annex_everything }
+			}
+			custom_effect_tooltip = ROQ_natural_borders_of_roqualia_effect
 			hidden_effect = {
 				news_event = { id = LOK_news.3 days = 2 }
+				MCF = {
+					every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } }
+				}
+				DOM = {
+					every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } }
+				}
+				FSR = {
+					every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } }
+				}
+				KUS = {
+					every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } }
+				}
+				NEK = {
+					every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } }
+				}
+				SLR = {
+					every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } }
+				}
+				818 = {
+					add_to_array = { array = ROQ.potential_cores_array }
+					set_state_flag = compliance_100_@ROOT
+					add_claim_by = ROQ
+				}
+				228 = {
+					add_to_array = { array = ROQ.potential_cores_array }
+					set_state_flag = compliance_100_@ROOT
+					add_claim_by = ROQ
+				}
+				264 = {
+					add_to_array = { array = ROQ.potential_cores_array }
+					set_state_flag = compliance_100_@ROOT
+					add_claim_by = ROQ
+				}
+				324 = {
+					add_to_array = { array = ROQ.potential_cores_array }
+					set_state_flag = compliance_100_@ROOT
+					add_claim_by = ROQ
+				}
 			}
 		}
 
@@ -685,13 +726,8 @@ lok_journal_entries_cat = {
 		}
 
 		visible = {
-			hidden_trigger = { has_country_flag = ROQ_delaparte_coup_done }
+			hidden_trigger = { has_country_flag = ROQ_proclaim_solakean_federation_done }
 			has_government = fascism
-			NOT = {
-				country_exists = MCF
-				country_exists = KUS
-				country_exists = NEK
-			}
 		}
 
 		fire_only_once = yes
@@ -709,6 +745,28 @@ lok_journal_entries_cat = {
 					}
 				}
 			}
+			PRL = {
+				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			}
+			CAT = {
+				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			}
+			HIM = {
+				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			}
+			MEO = {
+				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			}
+			174 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			153 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			136 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			119 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			527 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			528 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			525 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			524 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			526 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			142 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
 			hidden_effect = {
 				news_event = { id = LOK_news.4 }
 			}
@@ -737,10 +795,14 @@ lok_journal_entries_cat = {
 				OR = {
 					any_neighbor_state = { has_state_flag = ROQ_departements_decision_done }
 					any_neighbor_state = { is_core_of = ROQ }
+					AND = {
+						is_coastal = yes
+						ROQ = { has_country_flag = ROQ_proclaim_grand_federation_done }
+					}
 				}
 				NOT = { has_state_flag = ROQ_departements_decision_done }
-				NOT = { is_in_array = { array = ROQ.potential_cores_array } }
 				NOT = { is_core_of = ROQ }
+				is_controlled_by = ROQ
 			}
 		}
 
@@ -754,6 +816,7 @@ lok_journal_entries_cat = {
 
 		state_target = any_owned_state
 		on_map_mode = map_only
+		target_array = ROQ.potential_cores_array
 
 		cost = 25
 
@@ -764,10 +827,15 @@ lok_journal_entries_cat = {
 			}
 			FROM = {
 				set_state_flag = ROQ_departements_decision_done
-				custom_effect_tooltip = state_core_threshold_set_50
-				set_state_flag = compliance_50_@ROOT
-				add_to_array = { array = ROOT.potential_cores_array } #All the states that this nation can potentially core
-				add_compliance = 20
+				custom_effect_tooltip = state_core_threshold_lower_50
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+				add_compliance = 10
 				set_temp_variable = { species_temp = 3 }
 				change_state_minority_species = yes
 			}
@@ -827,6 +895,674 @@ lok_journal_entries_cat = {
 				factor = 0
 				date < "1940.1.1"
 			}
+		}
+	}
+
+	ROQ_proclaim_grand_federation = {
+		icon = GFX_decision_generic_speech
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_government = fascism
+		}
+
+		available = {
+			has_war = no
+			controls_state = 228
+			controls_state = 324
+			controls_state = 820
+			controls_state = 726
+			controls_state = 218
+			controls_state = 275
+		}
+
+		highlight_states = {
+			highlight_states_trigger = {
+				state = 228
+				state = 324
+				state = 820
+				state = 726
+				state = 218
+				state = 275
+			} 
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			add_political_power = 100
+			set_cosmetic_tag = ROQ_GRAND_FEDERATION
+			ROQ_Delaparte = {
+				set_portraits = {
+					civilian = { large = GFX_portrait_ROQ_Delaparte_2 small = GFX_portrait_ROQ_Deleparte_2_Small }
+				}
+			}
+			hidden_effect = {
+				set_country_flag = ROQ_proclaim_grand_federation_done
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_proclaim_solakean_federation = {
+		icon = GFX_decision_generic_speech
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_government = fascism
+		}
+
+		available = {
+			has_war = no
+			425 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			952 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			438 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			289 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			1027 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			336 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			349 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			1020 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			978 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			391 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			357 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			418 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			add_political_power = 100
+			set_cosmetic_tag = ROQ_SOLAKEAN_FEDERATION
+			ROQ_Delaparte = {
+				set_portraits = {
+					civilian = { large = GFX_portrait_ROQ_Delaparte_3 small = GFX_portrait_ROQ_Delaparte_3_Small }
+				}
+			}
+			RSA = {
+				every_core_state = { add_core_of = ROQ }
+			}
+			annex_country = {
+				target = RSA
+				transfer_troops = yes
+			}
+			set_faction_name = "Fédération de Solakie"
+			hidden_effect = {
+				set_country_flag = ROQ_proclaim_solakean_federation_done
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	ROQ_wardec_alkroa = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { PLR = { is_puppet_of = ALK } }
+					country_exists = ALK
+				}
+				declare_war_on = {
+					target = ALK
+					type = annex_everything
+				}
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	ROQ_wardec_paluushia = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { PLR = { is_puppet_of = ROQ } }
+					country_exists = PLR
+				}
+				declare_war_on = {
+					target = PLR
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					NOT = { HAR = { is_puppet_of = ROQ } }
+					country_exists = HAR
+				}
+				declare_war_on = {
+					target = HAR
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					NOT = { KAR = { is_puppet_of = ROQ } }
+					country_exists = KAR
+				}
+				declare_war_on = {
+					target = KAR
+					type = annex_everything
+				}
+			}
+			777 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			760 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			761 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			384 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			759 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_vixens = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { VIX = { is_puppet_of = ROQ } }
+					country_exists = VIX
+				}
+				declare_war_on = {
+					target = VIX
+					type = annex_everything
+				}
+			}
+			846 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			261 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			847 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_izwae_paraneon = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { IZW = { is_puppet_of = ROQ } }
+					country_exists = IZW
+				}
+				declare_war_on = {
+					target = IZW
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					NOT = { PAR = { is_puppet_of = ROQ } }
+					country_exists = PAR
+				}
+				declare_war_on = {
+					target = PAR
+					type = annex_everything
+				}
+			}
+			975 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			977 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_geight = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { TEN = { is_puppet_of = ROQ } }
+					country_exists = TEN
+				}
+				declare_war_on = {
+					target = TEN
+					type = annex_everything
+				}
+			}
+			844 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			354 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_purrhelm = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { FST = { is_puppet_of = ROQ } }
+					country_exists = FST
+				}
+				declare_war_on = {
+					target = FST
+					type = annex_everything
+				}
+			}
+			899 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			900 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			438 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_phroges = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { PHR = { is_puppet_of = ROQ } }
+					country_exists = PHR
+				}
+				declare_war_on = {
+					target = PHR
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					NOT = { TUN = { is_puppet_of = ROQ } }
+					country_exists = TUN
+				}
+				declare_war_on = {
+					target = TUN
+					type = annex_everything
+				}
+			}
+			304 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_raiders = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { IMP = { is_puppet_of = ROQ } }
+					country_exists = IMP
+				}
+				declare_war_on = {
+					target = IMP
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					NOT = { SOF = { is_puppet_of = ROQ } }
+					country_exists = SOF
+				}
+				declare_war_on = {
+					target = SOF
+					type = annex_everything
+				}
+			}
+			962 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			437 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			961 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_city = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { CAN = { is_puppet_of = ROQ } }
+					country_exists = CAN
+				}
+				declare_war_on = {
+					target = CAN
+					type = annex_everything
+				}
+			}
+			1013 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			1017 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_kepler = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { KEP = { is_puppet_of = ROQ } }
+					country_exists = KEP
+				}
+				declare_war_on = {
+					target = KEP
+					type = annex_everything
+				}
+			}
+			402 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			804 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			396 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			364 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			806 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			426 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_vasmar = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { VAS = { is_puppet_of = ROQ } }
+					country_exists = VAS
+				}
+				declare_war_on = {
+					target = VAS
+					type = annex_everything
+				}
+			}
+			1030 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			1031 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_wardec_aurelia = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { SPQ = { is_puppet_of = ROQ } }
+					country_exists = SPQ
+				}
+				declare_war_on = {
+					target = SPQ
+					type = annex_everything
+				}
+			}
+			SPQ = {
+				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
+			}
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROQ_seized_hushed_forest = {
+		icon = GFX_decision_generic_protection
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			country_exists = HUF
+			HUF = { every_core_state = { is_controlled_by = HUF } }
+			has_country_flag = ROQ_proclaim_grand_federation_done 
+		}
+
+		available = {
+			controls_state = 1031
+			controls_state = 1029
+			controls_state = 410
+			controls_state = 961
+			controls_state = 803
+			controls_state = 426
+			has_government = fascism
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		remove_effect = {
+			annex_country = { target = HUF }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
 		}
 	}
 	# Elowia
@@ -894,6 +1630,78 @@ lok_journal_entries_cat = {
 			add_ideas = ELO_auralia_in_two
 			add_ideas = ELO_auralian_resistance
 			country_event = { id = LOK_ELO.2 days = 7 }
+		}
+	}
+
+	#MCF
+	MCF_form_SSU = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			tag = MCF
+		}
+
+		visible = {
+			NOT = { has_government = fascism }
+		}
+
+		available = {
+			date > "1938.1.1"
+		}
+
+		modifier = {
+			political_power_gain = -0.50
+		}
+
+		cost = 50
+
+		remove_effect = {
+			create_faction = "Steel Steppes Union"
+			every_country = {
+				limit = { is_puppet_of = MCR }
+				add_to_faction = ROOT
+			}
+			if = {
+				limit = {
+					country_exists = TEN
+					TEN = { is_puppet = no }
+				}
+				TEN = { country_event = { id = LOK_MCF.1 days = 1 } }
+			}
+			if = {
+				limit = {
+					country_exists = KHA
+					KHA = { is_puppet = no }
+				}
+				KHA = { country_event = { id = LOK_MCF.1 days = 1 } }
+			}
+			if = {
+				limit = {
+					country_exists = SLR
+					SLR = { is_puppet = no }
+				}
+				SLR = { country_event = { id = LOK_MCF.1 days = 1 } }
+			}
+			if = {
+				limit = {
+					country_exists = FSR
+					FSR = { is_puppet = no }
+				}
+				FSR = { country_event = { id = LOK_MCF.1 days = 1 } }
+			}
+			if = {
+				limit = {
+					country_exists = DOM
+					DOM = { is_puppet = no }
+				}
+				DOM = { country_event = { id = LOK_MCF.1 days = 1 } }
+			}
+			news_event = { id = LOK_MCF.2 days = 3 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
 		}
 	}
 }

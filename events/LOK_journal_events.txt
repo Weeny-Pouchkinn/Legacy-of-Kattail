@@ -716,3 +716,61 @@ country_event = {
 		set_victory_points = { province = 7845 value = 25 }
 	}
 }
+
+add_namespace = LOK_MCF
+
+#SSU formation
+country_event = {
+	id = LOK_MCF.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_MCF.1"}
+	title = "LOK_MCF.1.t"
+	desc = "LOK_MCF.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_queen_rose
+
+	#Ok
+	option = {
+		name = "LOK_MCF.1.a"
+		MCF = {
+			country_event = LOK_proposal.1
+			add_to_faction = ROOT
+		}
+		every_country = {
+			limit = { is_puppet_of = ROOT }
+			MCF = { add_to_faction = PREV }
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				is_in_faction = yes
+			}
+		}
+	}
+
+	#How about no
+	option = {
+		name = "LOK_MCF.1.b"
+		MCF = {
+			country_event = LOK_proposal.2
+			add_to_faction = ROOT
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+news_event = {
+	id = LOK_MCF.2
+	title = "LOK_MCF.2.t"
+	desc = "LOK_MCF.2.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_diplomacy
+	major = yes
+
+	#Whatever
+	option = {
+		name = "LOK_MCF.2.a"
+	}
+}
