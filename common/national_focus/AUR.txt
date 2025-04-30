@@ -1022,4 +1022,319 @@ focus_tree = {
 		completion_reward = {
 		}
 	}
+
+	focus = {
+		id = AUR_they_wont_blunt_our_advance
+		icon = GFX_focus_FIN_motti_tactics
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_swallow_the_free_sun }
+		relative_position_id = AUR_swallow_the_free_sun
+		available = {
+			controls_state = 115
+			controls_state = 511
+			controls_state = 517
+			controls_state = 140
+			controls_state = 138
+		}
+		completion_reward = {
+			add_stability = -0.05
+			add_political_power = 100
+			115 = {
+				add_resistance = -20
+				add_compliance = 10
+				add_manpower = -100000
+			}
+			511 = {
+				add_resistance = -20
+				add_compliance = 10
+				add_manpower = -100000
+			}
+			517 = {
+				add_resistance = -20
+				add_compliance = 10
+				add_manpower = -100000
+			}
+			140 = {
+				add_resistance = -20
+				add_compliance = 10
+				add_manpower = -100000
+			}
+			138 = {
+				add_resistance = -20
+				add_compliance = 10
+				add_manpower = -100000
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_going_for_the_throat
+		icon = GFX_focus_BEL_flooded_tank_barriers
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_swallow_the_free_sun }
+		relative_position_id = AUR_swallow_the_free_sun
+		completion_reward = {
+			add_tech_bonus = {
+				name = landing_bonus
+				bonus = 1.0
+				uses = 1
+				ahead_reduction = 1
+				category = tp_tech
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_remove_the_blight
+		icon = GFX_focus_RAJ_i_am_death
+		x = 0
+		y = 2
+		cost = 10
+		available = {
+			OR = {
+				controls_state = 512
+				controls_state = 514
+				controls_state = 191
+			}
+		}
+		bypass = {
+			ROQ = {
+				controls_state = 512
+				controls_state = 514
+				controls_state = 191
+			}
+		}
+		prerequisite = { focus = AUR_going_for_the_throat focus = AUR_they_wont_blunt_our_advance }
+		relative_position_id = AUR_swallow_the_free_sun
+		bypass_effect = {
+			custom_effect_tooltip = AUR_remove_the_blight_bypass
+			set_country_flag = AUR_did_not_kill_roqualians
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_remove_the_blight_effect
+			add_stability = 0.15
+			if = {
+				limit = { controls_state = 512 }
+				512 = {
+					add_resistance = 30
+					set_temp_variable = { species_temp = 1000 }
+					custom_effect_tooltip = remove_roqual_state_minority_species
+					add_manpower = -200000
+					hidden_effect = { change_state_minority_species = yes }
+				}
+			}
+			if = {
+				limit = { controls_state = 514 }
+				514 = {
+					add_resistance = 30
+					set_temp_variable = { species_temp = 1000 }
+					custom_effect_tooltip = remove_roqual_state_minority_species
+					add_manpower = -200000
+					hidden_effect = { change_state_minority_species = yes }
+				}
+			}
+			if = {
+				limit = { controls_state = 191 }
+				191 = {
+					add_resistance = 30
+					set_temp_variable = { species_temp = 1000 }
+					custom_effect_tooltip = remove_roqual_state_minority_species
+					add_manpower = -200000
+					hidden_effect = { change_state_minority_species = yes }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_a_quick_detour
+		icon = GFX_goal_generic_territory_or_war
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_remove_the_blight }
+		available = {
+			KUS = { is_puppet = no is_in_faction = no }
+		}
+		relative_position_id = AUR_remove_the_blight
+		will_lead_to_war_with = KUS
+		completion_reward = {
+			add_stability = -0.05
+			add_war_support = -0.05
+			declare_war_on = { target = KUS type = annex_everything }
+		}
+	}
+
+	focus = {
+		id = AUR_an_ultimatum
+		icon = GFX_focus_RAJ_war_taxes
+		x = 2
+		y = 2
+		cost = 10
+		available = {
+			controls_state = 173
+			controls_state = 192
+		}
+		prerequisite = { focus = AUR_going_for_the_throat focus = AUR_they_wont_blunt_our_advance }
+		relative_position_id = AUR_swallow_the_free_sun
+		completion_reward = {
+			add_ideas = closed_economy
+			country_event = { id = AUR_event.13 days = 5 }
+			add_political_power = 100
+			173 = {
+				add_manpower = -5000
+				add_compliance = 20
+				add_resistance = 20
+				custom_effect_tooltip = state_core_threshold_lower_40
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+			192 = {
+				add_manpower = -5000
+				add_compliance = 20
+				add_resistance = 20
+				custom_effect_tooltip = state_core_threshold_lower_40
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_bomb_the_heart
+		icon = GFX_focus_SWE_marauder_bombers
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_an_ultimatum }
+		prerequisite = { focus = AUR_remove_the_blight }
+		relative_position_id = AUR_an_ultimatum
+		will_lead_to_war_with = KUS
+		completion_reward = {
+			add_tech_bonus = {
+				name = landing_bonus
+				bonus = 1.0
+				uses = 1
+				ahead_reduction = 1
+				category = heavy_air
+			}
+			add_equipment_to_stockpile = { type = strat_bomber_equipment_1 amount = 100 }
+			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 5 }
+		}
+	}
+
+	focus = {
+		id = AUR_chew_slowly
+		icon = GFX_SOV_the_means_to_wage_war_ccp_2d_sov_compatibility
+		x = -2
+		y = 1
+		cost = 5
+		mutually_exclusive = {
+			focus = AUR_i_need_it_all
+		}
+		prerequisite = { focus = AUR_bomb_the_heart }
+		relative_position_id = AUR_bomb_the_heart
+		will_lead_to_war_with = KUS
+		available = {
+			has_war = no
+			has_country_flag = AUR_did_not_kill_roqualians
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = landing_bonus
+				bonus = 1.0
+				uses = 1
+				ahead_reduction = 1
+				category = heavy_air
+			}
+			add_equipment_to_stockpile = { type = strat_bomber_equipment_1 amount = 100 }
+			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 5 }
+		}
+	}
+
+	focus = {
+		id = AUR_i_need_it_all
+		icon = GFX_focus_GER_wunderwaffe
+		x = 2
+		y = 1
+		cost = 5
+		mutually_exclusive = {
+			focus = AUR_chew_slowly
+		}
+		available = {
+			has_war = no
+			has_country_flag = AUR_killed_roqualians
+		}
+		prerequisite = { focus = AUR_bomb_the_heart }
+		relative_position_id = AUR_bomb_the_heart
+		will_lead_to_war_with = KUS
+		completion_reward = {
+			custom_effect_tooltip = AUR_i_need_it_all_effect
+			every_owned_state = {
+				limit = { NOT = { is_core_of = ROOT } NOT = { state = 173 } NOT = { state = 192 } }
+				add_resistance = 20
+				add_compliance = 20
+				add_manpower = -10000
+				custom_effect_tooltip = state_core_threshold_lower_40
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_crack_mountains
+		icon = GFX_focus_RAJ_mountain_guns
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_i_need_it_all }
+		relative_position_id = AUR_i_need_it_all
+		will_lead_to_war_with = KUS
+		available = {
+			has_war = no
+			has_country_flag = AUR_did_not_kill_roqualians
+		}
+		completion_reward = {
+			WPR = { every_core_state = { add_claim_by = AUR } }
+			declare_war_on = { target = WPR type = annex_everything }
+			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 25 }
+		}
+	}
+
+	focus = {
+		id = AUR_the_entire_south
+		icon = GFX_focus_GER_wunderwaffe
+		x = 1
+		y = 1
+		cost = 5
+		mutually_exclusive = {
+			focus = AUR_chew_slowly
+		}
+		prerequisite = { focus = AUR_i_need_it_all }
+		relative_position_id = AUR_i_need_it_all
+		will_lead_to_war_with = KUS
+		completion_reward = {
+			LIO = { every_core_state = { add_claim_by = AUR } }
+			MEO = { every_core_state = { add_claim_by = AUR } }
+			declare_war_on = { target = LIO type = annex_everything }
+			declare_war_on = { target = MEO type = annex_everything }
+		}
+	}
 }

@@ -29,6 +29,10 @@ on_actions = {
 				}
 			}
 
+			#Nuclear Winter
+			set_variable = { global.lok_nuclear_soot_perc_raw = 0 } #Percentage of sunlight blocked by soot (in raw percentage)
+			set_variable = { global.lok_nuclear_soot_perc_negative = 1 } #The actual food debuff, divided by 100
+
 			#Casualty counters
 			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL combat-deaths for ALL countries
 
@@ -68,7 +72,13 @@ on_actions = {
 				#Radiation in state
 				add_dynamic_modifier = { modifier = lok_radiation_state_modifier }
 				calculate_radiation_state_modifiers = yes
+				if = {
+					limit = { is_space_state = no }
+					add_dynamic_modifier = { modifier = lok_soot_state_modifier }
+				}
 			}
+
+			set_variable = { global.lok_nuclear_soot_perc_weekly_decay = 0.1 } #Weekly decay of soot, in raw percentage
 
 			#Setup the Herzlands state array to track unification
 			set_variable = { global.total_herzlands_state_count = 0 }
@@ -712,8 +722,19 @@ on_actions = {
 		}
 	}
 
+	on_weekly_ZZZ = { #for weekly effects that are only needed ONCE
+		effect = {
+			subtract_from_variable = { global.lok_nuclear_soot_perc_raw = global.lok_nuclear_soot_perc_weekly_decay } #Natural soot decline
+			update_nuclear_soot_perc = yes
+		}
+	}
+
 	on_weekly = {
 		effect = {
+			every_controlled_state = { #Soot! Soot! Soot!
+				limit = { is_space_state = no }
+				set_variable = { lok_nuclear_soot_perc = global.lok_nuclear_soot_perc }
+			}
 			if = {
 				limit = { NOT = { tag = ZZZ tag = MUN tag = XEN } }
 				if = { #Make sure to apply the food modifier if it's not there for some reason
@@ -902,13 +923,6 @@ on_actions = {
 					add_dynamic_modifier = { modifier = lok_matching_minority }
 				}
 			}
-			if = {
-				limit = {
-					ROOT = { tag = AUR }
-					FROM.FROM = { state = 173 }
-				}
-				ROOT = { country_event = { id = AUR_event.13 days = 30 } }
-			}
 		}
 	}
 
@@ -926,7 +940,7 @@ on_actions = {
 		effect = {
 			#Recolonize wasteland
 			if = {
-				limit = { any_controlled_state = { any_neighbor_state = { is_controlled_by = AAA } } }
+				limit = { is_ai = yes any_controlled_state = { any_neighbor_state = { is_controlled_by = AAA } } }
 				random_controlled_state = {
 					limit = { any_neighbor_state = { is_controlled_by = AAA } }
 					random_neighbor_state = {
@@ -938,7 +952,10 @@ on_actions = {
 				}
 			}
 			force_update_map_mode = { mapmode = LOK_species_map_mode }
-			calculate_ipf_ksk_resistance = yes
+			if = {
+				limit = { is_herzlands_warlord = yes }
+				calculate_ipf_ksk_resistance = yes
+			}
 			if = {
 				limit = { check_variable = { ipf_strength > 0 } check_variable = { ipf_opinion < 0 } }
 				activate_mission = ipf_bad_action
@@ -1071,14 +1088,49 @@ on_actions = {
 
 	on_capitulation_immediate = {
 		effect = {
-			if = { #USF state
-				limit = { 
-					OR = {
-						FROM = { is_puppet_of = event_target:ussf_leader }
-						tag = event_target:ussf_leader
+			# if = { #USF state
+			# 	limit = { 
+			# 		OR = {
+			# 			FROM = { is_puppet_of = event_target:ussf_leader }
+			# 			tag = event_target:ussf_leader
+			# 		}
+			# 	}
+			# 	ROOT = { every_core_state = { transfer_state_to = event_target:ussf_leader } }
+			# }
+			if = { #South flips to Roqualia
+				limit = {
+					has_idea = ROQ_south_looks_to_roqualia
+					country_exists = ROQ
+					NOT = { has_war_with = ROQ }
+				}
+				remove_ideas = ROQ_south_looks_to_roqualia
+				if = {
+					limit = { controls_state = 514 }
+					514 = {
+						transfer_state_to = ROQ
+						set_state_flag = compliance_40_@ROQ
+						add_to_array = { array = ROQ.potential_cores_array }
+						add_compliance = 20
 					}
 				}
-				ROOT = { every_core_state = { transfer_state_to = event_target:ussf_leader } }
+				if = {
+					limit = { controls_state = 512 }
+					512 = {
+						transfer_state_to = ROQ
+						set_state_flag = compliance_40_@ROQ
+						add_to_array = { array = ROQ.potential_cores_array }
+						add_compliance = 20
+					}
+				}
+				if = {
+					limit = { controls_state = 191 }
+					191 = {
+						transfer_state_to = ROQ
+						set_state_flag = compliance_40_@ROQ
+						add_to_array = { array = ROQ.potential_cores_array }
+						add_compliance = 20
+					}
+				}
 			}
 		}
 	}

@@ -1103,11 +1103,12 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	#Calculate total bonuses for food
 	set_temp_variable = { lok_total_extra_food_factor = 1 } #set to 1
 	add_to_temp_variable = { lok_total_extra_food_factor = modifier@lok_food_resources_factor } #minerals
+	#multiply_variable = { lok_total_extra_food_factor = global.lok_nuclear_soot_perc_negative } #Applied AFTER buffs, subtract nuclear soot
 	#Calculate total extra food
 	set_variable = { lok_total_extra_food = resource_produced@food } #Say 100
-	multiply_variable = { lok_total_extra_food = lok_total_extra_food_factor } #we get the factor, if its 1.5 then 150
-	subtract_from_variable = { lok_total_extra_food = resource_produced@food } #Remove current production to get the extra we need to add
-	clamp_variable = { var = lok_total_extra_food min = 0 max = 1000000 }
+	multiply_variable = { lok_total_extra_food = lok_total_extra_food_factor } #we get the factor, if its 1.5 then 150. If it's 0.5 then 50.
+	subtract_from_variable = { lok_total_extra_food = resource_produced@food } #Remove current production to get the extra we need to add. Now 50. If it was 50, then -50.
+	clamp_variable = { var = lok_total_extra_food min = -100000 max = 1000000 }
 
 	#Calculate total bonuses for fissiles
 	set_temp_variable = { lok_total_extra_fissiles_factor = 1 } #set to 1
@@ -1404,6 +1405,13 @@ calculate_combat_casualties = {
 	}
 }
 
+update_nuclear_soot_perc = {
+	clamp_variable = { var = global.lok_nuclear_soot_perc_raw min = 0 max = 100 } #Safety check.
+	set_variable = { global.lok_nuclear_soot_perc = global.lok_nuclear_soot_perc_raw } #For a 0-1 value
+	divide_variable = { global.lok_nuclear_soot_perc = 100 } #An actual percentage for the calcs
+	multiply_variable = { global.lok_nuclear_soot_perc = -1 } #Get the negative percentage for the calcs
+}
+
 #Firing the nukes
 fire_thermonuclear_salvo = {
 	count_nukes_in_stockpile = yes
@@ -1425,15 +1433,36 @@ fire_thermonuclear_salvo = {
 					if = { #Fission
 						limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
 						set_variable = { lok_added_radiation_level = 1 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
 					}
 					else_if = { #Fusion
 						limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
 						set_variable = { lok_added_radiation_level = 0.75 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
 					}
 					else_if = { #Cobalt
 						limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
 						set_variable = { lok_added_radiation_level = 10 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
 					}
+					#FIRESTORMS!!! Cities multiply soot
+					if = {
+						limit = { OR = { has_state_category = large_town has_state_category = city } }
+						multiply_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 1.25 }
+					}
+					else_if = {
+						limit = { has_state_category = large_city }
+						multiply_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 1.5 }
+					}
+					else_if = {
+						limit = { has_state_category = metropolis }
+						multiply_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 1.75 }
+					}
+					else_if = {
+						limit = { has_state_category = megalopolis }
+						multiply_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 2 }
+					}
+					add_to_variable = { global.lok_nuclear_soot_perc_raw = lok_nuclear_soot_perc_raw_from_state } #Add the soot to the global counter
 					multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
 					add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
 					divide_variable = { lok_added_radiation_level = 4 }
@@ -1491,6 +1520,7 @@ fire_thermonuclear_salvo = {
 			}
 		}
 	}
+	update_nuclear_soot_perc = yes
 }
 
 collapse_into_anarchy = {

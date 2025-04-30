@@ -1,0 +1,123 @@
+add_namespace = ROQ_event
+
+#If controller of Solkatzia is at risk of surrender, they ask Roqualia if they can join!
+country_event = {
+	id = ROQ_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.18"}
+	title = ROQ_event.1.t
+	desc = ROQ_event.1.d
+	picture = GFX_report_event_dofus
+
+	trigger = {
+		tag = ROQ
+		514 = {
+			var:controller = {
+				is_herzlands_warlord = yes
+				has_government = democratic
+				surrender_progress > 0.1
+				OR = { 
+					has_war_with = AUR
+					has_war_with = SIL
+					has_war_with = PAW
+					has_war_with = CLE
+				}
+				NOT = { has_war_with = ROQ }
+			}
+		}
+	}
+
+	fire_only_once = yes
+
+	option = {
+		name = ROQ_event.1.a
+		custom_effect_tooltip = AUR_event.1.a.tt
+		effect_tooltip = {
+			514 = { var:controller = { add_ideas = ROQ_south_looks_to_roqualia } }
+		}
+		add_political_power = -100
+
+		514 = {
+			add_claim_by = ROQ
+		}
+		512 = {
+			add_claim_by = ROQ
+		}
+		191 = {
+			add_claim_by = ROQ
+		}
+
+		every_country = {
+			limit = { has_war_with = 514.owner }
+			country_event = { id = ROQ_event.2 days = 1 }
+		}
+
+		514 = {
+			var:owner = {
+				country_event = { id = ROQ_event.3 days = 1 }
+			}
+		}
+	}
+
+	option = {
+		name = ROQ_event.1.b
+		add_political_power = 50
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = {
+	id = ROQ_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_event.2"}
+	title = ROQ_event.2.t
+	desc = ROQ_event.2.d
+	picture = GFX_report_event_dofus
+
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_event.2.a
+		custom_effect_tooltip = ROQ_event.2.a.tt
+		effect_tooltip = {
+			514 = {
+				var:controller = { add_ideas = ROQ_south_looks_to_roqualia }
+			}
+			514 = {
+				add_claim_by = ROQ
+			}
+			512 = {
+				add_claim_by = ROQ
+			}
+			191 = {
+				add_claim_by = ROQ
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ROQ_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_event.2"}
+	title = ROQ_event.3.t
+	desc = ROQ_event.3.d
+	picture = GFX_report_event_dofus
+
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_event.3.a
+		custom_effect_tooltip = ROQ_event.3.a.tt
+		add_ideas = ROQ_south_looks_to_roqualia
+		effect_tooltip = {
+			514 = {
+				add_claim_by = ROQ
+			}
+			512 = {
+				add_claim_by = ROQ
+			}
+			191 = {
+				add_claim_by = ROQ
+			}
+		}
+	}
+}
+
