@@ -1,3 +1,30 @@
+nuke_state_fission = {
+	custom_effect_tooltip = nuke_state_fission_tt
+	hidden_effect = {
+		ROOT = {
+			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment amount = -1 }
+			launch_nuke = { state = PREV use_nuke = no }
+		}
+		add_to_variable = { lok_radiation_level = 1 }
+		calculate_radiation_state_modifiers = yes
+	}
+}
+
+AUR_add_1_commissar = {
+	custom_effect_tooltip = AUR_add_1_commissar_tt
+	add_to_variable = { AUR_available_commissars = 1 }
+}
+
+AUR_add_2_commissar = {
+	custom_effect_tooltip = AUR_add_2_commissar_tt
+	add_to_variable = { AUR_available_commissars = 2 }
+}
+
+AUR_add_3_commissar = {
+	custom_effect_tooltip = AUR_add_3_commissar_tt
+	add_to_variable = { AUR_available_commissars = 3 }
+}
+
 generate_warlord_state = {
 	random_controlled_state = {
 		limit = { NOT = { check_variable = { state_actions_recolonize_button_status = 2 } } }
@@ -1434,16 +1461,43 @@ fire_thermonuclear_salvo = {
 						limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
 						set_variable = { lok_added_radiation_level = 1 }
 						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
+						damage_units = { #Damage troops
+							state = THIS
+							limit = { always = yes }
+							org_damage = 0.05
+							str_damage = 0.05
+							ratio = yes
+							army = yes
+							navy = yes
+						}
 					}
 					else_if = { #Fusion
 						limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
 						set_variable = { lok_added_radiation_level = 0.75 }
-						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.02 }
+						damage_units = { #Damage troops
+							state = THIS
+							limit = { always = yes }
+							org_damage = 0.10
+							str_damage = 0.10
+							ratio = yes
+							army = yes
+							navy = yes
+						}
 					}
 					else_if = { #Cobalt
 						limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
 						set_variable = { lok_added_radiation_level = 10 }
 						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
+						damage_units = { #Damage troops
+							state = THIS
+							limit = { always = yes }
+							org_damage = 0.07
+							str_damage = 0.07
+							ratio = yes
+							army = yes
+							navy = yes
+						}
 					}
 					#FIRESTORMS!!! Cities multiply soot
 					if = {
@@ -1731,6 +1785,7 @@ apply_wonder_effects = {
 		limit = { has_dynamic_modifier = { modifier = lok_wonder_modifier } }
 		remove_dynamic_modifier = { modifier = lok_wonder_modifier }
 	}
+		
 	every_controlled_state = {
 		if = {
 			limit = { check_variable = { wonder > 0 } }

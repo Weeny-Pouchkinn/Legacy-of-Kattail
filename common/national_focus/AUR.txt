@@ -8,6 +8,207 @@ focus_tree = {
 			tag = AUR
 		}
 	}
+
+	#Navy Tree
+	# focus = {
+	# 	id = AUR_state_of_arms
+	# 	icon = GFX_goal_generic_construct_civ_factory
+	# 	x = -3
+	# 	y = 0
+	# 	cost = 5
+	# 	completion_reward = {
+	# 		add_stability = -0.05
+	# 		add_manpower = -25000
+	# 		random_owned_state = {
+	# 			add_building_construction = { type = industrial_complex level = 1 }
+	# 			add_extra_state_shared_building_slots = 1
+	# 		}
+	# 		random_owned_state = {
+	# 			add_building_construction = { type = industrial_complex level = 1 }
+	# 			add_extra_state_shared_building_slots = 1
+	# 		}
+	# 		random_owned_state = {
+	# 			add_building_construction = { type = industrial_complex level = 1 }
+	# 			add_extra_state_shared_building_slots = 1
+	# 		}
+	# 	}
+	# }
+
+	focus = {
+		id = AUR_neu_seetruppen
+		icon = GFX_goal_KTZ_true_navy
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_a_grand_fleet }
+		relative_position_id = AUR_a_grand_fleet
+		completion_reward = {
+			add_political_power = 100
+			navy_experience = 50
+		}
+	}
+
+	focus = {
+		id = AUR_reintroduce_naval_academy
+		icon = GFX_goal_KTZ_kimitz_cool_cruiser
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_neu_seetruppen }
+		relative_position_id = AUR_neu_seetruppen
+		completion_reward = {
+			navy_experience = 25
+			add_ideas = AUR_academy
+		}
+	}
+
+	focus = {
+		id = AUR_secondary_dockyards
+		icon = GFX_goal_KTZ_actual_naval_industry
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_neu_seetruppen }
+		relative_position_id = AUR_neu_seetruppen
+		completion_reward = {
+			random_owned_state = {
+				limit = { is_coastal = yes }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = dockyard level = 1 }
+			}
+			random_owned_state = {
+				limit = { is_coastal = yes }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = dockyard level = 1 }
+			}
+			random_owned_state = {
+				limit = { is_coastal = yes }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = dockyard level = 1 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_cooperate_with_old
+		icon = GFX_goal_KTZ_kimitz_full_navy
+		x = -2
+		y = 2
+		cost = 5
+		bypass = {
+			NOT = { country_exists = NAV }
+		}
+		relative_position_id = AUR_neu_seetruppen
+		prerequisite = { focus = AUR_reintroduce_naval_academy }
+		completion_reward = {
+			NAV = { country_event = { id = AUR_event.17 days = 1 } }
+			add_tech_bonus = {
+				name = naval_bonus
+				bonus = 0.2
+				uses = 1
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_propose_doctrine_changes
+		icon = GFX_goal_KTZ_navy_doctrine
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = AUR_neu_seetruppen
+		prerequisite = { focus = AUR_reintroduce_naval_academy }
+		prerequisite = { focus = AUR_secondary_dockyards }
+		completion_reward = {
+			add_doctrine_cost_reduction = {
+				cost_reduction = 1
+				uses = 2
+				category = naval_doctrine
+				name = naval_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_annihilate_corruption
+		icon = GFX_goal_KTZ_anti_submarines
+		x = 2
+		y = 2
+		cost = 5
+		relative_position_id = AUR_neu_seetruppen
+		prerequisite = { focus = AUR_secondary_dockyards }
+		completion_reward = {
+			add_political_power = -50
+			add_stability = 0.025
+			add_war_support = 0.025
+			if = {
+				limit = { has_idea = AUR_mishandled_navy_airforce }
+				swap_ideas = {
+					remove_idea = AUR_mishandled_navy_airforce
+					add_idea = AUR_mishandled_airforce
+				}
+			}
+			else_if = {
+				limit = { has_idea = AUR_mishandled_navy }
+				remove_ideas = AUR_mishandled_navy
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_new_goalposts 
+		icon = GFX_goal_KTZ_the_biggest_ships
+		x = -1
+		y = 3
+		cost = 5
+		relative_position_id = AUR_neu_seetruppen
+		prerequisite = { focus = AUR_propose_doctrine_changes }
+		mutually_exclusive = {
+			focus = AUR_famed_efficiency
+		}
+		completion_reward = {
+			add_ideas = AUR_new_goals
+			116 = {
+				add_extra_state_shared_building_slots = 2
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_famed_efficiency
+		icon = GFX_goal_KTZ_perfect_navy
+		x = 1
+		y = 3
+		cost = 5
+		relative_position_id = AUR_neu_seetruppen
+		prerequisite = { focus = AUR_propose_doctrine_changes }
+		mutually_exclusive = { focus = AUR_new_goalposts }
+		completion_reward = {
+			add_ideas = AUR_efficient_dockyards
+		}
+	}
+
+	focus = {
+		id = AUR_reinvigorate_studies
+		icon = GFX_goal_KTZ_modular_ship_engineering
+		x = 0
+		y = 4
+		cost = 5
+		relative_position_id = AUR_neu_seetruppen
+		prerequisite = { focus = AUR_famed_efficiency focus = AUR_new_goalposts }
+		completion_reward = {
+			navy_experience = 50
+			add_tech_bonus = {
+				name = naval_bonus
+				bonus = 0.5
+				uses = 2
+				ahead_reduction = 1
+				category = naval_equipment
+			}
+		}
+	}
+
 	focus = {
 		id = AUR_dreijahrige
 		icon = GFX_focus_generic_low_cost_housing
@@ -399,7 +600,7 @@ focus_tree = {
 	focus = {
 		id = AUR_wunderwaffe_buro
 		icon = GFX_focus_ARG_develop_the_electricity_sector
-		x = -1
+		x = -5
 		y = 2
 		cost = 10
 		relative_position_id = AUR_controlled_thought
@@ -579,6 +780,18 @@ focus_tree = {
 		prerequisite = { focus = AUR_herzlands_darkspot }
 		relative_position_id = AUR_herzlands_darkspot
 		completion_reward = {
+			if = {
+				limit = { has_dlc = "La Resistance" }
+				if = {
+					limit = { has_intelligence_agency = no }
+					create_intelligence_agency = {
+						name = "His Excellency's All-Seeing Eye"
+					}
+				}
+				upgrade_intelligence_agency = upgrade_passive_defense
+				upgrade_intelligence_agency = upgrade_passive_defense
+				upgrade_intelligence_agency = upgrade_anti_partisan
+			}
 		}
 	}
 	focus = {
@@ -924,7 +1137,7 @@ focus_tree = {
 	focus = {
 		id = AUR_every_katzen_a_gun
 		icon = GFX_focus_generic_reorient_production
-		x = 0
+		x = 2
 		y = 2
 		cost = 10
 		prerequisite = { focus = AUR_a_grand_fleet }
@@ -1319,7 +1532,6 @@ focus_tree = {
 		prerequisite = { focus = AUR_looting_their_corpse }
 		prerequisite = { focus = AUR_victory_parades }
 		relative_position_id = AUR_victory_parades
-		will_lead_to_war_with = KUS
 		available = {
 			has_country_flag = AUR_did_not_kill_roqualians
 		}
@@ -1351,7 +1563,6 @@ focus_tree = {
 		prerequisite = { focus = AUR_looting_their_corpse }
 		prerequisite = { focus = AUR_victory_parades }
 		relative_position_id = AUR_victory_parades
-		will_lead_to_war_with = KUS
 		completion_reward = {
 			activate_mission = AUR_katown_conquest
 			custom_effect_tooltip = AUR_i_need_it_all_effect
@@ -1361,15 +1572,15 @@ focus_tree = {
 	focus = {
 		id = AUR_blood_sweat_and_blood
 		icon = GFX_goal_KTZ_the_kaiserdorf_program
-		x = 0
+		x = 1
 		y = 1
 		cost = 10
 		prerequisite = { focus = AUR_i_need_it_all }
 		relative_position_id = AUR_i_need_it_all
 		completion_reward = {
 			custom_effect_tooltip = AUR_blood_sweat_and_blood_tt
-			add_stability = -0.20
-			add_political_power = -200
+			add_stability = -0.10
+			add_political_power = -100
 			every_owned_state = {
 				limit = { NOT = { is_core_of = ROOT } NOT = { state = 173 } NOT = { state = 192 } }
 				add_resistance = 20
@@ -1398,7 +1609,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		prerequisite = { focus = AUR_blood_sweat_and_blood }
-		prerequisite = { focus = AUR_re_establish_the_katzregion}
+		prerequisite = { focus = AUR_re_establish_the_katzregion }
 		relative_position_id = AUR_blood_sweat_and_blood
 		completion_reward = {
 			every_owned_state = {
@@ -1434,24 +1645,32 @@ focus_tree = {
 	focus = {
 		id = AUR_re_establish_the_katzregion
 		icon = GFX_goal_KTZ_katzen_states
-		x = 0
+		x = 1
 		y = 3
 		cost = 5
 		prerequisite = { focus = AUR_i_need_it_all focus = AUR_chew_slowly }
 		relative_position_id = AUR_bomb_the_heart
 		completion_reward = {
-			add_tech_bonus = {
-				name = landing_bonus
-				bonus = 1.0
-				uses = 1
-				ahead_reduction = 1
-				category = heavy_air
-			}
-			add_equipment_to_stockpile = { type = strat_bomber_equipment_1 amount = 100 }
-			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 5 }
+			add_political_power = 200
 		}
 	}
 
+
+	focus = {
+		id = AUR_re_mint_the_katzmark
+		icon = GFX_goal_KTZ_new_katzmark
+		x = -1
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_i_need_it_all focus = AUR_chew_slowly }
+		relative_position_id = AUR_bomb_the_heart
+		available = {
+			num_of_civilian_factories > 150
+		}
+		completion_reward = {
+			add_political_power = 200
+		}
+	}
 
 	focus = {
 		id = AUR_look_to_his_domain
@@ -1464,6 +1683,10 @@ focus_tree = {
 		relative_position_id = AUR_katzkommissars
 		completion_reward = {
 			add_war_support = 0.10
+			add_timed_idea = {
+				idea = AUR_katown_dash
+				days = 365
+			}
 		}
 	}
 
@@ -1488,6 +1711,60 @@ focus_tree = {
 	}
 
 	focus = {
+		id = AUR_slaves_for_minerals
+		icon = GFX_goal_KTZ_a_mountain_of_iron
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_crack_mountains }
+		relative_position_id = AUR_crack_mountains
+		available = {
+			controls_state = 78
+			controls_state = 84
+			controls_state = 535
+			controls_state = 69
+		}
+		completion_reward = {
+			if = {
+				limit = { NOT = { 84 = { check_variable = { wonder = 0 } } } }
+				custom_effect_tooltip = AUR_slaves_for_minerals_tt
+				84 = {
+					add_resource = { type = steel amount = 25 }
+					add_manpower = -10000
+					add_compliance = 5
+					add_resistance = 5
+				}
+				hidden_effect = {
+					84 = {
+						set_variable = { 84.wonder_modifiers_values^0 = 0.20 } 
+						set_variable = { 84.wonder_modifiers_values^1 = 0.05 } 
+						set_variable = { 84.wonder_modifiers_values^2 = -500 }
+					}
+					AUR = { apply_wonder_effects = yes }
+				}
+			}
+			78 = {
+				add_resource = { type = aluminium amount = 25 }
+				add_manpower = -10000
+				add_compliance = 5
+				add_resistance = 5
+			}
+			535 = {
+				add_resource = { type = tungsten amount = 25 }
+				add_manpower = -10000
+				add_compliance = 5
+				add_resistance = 5
+			}
+			69 = {
+				add_resource = { type = fissiles amount = 25 }
+				add_manpower = -10000
+				add_compliance = 5
+				add_resistance = 5
+			}
+		}
+	}
+
+	focus = {
 		id = AUR_smash_the_pretenders
 		icon = GFX_goal_KTZ_plan_itch
 		x = 1
@@ -1504,7 +1781,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_incorporate_itch_police
-		icon = GFX_goal_KTZ_plan_itch
+		icon = GFX_goal_KTZ_military_police
 		x = 1
 		y = 1
 		cost = 5
@@ -1515,10 +1792,14 @@ focus_tree = {
 			controls_state = 74
 		}
 		completion_reward = {
+			AUR_add_2_commissar = yes
 			custom_effect_tooltip = AUR_incorporate_itch_police_tt
-			hidden_effect = {
-				add_to_variable = { AUR_the_kaiser_must_return_resistance_growth = -0.10 }
-				add_to_variable = { AUR_the_kaiser_must_return_resistance_target = -0.10 }
+			add_tech_bonus = {
+				name = military_police_bonus
+				bonus = 0
+				uses = 1
+				ahead_reduction = 1
+				category = military_police_tech
 			}
 		}
 	}
@@ -1526,18 +1807,392 @@ focus_tree = {
 
 	focus = {
 		id = AUR_crush_the_spartans
-		icon = GFX_focus_GER_wunderwaffe
+		icon = GFX_focus_generic_total_war
 		x = 0
-
 		y = 2
 		cost = 5
 		prerequisite = { focus = AUR_crack_mountains }
 		prerequisite = { focus = AUR_smash_the_pretenders }
 		relative_position_id = AUR_look_to_his_domain
-		will_lead_to_war_with = CLE
+		will_lead_to_war_with = PAW
 		completion_reward = {
 			PAW = { every_core_state = { add_claim_by = AUR } }
 			declare_war_on = { target = PAW type = annex_everything }
+		}
+	}
+
+	focus = {
+		id = AUR_meowrine_kill_collars
+		icon = GFX_goal_KTZ_prepare_tracking_chips
+		x = 2
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_crush_the_spartans }
+		prerequisite = { focus = AUR_incorporate_itch_police }
+		relative_position_id = AUR_crush_the_spartans
+		available = {
+			controls_state = 62
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_meowrine_kill_collars_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_compliance_growth = -0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_resistance_growth = -0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_resistance_target = -0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_meowrine_power_armor
+		icon = GFX_goal_KTZ_dig_for_resources
+		x = -2
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_crush_the_spartans }
+		prerequisite = { focus = AUR_slaves_for_minerals }
+		relative_position_id = AUR_crush_the_spartans
+		available = {
+			controls_state = 62
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = excavation_tech
+				bonus = 2
+				uses = 2
+				category = excavation_tech
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_the_path_to_katown
+		icon = GFX_goal_KTZ_fight_katown
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_meowrine_power_armor focus = AUR_meowrine_kill_collars }
+		relative_position_id = AUR_crush_the_spartans
+		available = {
+			controls_state = 62
+		}
+		will_lead_to_war_with = SIL
+		will_lead_to_war_with = KKH
+		will_lead_to_war_with = KHK
+		will_lead_to_war_with = KTW
+		completion_reward = {
+			custom_effect_tooltip = AUR_the_path_to_katown_tt
+			every_country = {
+				limit = { is_elwin_warlord = yes }
+				every_core_state = { add_claim_by = AUR }
+				AUR = { declare_war_on = { target = PREV type = annex_everything } }
+			}
+			hidden_effect = {
+				509.owner = { AUR = { declare_war_on = { target = PREV type = annex_everything } } }
+				45.owner = { AUR = { declare_war_on = { target = PREV type = annex_everything } } }
+				44.owner = { AUR = { declare_war_on = { target = PREV type = annex_everything } } }
+				35.owner = { AUR = { declare_war_on = { target = PREV type = annex_everything } } }
+				36.owner = { AUR = { declare_war_on = { target = PREV type = annex_everything } } }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_over_the_meoder
+		icon = GFX_focus_generic_naval_invasion
+		x = -1
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_the_path_to_katown }
+		relative_position_id = AUR_the_path_to_katown
+		available = {
+			controls_state = 654
+			controls_state = 57
+			controls_state = 653
+			has_equipment = {
+				lok_fission_nuke_equipment > 10
+			}
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = { type = strat_bomber_equipment_1 amount = 200 }
+			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 10 }
+			add_tech_bonus = {
+				name = marine_tech
+				bonus = 1
+				uses = 2
+				category = marine_tech
+			}
+			654 = {
+				nuke_state_fission = yes
+				add_resistance = -10
+				add_compliance = -10
+				add_manpower = -15000
+				custom_effect_tooltip = state_core_threshold_lower_20
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+			57 = {
+				nuke_state_fission = yes
+				add_resistance = -10
+				add_compliance = -10
+				add_manpower = -15000
+				custom_effect_tooltip = state_core_threshold_lower_20
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+			653 = {
+				nuke_state_fission = yes
+				add_resistance = -10
+				add_compliance = -10
+				add_manpower = -15000
+				custom_effect_tooltip = state_core_threshold_lower_20
+				AUR = { launch_nuke = { state = PREV use_nuke = no } }
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+			custom_effect_tooltip = AUR_over_the_meoder_tt
+			hidden_effect = {
+				659 = {
+					damage_units = {
+						state = THIS
+						limit = {
+							OR = {
+								tag = AUR
+								has_war_with = AUR
+							}
+						}
+						org_damage = 0.5
+						str_damage = 0.5
+						ratio = yes
+						army = yes
+						navy = yes
+					}
+				}
+				657 = {
+					damage_units = {
+						state = THIS
+						limit = {
+							OR = {
+								tag = AUR
+								has_war_with = AUR
+							}
+						}
+						org_damage = 0.5
+						str_damage = 0.5
+						ratio = yes
+						army = yes
+						navy = yes
+					}
+				}
+				39 = {
+					damage_units = {
+						state = THIS
+						limit = {
+							OR = {
+								tag = AUR
+								has_war_with = AUR
+							}
+						}
+						org_damage = 0.5
+						str_damage = 0.5
+						ratio = yes
+						army = yes
+						navy = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_airdrop_cannon_fodder
+		icon = GFX_goal_KTZ_the_path_beyond
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_the_path_to_katown }
+		prerequisite = { focus = AUR_meowrine_kill_collars }
+		relative_position_id = AUR_the_path_to_katown
+		available = {
+			has_tech = paratroopers
+		}
+		completion_reward = {
+			division_template = {
+				name = "His Excellency's Frontrunners"
+				regiments = {
+					paratrooper = { x = 0 y = 0 }
+					paratrooper = { x = 0 y = 1 }
+					paratrooper = { x = 0 y = 2 }
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					ROOT = { has_full_control_of_state = PREV }
+					impassable = no
+				}
+				create_unit = {
+					division = "division_template = \"His Excellency's Frontrunners\" start_experience_factor = 0.5 start_equipment_factor = 1.0"
+					count = 10
+					owner = ROOT
+				}
+			}
+			add_tech_bonus = {
+				name = paratroopers_bonus
+				bonus = 2
+				uses = 2
+				category = para_tech
+			}
+			add_equipment_to_stockpile = {
+				type = transport_plane_equipment
+				amount = 50
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_storm_the_pyramid
+		icon = GFX_goal_KTZ_a_success
+		x = 0
+		y = 2
+		cost = 10
+		prerequisite = { focus = AUR_over_the_meoder }
+		relative_position_id = AUR_the_path_to_katown
+		available = {
+			has_war = no
+			controls_state = 509
+			NOT = { has_active_mission = AUR_katown_conquest }
+			has_equipment = {
+				infantry_equipment > 29999
+			}
+			has_equipment = {
+				artillery_equipment > 9999
+			}
+		}
+		completion_reward = {
+			add_manpower = -100000
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -30000
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = -10000
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_clamp_down_on_the_north
+		icon = GFX_goal_KTZ_i_have_a_dream
+		x = -3
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_storm_the_pyramid }
+		relative_position_id = AUR_storm_the_pyramid
+		completion_reward = {
+			AUR_add_3_commissar = yes
+			every_owned_state = {
+				limit = { is_core_of = SIL }
+				add_resistance = -10
+				add_compliance = 10
+				add_manpower = -15000
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_the_second_dreijahrige
+		icon = GFX_goal_KTZ_establish_production_lines
+		x = -1
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_storm_the_pyramid }
+		relative_position_id = AUR_storm_the_pyramid
+		completion_reward = {
+			every_owned_state = {
+				add_manpower = -500
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+			}
+			add_timed_idea = {
+				idea = AUR_repair_effort
+				days = 90
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_mass_conversion
+		icon = GFX_goal_KTZ_kiloforges
+		x = 1
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_storm_the_pyramid }
+		relative_position_id = AUR_storm_the_pyramid
+		completion_reward = {
+			custom_effect_tooltip = AUR_mass_conversion_tt
+			hidden_effect = {
+				every_owned_state = {
+					if = {
+						limit = { check_variable = { building_level@industrial_complex > 0 } }
+						remove_building = {
+							type = industrial_complex
+							level = 1
+						}
+						add_building_construction = {
+							type = arms_factory
+							level = 1
+						}
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_the_greatest_army
+		icon = GFX_goal_KTZ_taming_the_dragons
+		x = 3
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_storm_the_pyramid }
+		relative_position_id = AUR_storm_the_pyramid
+		completion_reward = {
+			add_ideas = all_adults_serve
+			add_manpower = 1000000
+			army_experience = -100
+		}
+	}
+
+	focus = {
+		id = AUR_unto_the_breach
+		icon = AUR_almost_as_good_as_him
+		x = 0
+		y = 2
+		cost = 10
+		prerequisite = { focus = AUR_the_greatest_army focus = AUR_mass_conversion focus = AUR_the_second_dreijahrige focus = AUR_clamp_down_on_the_north}
+		relative_position_id = AUR_storm_the_pyramid
+		completion_reward = {
+			custom_effect_tooltip = AUR_unto_the_breach_tt
+			hidden_effect = {
+				every_country = {
+					limit = { is_herzlands_warlord = yes }
+					AUR = {
+						declare_war_on = {
+							target = PREV
+							type = annex_everything
+						}
+					}
+				}	
+			}
 		}
 	}
 }

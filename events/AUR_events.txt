@@ -469,4 +469,91 @@ country_event = {
 	}
 }
 
+#Ask kimitz for admiral
+country_event = {
+	id = AUR_event.17
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.17"}
+	title = AUR_event.17.t
+	desc = AUR_event.17.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.17.a
+		random_owned_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		random_owned_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+			}
+		}
+		effect_tooltip = {
+			NAV_Tim_Stammeow = { set_nationality = AUR }
+			NAV_Tabby_Gilges = { set_nationality = AUR }
+		}
+		AUR = { country_event = { id = AUR_event.18 days = 1 } }
+	}
+
+	option = {
+		name = AUR_event.17.b
+		AUR = { country_event = { id = AUR_event.19 days = 1 } }
+	}
+}
+
+#Yes
+country_event = {
+	id = AUR_event.18
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.18"}
+	title = AUR_event.18.t
+	desc = AUR_event.18.d
+	picture = GFX_report_event_kimitz
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.18.a
+		add_political_power = 10
+		every_navy_leader = {
+			add_skill_level = 1
+			add_attack = 1
+			add_defense = 1
+			add_coordination = 1
+			add_maneuver = 1
+		}
+		add_timed_idea = {
+			idea = 10_cg_payment
+			days = 60
+		}
+		NAV = {
+			NAV_Tim_Stammeow = { set_nationality = AUR }
+			NAV_Tabby_Gilges = { set_nationality = AUR }
+		}
+	}
+}
+
+#No
+country_event = {
+	id = AUR_event.19
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.19"}
+	title = AUR_event.19.t
+	desc = AUR_event.19.d
+	picture = GFX_report_event_kimitz
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.19.a
+		add_political_power = -10
+	}
+}
+
+
 #South threatens secession!
