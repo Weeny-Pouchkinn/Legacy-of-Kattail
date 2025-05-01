@@ -732,7 +732,7 @@ focus_tree = {
 	}
 	focus = {
 		id = AUR_mobilize_greater
-		icon = GFX_focus_focus_fra_maquis
+		icon = GFX_goal_KTZ_every_kat_must_do_their_duty
 		x = 0
 		y = 1
 		cost = 5
@@ -827,7 +827,7 @@ focus_tree = {
 	}
 	focus = {
 		id = AUR_a_grand_fleet
-		icon = GFX_goal_generic_navy_battleship
+		icon = GFX_goal_KTZ_the_biggest_ships
 		x = -2
 		y = 2
 		cost = 15
@@ -936,7 +936,7 @@ focus_tree = {
 	}
 	focus = {
 		id = AUR_every_gun_a_katzen
-		icon = GFX_focus_generic_fascist_troops
+		icon = GFX_goal_KTZ_a_flood_of_violence
 		x = 0
 		y = 1
 		cost = 5
@@ -956,7 +956,7 @@ focus_tree = {
 	}
 	focus = {
 		id = AUR_last_preparations
-		icon = GFX_goal_tfv_saf_support_ossebrandwag
+		icon = GFX_goal_KTZ_pro_katzen_propaganda
 		x = -1
 		y = 1
 		cost = 5
@@ -1152,13 +1152,14 @@ focus_tree = {
 
 	focus = {
 		id = AUR_a_quick_detour
-		icon = GFX_goal_generic_territory_or_war
+		icon = GFX_goal_KTZ_strike_enemy
 		x = -1
 		y = 1
 		cost = 5
 		prerequisite = { focus = AUR_remove_the_blight }
 		available = {
 			KUS = { is_puppet = no is_in_faction = no }
+			controls_state = 514
 		}
 		relative_position_id = AUR_remove_the_blight
 		will_lead_to_war_with = KUS
@@ -1174,7 +1175,7 @@ focus_tree = {
 		icon = GFX_focus_RAJ_war_taxes
 		x = 2
 		y = 2
-		cost = 10
+		cost = 5
 		available = {
 			controls_state = 173
 			controls_state = 192
@@ -1236,19 +1237,90 @@ focus_tree = {
 	}
 
 	focus = {
+		id = AUR_victory_parades
+		icon = GFX_goal_KTZ_victory_parades
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_bomb_the_heart }
+		relative_position_id = AUR_bomb_the_heart
+		available = {
+			has_war = no
+		}
+		completion_reward = {
+			add_political_power = 100
+			add_stability = 0.10
+			add_war_support = 0.10
+			every_owned_state = {
+				limit = {
+					NOT = { is_core_of = ROOT }
+					OR = {
+						has_state_category = large_city
+						has_state_category = metropolis
+						has_state_category = megalopolis
+					}
+				}
+				add_compliance = 5
+				add_resistance = -5
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_looting_their_corpse
+		icon = GFX_goal_KTZ_salvage_local_tech
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_bomb_the_heart }
+		relative_position_id = AUR_bomb_the_heart
+		available = {
+			has_war = no
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_looting_their_corpse_effect
+			every_owned_state = {
+				limit = { is_core_of = PRL }
+				add_compliance = 10
+				add_resistance = -10
+				AUR = { add_equipment_to_stockpile = { type = infantry_equipment amount = 500 producer = PRL } }
+			}
+			every_owned_state = {
+				limit = { is_core_of = CAT }
+				add_compliance = 10
+				add_resistance = -10
+				AUR = { add_equipment_to_stockpile = { type = motorized_equipment amount = 50 producer = PRL } }
+			}
+			every_owned_state = {
+				limit = { is_core_of = CAT }
+				add_compliance = 10
+				add_resistance = -10
+				AUR = { add_equipment_to_stockpile = { type = support_equipment amount = 50 producer = PRL } }
+			}
+			every_owned_state = {
+				limit = { is_core_of = HIM }
+				add_compliance = 10
+				add_resistance = -10
+				AUR = { add_equipment_to_stockpile = { type = heavy_fighter_equipment_1 amount = 25 producer = HIM } }
+			}
+		}
+	}
+
+
+	focus = {
 		id = AUR_chew_slowly
 		icon = GFX_SOV_the_means_to_wage_war_ccp_2d_sov_compatibility
-		x = -2
+		x = -1
 		y = 1
 		cost = 5
 		mutually_exclusive = {
 			focus = AUR_i_need_it_all
 		}
-		prerequisite = { focus = AUR_bomb_the_heart }
-		relative_position_id = AUR_bomb_the_heart
+		prerequisite = { focus = AUR_looting_their_corpse }
+		prerequisite = { focus = AUR_victory_parades }
+		relative_position_id = AUR_victory_parades
 		will_lead_to_war_with = KUS
 		available = {
-			has_war = no
 			has_country_flag = AUR_did_not_kill_roqualians
 		}
 		completion_reward = {
@@ -1267,26 +1339,42 @@ focus_tree = {
 	focus = {
 		id = AUR_i_need_it_all
 		icon = GFX_focus_GER_wunderwaffe
-		x = 2
+		x = 3
 		y = 1
 		cost = 5
 		mutually_exclusive = {
 			focus = AUR_chew_slowly
 		}
 		available = {
-			has_war = no
 			has_country_flag = AUR_killed_roqualians
 		}
-		prerequisite = { focus = AUR_bomb_the_heart }
-		relative_position_id = AUR_bomb_the_heart
+		prerequisite = { focus = AUR_looting_their_corpse }
+		prerequisite = { focus = AUR_victory_parades }
+		relative_position_id = AUR_victory_parades
 		will_lead_to_war_with = KUS
 		completion_reward = {
+			activate_mission = AUR_katown_conquest
 			custom_effect_tooltip = AUR_i_need_it_all_effect
+		}
+	}
+
+	focus = {
+		id = AUR_blood_sweat_and_blood
+		icon = GFX_goal_KTZ_the_kaiserdorf_program
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_i_need_it_all }
+		relative_position_id = AUR_i_need_it_all
+		completion_reward = {
+			custom_effect_tooltip = AUR_blood_sweat_and_blood_tt
+			add_stability = -0.20
+			add_political_power = -200
 			every_owned_state = {
 				limit = { NOT = { is_core_of = ROOT } NOT = { state = 173 } NOT = { state = 192 } }
 				add_resistance = 20
 				add_compliance = 20
-				add_manpower = -10000
+				add_manpower = -200000
 				custom_effect_tooltip = state_core_threshold_lower_40
 				hidden_effect = {
 					reduce_compliance_coring_threshold_by_10 = yes
@@ -1295,6 +1383,87 @@ focus_tree = {
 					reduce_compliance_coring_threshold_by_10 = yes
 				}
 			}
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_resistance_growth = 0.50 }
+				add_to_variable = { AUR_the_kaiser_must_return_resistance_target = 0.50 }
+				add_to_variable = { AUR_the_kaiser_must_return_compliance_growth = 0.50 }	
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_military_police
+		icon = GFX_goal_KTZ_new_recon
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_blood_sweat_and_blood }
+		prerequisite = { focus = AUR_re_establish_the_katzregion}
+		relative_position_id = AUR_blood_sweat_and_blood
+		completion_reward = {
+			every_owned_state = {
+				limit = { NOT = { is_core_of = ROOT } }
+				add_resistance = -5
+			}
+			add_tech_bonus = {
+				name = military_police_bonus
+				bonus = 1.0
+				uses = 2
+				ahead_reduction = 0.5
+				category = military_police_tech
+			}
+		}
+	}
+	focus = {
+		id = AUR_katzkommissars
+		icon = GFX_goal_KTZ_katzen_authorities
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_blood_sweat_and_blood }
+		prerequisite = { focus = AUR_re_establish_the_katzregion}
+		relative_position_id = AUR_blood_sweat_and_blood
+		completion_reward = {
+			custom_effect_tooltip = AUR_katzkommissars_tt
+			set_variable = { AUR_dispatched_commissars = 0 }
+			set_variable = { AUR_available_commissars = 2 }
+		}
+	}
+
+
+	focus = {
+		id = AUR_re_establish_the_katzregion
+		icon = GFX_goal_KTZ_katzen_states
+		x = 0
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_i_need_it_all focus = AUR_chew_slowly }
+		relative_position_id = AUR_bomb_the_heart
+		completion_reward = {
+			add_tech_bonus = {
+				name = landing_bonus
+				bonus = 1.0
+				uses = 1
+				ahead_reduction = 1
+				category = heavy_air
+			}
+			add_equipment_to_stockpile = { type = strat_bomber_equipment_1 amount = 100 }
+			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 5 }
+		}
+	}
+
+
+	focus = {
+		id = AUR_look_to_his_domain
+		icon = GFX_goal_KTZ_a_success
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_katzkommissars }
+		prerequisite = { focus = AUR_military_police }
+		relative_position_id = AUR_katzkommissars
+		completion_reward = {
+			add_war_support = 0.10
 		}
 	}
 
@@ -1304,37 +1473,71 @@ focus_tree = {
 		x = -1
 		y = 1
 		cost = 5
-		prerequisite = { focus = AUR_i_need_it_all }
-		relative_position_id = AUR_i_need_it_all
-		will_lead_to_war_with = KUS
+		prerequisite = { focus = AUR_look_to_his_domain }
+		relative_position_id = AUR_look_to_his_domain
+		will_lead_to_war_with = TAI
 		available = {
 			has_war = no
 			has_country_flag = AUR_did_not_kill_roqualians
 		}
 		completion_reward = {
-			WPR = { every_core_state = { add_claim_by = AUR } }
-			declare_war_on = { target = WPR type = annex_everything }
+			TAI = { every_core_state = { add_claim_by = AUR } }
+			declare_war_on = { target = TAI type = annex_everything }
 			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 25 }
 		}
 	}
 
 	focus = {
-		id = AUR_the_entire_south
-		icon = GFX_focus_GER_wunderwaffe
+		id = AUR_smash_the_pretenders
+		icon = GFX_goal_KTZ_plan_itch
 		x = 1
 		y = 1
 		cost = 5
-		mutually_exclusive = {
-			focus = AUR_chew_slowly
-		}
-		prerequisite = { focus = AUR_i_need_it_all }
-		relative_position_id = AUR_i_need_it_all
-		will_lead_to_war_with = KUS
+		prerequisite = { focus = AUR_look_to_his_domain }
+		relative_position_id = AUR_look_to_his_domain
+		will_lead_to_war_with = CLE
 		completion_reward = {
-			LIO = { every_core_state = { add_claim_by = AUR } }
-			MEO = { every_core_state = { add_claim_by = AUR } }
-			declare_war_on = { target = LIO type = annex_everything }
-			declare_war_on = { target = MEO type = annex_everything }
+			CLE = { every_core_state = { add_claim_by = AUR } }
+			declare_war_on = { target = CLE type = annex_everything }
+		}
+	}
+
+	focus = {
+		id = AUR_incorporate_itch_police
+		icon = GFX_goal_KTZ_plan_itch
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_smash_the_pretenders }
+		relative_position_id = AUR_smash_the_pretenders
+		will_lead_to_war_with = CLE
+		available = {
+			controls_state = 74
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_incorporate_itch_police_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_resistance_growth = -0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_resistance_target = -0.10 }
+			}
+		}
+	}
+
+
+	focus = {
+		id = AUR_crush_the_spartans
+		icon = GFX_focus_GER_wunderwaffe
+		x = 0
+
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_crack_mountains }
+		prerequisite = { focus = AUR_smash_the_pretenders }
+		relative_position_id = AUR_look_to_his_domain
+		will_lead_to_war_with = CLE
+		completion_reward = {
+			PAW = { every_core_state = { add_claim_by = AUR } }
+			declare_war_on = { target = PAW type = annex_everything }
 		}
 	}
 }

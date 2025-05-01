@@ -1,4 +1,5 @@
 herzlands_unification_cat = {
+	icon = GFX_decision_herzlands
 	visible = { is_herzlands_warlord = yes }
 	allowed = { is_herzlands_warlord = yes }
 	visible_when_empty = yes
@@ -16,7 +17,7 @@ herzlands_unification_cat = {
 }
 
 LOK_food_management_cat = {
-	icon = GFX_decision_gigastructures
+	icon = GFX_decision_wheat
 	priority = 200
 	visible_when_empty = yes
 }
@@ -47,7 +48,7 @@ lok_IPF_KSK_cat = {
 }
 
 lok_space_program_cat = {
-	icon = GFX_decision_gigastructures
+	icon = GFX_decision_rocket
 	priority = 2000
 	visible_when_empty = yes
 	visible = {
@@ -57,9 +58,15 @@ lok_space_program_cat = {
 
 #Skeleton content
 lok_journal_entries_cat = {
-	icon = GFX_decision_category_gre_paying_ifc_debt
+	icon = GFX_decision_book
 	priority = 3000
 	visible_when_empty = yes
+	visible = {
+		OR = {
+			has_focus_tree = generic_focus
+			has_focus_tree = KTZ_TREE
+		}
+	}
 }
 
 #Regency
@@ -68,6 +75,14 @@ AUR_industrialization_cat = {
 	allowed = { tag = AUR }
 	visible = { has_completed_focus = AUR_dreijahrige NOT = { has_country_flag = failed_dreijahrige } }
 	priority = 900
+	visible_when_empty = yes
+}
+
+AUR_commissars_cat = {
+	icon = GFX_decision_katzen_police
+	allowed = { tag = AUR }
+	visible = { has_completed_focus = AUR_katzkommissars }
+	priority = 2500
 	visible_when_empty = yes
 }
 

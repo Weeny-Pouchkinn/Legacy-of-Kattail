@@ -71,6 +71,20 @@ scripted_gui = {
 					state_event = { id = LOK_state_actions.2 days = 180 trigger_for = controller }
 				}
 			}
+			#Ze Herald
+			# lok_state_actions_AUR_repression_button_click = {
+			# 	if = {
+			# 		limit = { NOT = { check_variable = { state_actions_AUR_repression_button_status = 2 } } }
+			# 		ROOT = { add_political_power = -10 }
+			# 		set_variable = { state_actions_AUR_repression_button_status = 2 }
+			# 		set_variable = { state_actions_AUR_repression_weeks_left = 4 }
+			# 		AUR = {
+			# 			subtract_from_variable = { AUR_available_commissars = 1 }
+			# 			add_to_variable = { AUR_dispatched_commissars = 1 }
+			# 		}
+			# 		state_event = { id = LOK_state_actions.3 days = 7 trigger_for = controller }
+			# 	}
+			# }
 		}
 
 		properties = {
@@ -80,9 +94,14 @@ scripted_gui = {
 			lok_state_actions_stimulus_button = {
 				frame = THIS.state_actions_stimulus_button_status
 			}
+			#Ze Herald
+			# lok_state_actions_AUR_repression_button = {
+			# 	frame = THIS.state_actions_AUR_repression_button_status
+			# }
 		}
 
 		triggers = {
+			#Colonization
 			lok_state_actions_recolonize_button_visible = {
 				is_owned_by = AAA
 			}
@@ -92,6 +111,7 @@ scripted_gui = {
 				any_neighbor_state = { is_controlled_by = ROOT }
 				ROOT = { has_political_power > 74 }
 			}
+			#Stimulus
 			lok_state_actions_stimulus_button_visible = {
 				is_owned_by = ROOT
 			}
@@ -99,6 +119,19 @@ scripted_gui = {
 				ROOT = { has_political_power > 49 }
 				is_owned_by = ROOT
 			}
+			#Ze Herald
+			# lok_state_actions_AUR_repression_button_visible = {
+			# 	is_owned_by = AUR
+			# 	ROOT = { tag = AUR }
+			# 	NOT = { is_core_of = AUR }
+			# 	AUR = { has_completed_focus = AUR_katzkommissars }
+			# }
+			# lok_state_actions_AUR_repression_button_click_enabled = {
+			# 	AUR = { has_political_power > 9 check_variable = { AUR_available_commissars > 0 } }
+			# 	ROOT = { tag = AUR }
+			# 	is_owned_by = AUR
+			# 	AUR = { has_completed_focus = AUR_katzkommissars }
+			# }
 		}
 	}
 

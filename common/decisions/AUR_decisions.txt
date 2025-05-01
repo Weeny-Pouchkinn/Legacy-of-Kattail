@@ -1,3 +1,164 @@
+herzlands_unification_cat = {
+	AUR_katown_conquest = {
+		activation  = {
+			has_completed_focus = AUR_i_need_it_all
+		}
+		available = {
+			owns_state = 36
+			owns_state = 34
+			owns_state = 44
+			owns_state = 45
+			owns_state = 509
+		}
+		icon = GFX_decision_pyramid
+		is_good = no
+		fire_only_once = yes
+		days_mission_timeout = 1095
+		timeout_effect = {
+			custom_effect_tooltip = AUR_katown_conquest_tt
+		}
+	}
+}
+
+AUR_commissars_cat = {
+
+	AUR_commissar_show_of_force = {
+		icon = GFX_decision_generic_police_action
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_katzkommissars
+			FROM = { NOT = { is_core_of = AUR } }
+		}
+
+		available = {
+			FROM = { NOT = { has_state_flag = AUR_active_commissar } }
+			check_variable = { AUR_available_commissars > 0 }
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 25
+
+		complete_effect = {
+			custom_effect_tooltip = AUR_dispatch_1_katzkommissar
+			FROM = { set_state_flag = AUR_active_commissar }
+			subtract_from_variable = { AUR_available_commissars = 1 }
+			add_to_variable = { AUR_dispatched_commissars = 1 }
+		}
+
+		remove_effect = {
+			subtract_from_variable = { AUR_dispatched_commissars = 1 }
+			add_to_variable = { AUR_available_commissars = 1 }
+			FROM = {
+				add_resistance = -20
+				add_resistance_target = -20
+				add_manpower = -5000
+				every_neighbor_state = {
+					limit = { is_controlled_by = AUR NOT = { is_core_of = AUR } }
+					add_resistance = -10
+					add_resistance_target = -10
+					add_manpower = -10000
+				}
+			}
+		}
+
+		cancel_trigger = {
+			FROM = { is_core_of = AUR }
+		}
+
+		cancel_effect = {
+			add_to_variable = { AUR_dispatched_commissars = 1 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	AUR_commissar_reward_collaborators = {
+		icon = GFX_decision_CHL_mapuche_liberate_isthmo_amerindia
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_katzkommissars
+			FROM = { NOT = { is_core_of = AUR } }
+		}
+
+		available = {
+			FROM = {
+				NOT = { has_state_flag = AUR_active_commissar }
+				is_in_array = { AUR.potential_cores_array = THIS }
+				hidden_trigger = {
+					NOT = {
+						has_state_flag = compliance_0_@ROOT
+						has_state_flag = compliance_10_@ROOT
+						has_state_flag = compliance_20_@ROOT
+					}	
+				}
+			}
+			check_variable = { AUR_available_commissars > 0 }
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 10
+
+		complete_effect = {
+			FROM = { set_state_flag = AUR_active_commissar }
+			custom_effect_tooltip = AUR_dispatch_1_katzkommissar
+			subtract_from_variable = { AUR_available_commissars = 1 }
+			add_to_variable = { AUR_dispatched_commissars = 1 }
+		}
+
+		remove_effect = {
+			subtract_from_variable = { AUR_dispatched_commissars = 1 }
+			add_to_variable = { AUR_available_commissars = 1 }
+			custom_effect_tooltip = AUR_commissar_reward_collaborators_remove_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_research_speed_factor = -0.001 }
+				add_to_variable = { AUR_the_kaiser_must_return_industrial_capacity_factory = -0.001 }	
+			}
+			FROM = {
+				custom_effect_tooltip = state_core_threshold_lower_20
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+				every_neighbor_state = {
+					limit = { is_controlled_by = AUR NOT = { is_core_of = AUR } }
+					custom_effect_tooltip = state_core_threshold_lower_10
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
+			}
+		}
+
+		cancel_trigger = {
+			FROM = { is_core_of = AUR }
+		}
+
+		cancel_effect = {
+			add_to_variable = { AUR_dispatched_commissars = 1 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
 AUR_industrialization_cat = {
 	#1st term
 	AUR_aggressive_industrialization = {
