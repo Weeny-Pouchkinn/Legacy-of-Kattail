@@ -1,0 +1,602 @@
+technologies = {
+
+	experimental_rockets = { #Rocketry
+
+		enable_building = {
+			building = rocket_site
+			level = 1
+		}
+		
+		path = {
+			leads_to_tech = rocket_engines
+			research_cost_coeff = 1
+		}
+
+		research_cost = 1.5
+		start_year = 70
+		
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 0 }
+		}
+	
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}
+	}
+
+	rocket_engines = {
+
+		enable_building = {
+			building = rocket_site
+			level = 2
+		}
+
+		on_research_complete = {
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		path = {
+			leads_to_tech = light_chemical_rocket
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = improved_rocket_engines 
+			research_cost_coeff = 1
+		}
+		
+		research_cost = 2
+		start_year = 74
+		
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 2 }
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	light_chemical_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = light_chemical_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		path = {
+			leads_to_tech = heavy_chemical_rocket
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 74
+		
+		folder = {
+			name = space_folder
+			position = { x = 0 y = 2 }
+		}
+
+		
+		enable_equipments = {
+			lok_light_chemical_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	heavy_chemical_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = heavy_chemical_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 82
+		
+		folder = {
+			name = space_folder
+			position = { x = 2 y = 3 }
+		}
+		
+		enable_equipments = {
+			lok_heavy_chemical_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	improved_rocket_engines = {
+
+		on_research_complete = {
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		enable_building = {
+			building = rocket_site
+			level = 3
+		}
+
+		path = {
+			leads_to_tech = reusable_light_chemical_rocket 
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = advanced_rocket_engines 
+			research_cost_coeff = 1
+		}
+
+		research_cost = 1.5
+		start_year = 76
+		
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 6 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}
+	}
+
+	reusable_light_chemical_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = reusable_light_chemical_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		research_cost = 2
+		start_year = 76
+		
+		folder = {
+			name = space_folder
+			position = { x = 0 y = 6 }
+		}
+
+		path = {
+			leads_to_tech = reusable_heavy_chemical_rocket 
+			research_cost_coeff = 1
+		}
+		
+		enable_equipments = {
+			lok_reusable_light_chemical_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	reusable_heavy_chemical_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = reusable_heavy_chemical_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 76
+		
+		folder = {
+			name = space_folder
+			position = { x = 2 y = 7 }
+		}
+		
+		enable_equipments = {
+			lok_reusable_heavy_chemical_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	advanced_rocket_engines = {
+
+		show_equipment_icon = yes
+		
+		research_cost = 1.5
+		start_year = 80
+
+		on_research_complete = {
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		enable_building = {
+			building = rocket_site
+			level = 4
+		}
+		
+		path = {
+			leads_to_tech = nerva_heavy_rocket 
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = magneto_rocket_engines 
+			research_cost_coeff = 1
+		}
+
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 10 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}
+	}
+
+	nerva_heavy_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = nerva_heavy_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 80
+
+		folder = {
+			name = space_folder
+			position = { x = 0 y = 10 }
+		}
+		
+		enable_equipments = {
+			lok_nerva_heavy_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+	
+	magneto_rocket_engines = {
+
+		show_equipment_icon = yes
+		
+		research_cost = 1.5
+		start_year = 84
+
+		on_research_complete = {
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		enable_building = {
+			building = rocket_site
+			level = 5
+		}
+		
+		path = {
+			leads_to_tech = magneto_heavy_rocket 
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = fission_rocket_engines 
+			research_cost_coeff = 1
+		}
+
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 14 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}
+	}
+
+	magneto_heavy_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = nerva_heavy_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 84
+		
+		folder = {
+			name = space_folder
+			position = { x = 0 y = 14 }
+		}
+		
+		enable_equipments = {
+			lok_nerva_heavy_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	fission_rocket_engines = {
+
+		show_equipment_icon = yes
+		
+		research_cost = 1.5
+		start_year = 88
+
+		on_research_complete = {
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		enable_building = {
+			building = rocket_site
+			level = 5
+		}
+		
+		path = {
+			leads_to_tech = fission_heavy_rocket 
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = fusion_rocket_engines 
+			research_cost_coeff = 1
+		}
+
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 18 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}
+	}
+
+	fission_heavy_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = nerva_heavy_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 88
+		
+		folder = {
+			name = space_folder
+			position = { x = 0 y = 18 }
+		}
+		
+		enable_equipments = {
+			lok_nerva_heavy_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	fusion_rocket_engines = {
+
+		show_equipment_icon = yes
+		
+		research_cost = 1.5
+		start_year = 92
+
+		on_research_complete = {
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		enable_building = {
+			building = rocket_site
+			level = 5
+		}
+		
+		path = {
+			leads_to_tech = fusion_heavy_rocket 
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = antimatter_rocket_engines 
+			research_cost_coeff = 1
+		}
+
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 22 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}
+	}
+
+	fusion_heavy_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = nerva_heavy_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 92
+		
+		folder = {
+			name = space_folder
+			position = { x = 0 y = 22 }
+		}
+		
+		enable_equipments = {
+			lok_nerva_heavy_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+
+	antimatter_rocket_engines = {
+
+		show_equipment_icon = yes
+		
+		research_cost = 1.5
+		start_year = 96
+
+		on_research_complete = {
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+
+		enable_building = {
+			building = rocket_site
+			level = 5
+		}
+		
+		path = {
+			leads_to_tech = antimatter_heavy_rocket 
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = antimatter_rocket_engines 
+			research_cost_coeff = 1
+		}
+
+		folder = {
+			name = space_folder
+			position = { x = -2 y = 26 }
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}
+	}
+
+	antimatter_heavy_rocket = {
+
+		on_research_complete = {
+			custom_effect_tooltip = nerva_heavy_rocket_tt
+			set_temp_variable = { space_exp_gained = 2 }
+			add_to_variable = { space_exp = space_exp_gained }
+			custom_effect_tooltip = lok_add_space_exp_tooltip
+		}
+		
+		research_cost = 2
+		start_year = 96
+		
+		folder = {
+			name = space_folder
+			position = { x = 0 y = 26 }
+		}
+		
+		enable_equipments = {
+			lok_nerva_heavy_rocket_0
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		
+		categories = {
+			rocketry
+		}		
+	}
+}
