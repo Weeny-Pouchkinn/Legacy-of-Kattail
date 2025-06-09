@@ -30,21 +30,21 @@ on_actions = {
 			}
 
 			#Katlantropa Dam
-			# FOD = {
-			# 	create_entity = {
-			# 		entity = building_generic_dam
-			# 		id = 9999998
-			# 		var = katlantropa_dam
-			# 		x = 0
-			# 		y = 0
-			# 		z = 0
-			# 		state = 869
-			# 		province = 10165
-			# 		scale = 5
-			# 		rotation = 1.5
-			# 		min_zoom = 3000.0
-			# 	}
-			# }
+			FOD = {
+				create_entity = {
+					entity = building_generic_dam
+					id = 9999998
+					var = katlantropa_dam
+					x = 0
+					y = 0
+					z = -1
+					state = 869
+					province = 10165
+					scale = 4.9
+					rotation = 0.6
+					min_zoom = 30000.0
+				}
+			}
 
 			#Nuclear Winter
 			set_variable = { global.lok_nuclear_soot_perc_raw = 0 } #Percentage of sunlight blocked by soot (in raw percentage)
@@ -728,8 +728,12 @@ on_actions = {
 				calculate_orbital_logistics_capacity = yes
 				calculate_xenon_colonies_stats = yes
 				calculate_muno_colonies_stats = yes
+
 				if = {
-					limit = { check_variable = { orbital_logistics_damage_odds > 0 } }
+					limit = {
+						check_variable = { orbital_logistics_damage_odds > 0 }
+						NOT = { tag = MON }
+					}
 					damage_muno_colonies = yes
 					damage_xenon_colonies = yes
 				}
