@@ -790,6 +790,38 @@ on_actions = {
 				}
 			}
 
+			#Spawn units for countries that lack them
+			every_country = {
+				if = {
+					limit = { check_variable = { num_battalions < 1 } }
+					division_template = {
+						name = "Basic Infantry"
+						is_locked = no
+						regiments = {
+							infantry = { x = 0 y = 0 }
+							infantry = { x = 0 y = 1 }
+							infantry = { x = 0 y = 2 }
+							infantry = { x = 0 y = 3 }
+							infantry = { x = 1 y = 0 }
+							infantry = { x = 1 y = 1 }
+							infantry = { x = 1 y = 2 }
+							infantry = { x = 1 y = 3 }
+						}
+						support = {
+							artillery = { x = 0 y = 0 }
+							engineer = { x = 0 y = 1 }
+						}
+					}
+					every_controlled_state = {
+						create_unit = {
+							division = "division_template = \"Basic Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
+							count = 1
+							owner = PREV
+						}
+					}
+				}
+			}
+
 			#Bridges
 			set_global_flag = EZIKATZEN_CANAL_DISABLED
 			set_global_flag = FISHY_PASS_CANAL_DISABLED

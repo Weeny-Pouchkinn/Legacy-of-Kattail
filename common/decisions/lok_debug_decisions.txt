@@ -1,4 +1,60 @@
 debug_decisions = {
+	lok_begin_crusade = {
+		icon = generic_research
+		fire_only_once = yes
+
+		priority = 1000
+		
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+
+		cost = 0
+
+		complete_effect = {
+			every_country = {
+				limit = { NOT = { is_in_faction_with = KTZ } }
+				KTZ = {
+					declare_war_on = { target = PREV type = annex_everything }
+				}
+			}
+		}
+	}
+	lok_explode_kaiser = {
+		icon = generic_research
+
+		priority = 1000
+		
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+
+		cost = 0
+
+		complete_effect = {
+			KTZ = {
+				country_event = { id = LOK_KTZ.1 }
+			}
+		}
+	}
 	lok_spawn_katlantropa_dam = {
 		icon = generic_research
 
