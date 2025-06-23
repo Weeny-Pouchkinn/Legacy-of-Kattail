@@ -143,18 +143,21 @@ def save_input():
     with open(char_file, 'w') as f:
         f.writelines(lines)
 
-    # Write to the country history file
     directory = "history/countries/"
     for filename in os.listdir(directory):
         if filename.startswith(country_tag):
-            with open(os.path.join(directory, filename), 'r') as f:
-                lines = f.readlines()
+            path = os.path.join(directory, filename)
 
-            # Insert the new line at the second-to-last line
-            lines.insert(0, f"\nrecruit_character = {country_tag}_{code_name}\n")
+            # Make sure the file ends with a newline before we append
+            with open(path, "rb+") as f:
+                f.seek(-1, os.SEEK_END)          # jump to last byte
+                last = f.read(1)
+                if last != b"\n":                # add a newline if missing
+                    f.write(b"\n")
 
-            with open(os.path.join(directory, filename), 'w') as f:
-                f.writelines(lines)
+            # Now drop the new line at the very end
+            with open(path, "a", encoding="utf-8") as f:
+                f.write(f"recruit_character = {country_tag}_{code_name}\n\n")
             break
 
 def upload_large_image():
