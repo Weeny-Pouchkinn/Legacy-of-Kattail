@@ -143,6 +143,20 @@ def save_input():
     with open(char_file, 'w') as f:
         f.writelines(lines)
 
+    # Write to the country history file
+    directory = "history/countries/"
+    for filename in os.listdir(directory):
+        if filename.startswith(country_tag):
+            with open(os.path.join(directory, filename), 'r') as f:
+                lines = f.readlines()
+
+            # Insert the new line at the second-to-last line
+            lines.insert(0, f"\nrecruit_character = {country_tag}_{code_name}\n")
+
+            with open(os.path.join(directory, filename), 'w') as f:
+                f.writelines(lines)
+            break
+
 def upload_large_image():
     large_image_path = filedialog.askopenfilename()
     img = Image.open(large_image_path)
