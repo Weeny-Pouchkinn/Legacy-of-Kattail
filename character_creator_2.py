@@ -14,7 +14,8 @@ def save_input():
     country_tag = tag_entry.get()
     code_name = code_name_entry.get()
     proper_name = proper_name_entry.get()
-    
+    char_description = char_description_entry.get()
+
     # Prepare character data
     data = f"\t{country_tag}_{code_name} = {{\n"
     data += f"\t\tname = {country_tag}_{code_name}\n"
@@ -24,7 +25,7 @@ def save_input():
 
     if country_leader_var.get():
         data += "\t\tcountry_leader={\n"
-        data += f"\t\t\texpire = \"1965.1.1\"\n\t\t\tideology = {country_leader_ideology_entry.get()}\n\t\t}}\n"
+        data += f"\t\t\texpire = \"1965.1.1\"\n\t\t\tdesc = {char_description_entry.get()}\n\t\t\tideology = {country_leader_ideology_entry.get()}\n\t\t}}\n"
 
     if minister_var.get():
         data += "\t\tadvisor = {\n"
@@ -79,6 +80,7 @@ def save_input():
             break
     
     lines.insert(next_tag_index, f" {country_tag}_{code_name}:0 \"{proper_name}\"\n")
+    lines.insert(next_tag_index, f" {country_tag}_{code_name}_desc:0 \"{char_description}\"\n")
 
     with open(loc_file, 'w', encoding='utf-8') as f:
         f.writelines(lines)
@@ -257,6 +259,11 @@ proper_name_label = tk.Label(root, text='Proper Name')
 proper_name_label.pack()
 proper_name_entry = tk.Entry(root)
 proper_name_entry.pack()
+
+char_description_label = tk.Label(root, text='Character Description')
+char_description_label.pack()
+char_description_entry = tk.Entry(root)
+char_description_entry.pack()
 
 gender_label = tk.Label(root, text='Gender')
 gender_label.pack()
