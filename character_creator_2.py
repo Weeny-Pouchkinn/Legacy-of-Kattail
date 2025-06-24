@@ -25,7 +25,7 @@ def save_input():
 
     if country_leader_var.get():
         data += "\t\tcountry_leader={\n"
-        data += f"\t\t\texpire = \"1965.1.1\"\n\t\t\tdesc = {char_description_entry.get()}\n\t\t\tideology = {country_leader_ideology_entry.get()}\n\t\t}}\n"
+        data += f"\t\t\texpire = \"1965.1.1\"\n\t\t\tdesc = {country_tag}_{code_name}_desc\n\t\t\tideology = {country_leader_ideology_entry.get()}\n\t\t}}\n"
 
     if minister_var.get():
         data += "\t\tadvisor = {\n"
