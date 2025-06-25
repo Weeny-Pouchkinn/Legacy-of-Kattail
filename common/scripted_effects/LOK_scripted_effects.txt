@@ -268,6 +268,27 @@ change_state_minority_species = {
 	}
 }
 
+clear_all_species_ideas = {
+	set_variable = { species_id = 0 }
+	for_loop_effect = { #Done thrice as to properly clear it all cuz there are 3 slots
+		end = 3
+		for_loop_effect = {
+			end = 100
+			meta_effect = {
+				text = {
+					if = {
+						limit = { has_idea = var_species_[SPECIES_ID] }
+						remove_ideas = var_species_[SPECIES_ID]
+					}
+				}
+				SPECIES_ID = "[?species_id]"
+			}
+			add_to_variable = { species_id = 1 }
+		}
+	}
+}
+
+
 dismantle_wonder = {
 	custom_effect_tooltip = dismantle_wonder_tt
 	for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
