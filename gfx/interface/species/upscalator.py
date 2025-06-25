@@ -1,33 +1,40 @@
 #!/usr/bin/env python3
 """
-Upscale every 40x40 image in the current folder to 60x60.
+Upscale every 40×40 image in the folder to 60×60
+with Lanczos → Adaptive-Sharpen, all in linear space.
 
-Usage:
-    python upscale_to_60.py
-Dependencies:
-    pip install Pillow
+Needs:
+  • ImageMagick installed (≥7 recommended)
+  • pip install Wand
 """
 
 from pathlib import Path
-from PIL import Image
+from wand.image import Image
 
-# Image extensions you care about
-IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".gif"}
+IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".dds"}
 
-def upscale(img_path: Path) -> None:
-    """Resize image in place from 40x40 ➜ 60x60."""
-    with Image.open(img_path) as im:
-        if im.size != (40, 40):
-            print(f"skip {img_path.name:20} — size {im.size}")
+def upscale_and_sharpen(path: Path, sigma: float = 1.0) -> None:
+    with Image(filename=str(path)) as img:
+        if img.width != 40 or img.height != 40:
             return
-        upscaled = im.resize((60, 60), Image.Resampling.NEAREST)
-        upscaled.save(img_path)
-        print(f"✔ upscaled {img_path.name}")
+
+        # --- linear colours → resize ---
+        img.colorspace = 'rgb'                 # ditch gamma
+        img.resize(60, 60, filter='lanczos')   # 1.5×
+        
+        # --- adaptive edge punch ---
+        img.adaptive_sharpen(radius=0, sigma=sigma)  # σ≈1 hits 1-px edges
+
+        # --- back to display space ---
+        img.colorspace = 'srgb'
+        img.save(filename=str(path.with_stem(path.stem)))
+
+        print(f"✔ {path.name} → {path.stem}_60{path.suffix}")
 
 def main() -> None:
-    for p in Path(".").iterdir():
-        if p.is_file() and p.suffix.lower() in IMAGE_EXTS:
-            upscale(p)
+    for p in Path('.').iterdir():
+        if p.suffix.lower() in IMAGE_EXTS:
+            upscale_and_sharpen(p, sigma=1.0)   # tweak sigma if needed
 
 if __name__ == "__main__":
     main()
