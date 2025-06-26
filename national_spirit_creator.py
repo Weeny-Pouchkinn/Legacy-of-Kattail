@@ -308,46 +308,46 @@ class NationalSpiritCreatorApp:
         gfx_filename   = f"{tag}_lok_ideas.gfx"
 
         # 1) Build the idea block
-        lines = [f"            {spirit_id} = {{"]
+        lines = [f"        {tag}_{spirit_id} = {{"]
         # If user typed a picture override, we do picture = X
         pic_override = self.picture_override_var.get().strip()
         if pic_override:
-            lines.append(f"                picture = {pic_override}")
+            lines.append(f"            picture = {pic_override}")
 
-        lines.append("                allowed = { always = no }")
-        lines.append("                removal_cost = -1")
+        lines.append("            allowed = { always = no }")
+        lines.append("            removal_cost = -1")
 
         # Add modifiers if toggled
         if self.include_modifiers_var.get():
             raw_mods = self.modifiers_text_widget.get("1.0", "end").strip()
             mod_lines = [m for m in raw_mods.splitlines() if m.strip() and not m.strip().startswith("#")]
             if mod_lines:
-                lines.append("                modifier = {")
+                lines.append("            modifier = {")
                 for ml in mod_lines:
-                    lines.append(f"                    {ml.strip()}")
-                lines.append("                }")
+                    lines.append(f"                {ml.strip()}")
+                lines.append("            }")
 
         # research_bonus
         if self.include_research_bonus_var.get():
             raw_res = self.research_bonus_text_widget.get("1.0", "end").strip()
             res_lines = [r for r in raw_res.splitlines() if r.strip() and not r.strip().startswith("#")]
             if res_lines:
-                lines.append("                research_bonus = {")
+                lines.append("            research_bonus = {")
                 for rl in res_lines:
-                    lines.append(f"                    {rl.strip()}")
-                lines.append("                }")
+                    lines.append(f"                {rl.strip()}")
+                lines.append("            }")
 
         # equipment_bonus
         if self.include_equipment_bonus_var.get():
             raw_eq = self.equipment_bonus_text_widget.get("1.0", "end").strip()
             eq_lines = [e for e in raw_eq.splitlines() if e.strip() and not e.strip().startswith("#")]
             if eq_lines:
-                lines.append("                equipment_bonus = {")
+                lines.append("            equipment_bonus = {")
                 for el in eq_lines:
-                    lines.append(f"                    {el.strip()}")
-                lines.append("                }")
+                    lines.append(f"                {el.strip()}")
+                lines.append("            }")
 
-        lines.append("            }")
+        lines.append("        }")
         new_idea_block = "\n".join(lines) + "\n"
 
         # 2) Insert into ideas file
@@ -355,7 +355,7 @@ class NationalSpiritCreatorApp:
 
         # 3) Localization
         loc_path = os.path.join(LOCALISATION_DIR, loc_filename)
-        self.insert_localization(loc_path, spirit_id, spirit_name, spirit_desc)
+        self.insert_localization(loc_path, spirit_id, tag, spirit_name, spirit_desc)
 
         # 4) Custom GFX
         if self.use_custom_gfx_var.get():
@@ -458,15 +458,15 @@ class NationalSpiritCreatorApp:
         with open(full_path, "w", encoding="utf-8") as f:
             f.write(new_data)
 
-    def insert_localization(self, loc_path, spirit_id, spirit_name, spirit_desc):
+    def insert_localization(self, loc_path, tag, spirit_id, spirit_name, spirit_desc):
         """
         Make sure we have:
          l_english:
           spirit_id: "<spirit_name>"
           spirit_id_desc: "<spirit_desc>"
         """
-        name_line = f" {spirit_id}: \"{spirit_name}\""
-        desc_line = f" {spirit_id}_desc: \"{spirit_desc}\""
+        name_line = f" {spirit_id}_{tag}: \"{spirit_name}\""
+        desc_line = f" {spirit_id}_{tag}_desc: \"{spirit_desc}\""
         if not os.path.exists(loc_path):
             text = "l_english:\n" + name_line + "\n" + desc_line + "\n"
             with open(loc_path, "w", encoding="utf-8-sig") as f:
@@ -489,16 +489,16 @@ class NationalSpiritCreatorApp:
         gfx_file   = f"{tag}_lok_ideas.gfx"
         gfx_path   = os.path.join(INTERFACE_DIR, gfx_file)
 
-        sprite_name = f"GFX_idea_{spirit_id}"
+        sprite_name = f"GFX_idea_{tag}_{spirit_id}"
         if self.custom_image_path:
             ext = os.path.splitext(self.custom_image_path)[1]
-            final_image_name = f"{spirit_id}{ext}"
+            final_image_name = f"{tag}_{spirit_id}{ext}"
             target_path = os.path.join(ICONS_DIR, final_image_name)
             shutil.copyfile(self.custom_image_path, target_path)
             texture_line = f"texturefile = \"gfx/interface/ideas/{final_image_name}\""
         else:
             # fallback placeholder
-            texture_line = f"texturefile = \"gfx/interface/ideas/{spirit_id}.dds\""
+            texture_line = f"texturefile = \"gfx/interface/ideas/{tag}_{spirit_id}.dds\""
 
         new_sprite_def = (
             "    spriteType = {\n"
@@ -560,7 +560,7 @@ class NationalSpiritCreatorApp:
                 f"# Generated history for {tag}\n",
                 "set_convoys = 10\n",  # optional baseline
                 "add_ideas = {\n",
-                f"    {spirit_id}\n",
+                f"    {tag}_{spirit_id}\n",
                 "}\n"
             ]
             with open(found_file, "w", encoding="utf-8") as f:
@@ -611,7 +611,7 @@ class NationalSpiritCreatorApp:
         if not add_ideas_found:
             block = [
                 "add_ideas = {\n",
-                f"    {spirit_id}\n",
+                f"    {tag}_{spirit_id}\n",
                 "}\n"
             ]
             if set_convoys_index is not None:
