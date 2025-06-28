@@ -1,6 +1,6 @@
 NDefines.NGame.MAP_SCALE_PIXEL_TO_KM = 8.053
-NDefines.NGame.START_DATE = "80.1.1.12"
-NDefines.NGame.END_DATE = "100.1.1.1"
+NDefines.NGame.START_DATE = "100.1.1.12"
+NDefines.NGame.END_DATE = "120.1.1.1"
 NDefines.NCountry.MIN_STABILITY = -1.0
 NDefines.NCountry.MAX_STABILITY = 1.0
 NDefines.NCountry.MIN_WAR_SUPPORT = -1.0
