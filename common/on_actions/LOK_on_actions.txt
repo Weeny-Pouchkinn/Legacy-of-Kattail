@@ -1,6 +1,24 @@
 on_actions = {
 	on_startup = {
 		effect = {			
+			#Countries claiming land
+			#Nordkrabben and Krokatzia claim each other
+			KKN = { every_owned_state = { add_claim_by = WAC } }
+			WAC = { every_owned_state = { add_claim_by = KKN } }
+
+			#Loris claims all of Amphibia (rightful bozoclay)
+			ACR = { every_owned_state = { add_claim_by = FOD } }
+			DAW = { every_owned_state = { add_claim_by = FOD } }
+			BAZ = { every_owned_state = { add_claim_by = FOD } }
+			EUL = { every_owned_state = { add_claim_by = FOD } }
+			MSN = { every_owned_state = { add_claim_by = FOD } }
+
+			#Amphibia claims all of Loris (NAOOOO!)
+			FOD = { every_owned_state = { add_claim_by = ACR } }
+
+			#Saru claims the FMT
+			FMT = { every_owned_state = { add_claim_by = SAR } }
+
 			random_list = { #just pick a random southerner for USSF
 				1 = { CAT = { set_country_flag = will_form_ussf } }
 				1 = { LIO = { set_country_flag = will_form_ussf } }
@@ -1060,7 +1078,7 @@ on_actions = {
 				set_variable = { lok_nuclear_soot_perc = global.lok_nuclear_soot_perc }
 			}
 			if = {
-				limit = { NOT = { tag = ZZZ tag = MUN tag = XEN } }
+				limit = { NOT = { tag = ZZZ tag = MUN tag = XEN tag = MRI } }
 				if = { #Make sure to apply the food modifier if it's not there for some reason
 					limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
 					add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
@@ -1585,6 +1603,51 @@ on_actions = {
 					}
 					clear_variable = SPQ_consumer_goods_diff
 				}
+			}
+		}
+	}
+
+	on_before_peace_conference_start = {
+		effect = {
+			if = {
+				limit = { #Amphibia loses
+					ROOT = { tag = FOD }
+					FROM = { tag = ACR }
+				}
+				FOD = { annex_country = { target = ACR } }
+				FOD = { annex_country = { target = DAW } }
+				FOD = { annex_country = { target = BAZ } }
+				TEM = { annex_country = { target = ENO } }
+				every_country = {
+					limit = { has_war_with = MSN OR = { is_in_faction_with = FOD tag = FOD } }
+					white_peace = MSN
+				}
+				every_country = {
+					limit = { has_war_with = EUL OR = { is_in_faction_with = FOD tag = FOD } }
+					white_peace = EUL
+				}
+				news_event = { id = LOK_news.5 days = 2 }
+			}
+			if = {
+				limit = { #Amphibia wins
+					ROOT = { tag = ACR }
+					FROM = { tag = FOD }
+				}
+				KKN = { every_character = { retire_character = THIS } }
+				FOD = { every_character = { retire_character = THIS } }
+				TEM = { every_character = { retire_character = THIS } }
+				ACR = { annex_country = { target = KKN } }
+				ACR = { annex_country = { target = KKN } }
+				ENO = { annex_country = { target = TEM } }
+				news_event = { id = LOK_news.6 days = 2 } 
+			}
+			if = {
+				limit = { #Macaquia annexes the FMT
+					ROOT = { tag = SAR }
+					FROM = { tag = FMT }
+				}
+				SAR = { annex_country = { target = FMT } }
+				news_event = { id = LOK_news.7 days = 2 } 
 			}
 		}
 	}
