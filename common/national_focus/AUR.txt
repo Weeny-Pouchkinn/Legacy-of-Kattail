@@ -35,6 +35,103 @@ focus_tree = {
 	# }
 
 	focus = {
+		id = AUR_a_grand_fleet
+		icon = GFX_goal_KTZ_the_biggest_ships
+		x = -2
+		y = 2
+		cost = 15
+		prerequisite = { focus = AUR_controlled_thought }
+		prerequisite = { focus = AUR_reopen_auralian_docks }
+		relative_position_id = AUR_reopen_auralian_docks
+		completion_reward = {
+			custom_effect_tooltip = AUR_a_grand_fleet_effect
+			116 = { add_manpower = -20000 }
+			add_timed_idea = {
+				idea = AUR_exhausted_dockyards
+				days = 180
+			}
+			hidden_effect = {
+				create_equipment_variant = {
+					name = "Gilges-Class"
+					type = destroyer_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				create_equipment_variant = {
+					name = "Koko-Class"
+					type = submarine_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				create_equipment_variant = {
+					name = "Seesteiner-Class"
+					type = light_cruiser_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				create_equipment_variant = {
+					name = "Stammeow-Class"
+					type = battleship_2
+					upgrades = {
+						ship_reliability_upgrade = 0
+						ship_engine_upgrade = 0
+						ship_gun_upgrade = 0
+						ship_anti_air_upgrade = 0
+					}
+				}
+				for_loop_effect = {
+					end = 10
+					create_ship = {
+						type = destroyer_2
+						equipment_variant = "Gilges-Class"
+						name = "Gilges-Class"
+						creator = ROOT
+					}
+				}
+				for_loop_effect = {
+					end = 10
+					create_ship = {
+						type = submarine_2
+						equipment_variant = "Koko-Class"
+						name = "Koko-Class"
+						creator = ROOT
+					}
+				}
+				for_loop_effect = {
+					end = 5
+					create_ship = {
+						type = light_cruiser_2
+						equipment_variant = "Seesteiner-Class"
+						name = "Seesteiner-Class"
+						creator = ROOT
+					}
+				}
+				for_loop_effect = {
+					end = 1
+					create_ship = {
+						type = battleship_2
+						equipment_variant = "Stammeow-Class"
+						name = "Stammeow-Class"
+						creator = ROOT
+					}
+				}
+			}
+		}
+	}
+	
+	focus = {
 		id = AUR_neu_seetruppen
 		icon = GFX_goal_KTZ_true_navy
 		x = -1
@@ -1038,102 +1135,7 @@ focus_tree = {
 			}
 		}
 	}
-	focus = {
-		id = AUR_a_grand_fleet
-		icon = GFX_goal_KTZ_the_biggest_ships
-		x = -2
-		y = 2
-		cost = 15
-		prerequisite = { focus = AUR_controlled_thought }
-		prerequisite = { focus = AUR_reopen_auralian_docks }
-		relative_position_id = AUR_reopen_auralian_docks
-		completion_reward = {
-			custom_effect_tooltip = AUR_a_grand_fleet_effect
-			116 = { add_manpower = -20000 }
-			add_timed_idea = {
-				idea = AUR_exhausted_dockyards
-				days = 180
-			}
-			hidden_effect = {
-				create_equipment_variant = {
-					name = "Gilges-Class"
-					type = destroyer_2
-					upgrades = {
-						ship_reliability_upgrade = 0
-						ship_engine_upgrade = 0
-						ship_gun_upgrade = 0
-						ship_anti_air_upgrade = 0
-					}
-				}
-				create_equipment_variant = {
-					name = "Koko-Class"
-					type = submarine_2
-					upgrades = {
-						ship_reliability_upgrade = 0
-						ship_engine_upgrade = 0
-						ship_gun_upgrade = 0
-						ship_anti_air_upgrade = 0
-					}
-				}
-				create_equipment_variant = {
-					name = "Seesteiner-Class"
-					type = light_cruiser_2
-					upgrades = {
-						ship_reliability_upgrade = 0
-						ship_engine_upgrade = 0
-						ship_gun_upgrade = 0
-						ship_anti_air_upgrade = 0
-					}
-				}
-				create_equipment_variant = {
-					name = "Stammeow-Class"
-					type = battleship_2
-					upgrades = {
-						ship_reliability_upgrade = 0
-						ship_engine_upgrade = 0
-						ship_gun_upgrade = 0
-						ship_anti_air_upgrade = 0
-					}
-				}
-				for_loop_effect = {
-					end = 10
-					create_ship = {
-						type = destroyer_2
-						equipment_variant = "Gilges-Class"
-						name = "Gilges-Class"
-						creator = ROOT
-					}
-				}
-				for_loop_effect = {
-					end = 10
-					create_ship = {
-						type = submarine_2
-						equipment_variant = "Koko-Class"
-						name = "Koko-Class"
-						creator = ROOT
-					}
-				}
-				for_loop_effect = {
-					end = 5
-					create_ship = {
-						type = light_cruiser_2
-						equipment_variant = "Seesteiner-Class"
-						name = "Seesteiner-Class"
-						creator = ROOT
-					}
-				}
-				for_loop_effect = {
-					end = 1
-					create_ship = {
-						type = battleship_2
-						equipment_variant = "Stammeow-Class"
-						name = "Stammeow-Class"
-						creator = ROOT
-					}
-				}
-			}
-		}
-	}
+
 	focus = {
 		id = AUR_every_katzen_a_gun
 		icon = GFX_focus_generic_reorient_production
