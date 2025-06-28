@@ -1,9 +1,13 @@
 on_actions = {
 	on_startup = {
 		effect = {			
-			#Countries claiming land
+			#COUNTRIES CLAIMING LAND
 			#Nordkrabben and Krokatzia claim each other
-			KKN = { every_owned_state = { add_claim_by = WAC } }
+			123 = { add_claim_by = WAC }
+			124 = { add_claim_by = WAC }
+			617 = { add_claim_by = WAC }
+			1009 = { add_claim_by = WAC }
+			561 = { add_claim_by = WAC }
 			WAC = { every_owned_state = { add_claim_by = KKN } }
 
 			#Loris claims all of Amphibia (rightful bozoclay)
@@ -15,6 +19,16 @@ on_actions = {
 
 			#Amphibia claims all of Loris (NAOOOO!)
 			FOD = { every_owned_state = { add_claim_by = ACR } }
+			1043 = { add_claim_by = ACR }
+			120 = { add_claim_by = ACR }
+			1044 = { add_claim_by = ACR }
+			128 = { add_claim_by = ACR }
+			1045 = { add_claim_by = ACR }
+			1316 = { add_claim_by = ACR }
+			105 = { add_claim_by = ACR }
+			1046 = { add_claim_by = ACR }
+			1036 = { add_claim_by = ACR }
+			71 = { add_claim_by = ACR }
 
 			#Saru claims the FMT
 			FMT = { every_owned_state = { add_claim_by = SAR } }
@@ -1637,8 +1651,28 @@ on_actions = {
 				FOD = { every_character = { retire_character = THIS } }
 				TEM = { every_character = { retire_character = THIS } }
 				ACR = { annex_country = { target = KKN } }
-				ACR = { annex_country = { target = KKN } }
+				ACR = { annex_country = { target = FOD } }
 				ENO = { annex_country = { target = TEM } }
+				if = { #Give back Krokatzian lands
+					limit = {
+						WAC = {
+							NOT = { has_war_with = ACR }
+							has_government = communism
+						}
+					}
+					ACR = {
+						every_owned_state = {
+							limit = { is_claimed_by = WAC }
+							transfer_state_to = WAC
+						}
+					}
+				}
+				ENO = {
+					every_owned_state = {
+						limit = { is_claimed_by = ACR }
+						transfer_state_to = ACR
+					}
+				}
 				news_event = { id = LOK_news.6 days = 2 } 
 			}
 			if = {
