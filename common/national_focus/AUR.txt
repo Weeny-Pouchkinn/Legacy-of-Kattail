@@ -33,7 +33,53 @@ focus_tree = {
 	# 		}
 	# 	}
 	# }
-
+	focus = {
+		id = AUR_the_wait_for_him
+		icon = AUR_the_wait_for_him
+		x = 15
+		y = -1
+		cost = 1
+		completion_reward = {
+			country_event = { id = AUR_event.1 }
+		}
+	}
+	focus = {
+		id = AUR_building_better_imperium
+		icon = GFX_focus_CHL_a_french_alliance
+		x = 0
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_the_kaisers_footsteps }
+		relative_position_id = AUR_the_wait_for_him
+		completion_reward = {
+			custom_effect_tooltip = AUR_building_better_imperium_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_production_speed_arms_factory_factor = 0.05 }
+				add_to_variable = { AUR_the_kaiser_must_return_production_speed_industrial_complex_factor = -0.05 }
+			}
+		}
+	}
+	focus = {
+		id = AUR_reopen_auralian_docks
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -2
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_building_better_imperium }
+		relative_position_id = AUR_building_better_imperium
+		completion_reward = {
+			116 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = dockyard level = 3 }
+			}
+			add_tech_bonus = {
+				name = capital_ships_bonus
+				bonus = 2.0
+				uses = 2
+				category = naval_equipment
+			}
+		}
+	}
 	focus = {
 		id = AUR_a_grand_fleet
 		icon = GFX_goal_KTZ_the_biggest_ships
@@ -711,16 +757,7 @@ focus_tree = {
 			}
 		}
 	}
-	focus = {
-		id = AUR_the_wait_for_him
-		icon = AUR_the_wait_for_him
-		x = 15
-		y = -1
-		cost = 1
-		completion_reward = {
-			country_event = { id = AUR_event.1 }
-		}
-	}
+
 	focus = {
 		id = AUR_he_did_not_have_dissent
 		icon = GFX_focus_BRA_repeale_national_security_law
@@ -833,22 +870,7 @@ focus_tree = {
 			country_event = { id = AUR_event.4 }
 		}
 	}
-	focus = {
-		id = AUR_building_better_imperium
-		icon = GFX_focus_CHL_a_french_alliance
-		x = 0
-		y = 3
-		cost = 5
-		prerequisite = { focus = AUR_the_kaisers_footsteps }
-		relative_position_id = AUR_the_wait_for_him
-		completion_reward = {
-			custom_effect_tooltip = AUR_building_better_imperium_tt
-			hidden_effect = {
-				add_to_variable = { AUR_the_kaiser_must_return_production_speed_arms_factory_factor = 0.05 }
-				add_to_variable = { AUR_the_kaiser_must_return_production_speed_industrial_complex_factor = -0.05 }
-			}
-		}
-	}
+
 	focus = {
 		id = AUR_herzlands_darkspot
 		icon = AUR_herzlands_darkspot
@@ -1114,27 +1136,7 @@ focus_tree = {
 			}
 		}
 	}
-	focus = {
-		id = AUR_reopen_auralian_docks
-		icon = GFX_goal_generic_construct_naval_dockyard
-		x = -2
-		y = 1
-		cost = 10
-		prerequisite = { focus = AUR_building_better_imperium }
-		relative_position_id = AUR_building_better_imperium
-		completion_reward = {
-			116 = {
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = { type = dockyard level = 3 }
-			}
-			add_tech_bonus = {
-				name = capital_ships_bonus
-				bonus = 2.0
-				uses = 2
-				category = naval_equipment
-			}
-		}
-	}
+
 
 	focus = {
 		id = AUR_every_katzen_a_gun
