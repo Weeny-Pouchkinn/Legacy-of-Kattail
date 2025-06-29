@@ -1796,14 +1796,16 @@ apply_state_species_modifier = {
 # 	}
 # }
 
+@wonder_modifier_count = 32
+
 setup_wonder_array = {
 	resize_array = { #Array containing BASE modifiers, modify this in script!
 		array = wonder_modifiers_values
-		size = 32
+		size = @wonder_modifier_count
 	}
 	resize_array = { #Array Containing POST CALCULATION modifiers, used for the state tooltips, do NOT modify!
 		array = wonder_modifiers_values_real
-		size = 32
+		size = @wonder_modifier_count
 	}
 }
 
@@ -1814,7 +1816,7 @@ apply_wonder_effects = {
 	clear_array = wonder_modifiers_values
 	resize_array = {
 		array = wonder_modifiers_values
-		size = 32
+		size = @wonder_modifier_count
 	}
 
 
@@ -1838,6 +1840,8 @@ apply_wonder_effects = {
 			break = break
 			set_variable = { wonder_modifier_id = i }
 			set_variable = { wonder_modifier_value = v }
+			set_variable = { wonder_modifier_output_mult = 1 }
+			add_to_variable = { wonder_modifier_output_mult = var:controller:modifier@lok_wonder_output_mult }
 			meta_effect = {
 				text = {
 					if = {
@@ -1863,6 +1867,7 @@ apply_wonder_effects = {
 							}
 							multiply_variable = { wonder_modifier_[WONDER_MODIFIER_ID] = 0.5 }
 						}
+						multiply_variable = { wonder_modifier_[WONDER_MODIFIER_ID] = [WONDER_OUTPUT_MULT] }
 						set_variable = {
 							wonder_modifiers_values_real^[WONDER_MODIFIER_ID] = wonder_modifier_[WONDER_MODIFIER_ID] #Setting the post calculation modifier for the state tooltip
 						}
@@ -1875,6 +1880,7 @@ apply_wonder_effects = {
 				}
 				WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
 				WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
+				WONDER_OUTPUT_MULT = "[?wonder_modifier_output_mult]"
 				debug = no
 			}
 		}
