@@ -1797,8 +1797,12 @@ apply_state_species_modifier = {
 # }
 
 setup_wonder_array = {
-	resize_array = {
+	resize_array = { #Array containing BASE modifiers, modify this in script!
 		array = wonder_modifiers_values
+		size = 32
+	}
+	resize_array = { #Array Containing POST CALCULATION modifiers, used for the state tooltips, do NOT modify!
+		array = wonder_modifiers_values_real
 		size = 32
 	}
 }
@@ -1806,6 +1810,7 @@ setup_wonder_array = {
 apply_wonder_effects = {
 	#First we gotta reset all the effects!
 
+	#Resetting the country level modifier array
 	clear_array = wonder_modifiers_values
 	resize_array = {
 		array = wonder_modifiers_values
@@ -1857,6 +1862,9 @@ apply_wonder_effects = {
 								}
 							}
 							multiply_variable = { wonder_modifier_[WONDER_MODIFIER_ID] = 0.5 }
+						}
+						set_variable = {
+							wonder_modifiers_values_real^[WONDER_MODIFIER_ID] = wonder_modifier_[WONDER_MODIFIER_ID] #Setting the post calculation modifier for the state tooltip
 						}
 						var:controller = {
 							add_to_variable = {

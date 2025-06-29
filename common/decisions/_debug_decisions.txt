@@ -585,5 +585,95 @@ debug_decisions = {
 			encryption = 1
 		}
 	}
-	
+
+	enable_pyramid_sex = {
+		available = { is_ai = no }
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			custom_effect_tooltip = "Adds 1 million monthly manpower growth to the pyramid wonder"
+			hidden_effect = {
+				509 = {
+					set_variable = { wonder_modifiers_values^18 = 1000000 }
+					controller = { apply_wonder_effects = yes }
+				}
+			}
+
+		}
+
+		ai_will_do = {
+			base = 0
+		}
+
+	}
+
+	show_state_variable_printer = {
+		available = { is_ai = no }
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+			NOT = { has_global_flag = show_state_variable_printer_flag }
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			set_global_flag = show_state_variable_printer_flag
+		}
+	}
+
+	hide_state_variable_printer = {
+		available = { is_ai = no }
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+			has_global_flag = show_state_variable_printer_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			clr_global_flag = show_state_variable_printer_flag
+		}
+	}
+
+	state_variable_printer = {
+		available = { is_ai = no }
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+			has_global_flag = show_state_variable_printer_flag
+		}
+
+		state_target = yes
+
+		on_map_mode = map_only
+		cost = 0
+		#target_array = states
+
+		complete_effect = {
+			FROM = {
+				print_variables = {
+					file = LOK_state_variable_printer
+					text = "These variables are printed at [GetDateText] in [THIS.GetName]"
+				}
+			}
+		}
+	}
 }
