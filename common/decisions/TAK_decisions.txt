@@ -138,7 +138,7 @@ TAK_painting_cat = {
 
 		state_target = yes
 		on_map_mode = map_only
-		target_array = owned_controlled_states
+		target_array = controlled_states
 
 		fire_only_once = yes
 
@@ -195,6 +195,9 @@ TAK_painting_cat = {
 		state_target = yes
 		on_map_mode = map_only
 		target_array = TAK_possible_infiltration_states
+		target_trigger = {
+			FROM = { NOT = { is_controlled_by = TAK } }
+		}
 
 		visible = {
 			tag = TAK
@@ -319,7 +322,6 @@ TAK_painting_cat = {
 		cost = 10
 
 		complete_effect = {
-			add_to_variable = { TAK_painting_power_usage = 25 }
 			TAK_update_painting_stats = yes
 		}
 
