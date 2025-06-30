@@ -207,7 +207,7 @@ TAK_painting_cat = {
 			custom_trigger_tooltip = {
 				tooltip = TAK_infiltrate_state_available_tt
 				hidden_trigger = {
-					check_variable = { TAK_usable_painting_power > 24 }
+					check_variable = { TAK_painting_power > 24 }
 				}
 			}
 		}
@@ -225,10 +225,12 @@ TAK_painting_cat = {
 		}
 
 		complete_effect = {
+			add_to_variable = { TAK_painting_power_usage = 25 }
 			TAK_update_painting_stats = yes
 		}
 
 		remove_effect = {
+			subtract_from_variable = { TAK_painting_power_usage = 25 }
 			TAK_update_painting_stats = yes
 			FROM = {
 				custom_effect_tooltip = TAK_infiltrate_state_effect_tt
@@ -272,6 +274,10 @@ TAK_painting_cat = {
 
 		cancel_trigger = {
 			has_war_with = FROM.controller
+		}
+
+		cancel_effect = {
+			subtract_from_variable = { TAK_painting_power_usage = 25 }
 		}
 	}
 }

@@ -61,8 +61,8 @@ focus_tree = {
 		relative_position_id = TAK_a_necessary_evil
 		prerequisite = { focus = TAK_a_necessary_evil }
 		completion_reward = {
-			347 = { add_resource = { type = food amount = 5 } }
-			340 = { add_resource = { type = food amount = 5 } }
+			347 = { add_extra_state_shared_building_slots = 2 }
+			340 = { add_extra_state_shared_building_slots = 2 }
 		}
 	}
 	focus = { #roi makes farms
@@ -103,7 +103,7 @@ focus_tree = {
 	}
 	focus = { #roi encourages settlement
 		id = TAK_petites_charles
-		icon = GFX_focus_generic_road_investment
+		icon = GFX_focus_generic_low_cost_housing
 		x = 0
 		y = 2
 		cost = 5
@@ -225,6 +225,9 @@ focus_tree = {
 		relative_position_id = TAK_flotte_du_roi
 		prerequisite = { focus = TAK_des_gros_vaisseaux }
 		prerequisite = { focus = TAK_des_gros_cannons }
+		available = {
+			has_tech = heavy_battleship
+		}
 		completion_reward = {
 			add_manpower = -10000
 			349 = {
@@ -239,7 +242,7 @@ focus_tree = {
 			}
 			add_equipment_production = {
 				equipment = {
-					type = SH_battleship_2
+					type = SH_battleship
 					creator = "TAK" 
 					version_name = "Charles Class"
 				}
@@ -359,7 +362,7 @@ focus_tree = {
 			set_country_flag = TAK_painters_make_propaganda
 			add_dynamic_modifier = { modifier = TAK_painting_output }
 			TAK_recruit_painter_1 = yes
-			TAK_gain_3_brush = yes
+			TAK_gain_1_brush = yes
 		}
 	}
 	focus = { #roi sets up dedicated buildings for the paintings to be painted in
@@ -373,12 +376,12 @@ focus_tree = {
 			focus = TAK_figure_it_out
 		}
 		completion_reward = {
-			TAK_gain_1_brush = yes
+			TAK_gain_3_brush = yes
 		}
 	}
 	focus = { #roi recruits painters, unlocks decisions to recruit royal painters that will paint paintings
 		id = TAK_recruit_painters
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = GFX_focus_ARG_defense_and_democracy
 		x = 1
 		y = 1
 		cost = 5
@@ -525,7 +528,7 @@ focus_tree = {
 
 	focus = { #roi opens takicardie up for his ploys
 		id = TAK_officially_open_up
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = GFX_SOV_call_for_aid_ccp_2d_sov_compatibility
 		x = 0
 		y = 4
 		cost = 5
@@ -647,9 +650,11 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = TAK_alkroa_wargoal_effect
-			ALK = {
-				every_core_state = {
-					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+			hidden_effect = {
+				ALK = {
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
 				}
 			}
 		}
@@ -668,9 +673,11 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = TAK_aurelia_wargoal_effect
-			SPQ = {
-				every_core_state = {
-					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+			hidden_effect = {
+				SPQ = {
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
 				}
 			}
 		}
@@ -689,9 +696,11 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = TAK_quepler_wargoal_effect
-			KEP = {
-				every_core_state = {
-					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+			hidden_effect = {
+				KEP = {
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
 				}
 			}
 		}
@@ -710,9 +719,11 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = TAK_solaria_wargoal_effect
-			SLR = {
-				every_core_state = {
-					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+			hidden_effect = {
+				SLR = {
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
 				}
 			}
 		}
