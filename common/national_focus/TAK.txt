@@ -8,12 +8,11 @@ focus_tree = {
 		modifier = {
 			add = 10
 			tag = TAK
-			has_country_flag = TAK_charles_path
 		}
 	}
 	focus = { #roi gives an awkward speech abt greatness
 		id = TAK_address_the_people
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_address_the_people
 		x = 10
 		y = 1
 		cost = 5
@@ -28,7 +27,7 @@ focus_tree = {
 	}
 	focus = { #roi thinks about how great it would be to be great
 		id = TAK_think_about_greatness
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_think_about_greatness
 		x = 0
 		y = 1
 		cost = 5
@@ -37,7 +36,7 @@ focus_tree = {
 	}
 	focus = { #roi loosens the production of stuff abt him a bit. it hurts but it's necessary
 		id = TAK_a_necessary_evil
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_a_necessary_evil
 		x = -2
 		y = 1
 		cost = 5
@@ -103,7 +102,7 @@ focus_tree = {
 	}
 	focus = { #roi encourages settlement
 		id = TAK_petites_charles
-		icon = GFX_focus_generic_low_cost_housing
+		icon = TAK_petites_charles
 		x = 0
 		y = 2
 		cost = 5
@@ -242,9 +241,9 @@ focus_tree = {
 			}
 			add_equipment_production = {
 				equipment = {
-					type = SH_battleship
+					type = SH_battleship_1
 					creator = "TAK" 
-					version_name = "Charles Class"
+					version_name = "Super-Charles Class"
 				}
 				requested_factories = 1
 				progress = 0.60
@@ -305,7 +304,7 @@ focus_tree = {
 		x = 0
 		y = 2
 		cost = 5
-		relative_position_id = TAK_develop_ikar
+		relative_position_id = TAK_develop_die
 		prerequisite = { focus = TAK_develop_ikar focus = TAK_develop_die }
 		completion_reward = {
 			347 = {
@@ -322,6 +321,18 @@ focus_tree = {
 					amount = 20
 				}
 			}
+		}
+	}
+	focus = { #robot upgrades
+		id = TAK_automaton_department
+		icon = TAK_automaton_department
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = TAK_develop_ikar
+		prerequisite = { focus = TAK_develop_ikar }
+		completion_reward = {
+			custom_effect_tooltip = TAK_automaton_department_effect_tt
 		}
 	}
 
@@ -345,7 +356,7 @@ focus_tree = {
 
 	focus = { #roi tries to find out what exactly makes the portraits come to life
 		id = TAK_figure_it_out
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = GFX_focus_ARG_defense_and_democracy
 		x = 2
 		y = 1
 		cost = 5
@@ -367,7 +378,7 @@ focus_tree = {
 	}
 	focus = { #roi sets up dedicated buildings for the paintings to be painted in
 		id = TAK_painting_factory
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = GFX_SOV_russian_corporate_state_ccp_2d_sov_compatibility
 		x = -1
 		y = 1
 		cost = 5
@@ -377,11 +388,18 @@ focus_tree = {
 		}
 		completion_reward = {
 			TAK_gain_3_brush = yes
+			349 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
 		}
 	}
 	focus = { #roi recruits painters, unlocks decisions to recruit royal painters that will paint paintings
 		id = TAK_recruit_painters
-		icon = GFX_focus_ARG_defense_and_democracy
+		icon = TAK_recruit_painters
 		x = 1
 		y = 1
 		cost = 5
@@ -391,6 +409,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			custom_effect_tooltip = TAK_recruit_painters_effect_tt
 			TAK_recruit_painter_10 = yes
 			TAK_recruit_painter_5 = yes
 			TAK_recruit_painter_5 = yes
@@ -522,7 +541,7 @@ focus_tree = {
 		prerequisite = { focus = TAK_recruit_painters }
 		prerequisite = { focus = TAK_painting_factory }
 		completion_reward = {
-			add_research_slot = 1
+			custom_effect_tooltip = TAK_the_roqualian_form_effect_tt
 		}
 	}
 
@@ -567,13 +586,13 @@ focus_tree = {
 			ROQ = { country_event = { id = TAK_event.1000 days = 1 } }
 			custom_effect_tooltip = lok_needs_approval
 			show_ideas_tooltip = cg_payment_40
-			TAK_gain_4_brush = yes
+			TAK_gain_3_brush = yes
 		}
 	}
 
 	focus = { #buy painters from anyone
 		id = TAK_recruit_the_best
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_recruit_the_best
 		x = 0
 		y = 2
 		cost = 5
@@ -585,9 +604,9 @@ focus_tree = {
 
 	focus = { #roi designs the ideal "painting citizen" to mass produce
 		id = TAK_conceive_the_charlesling
-		icon = GFX_focus_SWE_urbanization
-		x = 0
-		y = 2
+		icon = TAK_conceive_the_charlesling
+		x = 1
+		y = 1
 		cost = 10
 		relative_position_id = TAK_recruit_the_best
 		prerequisite = { focus = TAK_recruit_the_best }
@@ -598,6 +617,7 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
+			custom_effect_tooltip = TAK_conceive_the_charlesling_tt
 			set_variable = { TAK_painting_charles_count = 0 }
 			set_variable = { TAK_painting_charles_weekly_per_painting_power = 5 } #you can't rush his glorious form
 		}
@@ -605,12 +625,14 @@ focus_tree = {
 
 	focus = { #roi learns to perfectly copy people
 		id = TAK_perfect_imitation
-		icon = GFX_focus_SWE_urbanization
-		x = 2
+		icon = TAK_perfect_imitation
+		x = 3
 		y = 1
-		cost = 10
+		cost = 5
 		relative_position_id = TAK_recruit_the_best
-		prerequisite = { focus = TAK_recruit_the_best }
+		prerequisite = {
+			focus = TAK_recruit_the_best
+		}
 		available = {
 			custom_trigger_tooltip = {
 				tooltip = TAK_perfect_imitation_available
@@ -637,21 +659,46 @@ focus_tree = {
 		}
 	}
 
-	focus = { #prepare to fight alkroa
-		id = TAK_alkroa_wargoal
-		icon = GFX_focus_SWE_urbanization
+	focus = { #roi prepares for war
+		id = TAK_war_economy
+		icon = GFX_focus_RAJ_war_taxes
 		x = 0
 		y = 1
-		cost = 5
+		cost = 10
 		relative_position_id = TAK_perfect_imitation
 		prerequisite = { focus = TAK_perfect_imitation }
+		completion_reward = {
+			add_ideas = tot_economic_mobilisation
+			add_stability = -0.20
+			add_political_power = -100
+			every_owned_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+		}
+	}
+
+	focus = { #prepare to fight alkroa
+		id = TAK_alkroa_wargoal
+		icon = TAK_alkroa_wargoal
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_war_economy
+		prerequisite = { focus = TAK_war_economy }
 		bypass = {
 			NOT = { country_exists = ALK }
 		}
+		will_lead_to_war_with = ALK
 		completion_reward = {
 			custom_effect_tooltip = TAK_alkroa_wargoal_effect
+			ALK = { every_controlled_state = { add_claim_by = TAK } }
 			hidden_effect = {
 				ALK = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
 					every_core_state = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
 					}
@@ -662,19 +709,22 @@ focus_tree = {
 
 	focus = { #prepare to fight aurelia
 		id = TAK_aurelia_wargoal
-		icon = GFX_focus_SWE_urbanization
-		x = 2
+		icon = TAK_aurelia_wargoal
+		x = 1
 		y = 1
 		cost = 5
-		relative_position_id = TAK_perfect_imitation
-		prerequisite = { focus = TAK_perfect_imitation }
+		relative_position_id = TAK_war_economy
+		prerequisite = { focus = TAK_war_economy }
 		bypass = {
 			NOT = { country_exists = SPQ }
 		}
+		will_lead_to_war_with = SPQ
 		completion_reward = {
 			custom_effect_tooltip = TAK_aurelia_wargoal_effect
+			SPQ = { every_controlled_state = { add_claim_by = TAK } }
 			hidden_effect = {
 				SPQ = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
 					every_core_state = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
 					}
@@ -685,19 +735,22 @@ focus_tree = {
 
 	focus = { #prepare to fight quepler
 		id = TAK_quepler_wargoal
-		icon = GFX_focus_SWE_urbanization
-		x = 2
+		icon = TAK_quepler_wargoal
+		x = 1
 		y = 2
 		cost = 5
-		relative_position_id = TAK_perfect_imitation
+		relative_position_id = TAK_war_economy
 		prerequisite = { focus = TAK_aurelia_wargoal focus = TAK_alkroa_wargoal }
 		bypass = {
 			NOT = { country_exists = KEP }
 		}
+		will_lead_to_war_with = KEP
 		completion_reward = {
 			custom_effect_tooltip = TAK_quepler_wargoal_effect
+			KEP = { every_controlled_state = { add_claim_by = TAK } }
 			hidden_effect = {
 				KEP = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
 					every_core_state = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
 					}
@@ -708,19 +761,22 @@ focus_tree = {
 
 	focus = { #prepare to fight solaria
 		id = TAK_solaria_wargoal
-		icon = GFX_focus_SWE_urbanization
-		x = 0
+		icon = TAK_solaria_wargoal
+		x = -1
 		y = 2
 		cost = 5
-		relative_position_id = TAK_perfect_imitation
+		relative_position_id = TAK_war_economy
 		prerequisite = { focus = TAK_aurelia_wargoal focus = TAK_alkroa_wargoal }
 		bypass = {
 			NOT = { country_exists = SLR }
 		}
+		will_lead_to_war_with = SLR
 		completion_reward = {
 			custom_effect_tooltip = TAK_solaria_wargoal_effect
+			SLR = { every_controlled_state = { add_claim_by = TAK } }
 			hidden_effect = {
 				SLR = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
 					every_core_state = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
 					}
@@ -731,21 +787,29 @@ focus_tree = {
 
 	focus = { #prepare to fight roqualia
 		id = TAK_roqualia_wargoal
-		icon = GFX_focus_SWE_urbanization
-		x = 1
-		y = 3
+		icon = TAK_roqualia_wargoal
+		x = 0
+		y = 4
 		cost = 5
 		relative_position_id = TAK_perfect_imitation
 		prerequisite = { focus = TAK_solaria_wargoal focus = TAK_quepler_wargoal }
 		completion_reward = {
-			set_variable = { TAK_painting_charles_count = 0 }
-			set_variable = { TAK_painting_charles_weekly_per_painting_power = 5 } #you can't rush his glorious form
+			custom_effect_tooltip = TAK_roqualia_wargoal_effect
+			ROQ = { every_controlled_state = { add_claim_by = TAK } }
+			hidden_effect = {
+				ROQ = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
+				}
+			}
 		}
 	}
 
 	focus = { #fill charles with clones of charles
 		id = TAK_the_new_charles
-		icon = GFX_focus_SWE_urbanization
+		icon = TAK_the_new_charles
 		x = -1
 		y = 1
 		cost = 5
@@ -769,6 +833,10 @@ focus_tree = {
 					type = industrial_complex
 					level = 4
 				}
+			}
+			swap_ideas = {
+				remove_idea = TAK_Industrie_du_roi_2
+				add_idea = TAK_Industrie_du_roi_3
 			}
 		}
 	}

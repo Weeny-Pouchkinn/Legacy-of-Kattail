@@ -232,6 +232,14 @@ TAK_painting_cat = {
 		remove_effect = {
 			subtract_from_variable = { TAK_painting_power_usage = 25 }
 			TAK_update_painting_stats = yes
+			if = {
+				limit = { has_DLC = "La Resistance" }
+				add_intel = { target = FROM.controller army_intel = 5 }
+				add_intel = {
+					target = FROM.controller
+					civilian_intel = 10
+				}
+			}
 			FROM = {
 				custom_effect_tooltip = TAK_infiltrate_state_effect_tt
 				add_to_variable = { TAK_infiltration_level = 1 }
@@ -278,6 +286,52 @@ TAK_painting_cat = {
 
 		cancel_effect = {
 			subtract_from_variable = { TAK_painting_power_usage = 25 }
+		}
+	}
+
+	#Wardec
+	TAK_expand_domain = {
+		icon = GFX_decision_infiltrate_state
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = TAK_possible_wardec_targets
+
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_perfect_imitation
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		days_remove = 30
+
+		cost = 10
+
+		complete_effect = {
+			add_to_variable = { TAK_painting_power_usage = 25 }
+			TAK_update_painting_stats = yes
+		}
+
+		remove_effect = {
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+
+		cancel_trigger = {
+			has_war_with = FROM
 		}
 	}
 }
