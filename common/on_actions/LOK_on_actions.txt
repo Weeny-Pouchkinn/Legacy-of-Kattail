@@ -1094,6 +1094,37 @@ on_actions = {
 			967 = { set_variable = { glongland = 1 } }
         }
 	}
+
+	on_weekly_TAK = {
+		effect = {
+			if = {
+				limit = { has_completed_focus = TAK_figure_it_out }
+				TAK_update_painting_stats = yes
+				if = {
+					limit = { has_completed_focus = TAK_conceive_the_charlesling }
+					add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_weekly }
+				}
+			}
+		}
+	}
+
+	on_declare_war = {
+		effect = {
+			if = { #takicardie declares war
+				limit = {
+					TAK = { has_completed_focus = TAK_perfect_imitation }
+				}
+				if = {
+					limit = { FROM = { tag = TAK } }
+					ROOT = { country_event = { id = TAK_event.1005 days = 1 } }
+				}
+				else_if = {
+					limit = { ROOT = { tag = TAK } }
+					FROM = { country_event = { id = TAK_event.1005 days = 1 } }
+				}
+			}
+		}
+	}
 	
 	on_weekly_ROQ = {
 		effect = {

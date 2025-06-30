@@ -1,4 +1,73 @@
 defined_text = { # Country
+	name = GetTakicardieInfiltrationLevel
+	text = {
+		trigger = { check_variable = { TAK_infiltration_level = 0 } }
+		localization_key = "TAK_infiltration_0"
+	}
+	text = {
+		trigger = { check_variable = { TAK_infiltration_level = 1 } }
+		localization_key = "TAK_infiltration_1"
+	}
+	text = {
+		trigger = { check_variable = { TAK_infiltration_level = 2 } }
+		localization_key = "TAK_infiltration_2"
+	}
+	text = {
+		trigger = { check_variable = { TAK_infiltration_level = 3 } } 
+		localization_key = "TAK_infiltration_3"
+	}
+}
+
+defined_text = { # Country
+	name = GetTakicardieBrushFulfill
+	text = {
+		trigger = { check_variable = { TAK_brush_count > TAK_painter_list^num } }
+		localization_key = "TAK_enough_brushes"
+	}
+	text = {
+		trigger = { check_variable = { TAK_brush_count = TAK_painter_list^num } }
+		localization_key = "TAK_just_right_brushes"
+	}
+	text = {
+		trigger = { check_variable = { TAK_brush_count < TAK_painter_list^num } }
+		localization_key = "TAK_not_enough_brushes"
+	}
+}
+
+defined_text = { # Country
+	name = GetTakicardiePaintingType
+	text = {
+		trigger = { has_country_flag = TAK_painters_make_soldiers }
+		localization_key = "TAK_painters_make_soldiers_loc"
+	}
+	text = {
+		trigger = { has_country_flag = TAK_painters_make_propaganda }
+		localization_key = "TAK_painters_make_propaganda_loc"
+	}
+	text = {
+		trigger = { has_country_flag = TAK_painters_make_war_propaganda }
+		localization_key = "TAK_painters_make_war_propaganda_loc"
+	}
+	text = {
+		trigger = { has_country_flag = TAK_painters_make_charles }
+		localization_key = "TAK_painters_make_charles_loc"
+	}
+}
+
+
+defined_text = { # Country
+	name = GetTakicardieCharleslingsCount
+	text = {
+		trigger = { NOT = { has_completed_focus = TAK_conceive_the_charlesling } }
+		localization_key = ""
+	}
+	text = {
+		trigger = { has_completed_focus = TAK_conceive_the_charlesling }
+		localization_key = "TAK_painting_charles_count_loc"
+	}
+}
+
+defined_text = { # Country
 	name = GetCatKingdomMonarchName
 	text = {
 		trigger = { has_country_flag = mewtail_recovered }

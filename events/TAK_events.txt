@@ -1,0 +1,428 @@
+add_namespace = TAK_event
+
+#another day in the roi's life
+country_event = {
+	id = TAK_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.1"}
+	title = TAK_event.1.t
+	desc = TAK_event.1.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.1.a
+		country_event = { id = TAK_event.2 days = 5 }
+	}
+}
+
+#roi gets a painting made
+country_event = {
+	id = TAK_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.2"}
+	title = TAK_event.2.t
+	desc = TAK_event.2.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.2.a
+		country_event = { id = TAK_event.3 days = 1 }
+	}
+}
+
+#roi goes to bed and the painting comes alive
+country_event = {
+	id = TAK_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.3"}
+	title = TAK_event.3.t
+	desc = TAK_event.3.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.3.a
+		country_event = { id = TAK_event.4 days = 2 }
+	}
+}
+
+#the two Rois fight
+country_event = {
+	id = TAK_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.4"}
+	title = TAK_event.4.t
+	desc = TAK_event.4.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { #the roi fights with the fake roi and wins
+		name = TAK_event.4.a
+		country_event = { id = TAK_event.11 days = 2 }
+	}
+
+	option = { #the fake roi eliminates the real roi and takes his place
+		name = TAK_event.4.b
+		hidden_effect = {
+			set_country_flag = TAK_fake_roi_takeover
+		}
+		retire_character = ROQ_Charles
+		TAK_Fake_Charkes = {
+			add_country_leader_role = {
+				country_leader={
+					expire = "1965.1.1"
+					desc = TAK_Fake_Charkes_desc
+					ideology = absolutism
+				}
+				promote_leader = yes
+			}
+		}
+		set_politics = { ruling_party = neutrality }
+		add_popularity = { ideology = neutrality popularity = 0.50 }
+		country_event = { id = TAK_event.5 days = 2 }
+	}
+}
+
+#FAKE ROI BRANCH - DEMOCRATIC/NEUTRALITY
+#fake roi plots to try and get the girl he likes
+country_event = {
+	id = TAK_event.5
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.5"}
+	title = TAK_event.5.t
+	desc = TAK_event.5.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { 
+		name = TAK_event.5.a
+		country_event = { id = TAK_event.6 days = 2 }
+	}
+}
+
+#the wedding!
+country_event = {
+	id = TAK_event.6
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.6"}
+	title = TAK_event.6.t
+	desc = TAK_event.6.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { #the wedding is stopped! 
+		name = TAK_event.6.a
+		country_event = { id = TAK_event.8 days = 2 }
+	}
+
+	option = { #the wedding is not stopped
+		name = TAK_event.6.b
+		country_event = { id = TAK_event.7 days = 2 }
+	}
+}
+
+#NEUTRALITY PATH
+#the roi just... marries the girl and clamps down on everything. slight reforms but nothing really happens. end of story, mostly for AI purposes
+country_event = {
+	id = TAK_event.7
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.7"}
+	title = TAK_event.7.t
+	desc = TAK_event.7.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.7.a
+	}
+}
+
+#FAILED WEDDING PATH
+#the wedding is foiled and roi goes on a chase!
+country_event = {
+	id = TAK_event.8
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.8"}
+	title = TAK_event.8.t
+	desc = TAK_event.8.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.8.a
+		country_event = { id = TAK_event.9 days = 2 }
+	}
+}
+
+#the chase goes wrong and the city is destroyed
+country_event = {
+	id = TAK_event.9
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.9"}
+	title = TAK_event.9.t
+	desc = TAK_event.9.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.9.a
+		country_event = { id = TAK_event.10 days = 2 }
+		launch_nuke = {
+			province = 8983
+			use_nuke = no
+		}
+		set_province_name = { id = 8983 name = "Ruins of Charles" }
+		349 = {
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = infrastructure level = 0 }
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+			set_state_category = wasteland
+		}
+		set_temp_variable = { TAK_population_flees = 349.state_population }
+		divide_temp_variable = { TAK_population_flees = 2 }
+		347 = { add_manpower = TAK.TAK_population_flees }
+		340 = { add_manpower = TAK.TAK_population_flees }
+		hidden_effect = { 349 = { add_manpower = -2000000 } }
+		set_politics = { ruling_party = democratic }
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.50
+		}
+	}
+}
+
+#freedom...?
+country_event = {
+	id = TAK_event.10
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.10"}
+	title = TAK_event.10.t
+	desc = TAK_event.10.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.10.a
+		set_capital = { state = 347 }
+		remove_ideas = TAK_Industrie_du_roi
+		remove_ideas = TAK_Vive_le_roi
+		load_focus_tree = TAK_BIRD_TREE
+	}
+}
+
+#FASCIST PATH
+#the roi survives the fake roi and realizes the paintings come alive
+country_event = {
+	id = TAK_event.11
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.11"}
+	title = TAK_event.11.t
+	desc = TAK_event.11.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.11.a
+		country_event = { id = TAK_event.12 days = 10 }
+	}
+}
+
+#the roi first burns the paintings, then does some experimentation and realizes there is something to be done
+country_event = {
+	id = TAK_event.12
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.12"}
+	title = TAK_event.12.t
+	desc = TAK_event.12.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.12.a
+		set_country_flag = TAK_charles_path
+		#load_focus_tree = TAK_CHARLES_TREE
+	}
+}
+
+#roi gives speech that kinda sucks
+country_event = {
+	id = TAK_event.13
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.13"}
+	title = TAK_event.13.t
+	desc = TAK_event.13.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.13.a
+		add_political_power = -5
+	}
+}
+
+#roi messes with paintings
+country_event = {
+	id = TAK_event.14
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.14"}
+	title = TAK_event.14.t
+	desc = TAK_event.14.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.14.a
+	}
+}
+
+#roi admires charlesling
+country_event = {
+	id = TAK_event.15
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.15"}
+	title = TAK_event.15.t
+	desc = TAK_event.15.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.15.a
+	}
+}
+
+
+#roi asks roqualia for roqualium
+country_event = {
+	id = TAK_event.1000
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.1000"}
+	title = TAK_event.1000.t
+	desc = TAK_event.1000.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { #sure
+		name = TAK_event.1000.a
+		add_timed_idea = {
+			idea = cg_bonus_10
+			days = 180
+		}
+		TAK = { country_event = { id = TAK_event.1001 days = 1 } }
+	}
+
+	option = { #no
+		name = TAK_event.1000.b
+		TAK = { country_event = { id = TAK_event.1002 days = 1 } }
+	}
+}
+
+#they accept
+country_event = {
+	id = TAK_event.1001
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.1001"}
+	title = TAK_event.1001.t
+	desc = TAK_event.1001.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { #sure
+		name = TAK_event.1001.a
+		TAK_gain_3_brush = yes
+		add_political_power = -150
+		add_timed_idea = {
+			idea = cg_payment_40
+			days = 360
+		}
+	}
+}
+
+#no way kingboy
+country_event = {
+	id = TAK_event.1002
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.1002"}
+	title = TAK_event.1002.t
+	desc = TAK_event.1002.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.1002.a
+		add_political_power = 50
+	}
+}
+
+#Takicardie is infiltrating us!
+country_event = {
+	id = TAK_event.1003
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.1003"}
+	title = TAK_event.1003.t
+	desc = TAK_event.1003.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { #ultimatum!
+		name = TAK_event.1003.a
+		TAK = { country_event = { id = TAK_event.1004 days = 1 } }
+	}
+
+	option = { #whatever
+		name = TAK_event.1003.b
+	}
+}
+
+#We have been found out!
+country_event = {
+	id = TAK_event.1004
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.1004"}
+	title = TAK_event.1004.t
+	desc = TAK_event.1004.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { #War it is!
+		name = TAK_event.1004.a
+		FROM = {
+			if = {
+				limit = { is_in_faction_with = TAK }
+				if = {
+					limit = { TAK = { is_faction_leader = yes } }
+					FROM = { leave_faction = yes }
+				}
+				else = { TAK = { leave_faction = yes } }
+			}
+			declare_war_on = {
+				target = TAK
+				type = annex_everything
+			}
+		}
+	}
+
+	option = { #Dismantle them, sure...
+		name = TAK_event.1004.b
+		custom_effect_tooltip = TAK_event.1004.b.tt
+		FROM = {
+			every_owned_state = {
+				subtract_from_variable = { TAK_infiltration_level = 2 }
+				clamp_variable = {
+					var = TAK_infiltration_level
+					min = 0
+					max = 3
+				}
+			}
+		}
+	}
+}
+
+#Divisions spawn!
+country_event = {
+	id = TAK_event.1005
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.1005"}
+	title = TAK_event.1005.t
+	desc = TAK_event.1005.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = { #Oh no!
+		name = TAK_event.1005.a
+		every_controlled_state = {
+			limit = { check_variable = { TAK_infiltration_level > 0 } }
+			for_loop_effect = {
+				end = TAK_infiltration_level
+				create_unit = {
+					division = "division_template = \"Tableaux Infiltrés\" start_experience_factor = 0.5 start_equipment_factor = 1.0"
+					count = 1
+					owner = TAK
+					allow_spawning_on_enemy_provs = yes
+				}
+			}
+			set_variable = { TAK_infiltration_level = 0 }
+		}
+	}
+}

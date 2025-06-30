@@ -1,0 +1,339 @@
+TAK_painting_cat = {
+	#the roi can recruit painters
+	#each painter gives a painting power
+	#painters are listed in an array
+	#and each painter needs one brush. brushes are automatically given to the top painters.
+	#then they passively paint stuff
+	TAK_painters_make_charles = { #paint CHARLES
+		icon = GFX_decision_generic_monarchy
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_conceive_the_charlesling
+		}
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = TAK_painters_make_charles }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+
+		cost = 10
+
+		complete_effect = {
+			TAK_clear_painter_flags = yes
+			set_country_flag = TAK_painters_make_charles
+			TAK_update_painting_stats = yes
+		}
+	}
+
+	TAK_painters_make_soldiers = { #paint soldiers. it will produce a trickle of manpower and give extra mils.
+		icon = GFX_decision_eng_blackshirt_march
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_the_roqualian_form
+		}
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = TAK_painters_make_soldiers }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+
+		cost = 10
+
+		complete_effect = {
+			TAK_clear_painter_flags = yes
+			set_country_flag = TAK_painters_make_soldiers
+			TAK_update_painting_stats = yes
+		}
+	}
+
+	TAK_painters_make_propaganda = { #just paint dancers and stuff for the Roi!
+		icon = GFX_decision_eng_propaganda_campaigns
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_recruit_painters
+		}
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = TAK_painters_make_propaganda }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+
+		cost = 10
+
+		complete_effect = {
+			TAK_clear_painter_flags = yes
+			set_country_flag = TAK_painters_make_propaganda
+			TAK_update_painting_stats = yes
+		}
+	}
+
+	TAK_painters_make_war_propaganda = { #bombastic parades
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_recruit_painters
+		}
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = TAK_painters_make_war_propaganda }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+
+		cost = 10
+
+		complete_effect = {
+			TAK_clear_painter_flags = yes
+			set_country_flag = TAK_painters_make_war_propaganda
+			TAK_update_painting_stats = yes
+		}
+	}
+
+	#Recruit painters from states
+	TAK_recruit_painters_state = { #painters
+		icon = GFX_decision_SWI_swiss_democratic_tradition_campaign
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		state_target = yes
+		on_map_mode = map_only
+		target_array = controlled_states
+
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_recruit_painters
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		cost = 50
+
+		remove_effect = {
+			random_list = {
+				40 = {
+					TAK_recruit_painter_1 = yes
+					modifier = { factor = 2 FROM = { tak_is_non_artistic_species = yes } }
+					modifier = { factor = 0.5 FROM = { tak_is_artistic_species = yes } }
+				}
+				40 = { 
+					TAK_recruit_painter_3 = yes
+					modifier = { factor = 2 FROM = { tak_is_non_artistic_species = yes } }
+					modifier = { factor = 0.5 FROM = { tak_is_artistic_species = yes } }
+				}
+				20 = {
+					TAK_recruit_painter_5 = yes
+					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species = yes } }
+					modifier = { factor = 2 FROM = { tak_is_artistic_species = yes } }
+				}
+				10 = {
+					TAK_recruit_painter_10 = yes
+					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species = yes } }
+					modifier = { factor = 2 FROM = { tak_is_artistic_species = yes } }
+				}
+				5 = {
+					TAK_recruit_painter_20 = yes
+					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species = yes } }
+					modifier = { factor = 2 FROM = { tak_is_artistic_species = yes } }
+				}
+			}
+		}
+	}
+
+	#Infiltrate state
+	TAK_infiltrate_state = {
+		icon = GFX_decision_eng_trade_unions_support
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		state_target = yes
+		on_map_mode = map_only
+		target_array = TAK_possible_infiltration_states
+		target_trigger = {
+			FROM = { NOT = { is_controlled_by = TAK } }
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_perfect_imitation
+			NOT = { has_war_with = FROM.controller }
+		}
+
+		available = {
+			FROM = { check_variable = { TAK_infiltration_level < 3 } }
+			custom_trigger_tooltip = {
+				tooltip = TAK_infiltrate_state_available_tt
+				hidden_trigger = {
+					check_variable = { TAK_painting_power > 24 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		days_remove = 30
+
+		cost = 10
+
+		modifier = {
+			TAK_painting_power_usage = 25
+		}
+
+		complete_effect = {
+			add_to_variable = { TAK_painting_power_usage = 25 }
+			TAK_update_painting_stats = yes
+		}
+
+		remove_effect = {
+			subtract_from_variable = { TAK_painting_power_usage = 25 }
+			TAK_update_painting_stats = yes
+			if = {
+				limit = { has_DLC = "La Resistance" }
+				add_intel = { target = FROM.controller army_intel = 5 }
+				add_intel = {
+					target = FROM.controller
+					civilian_intel = 10
+				}
+			}
+			FROM = {
+				custom_effect_tooltip = TAK_infiltrate_state_effect_tt
+				add_to_variable = { TAK_infiltration_level = 1 }
+				#the more developed a state is, the more likely it is that this is found out
+				set_variable = { TAK_threshold_to_halve_reveal_odds = var:owner.num_core_states }
+				multiply_variable = { TAK_threshold_to_halve_reveal_odds = 10 } #if takicardie has 10 times the painting power than the nation has core states the odds are halved
+				if = {
+					limit = { check_variable = { TAK.TAK_painting_power < TAK_threshold_to_halve_reveal_odds } }
+					if = {
+						limit = { OR = { has_state_category = large_city has_state_category = metropolis has_state_category = megalopolis } }
+						random_list = {
+							10 = { var:controller = { country_event = { id = TAK_event.1003 } } }
+							90 = {}
+						}
+					}
+					else = {
+						random_list = {
+							5 = { var:controller = { country_event = { id = TAK_event.1003 } } }
+							95 = {}
+						}
+					}				
+				}
+				else = { #tak does have the right odds
+					if = {
+						limit = { OR = { has_state_category = large_city has_state_category = metropolis has_state_category = megalopolis } }
+						random_list = {
+							5 = { var:controller = { country_event = { id = TAK_event.1003 } } }
+							95 = {}
+						}
+					}
+					else = {
+						random_list = {
+							2 = { var:controller = { country_event = { id = TAK_event.1003 } } }
+							98 = {}
+						}
+					}		
+				}
+			}
+		}
+
+		cancel_trigger = {
+			has_war_with = FROM.controller
+		}
+
+		cancel_effect = {
+			subtract_from_variable = { TAK_painting_power_usage = 25 }
+		}
+	}
+
+	#Wardec
+	TAK_expand_domain = {
+		icon = GFX_decision_infiltrate_state
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = TAK_possible_wardec_targets
+
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_perfect_imitation
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		days_remove = 30
+
+		cost = 10
+
+		complete_effect = {
+			TAK_update_painting_stats = yes
+		}
+
+		remove_effect = {
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+
+		cancel_trigger = {
+			has_war_with = FROM
+		}
+	}
+}
