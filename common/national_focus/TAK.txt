@@ -5,14 +5,23 @@ focus_tree = {
 	continuous_focus_position = { x = 2700 y = 300 }
 	country = {
 		factor = 0
+		modifier = {
+			add = 10
+			tag = TAK
+			has_country_flag = TAK_charles_path
+		}
 	}
 	focus = { #roi gives an awkward speech abt greatness
 		id = TAK_address_the_people
 		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
-		x = 1
+		x = 10
 		y = 1
 		cost = 5
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = TAK_Vive_le_roi
+				add_idea = TAK_Vive_le_roi_2
+			}
 			add_political_power = 50
 			add_stability = 0.05
 		}
@@ -81,17 +90,256 @@ focus_tree = {
 			347 = {
 				add_building_construction = {
 					type = infrastructure
-					level = 1
+					level = 2
 				}
 			}
 			340 = {
 				add_building_construction = {
 					type = infrastructure
-					level = 1
+					level = 2
 				}
 			}
 		}
 	}
+	focus = { #roi encourages settlement
+		id = TAK_petites_charles
+		icon = GFX_focus_generic_road_investment
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_develop_the_peripherie
+		prerequisite = { focus = TAK_agricultural_programs }
+		prerequisite = { focus = TAK_routes_du_roi }
+		completion_reward = {
+			347 = {
+				increase_state_category = yes
+				add_manpower = 50000
+				add_victory_points = {
+					province = 11545
+					value = 4
+				}
+				add_victory_points = {
+					province = 18539
+					value = 4
+				}
+			}
+			340 = {
+				increase_state_category = yes
+				add_manpower = 50000
+				add_victory_points = {
+					province = 3676
+					value = 4
+				}
+			}
+		}
+	}
+	focus = { #roi makes dockyards in tak
+		id = TAK_develop_tak
+		icon = GFX_focus_generic_refit_civilian_ships
+		x = -1
+		y = 2
+		cost = 5
+		relative_position_id = TAK_petites_charles
+		prerequisite = { focus = TAK_petites_charles }
+		completion_reward = {
+			347 = {
+				increase_state_category = yes
+				add_manpower = 50000
+				add_building_construction = {
+					type = dockyard
+					level = 2
+				}
+				add_victory_points = {
+					province = 11545
+					value = 5
+				}
+			}
+		}
+	}
+	focus = { #flotte du roi
+		id = TAK_flotte_du_roi
+		icon = GFX_focus_generic_navy_battleship2
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_develop_tak
+		prerequisite = { focus = TAK_develop_tak }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = naval_equipment
+				bonus = 1
+			}
+			349 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+				}
+			}
+			navy_experience = 50
+		}
+	}
+	focus = { #big guns
+		id = TAK_des_gros_cannons
+		icon = GFX_focus_SWE_let_fly_all_guns
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_flotte_du_roi
+		prerequisite = { focus = TAK_flotte_du_roi }
+		completion_reward = {
+			add_ideas = TAK_des_gros_cannons
+			navy_experience = 25
+		}
+	}
+	focus = { #big boats
+		id = TAK_des_gros_vaisseaux
+		icon = GFX_goal_generic_navy_battleship
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_flotte_du_roi
+		prerequisite = { focus = TAK_flotte_du_roi }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = bb_tech
+				bonus = 1
+			}
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = shbb_tech
+				bonus = 1
+				ahead_reduction = 1
+			}	
+			navy_experience = 25
+		}
+	}
+	focus = { #superheavy bb
+		id = TAK_lay_down_the_charles
+		icon = GFX_focus_generic_navy_research_bonus
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_flotte_du_roi
+		prerequisite = { focus = TAK_des_gros_vaisseaux }
+		prerequisite = { focus = TAK_des_gros_cannons }
+		completion_reward = {
+			add_manpower = -10000
+			349 = {
+				add_resource = {
+					type = steel
+					amount = -10
+				}
+			}
+			add_timed_idea = {
+				idea = cg_payment_40
+				days = 180
+			}
+			add_equipment_production = {
+				equipment = {
+					type = SH_battleship_2
+					creator = "TAK" 
+					version_name = "Charles Class"
+				}
+				requested_factories = 1
+				progress = 0.60
+				amount = 1
+			}
+			navy_experience = 50
+		}
+	}
+	focus = { #roi makes mils in ikar
+		id = TAK_develop_ikar
+		icon = GFX_focus_generic_military_industry
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = TAK_petites_charles
+		prerequisite = { focus = TAK_petites_charles }
+		completion_reward = {
+			347 = {
+				increase_state_category = yes
+				add_manpower = 50000
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+				add_victory_points = {
+					province = 18539
+					value = 5
+				}
+			}
+		}
+	}
+	focus = { #roi makes civs in die
+		id = TAK_develop_die
+		icon = GFX_focus_NORDIC_com_capstone_civilian
+		x = 1
+		y = 2
+		cost = 5
+		relative_position_id = TAK_petites_charles
+		prerequisite = { focus = TAK_petites_charles }
+		completion_reward = {
+			340 = {
+				increase_state_category = yes
+				add_manpower = 50000
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+				add_victory_points = {
+					province = 3676
+					value = 5
+				}
+			}
+		}
+	}
+	focus = { #roi turns the countryside into mines
+		id = TAK_mines_du_roi
+		icon = GFX_focus_CONGO_bakwanga_mine
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_develop_ikar
+		prerequisite = { focus = TAK_develop_ikar focus = TAK_develop_die }
+		completion_reward = {
+			347 = {
+				add_manpower = -10000
+				add_resource = {
+					type = tungsten
+					amount = 20
+				}
+			}
+			340 = {
+				add_manpower = -10000
+				add_resource = {
+					type = chromium
+					amount = 20
+				}
+			}
+		}
+	}
+
+	focus = { #roi builds houses for his painting people
+		id = TAK_bulk_housing
+		icon = GFX_focus_SWE_urbanization
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_develop_die
+		prerequisite = { focus = TAK_develop_die }
+		completion_reward = {
+			349 = { increase_state_category = yes }
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = construction_tech
+				bonus = 2
+			}
+		}
+	}
+
 	focus = { #roi tries to find out what exactly makes the portraits come to life
 		id = TAK_figure_it_out
 		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
@@ -101,6 +349,17 @@ focus_tree = {
 		relative_position_id = TAK_address_the_people
 		prerequisite = {
 			focus = TAK_address_the_people
+		}
+		completion_reward = {
+			set_variable = { TAK_stability_weekly_per_painting_power = 0.00001 }
+			set_variable = { TAK_war_support_weekly_per_painting_power = 0.00001 }
+			set_variable = { TAK_military_factory_donations_per_painting_power = 0.1 }
+			set_variable = { TAK_weekly_manpower_per_painting_power = 10 }
+			set_variable = { TAK_brush_count = 3 }
+			set_country_flag = TAK_painters_make_propaganda
+			add_dynamic_modifier = { modifier = TAK_painting_output }
+			TAK_recruit_painter_1 = yes
+			TAK_gain_3_brush = yes
 		}
 	}
 	focus = { #roi sets up dedicated buildings for the paintings to be painted in
@@ -113,6 +372,9 @@ focus_tree = {
 		prerequisite = {
 			focus = TAK_figure_it_out
 		}
+		completion_reward = {
+			TAK_gain_1_brush = yes
+		}
 	}
 	focus = { #roi recruits painters, unlocks decisions to recruit royal painters that will paint paintings
 		id = TAK_recruit_painters
@@ -123,6 +385,12 @@ focus_tree = {
 		relative_position_id = TAK_figure_it_out
 		prerequisite = {
 			focus = TAK_figure_it_out
+		}
+
+		completion_reward = {
+			TAK_recruit_painter_10 = yes
+			TAK_recruit_painter_5 = yes
+			TAK_recruit_painter_5 = yes
 		}
 	}
 	focus = { #for a painting to come to life the painters must understand what they are painting, so lets get some research going
@@ -180,6 +448,67 @@ focus_tree = {
 			}
 		}
 	}
+
+
+	focus = { #roqualium brush
+		id = TAK_scrounge_for_roqualium
+		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = TAK_painter_education }
+		prerequisite = { focus = TAK_learn_about_it_all }
+		relative_position_id = TAK_painter_education
+		completion_reward = {
+			add_stability = -0.20
+			TAK_gain_2_brush = yes
+			349 = {
+				add_manpower = -100000
+				remove_building = {
+					type = infrastructure
+					level = 1
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+			}
+		}
+	}
+
+	focus = { #roqualium brush
+		id = TAK_scrounge_for_roqualium_harder
+		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = TAK_scrounge_for_roqualium }
+		relative_position_id = TAK_scrounge_for_roqualium
+		completion_reward = {
+			add_stability = -0.40
+			TAK_gain_2_brush = yes
+			349 = {
+				add_manpower = -200000
+				remove_building = {
+					type = infrastructure
+					level = 2
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+			}
+		}
+	}
+
 	focus = { #study the roqualian body to make proper soldiers
 		id = TAK_the_roqualian_form
 		icon = GFX_focus_CHL_departemento_de_las_tropas_nacistas_de_asalto
@@ -232,6 +561,204 @@ focus_tree = {
 		prerequisite = { focus = TAK_officially_open_up }
 		relative_position_id = TAK_officially_open_up
 		completion_reward = {
+			ROQ = { country_event = { id = TAK_event.1000 days = 1 } }
+			custom_effect_tooltip = lok_needs_approval
+			show_ideas_tooltip = cg_payment_40
+			TAK_gain_4_brush = yes
+		}
+	}
+
+	focus = { #buy painters from anyone
+		id = TAK_recruit_the_best
+		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = { focus = TAK_roqualium_purchase focus = TAK_a_royal_voyage }
+		relative_position_id = TAK_officially_open_up
+		completion_reward = {
+		}
+	}
+
+	focus = { #roi designs the ideal "painting citizen" to mass produce
+		id = TAK_conceive_the_charlesling
+		icon = GFX_focus_SWE_urbanization
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = TAK_recruit_the_best
+		prerequisite = { focus = TAK_recruit_the_best }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = TAK_perfect_imitation_available
+				check_variable = { TAK_painting_power > 100 }
+			}
+		}
+		completion_reward = {
+			set_variable = { TAK_painting_charles_count = 0 }
+			set_variable = { TAK_painting_charles_weekly_per_painting_power = 5 } #you can't rush his glorious form
+		}
+	}
+
+	focus = { #roi learns to perfectly copy people
+		id = TAK_perfect_imitation
+		icon = GFX_focus_SWE_urbanization
+		x = 2
+		y = 1
+		cost = 10
+		relative_position_id = TAK_recruit_the_best
+		prerequisite = { focus = TAK_recruit_the_best }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = TAK_perfect_imitation_available
+				check_variable = { TAK_painting_power > 100 }
+			}
+		}
+		completion_reward = {
+			division_template = {
+				name = "Tableaux Infiltrés"
+				regiments = {
+					militia = { x = 0 y = 0 }
+					militia = { x = 0 y = 1 }
+					militia = { x = 0 y = 2 }
+					militia = { x = 1 y = 0 }
+					militia = { x = 1 y = 1 }
+					militia = { x = 1 y = 2 }
+					militia = { x = 2 y = 0 }
+					militia = { x = 2 y = 1 }
+					militia = { x = 2 y = 2 }
+				}
+			}
+			set_variable = { TAK_painting_charles_count = 0 }
+			set_variable = { TAK_painting_charles_weekly_per_painting_power = 5 } #you can't rush his glorious form
+		}
+	}
+
+	focus = { #prepare to fight alkroa
+		id = TAK_alkroa_wargoal
+		icon = GFX_focus_SWE_urbanization
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = TAK_perfect_imitation
+		prerequisite = { focus = TAK_perfect_imitation }
+		bypass = {
+			NOT = { country_exists = ALK }
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_alkroa_wargoal_effect
+			ALK = {
+				every_core_state = {
+					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+				}
+			}
+		}
+	}
+
+	focus = { #prepare to fight aurelia
+		id = TAK_aurelia_wargoal
+		icon = GFX_focus_SWE_urbanization
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = TAK_perfect_imitation
+		prerequisite = { focus = TAK_perfect_imitation }
+		bypass = {
+			NOT = { country_exists = SPQ }
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_aurelia_wargoal_effect
+			SPQ = {
+				every_core_state = {
+					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+				}
+			}
+		}
+	}
+
+	focus = { #prepare to fight quepler
+		id = TAK_quepler_wargoal
+		icon = GFX_focus_SWE_urbanization
+		x = 2
+		y = 2
+		cost = 5
+		relative_position_id = TAK_perfect_imitation
+		prerequisite = { focus = TAK_aurelia_wargoal focus = TAK_alkroa_wargoal }
+		bypass = {
+			NOT = { country_exists = KEP }
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_quepler_wargoal_effect
+			KEP = {
+				every_core_state = {
+					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+				}
+			}
+		}
+	}
+
+	focus = { #prepare to fight solaria
+		id = TAK_solaria_wargoal
+		icon = GFX_focus_SWE_urbanization
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_perfect_imitation
+		prerequisite = { focus = TAK_aurelia_wargoal focus = TAK_alkroa_wargoal }
+		bypass = {
+			NOT = { country_exists = SLR }
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_solaria_wargoal_effect
+			SLR = {
+				every_core_state = {
+					add_to_array = { array = TAK.TAK_possible_infiltration_states }
+				}
+			}
+		}
+	}
+
+	focus = { #prepare to fight roqualia
+		id = TAK_roqualia_wargoal
+		icon = GFX_focus_SWE_urbanization
+		x = 1
+		y = 3
+		cost = 5
+		relative_position_id = TAK_perfect_imitation
+		prerequisite = { focus = TAK_solaria_wargoal focus = TAK_quepler_wargoal }
+		completion_reward = {
+			set_variable = { TAK_painting_charles_count = 0 }
+			set_variable = { TAK_painting_charles_weekly_per_painting_power = 5 } #you can't rush his glorious form
+		}
+	}
+
+	focus = { #fill charles with clones of charles
+		id = TAK_the_new_charles
+		icon = GFX_focus_SWE_urbanization
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_conceive_the_charlesling
+		prerequisite = { focus = TAK_conceive_the_charlesling }
+		prerequisite = { focus = TAK_bulk_housing }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = TAK_the_new_charles_trigger
+				check_variable = { TAK_painting_charles_count > 499999 }
+			}
+		}
+		completion_reward = {
+			subtract_from_temp_variable = { TAK_painting_charles_count = 500000 }
+			add_stability = 0.10
+			add_political_power = 150
+			349 = {
+				add_manpower = 500000
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = industrial_complex
+					level = 4
+				}
+			}
 		}
 	}
 }
