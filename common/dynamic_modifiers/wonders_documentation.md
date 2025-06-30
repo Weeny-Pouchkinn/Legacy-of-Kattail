@@ -3,8 +3,25 @@
 
 ## Table of Contents
 * [Adding New Wonders](#guide-to-adding-new-wonders-)
+  * [Step 1 - Defining Wonders Modifiers](#step-1---defining-the-wonders-modifiersbackend)
+  * [Step 2 - Adding Localization](#step-2---adding-localization)
+  * [Step 3 - Adding Graphics](#step-3---adding-graphics)
+    * [Part 1 - Making the Icon](#part-1---making-the-icon)
+    * [Part 2 - Implementing The Icon](#part-2---implementing-the-icon)
 * [List of Modifers](#list-of-modifiers)
+  * [Adding New Modifiers](#adding-new-modifiers)
+    * [Step 1 - Updating the Array Backend Code](#step-1-updating-the-array-backend-code)
+    * [Step 2 - Updating the Dynamic Modifier Itself](#step-2---updating-the-dynamic-modifier-itself)
+    * [Step 3 - Updating the State Tooltip Localization](#step-3---updating-the-state-tooltip-scripted-localisation-)
+      * [Part 1 - Creating the New Scripted Loc Code](#part-1---creating-the-new-scripted-loc-code)
+      * [Part 2 - Defining the Loc for the Modifier](#part-2---defining-the-loc-for-the-modifier)
+      * [Part 3 - Adding them to the Modifier Block Loc-Key](#part-3---adding-them-to-the-modifier-block-loc-key)
 * [Current Wonders](#current-wonders)
+* [The Wonder Output Modifier, Adding New Modifiers Midgame and Adding Wonders Midgame](#the-wonder-output-modifier-adding-new-modifiers-midgame-and-adding-new-wonders-midgame)
+  * [The Wonder Output Modifier](#the-wonder-output-modifier)
+  * [Adding New Modifiers Midgame](#adding-new-modifiers-midgame)
+  * [Adding New Wonders Midgame](#adding-new-wonders-midgame)
+* [Documentation Notes](#documentation-notes)
 
 ## Guide to Adding New Wonders 
 Wonder implementation is done in three steps 
@@ -134,23 +151,23 @@ Adding new modifiers is a somewhat more complicated process but very modular. It
 2. Updating the Dynamic Modifier Itself
 3. Updating Scripted Localisation
 
-#### Step 1. Updating the Array Backend Code
+#### Step 1 - Updating the Array Backend Code
 So, thanks to Scripted Effects you only need to update 1 scripted Variable, thats it!.
 
 Head to [LOK_scripted_effects.txt](../scripted_effects/LOK_scripted_effects.txt) and search for the Variable <b><i>@wonder_modifier_count</i></b>. Once you've found this variable, update it to the <b>new</b> amount of Modifiers, this will be whatever the latest id is + 1 (due to modifier 0). Once this is done, all the other scripts will reference it for how large to set their modifier arrays to.
 
-#### Step 2. Updating the Dynamic Modifier Itself.
+#### Step 2 - Updating the Dynamic Modifier Itself.
 For your new modifier to even have any effect, it must be added to the actual national spirit modifier <B><I>"lok_wonder_modifier"</I></B> found in [LOK_dynamic_modifiers.txt](./LOK_dynamic_modifiers.txt).
 
 simply add your desired modifier string and then set it to equal <B>"wonder_modifier_values^\<MODIFIER_ID>"</B> where \<MODIFIER_ID> is the Array index assigned to your new modifier(s) when you expanded the arrays in Step 1.
 
-#### Step 3. Updating the State Tooltip Scripted Localisation 
+#### Step 3 - Updating the State Tooltip Scripted Localisation 
 Now there are three parts to this step.
 1. Creating the New Scripted Loc code
 2. Defining the Loc for the Modifier
 2. Adding them to the Modifier Block Loc-Key
 
-##### Part 1. Creating the New Scripted Loc Code
+##### Part 1 - Creating the New Scripted Loc Code
 For this step you need to head to [LOK_wonder_scripted_loc.txt](../scripted_localisation/LOK_wonder_scripted_loc.txt). Once here, head to the bottom of the file and add the following code
 ```paradox_script
 defined_text = {
@@ -170,7 +187,7 @@ defined_text = {
 ```
 Like before, \<MODIFIER_ID> is the index assigned to your new modifier. All three of the replace keys in this block need to be swapped out for the id. The purpose of this block is to check if the Modifier actually has a value differnt to 0 (and therefore is being used) and if so, show a the modifier loc key and not an empty string ("wonder_effects_NA")
 
-##### Part 2. Defining the Loc for the Modifier
+##### Part 2 - Defining the Loc for the Modifier
 Both parts 2 and 3 are located in [wonder_l_english.yml](../../localisation/english/wonders_l_english.yml)
 
 There is a large block of loc keys starting with <b>"wonder_modifiers_x"</b>, you will want to paste the following string
@@ -217,7 +234,7 @@ Which will render as (for sake of the example the value of THIS.wonder_modifiers
 
 With this all done, simply place it alongside the others in the loc file and you're good to move onto <b>part 3</b>
 
-##### Part 3: Adding them to the Modifier Block Loc-Key
+##### Part 3 - Adding them to the Modifier Block Loc-Key
 This is a simple part. Simply take the "wonder_modifier_x_scripted" part from the defined text made in part 1 and paste it within \[brackets\] at the end of the "wonder_effects_tooltips" loc key, like the others before it with NO space between.
 
 Now, the modifier will show up properly in the state tooltip.
@@ -261,7 +278,7 @@ Adding new modifiers or updating existing modifiers for a wonder midgame is an i
 ```
 <b>\<MODIFIER_ID>:</b> simply relates to the id of the modifier you want, found in [List of Modifiers](#list-of-modifiers)
 <b>\<VALUE>:</b> refers to the value your modifier would have, please keep in mind the Precision of the modifier (Also found in [List of Modifiers](#list-of-modifiers))  
-### Adding New Wonders Midgames
+### Adding New Wonders Midgame
 > <B>THIS DOES NOT COVER CREATION OF NEW WONDERS ENTIRELY! ONLY HOW TO IMPLEMENT PRE-CODED WONDERS TO STATES VIA SCRIPT!</B>
 > 
 > <I>For how to add a new wonder into the Code, see [Adding New Wonders](#guide-to-adding-new-wonders-)</I>
