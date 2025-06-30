@@ -17,10 +17,13 @@
       * [Part 2 - Defining the Loc for the Modifier](#part-2---defining-the-loc-for-the-modifier)
       * [Part 3 - Adding them to the Modifier Block Loc-Key](#part-3---adding-them-to-the-modifier-block-loc-key)
 * [Current Wonders](#current-wonders)
-* [The Wonder Output Modifier, Adding New Modifiers Midgame and Adding Wonders Midgame](#the-wonder-output-modifier-adding-new-modifiers-midgame-and-adding-new-wonders-midgame)
+* [The Wonder Output Modifier, Adding New Modifiers Midgame and Adding Wonders Midgame](#the-wonder-output-modifier-adding-newupdating-modifiers-midgame-and-adding-new-wonders-midgame)
   * [The Wonder Output Modifier](#the-wonder-output-modifier)
-  * [Adding New Modifiers Midgame](#adding-new-modifiers-midgame)
+  * [Adding New Modifiers Midgame](#adding-newupdating-modifiers-midgame)
   * [Adding New Wonders Midgame](#adding-new-wonders-midgame)
+* [Removing Wonders and Modifiers](#removing-wonders-and-modifiers)
+  * [Removing Wonders](#removing-wonders)
+  * [Removing Modifiers](#removing-modifiers)
 * [Documentation Notes](#documentation-notes)
 
 ## Guide to Adding New Wonders 
@@ -259,7 +262,7 @@ And with that, its all done! your new modifier has been added
 |    13     | Grüyettburg Pharmaceutics    |  131  |            LIO            |
 |    14     | Unterflusionian Monument     |  602  |            NEU            |
 
-## The Wonder Output Modifier, Adding New Modifiers Midgame and Adding New Wonders Midgame
+## The Wonder Output Modifier, Adding New/Updating Modifiers Midgame and Adding New Wonders Midgame
 To begin with, any time a wonders modifier is updated by script ingame, its recommended you run the "apply_wonder_effects" scripted effect on the scope of whoever controls the state with the wonder in it. This would look like
 ```paradox_script
 <STATE_ID>.contoller = { apply_wonder_effects = yes } 
@@ -267,7 +270,7 @@ To begin with, any time a wonders modifier is updated by script ingame, its reco
 This will immediately apply the effects of the wonder to the proper country (the controller of the wonder state).
 ### The Wonder Output Modifier
 As of current theres a simple modifier dubbed "lok_wonder_output_mult" that can be added to a country via national spirits and such. The modifier allows up to 2 decimal precision and is added onto 1 and used as a multiplier in the calculator for the Wonder output. It works without issue
-### Adding New Modifiers Midgame
+### Adding new/Updating Modifiers Midgame
 Adding new modifiers or updating existing modifiers for a wonder midgame is an incredibly easy process, you simply need to scope to the state with the wonder and do the following
 ```paradox_script
 <STATE_ID> = { 
@@ -300,6 +303,11 @@ Midgame Wonder implementation is fairly simple to do via script. Code for it wil
 <b>\<WONDER_ID>:</b> The ID of your Wonder, refer to the [List of Wonders](#current-wonders)<br>
 <b>\<WONDER_MODIFIER_ID_X>:</b> The Index ID of the Modifier you wish to use in the Wonder, refer to the [List of Modifiers](#list-of-modifiers)<br>
 <b>\<WONDER_VALUE_X>:</b> The value you wish your modifier to have, please keep in mind the Precision of the modifier (Also found in [List of Modifiers](#list-of-modifiers))
+## Removing Wonders and Modifiers
+### Removing Wonders
+Wonders can be removed much easier than they are added, simply run the "remove_wonder" effect on the state with the wonder (or relative state effect scope should you wish to affect multiple!) and the wonder will disappear
+### Removing Modifiers
+For Removing modifiers, simply follow the same procedure as [Updating a Modifier](#adding-newupdating-modifiers-midgame) but set the value to 0
 ## Documentation Notes
 As mentioned at the start, this Documentation used markdown formatting and is maintained by yours truly, DecentNameHere. Should you as a contributor add more wonders or modifiers i ask that you either ping me on the LOK mod discord or, if you are confident in adding with the Markdown format in this file, update the tables yourselves.
 Additionally, if any further clarification is needed on how to use 
