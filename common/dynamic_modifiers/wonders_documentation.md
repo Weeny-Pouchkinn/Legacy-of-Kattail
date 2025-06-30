@@ -65,7 +65,7 @@ and turn it into this! (Example using the Katown Pyramid)
 just replace \<WONDER_ID> with your Wonder ID (Duh!), \<WONDER_NAME> with the name of your Wonder and \<WONDER_DESC> with its description 
 
 And thats it, all other localisation is handled by the scripted localisation modifer bloc and (\$wonder_effects_tooltips$) and doesnt need extra help
-> If you are following this and adding new modifiers, dont worry, that part will be covered in the [Adding New Modifiers](#adding-new-modifiers) Section
+> If you are following this and adding new modifiers, dont worry, new modifier related loc will be covered in the [Adding New Modifiers](#adding-new-modifiers) Section
 
 ### Step 3 - Adding Graphics
 There are two main parts to this step, making the icon, and implementing it.
@@ -93,6 +93,40 @@ Simply past this code beneath the bottommost spriteType in the file (but before 
 
 Once you've done this, you're sorted! your Wonder should be ready to go!.
 ## List of Modifiers
+| ID | Modifier Name                      | Modifier String                           | Decimals Accepted | Higher = Positive/Negative |
+|----|------------------------------------|-------------------------------------------|-------------------|----------------------------|
+| 0  | Required Garrisons                 | required_garrison_factor                  | 0                 | Negative                   |
+| 1  | Max planning                       | max_planning                              | 1                 | Positive                   |
+| 2  | Army Organization Regain           | army_org_regain                           | 2                 | Positive                   |
+| 3  | Division Organization              | army_org_factor                           | 1                 | Positive                   |
+| 4  | Compliance Growth Speed            | compliance_growth                         | 0                 | Positive                   |
+| 5  | Production Efficiency growth       | production_factory_efficiency_gain_factor | 2                 | Positive                   |
+| 6  | Heavy Tank Unit Design Cost        | unit_heavy_armor_design_cost_factor       | 2                 | Negative                   |
+| 7  | Ship Refitting Speed               | refit_speed                               | 0                 | Positive                   |
+| 8  | Air Mission Efficiency             | air_mission_efficiency                    | 1                 | Positive                   |
+| 9  | Air Range                          | air_range_factor                          | 2                 | Positive                   |
+| 10 | Trade deal opinion factor          | trade_opinion_factor                      | 2                 | Positive                   |
+| 11 | Consumer Goods Factories factor    | consumer_goods_factor                     | 2                 | Negative                   |
+| 12 | Research Speed                     | research_speed_factor                     | 2                 | Positive                   |
+| 13 | Leader Skill Bonuses               | skill_bonus_factor                        | 1                 | Positive                   |
+| 14 | Stability                          | stability_factor                          | 2                 | Positive                   |
+| 15 | Encryption                         | encryption_factor                         | 2                 | Positive                   |
+| 16 | Decryption                         | decryption_factor                         | 2                 | Positive                   |
+| 17 | Mineral Resources Production       | lok_mineral_resources_factor              | 2                 | Positive                   |
+| 18 | Weekly Manpower                    | weekly_manpower                           | 0                 | Positive                   |
+| 19 | Railway construction speed         | production_speed_rail_way_factor          | 2                 | Positive                   |
+| 20 | Infrastructure construction speed  | production_speed_infrastructure_factor    | 2                 | Positive                   |
+| 21 | Supply Range                       | supply_node_range                         | 0                 | Positive                   |
+| 22 | Food                               | country_resource_food                     | 0                 | Positive                   |
+| 23 | Daily Political Power Gain         | political_power_gain                      | 2                 | Positive                   |
+| 24 | Political Power Gain               | political_power_factor                    | 2                 | Positive                   |
+| 25 | Industrial Factory Donations       | industrial_factory_donations              | 0                 | Positive                   |
+| 26 | Planning Speed                     | planning_speed                            | 1                 | Positive                   |
+| 27 | Monthly Population                 | monthly_population                        | 1                 | Positive                   |
+| 28 | Recruitable Population             | recruitable_population_factor             | 2                 | Positive                   |
+| 29 | Daily Support for Unaligned        | neutrality_drift                          | 2                 | Positive                   |
+| 30 | Daily Fascism Support              | fascism_drift                             | 2                 | Positive                   |
+| 31 | Resistance Activity Chance         | resistance_activity                       | 1                 | Negative                   |
 
 ### Adding New Modifiers
 
