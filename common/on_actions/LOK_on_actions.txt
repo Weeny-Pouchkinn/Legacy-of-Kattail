@@ -1710,54 +1710,9 @@ on_actions = {
 					ROOT = { tag = ACR }
 					FROM = { tag = FOD }
 				}
-				KKN = {
-					every_character = {
-						add_to_temp_array = { KKN_character_list = token:this }
-						for_each_loop = {
-							array = KKN_character_list
-							index = i
-							value = v
-							break = break
-							set_variable = { character_token_var = v }
-							meta_effect = {
-								TEXT = { retire_character = [CHARACTER_TOKEN] }
-								CHARACTER_TOKEN = "[?character_token_var]"
-							}
-						}
-					}
-				}
-				FOD = {
-					every_character = {
-						add_to_temp_array = { FOD_character_list = token:this }
-						for_each_loop = {
-							array = FOD_character_list
-							index = i
-							value = v
-							break = break
-							set_variable = { character_token_var = v }
-							meta_effect = {
-								TEXT = { retire_character = [CHARACTER_TOKEN] }
-								CHARACTER_TOKEN = "[?character_token_var]"
-							}
-						}
-					}
-				}
-				TEM = {
-					every_character = {
-						add_to_temp_array = { TEM_character_list = token:this }
-						for_each_loop = {
-							array = TEM_character_list
-							index = i
-							value = v
-							break = break
-							set_variable = { character_token_var = v }
-							meta_effect = {
-								TEXT = { retire_character = [CHARACTER_TOKEN] }
-								CHARACTER_TOKEN = "[?character_token_var]"
-							}
-						}
-					}
-				}
+				KKN = { retire_all_characters = yes }
+				FOD = { retire_all_characters = yes }
+				TEM = { retire_all_characters = yes }
 				ACR = { annex_country = { target = KKN } }
 				ACR = { annex_country = { target = FOD } }
 				ENO = { annex_country = { target = TEM } }

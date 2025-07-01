@@ -1861,3 +1861,21 @@ generate_generic_small_katzen_portrait = {
 		1 = { set_leader_portrait = GFX_portrait_katzen_generic_20_small }
 	}
 }
+
+#Country Scope
+retire_all_characters = {
+	every_character = {
+		add_to_temp_array = { temp_character_list = token:this }
+		for_each_loop = {
+			array = temp_character_list
+			index = i
+			value = v
+			break = break
+			set_variable = { character_token_var = v }
+			meta_effect = {
+				TEXT = { retire_character = [CHARACTER_TOKEN] }
+				CHARACTER_TOKEN = "[?character_token_var]"
+			}
+		}
+	}
+}
