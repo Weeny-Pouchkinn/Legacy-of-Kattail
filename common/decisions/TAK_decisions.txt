@@ -184,6 +184,118 @@ TAK_painting_cat = {
 		}
 	}
 
+	TAK_deploy_charleslings = { #pacify with charles
+		icon = GFX_decision_generic_monarchy
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		state_target = yes
+		on_map_mode = map_only
+		target_array = controlled_states
+
+		target_trigger = {
+			FROM = { NOT = { is_core_of = TAK } }
+		}
+
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_charlesling_vanguard
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_5000_painting_charles
+				hidden_trigger = {
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		cost = 25
+
+		days_remove = 30
+
+		complete_effect = {
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
+		}
+
+		remove_effect = {
+			set_temp_variable = { TAK_painting_charles_change = 4500 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
+			FROM = {
+				add_compliance = 10
+				add_resistance = -10
+				add_resistance_target = -10
+			}
+		}
+	}
+
+
+	TAK_recruit_painters_country = { #painters from country
+		icon = GFX_decision_SWI_swiss_democratic_tradition_campaign
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = TAK_possible_country_painter_purchases
+
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_recruit_the_best
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		cost = 50
+
+		remove_effect = {
+			random_list = {
+				40 = {
+					TAK_recruit_painter_1 = yes
+					modifier = { factor = 2 FROM = { tak_is_non_artistic_species_country = yes } }
+					modifier = { factor = 0.5 FROM = { tak_is_artistic_species_country = yes } }
+				}
+				40 = { 
+					TAK_recruit_painter_3 = yes
+					modifier = { factor = 2 FROM = { tak_is_non_artistic_species_country = yes } }
+					modifier = { factor = 0.5 FROM = { tak_is_artistic_species_country = yes } }
+				}
+				20 = {
+					TAK_recruit_painter_5 = yes
+					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species_country = yes } }
+					modifier = { factor = 2 FROM = { tak_is_artistic_species_country = yes } }
+				}
+				10 = {
+					TAK_recruit_painter_10 = yes
+					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species_country = yes } }
+					modifier = { factor = 2 FROM = { tak_is_artistic_species_country = yes } }
+				}
+				5 = {
+					TAK_recruit_painter_20 = yes
+					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species_country = yes } }
+					modifier = { factor = 2 FROM = { tak_is_artistic_species_country = yes } }
+				}
+			}
+		}
+	}
+
+
 	#Infiltrate state
 	TAK_infiltrate_state = {
 		icon = GFX_decision_eng_trade_unions_support
@@ -334,6 +446,940 @@ TAK_painting_cat = {
 
 		cancel_trigger = {
 			has_war_with = FROM
+		}
+	}
+}
+
+lok_peace_decisions_cat = {
+	TAK_quepler_puppet = {
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 804
+				state = 396
+				state = 364
+				state = 1016
+				state = 1017
+				state = 358
+				state = 806
+				state = 421
+				state = 425
+				state = 825
+				state = 826
+				state = 827
+				state = 828
+				state = 829
+			}
+		}
+
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_quepler_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_quepler_domain_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = KEP
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_quepler_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_KEP_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_quepler_charlesling_leader
+								name = TAK_quepler_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_quepler_charlesling_leader }
+								set_portraits = {
+									character = TAK_quepler_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_quepler_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+	TAK_salt_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 805
+				state = 370
+				state = 1025
+				state = 1023
+				state = 1017
+				state = 1016
+				state = 1024
+				state = 1022
+				state = 1018
+				state = 1019
+				state = 383
+				state = 1020
+				state = 964
+				state = 365
+			}
+		}
+	
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_salt_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_salt_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = KEP
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_salt_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_SALT_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_salt_charlesling_leader
+								name = TAK_salt_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_salt_charlesling_leader }
+								set_portraits = {
+									character = TAK_salt_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_salt_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	TAK_south_solaria_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 356
+				state = 1013
+				state = 363
+				state = 1021
+				state = 1014
+				state = 844
+				state = 354
+				state = 843
+				state = 1015
+				state = 1273
+			}
+		}
+		
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_south_solaria_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_south_solaria_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = SLR
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_south_solaria_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_SOUTH_SOLARIA_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_south_solaria_charlesling_leader
+								name = TAK_south_solaria_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_south_solaria_charlesling_leader }
+								set_portraits = {
+									character = TAK_south_solaria_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_south_solaria_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	TAK_north_solaria_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 820
+				state = 273
+				state = 328
+				state = 327
+				state = 821
+				state = 819
+				state = 271
+				state = 313
+				state = 269
+				state = 264
+				state = 273
+				state = 818
+			}
+		}
+		
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_north_solaria_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_north_solaria_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = SLR
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_north_solaria_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_NORTH_SOLARIA_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_north_solaria_charlesling_leader
+								name = TAK_north_solaria_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_north_solaria_charlesling_leader }
+								set_portraits = {
+									character = TAK_north_solaria_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_north_solaria_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	TAK_midi_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 325
+				state = 722
+				state = 303
+				state = 741
+			}
+		}
+		
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_midi_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_midi_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = ROQ
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_midi_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_MIDI_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_midi_charlesling_leader
+								name = TAK_midi_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_midi_charlesling_leader }
+								set_portraits = {
+									character = TAK_midi_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_midi_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	TAK_roqual_frontier_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 260
+				state = 744
+				state = 299
+				state = 301
+				state = 272
+				state = 293
+				state = 256
+				state = 740
+				state = 245
+			}
+		}
+		
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_roqual_frontier_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_roqual_frontier_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = LMB
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_roqual_frontier_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_ROQUAL_FRONTIER_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_roqual_frontier_charlesling_leader
+								name = TAK_roqual_frontier_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_roqual_frontier_charlesling_leader }
+								set_portraits = {
+									character = TAK_roqual_frontier_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_roqual_frontier_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	TAK_lutecie_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 320
+			}
+		}
+		
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_katzen_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_lutecie_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = ROQ
+					set_temp_variable = { new_country = this }
+					320 = { transfer_state_to = var:new_country add_core_of = var:new_country }
+
+					TAK = {
+						set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet }
+					}
+					var:new_country = {
+						set_capital = {
+							state = 320
+						}
+						set_cosmetic_tag = TAK_LUTECIE_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_lutecie_charlesling_leader
+								name = TAK_lutecie_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_lutecie_charlesling_leader }
+								set_portraits = {
+									character = TAK_lutecie_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_lutecie_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}				
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	TAK_bocerie_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 723
+				state = 739
+				state = 743
+				state = 307
+				state = 297
+				state = 281
+				state = 278
+				state = 719
+				state = 742
+				state = 258
+			}
+		}
+
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_bocerie_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_bocerie_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = LMB
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_bocerie_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_BOCERIE_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_bocerie_charlesling_leader
+								name = TAK_bocerie_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_bocerie_charlesling_leader }
+								set_portraits = {
+									character = TAK_bocerie_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_bocerie_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
+
+	TAK_katzen_puppet = {
+
+		icon = GFX_decision_generic_monarchy
+
+		days_remove = 0
+		fire_only_once = yes
+
+		visible = {
+			tag = TAK
+			OR = {
+				has_completed_focus = TAK_charles_puppets
+				has_completed_focus = TAK_native_puppets
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 238
+				state = 254
+				state = 255
+				state = 236
+				state = 730
+				state = 244
+				state = 242
+				state = 231
+				state = 716
+				state = 225
+				state = 229
+				state = 715
+				state = 717
+				state = 716
+				state = 218
+				state = 512
+				state = 514
+				state = 191
+				state = 510
+				state = 213
+				state = 192
+			}
+		}
+		
+		available = {
+			if = {
+				limit = { has_completed_focus = TAK_charles_puppets }
+				custom_trigger_tooltip = {
+					tooltip = TAK_need_5000_painting_charles
+					check_variable = { TAK_painting_charles_count > 4999 }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = LOK_controls_state_in_highlighted_area
+				any_owned_state = {
+					is_in_array = {
+						array = TAK.TAK_katzen_puppet_cores
+						value = THIS
+					}	
+				}
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_katzen_puppet_tt
+			hidden_effect = {
+				create_dynamic_country = {
+					original_tag = FSR
+					set_temp_variable = { new_country = this }
+					for_each_scope_loop = {
+						array = TAK.TAK_katzen_puppet_cores
+						add_core_of = var:new_country
+						if = {
+							limit = { is_owned_by = TAK }
+							transfer_state_to = var:new_country
+						}
+					}
+					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_puppet } }
+					var:new_country = {
+						set_cosmetic_tag = TAK_KATZEN_PUPPET
+						set_popularities = {
+							fascism = 100
+						}
+						if = {
+							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
+							add_ideas = TAK_charlesling_domain
+							generate_character = {
+								token_base = TAK_katzen_charlesling_leader
+								name = TAK_katzen_charlesling_leader
+							}
+							if = {
+								limit = { has_character = TAK_katzen_charlesling_leader }
+								set_portraits = {
+									character = TAK_katzen_charlesling_leader
+									civilian = { large ="GFX_portrait_TAK_Fake_Charkes" }
+								}
+								add_country_leader_role = {
+									character = TAK_katzen_charlesling_leader
+									country_leader = {
+										expire = "1965.1.1"
+										ideology = kleptocracy
+										traits={ }
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		ai_will_do = {
+			factor = 200
 		}
 	}
 }
