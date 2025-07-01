@@ -302,11 +302,11 @@ dismantle_wonder = {
 			debug = yes
 			text = {
 				ROOT.var:controller = {
-					limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }
-					set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0 }
+					limit = { check_variable = { wonder_modifier_[WONDER_MODIFIER_ID] > 0 } }
+					set_variable = { wonder_modifier_[WONDER_MODIFIER_ID] = 0 }
 				}
 			}
-			WONDER_ID = "[?wonder]"
+			#WONDER_ID = "[?wonder]"
 			WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
 		}
 	}
@@ -1735,118 +1735,167 @@ apply_state_species_modifier = {
 	}
 }
 
-clear_wonder_ideas = {
-	# remove_idea = wonder_idea_1_normal
-	# remove_idea = wonder_idea_1_capital
-	# remove_idea = wonder_idea_1_noncore
-	# remove_idea = wonder_idea_2_normal
-	# remove_idea = wonder_idea_2_capital
-	# remove_idea = wonder_idea_2_noncore
-	# remove_idea = wonder_idea_3_normal
-	# remove_idea = wonder_idea_3_capital
-	# remove_idea = wonder_idea_3_noncore
-	# remove_idea = wonder_idea_4_normal
-	# remove_idea = wonder_idea_4_capital
-	# remove_idea = wonder_idea_4_noncore
-	set_variable = { wonder_idea_removed_number = 0 }
-	while_loop_effect = {
-		limit = { check_variable = { wonder_idea_removed_number < 11 } }
-		add_to_variable = { wonder_idea_removed_number = 1 }
-		meta_effect = {
-			text = {
-				if = {
-					limit = { has_idea = wonder_idea_[WONDER_ID]_normal }
-					remove_ideas = wonder_idea_[WONDER_ID]_normal
-				}
-				if = {
-					limit = { has_idea = wonder_idea_[WONDER_ID]_capital }
-					remove_ideas = wonder_idea_[WONDER_ID]_capital
-				}
-				if = {
-					limit = { has_idea = wonder_idea_[WONDER_ID]_noncore }
-					remove_ideas = wonder_idea_[WONDER_ID]_noncore
-				}
-			}
-			WONDER_ID = "[?ROOT.wonder_idea_removed_number]"
-		}
+# clear_wonder_ideas = {
+# 	# remove_idea = wonder_idea_1_normal
+# 	# remove_idea = wonder_idea_1_capital
+# 	# remove_idea = wonder_idea_1_noncore
+# 	# remove_idea = wonder_idea_2_normal
+# 	# remove_idea = wonder_idea_2_capital
+# 	# remove_idea = wonder_idea_2_noncore
+# 	# remove_idea = wonder_idea_3_normal
+# 	# remove_idea = wonder_idea_3_capital
+# 	# remove_idea = wonder_idea_3_noncore
+# 	# remove_idea = wonder_idea_4_normal
+# 	# remove_idea = wonder_idea_4_capital
+# 	# remove_idea = wonder_idea_4_noncore
+# 	set_variable = { wonder_idea_removed_number = 0 }
+# 	while_loop_effect = {
+# 		limit = { check_variable = { wonder_idea_removed_number < 11 } }
+# 		add_to_variable = { wonder_idea_removed_number = 1 }
+# 		meta_effect = {
+# 			text = {
+# 				if = {
+# 					limit = { has_idea = wonder_idea_[WONDER_ID]_normal }
+# 					remove_ideas = wonder_idea_[WONDER_ID]_normal
+# 				}
+# 				if = {
+# 					limit = { has_idea = wonder_idea_[WONDER_ID]_capital }
+# 					remove_ideas = wonder_idea_[WONDER_ID]_capital
+# 				}
+# 				if = {
+# 					limit = { has_idea = wonder_idea_[WONDER_ID]_noncore }
+# 					remove_ideas = wonder_idea_[WONDER_ID]_noncore
+# 				}
+# 			}
+# 			WONDER_ID = "[?ROOT.wonder_idea_removed_number]"
+# 		}
+# 	}
+# 	if = { #state-bound modifiers
+# 		limit = {
+# 			any_controlled_state = {
+# 				check_variable = { wonder = 11 }
+# 			}
+# 		}
+# 		every_controlled_state = {
+# 			limit = {
+# 				check_variable = { wonder = 11 }
+# 			}
+# 			if = {
+# 				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_normal } }
+# 				remove_dynamic_modifier = { modifier = wonder_idea_11_normal }
+# 			}
+# 			else_if = {
+# 				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_capital } }
+# 				remove_dynamic_modifier = { modifier = wonder_idea_11_capital }
+# 			}
+# 			else_if = {
+# 				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_noncore } }
+# 				remove_dynamic_modifier = { modifier = wonder_idea_11_noncore }
+# 			}
+# 		}
+# 	}
+# }
+
+@wonder_modifier_count = 32
+
+setup_wonder_array = {
+	resize_array = { #Array containing BASE modifiers, modify this in script!
+		array = wonder_modifiers_values
+		size = @wonder_modifier_count
 	}
-	if = { #state-bound modifiers
-		limit = {
-			any_controlled_state = {
-				check_variable = { wonder = 11 }
-			}
-		}
-		every_controlled_state = {
-			limit = {
-				check_variable = { wonder = 11 }
-			}
-			if = {
-				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_normal } }
-				remove_dynamic_modifier = { modifier = wonder_idea_11_normal }
-			}
-			else_if = {
-				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_capital } }
-				remove_dynamic_modifier = { modifier = wonder_idea_11_capital }
-			}
-			else_if = {
-				limit = { has_dynamic_modifier = { modifier = wonder_idea_11_noncore } }
-				remove_dynamic_modifier = { modifier = wonder_idea_11_noncore }
-			}
-		}
+	resize_array = { #Array Containing POST CALCULATION modifiers, used for the state tooltips, do NOT modify!
+		array = wonder_modifiers_values_real
+		size = @wonder_modifier_count
 	}
 }
 
 apply_wonder_effects = {
 	#First we gotta reset all the effects!
 
+	#Resetting the country level modifier array
+	clear_array = wonder_modifiers_values
+	resize_array = {
+		array = wonder_modifiers_values
+		size = @wonder_modifier_count
+	}
+
+	#Resetting the Wonder Dynamic Modifier In event the Controller doesnt control a modifier now!
 	if = {
 		limit = { has_dynamic_modifier = { modifier = lok_wonder_modifier } }
 		remove_dynamic_modifier = { modifier = lok_wonder_modifier }
 	}
-		
+
 	every_controlled_state = {
-		if = {
-			limit = { check_variable = { wonder > 0 } }
-			ROOT = {
-				if = {
-					limit = { NOT = { has_dynamic_modifier = { modifier = lok_wonder_modifier } } }
-					add_dynamic_modifier = { modifier = lok_wonder_modifier }
-				}
+		limit = { check_variable = { wonder > 0 } }
+		controller = {
+			if = {
+				limit = { NOT = { has_dynamic_modifier = { modifier = lok_wonder_modifier } } }
+				add_dynamic_modifier = { modifier = lok_wonder_modifier }
 			}
-			for_each_loop = { #We interate through the modifier values array and use the various values to generate the variables
-				array = wonder_modifiers_values
-				value = v
-				index = i
-				break = break
-				set_variable = { wonder_modifier_id = i }
-				set_variable = { wonder_modifier_value = v }
-				meta_effect = {
-					text = {
-						every_country = {
-							limit = { check_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] > 0 } }
-							set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0 }
+		}
+		for_each_loop = {
+			array = wonder_modifiers_values
+			index = i
+			value = v
+			break = break
+			set_variable = { wonder_modifier_id = i }
+			set_variable = { wonder_modifier_value = v }
+			set_variable = { wonder_modifier_output_mult = 1 }
+			add_to_variable = { wonder_modifier_output_mult = var:controller:modifier@lok_wonder_output_mult }
+			meta_effect = {
+				text = {
+					if = {
+						limit = {
+							check_variable = {
+								var = wonder_modifier_value
+								value = 0
+								compare = not_equals
+							}
 						}
-						set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = [WONDER_MODIFIER_VALUE] }
+						set_variable = {
+							wonder_modifier_[WONDER_MODIFIER_ID] = [WONDER_MODIFIER_VALUE]
+						}
 						if = {
 							limit = { is_capital = yes }
-							multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 2 }
+							multiply_variable = { wonder_modifier_[WONDER_MODIFIER_ID] = 2 }
 						}
 						else_if = {
-							limit = { NOT = { is_core_of = var:controller } }
-							multiply_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = 0.5 }
+							limit = {
+								NOT = {
+									is_core_of = var:controller
+								}
+							}
+							multiply_variable = { wonder_modifier_[WONDER_MODIFIER_ID] = 0.5 }
+						}
+						multiply_variable = { wonder_modifier_[WONDER_MODIFIER_ID] = [WONDER_OUTPUT_MULT] }
+						set_variable = {
+							wonder_modifiers_values_real^[WONDER_MODIFIER_ID] = wonder_modifier_[WONDER_MODIFIER_ID] #Setting the post calculation modifier for the state tooltip
 						}
 						var:controller = {
-							set_variable = { wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] = PREV.wonder_[WONDER_ID]_modifier_[WONDER_MODIFIER_ID] }
+							add_to_variable = {
+								wonder_modifiers_values^[WONDER_MODIFIER_ID] = PREV.wonder_modifier_[WONDER_MODIFIER_ID]
+							}
 						}
 					}
-					WONDER_ID = "[?wonder]"
-					WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
-					WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
 				}
+				WONDER_MODIFIER_ID = "[?wonder_modifier_id]"
+				WONDER_MODIFIER_VALUE = "[?wonder_modifier_value]"
+				WONDER_OUTPUT_MULT = "[?wonder_modifier_output_mult]"
+				debug = no
 			}
 		}
 	}
+}
 
+remove_wonder = { State scope, if you need to remove every wonder in a country (or in the world idk pop off king) run this in the relevant effect scope e.g. every_controlled_state
+	#Clearing Modifier Arrays!
+	clear_array = wonder_modifiers_values
+	clear_array = wonder_modifiers_values_real
+	#Removing Wonder Variable
+	set_variable = { wonder = 0 }
+	#Recalculating the Wonder Modifier for the controller
+	controller = { apply_wonder_effects = yes }
+}
 	# clear_wonder_ideas = yes
 	# every_controlled_state = {
 	# 	if = {
@@ -1943,7 +1992,7 @@ apply_wonder_effects = {
 	# 	}
 	# 	else = { add_ideas = wonder_idea_4_noncore }
 	# }
-}
+
 
 generate_generic_small_katzen_portrait = {
 	random_list = {
