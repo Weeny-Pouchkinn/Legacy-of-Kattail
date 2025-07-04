@@ -23,6 +23,7 @@ focus_tree = {
 			}
 			add_political_power = 50
 			add_stability = 0.05
+			country_event = TAK_event.13
 		}
 	}
 	focus = { #roi thinks about how great it would be to be great
@@ -366,15 +367,19 @@ focus_tree = {
 			focus = TAK_address_the_people
 		}
 		completion_reward = {
+			custom_effect_tooltip = TAK_figure_it_out_tt
 			set_variable = { TAK_stability_weekly_per_painting_power = 0.00001 }
 			set_variable = { TAK_war_support_weekly_per_painting_power = 0.00001 }
 			set_variable = { TAK_military_factory_donations_per_painting_power = 0.1 }
 			set_variable = { TAK_weekly_manpower_per_painting_power = 10 }
 			set_variable = { TAK_brush_count = 3 }
 			set_country_flag = TAK_painters_make_propaganda
-			add_dynamic_modifier = { modifier = TAK_painting_output }
+			hidden_effect = {
+				add_dynamic_modifier = { modifier = TAK_painting_output }
+			}
 			TAK_recruit_painter_1 = yes
 			TAK_gain_1_brush = yes
+			country_event = TAK_event.14
 		}
 	}
 	focus = { #roi sets up dedicated buildings for the paintings to be painted in
@@ -475,7 +480,7 @@ focus_tree = {
 
 	focus = { #roqualium brush
 		id = TAK_scrounge_for_roqualium
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_scrounge_for_roqualium
 		x = 1
 		y = 1
 		cost = 5
@@ -505,7 +510,7 @@ focus_tree = {
 
 	focus = { #roqualium brush
 		id = TAK_scrounge_for_roqualium_harder
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_scrounge_for_roqualium_harder
 		x = 0
 		y = 1
 		cost = 5
@@ -558,26 +563,33 @@ focus_tree = {
 		prerequisite = { focus = TAK_learn_about_it_all }
 		relative_position_id = TAK_address_the_people
 		completion_reward = {
-			347 = { add_resource = { type = food amount = 5 } }
-			340 = { add_resource = { type = food amount = 5 } }
+			add_ideas = civilian_economy
 		}
 	}
 
 	focus = { #roi tours roqualia and oshia, will give some intel...
 		id = TAK_a_royal_voyage
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_a_royal_voyage
 		x = -1
 		y = 1
 		cost = 5
+		cancelable = no
 		prerequisite = { focus = TAK_officially_open_up }
 		relative_position_id = TAK_officially_open_up
+		select_effect = {
+			every_other_country = {
+				limit = { has_idea = var_species_3 }
+				country_event = { id = TAK_event.16 days = 5 }
+			}
+		}
 		completion_reward = {
+			custom_effect_tooltip = TAK_a_royal_voyage_tt
 		}
 	}
 
 	focus = { #buy some roqualium from roqualia
 		id = TAK_roqualium_purchase
-		icon = GFX_SOV_an_adaptable_army_ccp_2d_sov_compatibility
+		icon = TAK_roqualium_purchase
 		x = 1
 		y = 1
 		cost = 5
@@ -640,6 +652,7 @@ focus_tree = {
 			custom_effect_tooltip = TAK_conceive_the_charlesling_tt
 			set_variable = { TAK_painting_charles_count = 0 }
 			set_variable = { TAK_painting_charles_weekly_per_painting_power = 5 } #you can't rush his glorious form
+			country_event = TAK_event.15
 		}
 	}
 
@@ -739,6 +752,8 @@ focus_tree = {
 				1020 = { add_to_array = { array = TAK.TAK_salt_puppet_cores } }
 				1016 = { add_to_array = { array = TAK.TAK_salt_puppet_cores } }
 				1017 = { add_to_array = { array = TAK.TAK_salt_puppet_cores } }
+				964 = { add_to_array = { array = TAK.TAK_salt_puppet_cores } }
+				365 = { add_to_array = { array = TAK.TAK_salt_puppet_cores } }
 
 				#South Solaria
 				356 = { add_to_array = { array = TAK.TAK_south_solaria_puppet_cores } }

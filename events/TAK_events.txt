@@ -278,6 +278,99 @@ country_event = {
 	}
 }
 
+#roi asks for visit
+country_event = {
+	id = TAK_event.16
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.16"}
+	title = TAK_event.16.t
+	desc = TAK_event.16.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	#Sure?
+	option = {
+		name = TAK_event.16.a
+		TAK = { country_event = { id = TAK_event.161 days = 1 } }
+		ai_chance = {
+			base = 1
+		}
+	}
+
+	#Eeermm... no
+	option = {
+		name = TAK_event.16.b
+		TAK = { country_event = { id = TAK_event.162 days = 1 } }
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 3
+				has_government = communism
+			}
+			modifier = {
+				factor = 2
+				has_government = democratic
+			}
+			modifier = {
+				factor = 0.5
+				has_government = neutrality
+			}
+			modifier = {
+				factor = 0.25
+				has_government = fascism
+			}
+		}
+	}
+}
+
+#visit approved
+country_event = {
+	id = TAK_event.161
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.161"}
+	title = TAK_event.161.t
+	desc = TAK_event.161.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.161.a
+		add_political_power = 25
+		add_opinion_modifier = {
+			target = FROM
+			modifier = TAK_royal_visit
+		}
+		FROM = {
+			add_opinion_modifier = {
+				target = TAK
+				modifier = TAK_royal_visit
+			}		
+		}
+	}
+}
+
+#visit rejected
+country_event = {
+	id = TAK_event.162
+	immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.162"}
+	title = TAK_event.162.t
+	desc = TAK_event.162.d
+	is_triggered_only = yes
+	picture = GFX_report_event_charles
+
+	option = {
+		name = TAK_event.162.a
+		add_political_power = -5
+		add_opinion_modifier = {
+			target = FROM
+			modifier = TAK_denied_visit
+		}
+		FROM = {
+			add_opinion_modifier = {
+				target = TAK
+				modifier = TAK_denied_visit
+			}
+		}
+	}
+}
 
 #roi asks roqualia for roqualium
 country_event = {
