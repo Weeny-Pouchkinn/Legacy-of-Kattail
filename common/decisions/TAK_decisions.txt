@@ -153,6 +153,8 @@ TAK_painting_cat = {
 
 		cost = 50
 
+		days_remove = 30
+
 		remove_effect = {
 			random_list = {
 				40 = {
@@ -196,12 +198,13 @@ TAK_painting_cat = {
 		target_array = controlled_states
 
 		target_trigger = {
-			FROM = { NOT = { is_core_of = TAK } }
+			FROM = { is_controlled_by = TAK NOT = { is_core_of = TAK } }
 		}
 
 		fire_only_once = yes
 
 		visible = {
+			FROM = { is_controlled_by = TAK NOT = { is_core_of = TAK } }
 			tag = TAK
 			has_completed_focus = TAK_charlesling_vanguard
 		}
@@ -256,6 +259,7 @@ TAK_painting_cat = {
 		visible = {
 			tag = TAK
 			has_completed_focus = TAK_recruit_the_best
+			FROM = { NOT = { has_war_with = TAK } }
 		}
 
 		ai_will_do = {
@@ -308,7 +312,10 @@ TAK_painting_cat = {
 		on_map_mode = map_only
 		target_array = TAK_possible_infiltration_states
 		target_trigger = {
-			FROM = { NOT = { is_controlled_by = TAK } }
+			FROM = {
+				NOT = { is_controlled_by = TAK }
+				var:controller = { NOT = { is_puppet_of = TAK } }
+			}
 		}
 
 		visible = {
@@ -416,6 +423,7 @@ TAK_painting_cat = {
 
 		target_trigger = {
 			NOT = { has_war_with = FROM }
+			NOT = { FROM = { is_puppet_of = TAK } }
 		}
 
 		visible = {
@@ -506,6 +514,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_quepler_domain_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = KEP
@@ -612,6 +623,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_salt_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = KEP
@@ -715,6 +729,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_south_solaria_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = SLR
@@ -820,6 +837,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_north_solaria_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = SLR
@@ -917,6 +937,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_midi_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = ROQ
@@ -1019,6 +1042,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_roqual_frontier_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = LMB
@@ -1106,6 +1132,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_lutecie_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = ROQ
@@ -1208,6 +1237,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_bocerie_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = LMB
@@ -1322,6 +1354,9 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			custom_effect_tooltip = TAK_katzen_puppet_tt
+			set_temp_variable = { TAK_painting_charles_change = -5000 }
+			add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_change }
+			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
 					original_tag = FSR
@@ -1378,9 +1413,9 @@ lok_peace_decisions_cat = {
 
 TAK_automata_cat = {
 	TAK_automata_railgun_upgrade = {
-		icon = GFX_decision_generic_air
+		icon = GFX_decision_ger_military_buildup
 		cost = 25
-		days_remove = 360
+		days_remove = 120
 		fire_only_once = yes
 		allowed = {
 			original_tag = TAK
@@ -1390,6 +1425,7 @@ TAK_automata_cat = {
 				has_country_flag = TAK_improving_automata
 			}
 			336 = { is_controlled_by_ROOT_or_subject = yes }
+			num_of_civilian_factories_available_for_projects > 9
 		}
 		modifier = {
 			research_speed_factor = -0.20
@@ -1417,9 +1453,9 @@ TAK_automata_cat = {
 		}
 	}
 	TAK_automata_soundfield_upgrade = {
-		icon = GFX_decision_generic_air
+		icon = GFX_decision_eng_propaganda_campaigns
 		cost = 25
-		days_remove = 360
+		days_remove = 120
 		fire_only_once = yes
 		allowed = {
 			original_tag = TAK
@@ -1429,6 +1465,7 @@ TAK_automata_cat = {
 				has_country_flag = TAK_improving_automata
 			}
 			320 = { is_controlled_by_ROOT_or_subject = yes }
+			num_of_civilian_factories_available_for_projects > 9
 		}
 		modifier = {
 			research_speed_factor = -0.20
@@ -1438,7 +1475,7 @@ TAK_automata_cat = {
 			clr_country_flag = TAK_improving_automata
 			set_technology = {
 				TAK_automata_soundfield_upgrade_tech = 1
-				popup = no
+				popup = yes
 			}
 			custom_effect_tooltip = TAK_automata_soundfield_upgrade_effect
 		}
@@ -1456,9 +1493,9 @@ TAK_automata_cat = {
 		}
 	}
 	TAK_automata_nuclear_reactor_upgrade = {
-		icon = GFX_decision_generic_air
+		icon = GFX_decision_generic_naval_mine
 		cost = 25
-		days_remove = 360
+		days_remove = 120
 		fire_only_once = yes
 		allowed = {
 			original_tag = TAK
@@ -1469,6 +1506,7 @@ TAK_automata_cat = {
 			}
 			820 = { is_controlled_by_ROOT_or_subject = yes }
 			has_tech = nuclear_power_plant_tech_2
+			num_of_civilian_factories_available_for_projects > 9
 		}
 		modifier = {
 			research_speed_factor = -0.20
@@ -1477,7 +1515,7 @@ TAK_automata_cat = {
 		remove_effect = {
 			clr_country_flag = TAK_improving_automata
 			set_technology = {
-				TAK_automata_soundfield_upgrade_tech = 1
+				TAK_automata_nuclear_reactor_upgrade_tech = 1
 				popup = no
 			}
 			custom_effect_tooltip = TAK_automata_nuclear_reactor_upgrade_effect
@@ -1496,9 +1534,9 @@ TAK_automata_cat = {
 		}
 	}
 	TAK_automata_robots_upgrade = {
-		icon = GFX_decision_generic_air
+		icon = GFX_decision_generic_military
 		cost = 25
-		days_remove = 360
+		days_remove = 120
 		fire_only_once = yes
 		allowed = {
 			original_tag = TAK
@@ -1508,6 +1546,7 @@ TAK_automata_cat = {
 				has_country_flag = TAK_improving_automata
 			}
 			323 = { is_controlled_by_ROOT_or_subject = yes }
+			num_of_civilian_factories_available_for_projects > 9
 		}
 		modifier = {
 			research_speed_factor = -0.20
@@ -1519,7 +1558,7 @@ TAK_automata_cat = {
 				TAK_automata_robots_upgrade_tech = 1
 				popup = no
 			}
-			custom_effect_tooltip = TAK_automata_nuclear_reactor_upgrade_effect
+			custom_effect_tooltip = TAK_automata_robots_upgrade_effect
 		}
 
 		ai_will_do = {
@@ -1536,9 +1575,9 @@ TAK_automata_cat = {
 	}
 
 	TAK_automata_aa_upgrade = {
-		icon = GFX_decision_generic_air
+		icon = GFX_decision_generic_fortification
 		cost = 25
-		days_remove = 360
+		days_remove = 120
 		fire_only_once = yes
 		allowed = {
 			original_tag = TAK
@@ -1548,6 +1587,7 @@ TAK_automata_cat = {
 				has_country_flag = TAK_improving_automata
 			}
 			has_tech = antiair3
+			num_of_civilian_factories_available_for_projects > 9
 		}
 		modifier = {
 			research_speed_factor = -0.20
@@ -1556,10 +1596,10 @@ TAK_automata_cat = {
 		remove_effect = {
 			clr_country_flag = TAK_improving_automata
 			set_technology = {
-				TAK_automata_plating_upgrade_tech = 1
+				TAK_automata_aa_upgrade_tech = 1
 				popup = no
 			}
-			custom_effect_tooltip = TAK_automata_nuclear_reactor_upgrade_effect
+			custom_effect_tooltip = TAK_automata_aa_upgrade_effect
 		}
 
 		ai_will_do = {
@@ -1578,7 +1618,7 @@ TAK_automata_cat = {
 	TAK_automata_jump_jets_upgrade = {
 		icon = GFX_decision_generic_air
 		cost = 25
-		days_remove = 360
+		days_remove = 120
 		fire_only_once = yes
 		allowed = {
 			original_tag = TAK
@@ -1588,6 +1628,7 @@ TAK_automata_cat = {
 				has_country_flag = TAK_improving_automata
 			}
 			has_tech = jet_engines
+			num_of_civilian_factories_available_for_projects > 9
 		}
 		modifier = {
 			research_speed_factor = -0.20
@@ -1599,7 +1640,7 @@ TAK_automata_cat = {
 				TAK_automata_jump_jets_upgrade_tech = 1
 				popup = no
 			}
-			custom_effect_tooltip = TAK_automata_nuclear_reactor_upgrade_effect
+			custom_effect_tooltip = TAK_automata_jump_jets_upgrade_effect
 		}
 
 		ai_will_do = {
