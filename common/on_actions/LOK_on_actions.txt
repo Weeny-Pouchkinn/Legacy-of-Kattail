@@ -1070,7 +1070,12 @@ on_actions = {
 			set_global_flag = KOTIJGRAD_BRIDGE_DISABLED
 
 			ROQ = { activate_advisor = ROQ_Saxeton }
-			ROQ = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
+			ROQ = {
+				every_owned_state = {
+					limit = { is_space_state = no }
+					add_to_array = { ROQ.roq_fed_states_array = THIS }
+				}
+			}
 			PER = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
 			LMB = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
 			RQA = { every_owned_state = { add_to_array = { ROQ.roq_fed_states_array = THIS } } }
@@ -1104,6 +1109,16 @@ on_actions = {
 					limit = { has_completed_focus = TAK_conceive_the_charlesling }
 					add_to_variable = { TAK_painting_charles_count = TAK_painting_charles_weekly }
 				}
+			}
+		}
+	}
+
+	on_monthly_TAK = {
+		effect = {
+			if = { #add paintbrushes
+				limit = { has_completed_focus = TAK_figure_it_out }
+				add_to_variable = { TAK_brush_count = modifier@TAK_paintbrushes_monthly }
+				TAK_update_painting_stats = yes
 			}
 		}
 	}

@@ -401,6 +401,7 @@ focus_tree = {
 					level = 1
 				}
 			}
+			add_ideas = TAK_paintbrush_foundry
 		}
 	}
 	focus = { #roi recruits painters, unlocks decisions to recruit royal painters that will paint paintings
@@ -489,7 +490,10 @@ focus_tree = {
 		relative_position_id = TAK_painter_education
 		completion_reward = {
 			add_stability = -0.20
-			TAK_gain_2_brush = yes
+			set_temp_variable = { TAK_brush_count_change = 5 }
+			add_to_variable = { TAK_brush_count = TAK_brush_count_change }
+			custom_effect_tooltip = TAK_brush_count_change_tooltip
+			TAK_update_painting_stats = yes
 			349 = {
 				add_manpower = -100000
 				remove_building = {
@@ -518,7 +522,10 @@ focus_tree = {
 		relative_position_id = TAK_scrounge_for_roqualium
 		completion_reward = {
 			add_stability = -0.40
-			TAK_gain_2_brush = yes
+			set_temp_variable = { TAK_brush_count_change = 5 }
+			add_to_variable = { TAK_brush_count = TAK_brush_count_change }
+			custom_effect_tooltip = TAK_brush_count_change_tooltip
+			TAK_update_painting_stats = yes
 			349 = {
 				add_manpower = -200000
 				remove_building = {
@@ -598,8 +605,13 @@ focus_tree = {
 		completion_reward = {
 			ROQ = { country_event = { id = TAK_event.1000 days = 1 } }
 			custom_effect_tooltip = lok_needs_approval
-			show_ideas_tooltip = cg_payment_40
-			TAK_gain_3_brush = yes
+			effect_tooltip = {
+				show_ideas_tooltip = cg_payment_40
+				set_temp_variable = { TAK_brush_count_change = 6 }
+				add_to_variable = { TAK_brush_count = TAK_brush_count_change }
+				custom_effect_tooltip = TAK_brush_count_change_tooltip
+				TAK_update_painting_stats = yes
+			}
 		}
 	}
 
@@ -686,6 +698,7 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
+			custom_effect_tooltip = TAK_perfect_imitation_tt
 			division_template = {
 				name = "Tableaux Infiltrés"
 				regiments = {
@@ -700,8 +713,12 @@ focus_tree = {
 					militia = { x = 2 y = 2 }
 				}
 			}
-			set_variable = { TAK_painting_charles_count = 0 }
-			set_variable = { TAK_painting_charles_weekly_per_painting_power = 5 } #you can't rush his glorious form
+			for_each_loop = {
+				array = TAK.TAK_painter_list
+				add_to_temp_variable = { v = 1 }
+				set_variable = { TAK.TAK_painter_list^i = v }
+			}
+			TAK_update_painting_stats = yes
 		}
 	}
 
