@@ -634,6 +634,426 @@ add_namespace = LOK_KTZ
 # 	}
 # }
 
+add_namespace = LOK_WSF
+#Civil War
+country_event = {
+	id = LOK_WSF.1
+	title = "LOK_WSF.1.t"
+	desc = "LOK_WSF.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	immediate = {
+		hidden_effect = {
+			#First wave - Roqs
+			create_dynamic_country = {
+				original_tag = WSF
+				set_temp_variable = { new_country = this }
+				var:new_country = {
+					WSF = {
+						transfer_units_fraction = {
+							target = var:new_country
+							stockpile_ratio = 0.15
+							army_ratio = 0.15
+							navy_ratio = 0.15
+							air_ratio = 0.15
+						}
+					}
+					set_politics = { ruling_party = fascism }
+					set_popularities = {
+						fascism = 100
+					}
+					save_global_event_target_as = WSF_fascists
+					set_cosmetic_tag = WSF_FAS
+					936 = { transfer_state_to = var:new_country }
+					155 = { transfer_state_to = var:new_country }
+					932 = { transfer_state_to = var:new_country }
+					495 = { transfer_state_to = var:new_country }
+					942 = { transfer_state_to = var:new_country }
+					935 = { transfer_state_to = var:new_country }
+					934 = { transfer_state_to = var:new_country }
+				}
+			}
+			create_dynamic_country = {
+				original_tag = WSF
+				set_temp_variable = { new_country = this }
+				var:new_country = {
+					WSF = {
+						transfer_units_fraction = {
+							target = var:new_country
+							stockpile_ratio = 0.15
+							army_ratio = 0.15
+							navy_ratio = 0.15
+							air_ratio = 0.15
+						}
+					}
+					set_politics = { ruling_party = neutrality }
+					set_popularities = {
+						neutrality = 100
+					}
+					set_cosmetic_tag = WSF_NEU
+					save_global_event_target_as = WSF_neutrals
+					214 = { transfer_state_to = var:new_country }
+					941 = { transfer_state_to = var:new_country }
+					947 = { transfer_state_to = var:new_country }
+					927 = { transfer_state_to = var:new_country }
+					196 = { transfer_state_to = var:new_country }
+					928 = { transfer_state_to = var:new_country }
+					929 = { transfer_state_to = var:new_country }
+					931 = { transfer_state_to = var:new_country }
+				}
+			}
+			create_dynamic_country = {
+				original_tag = WSF
+				set_temp_variable = { new_country = this }
+				var:new_country = {
+					set_politics = { ruling_party = democratic }
+					set_popularities = {
+						democratic = 100
+					}
+					set_cosmetic_tag = WSF_DEM
+					save_global_event_target_as = WSF_democrats
+					919 = { transfer_state_to = var:new_country }
+					903 = { transfer_state_to = var:new_country }
+					150 = { transfer_state_to = var:new_country }
+					904 = { transfer_state_to = var:new_country }
+					902 = { transfer_state_to = var:new_country }
+					491 = { transfer_state_to = var:new_country }
+					918 = { transfer_state_to = var:new_country }
+					917 = { transfer_state_to = var:new_country }
+					915 = { transfer_state_to = var:new_country }
+					126 = { transfer_state_to = var:new_country }
+					920 = { transfer_state_to = var:new_country }
+					918 = { transfer_state_to = var:new_country }
+				}
+			}
+			save_global_event_target_as = WSF_commies
+			transfer_units_fraction = {
+				target = event_target:WSF_fascists
+				stockpile_ratio = 0.15
+				army_ratio = 0.15
+				navy_ratio = 0.15
+				air_ratio = 0.15
+			}
+			transfer_units_fraction = {
+				target = event_target:WSF_neutrals
+				stockpile_ratio = 0.15
+				army_ratio = 0.15
+				navy_ratio = 0.15
+				air_ratio = 0.15
+			}
+			transfer_units_fraction = {
+				target = event_target:WSF_democrats
+				stockpile_ratio = 0.15
+				army_ratio = 0.15
+				navy_ratio = 0.15
+				air_ratio = 0.15
+			}
+			event_target:WSF_neutrals = {
+				declare_war_on = { target = event_target:WSF_commies type = annex_everything }
+				declare_war_on = { target = event_target:WSF_fascists type = annex_everything }
+			}
+			event_target:WSF_fascists = {
+				declare_war_on = { target = event_target:WSF_commies type = annex_everything }
+				declare_war_on = { target = event_target:WSF_democrats type = annex_everything }
+			}
+			event_target:WSF_democrats = {
+				declare_war_on = { target = event_target:WSF_commies type = annex_everything }
+			}
+		}
+	}
+
+	option = {
+		name = LOK_WSF.1.a
+		country_event = { id = LOK_WSF.2 days = 5 }
+		DRO = { country_event = { id = LOK_DRO.1 days = 10 } }
+		PRO = { country_event = { id = LOK_PRO.1 days = 10 } }
+	}
+}
+
+#Katzens
+country_event = {
+	id = LOK_WSF.2
+	title = "LOK_WSF.2.t"
+	desc = "LOK_WSF.2.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	immediate = {
+		hidden_effect = {
+			#Second wave - Katzens
+			create_dynamic_country = {
+				original_tag = FKN
+				set_temp_variable = { new_country = this }
+				var:new_country = {
+					set_politics = { ruling_party = fascism }
+					set_popularities = {
+						fascism = 100
+					}
+					set_cosmetic_tag = FKN_FAS
+					save_global_event_target_as = FKN_fascists
+					905 = { transfer_state_to = var:new_country }
+					906 = { transfer_state_to = var:new_country }
+					493 = { transfer_state_to = var:new_country }
+					933 = { transfer_state_to = var:new_country }
+					495 = { transfer_state_to = var:new_country }
+					every_owned_state = {
+						add_core_of = var:new_country
+					}
+				}
+			}
+			create_dynamic_country = {
+				original_tag = FKN
+				set_temp_variable = { new_country = this }
+				var:new_country = {
+					set_politics = { ruling_party = neutrality }
+					set_popularities = {
+						neutrality = 100
+					}
+					save_global_event_target_as = FKN_neutrals
+					set_cosmetic_tag = FKN_NEU
+					910 = { transfer_state_to = var:new_country }
+					every_owned_state = {
+						add_core_of = var:new_country
+					}
+				}
+			}
+			create_dynamic_country = {
+				original_tag = FKN
+				set_temp_variable = { new_country = this }
+				var:new_country = {
+					set_politics = { ruling_party = democratic }
+					set_popularities = {
+						democratic = 100
+					}
+					save_global_event_target_as = FKN_democrats
+					set_cosmetic_tag = FKN_DEM
+					918 = { transfer_state_to = var:new_country }
+					917 = { transfer_state_to = var:new_country }
+					915 = { transfer_state_to = var:new_country }
+					126 = { transfer_state_to = var:new_country }
+					every_owned_state = {
+						add_core_of = var:new_country
+					}
+				}
+			}
+			create_dynamic_country = {
+				original_tag = FKN
+				set_temp_variable = { new_country = this }
+				var:new_country = {
+					set_politics = { ruling_party = communism }
+					set_popularities = {
+						communism = 100
+					}
+					save_global_event_target_as = FKN_commies
+					set_cosmetic_tag = FKN_COM
+					942 = { transfer_state_to = var:new_country }
+					214 = { transfer_state_to = var:new_country }
+					929 = { transfer_state_to = var:new_country }
+					941 = { transfer_state_to = var:new_country }
+					947 = { transfer_state_to = var:new_country }
+					every_owned_state = {
+						add_core_of = var:new_country
+					}
+				}
+			}
+			event_target:FKN_fascists = {
+				declare_war_on = { target = event_target:WSF_fascists type = annex_everything }
+				declare_war_on = { target = event_target:WSF_democrats type = annex_everything }
+			}
+			event_target:FKN_neutrals = {
+				declare_war_on = { target = event_target:WSF_commies type = annex_everything }
+			}
+			event_target:FKN_commies = {
+				declare_war_on = { target = event_target:WSF_neutrals type = annex_everything }
+				declare_war_on = { target = event_target:WSF_fascists type = annex_everything }
+			}
+			every_country = {
+				limit = { original_tag = FKN }
+				division_template = {
+					name = "Katzoshie Infantry"
+					is_locked = no
+					regiments = {
+						motorized = { x = 0 y = 0 }
+						motorized = { x = 0 y = 1 }
+						motorized = { x = 0 y = 2 }
+						motorized = { x = 0 y = 3 }
+						motorized = { x = 1 y = 0 }
+						motorized = { x = 1 y = 1 }
+					}
+					support = {
+						artillery = { x = 0 y = 0 }
+						engineer = { x = 0 y = 1 }
+					}
+				}
+				every_controlled_state = {
+					create_unit = {
+						division = "division_template = \"Katzoshie Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
+						count = 1
+						owner = PREV
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		name = LOK_WSF.2.a
+	}
+}
+
+# #Monburn Backstab
+# country_event = {
+# 	id = LOK_WSF.5
+# 	title = "LOK_WSF.5.t"
+# 	desc = "LOK_WSF.5.d"
+# 	is_triggered_only = yes
+# 	picture = GFX_report_event_elwin
+
+# 	immediate = {
+# 		declare_war_on = {
+# 			target = ITZ
+# 			type = annex_everything
+# 		}
+# 	}
+
+# 	option = {
+# 		name = LOK_WSF.5.a
+# 	}
+# }
+
+add_namespace = LOK_PRO
+#Propania Strikes
+country_event = {
+	id = LOK_PRO.1
+	title = "LOK_PRO.1.t"
+	desc = "LOK_PRO.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	option = {
+		name = LOK_WSF.3.a
+		declare_war_on = {
+			target = event_target:WSF_commies
+			type = take_claimed_state
+		}
+	}
+
+	option = {
+		name = LOK_WSF.3.b
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+add_namespace = LOK_DRO
+#Vampiric Alliance?
+country_event = {
+	id = LOK_DRO.1
+	title = "LOK_DRO.1.t"
+	desc = "LOK_DRO.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	option = {
+		name = LOK_DRO.1.a
+		create_faction = "Vampiric Reclamation League"
+		save_global_event_target_as = LOK_vampire_faction_leader
+		every_other_country = {
+			limit = { has_idea = var_species_26 }
+			if = {
+				limit = {
+					is_in_faction = no
+					is_puppet = no
+				}
+				country_event = { id = LOK_DRO.2 days = 1 }
+			}
+		}
+		country_event = { id = LOK_DRO.3 days = 10 }
+	}
+
+	option = {
+		name = LOK_DRO.1.b
+	}
+}
+
+#Alliance Proposal
+country_event = {
+	id = LOK_DRO.2
+	title = "LOK_DRO.2.t"
+	desc = "LOK_DRO.2.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	option = {
+		name = LOK_DRO.3.a
+		event_target:LOK_vampire_faction_leader = {
+			add_to_faction = ROOT
+			country_event = { id = LOK_proposal.1 days = 1 }
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				tag = VAR
+			}
+		}
+	}
+
+	option = {
+		name = LOK_DRO.3.b
+		event_target:LOK_vampire_faction_leader = {
+			country_event = { id = LOK_proposal.2 days = 1 }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 10
+				tag = VAR
+			}
+		}
+	}
+}
+
+#Wardec
+country_event = {
+	id = LOK_DRO.3
+	title = "LOK_DRO.3.t"
+	desc = "LOK_DRO.3.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	option = {
+		name = LOK_DRO.1.a
+		every_state = {
+			limit = {
+				is_core_of = WSF
+				OR = {
+					check_variable = { species = 26 }
+					check_variable = { minority = 26 }
+				}
+			}
+			add_claim_by = event_target:LOK_vampire_faction_leader
+		}
+		every_country = {
+			limit = {
+				any_controlled_state = { is_claimed_by = event_target:LOK_vampire_faction_leader }
+			}
+			every_country = {
+				limit = {
+					OR = { tag = event_target:LOK_vampire_faction_leader is_in_faction_with = event_target:LOK_vampire_faction_leader }
+				}
+				declare_war_on = {
+					target = PREV
+					type = take_claimed_state
+				}
+			}
+		}
+	}
+}
+
+
 add_namespace = LOK_SIL
 #SHIT'S EXPLODING
 country_event = {
