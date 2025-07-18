@@ -960,6 +960,9 @@ country_event = {
 		name = LOK_DRO.1.a
 		create_faction = "Vampiric Reclamation League"
 		save_global_event_target_as = LOK_vampire_faction_leader
+		hidden_effect = {
+			set_country_flag = LOK_droogian_reclamation_ongoing
+		}
 		every_other_country = {
 			limit = { has_idea = var_species_26 }
 			if = {
@@ -975,6 +978,9 @@ country_event = {
 
 	option = {
 		name = LOK_DRO.1.b
+		ai_chance = {
+			base = 0
+		}
 	}
 }
 
@@ -1053,6 +1059,129 @@ country_event = {
 	}
 }
 
+#WP or go further?
+country_event = {
+	id = LOK_DRO.4
+	title = "LOK_DRO.4.t"
+	desc = "LOK_DRO.4.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	option = {
+		name = LOK_DRO.4.a
+		every_country = {
+			limit = {
+				OR = { tag = ROOT is_in_faction_with = ROOT }
+			}
+			white_peace = event_target:WSF_commies
+			white_peace = event_target:WSF_neutrals
+			white_peace = event_target:WSF_fascists
+			white_peace = event_target:WSF_democrats
+			white_peace = event_target:FKN_commies
+			white_peace = event_target:FKN_fascists
+			white_peace = event_target:FKN_democrats
+			white_peace = event_target:FKN_neutrals
+		}
+		clr_country_flag = LOK_droogian_reclamation_ongoing
+		950 = { transfer_state_to = ITZ }
+		259 = { transfer_state_to = ITZ }
+		946 = { transfer_state_to = ITZ }
+		947 = { transfer_state_to = FRO }
+		941 = { transfer_state_to = FRO }
+		214 = { transfer_state_to = FRO }
+		942 = { transfer_state_to = FRO }
+		set_country_flag = LOK_partial_droogian_victory
+		country_event = { id = LOK_DRO.5 days = 10 }
+	}
+
+	option = {
+		name = LOK_DRO.4.b
+		set_country_flag = LOK_droogia_taking_all
+	}
+}
+
+#leader recognized as legitimate
+country_event = {
+	id = LOK_DRO.5
+	title = "LOK_DRO.5.t"
+	desc = "LOK_DRO.5.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_elwin
+
+	option = {
+		name = LOK_DRO.5.a
+		if = {
+			limit = {
+				has_country_flag = LOK_partial_droogian_victory
+			}
+			every_country = {
+				limit = {
+					NOT = { tag = event_target:LOK_vampire_faction_leader }
+					is_in_faction_with = event_target:LOK_vampire_faction_leader
+				}
+				event_target:LOK_vampire_faction_leader = {
+					set_autonomy = {
+						target = PREV
+						autonomy_state = autonomy_puppet
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_country_flag = LOK_total_droogian_victory
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = event_target:LOK_vampire_faction_leader
+				}
+				event_target:LOK_vampire_faction_leader = {
+					set_autonomy = {
+						target = PREV
+						autonomy_state = autonomy_integrated_puppet
+					}
+				}
+			}
+		}
+		ITZ = {
+			if = {
+				limit = {
+					is_puppet_of = event_target:LOK_vampire_faction_leader
+					NOT = { has_government = democratic }
+				}
+				set_politics = {
+					ruling_party = democratic
+				}
+			}
+		}
+		FRO = {
+			if = {
+				limit = {
+					is_puppet_of = event_target:LOK_vampire_faction_leader
+					NOT = { has_government = neutrality }
+				}
+				set_politics = {
+					ruling_party = neutrality
+				}
+			}
+		}
+		DRO = {
+			if = {
+				limit = {
+					is_puppet_of = event_target:LOK_vampire_faction_leader
+					NOT = { has_government = neutrality }
+				}
+				set_politics = {
+					ruling_party = neutrality
+				}
+			}
+		}
+		event_target:LOK_vampire_faction_leader = {
+			dismantle_faction = yes
+			create_faction = "United Droogian Fiefdoms"
+		}
+	}
+}
 
 add_namespace = LOK_SIL
 #SHIT'S EXPLODING
