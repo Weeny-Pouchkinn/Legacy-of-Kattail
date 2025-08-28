@@ -337,6 +337,97 @@ focus_tree = {
 			add_research_slot = 1
 		}
 	}
+	focus = { #NUCLEAR POWER (civilian)
+		id = TAK_nuclear_power
+		icon = GFX_focus_generic_uranium_extraction
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = TAK_automaton_department
+		prerequisite = { focus = TAK_mines_du_roi }
+		prerequisite = { focus = TAK_automaton_department }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = nuclear
+				bonus = 2
+				uses = 2
+				ahead_reduction = 0.5
+			}
+			340 = {
+				add_resource = {
+					type = fissiles
+					amount = 10
+				}
+			}
+			347 = {
+				add_resource = {
+					type = fissiles
+					amount = 10
+				}
+			}
+		}
+	}
+	focus = { #NUCLEAR POWER (civilian)
+		id = TAK_build_power_plants
+		icon = GFX_focus_generic_nuclear_development
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = TAK_nuclear_power
+		prerequisite = { focus = TAK_nuclear_power }
+		available = {
+			has_tech = nuclear_power_plant_tech
+		}
+		completion_reward = {
+			340 = {
+				add_building_construction = {
+					type = nuclear_reactor
+					level = 1
+				}
+			}
+			347 = {
+				add_building_construction = {
+					type = nuclear_reactor
+					level = 1
+				}
+			}
+		}
+	}
+	focus = { #Nukes
+		id = TAK_make_nukes
+		icon = GFX_SOV_soviet_atomic_bomb_project_ccp_2d_sov_compatibility
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = TAK_nuclear_power
+		prerequisite = { focus = TAK_nuclear_power }
+		available = {
+			has_tech = nukes
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 15 }
+		}
+	}
+	focus = { #NUCLEAR FUSION
+		id = TAK_towards_fusion
+		icon = GFX_focus_research2
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = TAK_nuclear_power
+		prerequisite = { focus = TAK_build_power_plants focus = TAK_make_nukes }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = nuclear_fusion
+				bonus = 2
+				uses = 2
+				ahead_reduction = 0.5
+			}
+		}
+	}
+
 
 	focus = { #roi builds houses for his painting people
 		id = TAK_bulk_housing
@@ -474,6 +565,123 @@ focus_tree = {
 			add_equipment_to_stockpile = {
 				type = support_equipment
 				amount = 200
+			}
+		}
+	}
+	focus = { #military school
+		id = TAK_ecole_militaire
+		icon = GFX_SOV_depoliticize_the_military_ccp_2d_sov_compatibility
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = TAK_learn_about_it_all
+		prerequisite = { focus = TAK_learn_about_it_all }
+		completion_reward = {
+			army_experience = 50
+			add_doctrine_cost_reduction = {
+				name = LOK_doctrine_bonus
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+		}
+	}
+	focus = { #mass assault
+		id = TAK_painting_spam
+		icon = GFX_focus_generic_fascist_troops
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = TAK_ecole_militaire
+		prerequisite = { focus = TAK_ecole_militaire }
+		mutually_exclusive = {
+			focus = TAK_superior_firepower
+		}
+		completion_reward = {
+			army_experience = 25
+			add_doctrine_cost_reduction = {
+				name = LOK_doctrine_bonus
+				cost_reduction = 0.5
+				uses = 3
+				category = cat_mass_assault
+			}
+		}
+	}
+	focus = {
+		id = TAK_roi_milices
+		icon = GFX_focus_PER_stage_mass_protests
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_ecole_militaire
+		prerequisite = { focus = TAK_painting_spam focus = TAK_superior_firepower }
+		completion_reward = {
+			add_stability = -0.10
+			add_manpower = 50000
+		}
+	}
+	focus = { #superior_firepower
+		id = TAK_superior_firepower
+		icon = GFX_SOV_soviet_artillery_ccp_2d_sov_compatibility
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = TAK_ecole_militaire
+		prerequisite = { focus = TAK_ecole_militaire }
+		mutually_exclusive = {
+			focus = TAK_painting_spam
+		}
+		completion_reward = {
+			army_experience = 25
+			add_doctrine_cost_reduction = {
+				name = LOK_doctrine_bonus
+				cost_reduction = 0.5
+				uses = 3
+				category = cat_superior_firepower
+			}
+		}
+	}
+	focus = { #convert to mils
+		id = TAK_statue_bombs
+		icon = TAK_a_necessary_evil
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_superior_firepower
+		prerequisite = { focus = TAK_painting_spam focus = TAK_superior_firepower }
+		completion_reward = {
+			add_stability = -0.10
+			349 = {
+				add_extra_state_shared_building_slots = 2
+				remove_building = {
+					type = industrial_complex
+					level = 2
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 4
+				}
+			}
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = artillery
+				bonus = 1
+				uses = 2
+			}
+		}
+	}
+	focus = { #train officers
+		id = TAK_train_officers
+		icon = GFX_focus_CONGO_congolese_generals
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_painting_spam
+		prerequisite = { focus = TAK_painting_spam focus = TAK_superior_firepower }
+		completion_reward = {
+			every_unit_leader = {
+				add_attack = 2
+				add_defense = 2
 			}
 		}
 	}
@@ -1048,12 +1256,38 @@ focus_tree = {
 		}
 	}
 
+	focus = { #brain drain
+		id = TAK_brain_drain
+		icon = TAK_civi
+		x = 2
+		y = 0
+		cost = 5
+		relative_position_id = TAK_roqualia_wargoal
+		prerequisite = { focus = TAK_charles_puppets focus = TAK_native_puppets }
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = { #brain drain
+		id = TAK_a_united_realm
+		icon = TAK_civi
+		x = -2
+		y = 0
+		cost = 5
+		relative_position_id = TAK_roqualia_wargoal
+		prerequisite = { focus = TAK_charles_puppets focus = TAK_native_puppets }
+		completion_reward = {
+			create_faction = "Splendide Fédération Royale de Takicardie"
+		}
+	}
+
 	focus = { #big takicardie
 		id = TAK_greater_takicardie
 		icon = TAK_greater_takicardie
 		x = 0
 		y = 1
-		cost = 5
+		cost = 10
 		relative_position_id = TAK_roqualia_wargoal
 		prerequisite = { focus = TAK_roqualia_wargoal }
 		available = {
@@ -1112,6 +1346,127 @@ focus_tree = {
 				add_claim_by = TAK
 				custom_effect_tooltip = state_core_threshold_set_40
 				clr_state_flag = TAK_potential_cores_in_roqualia
+			}
+		}
+	}
+
+	focus = { #scrap dofus & co
+		id = TAK_scrap_dofus
+		icon = TAK_civi
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_greater_takicardie
+		prerequisite = { focus = TAK_greater_takicardie }
+		completion_reward = {
+		}
+	}
+
+	focus = { #decentralized
+		id = TAK_many_many_charles
+		icon = TAK_civi
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_greater_takicardie
+		prerequisite = { focus = TAK_greater_takicardie }
+		mutually_exclusive = {
+			focus = TAK_everything_on_charles
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { #centralized
+		id = TAK_everything_on_charles
+		icon = TAK_the_new_charles
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_greater_takicardie
+		prerequisite = { focus = TAK_greater_takicardie }
+		mutually_exclusive = {
+			focus = TAK_many_many_charles
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { #prepare to fight katzens
+		id = TAK_katzen_wargoal
+		icon = TAK_chalsace_wargoal
+		x = -2
+		y = 2
+		cost = 5
+		relative_position_id = TAK_greater_takicardie
+		prerequisite = { focus = TAK_many_many_charles focus = TAK_everything_on_charles }
+		bypass = {
+			NOT = { country_exists = ALK }
+		}
+		will_lead_to_war_with = ALK
+		completion_reward = {
+			custom_effect_tooltip = TAK_katzen_wargoal_effect
+			DOM = { every_controlled_state = { add_claim_by = DOM } }
+			hidden_effect = {
+				DOM = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
+				}
+			}
+			KUS = { every_controlled_state = { add_claim_by = TAK } }
+			hidden_effect = {
+				KUS = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
+				}
+			}
+			NEK = { every_controlled_state = { add_claim_by = TAK } }
+			hidden_effect = {
+				NEK = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
+				}
+			}
+			FSR = { every_controlled_state = { add_claim_by = TAK } }
+			hidden_effect = {
+				FSR = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
+				}
+			}
+		}
+	}
+
+	focus = { #prepare to fight rustalia
+		id = TAK_rustalia_wargoal
+		icon = TAK_rustalia_wargoal
+		x = 2
+		y = 2
+		cost = 5
+		relative_position_id = TAK_greater_takicardie
+		prerequisite = { focus = TAK_many_many_charles focus = TAK_everything_on_charles }
+		bypass = {
+			NOT = { country_exists = RST }
+		}
+		will_lead_to_war_with = RST
+		completion_reward = {
+			custom_effect_tooltip = TAK_rustalia_wargoal_effect
+			RST = { every_controlled_state = { add_claim_by = TAK} }
+			hidden_effect = {
+				RST = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+					every_core_state = {
+						add_to_array = { array = TAK.TAK_possible_infiltration_states }
+					}
+				}
 			}
 		}
 	}
