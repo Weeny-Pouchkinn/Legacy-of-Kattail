@@ -440,6 +440,8 @@ on_actions = {
 
 			#Ascarl
 			NRW = { every_owned_state = { set_variable = { species = 3 } } }
+			
+			SAR = { every_owned_state = { set_variable = { minority = 9 } } }
 
 			#Macaquia
 			SAR = { every_owned_state = { set_variable = { species = 9 } } }
@@ -1106,26 +1108,25 @@ on_actions = {
 				if = {
 					limit = { check_variable = { num_battalions < 1 } }
 					division_template = {
-						name = "Basic Infantry"
+						name = "Infantry Division"
 						is_locked = no
 						regiments = {
-							infantry = { x = 0 y = 0 }
-							infantry = { x = 0 y = 1 }
-							infantry = { x = 0 y = 2 }
-							infantry = { x = 0 y = 3 }
-							infantry = { x = 1 y = 0 }
-							infantry = { x = 1 y = 1 }
-							infantry = { x = 1 y = 2 }
-							infantry = { x = 1 y = 3 }
+							motorized = { x = 0 y = 0 }
+							motorized = { x = 0 y = 1 }
+							motorized = { x = 0 y = 2 }
+							motorized = { x = 1 y = 0 }
+							motorized = { x = 1 y = 1 }
+							motorized = { x = 1 y = 2 }
 						}
 						support = {
 							artillery = { x = 0 y = 0 }
-							engineer = { x = 0 y = 1 }
+							anti_tank = { x = 0 y = 1 }
+							engineer = { x = 0 y = 2 }
 						}
 					}
 					every_controlled_state = {
 						create_unit = {
-							division = "division_template = \"Basic Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
+							division = "division_template = \"Infantry Division\" start_experience_factor = 0.1 start_equipment_factor = 1"
 							count = 1
 							owner = PREV
 						}
@@ -1168,8 +1169,29 @@ on_actions = {
 			# Offmap shitpost guis
 			966 = { set_variable = { meogartha = 1 } }
 			967 = { set_variable = { glongland = 1 } }
+
+			#Kaiser Timer
+			KTZ = {
+				set_country_flag = KTZ_kattail_conquest_timer_active
+				set_variable = { KTZ_kattail_conquest_timer = 1825 } #5 years
+			}
         }
 	}
+
+	on_daily_KTZ = {
+		effect = {
+			if = {
+				limit = { has_country_flag = KTZ_kattail_conquest_timer_active }
+				subtract_from_variable = { KTZ_kattail_conquest_timer = 1 }
+				if = {
+					limit = { check_variable = { KTZ_kattail_conquest_timer < 1 } }
+					country_event = LOK_KTZ.1
+				}
+			}
+		}
+	}
+
+
 
 	on_weekly_TAK = {
 		effect = {
@@ -1394,6 +1416,45 @@ on_actions = {
 
 	on_state_control_changed = {
 		effect = {
+			#Kattail's Timer
+			if = { #State gained
+				limit = {
+					ROOT = {
+						OR = {
+							tag = KTZ
+							is_puppet_of = KTZ
+						}
+					}
+					FROM = {
+						NOT = { is_puppet_of = KTZ }
+						NOT = { tag = KTZ }
+					}
+					KTZ = { has_country_flag = KTZ_kattail_conquest_timer_active }
+				}
+				KTZ = {
+					add_political_power = 2
+					add_to_variable = { KTZ_kattail_conquest_timer = 2 }
+				}
+			}
+			if = { #State lost
+				limit = {
+					FROM = {
+						OR = {
+							tag = KTZ
+							is_puppet_of = KTZ
+						}
+						KTZ = { has_country_flag = KTZ_kattail_conquest_timer_active }
+					}
+					ROOT = {
+						NOT = { is_puppet_of = KTZ }
+						NOT = { tag = KTZ }
+					}
+				}
+				KTZ = {
+					subtract_from_variable = { KTZ_kattail_conquest_timer = 2 }
+				}
+			}
+
 			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
