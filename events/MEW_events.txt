@@ -1,0 +1,86 @@
+add_namespace = MEW_event
+
+#meownich wants stuff
+country_event = {
+	id = MEW_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event MEW_event.1"}
+	title = MEW_event.1.t
+	desc = MEW_event.1.d
+	is_triggered_only = yes
+	picture = GFX_report_event_valewria
+
+	option = { #just recognize
+		name = MEW_event.1.a
+		MEW = { country_event = { id = MEW_event.2 days = 5 } }
+	}
+
+	option = { #send guns
+		name = MEW_event.1.b
+		MEW = { country_event = { id = MEW_event.3 days = 5 } }
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -5000
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				tag = ACR
+				factor = 0.25
+			}
+		}
+	}
+
+	option = { #do nothing
+		name = MEW_event.1.c
+		MEW = { country_event = { id = MEW_event.4 days = 5 } }
+	}
+}
+
+#recognized
+country_event = {
+	id = MEW_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event MEW_event.2"}
+	title = MEW_event.2.t
+	desc = MEW_event.2.d
+	is_triggered_only = yes
+	picture = GFX_report_event_valewria
+
+	option = {
+		name = MEW_event.2.a
+		add_political_power = 50
+	}
+}
+
+#sent guns
+country_event = {
+	id = MEW_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event MEW_event.3"}
+	title = MEW_event.3.t
+	desc = MEW_event.3.d
+	is_triggered_only = yes
+	picture = GFX_report_event_valewria
+
+	option = {
+		name = MEW_event.3.a
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 5000
+		}
+		add_political_power = 50
+	}
+}
+
+#nothing
+country_event = {
+	id = MEW_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event MEW_event.4"}
+	title = MEW_event.4.t
+	desc = MEW_event.4.d
+	is_triggered_only = yes
+	picture = GFX_report_event_valewria
+
+	option = {
+		name = MEW_event.4.a
+		add_political_power = -10
+	}
+}

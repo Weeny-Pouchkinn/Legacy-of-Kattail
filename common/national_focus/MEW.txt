@@ -1,0 +1,334 @@
+focus_tree = {
+	id = MEW_TREE
+	continuous_focus_position = { x = 2700 y = 300 }
+	country = {
+		factor = 0
+		modifier = {
+			add = 100
+			tag = MEW
+		}
+	}
+	focus = {
+		id = MEW_hail_valweria
+		icon = TAI_state_of_tailsbaden
+		x = 12
+		y = 0
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_codify_herzlands_communism
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_hail_valweria
+		prerequisite = { focus = MEW_hail_valweria }
+		x = 0
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_contact_revolutionaries
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_codify_herzlands_communism
+		prerequisite = { focus = MEW_codify_herzlands_communism }
+		x = 0
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_contact_sobakiland
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_contact_revolutionaries
+		prerequisite = { focus = MEW_contact_revolutionaries }
+		x = 2
+		y = 1
+		cost = 5
+		completion_reward = {
+			SOB = { country_event = { id = MEW_event.1 days = 5 } }
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_contact_krokatzia
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_contact_revolutionaries
+		prerequisite = { focus = MEW_contact_revolutionaries }
+		x = -2
+		y = 1
+		cost = 5
+		completion_reward = {
+			WAC = { country_event = { id = MEW_event.1 days = 5 } }
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_contact_amphibia
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_contact_revolutionaries
+		prerequisite = { focus = MEW_contact_revolutionaries }
+		x = 0
+		y = 1
+		cost = 5
+		completion_reward = {
+			ACR = { country_event = { id = MEW_event.1 days = 5 } }
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_prepare_first_step
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_contact_revolutionaries
+		prerequisite = { focus = MEW_contact_amphibia focus = MEW_contact_krokatzia focus = MEW_contact_sobakiland }
+		x = 0
+		y = 2
+		cost = 5
+		completion_reward = {
+			random_core_state = { add_building_construction = { type = arms_factory level = 1 } }
+			random_core_state = { add_building_construction = { type = arms_factory level = 1 } }
+			random_core_state = { add_building_construction = { type = arms_factory level = 1 } }
+			random_core_state = { add_building_construction = { type = arms_factory level = 1 } }
+			if = {
+				limit = {
+					OR = {
+						has_idea = volunteer_only
+						has_idea = limited_conscription
+					}
+				}
+				add_idea = extensive_conscription
+			}
+		}
+	}
+
+	focus = {
+		id = MEW_strike_at_struken
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_prepare_first_step
+		prerequisite = { focus = MEW_prepare_first_step }
+		x = 0
+		y = 1
+		cost = 5
+		will_lead_to_war_with = STR
+		completion_reward = {
+			declare_war_on = {
+				target = STR
+				type = annex_everything
+			}
+		}
+	}
+
+	focus = {
+		id = MEW_communard_agents
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_strike_at_struken
+		prerequisite = { focus = MEW_strike_at_struken }
+		x = -1
+		y = 1
+		cost = 5
+		available = {
+			has_war_with = STR
+		}
+		completion_reward = {
+			STR = {
+				every_controlled_state = {
+					random = {
+						chance = 50
+						create_unit = {
+							division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+							count = 3
+							owner = MEW
+							allow_spawning_on_enemy_provs = yes
+						}
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MEW_prepare_assimilation
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_strike_at_struken
+		prerequisite = { focus = MEW_strike_at_struken }
+		x = 1
+		y = 1
+		cost = 5
+		available = {
+			any_controlled_state = {
+				is_core_of = STR
+			}
+		}
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_eastern_feline_communes
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_strike_at_struken
+		prerequisite = { focus = MEW_strike_at_struken }
+		x = 0
+		y = 2
+		cost = 5
+		completion_reward = {
+			set_cosmetic_tag = MEW_eastern_communes
+			STR = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MEW_fate_of_gunnaw
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_eastern_feline_communes
+		mutually_exclusive = { focus = MEW_kill_gunnaw }
+		prerequisite = { focus = MEW_eastern_feline_communes }
+		x = 1
+		y = 1
+		cost = 5
+		completion_reward = {
+			STR = {
+				every_character = {
+					set_nationality = MEW
+				}
+				every_core_state = {
+					add_compliance = 10
+				}
+			}
+			add_stability = -0.05
+			add_war_support = -0.05
+			add_political_power = -100
+		}
+	}
+
+	focus = {
+		id = MEW_kill_gunnaw
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_eastern_feline_communes
+		mutually_exclusive = { focus = MEW_fate_of_gunnaw }
+		prerequisite = { focus = MEW_eastern_feline_communes }
+		x = 3
+		y = 1
+		cost = 5
+		completion_reward = {
+			STR = {
+				every_core_state = {
+					add_compliance = -5
+				}
+			}
+			add_stability = 0.10
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MEW_meet_with_krokatzia
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_eastern_feline_communes
+		prerequisite = { focus = MEW_eastern_feline_communes }
+		x = -1
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+
+	focus = { #Liberate sister republics
+		id = MEW_valewria_forever
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_meet_with_krokatzia
+		prerequisite = { focus = MEW_meet_with_krokatzia }
+		mutually_exclusive = { focus = MEW_chteiner_triumphs }
+		x = 1
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+	focus = { #Glorious singular state
+		id = MEW_chteiner_triumphs
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_meet_with_krokatzia
+		prerequisite = { focus = MEW_meet_with_krokatzia }
+		mutually_exclusive = { focus = MEW_valewria_forever }
+		x = -1
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+	focus = {
+		id = MEW_quarries_civil_war
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_meet_with_krokatzia
+		prerequisite = { focus = MEW_valewria_forever focus = MEW_chteiner_triumphs }
+		x = 0
+		y = 2
+		cost = 5
+		available = {
+			PTQ = {
+				communism > 0.5
+			}
+		}
+		completion_reward = {
+			PTQ = {
+				every_controlled_state = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					random = {
+						chance = 50
+						transfer_state_to = MEW
+						create_unit = {
+							division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+							count = 6
+							owner = MEW
+							allow_spawning_on_enemy_provs = yes
+						}
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = MEW_look_to_the_WPR
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_meet_with_krokatzia
+		prerequisite = { focus = MEW_valewria_forever focus = MEW_chteiner_triumphs }
+		x = -2
+		y = 2
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+}
