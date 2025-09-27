@@ -14,6 +14,10 @@ country_event = {
 				check_variable = { aur_num_new_reactors_built > 1 }
 			}
 			complete_national_focus = AUR_pushing_pushing
+			hidden_effect = {
+				remove_mission = AUR_industry_timer
+			}
+			country_event = { id = AUR_industry.4 }
 		}
 		else = {
 			set_country_flag = failed_dreijahrige
@@ -36,6 +40,10 @@ country_event = {
 				check_variable = { aur_num_new_mils_built > 15 }
 			}
 			complete_national_focus = AUR_nearly_there
+			hidden_effect = {
+				remove_mission = AUR_industry_timer
+			}
+			country_event = { id = AUR_industry.4 }
 		}
 		else = {
 			set_country_flag = failed_dreijahrige
@@ -66,6 +74,22 @@ country_event = {
 		}
 	}
 }
+
+country_event = {
+	id = AUR_industry.4
+	title = AUR_industry.4.t
+	desc = AUR_industry.4.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_industry.4.a
+		custom_effect_tooltip = AUR_industry.4.a.tt
+		activate_mission = AUR_industry_timer
+	}
+}
+
 
 add_namespace = AUR_event
 country_event = {
@@ -157,6 +181,10 @@ country_event = {
 			idea = AUR_economic_backlash
 			days = 180
 		}
+		hidden_effect = {
+			set_country_flag = AUR_industry_timer_done
+		}
+		remove_mission = AUR_industry_timer
 	}
 }
 
@@ -555,5 +583,148 @@ country_event = {
 	}
 }
 
+#Roqualians Purged
+country_event = {
+	id = AUR_event.20
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.20"}
+	title = AUR_event.20.t
+	desc = AUR_event.20.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.20.a
+		add_stability = -0.05
+	}
+	
+	immediate = {
+		hidden_effect = {
+			KUS = { country_event = { id = AUR_event.21 days = 5 } }
+			RQA = { country_event = { id = AUR_event.21 days = 5 } }
+			NEK = { country_event = { id = AUR_event.21 days = 5 } }
+			RST = { country_event = { id = AUR_event.21 days = 5 } }
+			ROQ = { country_event = { id = AUR_event.21 days = 5 } }
+			LMB = { country_event = { id = AUR_event.21 days = 5 } }
+			FSR = { country_event = { id = AUR_event.21 days = 5 } }
+			news_event = { id = AUR_event.22 days = 7 }
+		}
+	}
+}
+
+#Roqualian Purged (nation reactions)
+country_event = {
+	id = AUR_event.21
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.21"}
+	title = AUR_event.21.t
+	desc = AUR_event.21.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.21.a
+		add_stability = -0.05
+	}
+
+	option = {
+		name = AUR_event.21.b
+		add_stability = -0.05
+		add_political_power = -100
+		add_ideas = service_by_requirement
+	}
+}
+
+#Roqualians Purged (news)
+news_event = {
+	id = AUR_event.22
+	title = "AUR_event.22.t"
+	desc = "AUR_event.22.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_combat
+	major = yes
+
+	#Whatever
+	option = {
+		name = "AUR_event.22.a"
+		trigger = { NOT = { tag = AUR } }
+		send_embargo = AUR
+	}
+
+	option = {
+		name = "AUR_event.22.b"
+		custom_effect_tooltip = "AUR_event.22.b.tt"
+		trigger = { tag = AUR }
+	}
+}
+
+#slave collars
+country_event = {
+	id = AUR_event.23
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.23"}
+	title = AUR_event.23.t
+	desc = AUR_event.23.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.23.a
+		add_stability = 0.05
+	}
+}
+
+#Frankfurr
+country_event = {
+	id = AUR_event.24
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.24"}
+	title = AUR_event.24.t
+	desc = AUR_event.24.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.24.a
+		add_research_slot = -1
+		add_tech_bonus = {
+			name = LOK_tech_bonus
+			category = electronics
+			bonus = 2
+			uses = 2
+			ahead_reduction = 0.5
+		}
+	}
+}
+
+#Kathur is a moron and joins the "Meowrines"
+country_event = {
+	id = AUR_event.25
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.25"}
+	title = AUR_event.25.t
+	desc = AUR_event.25.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.25.a
+		country_event = { id = AUR_event.26 days = 3 }
+	}
+}
+
+country_event = {
+	id = AUR_event.26
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.26"}
+	title = AUR_event.26.t
+	desc = AUR_event.26.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.26.a
+	}
+}
 
 #South threatens secession!

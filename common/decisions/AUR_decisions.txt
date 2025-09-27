@@ -54,6 +54,7 @@ AUR_commissars_cat = {
 			subtract_from_variable = { AUR_dispatched_commissars = 1 }
 			add_to_variable = { AUR_available_commissars = 1 }
 			FROM = {
+				clr_state_flag = AUR_active_commissar
 				add_resistance = -20
 				add_resistance_target = -20
 				add_manpower = -5000
@@ -128,6 +129,7 @@ AUR_commissars_cat = {
 				add_to_variable = { AUR_the_kaiser_must_return_industrial_capacity_factory = -0.001 }	
 			}
 			FROM = {
+				clr_state_flag = AUR_active_commissar
 				custom_effect_tooltip = state_core_threshold_lower_20
 				hidden_effect = {
 					reduce_compliance_coring_threshold_by_10 = yes
@@ -157,9 +159,87 @@ AUR_commissars_cat = {
 			base = 1000
 		}
 	}
+
+	AUR_clease_unterkatzens = {
+		icon = GFX_decision_generic_scorched_earth
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			has_completed_focus = AUR_remove_monke
+			FROM = {
+				NOT = { check_variable = { minority = 1000 } }
+			}
+		}
+
+		available = {
+			FROM = { NOT = { has_state_flag = AUR_active_commissar } }
+			check_variable = { AUR_available_commissars > 0 }
+		}
+
+		state_target = any_owned_state
+		on_map_mode = map_only
+
+		cost = 25
+
+		complete_effect = {
+			custom_effect_tooltip = AUR_dispatch_1_katzkommissar
+			FROM = { set_state_flag = AUR_active_commissar }
+			subtract_from_variable = { AUR_available_commissars = 1 }
+			add_to_variable = { AUR_dispatched_commissars = 1 }
+		}
+
+		remove_effect = {
+			subtract_from_variable = { AUR_dispatched_commissars = 1 }
+			add_to_variable = { AUR_available_commissars = 1 }
+			FROM = {
+				clr_state_flag = AUR_active_commissar
+				add_resistance = -10
+				add_resistance_target = -10
+				custom_effect_tooltip = AUR_clease_unterkatzens_tt
+				set_variable = { minority = 1000 }
+				add_manpower = -500000
+			}
+			add_stability = -0.05
+			force_update_map_mode = {
+				mapmode = LOK_species_map_mode
+			}
+			custom_effect_tooltip = AUR_clease_unterkatzens_remove_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_research_speed_factor = -0.01 }
+				add_to_variable = { AUR_the_kaiser_must_return_industrial_capacity_factory = -0.01 }	
+			}
+		}
+
+		cancel_effect = {
+			add_to_variable = { AUR_dispatched_commissars = 1 }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
 }
 
 AUR_industrialization_cat = {
+	AUR_industry_timer = {
+		available = {
+			hidden_trigger = { always = no }
+		}
+		activation = {
+			has_completed_focus = AUR_dreijahrige
+			NOT = { has_country_flag = AUR_industry_timer_done }
+		}
+		icon = GFX_decision_generic_factory
+		is_good = no
+		days_mission_timeout = 365
+		timeout_effect = {
+			custom_effect_tooltip = AUR_industry_timer_tt
+		}
+	}
 	#1st term
 	AUR_aggressive_industrialization = {
 		icon = GFX_decision_generic_construction
@@ -170,8 +250,7 @@ AUR_industrialization_cat = {
 		visible = {
 			has_completed_focus = AUR_dreijahrige
 			NOT = { has_completed_focus = AUR_pushing_pushing }
-			FROM = { is_core_of = AUR }
-			check_variable = { building_level@infrastructure < 5 }
+			FROM = { is_core_of = AUR check_variable = { building_level@infrastructure < 5 } }
 		}
 
 		available = {

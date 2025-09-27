@@ -1,0 +1,45 @@
+add_namespace = PTQ_event
+
+#CIVIL WAR!!
+country_event = {
+	id = PTQ_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event PTQ_event.1"}
+	title = PTQ_event.1.t
+	desc = PTQ_event.1.d
+	picture = GFX_report_event_dofus
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = PTQ_event.1.a
+		every_neighbor_country = {
+			limit = { is_herzlands_warlord = yes }
+			save_global_event_target_as = ptq_state_stealer
+			PTQ = {
+				random_owned_state = {
+					limit = { any_neighbor_state = { is_controlled_by = event_target:ptq_state_stealer } }
+					transfer_state_to = event_target:ptq_state_stealer
+				}
+			}
+		}
+		start_civil_war = { ideology = communism size = 0.5 }
+	}
+}
+
+#Seize land?
+country_event = {
+	id = PTQ_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event PTQ_event.2"}
+	title = ROQ_event.2.t
+	desc = ROQ_event.2.d
+	picture = GFX_report_event_dofus
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = PTQ_event.1.a
+		start_civil_war = { ideology = communism size = 0.5 }
+	}
+}

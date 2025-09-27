@@ -1334,6 +1334,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = AUR_remove_the_blight_effect
 			add_stability = 0.15
+			country_event = { id = AUR_event.20 }
 			if = {
 				limit = { controls_state = 512 }
 				512 = {
@@ -1838,6 +1839,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = AUR_meowrine_kill_collars_tt
+			country_event = { id = AUR_event.23 days = 3 }
 			hidden_effect = {
 				add_to_variable = { AUR_the_kaiser_must_return_compliance_growth = -0.10 }
 				add_to_variable = { AUR_the_kaiser_must_return_resistance_growth = -0.10 }
@@ -1859,6 +1861,7 @@ focus_tree = {
 			controls_state = 62
 		}
 		completion_reward = {
+			country_event = { id = AUR_event.25 days = 3 }
 			add_tech_bonus = {
 				name = excavation_tech
 				bonus = 2
@@ -2181,7 +2184,7 @@ focus_tree = {
 		x = 0
 		y = 2
 		cost = 10
-		prerequisite = { focus = AUR_the_greatest_army focus = AUR_mass_conversion focus = AUR_the_second_dreijahrige focus = AUR_clamp_down_on_the_north}
+		prerequisite = { focus = AUR_the_greatest_army focus = AUR_mass_conversion focus = AUR_the_second_dreijahrige focus = AUR_clamp_down_on_the_north }
 		relative_position_id = AUR_storm_the_pyramid
 		completion_reward = {
 			custom_effect_tooltip = AUR_unto_the_breach_tt
@@ -2194,8 +2197,238 @@ focus_tree = {
 							type = annex_everything
 						}
 					}
-				}	
+				}
 			}
+			every_state = {
+				limit = {
+					is_in_array = {
+						array = global.herzlands_states_array
+						value = THIS
+					}
+				}
+				add_claim_by = AUR
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_reap_knowledge
+		icon = GFX_goal_KTZ_modern_medicine
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_unto_the_breach }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			controls_state = 477
+		}
+		completion_reward = {
+			add_research_slot = 1
+			country_event = { id = AUR_event.24 }
+		}
+	}
+
+	focus = {
+		id = AUR_remove_monke
+		icon = GFX_focus_SWE_neither_death_nor_dishonor
+		x = 2
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_unto_the_breach }
+		prerequisite = { focus = AUR_the_greatest_army }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			controls_state = 87
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_remove_monke_tt
+		}
+	}
+
+	focus = {
+		id = AUR_hell_for_commies
+		icon = GFX_focus_RAJ_bathe_in_hellfire
+		x = -2
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_unto_the_breach }
+		prerequisite = { focus = AUR_clamp_down_on_the_north }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			controls_state = 110
+			has_equipment = {
+				lok_fission_nuke_equipment > 14
+			}
+		}
+		completion_reward = {
+			add_political_power = 150
+			add_popularity = {
+				ideology = communism
+				popularity = -1
+			}
+			110 = {
+				for_loop_effect = {
+					end = 15
+					nuke_state_fission = yes
+				}
+				add_resistance = 50
+				add_manpower = -1000000
+				set_victory_points = { province = 10353 value = 0 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_elevate_the_monument
+		icon = GFX_goal_KTZ_local_police
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_unto_the_breach }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			controls_state = 602
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_elevate_the_monument_tt
+			602 = {
+				multiply_variable = { wonder_modifiers_values^30 = 2 }
+				multiply_variable = { wonder_modifiers_values^31 = 2 }
+				multiply_variable = { wonder_modifiers_values^14 = 2 }
+				multiply_variable = { wonder_modifiers_values^0 = 2 }
+			}
+			hidden_effect = {
+				apply_wonder_effects = yes
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_the_new_superhighway
+		icon = GFX_goal_KTZ_new_superhighway
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_unto_the_breach }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			controls_state = 486
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_the_new_superhighway_tt
+			add_timed_idea = {
+				idea = cg_payment_20
+				days = 120
+			}
+			486 = {
+				multiply_variable = { wonder_modifiers_values^19 = 2 }
+				multiply_variable = { wonder_modifiers_values^20 = 2 }
+				multiply_variable = { wonder_modifiers_values^21 = 2 }
+			}
+			hidden_effect = {
+				apply_wonder_effects = yes
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_fuel_the_bombs
+		icon = GFX_focus_RAJ_uranium_tipped_bullets
+		x = 1
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_remove_monke }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			controls_state = 54
+			controls_state = 566	
+			controls_state = 481
+		}
+		completion_reward = {
+			add_resource = { type = fissiles amount = 20 state = 54 }
+			add_resource = { type = fissiles amount = 20 state = 566 }
+			add_resource = { type = fissiles amount = 20 state = 481 }
+		}
+	}
+	focus = {
+		id = AUR_obliterate_the_encroachers
+		icon = GFX_goal_KTZ_true_blitzkrieg
+		x = -1
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_hell_for_commies }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			controls_state = 486
+		}
+		will_lead_to_war_with = SOB
+		will_lead_to_war_with = NMI
+		will_lead_to_war_with = ZUS
+		will_lead_to_war_with = NKC
+		will_lead_to_war_with = WAC
+		completion_reward = {
+			declare_war_on = {
+				target = SOB
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = ZUS
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = NMI
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = NKC
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = WAC
+				type = annex_everything
+			}
+		}
+	}
+	focus = {
+		id = AUR_his_domain_is_ready
+		icon = AUR_the_wait_for_him
+		x = 0
+		y = 4
+		cost = 5
+		prerequisite = { focus = AUR_reap_knowledge }
+		prerequisite = { focus = AUR_obliterate_the_encroachers }
+		prerequisite = { focus = AUR_fuel_the_bombs }
+		relative_position_id = AUR_unto_the_breach
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_his_domain_is_ready_prereq
+				hidden_trigger = {
+					NOT = {
+						any_country = {
+							NOT = { tag = AUR }
+							is_herzlands_warlord = yes
+						}
+					}			
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = AUR_his_domain_is_ready_no_unterflusionians
+				hidden_trigger = {
+					NOT = {
+						any_owned_state = {
+							is_in_array = {
+								array = global.herzlands_states_array
+								value = THIS
+							}
+							NOT = { check_variable = { minority = 1000 } }
+						}
+					}			
+				}
+			}
+		}
+		completion_reward = {
+			set_cosmetic_tag = KTZ_UNITED_AUR
+			country_event = { id = AUR_event.14 }
 		}
 	}
 }
