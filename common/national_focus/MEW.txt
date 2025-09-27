@@ -204,9 +204,9 @@ focus_tree = {
 		icon = TAI_state_of_tailsbaden
 		relative_position_id = MEW_eastern_feline_communes
 		mutually_exclusive = { focus = MEW_kill_gunnaw }
-		prerequisite = { focus = MEW_eastern_feline_communes }
-		x = 1
-		y = 1
+		prerequisite = { focus = MEW_prepare_assimilation }
+		x = 2
+		y = 0
 		cost = 5
 		completion_reward = {
 			STR = {
@@ -228,9 +228,9 @@ focus_tree = {
 		icon = TAI_state_of_tailsbaden
 		relative_position_id = MEW_eastern_feline_communes
 		mutually_exclusive = { focus = MEW_fate_of_gunnaw }
-		prerequisite = { focus = MEW_eastern_feline_communes }
-		x = 3
-		y = 1
+		prerequisite = { focus = MEW_prepare_assimilation }
+		x = 4
+		y = 0
 		cost = 5
 		completion_reward = {
 			STR = {
@@ -244,51 +244,12 @@ focus_tree = {
 	}
 
 	focus = {
-		id = MEW_meet_with_krokatzia
+		id = MEW_quarries_civil_war
 		icon = TAI_state_of_tailsbaden
 		relative_position_id = MEW_eastern_feline_communes
 		prerequisite = { focus = MEW_eastern_feline_communes }
-		x = -1
-		y = 1
-		cost = 5
-		completion_reward = {
-			add_political_power = 100
-		}
-	}
-
-	focus = { #Liberate sister republics
-		id = MEW_valewria_forever
-		icon = TAI_state_of_tailsbaden
-		relative_position_id = MEW_meet_with_krokatzia
-		prerequisite = { focus = MEW_meet_with_krokatzia }
-		mutually_exclusive = { focus = MEW_chteiner_triumphs }
-		x = 1
-		y = 1
-		cost = 5
-		completion_reward = {
-			add_political_power = 100
-		}
-	}
-	focus = { #Glorious singular state
-		id = MEW_chteiner_triumphs
-		icon = TAI_state_of_tailsbaden
-		relative_position_id = MEW_meet_with_krokatzia
-		prerequisite = { focus = MEW_meet_with_krokatzia }
-		mutually_exclusive = { focus = MEW_valewria_forever }
-		x = -1
-		y = 1
-		cost = 5
-		completion_reward = {
-			add_political_power = 100
-		}
-	}
-	focus = {
-		id = MEW_quarries_civil_war
-		icon = TAI_state_of_tailsbaden
-		relative_position_id = MEW_meet_with_krokatzia
-		prerequisite = { focus = MEW_valewria_forever focus = MEW_chteiner_triumphs }
 		x = 0
-		y = 2
+		y = 1
 		cost = 5
 		available = {
 			PTQ = {
@@ -309,13 +270,65 @@ focus_tree = {
 			}
 		}
 	}
+
+	focus = {
+		id = MEW_meet_with_krokatzia
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_quarries_civil_war
+		prerequisite = { focus = MEW_valewria_forever focus = MEW_chteiner_triumphs }
+		x = 0
+		y = 2
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+
+	focus = { #Liberate sister republics
+		id = MEW_valewria_forever
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_quarries_civil_war
+		prerequisite = { focus = MEW_quarries_civil_war }
+		mutually_exclusive = { focus = MEW_chteiner_triumphs }
+		x = 2
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+	focus = { #Glorious singular state
+		id = MEW_chteiner_triumphs
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_quarries_civil_war
+		prerequisite = { focus = MEW_quarries_civil_war }
+		mutually_exclusive = { focus = MEW_valewria_forever }
+		x = -2
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
 	focus = {
 		id = MEW_look_to_the_WPR
 		icon = TAI_state_of_tailsbaden
 		relative_position_id = MEW_meet_with_krokatzia
 		prerequisite = { focus = MEW_valewria_forever focus = MEW_chteiner_triumphs }
-		x = -2
-		y = 2
+		x = -1
+		y = 1
+		cost = 5
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+	focus = {
+		id = MEW_look_to_the_frontier
+		icon = TAI_state_of_tailsbaden
+		relative_position_id = MEW_meet_with_krokatzia
+		prerequisite = { focus = MEW_valewria_forever focus = MEW_chteiner_triumphs }
+		x = 1
+		y = 1
 		cost = 5
 		completion_reward = {
 			add_political_power = 100
