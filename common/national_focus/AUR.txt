@@ -1779,6 +1779,12 @@ focus_tree = {
 		prerequisite = { focus = AUR_military_police }
 		relative_position_id = AUR_military_police
 		completion_reward = {
+			custom_effect_tooltip = AUR_military_schools_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_research_speed_factor = 0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_army_attack_factor = 0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_army_org_factor = 0.10 }
+			}
 		}
 	}
 
@@ -1791,6 +1797,12 @@ focus_tree = {
 		prerequisite = { focus = AUR_katzkommissars }
 		relative_position_id = AUR_katzkommissars
 		completion_reward = {
+			add_political_power = 150
+			custom_effect_tooltip = AUR_supreme_authority_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_weekly_manpower = -1000 }
+				add_to_variable = { AUR_the_kaiser_must_return_political_power_gain = 0.50 }
+			}
 		}
 	}
 
@@ -2420,8 +2432,12 @@ focus_tree = {
 					end = 15
 					nuke_state_fission = yes
 				}
+				set_building_level = { type = arms_factory level = 0 }
+				set_building_level = { type = industrial_complex level = 0 }
+				set_building_level = { type = dockyard level = 0 }
+				add_extra_state_shared_building_slots = -5
 				add_resistance = 50
-				add_manpower = -1000000
+				add_manpower = -2000000
 				set_victory_points = { province = 10353 value = 0 }
 			}
 		}
