@@ -1315,14 +1315,14 @@ focus_tree = {
 			OR = {
 				controls_state = 512
 				controls_state = 514
-				controls_state = 191
+				controls_state = 192
 			}
 		}
 		bypass = {
 			ROQ = {
 				controls_state = 512
 				controls_state = 514
-				controls_state = 191
+				controls_state = 192
 			}
 		}
 		prerequisite = { focus = AUR_going_for_the_throat focus = AUR_they_wont_blunt_our_advance }
@@ -1396,7 +1396,6 @@ focus_tree = {
 		cost = 5
 		available = {
 			controls_state = 173
-			controls_state = 192
 		}
 		prerequisite = { focus = AUR_going_for_the_throat focus = AUR_they_wont_blunt_our_advance }
 		relative_position_id = AUR_swallow_the_free_sun
@@ -1416,16 +1415,21 @@ focus_tree = {
 					reduce_compliance_coring_threshold_by_10 = yes
 				}
 			}
-			192 = {
-				add_manpower = -5000
-				add_compliance = 20
-				add_resistance = 20
-				custom_effect_tooltip = state_core_threshold_lower_40
-				hidden_effect = {
-					reduce_compliance_coring_threshold_by_10 = yes
-					reduce_compliance_coring_threshold_by_10 = yes
-					reduce_compliance_coring_threshold_by_10 = yes
-					reduce_compliance_coring_threshold_by_10 = yes
+			if = {
+				limit = {
+					controls_state = 192
+				}
+				192 = {
+					add_manpower = -5000
+					add_compliance = 20
+					add_resistance = 20
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
 				}
 			}
 		}
@@ -1528,7 +1532,7 @@ focus_tree = {
 	focus = {
 		id = AUR_chew_slowly
 		icon = GFX_SOV_the_means_to_wage_war_ccp_2d_sov_compatibility
-		x = -1
+		x = -2
 		y = 1
 		cost = 5
 		mutually_exclusive = {
@@ -1541,15 +1545,11 @@ focus_tree = {
 			has_country_flag = AUR_did_not_kill_roqualians
 		}
 		completion_reward = {
-			add_tech_bonus = {
-				name = landing_bonus
-				bonus = 1.0
-				uses = 1
-				ahead_reduction = 1
-				category = heavy_air
+			custom_effect_tooltip = AUR_chew_slowly_tt
+			hidden_effect = {
+				set_country_flag = AUR_herald_sanity_active
+				set_variable = { herald_sanity = 50 }
 			}
-			add_equipment_to_stockpile = { type = strat_bomber_equipment_1 amount = 100 }
-			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment_0 amount = 5 }
 		}
 	}
 
@@ -1562,6 +1562,12 @@ focus_tree = {
 		prerequisite = { focus = AUR_chew_slowly }
 		relative_position_id = AUR_chew_slowly
 		completion_reward = {
+			add_political_power = -100
+			every_controlled_state = {
+				limit = { NOT = { is_core_of = AUR } }
+				add_resistance = -10
+				add_compliance = 10
+			}
 		}
 	}
 
@@ -1575,6 +1581,13 @@ focus_tree = {
 		prerequisite = { focus = AUR_re_mint_the_katzmark }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			custom_effect_tooltip = AUR_imperial_education_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_command_power_gain_mult = 0.10 }
+				add_to_variable = { AUR_the_kaiser_must_return_war_support_weekly = 0.001 }
+				add_to_variable = { AUR_the_kaiser_must_return_surrender_limit = 0.05 }
+				add_to_variable = { AUR_the_kaiser_must_return_conscription_factor = -0.10 }
+			}
 		}
 	}
 
@@ -1587,6 +1600,31 @@ focus_tree = {
 		prerequisite = { focus = AUR_put_out_the_fire }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			add_ideas = limited_exports
+			173 = {
+				add_building_construction = { type = anti_air_building level = 2 }
+				set_building_level = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_border = yes
+					}
+				}
+			}
+			191 = {
+				add_building_construction = { type = anti_air_building level = 2 }
+				set_building_level = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_border = yes
+					}
+				}
+			}
 		}
 	}
 
@@ -1599,6 +1637,13 @@ focus_tree = {
 		prerequisite = { focus = AUR_closing_the_blinds_again }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			add_manpower = -10000
+			every_army_leader = {
+				add_attack = -1
+				add_logistics = 1
+			}
+			set_temp_variable = { herald_sanity_change = 5 }
+			AUR_change_herald_sanity = yes
 		}
 	}
 
@@ -1611,6 +1656,9 @@ focus_tree = {
 		prerequisite = { focus = AUR_closing_the_blinds_again }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			add_stability = 0.05
+			add_war_support = 0.10
+			add_ideas = war_economy
 		}
 	}
 
@@ -1623,6 +1671,14 @@ focus_tree = {
 		prerequisite = { focus = AUR_imperial_education }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			custom_effect_tooltip = AUR_a_constitution_tt
+			set_temp_variable = { herald_sanity_change = 5 }
+			AUR_change_herald_sanity = yes
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_political_power_cost = 0.15 }
+				add_to_variable = { AUR_the_kaiser_must_return_stability_weekly = 0.001 }
+				add_to_variable = { AUR_the_kaiser_must_return_compliance_growth = 0.05 }
+			}
 		}
 	}
 
@@ -1635,6 +1691,12 @@ focus_tree = {
 		prerequisite = { focus = AUR_imperial_education }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			custom_effect_tooltip = AUR_cult_of_his_return_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_fascism_drift = 0.05 }
+				add_to_variable = { AUR_the_kaiser_must_return_drift_defence_factor = 0.25 }
+				add_to_variable = { AUR_the_kaiser_must_return_party_popularity_stability_factor = 0.10 }
+			}
 		}
 	}
 
@@ -1648,6 +1710,8 @@ focus_tree = {
 		prerequisite = { focus = AUR_army_reform }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			add_stability = 0.05
+			set_cosmetic_tag = AUR_SOUTHERN_KTZ
 		}
 	}
 
@@ -1674,13 +1738,210 @@ focus_tree = {
 		prerequisite = { focus = AUR_cult_of_his_return }
 		relative_position_id = AUR_biding_our_time
 		completion_reward = {
+			add_political_power = 100
+			custom_effect_tooltip = AUR_manifest_of_his_will_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_political_advisor_cost_factor = -0.25 }
+				add_to_variable = { AUR_the_kaiser_must_return_economy_cost_factor = -0.25 }
+				add_to_variable = { AUR_the_kaiser_must_return_trade_laws_cost_factor = -0.25 }
+				add_to_variable = { AUR_the_kaiser_must_return_mobilization_laws_cost_factor = -0.25 }
+				add_to_variable = { AUR_the_kaiser_must_return_high_command_cost_factor = -0.25 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_northern_theater
+		icon = GFX_goal_KTZ_are_worth_taking_over
+		x = -2
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_manifest_of_his_will }
+		prerequisite = { focus = AUR_reform_the_high_command }
+		relative_position_id = AUR_biding_our_time
+		completion_reward = {
+		}
+	}
+
+	focus = {
+		id = AUR_southern_theater
+		icon = GFX_goal_KTZ_are_worth_taking_over
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_manifest_of_his_will }
+		prerequisite = { focus = AUR_reform_the_high_command }
+		relative_position_id = AUR_biding_our_time
+		completion_reward = {
+		}
+	}
+
+	focus = {
+		id = AUR_foreign_theater
+		icon = GFX_goal_KTZ_are_worth_taking_over
+		x = 2
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_manifest_of_his_will }
+		prerequisite = { focus = AUR_reform_the_high_command }
+		relative_position_id = AUR_biding_our_time
+		completion_reward = {
+		}
+	}
+
+	focus = {
+		id = AUR_eastern_campaigns
+		icon = GFX_goal_KTZ_new_world_old_acquaintances
+		x = -1
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_southern_theater }
+		relative_position_id = AUR_southern_theater
+		will_lead_to_war_with = LIO
+		will_lead_to_war_with = MEO
+		will_lead_to_war_with = KPK
+		completion_reward = {
+			if = {
+				limit = { is_ai = no }
+				create_wargoal = {
+					target = LIO
+					type = annex_everything
+				}
+				create_wargoal = {
+					target = MEO
+					type = annex_everything
+				}
+				create_wargoal = {
+					target = KPK
+					type = annex_everything
+				}
+			}
+			else = {
+				declare_war_on = {
+					target = LIO
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = MEO
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = KPK
+					type = annex_everything
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_consolidate_the_east
+		icon = GFX_goal_KTZ_new_world_old_acquaintances
+		x = 1
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_southern_theater }
+		relative_position_id = AUR_southern_theater
+		will_lead_to_war_with = MEW
+		will_lead_to_war_with = STR
+		completion_reward = {
+			if = {
+				limit = { is_ai = no }
+				create_wargoal = {
+					target = MEW
+					type = annex_everything
+				}
+				create_wargoal = {
+					target = STR
+					type = annex_everything
+				}
+			}
+			else = {
+				declare_war_on = {
+					target = MEW
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = STR
+					type = annex_everything
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_through_the_zuspri
+		icon = GFX_goal_KTZ_new_world_old_acquaintances
+		x = 0
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_southern_theater }
+		relative_position_id = AUR_southern_theater
+		will_lead_to_war_with = WPR
+		will_lead_to_war_with = IMF
+		completion_reward = {
+			if = {
+				limit = { is_ai = no }
+				create_wargoal = {
+					target = PTQ
+					type = annex_everything
+				}
+				create_wargoal = {
+					target = IMF
+					type = annex_everything
+				}
+			}
+			else = {
+				declare_war_on = {
+					target = PTQ
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = IMF
+					type = annex_everything
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_through_the_center
+		icon = GFX_goal_KTZ_new_world_old_acquaintances
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_southern_theater }
+		relative_position_id = AUR_southern_theater
+		will_lead_to_war_with = WPR
+		will_lead_to_war_with = OST
+		completion_reward = {
+			if = {
+				limit = { is_ai = no }
+				create_wargoal = {
+					target = OST
+					type = annex_everything
+				}
+				create_wargoal = {
+					target = WPR
+					type = annex_everything
+				}
+			}
+			else = {
+				declare_war_on = {
+					target = OST
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = WPR
+					type = annex_everything
+				}
+			}
 		}
 	}
 
 	focus = {
 		id = AUR_i_need_it_all
 		icon = GFX_focus_GER_wunderwaffe
-		x = 3
+		x = 4
 		y = 1
 		cost = 5
 		mutually_exclusive = {

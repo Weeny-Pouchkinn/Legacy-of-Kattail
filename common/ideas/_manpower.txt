@@ -278,6 +278,14 @@ ideas = {
 			}
 
 			cancel_if_invalid = no
+
+			on_add = {
+				if = {
+					limit = { tag = AUR has_country_flag = AUR_herald_sanity_active NOT = { has_idea = scraping_the_barrel } }
+					set_temp_variable = { herald_sanity_change = -5 }
+					AUR_change_herald_sanity = yes
+				}
+			}
 		}
 
 		scraping_the_barrel = {
@@ -336,6 +344,14 @@ ideas = {
 			}
 
 			cancel_if_invalid = no
+
+			on_add = {
+				if = {
+					limit = { tag = AUR has_country_flag = AUR_herald_sanity_active }
+					set_temp_variable = { herald_sanity_change = -5 }
+					AUR_change_herald_sanity = yes
+				}
+			}
 		}
 
 	}

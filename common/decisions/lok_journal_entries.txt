@@ -314,6 +314,7 @@ lok_journal_entries_cat = {
 		fire_only_once = yes
 
 		remove_effect = {
+			save_global_event_target_as = east_solakea_katzen_uniter
 			set_cosmetic_tag = UNIONSTAAT
 			RQA = {
 				every_core_state = {
@@ -757,6 +758,71 @@ lok_journal_entries_cat = {
 		cost = 50
 
 		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	ROQ_reclamation_peace = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+
+		visible = {
+			OR = {
+				has_war_with = DOM
+				has_war_with = FSR
+			}
+		}
+
+		available = {
+			272 = { var:controller = { has_war_with = ROQ } }
+			301 = { var:controller = { has_war_with = ROQ } }
+			299 = { var:controller = { has_war_with = ROQ } }
+			744 = { var:controller = { has_war_with = ROQ } }
+			260 = { var:controller = { has_war_with = ROQ } }
+			245 = { var:controller = { has_war_with = ROQ } }
+			238 = { var:controller = { has_war_with = ROQ } }
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			if = {
+				limit = { has_war_with = SLR }
+				325 = { transfer_state_to = SLR }
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = event_target:east_solakea_katzen_uniter
+					has_war_with = ROQ
+				}
+				white_peace = ROQ
+			}
+			272 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
+			301 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
+			299 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
+			744 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
+			260 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
+			245 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
+			238 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
+			256 = { set_demilitarized_zone = yes }
+			740 = { set_demilitarized_zone = yes }
+			if = {
+				limit = { SLR = { controls_state = 325 } }
+				722 = { set_demilitarized_zone = yes }
+			}
+			else_if = {
+				limit = { 313 = { var:controller = { is_in_faction_with = event_target:east_solakea_katzen_uniter } } }
+				325 = { set_demilitarized_zone = yes }
+			}
+			add_war_support = -0.40
+			add_stability = -0.40
+		}
+
+		cost = 50
 
 		ai_will_do = {
 			base = 1000

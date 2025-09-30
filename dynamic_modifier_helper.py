@@ -40,7 +40,10 @@ def get_loc_formatting(modifier_name, value, type_str):
     return f"ERROR" # Should not be reached
 
 def parse_modifier_input(input_text):
-    """Parses the multiline modifier input."""
+    """
+    Parses the multiline modifier input.
+    Format expected: [name] = [value] [GOOD/BAD]
+    """
     parsed_modifiers = []
     lines = input_text.strip().split('\n')
     
@@ -49,12 +52,11 @@ def parse_modifier_input(input_text):
         if not line:
             continue
 
-        # Regex to match: [name] = [value] - [GOOD/BAD]
-        # Example: political_power_gain = 0.10 - GOOD
-        match = re.match(r"([\w_]+)\s*=\s*([-\d.]+)\s*-\s*(GOOD|BAD)", line, re.IGNORECASE)
+        # Regex updated to match: [name] = [value] [GOOD/BAD] (removed the dash)
+        match = re.match(r"([\w_]+)\s*=\s*([-\d.]+)\s+(GOOD|BAD)", line, re.IGNORECASE)
         
         if not match:
-            messagebox.showerror("Input Error", f"Invalid modifier line format: {line}")
+            messagebox.showerror("Input Error", f"Invalid modifier line format. Expected format: name = value GOOD/BAD. Error line: {line}")
             return None
         
         modifier_name, value_str, type_str = match.groups()
@@ -78,18 +80,22 @@ def parse_modifier_input(input_text):
     return parsed_modifiers
 
 def update_localisation(tag, effect_name, dyn_mod_name, modifiers):
-    """Generates and writes the _tt entry to the country's localization file."""
+    """
+    Generates and writes the _tt entry to the country's localization file.
+    Ensures a single space before the key.
+    """
     loc_filepath = os.path.join(LOCALISATION_DIR, f"{tag}_l_english.yml")
     
     # Create directory if it doesn't exist
     os.makedirs(LOCALISATION_DIR, exist_ok=True)
 
     # 1. Generate the content
-    tt_key = f" {effect_name}_tt:0"
+    # Key structure: [space]KEY:0
+    tt_key_with_space = f" {effect_name}_tt:0"
     
-    # Title line
-    loc_lines = [
-        f' "{tt_key}\\"Modify §Y${dyn_mod_name}$§! by: \\n'
+    # Start the value part of the localization string
+    value_parts = [
+        f'Modify §Y${dyn_mod_name}$§! by: \\n'
     ]
     
     # Modifier lines
@@ -97,10 +103,13 @@ def update_localisation(tag, effect_name, dyn_mod_name, modifiers):
         loc_formatting = get_loc_formatting(mod['name'], mod['value'], mod['type'])
         modifier_loc_key = f"MODIFIER_{mod['name'].upper()}"
         
-        loc_lines.append(f'${modifier_loc_key}$: {loc_formatting}\\n')
+        value_parts.append(f'${modifier_loc_key}$: {loc_formatting}\\n')
 
-    # Join lines and close the quote
-    loc_value = "".join(loc_lines) + '"'
+    # Join lines, remove the final \n, and surround with quotes
+    loc_value_content = "".join(value_parts).rstrip('\\n')
+    
+    # Final localization line structure: [space]KEY:0 "VALUE"
+    loc_line = f'{tt_key_with_space} "{loc_value_content}"'
 
     # 2. Prepare file content
     try:
@@ -112,15 +121,15 @@ def update_localisation(tag, effect_name, dyn_mod_name, modifiers):
             if "l_english:" not in content:
                 content = f'l_english:\n{content}'
                 
-            # Remove existing key if it exists to replace it
-            content = re.sub(rf" {effect_name}_tt:0\s*\".*?\"", "", content, flags=re.DOTALL)
+            # Remove existing key if it exists to replace it (handles key with or without a leading space)
+            content = re.sub(rf"\s*{effect_name}_tt:0\s*\".*?\"", "", content, flags=re.DOTALL)
             
             # Append the new line
-            content = content.strip() + '\n' + loc_value
+            content = content.strip() + '\n' + loc_line
             
         else:
             # New file content
-            content = f'l_english:\n{loc_value}'
+            content = f'l_english:\n{loc_line}'
         
         # 3. Write to file
         with open(loc_filepath, 'w', encoding='utf-8') as f:
@@ -153,15 +162,13 @@ def update_dynamic_modifiers(dyn_mod_name, modifiers):
     end_line = -1
     icon_line = -1
     
-    # Target definition line (e.g., AUR_the_kaiser_must_return = {)
-    target_definition = f"{dyn_mod_name} = {{ \n"
-
     # Find the block and the insertion point
     for i, line in enumerate(content):
         if line.strip().startswith(f"{dyn_mod_name} = {{"):
             start_line = i
         
         if start_line != -1:
+            # Find the 'icon' line to insert after it
             if start_line < i and 'icon' in line:
                 icon_line = i
             
@@ -189,6 +196,7 @@ def update_dynamic_modifiers(dyn_mod_name, modifiers):
         
         # Check if the line already exists in the block
         exists = False
+        # Search between the start of the block and the end of the block (or end of file if new)
         for i in range(start_line + 1, end_line if end_line != len(content) else len(content)):
             if content[i].strip() == linkage_line.strip():
                 exists = True
@@ -219,6 +227,70 @@ def update_dynamic_modifiers(dyn_mod_name, modifiers):
     except Exception as e:
         return f"ERROR writing dynamic modifiers file: {e}"
 
+def generate_script_lines(effect_name, dyn_mod_name, modifiers):
+    """Generates the HOI4 script lines for variable manipulation wrapped in an effect block."""
+    
+    # 1. Custom effect tooltip line
+    output = [
+        f"custom_effect_tooltip = {effect_name}_tt",
+        "hidden_effect = {"
+    ]
+    
+    # 2. Add_to_variable lines with indentation
+    for mod in modifiers:
+        # Example: AUR_the_kaiser_must_return_political_power_gain = 0.10
+        var_name = f"{dyn_mod_name}_{mod['name']}"
+        # Format the value to two decimal places
+        value_str = f"{mod['value']:.2f}" 
+        
+        # Indented structure: \tadd_to_variable = { var_name = value }
+        output.append(f"\tadd_to_variable = {{ {var_name} = {value_str} }}")
+    
+    # 3. Close the hidden_effect block
+    output.append("}")
+    
+    return "\n".join(output)
+
+def show_script_output(script_lines):
+    """Displays a non-blocking window for the user to copy the script lines."""
+    
+    output_window = tk.Toplevel(root)
+    output_window.title("HOI4 Scripting Lines")
+    output_window.geometry("500x300")
+    output_window.configure(bg='#2e2e2e')
+
+    tk.Label(output_window, 
+             text="Copy these lines into your focus/decision effect block:", 
+             fg='#ffffff', bg='#2e2e2e', font=("Arial", 11)).pack(pady=10, padx=10)
+
+    # Text widget for the code
+    script_text = tk.Text(output_window, height=8, width=55, bg='#1e1e1e', fg='#4CAF50', 
+                          font=("Courier", 10), padx=10, pady=10)
+    script_text.insert(tk.END, script_lines)
+    script_text.config(state=tk.DISABLED)
+    script_text.pack(pady=(0, 10))
+
+    def copy_to_clipboard():
+        try:
+            root.clipboard_clear()
+            root.clipboard_append(script_lines)
+            messagebox.showinfo("Copied", "HOI4 script lines copied to clipboard!")
+        except tk.TclError:
+            messagebox.showerror("Copy Error", "Could not access clipboard.")
+
+    # Copy button
+    copy_button = tk.Button(output_window, text="Copy to Clipboard", command=copy_to_clipboard,
+                            bg='#3498db', fg='white', font=("Arial", 10, "bold"), 
+                            activebackground='#2980b9', activeforeground='white',
+                            bd=0, relief=tk.FLAT, padx=10, pady=5)
+    copy_button.pack()
+    
+    # Make the window modal and centered
+    output_window.transient(root)
+    output_window.grab_set()
+    root.wait_window(output_window)
+
+
 # --- GUI Functions ---
 def submit_data():
     """Handles the button click and orchestrates the file updates."""
@@ -246,8 +318,13 @@ def submit_data():
     
     # 3. Update Localization
     loc_result = update_localisation(tag, effect_name, dyn_mod_name, modifiers)
+    
+    # 4. Generate and show Scripting lines
+    # Updated to pass effect_name for the tooltip generation
+    script_lines = generate_script_lines(effect_name, dyn_mod_name, modifiers)
+    show_script_output(script_lines)
 
-    # 4. Show Results
+    # 5. Show Final Results
     result_message = f"Operation Complete!\n\n-- Dynamic Modifiers --\n{dyn_mod_result}\n\n-- Localization --\n{loc_result}"
     messagebox.showinfo("Success", result_message)
 
@@ -288,8 +365,8 @@ entry_dynamic = tk.Entry(main_frame, bg=entry_bg, fg=entry_fg, insertbackground=
 entry_dynamic.pack(fill='x', ipady=3)
 
 # 4/ Affected modifiers (Multiline Textbox)
-tk.Label(main_frame, text="4/ Affected Modifiers (One per line, format: [name] = [value] - [GOOD/BAD]):", anchor='w', fg=label_fg, bg=frame_bg, font=font_style).pack(fill='x', pady=(10, 2))
-tk.Label(main_frame, text="Example: political_power_gain = 0.10 - GOOD\nExample: stability_factor = -0.50 - BAD", anchor='w', fg='#a0a0a0', bg=frame_bg, font=("Arial", 9)).pack(fill='x')
+tk.Label(main_frame, text="4/ Affected Modifiers (One per line, format: [name] = [value] [GOOD/BAD]):", anchor='w', fg=label_fg, bg=frame_bg, font=font_style).pack(fill='x', pady=(10, 2))
+tk.Label(main_frame, text="Example: political_power_gain = 0.10 GOOD\nExample: stability_factor = -0.50 BAD", anchor='w', fg='#a0a0a0', bg=frame_bg, font=("Arial", 9)).pack(fill='x')
 
 text_modifiers = tk.Text(main_frame, height=10, bg=entry_bg, fg=entry_fg, insertbackground=entry_fg, font=font_style, padx=5, pady=5)
 text_modifiers.pack(fill='both', expand=True, pady=(5, 20))

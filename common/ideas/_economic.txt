@@ -175,6 +175,14 @@ ideas = {
 					is_major = yes
 				}
    			}
+
+			on_add = {
+				if = {
+					limit = { tag = AUR has_country_flag = AUR_herald_sanity_active }
+					set_temp_variable = { herald_sanity_change = 5 }
+					AUR_change_herald_sanity = yes
+				}
+			}
 		}
 
 		war_economy = {
@@ -309,6 +317,14 @@ ideas = {
 				if = {
 					limit = { original_tag = AUR }
 					NOT = { has_completed_focus = AUR_last_preparations }
+				}
+			}
+
+			on_add = {
+				if = {
+					limit = { tag = AUR has_country_flag = AUR_herald_sanity_active }
+					set_temp_variable = { herald_sanity_change = -5 }
+					AUR_change_herald_sanity = yes
 				}
 			}
 		}
@@ -626,6 +642,14 @@ ideas = {
 			}
 
 			cancel_if_invalid = no
+
+			on_add = {
+				if = {
+					limit = { tag = AUR has_country_flag = AUR_herald_sanity_active }
+					set_temp_variable = { herald_sanity_change = -10 }
+					AUR_change_herald_sanity = yes
+				}	
+			}
 
 			ai_will_do = {
    				factor = 1
