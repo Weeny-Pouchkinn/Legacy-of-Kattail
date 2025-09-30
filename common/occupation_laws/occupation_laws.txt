@@ -94,6 +94,10 @@ no_garrison = {
 		resistance_target = 0.4
 	}
 
+	visible = {
+		NOT = { tag = AUR }
+	}
+
 	ai_will_do = {
 		base = 0
 
@@ -168,6 +172,11 @@ foreign_civilian_oversight = {
 		local_resources 				= 0.00
 	}
 
+	visible = {
+		has_government = democratic #? on design
+		NOT = { tag = AUR }
+	}
+
 	ai_will_do = {
 		base = 120
 		modifier = {
@@ -194,7 +203,10 @@ local_police_force_garrison = {
 		local_factories 				= 0.00
 		local_resources 				= 0.00
 	}
-
+	
+	visible = {
+		NOT = { tag = AUR }
+	}
 
 	ai_will_do = {
 		base = 100
@@ -222,6 +234,10 @@ local_police_force_garrison = {
 secret_police_oversight = {
 	icon = 4
 	sound_effect = "Martial_Law_Interface_Secret_Police_Oversight"
+
+	visible = {
+		NOT = { tag = AUR has_completed_focus = AUR_i_need_it_all }
+	}
 
 	state_modifier = {
 		resistance_target 				= -0.30
@@ -263,6 +279,10 @@ military_governor_occupation = {
 	sound_effect = "Martial_Law_Interface_Military_Governor_Occupation"
 	default_law = yes
 	starting_law = yes
+
+	visible = {
+		NOT = { tag = AUR has_completed_focus = AUR_i_need_it_all }
+	}
 	
 	state_modifier = {
 		resistance_target 			= -0.35
