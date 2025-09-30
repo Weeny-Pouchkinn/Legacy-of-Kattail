@@ -1,4 +1,198 @@
 lok_journal_entries_cat = {
+	#PURRLIN
+	PRL_form_southern_feline_league = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			#date > "101.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			hidden_effect = {
+				set_country_flag = sfl_formed
+			}
+			create_faction = "Southern Feline League"
+			CAT = { country_event = { id = PRL_event.1 } }
+			MEO = { country_event = { id = PRL_event.1 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PRL_expand_southern_feline_league_to_lionita = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			#date > "101.1.6"
+		}
+
+		visible = { has_country_flag = sfl_formed }
+
+		fire_only_once = yes
+
+		remove_effect = {
+			LIO = { country_event = { id = PRL_event.1 days = 1 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PRL_expand_southern_feline_league_to_himezulte = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			date > "102.1.1"
+		}
+
+		visible = { has_country_flag = sfl_formed }
+
+		fire_only_once = yes
+
+		remove_effect = {
+			HIM = { country_event = { id = PRL_event.1 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PRL_expand_southern_feline_league_to_kpk = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			date > "102.1.5"
+		}
+	
+		visible = { has_country_flag = sfl_formed }
+
+		fire_only_once = yes
+
+		remove_effect = {
+			KPK = { country_event = { id = PRL_event.1 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PRL_expand_southern_feline_league_to_struken = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			STR = { has_war = no }
+			OR = {
+				NOT = { country_exists = MEW }
+				MEW = { is_puppet_of = STR }
+			}
+		}
+	
+		visible = { has_country_flag = sfl_formed }
+
+		fire_only_once = yes
+
+		remove_effect = {
+			STR = { country_event = { id = PRL_event.1 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PRL_expand_southern_feline_league_to_elowia = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			ELO = { has_war = no }
+			OR = {
+				NOT = { country_exists = AUR }
+				AUR = { is_puppet_of = ELO }
+			}
+		}
+
+		visible = { has_country_flag = sfl_formed }
+
+		fire_only_once = yes
+
+		remove_effect = {
+			ELO = { country_event = { id = PRL_event.1 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PRL_form_ussf = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			OR = {
+				AND = {
+					date > "103.1.1"
+					has_war = yes
+				}
+				date > "105.1.1"
+			}
+		}
+
+		visible = { has_country_flag = sfl_formed }
+
+		fire_only_once = yes
+
+		remove_effect = {
+			clr_country_flag = sfl_formed
+			set_country_flag = ussf_formed
+			every_other_country = {
+				limit = {
+					is_in_faction_with = root
+				}
+				add_to_array = {
+					array = global.sfl_members_array
+					value = THIS
+				}
+				country_event = { id = PRL_event.2 }
+			}
+			set_faction_name = "United States of Southern Felinea"
+			hidden_effect = {
+				save_global_event_target_as = ussf_leader
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
 	#NORTH OSHIA
 	WSF_civil_war_timer = {
 		activation  = {

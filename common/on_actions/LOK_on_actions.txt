@@ -347,6 +347,11 @@ on_actions = {
 			TEN = { remove_ideas = var_species_0 add_ideas = var_species_3 add_ideas = var_species_0 }
 			KOT = { remove_ideas = var_species_0 add_ideas = var_species_3 }
 
+			RQA = { remove_ideas = var_species_0 add_ideas = var_species_3 add_ideas = var_species_1 }
+			FSR = { remove_ideas = var_species_0 add_ideas = var_species_3 add_ideas = var_species_1 }
+			DOM = { remove_ideas = var_species_0 add_ideas = var_species_1 }
+
+
 			PLA = { remove_ideas = var_species_0 add_ideas = var_species_33 }
 
 			CRA = { remove_ideas = var_species_0 add_ideas = var_species_36 }
@@ -419,8 +424,11 @@ on_actions = {
 
 			ALK = { remove_ideas = var_species_0 add_ideas = var_species_28 add_ideas = var_species_3 }
 			
-			KHA = { remove_ideas = var_species_0 add_ideas = var_species_12 }
+			KHA = { remove_ideas = var_species_0 add_ideas = var_species_22 }
 
+			FST = { remove_ideas = var_species_0 add_ideas = var_species_1 }
+			
+			NMI = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_8 }
 
 			#Setup STATE species
 			every_state = { set_variable = { species = 0 } }
@@ -1334,6 +1342,21 @@ on_actions = {
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 			#force_update_map_mode = { mapmode = LOK_food_map_mode }
+		}
+	}
+
+	on_peaceconference_ended = {
+		#If noncore state owned by an USSF puppet, give it to Purrlin
+		effect = {
+			if = {
+				limit = { ROOT = { is_puppet_of = event_target:ussf_leader } }
+				ROOT = {
+					every_owned_state = {
+						limit = { NOT = { is_core_of = ROOT } }
+						transfer_state_to = event_target:ussf_leader
+					}
+				}
+			}
 		}
 	}
 

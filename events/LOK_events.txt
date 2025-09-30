@@ -195,8 +195,14 @@ country_event = {
 		}
 		ai_chance = {
 			base = 1
+			modifier = { #USSF makes puppets
+				factor = 1000
+				tag = event_target:ussf_leader
+				NOT = { has_country_flag = usf_formed }
+			}
 			modifier = {
 				factor = 0 #If we can just annex more stuff then do that instead
+				NOT = { tag = event_target:ussf_leader }
 				event_target:peace_puppet_country = {
 					any_core_state = {
 						OR = {
@@ -262,6 +268,11 @@ country_event = {
 				tag = ROQ
 				has_government = fascism
 			}
+			modifier = { #USSF makes puppets
+				factor = 0
+				tag = event_target:ussf_leader
+				NOT = { has_country_flag = usf_formed }
+			}
 			modifier = { #If we CAN annex more stuff then do it
 				factor = 0
 				NOT = {
@@ -326,6 +337,11 @@ country_event = {
 		}
 		ai_chance = {
 			base = 10
+			modifier = { #USSF makes puppets
+				factor = 0
+				tag = event_target:ussf_leader
+				NOT = { has_country_flag = usf_formed }
+			}
 			modifier = {
  				factor = 0
 				tag = ROQ

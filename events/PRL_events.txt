@@ -1,0 +1,90 @@
+add_namespace = PRL_event
+
+#Join SFL
+country_event = {
+	id = PRL_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event PRL_event.1"}
+	title = PRL_event.1.t
+	desc = PRL_event.1.d
+	picture = GFX_report_event_kattail
+	is_triggered_only = yes
+
+	option = {
+		name = PRL_event.1.a
+		PRL = {
+			add_to_faction = ROOT
+			country_event = { id = LOK_proposal.1 }
+		}
+	}
+
+	option = {
+		name = PRL_event.1.b
+		PRL = {
+			country_event = { id = LOK_proposal.2 }
+		}
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = {
+	id = PRL_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event PRL_event.2"}
+	title = PRL_event.2.t
+	desc = PRL_event.2.d
+	picture = GFX_report_event_kattail
+	is_triggered_only = yes
+
+	option = {
+		name = PRL_event.2.a
+		PRL = {
+			set_autonomy = {
+				target = ROOT
+				autonomy_state = autonomy_puppet
+			}
+			if = {
+				limit = { OR = { tag = LIO tag = HIM tag = KPK } }
+				set_politics = { ruling_party = neutrality }
+			}
+			country_event = { id = LOK_proposal.1 }
+		}
+	}
+
+	option = {
+		name = PRL_event.2.b
+		leave_faction = yes
+		PRL = {
+			country_event = { id = LOK_proposal.2 }
+		}
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = {
+	id = PRL_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event PRL_event.3"}
+	title = PRL_event.3.t
+	desc = PRL_event.3.d
+	picture = GFX_report_event_kattail
+	is_triggered_only = yes
+
+	option = {
+		name = PRL_event.3.a
+		every_unit_leader = {
+			set_nationality = ROOT
+		}
+		PRL = { annex_country = { target = ROOT } }
+	}
+
+	option = {
+		name = PRL_event.2.b
+		leave_faction = yes
+		PRL = {
+			set_autonomy = {
+				target = ROOT
+				autonomy_state = autonomy_free
+			}
+			country_event = { id = LOK_proposal.2 }
+		}
+		ai_chance = { base = 0 }
+	}
+}
