@@ -1,4 +1,31 @@
 lok_journal_entries_cat = {
+	#QUARRIES
+	PTQ_invade_struken = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = PTQ
+		}
+
+		available = {
+			STR = {
+				has_war = yes
+				surrender_progress > 0.5
+			}
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = STR
+				type = annex_everything
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
 	#PURRLIN
 	PRL_form_southern_feline_league = {
 		icon = generic_form_nation
@@ -7,7 +34,9 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
-			#date > "101.1.1"
+			has_government = democratic
+			is_puppet = no
+			date > "101.1.1"
 		}
 
 		fire_only_once = yes
@@ -33,7 +62,9 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
-			#date > "101.1.6"
+			has_government = democratic
+			is_puppet = no
+			date > "101.1.6"
 		}
 
 		visible = { has_country_flag = sfl_formed }
@@ -56,6 +87,8 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
+			has_government = democratic
+			is_puppet = no
 			date > "102.1.1"
 		}
 
@@ -79,6 +112,8 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
+			has_government = democratic
+			is_puppet = no
 			date > "102.1.5"
 		}
 	
@@ -102,6 +137,8 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
+			has_government = democratic
+			is_puppet = no
 			STR = { has_war = no }
 			OR = {
 				NOT = { country_exists = MEW }
@@ -129,6 +166,8 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
+			has_government = democratic
+			is_puppet = no
 			ELO = { has_war = no }
 			OR = {
 				NOT = { country_exists = AUR }
@@ -156,6 +195,8 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
+			has_government = democratic
+			is_puppet = no
 			OR = {
 				AND = {
 					date > "103.1.1"
@@ -192,6 +233,113 @@ lok_journal_entries_cat = {
 			base = 1000
 		}
 	}
+
+	PRL_growlzi_gambit = {
+		icon = generic_form_nation
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			has_government = democratic
+			has_country_flag = ussf_formed
+			is_puppet = no
+			date > "106.1.1"
+		}
+
+		visible = { has_country_flag = ussf_formed }
+
+		fire_only_once = yes
+
+		remove_effect = {
+			country_event = { id = PRL_event.4 }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+
+	PRL_destroy_itch = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			has_government = democratic
+			has_country_flag = ussf_formed
+			is_puppet = no
+			date > "106.1.1"
+			NOT = { is_in_faction_with = CLE }
+			country_exists = CLE
+			NOT = { has_war_with = AUR }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = CLE
+				type = annex_everything
+			}
+			every_country = {
+				limit = { is_in_faction_with = event_target:ussf_leader }
+				declare_war_on = {
+					target = CLE
+					type = annex_everything
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+
+	PRL_great_northern_war = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			has_government = democratic
+			has_country_flag = ussf_formed
+			is_puppet = no
+			date > "108.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			if = {
+				limit = { NOT = { is_in_faction_with = NEU } }
+				declare_war_on = { target = NEU type = annex_everything }
+				every_country = {
+					limit = { is_in_faction_with = ROOT }
+					declare_war_on = { target = NEU type = annex_everything }
+				}
+			}
+			if = {
+				limit = { NOT = { is_in_faction_with = PAW } }
+				declare_war_on = { target = PAW type = annex_everything }
+				every_country = {
+					limit = { is_in_faction_with = ROOT }
+					declare_war_on = { target = PAW type = annex_everything }
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
 
 	#NORTH OSHIA
 	WSF_civil_war_timer = {

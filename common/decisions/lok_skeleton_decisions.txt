@@ -45,33 +45,6 @@ herzlands_unification_cat = {
 	# 		base = 1000
 	# 	}
 	# }
-
-	PTQ_invade_struken = {
-		icon = GFX_decision_generic_tank
-		allowed = {
-			tag = PTQ
-		}
-
-		available = {
-			STR = {
-				has_war = yes
-				surrender_progress > 0.5
-			}
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			declare_war_on = {
-				target = STR
-				type = annex_everything
-			}
-		}
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
 	# PTQ_peace_with_struken = {
 	# 	icon = generic_form_nation
 	# 	allowed = {
@@ -204,115 +177,115 @@ herzlands_unification_cat = {
 	# 		base = 1000
 	# 	}
 	# }
-	southern_feline_league = {
-		icon = generic_form_nation
-		allowed = {
-			tag = PRL
-		}
+	# southern_feline_league = {
+	# 	icon = generic_form_nation
+	# 	allowed = {
+	# 		tag = PRL
+	# 	}
 
-		available = {
-			date > "102.1.1"
-		}
+	# 	available = {
+	# 		date > "102.1.1"
+	# 	}
 
-		fire_only_once = yes
+	# 	fire_only_once = yes
 
-		remove_effect = {
-			create_faction = "Southern Feline League"
-			add_to_faction = PRL
-			add_to_faction = LIO
-			add_to_faction = CAT
-			add_to_faction = MEO
-			add_to_faction = KPK
-			add_to_faction = HIM
-			hidden_effect = {
-				every_country = {
-					limit = {
-						is_in_faction_with = root
-					}
-					add_to_array = {
-						array = global.sfl_members_array
-						value = THIS
-					}
-				}
-			}
-		}
+	# 	remove_effect = {
+	# 		create_faction = "Southern Feline League"
+	# 		add_to_faction = PRL
+	# 		add_to_faction = LIO
+	# 		add_to_faction = CAT
+	# 		add_to_faction = MEO
+	# 		add_to_faction = KPK
+	# 		add_to_faction = HIM
+	# 		hidden_effect = {
+	# 			every_country = {
+	# 				limit = {
+	# 					is_in_faction_with = root
+	# 				}
+	# 				add_to_array = {
+	# 					array = global.sfl_members_array
+	# 					value = THIS
+	# 				}
+	# 			}
+	# 		}
+	# 	}
 
-		ai_will_do = {
-			base = 1000
-		}
-	}
-	form_USSF = {
-		icon = generic_form_nation
+	# 	ai_will_do = {
+	# 		base = 1000
+	# 	}
+	# }
+	# form_USSF = {
+	# 	icon = generic_form_nation
 
-		allowed = {
-			tag = PRL
-			tag = LIO
-			tag = CAT
-			tag = MEO
-			tag = ELO
-		}
+	# 	allowed = {
+	# 		tag = PRL
+	# 		tag = LIO
+	# 		tag = CAT
+	# 		tag = MEO
+	# 		tag = ELO
+	# 	}
 
-		visible = {
-			has_country_flag = will_form_ussf
-			NOT = { has_global_flag = ussf_formed }
-		}
+	# 	visible = {
+	# 		has_country_flag = will_form_ussf
+	# 		NOT = { has_global_flag = ussf_formed }
+	# 	}
 
-		available = {
-			date > "103.1.1"
-		}
+	# 	available = {
+	# 		date > "103.1.1"
+	# 	}
 
-		#fire_only_once = yes
+	# 	#fire_only_once = yes
 
-		remove_effect = {
-			hidden_effect = {
-				set_global_flag = ussf_formed
-			}
-			save_global_event_target_as = ussf_leader
-			every_country = {
-				limit = { is_in_array = { global.sfl_members_array = this } }
-				add_to_array = { array = ussf_countries }
-				event_target:ussf_leader = {
-					set_autonomy = {
-						target = PREV
-						autonomy_state = autonomy_puppet
-					}
-				}
-				if = {
-					limit = { OR = { tag = LIO tag = KPK tag = HIM } }
-					set_politics = { ruling_party = neutrality }
-				}
-				if = {
-					limit = { OR = { tag = PRL tag = CAT tag = MEO tag = ELO } }
-					set_politics = { ruling_party = democratic }
-				}
-			}
-			add_to_array = { array = ussf_countriesvalue }
-			if = {
-				limit = { tag = PRL }
-				set_faction_name = "Federal Republic of the Southern Herzlands"
-			}
-			else_if = {
-				limit = { tag = MEO }
-				set_faction_name = "United States of Southern Felinea"
-			}
-			else_if = {
-				limit = { tag = LIO }
-				set_faction_name = "Feline Bulwark"
-			}
-			else_if = {
-				limit = { tag = CAT }
-				set_faction_name = "Felinean Trade Federation"
-			}
-			else_if = {
-				limit = { tag = ELO }
-				set_faction_name = "Democratic Commonwealth of Southern Felinea"
-			}
-		}
+	# 	remove_effect = {
+	# 		hidden_effect = {
+	# 			set_global_flag = ussf_formed
+	# 		}
+	# 		save_global_event_target_as = ussf_leader
+	# 		every_country = {
+	# 			limit = { is_in_array = { global.sfl_members_array = this } }
+	# 			add_to_array = { array = ussf_countries }
+	# 			event_target:ussf_leader = {
+	# 				set_autonomy = {
+	# 					target = PREV
+	# 					autonomy_state = autonomy_puppet
+	# 				}
+	# 			}
+	# 			if = {
+	# 				limit = { OR = { tag = LIO tag = KPK tag = HIM } }
+	# 				set_politics = { ruling_party = neutrality }
+	# 			}
+	# 			if = {
+	# 				limit = { OR = { tag = PRL tag = CAT tag = MEO tag = ELO } }
+	# 				set_politics = { ruling_party = democratic }
+	# 			}
+	# 		}
+	# 		add_to_array = { array = ussf_countriesvalue }
+	# 		if = {
+	# 			limit = { tag = PRL }
+	# 			set_faction_name = "Federal Republic of the Southern Herzlands"
+	# 		}
+	# 		else_if = {
+	# 			limit = { tag = MEO }
+	# 			set_faction_name = "United States of Southern Felinea"
+	# 		}
+	# 		else_if = {
+	# 			limit = { tag = LIO }
+	# 			set_faction_name = "Feline Bulwark"
+	# 		}
+	# 		else_if = {
+	# 			limit = { tag = CAT }
+	# 			set_faction_name = "Felinean Trade Federation"
+	# 		}
+	# 		else_if = {
+	# 			limit = { tag = ELO }
+	# 			set_faction_name = "Democratic Commonwealth of Southern Felinea"
+	# 		}
+	# 	}
 
-		ai_will_do = {
-			base = 1000
-		}
-	}
+	# 	ai_will_do = {
+	# 		base = 1000
+	# 	}
+	# }
 
 	# MEW_form_eastern_communes = {
 	# 	icon = generic_form_nation
@@ -701,40 +674,6 @@ herzlands_unification_cat = {
 		}
 	}
 
-	USSF_destroy_itch = {
-		icon = generic_form_nation
-		
-		allowed = {
-			tag = event_target:ussf_leader
-		}
-
-		available = {
-			date > "106.1.1"
-			country_exists = CLE
-			NOT = { has_war_with = AUR }
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			declare_war_on = {
-				target = CLE
-				type = annex_everything
-			}
-			every_country = {
-				limit = { is_in_faction_with = event_target:ussf_leader }
-				declare_war_on = {
-					target = CLE
-					type = annex_everything
-				}
-			}
-		}
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
-
 	fritz_marry_alice = {
 		icon = generic_form_nation
 		
@@ -888,76 +827,44 @@ herzlands_unification_cat = {
 		}
 	}
 
-	USSF_great_northern_war = {
-		icon = generic_form_nation
+	# USSF_federalize = {
+	# 	icon = generic_form_nation
 		
-		allowed = {
-			tag = event_target:ussf_leader
-		}
+	# 	allowed = {
+	# 		tag = event_target:ussf_leader
+	# 	}
 
-		available = {
-			date > "108.1.1"
-		}
+	# 	available = {
+	# 		always = no
+	# 		OR = {
+	# 			AUR = { any_core_state = { is_controlled_by = ROOT } }
+	# 			AUR = { is_puppet_of = ROOT }
+	# 			MEW = { any_core_state = { is_controlled_by = ROOT } }
+	# 			MEW = { is_puppet_of = ROOT }
+	# 		}
+	# 	}
 
-		fire_only_once = yes
+	# 	fire_only_once = yes
 
-		remove_effect = {
-			declare_war_on = { target = NEU type = annex_everything }
-			every_country = {
-				limit = { is_in_faction_with = ROOT }
-				declare_war_on = { target = NEU type = annex_everything }
-			}
+	# 	remove_effect = {
+	# 		if = { limit = { tag = LIO } set_cosmetic_tag = LIO_USSF }
+	# 		else_if = { limit = { tag = CAT } set_cosmetic_tag = CAT_USSF }
+	# 		else_if = { limit = { tag = PRL } set_cosmetic_tag = PRL_USSF }
+	# 		else_if = { limit = { tag = MEO } set_cosmetic_tag = MEO_USSF }
+	# 		every_country = {
+	# 			limit = { is_in_faction_with = ROOT OR = { tag = LIO tag = PRL tag = MEO tag = CAT } }
+	# 			ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+	# 		}
+	# 		every_country = {
+	# 			limit = { is_in_faction_with = ROOT }
+	# 			ROOT = { annex_country = { target = PREV transfer_troops = no } }
+	# 		}
+	# 	}
 
-			declare_war_on = { target = PAW type = annex_everything }
-			every_country = {
-				limit = { is_in_faction_with = ROOT }
-				declare_war_on = { target = PAW type = annex_everything }
-			}
-		}
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
-
-	USSF_federalize = {
-		icon = generic_form_nation
-		
-		allowed = {
-			tag = event_target:ussf_leader
-		}
-
-		available = {
-			always = no
-			OR = {
-				AUR = { any_core_state = { is_controlled_by = ROOT } }
-				AUR = { is_puppet_of = ROOT }
-				MEW = { any_core_state = { is_controlled_by = ROOT } }
-				MEW = { is_puppet_of = ROOT }
-			}
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			if = { limit = { tag = LIO } set_cosmetic_tag = LIO_USSF }
-			else_if = { limit = { tag = CAT } set_cosmetic_tag = CAT_USSF }
-			else_if = { limit = { tag = PRL } set_cosmetic_tag = PRL_USSF }
-			else_if = { limit = { tag = MEO } set_cosmetic_tag = MEO_USSF }
-			every_country = {
-				limit = { is_in_faction_with = ROOT OR = { tag = LIO tag = PRL tag = MEO tag = CAT } }
-				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
-			}
-			every_country = {
-				limit = { is_in_faction_with = ROOT }
-				ROOT = { annex_country = { target = PREV transfer_troops = no } }
-			}
-		}
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
+	# 	ai_will_do = {
+	# 		base = 1000
+	# 	}
+	# }
 }
 
 foreign_politics = {

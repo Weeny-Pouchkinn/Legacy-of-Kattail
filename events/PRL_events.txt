@@ -72,11 +72,18 @@ country_event = {
 		every_unit_leader = {
 			set_nationality = ROOT
 		}
+		transfer_units_fraction = {
+			target = PRL
+			stockpile_ratio = 1
+			army_ratio = 1
+			navy_ratio = 1
+			air_ratio = 1
+		}
 		PRL = { annex_country = { target = ROOT } }
 	}
 
 	option = {
-		name = PRL_event.2.b
+		name = PRL_event.3.b
 		leave_faction = yes
 		PRL = {
 			set_autonomy = {
@@ -86,5 +93,53 @@ country_event = {
 			country_event = { id = LOK_proposal.2 }
 		}
 		ai_chance = { base = 0 }
+	}
+}
+
+country_event = {
+	id = PRL_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event PRL_event.4"}
+	title = PRL_event.4.t
+	desc = PRL_event.4.d
+	picture = GFX_report_event_kattail
+	is_triggered_only = yes
+
+	option = { #growlzi takes over
+		name = PRL_event.4.a
+		hidden_effect = {
+			set_country_flag = usf_formed
+		}
+		retire_character = PRL_Kibbles
+		hidden_effect = {
+			MEO = {
+				MEO_Growlzi = {
+					remove_country_leader_role = {
+						character = MEO_Growlzi
+						ideology = market_democracy
+					}
+					set_nationality = PRL
+					add_country_leader_role = {
+						promote_leader = yes
+						country_leader = {
+							ideology = market_democracy
+							expire = "1965.1.1.1"
+						}
+					}
+				}
+			}
+		}
+		set_cosmetic_tag = USF
+		set_faction_name = "Felinean Treaty Organization"
+		every_other_country = {
+			limit = { is_in_faction_with = ROOT is_puppet_of = ROOT is_herzlands_warlord = yes }
+			country_event = { id = PRL_event.3 days = 1 }
+		}
+	}
+
+	option = { #nogrowlz
+		name = PRL_event.4.b
+		leave_faction = yes
+		set_faction_name = "United States of Felinea"
+		add_political_power = 100
 	}
 }
