@@ -660,6 +660,9 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			save_global_event_target_as = east_solakea_katzen_uniter
 			set_cosmetic_tag = UNIONSTAAT
+			hidden_effect = {
+				set_country_flag = united_east_solakea_katzens
+			}
 			RQA = {
 				every_core_state = {
 					limit = { check_variable = { species = 1 } }
@@ -685,6 +688,7 @@ lok_journal_entries_cat = {
 				every_core_state = {
 					limit = { check_variable = { minority = 1 } }
 					custom_effect_tooltip = state_core_threshold_set_40
+					clear_compliance_coring_threshold = yes
 					set_state_flag = compliance_40_@ROOT
 					add_to_array = { array = ROOT.potential_cores_array }
 					add_claim_by = ROOT
@@ -699,6 +703,7 @@ lok_journal_entries_cat = {
 				every_core_state = {
 					limit = { check_variable = { minority = 1 } }
 					custom_effect_tooltip = state_core_threshold_set_40
+					clear_compliance_coring_threshold = yes
 					set_state_flag = compliance_40_@ROOT
 					add_to_array = { array = ROOT.potential_cores_array }
 					add_claim_by = ROOT
@@ -746,6 +751,215 @@ lok_journal_entries_cat = {
 				factor = 0
 				date < "100.6.1"
 			}
+		}
+	}
+
+
+	DOM_blitz_kusnurk = {
+		icon = GFX_decision_generic_confiscation
+		allowed = {
+			tag = DOM
+		}
+		
+		available = {
+			NOT = { is_in_faction_with = MCF }
+			has_country_flag = united_east_solakea_katzens
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = KUS
+				type = annex_everything
+			}
+			KUS = {
+				every_core_state = {
+					limit = { NOT = { check_variable = { minority = 1 } } }
+					custom_effect_tooltip = state_core_threshold_set_40
+					clear_compliance_coring_threshold = yes
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+		}
+
+		cost = 50
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+
+	DOM_blitz_nekaston = {
+		icon = GFX_decision_generic_arrest
+		allowed = {
+			tag = DOM
+		}
+		
+		available = {
+			NOT = { is_in_faction_with = MCF }
+			controls_state = 218
+			has_country_flag = united_east_solakea_katzens
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = NEK
+				type = annex_everything
+			}
+			NEK = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					clear_compliance_coring_threshold = yes
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+		}
+
+		cost = 50
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	DOM_backstab_ssu = {
+		icon = GFX_decision_generic_assassination
+		allowed = {
+			tag = DOM
+		}
+		
+		available = {
+			is_in_faction_with = MCF
+			has_country_flag = won_against_reclamation
+			275 = { is_core_of = ROOT }
+			218 = { is_core_of = ROOT }
+			744 = { is_core_of = ROOT }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			leave_faction = yes
+			add_timed_idea = {
+				idea = DOM_warplan_mcf
+				days = 180
+			}
+			declare_war_on = {
+				target = MCF
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = SLR
+				type = annex_everything
+			}
+			MCF = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					clear_compliance_coring_threshold = yes
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+			SLR = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					clear_compliance_coring_threshold = yes
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+		}
+
+		cost = 50
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	DOM_finish_the_job = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			tag = DOM
+		}
+		
+		available = {
+			has_country_flag = won_against_reclamation
+			726 = { is_owned_by = ROOT }
+			820 = { is_owned_by = ROOT }
+			has_war = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			ROQ = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			declare_war_on = {
+				target = ROQ
+				type = annex_everything
+			}
+		}
+
+		cost = 50
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	DOM_katzenify_roqualia = {
+		icon = GFX_decision_generic_intelligence_operation
+		allowed = {
+			tag = DOM
+		}
+		
+		available = {
+			has_country_flag = won_against_reclamation
+			320 = { is_owned_by = ROOT }
+			has_war = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			add_political_power = -500
+			set_cosmetic_tag = DOM_ROQUALIA
+			ROQ = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					clear_compliance_coring_threshold = yes
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+				}
+			}
+		}
+
+		cost = 50
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
 		}
 	}
 
@@ -1138,6 +1352,10 @@ lok_journal_entries_cat = {
 				limit = { has_war_with = SLR }
 				325 = { transfer_state_to = SLR }
 			}
+			hidden_effect = {
+				DOM = { white_peace = ROQ }
+				FSR = { white_peace = ROQ }
+			}
 			every_country = {
 				limit = {
 					is_in_faction_with = event_target:east_solakea_katzen_uniter
@@ -1165,6 +1383,11 @@ lok_journal_entries_cat = {
 			add_war_support = -0.40
 			add_stability = -0.40
 			news_event = { id = ROQ_event.4 }
+			hidden_effect = {
+				event_target:east_solakea_katzen_uniter = {
+					set_country_flag = won_against_reclamation
+				}
+			}
 		}
 
 		cost = 50
