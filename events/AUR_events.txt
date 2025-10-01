@@ -731,3 +731,46 @@ country_event = {
 }
 
 #South threatens secession!
+
+#Children worship Herald
+country_event = {
+	id = AUR_event.27
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.27"}
+	title = AUR_event.27.t
+	desc = AUR_event.27.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.27.a
+		add_stability = -0.05
+	}
+}
+
+##Justifying the Return
+country_event = {
+	id = AUR_event.28
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.28"}
+	title = AUR_event.28.t
+	desc = AUR_event.28.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.28.a
+		hidden_effect = {
+			add_to_variable = { AUR_the_kaiser_must_return_stability_factor = 0.05 }
+			add_to_variable = { AUR_the_kaiser_must_return_war_support_factor = -0.05 }
+		}
+	}
+
+	option = {
+		name = AUR_event.28.b
+		hidden_effect = {
+			add_to_variable = { AUR_the_kaiser_must_return_stability_factor = -0.05 }
+			add_to_variable = { AUR_the_kaiser_must_return_war_support_factor = 0.05 }
+		}
+	}
+}
