@@ -1,10 +1,56 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog, scrolledtext
+from tkinter import messagebox, scrolledtext
 import os
+import re
 
 # --- Constants for HOI4 Modding ---
 EVENTS_DIR = "events"
 LOCALISATION_DIR = os.path.join("localisation", "english")
+ID_PATTERN = re.compile(r"id\s*=\s*[A-Z0-9_]+\.(\d+)")
+
+# --- Core Logic for ID Auto-Generation ---
+
+def get_next_event_id(tag, namespace):
+    """
+    Reads the event file, finds the highest existing ID for the given namespace, 
+    and returns the next integer ID. Returns 1 if no events are found.
+    """
+    filename = os.path.join(EVENTS_DIR, f"{tag.upper()}_events.txt")
+    
+    if not os.path.exists(filename):
+        return 1
+    
+    max_id = 0
+    in_correct_namespace = False
+    
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+            # Find the start of the correct namespace block
+            ns_start_pattern = re.compile(rf"add_namespace\s*=\s*{re.escape(namespace)}", re.IGNORECASE)
+            ns_match = ns_start_pattern.search(content)
+
+            if ns_match:
+                start_index = ns_match.end()
+                
+                # Find the end of the current namespace block (start of the next 'add_namespace')
+                next_ns_match = re.search(r"add_namespace\s*=", content[start_index:])
+                end_index = (start_index + next_ns_match.start()) if next_ns_match else len(content)
+
+                namespace_content = content[start_index:end_index]
+
+                # Find all IDs within this content block
+                for match in ID_PATTERN.finditer(namespace_content):
+                    event_num = int(match.group(1))
+                    if event_num > max_id:
+                        max_id = event_num
+            
+    except Exception as e:
+        messagebox.showwarning("ID Auto-Generation Error", f"Could not read events file to find max ID. Defaulting to 1. Error: {e}")
+        return 1
+        
+    return max_id + 1
 
 # --- Helper Functions ---
 
@@ -31,13 +77,13 @@ def generate_event_code(data):
 
 \tis_triggered_only = yes
 """
-    # 1. Conditionally include fire_only_once block
+    # Conditionally include fire_only_once block
     if data['fire_only_once']:
         event_block += "\tfire_only_once = yes\n"
     
     event_block += "\t\n"
     
-    # 2. Conditionally include immediate effects block
+    # Conditionally include immediate effects block
     if immediate_effects:
         event_block += f"""\timmediate = {{
 {indent_block(immediate_effects, 2)}
@@ -85,6 +131,9 @@ def generate_localisation_code(data):
 def indent_block(text, level):
     """Indents a block of text for HOI4 file formatting."""
     indent = '\t' * level
+    # Only indent if there is content
+    if not text.strip():
+        return ""
     return '\n'.join([f"{indent}{line}" for line in text.strip().split('\n')])
 
 def append_to_events_file(tag, namespace, event_code):
@@ -102,11 +151,10 @@ def append_to_events_file(tag, namespace, event_code):
     namespace_line = f"add_namespace = {namespace}"
     
     if file_content:
-        # Look for the current namespace and the start of the next one
         try:
             ns_start_index = file_content.index(namespace_line)
         except ValueError:
-            # Namespace not found, append it at the beginning
+            # Namespace not found, prepend it
             with open(filename, 'r+', encoding='utf-8') as f:
                 content_to_prepend = f"{namespace_line}\n"
                 f.write(content_to_prepend + event_code + "\n\n" + file_content)
@@ -148,9 +196,10 @@ def append_to_localisation_file(tag, loc_code):
             
     messagebox.showinfo("Success", f"Appended localisation to file:\n{filename}")
 
-# --- GUI Logic (Same as before, not repeated for brevity) ---
+# --- GUI Logic ---
 
 class OptionWindow(tk.Toplevel):
+    """GUI window for creating a single event option."""
     def __init__(self, master):
         super().__init__(master)
         self.title("Add Event Option")
@@ -165,7 +214,7 @@ class OptionWindow(tk.Toplevel):
         self.tooltip_text = scrolledtext.ScrolledText(self, width=70, height=5)
         self.tooltip_text.pack(pady=5)
 
-        tk.Label(self, text="Option Trigger + Effect Block (Indents not required, but good for clarity):").pack(pady=5)
+        tk.Label(self, text="Option Trigger + Effect Block (Optional):").pack(pady=5)
         self.effect_text = scrolledtext.ScrolledText(self, width=70, height=10)
         self.effect_text.pack(pady=5)
 
@@ -176,8 +225,8 @@ class OptionWindow(tk.Toplevel):
         tooltip = self.tooltip_text.get("1.0", tk.END).strip()
         effect = self.effect_text.get("1.0", tk.END).strip()
         
-        if not name or not effect:
-            messagebox.showerror("Error", "Option Name and Effect Block are required.")
+        if not name:
+            messagebox.showerror("Error", "Option Name is required.")
             return
 
         self.option_data = {
@@ -200,35 +249,48 @@ class EventCreatorGUI:
         basic_frame = tk.LabelFrame(self.master, text="Basic Event Info", padx=10, pady=10)
         basic_frame.pack(padx=10, pady=10, fill="x")
 
+        # 1/ Country TAG
         tk.Label(basic_frame, text="1/ Country TAG (3-letter):").grid(row=0, column=0, sticky="w", padx=5, pady=2)
         self.tag_entry = tk.Entry(basic_frame)
         self.tag_entry.grid(row=0, column=1, sticky="ew", padx=5, pady=2)
         self.tag_entry.insert(0, "TAG") 
 
+        # 2/ Namespace
         tk.Label(basic_frame, text="2/ Event Namespace:").grid(row=1, column=0, sticky="w", padx=5, pady=2)
         self.namespace_entry = tk.Entry(basic_frame)
         self.namespace_entry.grid(row=1, column=1, sticky="ew", padx=5, pady=2)
         self.namespace_entry.insert(0, "MOD_event")
 
+        # 3/ Event ID
         tk.Label(basic_frame, text="3/ Event ID (Number):").grid(row=2, column=0, sticky="w", padx=5, pady=2)
         self.id_entry = tk.Entry(basic_frame)
         self.id_entry.grid(row=2, column=1, sticky="ew", padx=5, pady=2)
         self.id_entry.insert(0, "1")
+        
+        # New: Auto-Generate ID Checkbox
+        self.auto_id_var = tk.BooleanVar(self.master)
+        self.auto_id_var.set(True) # Default to true for convenience
+        self.auto_id_check = tk.Checkbutton(basic_frame, text="Auto-Generate ID (Overrides Manual Entry)", variable=self.auto_id_var)
+        self.auto_id_check.grid(row=3, column=0, columnspan=2, sticky="w", padx=5, pady=2)
 
-        tk.Label(basic_frame, text="4/ Event Type:").grid(row=3, column=0, sticky="w", padx=5, pady=2)
+        # Shifted rows due to new checkbox
+        # 4/ Event Type
+        tk.Label(basic_frame, text="4/ Event Type:").grid(row=4, column=0, sticky="w", padx=5, pady=2)
         self.type_var = tk.StringVar(self.master)
         self.type_var.set("country")
         self.type_menu = tk.OptionMenu(basic_frame, self.type_var, "country", "news")
-        self.type_menu.grid(row=3, column=1, sticky="ew", padx=5, pady=2)
+        self.type_menu.grid(row=4, column=1, sticky="ew", padx=5, pady=2)
 
-        tk.Label(basic_frame, text="5/ Event Picture (GFX_...):").grid(row=4, column=0, sticky="w", padx=5, pady=2)
+        # 5/ Event Picture
+        tk.Label(basic_frame, text="5/ Event Picture (GFX_...):").grid(row=5, column=0, sticky="w", padx=5, pady=2)
         self.picture_entry = tk.Entry(basic_frame)
-        self.picture_entry.grid(row=4, column=1, sticky="ew", padx=5, pady=2)
+        self.picture_entry.grid(row=5, column=1, sticky="ew", padx=5, pady=2)
         self.picture_entry.insert(0, "GFX_report_event_default")
 
-        tk.Label(basic_frame, text="6/ Fire Only Once (Leave unchecked for 'no'):").grid(row=5, column=0, sticky="w", padx=5, pady=2)
+        # 6/ Fire Only Once
+        tk.Label(basic_frame, text="6/ Fire Only Once (Leave unchecked for 'no'):").grid(row=6, column=0, sticky="w", padx=5, pady=2)
         self.fire_once_var = tk.BooleanVar(self.master)
-        tk.Checkbutton(basic_frame, text="Yes", variable=self.fire_once_var).grid(row=5, column=1, sticky="w", padx=5, pady=2)
+        tk.Checkbutton(basic_frame, text="Yes", variable=self.fire_once_var).grid(row=6, column=1, sticky="w", padx=5, pady=2)
 
         basic_frame.grid_columnconfigure(1, weight=1)
 
@@ -284,20 +346,23 @@ class EventCreatorGUI:
         # 1-6 Basic Validation
         tag = self.tag_entry.get().strip().upper()
         namespace = self.namespace_entry.get().strip()
-        event_id = self.id_entry.get().strip()
-        picture = self.picture_entry.get().strip()
         
-        if not all([tag, namespace, event_id, picture]):
-            messagebox.showerror("Error", "Country TAG, Namespace, ID, and Picture are required.")
+        if not all([tag, namespace]):
+            messagebox.showerror("Error", "Country TAG and Namespace are required.")
             return
         
         if len(tag) != 3 or not tag.isalpha():
             messagebox.showerror("Error", "Country TAG must be 3 letters.")
             return
 
-        if not event_id.isdigit():
-            messagebox.showerror("Error", "Event ID must be a number.")
-            return
+        # ID Handling
+        if self.auto_id_var.get():
+            event_id = str(get_next_event_id(tag, namespace))
+        else:
+            event_id = self.id_entry.get().strip()
+            if not event_id.isdigit():
+                messagebox.showerror("Error", "Manual Event ID must be a number.")
+                return
 
         # 7-11 Data Collection
         self.data.update({
@@ -305,7 +370,7 @@ class EventCreatorGUI:
             'namespace': namespace,
             'id': event_id,
             'type': self.type_var.get(),
-            'picture': picture,
+            'picture': self.picture_entry.get().strip(),
             'fire_only_once': self.fire_once_var.get(),
             'immediate_effects': self.immediate_text.get("1.0", tk.END).strip(),
             'name': self.name_entry.get().strip(),
@@ -329,9 +394,16 @@ class EventCreatorGUI:
             loc_code = generate_localisation_code(self.data)
             append_to_localisation_file(tag, loc_code)
             
-            # Reset options for next event
+            # Reset for next event
             self.data['options'] = []
             self.options_list_box.delete(0, tk.END)
+            self.id_entry.delete(0, tk.END)
+            # Re-run auto-generate logic if checked to update the displayed ID for the next event
+            if self.auto_id_var.get():
+                 next_id = get_next_event_id(tag, namespace)
+                 self.id_entry.insert(0, str(next_id))
+            else:
+                 self.id_entry.insert(0, "1")
 
         except Exception as e:
             messagebox.showerror("Critical Error", f"An unexpected error occurred during file generation: {e}")
@@ -340,4 +412,8 @@ class EventCreatorGUI:
 if __name__ == "__main__":
     root = tk.Tk()
     app = EventCreatorGUI(root)
+    # Perform an initial ID auto-generation (default TAG, default namespace)
+    initial_id = get_next_event_id("TAG", "MOD_event")
+    app.id_entry.delete(0, tk.END)
+    app.id_entry.insert(0, str(initial_id))
     root.mainloop()

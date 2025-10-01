@@ -730,8 +730,6 @@ country_event = {
 	}
 }
 
-#South threatens secession!
-
 #Children worship Herald
 country_event = {
 	id = AUR_event.27
@@ -744,7 +742,11 @@ country_event = {
 
 	option = {
 		name = AUR_event.27.a
-		add_stability = -0.05
+		add_stability = -0.01
+		168 = {
+			add_resistance = -1
+			add_compliance = 1
+		}
 	}
 }
 
@@ -760,6 +762,7 @@ country_event = {
 
 	option = {
 		name = AUR_event.28.a
+		custom_effect_tooltip = AUR_event.28.a.tooltip
 		hidden_effect = {
 			add_to_variable = { AUR_the_kaiser_must_return_stability_factor = 0.05 }
 			add_to_variable = { AUR_the_kaiser_must_return_war_support_factor = -0.05 }
@@ -768,9 +771,30 @@ country_event = {
 
 	option = {
 		name = AUR_event.28.b
+		custom_effect_tooltip = AUR_event.28.b.tooltip
 		hidden_effect = {
 			add_to_variable = { AUR_the_kaiser_must_return_stability_factor = -0.05 }
 			add_to_variable = { AUR_the_kaiser_must_return_war_support_factor = 0.05 }
 		}
+	}
+}
+
+#roqualians troll regent
+country_event = {
+	id = AUR_event.29
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.29"}
+	title = AUR_event.29.t
+	desc = AUR_event.29.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+	
+	option = {
+		name = AUR_event.29.a
+
+	}
+	option = {
+		name = AUR_event.29.b
+
 	}
 }

@@ -43,7 +43,7 @@ country_event = {
 		512 = {
 			add_claim_by = ROQ
 		}
-		192 = {
+		191 = {
 			add_claim_by = ROQ
 		}
 
@@ -88,7 +88,7 @@ country_event = {
 			512 = {
 				add_claim_by = ROQ
 			}
-			192 = {
+			191 = {
 				add_claim_by = ROQ
 			}
 		}
@@ -115,10 +115,35 @@ country_event = {
 			512 = {
 				add_claim_by = ROQ
 			}
-			192 = {
+			191 = {
 				add_claim_by = ROQ
 			}
 		}
 	}
 }
 
+#Roqualia loses
+news_event = {
+	id = ROQ_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_event.4"}
+	title = ROQ_event.4.t
+	desc = ROQ_event.4.d
+	picture = GFX_news_event_defeat
+
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_event.4.a
+		trigger = { has_government = democratic }
+	}
+
+	option = {
+		name = ROQ_event.4.b
+		trigger = { has_government = communism }
+	}
+
+	option = {
+		name = ROQ_event.4.c
+		trigger = { OR = { has_government = neutrality has_government = fascism has_government gestalt } }
+	}
+}
