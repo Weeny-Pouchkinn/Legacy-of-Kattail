@@ -66,6 +66,7 @@ country_event = {
 	picture = GFX_report_event_generic_riot
     
     trigger = {
+		tag = FRA
 		has_completed_focus = FRA_polquestion
 		date > 100.6.1
 	}
@@ -79,6 +80,49 @@ country_event = {
         name = FRA_report.3.a
         complete_national_focus = FRA_to_democracy_or_not_to_democracy
 		add_manpower = -100
+    }
+}
+country_event = {
+    id = FRA_report.4
+    title = FRA_report.4.t
+    desc = FRA_report.4.d
+	picture = GFX_report_event_generic_riot
+
+    trigger = {
+		tag = FRA
+		SIL = {
+			has_global_flag = elwin_collapse_occured
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+	}
+
+	fire_only_once = yes
+
+    option = {	
+        name = FRA_report.4.a
+        complete_national_focus = FRA_elwin_question
+		country_event = { id = FRA_report.5 }
+    }
+	option = {	
+        name = FRA_report.4.b
+        complete_national_focus = FRA_elwin_question
+    }
+}
+country_event = {
+    id = FRA_report.5
+    title = FRA_report.5.t
+    desc = FRA_report.5.d
+	picture = GFX_report_event_generic_riot
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+    option = {	
+        name = FRA_report.5.a
+        add_stability = -0.01
     }
 }
 
