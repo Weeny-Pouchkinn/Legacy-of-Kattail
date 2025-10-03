@@ -15,6 +15,8 @@ technologies = {
 	@1946 = 22
 	@1947 = 24
 	@1948 = 26
+	@1950 = 30
+	@1952 = 34
 
 	infantry_weapons = {
 
@@ -448,6 +450,7 @@ technologies = {
 		}	
 		
 		path = {
+			leads_to_tech = advanced_infantry_weapons3
 			research_cost_coeff = 1
 		}
 
@@ -456,6 +459,97 @@ technologies = {
 		folder = {
 			name = infantry_folder
 			position = { x = 0 y = @1948 }
+		}
+		
+		categories = {
+			infantry_weapons
+		}
+		
+		ai_will_do = {
+			factor = 0.8
+
+			modifier = {
+				num_of_military_factories > 150
+				factor = 2.5
+			}
+			
+			modifier = {
+				num_of_military_factories < 50
+				factor = 0.5
+			}
+		}
+	}
+
+	advanced_infantry_weapons3 = {
+
+		category_light_infantry = {
+			soft_attack = 0.05
+		}
+		cavalry = {
+			soft_attack = 0.1
+		}		
+
+		path = {
+			leads_to_tech = infantry_weapons_5
+			research_cost_coeff = 1
+		}
+
+		motorized = {
+			soft_attack = 0.1
+		}
+		mechanized = {
+			soft_attack = 0.1
+		}
+		amphibious_mechanized = {
+			soft_attack = 0.1
+		}		
+
+		research_cost = 1.5
+		start_year = 110
+		folder = {
+			name = infantry_folder
+			position = { x = 0 y = @1950 }
+		}
+		
+		categories = {
+			infantry_weapons
+		}
+		
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 2
+				date > "108.1.6"
+			}
+			
+			modifier = {
+				factor = 2
+				date > "109.1.1"
+			}
+			
+			modifier = {
+				factor = 2
+				date > "110.1.1"
+			}
+		}
+	}
+
+	infantry_weapons_5 = {
+
+		enable_equipments = {
+			infantry_equipment_5
+		}	
+		
+		path = {
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 116
+		folder = {
+			name = infantry_folder
+			position = { x = 0 y = @1952 }
 		}
 		
 		categories = {
