@@ -67,7 +67,7 @@ focus_tree = {
 			focus = FRA_firstmeeting
 		}
 		completion_reward = {
-
+			add_political_power = 100
 		}
 	}
 	############################ AGRICULTURE ###########################
@@ -320,14 +320,10 @@ focus_tree = {
 		}
 		completion_reward = {
 			swap_ideas = { 
-				remove_idea = {
-					FRA_idea_start_strikes
-				}
-				add_idea = {
-					FRA_idea_end_strikes
-				}
+				remove_idea = FRA_idea_start_strikes
+				add_idea = FRA_idea_end_strikes
 			}
-		}	
+		}
 	}
 	focus = {
 		id = FRA_ipfreform
@@ -353,6 +349,83 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = FRA_idea_factory_security
+		}	
+	}
+	focus = {
+		id = FRA_agitation_solved
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 12
+		y = 7
+		prerequisite = {
+			focus = FRA_kskreform
+		}
+		prerequisite = {
+			focus = FRA_ipfreform
+		}
+		completion_reward = {
+			add_ideas = FRA_idea_factory_security
+		}	
+	}
+	focus = {
+		id = FRA_to_democracy_or_not_to_democracy
+		icon = GFX_goal_generic_propaganda
+		cost = 0
+		available = { always = no }
+		x = 14
+		y = 4
+		prerequisite = {
+			focus = FRA_polquestion
+		}
+		completion_reward = {
+			
+		}	
+	}
+	focus = {
+		id = FRA_democracy
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 13
+		y = 6
+		mutually_exclusive = { focus = FRA_center_holds }
+		prerequisite = {
+			focus = FRA_ipfreform
+		}
+		prerequisite = {
+			focus = FRA_to_democracy_or_not_to_democracy
+		}
+		completion_reward = {
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = yes
+				long_name = FRA_democratic_party_techno_long
+				name = FRA_democratic_party_techno
+			}
+			add_country_leader_role = {
+				character = FRA_Hell
+				promote_leader = yes
+				country_leader = {
+					ideology = census_democracy
+					expire = "1965.1.1.1"
+				}
+			}
+			activate_advisor = FRA_Pawlbert
+			deactivate_advisor = FRA_Pawllas
+
+		}	
+	}
+	focus = {
+		id = FRA_center_holds
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 15
+		y = 6
+		mutually_exclusive = { focus = FRA_democracy }
+		prerequisite = {
+			focus = FRA_to_democracy_or_not_to_democracy
+		}
+		completion_reward = {
+			
 		}	
 	}
 }
