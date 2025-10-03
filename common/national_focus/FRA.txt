@@ -1,0 +1,431 @@
+focus_tree = {
+	id = FRA_TREE
+	continuous_focus_position = { x = 2000 y = 300 }
+	country = {
+		factor = 0
+		modifier = {
+			add = 100
+			tag = FRA
+		}
+	}
+	focus = {
+		id = FRA_sitrep
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 8
+		y = 0
+		completion_reward = {
+			FRA = { country_event = FRA_report.1 }
+		}
+	}
+	focus = {
+		id = FRA_questioning
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 8
+		y = 1
+		prerequisite = {
+			focus = FRA_sitrep
+		}
+		completion_reward = {
+			FRA = { country_event = FRA_report.2 }
+		}
+	}
+	focus = {
+		id = FRA_firstmeeting
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 8
+		y = 2
+		prerequisite = {
+			focus = FRA_questioning
+		}
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = FRA_econquestion
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 6
+		y = 3
+		prerequisite = {
+			focus = FRA_firstmeeting
+		}
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = FRA_polquestion
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 10
+		y = 3
+		prerequisite = {
+			focus = FRA_firstmeeting
+		}
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+	############################ AGRICULTURE ###########################
+	focus = {
+		id = FRA_agricomp
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 7
+		y = 4
+		prerequisite = {
+			focus = FRA_econquestion
+		}
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = FRA_agrieng
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 8
+		y = 5
+		prerequisite = {
+			focus = FRA_agricomp
+		}
+		mutually_exclusive = { focus = FRA_agridoc }
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = FRA_agridoc
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 6
+		y = 5
+		prerequisite = {
+			focus = FRA_agricomp
+		}
+		mutually_exclusive = { focus = FRA_agrieng }
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = FRA_agridocmore
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 6
+		y = 6
+		prerequisite = {
+			focus = FRA_agridoc
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_idea_overfarmed_soil
+				days = 365
+			}
+			add_timed_idea = {
+				idea = FRA_idea_overworked_farmers
+				days = 60
+			}
+			add_resource = {
+				type = food
+				amount = 23
+				state = 587
+			}
+			add_resource = {
+				type = food
+				amount = 21
+				state = 585
+			}
+			add_resource = {
+				type = food
+				amount = 34
+				state = 477
+			}
+		}
+	}
+	focus = {
+		id = FRA_agriengmore
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 8
+		y = 6
+		prerequisite = {
+			focus = FRA_agrieng
+		}
+		completion_reward = {
+			585 = {
+				add_resource = {
+					type = food
+					amount = 23
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+				add_building_construction = {
+					type = hydroponics_farm
+					level = 2
+				}
+				add_extra_state_shared_building_slots = 2
+			}
+			add_equipment_to_stockpile = {
+				type = motorized_equipment
+				amount = -100
+			}
+			add_equipment_to_stockpile = {
+				type = mechanized_equipment
+				amount = -10
+			}
+		}	
+	}
+	focus = {
+		id = FRA_agriengmost
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 8
+		y = 7
+		prerequisite = {
+			focus = FRA_agriengmore
+		}
+		completion_reward = {
+			add_ideas = {
+				FRA_idea_hydroponics_effort
+			}
+		}
+	}
+	############################ INDUSTRY ###########################
+	focus = {
+		id = FRA_inducomp
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 3
+		y = 4
+		prerequisite = {
+			focus = FRA_econquestion
+		}
+		completion_reward = {
+
+		}	
+	}
+	focus = {
+		id = FRA_indusolA
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 1
+		y = 5
+		prerequisite = {
+			focus = FRA_inducomp
+		}
+		completion_reward = {
+
+		}	
+	}
+	focus = {
+		id = FRA_indusolB
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 3
+		y = 5
+		prerequisite = {
+			focus = FRA_inducomp
+		}
+		completion_reward = {
+
+		}	
+	}
+	focus = {
+		id = FRA_induuniA
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 4
+		y = 6
+		prerequisite = {
+			focus = FRA_inducomp
+		}
+		completion_reward = {
+
+		}	
+	}
+	focus = {
+		id = FRA_induuniB
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 2
+		y = 6
+		prerequisite = {
+			focus = FRA_indusolA
+			focus = FRA_indusolB
+		}
+		completion_reward = {
+
+		}	
+	}
+	focus = {
+		id = FRA_indufin
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 3
+		y = 7
+		prerequisite = {
+			focus = FRA_induuniA
+			focus = FRA_induuniB
+		}
+		completion_reward = {
+
+		}	
+	}
+	focus = {
+		id = FRA_econfin
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 5
+		y = 8
+		prerequisite = {
+			focus = FRA_indufin
+		}
+		prerequisite = {
+			focus = FRA_agriengmost
+			focus = FRA_agridocmore
+		}
+		completion_reward = {
+			add_research_slot = 1
+		}	
+	}
+######################## POLITICS ###########################
+	focus = {
+		id = FRA_partisanquestion
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 10
+		y = 4
+		prerequisite = {
+			focus = FRA_polquestion
+		}
+		completion_reward = {
+			
+		}	
+	}
+	focus = {
+		id = FRA_kskreform
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 10
+		y = 5
+		prerequisite = {
+			focus = FRA_partisanquestion
+		}
+		completion_reward = {
+			swap_ideas = { 
+				remove_idea = FRA_idea_start_strikes
+				add_idea = FRA_idea_end_strikes
+			}
+		}
+	}
+	focus = {
+		id = FRA_ipfreform
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 12
+		y = 5
+		prerequisite = {
+			focus = FRA_partisanquestion
+		}
+		completion_reward = {
+			
+		}	
+	}
+	focus = {
+		id = FRA_factorysecurity
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 11
+		y = 6
+		prerequisite = {
+			focus = FRA_partisanquestion
+		}
+		completion_reward = {
+			add_ideas = FRA_idea_factory_security
+		}	
+	}
+	focus = {
+		id = FRA_agitation_solved
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 12
+		y = 7
+		prerequisite = {
+			focus = FRA_kskreform
+		}
+		prerequisite = {
+			focus = FRA_ipfreform
+		}
+		completion_reward = {
+			add_ideas = FRA_idea_factory_security
+		}	
+	}
+	focus = {
+		id = FRA_to_democracy_or_not_to_democracy
+		icon = GFX_goal_generic_propaganda
+		cost = 0
+		available = { always = no }
+		x = 14
+		y = 4
+		prerequisite = {
+			focus = FRA_polquestion
+		}
+		completion_reward = {
+			
+		}	
+	}
+	focus = {
+		id = FRA_democracy
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 13
+		y = 6
+		mutually_exclusive = { focus = FRA_center_holds }
+		prerequisite = {
+			focus = FRA_ipfreform
+		}
+		prerequisite = {
+			focus = FRA_to_democracy_or_not_to_democracy
+		}
+		completion_reward = {
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = yes
+				long_name = FRA_democratic_party_techno_long
+				name = FRA_democratic_party_techno
+			}
+			add_country_leader_role = {
+				character = FRA_Hell
+				promote_leader = yes
+				country_leader = {
+					ideology = census_democracy
+					expire = "1965.1.1.1"
+				}
+			}
+			activate_advisor = FRA_Pawlbert
+			deactivate_advisor = FRA_Pawllas
+
+		}	
+	}
+	focus = {
+		id = FRA_center_holds
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+		x = 15
+		y = 6
+		mutually_exclusive = { focus = FRA_democracy }
+		prerequisite = {
+			focus = FRA_to_democracy_or_not_to_democracy
+		}
+		completion_reward = {
+			
+		}	
+	}
+}

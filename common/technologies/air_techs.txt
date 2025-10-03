@@ -1,5 +1,468 @@
 technologies = {
 	
+	#helis!!
+	early_helicopter = {
+
+		enable_equipments = {
+			attack_helicopter_equipment_0
+		}
+	
+		path = {
+			leads_to_tech = attack_helicopter1
+			research_cost_coeff = 1
+		}
+
+		
+		path = {
+			leads_to_tech = transport_helicopter1
+			research_cost_coeff = 1
+		}
+		
+		research_cost = 2
+		start_year = 97
+		folder = {
+			name = air_techs_folder
+			position = { x = -2 y = 2 }
+		}
+		
+		categories = {
+			helicopter
+			attack_helicopter
+			air_equipment
+			mio_cat_all_attack_helicopter_and_modules
+			mio_cat_all_light_aircraft_and_modules
+
+		}
+		
+		# sub_technologies = {
+		# 	cv_early_attack_helicopter
+		# }
+		
+		ai_will_do = {
+			factor = 1
+			
+			modifier = {
+				factor = 2
+				is_major = yes
+			}
+		}
+	}
+	
+	attack_helicopter1 = {
+
+		enable_equipments = {
+			attack_helicopter_equipment_1
+		}
+	
+		path = {
+			leads_to_tech = attack_helicopter2
+			research_cost_coeff = 1
+		}
+		
+		research_cost = 2
+		start_year = 100
+
+		folder = {
+			name = air_techs_folder
+			position = { x = 0 y = 4 }
+		}
+		
+		categories = {
+			helicopter
+			attack_helicopter
+			air_equipment
+		}
+		
+		ai_will_do = {
+			factor = 4
+			
+			modifier = {
+				factor = 2
+				is_major = yes
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "101.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "102.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "103.1.1"
+			}
+			
+			modifier = {
+				factor = 5
+				date > "104.1.1"
+			}
+		}
+	}
+	
+	attack_helicopter2 = {
+
+		enable_equipments = {
+			attack_helicopter_equipment_2
+		}
+	
+		path = {
+			leads_to_tech = attack_helicopter3
+			research_cost_coeff = 1
+		}
+				
+
+		on_research_complete = {
+			if = {
+				limit = { has_dlc = "La Resistance" }
+				set_technology = {
+					scout_plane2 = 1
+					popup = no
+				}
+			}
+		}
+
+		research_cost = 2
+		start_year = 104
+		folder = {
+			name = air_techs_folder
+			position = { x = 0 y = 6 }
+		}
+		
+		categories = {
+			helicopter
+			attack_helicopter
+			air_equipment
+		}
+		
+		# sub_technologies = {
+		# 	cv_attack_helicopter2
+		# }
+		
+		ai_will_do = {
+			factor = 4
+			
+			modifier = {
+				factor = 4
+				is_major = yes
+			}
+
+			modifier = {
+				factor = 1.2
+				date > "105.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "106.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "107.1.1"
+			}
+			
+			modifier = {
+				factor = 5
+				date > "108.1.1"
+			}
+		}
+	}
+	
+	attack_helicopter3 = {
+
+		enable_equipments = {
+			attack_helicopter_equipment_3
+		}
+		
+		research_cost = 2
+		start_year = 108
+	
+		path = {
+			leads_to_tech = attack_helicopter4
+			research_cost_coeff = 1
+		}
+
+		folder = {
+			name = air_techs_folder
+			position = { x = 0 y = 8 }
+		}
+		
+		categories = {
+			helicopter
+			attack_helicopter
+			air_equipment
+		}
+		
+		# sub_technologies = {
+		# 	cv_attack_helicopter3
+		# }
+		
+		ai_will_do = {
+			factor = 4
+			
+			modifier = {
+				factor = 4
+				is_major = yes
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "109.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "110.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "111.1.1"
+			}
+			
+			modifier = {
+				factor = 5
+				date > "112.1.1"
+			}
+		}
+	}
+
+	attack_helicopter4 = {
+
+		enable_equipments = {
+			attack_helicopter_equipment_4
+		}
+		
+		research_cost = 2
+		start_year = 108
+
+		folder = {
+			name = air_techs_folder
+			position = { x = 0 y = 11 }
+		}
+		
+		categories = {
+			helicopter
+			attack_helicopter
+			air_equipment
+		}
+		
+		# sub_technologies = {
+		# 	cv_attack_helicopter3
+		# }
+		
+		ai_will_do = {
+			factor = 4
+			
+			modifier = {
+				factor = 4
+				is_major = yes
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "109.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "110.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "111.1.1"
+			}
+			
+			modifier = {
+				factor = 5
+				date > "112.1.1"
+			}
+		}
+	}
+
+	transport_helicopter1 = {
+
+		enable_equipments = {
+			transport_helicopter_equipment_1
+		}
+	
+		path = {
+			leads_to_tech = transport_helicopter2
+			research_cost_coeff = 1
+		}
+		
+		research_cost = 2
+		start_year = 100
+
+		folder = {
+			name = air_techs_folder
+			position = { x = -4 y = 4 }
+		}
+		
+		categories = {
+			helicopter
+			transport_helicopter
+			air_equipment
+		}
+		
+		ai_will_do = {
+			factor = 4
+			
+			modifier = {
+				factor = 2
+				is_major = yes
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "101.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "102.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "103.1.1"
+			}
+			
+			modifier = {
+				factor = 5
+				date > "104.1.1"
+			}
+		}
+	}
+	
+	transport_helicopter2 = {
+
+		enable_equipments = {
+			transport_helicopter_equipment_2
+		}
+	
+		path = {
+			leads_to_tech = transport_helicopter3
+			research_cost_coeff = 1
+		}
+				
+
+		on_research_complete = {
+			if = {
+				limit = { has_dlc = "La Resistance" }
+				set_technology = {
+					scout_plane2 = 1
+					popup = no
+				}
+			}
+		}
+
+		research_cost = 2
+		start_year = 104
+		folder = {
+			name = air_techs_folder
+			position = { x = -4 y = 8 }
+		}
+		
+		categories = {
+			helicopter
+			transport_helicopter
+			air_equipment
+		}
+		
+		# sub_technologies = {
+		# 	cv_transport_helicopter2
+		# }
+		
+		ai_will_do = {
+			factor = 4
+			
+			modifier = {
+				factor = 4
+				is_major = yes
+			}
+
+			modifier = {
+				factor = 1.2
+				date > "105.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "106.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "107.1.1"
+			}
+			
+			modifier = {
+				factor = 5
+				date > "108.1.1"
+			}
+		}
+	}
+	
+	transport_helicopter3 = {
+
+		enable_equipments = {
+			transport_helicopter_equipment_3
+		}
+		
+		research_cost = 2
+		start_year = 108
+
+		folder = {
+			name = air_techs_folder
+			position = { x = -4 y = 12 }
+		}
+		
+		categories = {
+			helicopter
+			transport_helicopter
+			air_equipment
+		}
+		
+		# sub_technologies = {
+		# 	cv_transport_helicopter3
+		# }
+		
+		ai_will_do = {
+			factor = 4
+			
+			modifier = {
+				factor = 4
+				is_major = yes
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "109.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "110.1.1"
+			}
+			
+			modifier = {
+				factor = 1.2
+				date > "111.1.1"
+			}
+			
+			modifier = {
+				factor = 5
+				date > "112.1.1"
+			}
+		}
+	}
+
 	early_fighter = {
 
 		enable_equipments = {
@@ -30,7 +493,7 @@ technologies = {
 		}
 		
 		research_cost = 2
-		start_year = 1933
+		start_year = 97
 		folder = {
 			name = air_techs_folder
 			position = { x = 0 y = 2 }
@@ -557,7 +1020,7 @@ technologies = {
 		#}
 		
 		research_cost = 2
-		start_year = 1933
+		start_year = 97
 		folder = {
 			name = air_techs_folder
 			position = { x = 2 y = 2 }
