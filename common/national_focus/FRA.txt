@@ -323,6 +323,9 @@ focus_tree = {
 				remove_idea = FRA_idea_start_strikes
 				add_idea = FRA_idea_end_strikes
 			}
+			custom_effect_tooltip = FRA_kskopinion1
+			add_to_variable = { ksk_opinion = 1 }
+			calculate_ipf_ksk_resistance = yes
 		}
 	}
 	focus = {
@@ -363,6 +366,10 @@ focus_tree = {
 		prerequisite = {
 			focus = FRA_ipfreform
 		}
+		prerequisite = {
+			focus = FRA_democracy
+			focus = FRA_center_holds
+		}
 		completion_reward = {
 			add_ideas = FRA_idea_factory_security
 		}	
@@ -371,14 +378,16 @@ focus_tree = {
 		id = FRA_to_democracy_or_not_to_democracy
 		icon = GFX_goal_generic_propaganda
 		cost = 0
-		available = { always = no }
+		available = {
+			always = no
+		}
 		x = 14
 		y = 4
 		prerequisite = {
 			focus = FRA_polquestion
 		}
 		completion_reward = {
-			
+			custom_effect_tooltip = FRA_elc_tip
 		}	
 	}
 	focus = {
@@ -409,9 +418,13 @@ focus_tree = {
 					expire = "1965.1.1.1"
 				}
 			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.3
+			}
 			activate_advisor = FRA_Pawlbert
 			deactivate_advisor = FRA_Pawllas
-
+			set_cosmetic_tag = FRA_censusdemocracy
 		}	
 	}
 	focus = {
@@ -425,7 +438,11 @@ focus_tree = {
 			focus = FRA_to_democracy_or_not_to_democracy
 		}
 		completion_reward = {
-			
+			add_political_power = 75
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.1
+			}
 		}	
 	}
 }
