@@ -1625,6 +1625,21 @@ on_actions = {
 
 	on_capitulation_immediate = {
 		effect = {
+			if = {
+				limit = {
+					ROOT = {
+						is_in_faction_with = AUR
+						OR = {
+							has_country_flag = AUR_northern_pawn
+							has_country_flag = AUR_eastern_pawn
+							has_country_flag = AUR_central_pawn
+						}
+					}
+					AUR = {
+						country_event = { id = AUR_event.32 days = 5 }
+					}
+				}
+			}
 			# if = { #USF state
 			# 	limit = { 
 			# 		OR = {
@@ -1686,6 +1701,44 @@ on_actions = {
 
 	on_weekly_AUR = {
 		effect = {
+			if = {
+				limit = {
+					check_variable = { AUR_northern_pawn_count > 0 }
+				}
+				set_variable = { AUR_northern_pawn_count_current = 0 }
+				every_country = {
+					limit = { 
+						is_herzlands_warlord = yes
+						has_country_flag = AUR_northern_pawn
+						is_puppet = no
+						NOT = { has_war_with = AUR }
+					}
+					add_to_variable = { AUR.AUR_northern_pawn_count_current = 1 }
+				}
+				if = {
+					limit = { check_variable = { AUR_northern_pawn_count_current < AUR_northern_pawn_count } }
+					country_event = { id = AUR_event.32 }
+					set_variable = { AUR_northern_pawn_count = AUR_northern_pawn_count_current }
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { AUR_central_pawn_count > 0 }
+				}
+				set_variable = { AUR_central_pawn_count_current = 0 }
+				every_country = {
+					limit = { 
+						is_herzlands_warlord = yes
+						has_country_flag = AUR_central_pawn
+						is_puppet = no
+						NOT = { has_war_with = AUR }
+					}
+				if = {
+					limit = { check_variable = { AUR_central_pawn_count_current < AUR_central_pawn_count } }
+					country_event = { id = AUR_event.32 }
+					set_variable = { AUR_central_pawn_count = AUR_central_pawn_count_current }
+				}
+			}
 			if = {
 				limit = { NOT = { has_country_flag = failed_dreijahrige } }
 				if = {

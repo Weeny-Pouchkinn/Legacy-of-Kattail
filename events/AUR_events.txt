@@ -821,6 +821,24 @@ country_event = {
 					has_government = democratic
 				}
 			}
+			modifier = {
+				factor = 0.5
+				is_major = yes
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = AUR
+					ratio > 1
+				}
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = AUR
+					ratio > 2
+				}
+			}
 		}
 		hidden_effect = {
 			if = {
@@ -855,6 +873,7 @@ country_event = {
 			}
 		}
 		AUR = {
+			add_to_faction = ROOT
 			country_event = { id = AUR_event.31 }
 		}
 	}
@@ -881,5 +900,23 @@ country_event = {
 		custom_effect_tooltip = AUR_event.31.a.tt
 		give_guarantee = FROM
 		FROM = { give_guarantee = AUR }
+	}
+}
+
+#Pawn Lost
+country_event = {
+	id = AUR_event.32
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.32"}
+	title = AUR_event.32.t
+	desc = AUR_event.32.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+	
+	option = {
+		name = AUR_event.32.a
+		custom_effect_tooltip = AUR_event.32.a.tt
+		set_temp_variable = { herald_sanity_change = -5 }
+		AUR_change_herald_sanity = yes
 	}
 }
