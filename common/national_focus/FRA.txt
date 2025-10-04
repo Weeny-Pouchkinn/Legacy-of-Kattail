@@ -41,7 +41,7 @@ focus_tree = {
 			focus = FRA_questioning
 		}
 		completion_reward = {
-
+			FRA = { country_event = FRA_diet.1 }
 		}
 	}
 	focus = {
@@ -54,7 +54,13 @@ focus_tree = {
 			focus = FRA_firstmeeting
 		}
 		completion_reward = {
-
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 0.75
+				category = industry
+				uses = 2
+			}
+			add_political_power = 35
 		}
 	}
 	focus = {
@@ -81,7 +87,7 @@ focus_tree = {
 			focus = FRA_econquestion
 		}
 		completion_reward = {
-
+			FRA = { country_event = FRA_industry.1 }
 		}
 	}
 	focus = {
@@ -95,7 +101,6 @@ focus_tree = {
 		}
 		mutually_exclusive = { focus = FRA_agridoc }
 		completion_reward = {
-
 		}
 	}
 	focus = {
@@ -109,7 +114,7 @@ focus_tree = {
 		}
 		mutually_exclusive = { focus = FRA_agrieng }
 		completion_reward = {
-
+			activate_advisor = FRA_Meowl
 		}
 	}
 	focus = {
@@ -208,7 +213,10 @@ focus_tree = {
 			focus = FRA_econquestion
 		}
 		completion_reward = {
-
+			add_timed_idea = {
+				idea = FRA_idea_charter
+				days = 365
+			}
 		}	
 	}
 	focus = {
@@ -221,7 +229,28 @@ focus_tree = {
 			focus = FRA_inducomp
 		}
 		completion_reward = {
-
+			add_tech_bonus = {
+				name = synthetic_refinery
+				bonus = 0.35
+				category = cat_synth_oil
+				category = excavation_tech
+				uses = 3
+			}
+			588 = {
+				add_resource = {
+					type = oil
+					amount = 9
+				}
+				add_resource = {
+					type = rubber
+					amount = 2
+				}
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 3
+				}
+				add_extra_state_shared_building_slots = 3
+			}
 		}	
 	}
 	focus = {
@@ -234,7 +263,20 @@ focus_tree = {
 			focus = FRA_inducomp
 		}
 		completion_reward = {
-
+			590 = { 
+				add_building_construction = {
+					type = industrial_complex
+					level = -2
+				}
+				add_extra_state_shared_building_slots = 3
+			}
+			477 = { 
+				add_building_construction = {
+					type = industrial_complex
+					level = 5
+				}
+				add_extra_state_shared_building_slots = 5
+			}	
 		}	
 	}
 	focus = {
@@ -247,8 +289,11 @@ focus_tree = {
 			focus = FRA_inducomp
 		}
 		completion_reward = {
-
-		}	
+			add_timed_idea = {
+				idea = FRA_idea_brigade
+				days = 270
+			}
+		}
 	}
 	focus = {
 		id = FRA_induuniB
@@ -261,7 +306,28 @@ focus_tree = {
 			focus = FRA_indusolB
 		}
 		completion_reward = {
-
+			586 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+				add_extra_state_shared_building_slots = 2
+				add_resource = {
+					type = steel
+					amount = 12
+				} 
+			}
+			477 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_extra_state_shared_building_slots = 1
+				add_resource = {
+					type = steel
+					amount = 4
+				}
+			}
 		}	
 	}
 	focus = {
@@ -275,7 +341,18 @@ focus_tree = {
 			focus = FRA_induuniB
 		}
 		completion_reward = {
-
+			add_political_power = 50
+			477 = {
+				add_manpower = 350000
+				set_building_level = {
+					type = infrastructure
+					level = 5
+				}
+			}
+			add_timed_idea = {
+				idea = FRA_idea_administration
+				days = 720
+			}
 		}	
 	}
 	focus = {
@@ -338,7 +415,11 @@ focus_tree = {
 			focus = FRA_partisanquestion
 		}
 		completion_reward = {
-			
+			add_stability = -0.02
+			add_political_power = 15
+			custom_effect_tooltip = FRA_ipfopinion1
+			add_to_variable = { ipf_opinion = 1 }
+			calculate_ipf_ksk_resistance = yes
 		}	
 	}
 	focus = {
@@ -424,7 +505,10 @@ focus_tree = {
 			}
 			activate_advisor = FRA_Pawlbert
 			deactivate_advisor = FRA_Pawllas
-			set_cosmetic_tag = FRA_censusdemocracy
+			set_cosmetic_tag = FRA_LIB
+			custom_effect_tooltip = FRA_ipfopinion2
+			add_to_variable = { ipf_opinion = 2 }
+			calculate_ipf_ksk_resistance = yes
 		}	
 	}
 	focus = {
@@ -456,6 +540,23 @@ focus_tree = {
 		}
 		available = {
 			always = no
+		}
+		completion_reward = {
+			}
+		}
+	focus = {
+		id = FRA_elwin_A
+		icon = GFX_goal_generic_propaganda
+		cost = 0
+		x = 18
+		y = 4
+		prerequisite = {
+			focus = FRA_elwin_question
+		}
+		available = {
+			has_army_manpower = {
+				size > 500001
+			}
 		}
 		completion_reward = {
 			}
