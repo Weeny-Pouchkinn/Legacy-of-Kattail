@@ -1754,58 +1754,7 @@ focus_tree = {
 	}
 
 	focus = {
-		id = AUR_northern_theater
-		icon = GFX_goal_KTZ_are_worth_taking_over
-		x = -2
-		y = 2
-		cost = 5
-		prerequisite = { focus = AUR_manifest_of_his_will }
-		prerequisite = { focus = AUR_reform_the_high_command }
-		relative_position_id = AUR_biding_our_time
-		completion_reward = {
-		}
-	}
-
-	#Find a northern nation to simp for
-	focus = {
-		id = AUR_finding_allies
-		icon = GFX_goal_KTZ_are_worth_taking_over
-		x = 0
-		y = 1
-		cost = 5
-		prerequisite = { focus = AUR_northern_theater }
-		relative_position_id = AUR_northern_theater
-		completion_reward = {
-		}
-	}
-
-	focus = {
-		id = AUR_a_subtle_takeover
-		icon = GFX_goal_KTZ_are_worth_taking_over
-		x = -1
-		y = 1
-		cost = 5
-		prerequisite = { focus = AUR_finding_allies }
-		relative_position_id = AUR_finding_allies
-		completion_reward = {
-		}
-	}
-
-	focus = {
-		id = AUR_promises_kept
-		icon = GFX_goal_KTZ_are_worth_taking_over
-		x = 1
-		y = 1
-		cost = 5
-		prerequisite = { focus = AUR_a_subtle_takeover }
-		relative_position_id = AUR_a_subtle_takeover
-		completion_reward = {
-		}
-	}
-
-
-	focus = {
-		id = AUR_southern_theater
+		id = AUR_declaration_of_intent
 		icon = GFX_goal_KTZ_are_worth_taking_over
 		x = 0
 		y = 2
@@ -1818,199 +1767,195 @@ focus_tree = {
 	}
 
 	focus = {
-		id = AUR_foreign_theater
-		icon = GFX_goal_KTZ_are_worth_taking_over
-		x = 2
-		y = 2
-		cost = 5
-		prerequisite = { focus = AUR_manifest_of_his_will }
-		prerequisite = { focus = AUR_reform_the_high_command }
-		relative_position_id = AUR_biding_our_time
-		completion_reward = {
-		}
-	}
-
-	focus = {
-		id = AUR_aid_solakean_kaiserists
+		id = AUR_pawns_in_the_north
 		icon = GFX_goal_KTZ_are_worth_taking_over
 		x = 0
 		y = 1
 		cost = 5
-		prerequisite = { focus = AUR_foreign_theater }
-		relative_position_id = AUR_foreign_theater
+		prerequisite = { focus = AUR_declaration_of_intent }
+		relative_position_id = AUR_declaration_of_intent
 		completion_reward = {
+			hidden_effect = {
+				set_variable = { AUR_northern_pawn_count = 0 }
+				every_possible_country = {
+					limit = {
+						OR = {
+							tag = SIL
+							is_elwin_warlord = yes
+							tag = CLE
+							tag = PAW
+							tag = NEU
+							tag = HYP
+						}
+					}
+					add_to_array = { array = AUR.north_herzlands_nations_array }
+				}
+			}
 		}
 	}
 
 	focus = {
-		id = AUR_aid_amphibian_kaiserists
+		id = AUR_pawns_in_the_center
 		icon = GFX_goal_KTZ_are_worth_taking_over
 		x = 1
 		y = 2
 		cost = 5
-		prerequisite = { focus = AUR_foreign_theater }
-		relative_position_id = AUR_foreign_theater
+		prerequisite = { focus = AUR_declaration_of_intent }
+		relative_position_id = AUR_declaration_of_intent
 		completion_reward = {
+			hidden_effect = {
+				set_variable = { AUR_central_pawn_count = 0 }
+				every_possible_country = {
+					limit = {
+						OR = {
+							tag = OST
+							tag = FRA
+							tag = NAV
+							tag = TAI
+							tag = NKB
+							tag = WPR
+						}
+					}
+					add_to_array = { array = AUR.center_herzlands_nations_array }
+				}
+			}
 		}
 	}
 
 	focus = {
-		id = AUR_placate_the_world
+		id = AUR_pawns_in_the_east
 		icon = GFX_goal_KTZ_are_worth_taking_over
-		x = 0
-		y = 3
-		cost = 5
-		prerequisite = { focus = AUR_aid_amphibian_kaiserists focus = AUR_aid_solakean_kaiserists }
-		relative_position_id = AUR_foreign_theater
-		completion_reward = {
-		}
-	}
-
-	focus = {
-		id = AUR_eastern_campaigns
-		icon = GFX_goal_KTZ_new_world_old_acquaintances
 		x = -1
 		y = 2
 		cost = 5
-		prerequisite = { focus = AUR_southern_theater }
-		relative_position_id = AUR_southern_theater
-		will_lead_to_war_with = LIO
-		will_lead_to_war_with = MEO
-		will_lead_to_war_with = KPK
+		prerequisite = { focus = AUR_declaration_of_intent }
+		relative_position_id = AUR_declaration_of_intent
 		completion_reward = {
-			if = {
-				limit = { is_ai = no }
-				create_wargoal = {
-					target = LIO
-					type = annex_everything
-				}
-				create_wargoal = {
-					target = MEO
-					type = annex_everything
-				}
-				create_wargoal = {
-					target = KPK
-					type = annex_everything
-				}
-			}
-			else = {
-				declare_war_on = {
-					target = LIO
-					type = annex_everything
-				}
-				declare_war_on = {
-					target = MEO
-					type = annex_everything
-				}
-				declare_war_on = {
-					target = KPK
-					type = annex_everything
+			hidden_effect = {
+				set_variable = { AUR_eastern_pawn_count = 0 }
+				every_possible_country = {
+					limit = {
+						OR = {
+							tag = LIO
+							tag = KPK
+							tag = MEW
+							tag = STR
+							tag = PTQ
+							tag = IMF
+						}
+					}
+					add_to_array = { array = AUR.east_herzlands_nations_array }
 				}
 			}
 		}
 	}
 
 	focus = {
-		id = AUR_consolidate_the_east
-		icon = GFX_goal_KTZ_new_world_old_acquaintances
-		x = 1
+		id = AUR_northern_promises_kept
+		icon = GFX_goal_KTZ_are_worth_taking_over
+		x = 0
 		y = 2
 		cost = 5
-		prerequisite = { focus = AUR_southern_theater }
-		relative_position_id = AUR_southern_theater
-		will_lead_to_war_with = MEW
-		will_lead_to_war_with = STR
-		completion_reward = {
-			if = {
-				limit = { is_ai = no }
-				create_wargoal = {
-					target = MEW
-					type = annex_everything
-				}
-				create_wargoal = {
-					target = STR
-					type = annex_everything
+		prerequisite = { focus = AUR_pawns_in_the_north }
+		relative_position_id = AUR_pawns_in_the_north
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_northern_promises_kept_trigger_tt
+				hidden_trigger = {
+					NOT = {
+						any_country = {
+							is_in_array = {
+								array = AUR.north_herzlands_nations_array
+								value = THIS
+							}
+							NOT = { has_country_flag = AUR_northern_pawn }
+						}
+					}				
 				}
 			}
-			else = {
-				declare_war_on = {
-					target = MEW
-					type = annex_everything
-				}
-				declare_war_on = {
-					target = STR
-					type = annex_everything
+		}
+		completion_reward = {
+			every_country = {
+				limit = { has_country_flag = AUR_northern_pawn }
+				AUR = {
+					set_autonomy = {
+						target = PREV
+						autonomy_state = autonomy_puppet
+					}
 				}
 			}
 		}
 	}
 
 	focus = {
-		id = AUR_through_the_zuspri
-		icon = GFX_goal_KTZ_new_world_old_acquaintances
+		id = AUR_eastern_promises_kept
+		icon = GFX_goal_KTZ_are_worth_taking_over
 		x = 0
-		y = 3
+		y = 2
 		cost = 5
-		prerequisite = { focus = AUR_eastern_campaigns }
-		prerequisite = { focus = AUR_consolidate_the_east }
-		relative_position_id = AUR_southern_theater
-		will_lead_to_war_with = WPR
-		will_lead_to_war_with = IMF
-		completion_reward = {
-			if = {
-				limit = { is_ai = no }
-				create_wargoal = {
-					target = PTQ
-					type = annex_everything
-				}
-				create_wargoal = {
-					target = IMF
-					type = annex_everything
+		prerequisite = { focus = AUR_pawns_in_the_east }
+		relative_position_id = AUR_pawns_in_the_east
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_eastern_promises_kept_trigger_tt
+				hidden_trigger = {
+					NOT = {
+						any_country = {
+							is_in_array = {
+								array = AUR.east_herzlands_nations_array
+								value = THIS
+							}
+							NOT = { has_country_flag = AUR_eastern_pawn }
+						}
+					}				
 				}
 			}
-			else = {
-				declare_war_on = {
-					target = PTQ
-					type = annex_everything
-				}
-				declare_war_on = {
-					target = IMF
-					type = annex_everything
+		}
+		completion_reward = {
+			every_country = {
+				limit = { has_country_flag = AUR_eastern_pawn }
+				AUR = {
+					set_autonomy = {
+						target = PREV
+						autonomy_state = autonomy_puppet
+					}
 				}
 			}
 		}
 	}
 
 	focus = {
-		id = AUR_through_the_center
-		icon = GFX_goal_KTZ_new_world_old_acquaintances
+		id = AUR_central_promises_kept
+		icon = GFX_goal_KTZ_are_worth_taking_over
 		x = 0
-		y = 1
+		y = 2
 		cost = 5
-		prerequisite = { focus = AUR_southern_theater }
-		relative_position_id = AUR_southern_theater
-		will_lead_to_war_with = WPR
-		will_lead_to_war_with = OST
-		completion_reward = {
-			if = {
-				limit = { is_ai = no }
-				create_wargoal = {
-					target = OST
-					type = annex_everything
-				}
-				create_wargoal = {
-					target = WPR
-					type = annex_everything
+		prerequisite = { focus = AUR_pawns_in_the_center }
+		relative_position_id = AUR_pawns_in_the_center
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_central_promises_kept_trigger_tt
+				hidden_trigger = {
+					NOT = {
+						any_country = {
+							is_in_array = {
+								array = AUR.center_herzlands_nations_array
+								value = THIS
+							}
+							NOT = { has_country_flag = AUR_central_pawn }
+						}
+					}				
 				}
 			}
-			else = {
-				declare_war_on = {
-					target = OST
-					type = annex_everything
-				}
-				declare_war_on = {
-					target = WPR
-					type = annex_everything
+		}
+		completion_reward = {
+			every_country = {
+				limit = { has_country_flag = AUR_central_pawn }
+				AUR = {
+					set_autonomy = {
+						target = PREV
+						autonomy_state = autonomy_puppet
+					}
 				}
 			}
 		}
@@ -2020,12 +1965,12 @@ focus_tree = {
 		id = AUR_restructure_the_imperium
 		icon = GFX_goal_KTZ_are_worth_taking_over
 		x = 0
-		y = 1
+		y = 2
 		cost = 5
-		prerequisite = { focus = AUR_through_the_zuspri }
-		prerequisite = { focus = AUR_promises_kept }
-		prerequisite = { focus = AUR_placate_the_world }
-		relative_position_id = AUR_through_the_zuspri
+		prerequisite = { focus = AUR_central_promises_kept }
+		prerequisite = { focus = AUR_eastern_promises_kept }
+		prerequisite = { focus = AUR_northern_promises_kept }
+		relative_position_id = AUR_northern_promises_kept
 		completion_reward = {
 			set_cosmetic_tag = AUR_KATOWN
 			44 = { transfer_state_to = AUR add_core_of = AUR }
