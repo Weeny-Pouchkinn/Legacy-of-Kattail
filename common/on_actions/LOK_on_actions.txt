@@ -303,6 +303,45 @@ on_actions = {
 			142 = { set_variable = { stratres = 2 } set_variable = { stratres_count = 3 } }
 			173 = { set_variable = { stratres = 2 } set_variable = { stratres_count = 1 } }
 
+			#Setup COUNTRY specialty
+			every_possible_country = {
+				limit = {
+					OR = {
+						is_herzlands_warlord = yes
+						tag = FST
+						tag = FSR
+						tag = DOM
+					}
+				}
+				add_ideas = specialty_nuclear
+				add_tech_bonus = {
+					name = specialty_nuclear
+					bonus = 0
+					uses = 1000
+					ahead_reduction = 1
+					category = nuclear
+				}
+			}
+
+			every_possible_country = {
+				limit = {
+					OR = {
+						tag = ROQ
+						tag = PER
+						tag = LMB
+						tag = RQA
+					}
+				}
+				add_ideas = specialty_computing
+				add_tech_bonus = {
+					name = specialty_computing
+					bonus = 0
+					uses = 1000
+					ahead_reduction = 1
+					category = computing_tech
+				}
+			}
+
 			#Setup COUNTRY species
 			every_possible_country = {
 				add_ideas = var_species_0
