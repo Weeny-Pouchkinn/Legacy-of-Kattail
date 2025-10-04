@@ -1,4 +1,46 @@
 herzlands_unification_cat = {
+	AUR_expand_into_neighbor = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			NOT = { has_country_flag = AUR_expand_into_neighbor_ongoing }
+			has_country_flag = AUR_northern_pawn
+			NOT = { is_in_faction_with = FROM }
+			NOT = { has_war_with = FROM }
+			ROOT = { NOT = { is_puppet_of = FROM } }
+			FROM = { NOT = { is_puppet_of = ROOT } }
+		}
+
+		fire_only_once = yes
+
+		target_array = AUR.north_herzlands_nations_array
+
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		days_remove = 10
+
+		complete_effect = {
+			set_country_flag = AUR_expand_into_neighbor_ongoing
+		}
+
+		remove_effect = {
+			clr_country_flag = AUR_expand_into_neighbor_ongoing
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
 	AUR_katown_conquest = {
 		activation  = {
 			has_completed_focus = AUR_i_need_it_all
@@ -583,6 +625,163 @@ AUR_industrialization_cat = {
 	}
 }
 
+AUR_chew_slowly_cat = {
+	AUR_recruit_northern_nation = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			tag = AUR
+			has_completed_focus = AUR_pawns_in_the_north
+			check_variable = { AUR_northern_pawn_count < 2 }
+			# NOT = {
+			# 	any_country = {
+			# 		has_country_flag = AUR_northern_pawn
+			# 		has_war_with = FROM
+			# 	}
+			# }
+			FROM = {
+				NOT = { has_war_with = AUR }
+				is_puppet = no
+				NOT = { has_country_flag = AUR_offered_recruitment_to_nation }
+			}
+		}
+
+		available = {
+			NOT = { has_country_flag = AUR_recruit_northern_nation_ongoing }
+		}
+
+		fire_only_once = yes
+
+		target_array = AUR.north_herzlands_nations_array
+
+		ai_will_do = {
+			factor = 100
+		}
+
+		cost = 15
+
+		days_remove = 10
+
+		complete_effect = {
+			set_country_flag = AUR_recruit_northern_nation_ongoing
+			FROM = {
+				set_country_flag = AUR_offered_recruitment_to_nation
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = AUR_recruit_northern_nation_tt
+			FROM = { country_event = { id = AUR_event.30 } }
+			clr_country_flag = AUR_recruit_northern_nation_ongoing
+		}
+	}
+
+	AUR_recruit_eastern_nation = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			tag = AUR
+			has_completed_focus = AUR_pawns_in_the_east
+			check_variable = { AUR_eastern_pawn_count < 2 }
+			FROM = {
+				NOT = { has_war_with = AUR }
+				is_puppet = no
+				NOT = { has_country_flag = AUR_offered_recruitment_to_nation }
+			}
+		}
+
+		available = {
+			NOT = { has_country_flag = AUR_recruit_eastern_nation_ongoing }
+		}
+
+		fire_only_once = yes
+
+		target_array = AUR.east_herzlands_nations_array
+
+		ai_will_do = {
+			factor = 100
+		}
+
+		cost = 15
+
+		days_remove = 10
+
+		complete_effect = {
+			set_country_flag = AUR_recruit_eastern_nation_ongoing
+			FROM = {
+				set_country_flag = AUR_offered_recruitment_to_nation
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = AUR_recruit_eastern_nation_tt
+			FROM = { country_event = { id = AUR_event.30 } }
+			clr_country_flag = AUR_recruit_eastern_nation_ongoing
+		}
+	}
+
+	AUR_recruit_central_nation = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			tag = AUR
+		}
+
+		visible = {
+			tag = AUR
+			has_completed_focus = AUR_pawns_in_the_center
+			check_variable = { AUR_central_pawn_count < 2 }
+			NOT = {
+				any_country = {
+					has_country_flag = AUR_central_pawn
+					has_war_with = FROM
+				}
+			}
+			FROM = {
+				NOT = { has_war_with = AUR }
+				is_puppet = no
+				NOT = { has_country_flag = AUR_offered_recruitment_to_nation }
+			}
+		}
+
+		available = {
+			NOT = { has_country_flag = AUR_recruit_central_nation_ongoing }
+		}
+
+		fire_only_once = yes
+
+		target_array = AUR.center_herzlands_nations_array
+
+		ai_will_do = {
+			factor = 100
+		}
+
+		cost = 15
+
+		days_remove = 10
+
+		complete_effect = {
+			set_country_flag = AUR_recruit_central_nation_ongoing
+			FROM = {
+				set_country_flag = AUR_offered_recruitment_to_nation
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = AUR_recruit_central_nation_tt
+			FROM = { country_event = { id = AUR_event.30 } }
+			clr_country_flag = AUR_recruit_central_nation_ongoing
+		}
+	}
+}
 
 lok_IPF_KSK_cat = {
 	aur_shoot_the_ipf = {

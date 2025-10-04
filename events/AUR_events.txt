@@ -798,3 +798,88 @@ country_event = {
 
 	}
 }
+
+#Pact with Nation
+country_event = {
+	id = AUR_event.30
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.30"}
+	title = AUR_event.30.t
+	desc = AUR_event.30.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+	
+	#Okay ig
+	option = {
+		name = AUR_event.30.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_government = communism
+					has_government = democratic
+				}
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					is_in_array = {
+						array = AUR.center_herzlands_nations_array
+						value = THIS
+					}
+				}
+				AUR = { add_to_variable = { AUR_central_pawn_count = 1 } }
+				set_country_flag = AUR_central_pawn
+			}
+			else_if = {
+				limit = {
+					is_in_array = {
+						array = AUR.north_herzlands_nations_array
+						value = THIS
+					}
+				}
+				AUR = { add_to_variable = { AUR_northern_pawn_count = 1 } }
+				set_country_flag = AUR_northern_pawn
+			}
+			else_if = {
+				limit = {
+					is_in_array = {
+						array = AUR.east_herzlands_nations_array
+						value = THIS
+					}
+				}
+				AUR = { add_to_variable = { AUR_eastern_pawn_count = 1 } }
+				set_country_flag = AUR_eastern_pawn
+			}
+		}
+		AUR = {
+			country_event = { id = AUR_event.31 }
+		}
+	}
+
+	#NEVER
+	option = {
+		name = AUR_event.30.b
+		AUR = { country_event = { id = LOK_proposal.2 } }
+	}
+}
+
+#Accepted!
+country_event = {
+	id = AUR_event.31
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.31"}
+	title = AUR_event.31.t
+	desc = AUR_event.31.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+	
+	option = {
+		name = AUR_event.31.a
+		custom_effect_tooltip = AUR_event.31.a.tt
+		give_guarantee = FROM
+		FROM = { give_guarantee = AUR }
+	}
+}
