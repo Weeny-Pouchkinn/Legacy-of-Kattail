@@ -288,6 +288,24 @@ on_actions = {
 				controller = { apply_wonder_effects = yes }
 			}
 
+			#Greater Katown
+			44 = { add_to_array = { array = global.greater_katown_states_array } }
+			45 = { add_to_array = { array = global.greater_katown_states_array } }
+			34 = { add_to_array = { array = global.greater_katown_states_array } }
+			36 = { add_to_array = { array = global.greater_katown_states_array } }
+			50 = { add_to_array = { array = global.greater_katown_states_array } }
+			42 = { add_to_array = { array = global.greater_katown_states_array } }
+			29 = { add_to_array = { array = global.greater_katown_states_array } }
+			27 = { add_to_array = { array = global.greater_katown_states_array } }
+			30 = { add_to_array = { array = global.greater_katown_states_array } }
+			39 = { add_to_array = { array = global.greater_katown_states_array } }	
+			509 = { add_to_array = { array = global.greater_katown_states_array } }
+
+			#ORIGINAL CORES
+			every_possible_country = {
+				every_core_state = { add_to_array = { array = PREV.original_cores_array } }
+			}
+
 			#RESOURCES
 			MUN = {
 				every_owned_state = {
@@ -1541,6 +1559,13 @@ on_actions = {
 
 	on_daily = {
 		effect = {
+			if = {
+				limit = { NOT = { has_government = gestalt } }
+				add_popularity = {
+					ideology = gestalt
+					popularity = -100
+				}
+			}
 			calculate_bonus_resources_from_modifiers = yes
 			count_nukes_in_stockpile = yes
 
@@ -1701,44 +1726,6 @@ on_actions = {
 
 	on_weekly_AUR = {
 		effect = {
-			if = {
-				limit = {
-					check_variable = { AUR_northern_pawn_count > 0 }
-				}
-				set_variable = { AUR_northern_pawn_count_current = 0 }
-				every_country = {
-					limit = { 
-						is_herzlands_warlord = yes
-						has_country_flag = AUR_northern_pawn
-						is_puppet = no
-						NOT = { has_war_with = AUR }
-					}
-					add_to_variable = { AUR.AUR_northern_pawn_count_current = 1 }
-				}
-				if = {
-					limit = { check_variable = { AUR_northern_pawn_count_current < AUR_northern_pawn_count } }
-					country_event = { id = AUR_event.32 }
-					set_variable = { AUR_northern_pawn_count = AUR_northern_pawn_count_current }
-				}
-			}
-			if = {
-				limit = {
-					check_variable = { AUR_central_pawn_count > 0 }
-				}
-				set_variable = { AUR_central_pawn_count_current = 0 }
-				every_country = {
-					limit = { 
-						is_herzlands_warlord = yes
-						has_country_flag = AUR_central_pawn
-						is_puppet = no
-						NOT = { has_war_with = AUR }
-					}
-				if = {
-					limit = { check_variable = { AUR_central_pawn_count_current < AUR_central_pawn_count } }
-					country_event = { id = AUR_event.32 }
-					set_variable = { AUR_central_pawn_count = AUR_central_pawn_count_current }
-				}
-			}
 			if = {
 				limit = { NOT = { has_country_flag = failed_dreijahrige } }
 				if = {

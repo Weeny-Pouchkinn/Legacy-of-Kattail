@@ -1755,7 +1755,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_declaration_of_intent
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = AUR_almost_as_good_as_him
 		x = 0
 		y = 2
 		cost = 5
@@ -1768,15 +1768,15 @@ focus_tree = {
 
 	focus = {
 		id = AUR_pawns_in_the_north
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = AUR_pawns_in_the_north
 		x = 0
 		y = 1
 		cost = 5
 		prerequisite = { focus = AUR_declaration_of_intent }
 		relative_position_id = AUR_declaration_of_intent
 		completion_reward = {
+			custom_effect_tooltip = AUR_pawns_in_the_north_tt
 			hidden_effect = {
-				custom_effect_tooltip = AUR_pawns_in_the_north_tt
 				set_variable = { AUR_northern_pawn_count = 0 }
 				every_possible_country = {
 					limit = {
@@ -1797,7 +1797,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_pawns_in_the_center
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = AUR_pawns_in_the_center
 		x = 1
 		y = 2
 		cost = 5
@@ -1826,7 +1826,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_pawns_in_the_east
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = AUR_pawns_in_the_east
 		x = -1
 		y = 2
 		cost = 5
@@ -1855,7 +1855,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_northern_promises_kept
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = GFX_SOV_depoliticize_the_military_ccp_2d_sov_compatibility
 		x = 0
 		y = 2
 		cost = 5
@@ -1879,12 +1879,23 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = AUR_northern_promises_kept_tt
-			every_country = {
-				limit = { has_country_flag = AUR_northern_pawn }
-				AUR = {
-					set_autonomy = {
-						target = PREV
-						autonomy_state = autonomy_puppet
+			hidden_effect = {
+				every_country = {
+					limit = { has_country_flag = AUR_northern_pawn }
+					AUR = {
+						set_autonomy = {
+							target = PREV
+							autonomy_state = autonomy_puppet
+						}
+					}
+					add_country_leader_role = {
+						character = var:aur_pawn
+						country_leader = {
+							expire = "1965.1.1"
+							ideology = kaiserism
+							traits={ }
+						}
+						promote_leader = yes
 					}
 				}
 			}
@@ -1893,7 +1904,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_eastern_promises_kept
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = GFX_focus_AFG_mountain_training
 		x = 0
 		y = 2
 		cost = 5
@@ -1917,12 +1928,23 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = AUR_eastern_promises_kept_tt
-			every_country = {
-				limit = { has_country_flag = AUR_eastern_pawn }
-				AUR = {
-					set_autonomy = {
-						target = PREV
-						autonomy_state = autonomy_puppet
+			hidden_effect = {
+				every_country = {
+					limit = { has_country_flag = AUR_eastern_pawn }
+					AUR = {
+						set_autonomy = {
+							target = PREV
+							autonomy_state = autonomy_puppet
+						}
+					}
+					add_country_leader_role = {
+						character = var:aur_pawn
+						country_leader = {
+							expire = "1965.1.1"
+							ideology = kaiserism
+							traits={ }
+						}
+						promote_leader = yes
 					}
 				}
 			}
@@ -1931,7 +1953,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_central_promises_kept
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = GFX_SOV_call_for_aid_ccp_2d_sov_compatibility
 		x = 0
 		y = 2
 		cost = 5
@@ -1955,12 +1977,23 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = AUR_central_promises_kept_tt
-			every_country = {
-				limit = { has_country_flag = AUR_central_pawn }
-				AUR = {
-					set_autonomy = {
-						target = PREV
-						autonomy_state = autonomy_puppet
+			hidden_effect = {
+				every_country = {
+					limit = { has_country_flag = AUR_central_pawn }
+					AUR = {
+						set_autonomy = {
+							target = PREV
+							autonomy_state = autonomy_puppet
+						}
+					}
+					add_country_leader_role = {
+						character = var:aur_pawn
+						country_leader = {
+							expire = "1965.1.1"
+							ideology = kaiserism
+							traits={ }
+						}
+						promote_leader = yes
 					}
 				}
 			}
@@ -1969,7 +2002,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_restructure_the_imperium
-		icon = GFX_goal_KTZ_are_worth_taking_over
+		icon = GFX_goal_KTZ_a_success
 		x = 0
 		y = 2
 		cost = 5
@@ -1977,115 +2010,46 @@ focus_tree = {
 		prerequisite = { focus = AUR_eastern_promises_kept }
 		prerequisite = { focus = AUR_northern_promises_kept }
 		relative_position_id = AUR_northern_promises_kept
+		available = {
+			has_war = no
+		}
 		completion_reward = {
 			set_cosmetic_tag = AUR_KATOWN
-			44 = { transfer_state_to = AUR add_core_of = AUR }
-			45 = { transfer_state_to = AUR add_core_of = AUR }
-			34 = { transfer_state_to = AUR add_core_of = AUR }
-			36 = { transfer_state_to = AUR add_core_of = AUR }
-			50 = { transfer_state_to = AUR add_core_of = AUR }
-			42 = { transfer_state_to = AUR add_core_of = AUR }
-			29 = { transfer_state_to = AUR add_core_of = AUR }
-			27 = { transfer_state_to = AUR add_core_of = AUR }
-			30 = { transfer_state_to = AUR add_core_of = AUR }
-			39 = { transfer_state_to = AUR add_core_of = AUR }
+			custom_effect_tooltip = AUR_restructure_the_imperium_tt
+			hidden_effect = {
+				44 = { transfer_state_to = AUR add_core_of = AUR }
+				45 = { transfer_state_to = AUR add_core_of = AUR }
+				34 = { transfer_state_to = AUR add_core_of = AUR }
+				36 = { transfer_state_to = AUR add_core_of = AUR }
+				50 = { transfer_state_to = AUR add_core_of = AUR }
+				42 = { transfer_state_to = AUR add_core_of = AUR }
+				29 = { transfer_state_to = AUR add_core_of = AUR }
+				27 = { transfer_state_to = AUR add_core_of = AUR }
+				30 = { transfer_state_to = AUR add_core_of = AUR }
+				39 = { transfer_state_to = AUR add_core_of = AUR }
+				509 = { transfer_state_to = AUR add_core_of = AUR }
+			}
+			set_capital = {
+				state = 509
+			}
 		}
 	}
 
 	focus = {
-		id = AUR_the_southern_provinces
-		icon = GFX_focus_GER_wunderwaffe
-		x = 1
+		id = AUR_grand_reorganization
+		icon = AUR_grand_reorganization
+		x = 0
 		y = 1
-		cost = 5
+		cost = 15
 		prerequisite = { focus = AUR_restructure_the_imperium }
 		relative_position_id = AUR_restructure_the_imperium
-		completion_reward = {
-			create_dynamic_country = {
-				original_tag = PRL
-				set_temp_variable = { new_country = this }
-				CAT = { every_core_state = { add_core_of = var:new_country } }
-				LIO = { every_core_state = { add_core_of = var:new_country } }
-				WPR = { every_core_state = { add_core_of = var:new_country } }
-				HIM = { every_core_state = { add_core_of = var:new_country } }
-				MEO = { every_core_state = { add_core_of = var:new_country } }
-				AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
-				var:new_country = {
-					set_cosmetic_tag = AUR_SOUTH_HERZ_REGION
-					set_popularities = {
-						fascism = 100
-					}
-					every_state = {
-						limit = { is_core_of = var:new_country }
-						transfer_state_to = var:new_country
-					}
-				}
-			}
-
-			create_dynamic_country = {
-				original_tag = STR
-				set_temp_variable = { new_country = this }
-				MEW = { every_core_state = { add_core_of = var:new_country } }
-				PTQ = { every_core_state = { add_core_of = var:new_country } }
-				IMF = { every_core_state = { add_core_of = var:new_country } }
-				AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
-				var:new_country = {
-					set_cosmetic_tag = AUR_EAST_HERZ_REGION
-					set_popularities = {
-						fascism = 100
-					}
-					every_state = {
-						limit = { is_core_of = var:new_country }
-						transfer_state_to = var:new_country
-					}
-				}
-			}
-
-			create_dynamic_country = {
-				original_tag = OST
-				set_temp_variable = { new_country = this }
-				FRA = { every_core_state = { add_core_of = var:new_country } }
-				NKB = { every_core_state = { add_core_of = var:new_country } }
-				AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
-				var:new_country = {
-					set_cosmetic_tag = AUR_NORTHEAST_HERZ_REGION
-					set_popularities = {
-						fascism = 100
-					}
-					every_state = {
-						limit = { is_core_of = var:new_country }
-						transfer_state_to = var:new_country
-					}
-				}
-			}
+		available = {
+			has_war = no
 		}
-	}
-	
-	focus = {
-		id = AUR_the_northern_allies
-		icon = GFX_focus_GER_wunderwaffe
-		x = -1
-		y = 1
-		cost = 5
-		prerequisite = { focus = AUR_restructure_the_imperium }
-		relative_position_id = AUR_restructure_the_imperium
 		completion_reward = {
-			create_dynamic_country = {
-				original_tag = TAI
-				set_temp_variable = { new_country = this }
-				ELO = { every_core_state = { add_core_of = var:new_country } }
-				CLE = { every_core_state = { add_core_of = var:new_country } }
-				AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
-				var:new_country = {
-					set_cosmetic_tag = AUR_CENTRAL_HERZ_REGION
-					set_popularities = {
-						fascism = 100
-					}
-					every_state = {
-						limit = { is_core_of = var:new_country }
-						transfer_state_to = var:new_country
-					}
-				}
+			custom_effect_tooltip = AUR_grand_reorganization_tt
+			hidden_effect = {
+				AUR_set_up_katzregions = yes
 			}
 		}
 	}

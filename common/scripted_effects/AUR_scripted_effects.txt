@@ -1,0 +1,653 @@
+AUR_set_up_katzregions = { #this code sucks
+	hidden_effect = {
+		#Southern Herzlands Katzregion
+		every_state = {
+			limit = {
+				NOT = {
+					state = 115
+					state = 517
+					state = 562
+					state = 511
+				}
+				OR = {
+					state = 608
+					state = 612
+					state = 611
+					state = 607
+					state = 502
+					state = 136
+					is_in_array = { array = CAT.original_cores_array value = THIS }
+					is_in_array = { array = PRL.original_cores_array value = THIS }
+					is_in_array = { array = HIM.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.south_herzlands_2_region }
+		}
+		#Meopinstaat Katzregion
+		every_state = {
+			limit = {
+				OR = {
+					state = 115
+					state = 517
+					state = 562
+					state = 511
+					state = 584
+					state = 581
+					state = 78
+					is_in_array = { array = MEC.original_cores_array value = THIS }
+					is_in_array = { array = AUR.original_cores_array value = THIS }
+					is_in_array = { array = ELO.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.south_herzlands_1_region }
+		}
+		#Winston Katzregion
+		every_state = {
+			limit = {
+				NOT = {
+					state = 121
+					state = 555
+				}
+				OR = {
+					state = 32
+					state = 652
+					state = 22
+					state = 554
+					is_in_array = { array = PLI.original_cores_array value = THIS }
+					is_in_array = { array = ZUS.original_cores_array value = THIS }
+					is_in_array = { array = NKC.original_cores_array value = THIS }
+					is_in_array = { array = PTQ.original_cores_array value = THIS }
+					is_in_array = { array = STR.original_cores_array value = THIS }
+					is_in_array = { array = MEW.original_cores_array value = THIS }
+					is_in_array = { array = PTQ.original_cores_array value = THIS }
+					is_in_array = { array = IMF.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.east_herzlands_1_region }
+		}
+		#Lionita Katzregion
+		every_state = {
+			limit = {
+				NOT = {
+					state = 122
+				}
+				OR = {
+					state = 121
+					state = 555
+					state = 613
+					state = 606
+					state = 498
+					state = 609
+					state = 605
+					state = 610
+					state = 165
+					is_in_array = { array = MEO.original_cores_array value = THIS }
+					is_in_array = { array = WAC.original_cores_array value = THIS }
+					is_in_array = { array = LIO.original_cores_array value = THIS }
+					is_in_array = { array = KPK.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.east_herzlands_2_region }
+		}
+		#Mountains Katzregion
+		every_state = {
+			limit = {
+				NOT = {
+					state = 136
+				}
+				OR = {
+					state = 536
+					state = 84
+					state = 122
+					is_in_array = { array = OST.original_cores_array value = THIS }
+					is_in_array = { array = WPR.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.central_herzlands_1_region }
+		}
+		#Frankfurr Katzregion
+		every_state = {
+			limit = {
+				NOT = {
+					state = 32
+					state = 652
+					state = 22
+					state = 78
+					state = 538
+					state = 536
+					state = 84
+				}
+				OR = {
+					state = 479
+					state = 648
+					state = 645
+					is_in_array = { array = FRA.original_cores_array value = THIS }
+					is_in_array = { array = NKB.original_cores_array value = THIS }
+					is_in_array = { array = TAI.original_cores_array value = THIS }
+					is_in_array = { array = NAV.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.central_herzlands_2_region }
+		}
+		#Neukats Katzregion
+		every_state = {
+			limit = {
+				OR = {
+					state = 474
+					state = 646
+					state = 647
+					state = 43
+					state = 282
+					state = 23
+					state = 664
+					state = 665
+					state = 13
+					state = 662
+					state = 661
+					state = 663
+					state = 19
+					state = 375
+					is_in_array = { array = HYP.original_cores_array value = THIS }
+					is_in_array = { array = NEU.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.north_herzlands_1_region }
+		}
+		#Clermeowth Katzregion
+		every_state = {
+			limit = {
+				NOT = {
+					state = 647
+					state = 43
+					state = 646
+					state = 474
+					state = 32
+					state = 652
+					state = 22
+					is_in_array = { array = AUR.south_herzlands_1_region value = THIS }
+					is_in_array = { array = global.greater_katown_states_array value = THIS }
+				}
+				OR = {
+					state = 657
+					state = 658
+					state = 659
+					state = 31
+					state = 38
+					state = 21
+					state = 660
+					state = 538
+					is_in_array = { array = CLE.original_cores_array value = THIS }
+					is_in_array = { array = PAW.original_cores_array value = THIS }
+				}
+			}
+			add_to_array = { array = AUR.north_herzlands_2_region }
+		}
+	}
+	#South
+	create_dynamic_country = {
+		original_tag = PRL
+		set_temp_variable = { new_country = this }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.south_herzlands_2_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
+				transfer_state_to = var:new_country
+			}
+			add_core_of = var:new_country
+		}
+		AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+		var:new_country = {
+			set_cosmetic_tag = AUR_SOUTH_HERZ_2_REGION
+			set_popularities = {
+				fascism = 100
+			}
+		}
+	}
+
+	#Auralia
+	create_dynamic_country = {
+		original_tag = ELO
+		set_temp_variable = { new_country = this }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.south_herzlands_1_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
+				transfer_state_to = var:new_country
+			}
+			add_core_of = var:new_country
+		}
+		AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+		var:new_country = {
+			set_cosmetic_tag = AUR_SOUTH_HERZ_1_REGION
+			set_popularities = {
+				fascism = 100
+			}
+		}
+	}
+
+	#THE EAST
+	#Winston Region
+	if = {
+		limit = { PTQ = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		PTQ = { save_global_event_target_as = aur_east_herz_1_root_country }
+	}
+	else_if = {
+		limit = { IMF = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		IMF = { save_global_event_target_as = aur_east_herz_1_root_country }
+	}
+	else_if = {
+		limit = { STR = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		STR = { save_global_event_target_as = aur_east_herz_1_root_country }
+	}
+	else_if = {
+		limit = { MEW = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		MEO = { save_global_event_target_as = aur_east_herz_1_root_country }
+	}
+	else_if = {
+		limit = { KPK = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KPK = { save_global_event_target_as = aur_east_herz_1_root_country }
+	}
+	else_if = {
+		limit = { MEO = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		MEO = { save_global_event_target_as = aur_east_herz_1_root_country }
+	}
+	else_if = {
+		limit = { LIO = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		LIO = { save_global_event_target_as = aur_east_herz_1_root_country }
+	}
+	else = { set_country_flag = no_aur_east_herz_1_root_country }
+	if = {
+		limit = { NOT = { has_country_flag = no_aur_east_herz_1_root_country } }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.east_herzlands_1_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				transfer_state_to = event_target:aur_east_herz_1_root_country
+			}
+			add_core_of = event_target:aur_east_herz_1_root_country
+		}
+	}
+	else = {
+		create_dynamic_country = {
+			original_tag = PTQ
+			set_temp_variable = { new_country = this }
+			every_state = {
+				limit = { is_in_array = { array = AUR.east_herzlands_1_region value = THIS } }
+				if = {
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					transfer_state_to = var:new_country
+				}
+				add_core_of = var:new_country
+			}
+			AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+			var:new_country = { save_global_event_target_as = aur_east_herz_1_root_country }
+		}
+	}
+	event_target:aur_east_herz_1_root_country = {
+		set_country_flag = become_aur_katzregion
+		set_cosmetic_tag = AUR_EAST_HERZ_1_REGION
+		set_popularities = { fascism = 100 }
+	}
+	#Lionita area
+	if = {
+		limit = { LIO = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		LIO = { save_global_event_target_as = aur_east_herz_2_root_country }
+	}
+	else_if = {
+		limit = { KPK = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KPK = { save_global_event_target_as = aur_east_herz_2_root_country }
+	}
+	else_if = {
+		limit = { MEO = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		MEO = { save_global_event_target_as = aur_east_herz_2_root_country }
+	}
+	else_if = {
+		limit = { MEW = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		MEO = { save_global_event_target_as = aur_east_herz_2_root_country }
+	}
+	else_if = {
+		limit = { STR = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		STR = { save_global_event_target_as = aur_east_herz_2_root_country }
+	}
+	else_if = {
+		limit = { PTQ = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		PTQ = { save_global_event_target_as = aur_east_herz_2_root_country }
+	}
+	else_if = {
+		limit = { IMF = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		IMF = { save_global_event_target_as = aur_east_herz_2_root_country }
+	}
+	else = { set_country_flag = no_aur_east_herz_2_root_country }
+	if = {
+		limit = { NOT = { has_country_flag = no_aur_east_herz_2_root_country } }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.east_herzlands_2_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				transfer_state_to = event_target:aur_east_herz_2_root_country
+			}
+			add_core_of = event_target:aur_east_herz_2_root_country
+		}
+	}
+	else = {
+		create_dynamic_country = {
+			original_tag = LIO
+			set_temp_variable = { new_country = this }
+			every_state = {
+				limit = { is_in_array = { array = AUR.east_herzlands_2_region value = THIS } }
+				if = {
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					transfer_state_to = var:new_country
+				}
+				add_core_of = var:new_country
+			}
+			AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+			var:new_country = { save_global_event_target_as = aur_east_herz_2_root_country }
+		}
+	}
+	event_target:aur_east_herz_2_root_country = {
+		set_country_flag = become_aur_katzregion
+		set_cosmetic_tag = AUR_EAST_HERZ_2_REGION
+		set_popularities = { fascism = 100 }
+	}
+
+	#THE NORTH
+	#Neukats
+	if = {
+		limit = { NEU = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		NEU = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { PAW = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		PAW = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { HYP = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		HYP = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { SIL = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		SIL = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { KKH = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KKH = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { KVK = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KVK = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { CLE = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		CLE = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { BLM = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		BLM = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { AKR = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		AKR = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { KTV = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KTV = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { PMB = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		PMB = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else_if = {
+		limit = { KTW = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KTW = { save_global_event_target_as = aur_north_herz_1_root_country }
+	}
+	else = { set_country_flag = no_aur_north_herz_1_root_country }
+	if = {
+		limit = { NOT = { has_country_flag = no_aur_north_herz_1_root_country } }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.north_herzlands_1_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				transfer_state_to = event_target:aur_north_herz_1_root_country
+			}
+			add_core_of = event_target:aur_north_herz_1_root_country
+		}
+	}
+	else = {
+		create_dynamic_country = {
+			original_tag = NEU
+			set_temp_variable = { new_country = this }
+			every_state = {
+				limit = { is_in_array = { array = AUR.north_herzlands_1_region value = THIS } }
+				if = {
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					transfer_state_to = var:new_country
+				}
+				add_core_of = var:new_country
+			}
+			AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+			var:new_country = { save_global_event_target_as = aur_north_herz_1_root_country }
+		}
+	}
+	event_target:aur_north_herz_1_root_country = {
+		set_country_flag = become_aur_katzregion
+		set_cosmetic_tag = AUR_NORTH_HERZ_1_REGION
+		set_popularities = { fascism = 100 }
+	}
+	#Clermeowth area
+	if = {
+		limit = { CLE = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		CLE = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { PAW = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		PAW = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { HYP = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		HYP = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { SIL = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		SIL = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { KKH = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KKH = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { KVK = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KVK = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { NEU = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		CLE = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { NEU = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		BLM = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { AKR = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		AKR = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { KTV = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KTV = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { PMB = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		PMB = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else_if = {
+		limit = { KTW = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		KTW = { save_global_event_target_as = aur_north_herz_2_root_country }
+	}
+	else = { set_country_flag = no_aur_north_herz_2_root_country }
+	if = {
+		limit = { NOT = { has_country_flag = no_aur_north_herz_2_root_country } }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.north_herzlands_2_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
+				transfer_state_to = event_target:aur_north_herz_2_root_country
+			}
+			add_core_of = event_target:aur_north_herz_2_root_country
+		}
+	}
+	else = {
+		create_dynamic_country = {
+			original_tag = CLE
+			set_temp_variable = { new_country = this }
+			every_state = {
+				limit = { is_in_array = { array = AUR.north_herzlands_2_region value = THIS } }
+				if = {
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
+					transfer_state_to = var:new_country
+				}
+				add_core_of = var:new_country
+			}
+			AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+			var:new_country = { save_global_event_target_as = aur_north_herz_2_root_country }
+		}
+	}
+	event_target:aur_north_herz_2_root_country = {
+		set_country_flag = become_aur_katzregion
+		set_cosmetic_tag = AUR_NORTH_HERZ_2_REGION
+		set_popularities = { fascism = 100 }
+	}
+
+	#THE EAST
+	#Mountains
+	if = {
+		limit = { OST = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		OST = { save_global_event_target_as = aur_central_herz_1_root_country }
+	}
+	else_if = {
+		limit = { WPR = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		WPR = { save_global_event_target_as = aur_central_herz_1_root_country }
+	}
+	else_if = {
+		limit = { NKB = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		NKB = { save_global_event_target_as = aur_central_herz_1_root_country }
+	}
+	else_if = {
+		limit = { TAI = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		TAI = { save_global_event_target_as = aur_central_herz_1_root_country }
+	}
+	else_if = {
+		limit = { NAV = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		NAV = { save_global_event_target_as = aur_central_herz_1_root_country }
+	}
+	else_if = {
+		limit = { FRA = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		FRA = { save_global_event_target_as = aur_central_herz_1_root_country }
+	}
+	else = { set_country_flag = no_aur_central_herz_1_root_country }
+	if = {
+		limit = { NOT = { has_country_flag = no_aur_central_herz_1_root_country } }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.central_herzlands_1_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				transfer_state_to = event_target:aur_central_herz_1_root_country
+			}
+			add_core_of = event_target:aur_central_herz_1_root_country
+		}
+	}
+	else = {
+		create_dynamic_country = {
+			original_tag = OST
+			set_temp_variable = { new_country = this }
+			every_state = {
+				limit = { is_in_array = { array = AUR.central_herzlands_1_region value = THIS } }
+				if = {
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					transfer_state_to = var:new_country
+				}
+				add_core_of = var:new_country
+			}
+			AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+			var:new_country = { save_global_event_target_as = aur_central_herz_1_root_country }
+		}
+	}
+	event_target:aur_central_herz_1_root_country = {
+		set_country_flag = become_aur_katzregion
+		set_cosmetic_tag = AUR_CENTRAL_HERZ_1_REGION
+		set_popularities = { fascism = 100 }
+	}
+	#Frankfurr area
+	if = {
+		limit = { FRA = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		FRA = { save_global_event_target_as = aur_central_herz_2_root_country }
+	}
+	else_if = {
+		limit = { NKB = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		NKB = { save_global_event_target_as = aur_central_herz_2_root_country }
+	}
+	else_if = {
+		limit = { TAI = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		TAI = { save_global_event_target_as = aur_central_herz_2_root_country }
+	}
+	else_if = {
+		limit = { NAV = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		NAV = { save_global_event_target_as = aur_central_herz_2_root_country }
+	}
+	else_if = {
+		limit = { OST = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		OST = { save_global_event_target_as = aur_central_herz_2_root_country }
+	}
+	else_if = {
+		limit = { WPR = { is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } }
+		WPR = { save_global_event_target_as = aur_central_herz_2_root_country }
+	}
+	else = { set_country_flag = no_aur_central_herz_2_root_country }
+	if = {
+		limit = { NOT = { has_country_flag = no_aur_central_herz_2_root_country } }
+		every_state = {
+			limit = {
+				is_in_array = { array = AUR.central_herzlands_2_region value = THIS }
+			}
+			if = {
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
+				transfer_state_to = event_target:aur_central_herz_2_root_country
+			}
+			add_core_of = event_target:aur_central_herz_2_root_country
+		}
+	}
+	else = {
+		create_dynamic_country = {
+			original_tag = FRA
+			set_temp_variable = { new_country = this }
+			every_state = {
+				limit = { is_in_array = { array = AUR.central_herzlands_2_region value = THIS } }
+				if = {
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
+					transfer_state_to = var:new_country
+				}
+				add_core_of = var:new_country
+			}
+			AUR = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
+			var:new_country = { save_global_event_target_as = aur_central_herz_2_root_country }
+		}
+	}
+	event_target:aur_central_herz_2_root_country = {
+		set_country_flag = become_aur_katzregion
+		set_cosmetic_tag = AUR_CENTRAL_HERZ_2_REGION
+		set_popularities = { fascism = 100 }
+	}
+}
