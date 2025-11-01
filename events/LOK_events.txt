@@ -1,3 +1,165 @@
+add_namespace = LOK_high_command
+#Leader Found and they want to work
+country_event = {
+	id = LOK_high_command.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_high_command.1"}
+	title = "LOK_high_command.1.t"
+	desc = "LOK_high_command.1.d"
+	is_triggered_only = yes
+
+	after = {
+		hidden_effect = {
+			clr_country_flag = dealing_with_katzen_high_command_member
+			event_target:lok_hc_member_being_dealt_with = { clr_character_flag = katzen_high_command_member_not_dealt_with }
+			if = {
+				limit = { any_character = { has_character_flag = katzen_high_command_member_not_dealt_with } }
+				random_character = {
+					limit = { has_character_flag = katzen_high_command_member_not_dealt_with }
+					save_global_event_target_as = lok_hc_member_being_dealt_with
+				}
+				set_country_flag = dealing_with_katzen_high_command_member
+				country_event = { id = LOK_high_command.1 days = 1 }
+			}
+		}
+	}
+
+	option = { #Recruit!
+		name = "LOK_high_command.1.a"
+		custom_effect_tooltip = LOK_high_command.1.a.tt
+		add_war_support = 0.05
+		add_stability = -0.05
+		if = {
+			limit = { tag = AUR has_completed_focus = AUR_chew_slowly }
+			set_temp_variable = { herald_sanity_change = 3 }
+			AUR_change_herald_sanity = yes
+		}
+		event_target:lok_hc_member_being_dealt_with = {
+			set_nationality = ROOT
+			clear_character_status_flags = yes
+		}
+		trigger = {
+			NOT = {
+				AND = {
+					tag = AUR
+					NOT = { has_completed_focus = AUR_chew_slowly }
+				}
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = fascism
+			}
+		}
+	}
+
+	option = { #Let go!
+		name = "LOK_high_command.1.b"
+		custom_effect_tooltip = LOK_high_command.1.b.tt
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_retired
+		}
+		trigger = {
+			NOT = {
+				AND = {
+					tag = AUR
+					NOT = { has_completed_focus = AUR_chew_slowly }
+				}
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = neutrality
+			}
+		}
+	}
+
+	option = { #Jail!
+		name = "LOK_high_command.1.c"
+		custom_effect_tooltip = LOK_high_command.1.c.tt
+		add_stability = 0.05
+		add_war_support = -0.05
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_jailed
+		}
+		trigger = {
+			NOT = {
+				AND = {
+					tag = AUR
+					NOT = { has_completed_focus = AUR_chew_slowly }
+				}
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = democratic
+			}
+		}
+	}
+
+	option = { #Kill!
+		name = "LOK_high_command.1.e"
+		custom_effect_tooltip = LOK_high_command.1.e.tt
+		add_political_power = 50
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_dead
+			hidden_effect = { retire = yes }
+		}
+		if = {
+			limit = { tag = AUR has_completed_focus = AUR_chew_slowly }
+			set_temp_variable = { herald_sanity_change = -5 }
+			AUR_change_herald_sanity = yes
+		}
+		hidden_effect = { subtract_from_variable = { global.katzen_high_command_member_count_total = 1 } }
+		trigger = {
+			NOT = {
+				AND = {
+					tag = AUR
+					NOT = { has_completed_focus = AUR_chew_slowly }
+				}
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = communism
+			}
+		}
+	}
+
+
+	option = { #Kill! (REGENT)
+		name = "LOK_high_command.1.f"
+		add_political_power = 150
+		custom_effect_tooltip = LOK_high_command.1.e.tt
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_dead
+			hidden_effect = { retire = yes }
+		}
+		hidden_effect = { subtract_from_variable = { global.katzen_high_command_member_count_total = 1 } }
+		trigger = {
+			tag = AUR
+			NOT = { has_completed_focus = AUR_chew_slowly }
+		}
+	}
+}
+
+
+
 add_namespace = LOK_state_actions
 
 state_event = { #recolonisation

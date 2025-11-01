@@ -940,8 +940,8 @@ focus_tree = {
 				tooltip = rival_must_exist
 				hidden_trigger = {
 					OR = { #CSS gotta exist
-						MEW = { has_cosmetic_tag = MEW_CSS }
-						WAC = { has_cosmetic_tag = MEW_CSS }
+						MEW = { has_country_flag = formed_css }
+						WAC = { has_country_flag = formed_css }
 					}
 				}
 			}
@@ -955,18 +955,17 @@ focus_tree = {
 				}
 			}
 		}
-		mutually_exclusive = { focus = AUR_turn_to_the_nmi }
 		prerequisite = { focus = AUR_with_some_lights }
 		relative_position_id = AUR_with_some_lights
 		completion_reward = {
 			if = {
-				limit = { MEW = { has_cosmetic_tag = MEW_CSS } }
+				limit = { MEW = { has_country_flag = formed_css } }
 				MEW = { save_global_event_target_as = regency_partner }
 				add_opinion_modifier = { target = MEW modifier = AUR_uneasy_compromise }
 				MEW = { add_opinion_modifier = { target = AUR modifier = AUR_uneasy_compromise } }
 			}
 			else_if = {
-				limit = { WAC = { has_cosmetic_tag = MEW_CSS } }
+				limit = { WAC = { has_country_flag = formed_css } }
 				WAC = { save_global_event_target_as = regency_partner }
 				add_opinion_modifier = { target = WAC modifier = AUR_uneasy_compromise }
 				WAC = { add_opinion_modifier = { target = AUR modifier = AUR_uneasy_compromise } }
@@ -980,6 +979,7 @@ focus_tree = {
 		y = 2
 		cost = 5
 		available = {
+			country_exists = NMI
 			custom_trigger_tooltip = {
 				tooltip = ussf_must_exist
 				hidden_trigger = {
@@ -990,7 +990,6 @@ focus_tree = {
 				}
 			}
 		}
-		mutually_exclusive = { focus = AUR_appease_felinean_rival }
 		prerequisite = { focus = AUR_with_some_lights }
 		relative_position_id = AUR_with_some_lights
 		completion_reward = {
@@ -1004,9 +1003,17 @@ focus_tree = {
 		x = 0
 		y = 2
 		cost = 5
+		available = {
+			country_exists = NMI
+		}
 		prerequisite = { focus = AUR_turn_to_the_nmi }
 		relative_position_id = AUR_turn_to_the_nmi
 		completion_reward = {
+			add_stability = -0.075
+			custom_effect_tooltip = AUR_herzlands_compromise_tooltip
+			hidden_effect = {
+				NMI = { country_event = { id = AUR_event.36 days = 1 } }
+			}
 		}
 	}
 	focus = {
@@ -1018,6 +1025,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_appease_felinean_rival }
 		relative_position_id = AUR_appease_felinean_rival
 		completion_reward = {
+			add_stability = -0.075
 			custom_effect_tooltip = AUR_meolowtof_ribbawtrop_tooltip
 			hidden_effect = {
 				event_target:regency_partner = { country_event = { id = AUR_event.6 days = 2 } }
@@ -1056,7 +1064,7 @@ focus_tree = {
 				country_event = { id = AUR_event.12 }
 			}
 			custom_effect_tooltip = AUR_pursuit_of_hypermilitarism_tt
-			add_ideas = extensive_conscription
+			add_manpower = 150000
 			add_stability = -0.10
 			country_event = { id = AUR_event.5 }
 			add_to_variable = { AUR_the_kaiser_must_return_war_support_weekly = 0.002 }
@@ -1224,6 +1232,11 @@ focus_tree = {
 			random_country = {
 				limit = { has_country_flag = signed_regency_pakt }
 				country_event = { id = AUR_event.8 }
+				news_event = { id = LOK_news.8 }
+			}
+			random_country = {
+				limit = { has_country_flag = nmi_signed_regency_pakt }
+				country_event = { id = AUR_event.38 }
 			}
 		}
 	}
@@ -2036,12 +2049,151 @@ focus_tree = {
 	}
 
 	focus = {
+		id = AUR_a_small_foothold
+		icon = GFX_focus_RAJ_a_policy_of_silence
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_restructure_the_imperium }
+		relative_position_id = AUR_restructure_the_imperium
+		will_lead_to_war_with = MEC
+		bypass = {
+			NOT = { country_exists = MEC }
+		}
+		mutually_exclusive = {
+			focus = AUR_secure_the_western_flank
+		}
+		completion_reward = {
+			set_temp_variable = { herald_sanity_change = -3 }
+			AUR_change_herald_sanity = yes
+			declare_war_on = {
+				target = MEC
+				type = annex_everything
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_fortify_the_western_flank
+		icon = GFX_SOV_fortify_mongolian_border_ccp_2d_sov_compatibility
+		x = -1
+		y = 1
+		cost = 5
+		mutually_exclusive = {
+			focus = AUR_secure_the_western_flank
+		}
+		available = {
+			NOT = { country_exists = MEC }
+		}
+		prerequisite = { focus = AUR_a_small_foothold }
+		relative_position_id = AUR_a_small_foothold
+		completion_reward = {
+			add_stability = 0.05
+			add_war_support = -0.05
+			set_temp_variable = { herald_sanity_change = 5 }
+			AUR_change_herald_sanity = yes
+			if = {
+				limit = { controls_state = 644 }
+				644 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+					}
+					set_building_level = {
+						type = coastal_bunker
+						level = 3
+						instant_build = yes
+						province = {
+							all_provinces = yes
+						}
+					}
+					set_building_level = {
+						type = bunker
+						level = 3
+						instant_build = yes
+						province = {
+							all_provinces = yes
+						}
+					}
+				}
+			}
+			if = {
+				limit = { controls_state = 31 }
+				85 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+					}
+					set_building_level = {
+						type = bunker
+						level = 3
+						instant_build = yes
+						province = {
+							limit_to_border = yes
+							all_provinces = yes
+						}
+					}
+				}
+			}
+			if = {
+				limit = { controls_state = 85 }
+				85 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+					}
+					set_building_level = {
+						type = coastal_bunker
+						level = 3
+						instant_build = yes
+						province = {
+							all_provinces = yes
+						}
+					}
+					set_building_level = {
+						type = bunker
+						level = 3
+						instant_build = yes
+						province = {
+							all_provinces = yes
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	focus = {
+		id = AUR_secure_the_western_flank
+		icon = GFX_goal_generic_territory_or_war
+		x = 1
+		y = 1
+		cost = 5
+		mutually_exclusive = {
+			focus = AUR_fortify_the_western_flank
+		}
+		prerequisite = { focus = AUR_a_small_foothold }
+		relative_position_id = AUR_a_small_foothold
+		will_lead_to_war_with = SOB
+		completion_reward = {
+			set_temp_variable = { herald_sanity_change = -10 }
+			AUR_change_herald_sanity = yes
+			declare_war_on = {
+				target = SOB
+				type = annex_everything
+			}
+		}
+	}
+
+
+	focus = {
 		id = AUR_grand_reorganization
 		icon = AUR_grand_reorganization
 		x = 0
-		y = 1
+		y = 3
 		cost = 15
-		prerequisite = { focus = AUR_restructure_the_imperium }
+		prerequisite = { focus = AUR_secure_the_western_flank focus = AUR_fortify_the_western_flank }
 		relative_position_id = AUR_restructure_the_imperium
 		available = {
 			has_war = no
@@ -2049,7 +2201,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = AUR_grand_reorganization_tt
 			hidden_effect = {
-				AUR_set_up_katzregions = yes
+				country_event = { id = AUR_event.35 }
+				country_event = { id = AUR_event.33 days = 30 }
 			}
 		}
 	}

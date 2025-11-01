@@ -1905,3 +1905,14 @@ retire_all_characters = {
 change_herald_sanity = {
 	add_to_variable = { herald_sanity = $VALUE$ }
 }
+
+clear_character_status_flags = {
+	if = {
+		limit = { has_character_flag = leader_is_retired }
+		clr_character_flag = leader_is_retired
+	}
+	if = {
+		limit = { has_character_flag = leader_is_jailed }
+		clr_character_flag = leader_is_jailed
+	}
+}

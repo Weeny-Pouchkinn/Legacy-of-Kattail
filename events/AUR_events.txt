@@ -921,3 +921,122 @@ country_event = {
 		AUR_change_herald_sanity = yes
 	}
 }
+
+#Kaiser Returns 1
+country_event = {
+	id = AUR_event.33
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.33"}
+	title = AUR_event.33.t
+	desc = AUR_event.33.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+	
+
+	option = {
+		name = AUR_event.33.a
+		country_event = { id = AUR_event.34 }
+	}
+}
+
+#Kaiser Returns 1
+country_event = {
+	id = AUR_event.34
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.34"}
+	title = AUR_event.34.t
+	desc = AUR_event.34.d
+	picture = GFX_report_event_kattail
+
+	is_triggered_only = yes
+	
+
+	option = {
+		name = AUR_event.34.a
+	}
+
+	option = {
+		name = AUR_event.34.b
+	}
+}
+
+#Katzregions
+country_event = {
+	id = AUR_event.35
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.35"}
+	hidden = yes
+
+	is_triggered_only = yes
+	
+	immediate = {
+		AUR_set_up_katzregions = yes
+	}
+}
+
+#NMI Pakt
+country_event = {
+	id = AUR_event.36
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.36"}
+	title = AUR_event.36.t
+	desc = AUR_event.36.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.6.a
+		add_stability = -0.05
+		custom_effect_tooltip = AUR_event.36.a.tooltip
+		diplomatic_relation = { country = AUR relation = non_aggression_pact }
+		hidden_effect = {
+			set_country_flag = nmi_signed_regency_pakt
+			AUR = { country_event = { id = AUR_event.37 } }
+		}
+		591 = { add_claim_by = ROOT }
+		592 = { add_claim_by = ROOT }
+		206 = { add_claim_by = ROOT }
+		197 = { add_claim_by = ROOT }
+		595 = { add_claim_by = ROOT }
+	}
+
+	option = {
+		name = AUR_event.6.b
+		add_political_power = 50 
+		add_stability = 0.05
+		hidden_effect = { AUR = { country_event = { id = LOK_proposal.2 } } }
+		ai_chance = { base = 0 }
+	}
+}
+
+#pakt accepted
+country_event = {
+	id = AUR_event.37
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.37"}
+	title = AUR_event.37.t
+	desc = AUR_event.37.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.37.a
+		diplomatic_relation = { country = NMI relation = non_aggression_pact }
+	}
+}
+
+#Regent strikes south (NMI)
+country_event = {
+	id = AUR_event.38
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.38"}
+	title = AUR_event.38.t
+	desc = AUR_event.38.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.8.a
+		declare_war_on = { target = HIM type = take_claimed_state }
+		declare_war_on = { target = CAT type = take_claimed_state }
+		declare_war_on = { target = MEO type = take_claimed_state }
+	}
+}
