@@ -1,5 +1,5 @@
 herzlands_unification_cat = {
-	AUR_expand_into_neighbor = {
+	AUR_expand_into_neighbor_north = {
 		icon = GFX_decision_generic_confiscation
 
 		allowed = {
@@ -7,8 +7,9 @@ herzlands_unification_cat = {
 		}
 
 		visible = {
-			NOT = { has_country_flag = AUR_expand_into_neighbor_ongoing }
 			has_country_flag = AUR_northern_pawn
+			is_in_faction_with = AUR
+			NOT = { has_country_flag = AUR_expand_into_neighbor_ongoing }
 			NOT = { is_in_faction_with = FROM }
 			NOT = { has_war_with = FROM }
 			ROOT = { NOT = { is_puppet_of = FROM } }
@@ -27,10 +28,18 @@ herzlands_unification_cat = {
 			}
 		}
 
-		days_remove = 10
+		days_remove = 60
 
 		complete_effect = {
+			AUR = {
+				country_event = { id = AUR_event.39 }
+			}
 			set_country_flag = AUR_expand_into_neighbor_ongoing
+			hidden_effect = {
+				FROM = {
+					save_global_event_target_as = expand_into_neighbor_target
+				}
+			}
 		}
 
 		remove_effect = {
@@ -38,6 +47,128 @@ herzlands_unification_cat = {
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
+			}
+			FROM = {
+				save_global_event_target_as = expand_into_neighbor_target
+				every_core_state = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+		}
+	}
+	AUR_expand_into_neighbor_east = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			has_country_flag = AUR_eastern_pawn
+			is_in_faction_with = AUR
+			NOT = { has_country_flag = AUR_expand_into_neighbor_ongoing }
+			NOT = { is_in_faction_with = FROM }
+			NOT = { has_war_with = FROM }
+			ROOT = { NOT = { is_puppet_of = FROM } }
+			FROM = { NOT = { is_puppet_of = ROOT } }
+		}
+
+		fire_only_once = yes
+
+		target_array = AUR.east_herzlands_nations_array
+
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		days_remove = 60
+
+		complete_effect = {
+			AUR = {
+				country_event = { id = AUR_event.39 }
+			}
+			set_country_flag = AUR_expand_into_neighbor_ongoing
+			hidden_effect = {
+				FROM = {
+					save_global_event_target_as = expand_into_neighbor_target
+				}
+			}
+		}
+
+		remove_effect = {
+			clr_country_flag = AUR_expand_into_neighbor_ongoing
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			FROM = {
+				save_global_event_target_as = expand_into_neighbor_target
+				every_core_state = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+		}
+	}
+	AUR_expand_into_neighbor_center = {
+		icon = GFX_decision_generic_confiscation
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		visible = {
+			has_country_flag = AUR_central_pawn
+			is_in_faction_with = AUR
+			NOT = { has_country_flag = AUR_expand_into_neighbor_ongoing }
+			NOT = { is_in_faction_with = FROM }
+			NOT = { has_war_with = FROM }
+			ROOT = { NOT = { is_puppet_of = FROM } }
+			FROM = { NOT = { is_puppet_of = ROOT } }
+		}
+
+		fire_only_once = yes
+
+		target_array = AUR.center_herzlands_nations_array
+
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		days_remove = 60
+
+		complete_effect = {
+			AUR = {
+				country_event = { id = AUR_event.39 }
+			}
+			set_country_flag = AUR_expand_into_neighbor_ongoing
+			hidden_effect = {
+				FROM = {
+					save_global_event_target_as = expand_into_neighbor_target
+				}
+			}
+		}
+
+		remove_effect = {
+			clr_country_flag = AUR_expand_into_neighbor_ongoing
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			FROM = {
+				every_core_state = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
 			}
 		}
 	}
@@ -637,7 +768,7 @@ AUR_chew_slowly_cat = {
 			tag = AUR
 			NOT = { has_country_flag = AUR_invading_the_north }
 			has_completed_focus = AUR_pawns_in_the_north
-			check_variable = { AUR_northern_pawn_count < 2 }
+			check_variable = { AUR_northern_pawn_count < 1 }
 			NOT = {
 				any_country = {
 					has_country_flag = AUR_northern_pawn
@@ -694,7 +825,7 @@ AUR_chew_slowly_cat = {
 			NOT = { has_country_flag = AUR_invading_the_east }
 			tag = AUR
 			has_completed_focus = AUR_pawns_in_the_east
-			check_variable = { AUR_eastern_pawn_count < 2 }
+			check_variable = { AUR_eastern_pawn_count < 1 }
 			FROM = {
 				NOT = { has_government = democratic }
 				NOT = { has_government = communism }
@@ -745,7 +876,7 @@ AUR_chew_slowly_cat = {
 			tag = AUR
 			NOT = { has_country_flag = AUR_invading_the_center }
 			has_completed_focus = AUR_pawns_in_the_center
-			check_variable = { AUR_central_pawn_count < 2 }
+			check_variable = { AUR_central_pawn_count < 1 }
 			NOT = {
 				any_country = {
 					has_country_flag = AUR_central_pawn
@@ -809,7 +940,7 @@ AUR_chew_slowly_cat = {
 				hidden_trigger = {
 					check_variable = { AUR_central_pawn_count = 0 }
 					NOT = { has_country_flag = AUR_recruit_central_nation_ongoing }	
-				}		
+				}
 			}
 		}
 
