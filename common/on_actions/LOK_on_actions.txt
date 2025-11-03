@@ -88,6 +88,20 @@ on_actions = {
 				}
 			}
 
+			#ACR Sphere of Influence
+			every_country = {
+				limit = {
+					OR = {
+						tag = DAW
+						tag = BAZ
+						tag = ENO
+						tag = EUL
+						tag = MSN
+					}
+				}
+				add_to_array = { ACR.sphere_of_influence_array = THIS }
+			}
+
 			#Nuclear Winter
 			set_variable = { global.lok_nuclear_soot_perc_raw = 0 } #Percentage of sunlight blocked by soot (in raw percentage)
 			set_variable = { global.lok_nuclear_soot_perc_negative = 1 } #The actual food debuff, divided by 100
@@ -417,8 +431,11 @@ on_actions = {
 			FOD = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_7 add_ideas = var_species_24 }
 			KKN = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			EUL = { remove_ideas = var_species_0 add_ideas = var_species_7 }
+			KRO = { remove_ideas = var_species_0 add_ideas = var_species_7 }
+			NKR = { remove_ideas = var_species_0 add_ideas = var_species_7 add_ideas = var_species_24 }
 			DAW = { remove_ideas = var_species_0 add_ideas = var_species_24 }
 			BAZ = { remove_ideas = var_species_0 add_ideas = var_species_24 }
+			YIN = { remove_ideas = var_species_0 add_ideas = var_species_24 }
 
 			ACR = { remove_ideas = var_species_0 add_ideas = var_species_7 add_ideas = var_species_24 }
 
@@ -525,6 +542,15 @@ on_actions = {
 
 			FMT = { every_owned_state = { set_variable = { species = 9 } } }
 
+			#Freeports
+			1056 = { set_variable = { species = 25 } set_variable = { minority = 1 } }
+			252 = { set_variable = { species = 25 } set_variable = { minority = 3 } }
+			894 = { set_variable = { species = 1 } set_variable = { minority = 3 } }
+			896 = { set_variable = { species = 3 } set_variable = { minority = 1 } }
+			895 = { set_variable = { species = 1 } set_variable = { minority = 3 } }
+			897 = { set_variable = { species = 3 } set_variable = { minority = 1 } }
+
+
 			#Roqualia
 			ROQ = { every_owned_state = { set_variable = { species = 3 } } }
 			#meowmeowmeow
@@ -624,6 +650,8 @@ on_actions = {
 
 			#Loris
 			FOD = { every_owned_state = { set_variable = { species = 7 } } }
+			1052 = { set_variable = { species = 7 } set_variable = { minority = 1} }
+			1053 = { set_variable = { species = 7 } set_variable = { minority = 24 } }
 			1038 = { set_variable = { species = 24 } }
 			96 = { set_variable = { species = 24 } }
 			1039 = { set_variable = { species = 24 } }
@@ -645,7 +673,7 @@ on_actions = {
 			1036 = { set_variable = { species = 24 } }
 			152 = { set_variable = { species = 24 } }
 			1324 = { set_variable = { species = 1 } set_variable = { minority = 7 } }
-			202 = { set_variable = { species = 1 } set_variable = { minority = 7 } }
+			202 = { set_variable = { species = 7 } set_variable = { minority = 1 } }
 			1313 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
 			201 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
 			1321 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
@@ -692,21 +720,21 @@ on_actions = {
 			FRO = { every_owned_state = { set_variable = { species = 26 } } }
 			ITZ = { every_owned_state = { set_variable = { species = 26 } } }
 			VAR = { every_owned_state = { set_variable = { species = 26 } } }
-			942 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			214 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			941 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			947 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			946 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			928 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			929 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			932 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			155 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			950 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			259 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			951 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			949 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			180 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			940 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 942 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 214 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 941 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 947 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 946 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 928 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 929 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 932 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 155 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 950 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 259 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 951 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 949 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 180 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 940 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
 
 			#More Roquals
 			KOT = { every_owned_state = { set_variable = { species = 3 } } }
@@ -756,9 +784,13 @@ on_actions = {
 
 			#Eulysses
 			EUL = { every_owned_state = { set_variable = { species = 7 } } }
+			
+			#Novokronkhiya
+			MSN = { every_owned_state = { set_variable = { species = 7 } set_variable = { minority = 1 } } }
 
 			#Svitanok
 			DAW = { every_owned_state = { set_variable = { species = 24 } } }
+			BAZ = { every_owned_state = { set_variable = { species = 24 } } }
 
 			#Katown
 			every_country = {
@@ -1977,6 +2009,31 @@ on_actions = {
 	on_before_peace_conference_start = {
 		effect = {
 			if = {
+				limit = {
+					ROOT = { tag = MER }
+					FROM = { OR = { tag = SLC tag = DUR } }
+				}
+				FROM = { every_core_state = { remove_core_of = FROM } }
+				MER = { annex_country = { target = FROM } }
+				if = {
+					limit = {
+						NOT = {
+							AND = {
+								country_exists = SLC
+								country_exists = DUR
+							}
+						}
+					}
+					MER = {
+						remove_ideas = MER_besieged_above_and_below
+						remove_ideas = MER_shield_of_the_world
+						add_political_power = 100
+						add_stability = 0.20
+						add_war_support = -0.20
+					}
+				}
+			}
+			if = {
 				limit = { #Amphibia loses
 					ROOT = { tag = FOD }
 					FROM = { tag = ACR }
@@ -2026,6 +2083,34 @@ on_actions = {
 					every_owned_state = {
 						limit = { is_claimed_by = ACR }
 						transfer_state_to = ACR
+					}
+				}
+				#Reconstruction Zone
+				1036 = {
+					add_core_of = KKN
+				}
+				93 = {
+					add_core_of = KKN
+				}
+				ACR = { #Remove faction
+					every_other_country = {
+						limit = { is_in_faction_with = ACR NOT = { is_puppet_of = ACR } }
+						leave_faction = yes
+					}
+					set_faction_name = "Socintern"
+					activate_mission = ACR_complete_reconstruction
+					every_owned_state = {
+						limit = { is_core_of = KKN }
+						transfer_state_to = KKN
+					}
+					ACR = {
+						set_autonomy = {
+							target = KKN
+							autonomy_state = autonomy_puppet
+						}
+					}
+					KKN = {
+						set_cosmetic_tag = ACR_RECONSTRUCTION_ZONE
 					}
 				}
 				news_event = { id = LOK_news.6 days = 2 } 

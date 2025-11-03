@@ -1,7 +1,79 @@
-AUR_change_herald_sanity = {
-	custom_effect_tooltip = change_herald_sanity_tooltip
-	add_to_variable = { herald_sanity = herald_sanity_change }
-	clamp_variable = { var = herald_sanity min = 0 max = 100 }
+ACR_dissolve_nation = {
+	every_owned_state = {
+		limit = { is_core_of = NKR }
+		transfer_state_to = NKR
+	}
+	transfer_units_fraction = {
+		target = NKR
+		air_ratio = 0.30
+		army_ratio = 0.30
+		navy_ratio = 0.30
+		stockpile_ratio = 0.30
+	}
+	every_owned_state = {
+		limit = { is_core_of = KTS }
+		transfer_state_to = KTS
+	}
+	transfer_units_fraction = {
+		target = KTS
+		air_ratio = 0.05
+		army_ratio = 0.05
+		navy_ratio = 0.05
+		stockpile_ratio = 0.05
+	}
+	every_owned_state = {
+		limit = { is_core_of = KRO }
+		transfer_state_to = KRO
+	}
+	transfer_units_fraction = {
+		target = KRO
+		air_ratio = 0.30
+		army_ratio = 0.30
+		navy_ratio = 0.30
+		stockpile_ratio = 0.30
+	}
+	every_owned_state = {
+		limit = { is_core_of = YIN }
+		transfer_state_to = YIN
+	}
+	transfer_units_fraction = {
+		target = YIN
+		air_ratio = 0.30
+		army_ratio = 0.30
+		navy_ratio = 0.30
+		stockpile_ratio = 0.30
+	}
+	every_country = {
+		limit = { is_puppet_of = ACR }
+		ACR = {
+			set_autonomy = {
+				target = PREV
+				autonomy_state = autonomy_free
+			}
+		}
+	}
+	release_on_controlled = BAZ
+	release_on_controlled = DAW
+	release_on_controlled = EUL
+	release_on_controlled = MSN
+	release_on_controlled = ENO
+	every_country = {
+		limit = { is_in_faction_with = ACR }
+		leave_faction = yes
+	}
+	every_neighbor_country = {
+		limit = { is_non_playable_country = no }
+		declare_war_on = {
+			target = ACR
+			type = annex_everything
+		}
+	}
+	every_character = {
+		set_nationality = KRO
+	}
+	KRO = {
+		news_event = { id = ACR_news.1 days = 3 }
+	}
 }
 
 nuke_state_fission = {
@@ -14,21 +86,6 @@ nuke_state_fission = {
 		add_to_variable = { lok_radiation_level = 1 }
 		calculate_radiation_state_modifiers = yes
 	}
-}
-
-AUR_add_1_commissar = {
-	custom_effect_tooltip = AUR_add_1_commissar_tt
-	add_to_variable = { AUR_available_commissars = 1 }
-}
-
-AUR_add_2_commissar = {
-	custom_effect_tooltip = AUR_add_2_commissar_tt
-	add_to_variable = { AUR_available_commissars = 2 }
-}
-
-AUR_add_3_commissar = {
-	custom_effect_tooltip = AUR_add_3_commissar_tt
-	add_to_variable = { AUR_available_commissars = 3 }
 }
 
 generate_warlord_state = {
@@ -1914,5 +1971,94 @@ clear_character_status_flags = {
 	if = {
 		limit = { has_character_flag = leader_is_jailed }
 		clr_character_flag = leader_is_jailed
+	}
+}
+
+dismantle_katlantropa_dam = {
+	custom_effect_tooltip = dismantle_katlantropa_dam_tooltip
+	hidden_effect = {
+		FOD = {
+			destroy_entity = 9999998
+		}
+		1324 = {
+			transfer_state_to = WWW
+			set_victory_points = {
+				province = 10165
+				value = 0
+			}
+			set_building_level = {
+				type = bunker
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = {
+				type = coastal_bunker
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = {
+				type = supply_node
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = {
+				type = naval_base
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1320 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1322 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1323 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1319 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1321 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		183 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		201 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
 	}
 }

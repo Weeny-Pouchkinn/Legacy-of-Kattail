@@ -1,4 +1,401 @@
 lok_journal_entries_cat = {
+	#ACR
+	ACR_dismantle_katlantropa_dam = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ACR
+		}
+
+		days_remove = 720
+		
+		available = {
+			has_war = no
+		}
+
+		fire_only_once = yes
+
+		modifier = {
+			civilian_factory_use = 100
+		}		
+
+		remove_effect = {
+			add_stability = 0.20
+			add_political_power = 500
+			dismantle_katlantropa_dam = yes
+			news_event = { id = ACR_news.2 }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ACR_complete_reconstruction = {
+		activation  = {
+			always = no
+		} # activated by effect
+		icon = GFX_decision_generic_military
+		is_good = yes
+
+		available = {
+			always = no
+		}
+		allowed = {
+			tag = ACR
+		}
+		days_mission_timeout = 720
+		selectable_mission = no
+		timeout_effect = {
+			annex_country = {
+				target = KKN
+			}
+			KKN = {
+				every_core_state = {
+					add_core_of = ACR
+				}
+			}
+			set_country_flag = ACR_reconstruction_complete
+			activate_mission = ACR_kolikov_retirement
+			if = {
+				limit = { is_ai = yes }
+				random = {
+					chance = 50
+					add_stability = -0.50 #amphibia will explode lol.
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+	}
+	ACR_kolikov_retirement = {
+		activation  = {
+			always = no
+		} # activated by effect
+		icon = GFX_decision_generic_military
+		is_good = no
+
+		available = {
+			always = no
+		}
+		allowed = {
+			tag = ACR
+		}
+		days_mission_timeout = 720
+		selectable_mission = no
+		timeout_effect = {
+			if = {
+				limit = { has_stability < 0.70 }
+				ACR_dissolve_nation = yes
+			}
+			else = {
+				add_political_power = 150
+			}
+			set_country_flag = ACR_reconstruction_complete
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+	}
+	ACR_create_katsteyt = {
+		icon = GFX_decision_generic_military
+
+		allowed = {
+			tag = ACR
+		}
+
+		available = {
+			has_war = no
+		}
+
+		fire_only_once = yes
+
+		days_remove = 360
+		
+		complete_effect = {
+			country_event = { id = ACR_event.3 }
+		}
+
+		remove_effect = {
+			if = {
+				limit = { has_country_flag = acr_small_katsteyt }
+				every_owned_state = {
+					limit = { check_variable = { minority = 7 } check_variable = { species = 1 } }
+					set_temp_variable = { species_temp = 7 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1 }
+					change_state_minority_species = yes		
+				}
+				every_owned_state = {
+					limit = { check_variable = { minority = 24 } check_variable = { species = 1 } }
+					set_temp_variable = { species_temp = 24 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1 }
+					change_state_minority_species = yes		
+				}
+				202 = {
+					remove_core_of = KRO
+					add_core_of = KTS
+					set_temp_variable = { species_temp = 1 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes
+				}
+				1313 = {
+					set_temp_variable = { species_temp = 24 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1 }
+					change_state_minority_species = yes					
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = acr_big_katsteyt }
+				every_owned_state = {
+					limit = { check_variable = { minority = 7 } check_variable = { species = 1 } }
+					set_temp_variable = { species_temp = 7 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1 }
+					change_state_minority_species = yes		
+				}
+				every_owned_state = {
+					limit = { check_variable = { minority = 24 } check_variable = { species = 1 } }
+					set_temp_variable = { species_temp = 24 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1 }
+					change_state_minority_species = yes		
+				}
+				every_owned_state = {
+					limit = { check_variable = { minority = 1 } }
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes		
+				}
+				202 = {
+					remove_core_of = KRO
+					add_core_of = KTS
+					set_temp_variable = { species_temp = 1 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes
+				}
+				207 = {
+					remove_core_of = KRO
+					add_core_of = KTS
+					set_temp_variable = { species_temp = 1 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 7 }
+					change_state_minority_species = yes
+				}
+				1051 = {
+					remove_core_of = KRO
+					add_core_of = KTS
+					set_temp_variable = { species_temp = 1 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 7 }
+					change_state_minority_species = yes
+				}
+				1050 = {
+					remove_core_of = KRO
+					add_core_of = KTS
+					set_temp_variable = { species_temp = 1 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 7 }
+					change_state_minority_species = yes
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = acr_kill_katzens }
+				add_stability = -0.40
+				add_popularity = {
+					ideology = fascism
+					popularity = 0.30
+				}
+				every_owned_state = {
+					limit = { check_variable = { minority = 7 } check_variable = { species = 1 } }
+					set_temp_variable = { species_temp = 7 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes
+					add_manpower = -500000
+				}
+				every_owned_state = {
+					limit = { check_variable = { minority = 24 } check_variable = { species = 1 } }
+					set_temp_variable = { species_temp = 24 }
+					change_state_majority_species = yes
+
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes
+					add_manpower = -500000
+				}
+				every_owned_state = {
+					limit = { check_variable = { minority = 1 } }
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes
+					add_manpower = -500000
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1000
+		}
+	}
+
+	ACR_influence_nation = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ACR
+		}
+
+		days_remove = 540
+
+		visible = {
+			country_exists = FROM
+			FROM = { NOT = { is_puppet_of = ACR } }
+		}
+		
+		available = {
+			has_country_flag = ACR_reconstruction_complete
+			NOT = { country_exists = FOD }
+		}
+
+		target_array = ACR.sphere_of_influence_array
+
+		fire_only_once = yes
+
+		complete_effect = {
+			FROM = {
+				country_event = { id = ACR_event.1 }
+				add_ideas = ACR_influence_nation_idea
+			}
+		}
+
+		remove_effect = {
+			FROM = { country_event = { id = ACR_event.2 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	ACR_integrate_nation = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ACR
+		}
+
+		days_remove = 360
+
+		visible = {
+			country_exists = FROM
+			FROM = { is_puppet_of = ACR }
+		}
+		
+		available = {
+			has_country_flag = ACR_reconstruction_complete
+			NOT = { country_exists = FOD }
+		}
+
+		target_array = ACR.sphere_of_influence_array
+
+		fire_only_once = yes	
+
+		remove_effect = {
+			ACR = {
+				annex_country = {
+					target = FROM
+					transfer_troops = yes
+				}
+			}
+			FROM = {
+				every_core_state = {
+					add_core_of = ACR
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	#NMI
+	NMI_invade_kolekhia = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = NMI
+		}
+
+		available = {
+			date > "104.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			KOL = {
+				every_core_state = {
+					add_claim_by = ROOT
+					custom_effect_tooltip = state_core_threshold_set_40
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+			declare_war_on = {
+				target = KOL
+				type = annex_everything
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	#UMR
+	UMR_safeguard_kolekhia = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = UMR
+		}
+
+		available = {
+			KOL = {
+				has_war_with = NMI
+			}
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = KOL
+				type = annex_everything
+			}
+			KOL = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
 	#QUARRIES
 	PTQ_invade_struken = {
 		icon = GFX_decision_generic_tank
