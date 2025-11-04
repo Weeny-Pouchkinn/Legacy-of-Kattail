@@ -899,6 +899,10 @@ focus_tree = {
 		prerequisite = { focus = AUR_herzlands_darkspot }
 		relative_position_id = AUR_herzlands_darkspot
 		completion_reward = {
+			custom_effect_tooltip = AUR_finish_the_blinds_tt
+			hidden_effect = {
+				add_to_variable = { AUR_the_kaiser_must_return_trade_opinion_factor = -0.50 }
+			}
 			if = {
 				limit = { has_dlc = "La Resistance" }
 				if = {
@@ -909,6 +913,9 @@ focus_tree = {
 				}
 				upgrade_intelligence_agency = upgrade_passive_defense
 				upgrade_intelligence_agency = upgrade_passive_defense
+				upgrade_intelligence_agency = upgrade_passive_defense
+				upgrade_intelligence_agency = upgrade_passive_defense
+				upgrade_intelligence_agency = upgrade_anti_partisan
 				upgrade_intelligence_agency = upgrade_anti_partisan
 			}
 		}
@@ -1112,6 +1119,7 @@ focus_tree = {
 		x = 1
 		y = 1
 		cost = 5
+		prerequisite = { focus = AUR_finish_the_blinds }
 		prerequisite = { focus = AUR_mobilize_greater }
 		relative_position_id = AUR_mobilize_greater
 		completion_reward = {
@@ -1621,6 +1629,16 @@ focus_tree = {
 		prerequisite = { focus = AUR_put_out_the_fire }
 		relative_position_id = AUR_put_out_the_fire
 		completion_reward = {
+			every_country = {
+				limit = {
+					has_opinion_modifier = AUR_crazy_kaiserists
+					has_government = neutrality 
+				}
+				remove_opinion_modifier = {
+					target = AUR
+					modifier = AUR_crazy_kaiserists
+				}
+			}
 			add_ideas = limited_exports
 			173 = {
 				add_building_construction = { type = anti_air_building level = 2 }
@@ -1901,6 +1919,15 @@ focus_tree = {
 			hidden_effect = {
 				every_country = {
 					limit = { has_country_flag = AUR_northern_pawn }
+					every_country = {
+						limit = { is_puppet_of = PREV }
+						AUR = {
+							set_autonomy = {
+								target = PREV
+								autonomy_state = autonomy_puppet
+							}
+						}
+					}
 					AUR = {
 						set_autonomy = {
 							target = PREV
@@ -1950,6 +1977,15 @@ focus_tree = {
 			hidden_effect = {
 				every_country = {
 					limit = { has_country_flag = AUR_eastern_pawn }
+					every_country = {
+						limit = { is_puppet_of = PREV }
+						AUR = {
+							set_autonomy = {
+								target = PREV
+								autonomy_state = autonomy_puppet
+							}
+						}
+					}
 					AUR = {
 						set_autonomy = {
 							target = PREV
@@ -1999,6 +2035,15 @@ focus_tree = {
 			hidden_effect = {
 				every_country = {
 					limit = { has_country_flag = AUR_central_pawn }
+					every_country = {
+						limit = { is_puppet_of = PREV }
+						AUR = {
+							set_autonomy = {
+								target = PREV
+								autonomy_state = autonomy_puppet
+							}
+						}
+					}
 					AUR = {
 						set_autonomy = {
 							target = PREV

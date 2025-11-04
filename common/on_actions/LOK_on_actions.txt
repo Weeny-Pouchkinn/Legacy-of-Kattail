@@ -952,7 +952,25 @@ on_actions = {
 				}
 			}
 
+			#People hate the Regent
+			every_possible_country = {
+				limit = {
+					OR = {
+						has_government = communism
+						has_government = democratic
+					}
+				}
+				send_embargo = AUR
+			}
 
+			every_possible_country = {
+				limit = { NOT = { has_government = fascism } }
+				add_opinion_modifier = {
+					target = AUR
+					modifier = AUR_crazy_kaiserists
+				}
+			}
+			
 			#Polar Projection
 			BSS = { every_owned_state = { add_dynamic_modifier = { modifier = lok_polar_projection } } }
 			NGE = { every_owned_state = { add_dynamic_modifier = { modifier = lok_polar_projection } } }
@@ -1258,17 +1276,17 @@ on_actions = {
 						check_variable = { num_battalions < 1 }
 					}
 					division_template = {
-						name = "Basic Infantry"
+						name = "Standard Infantry"
 						is_locked = no
 						regiments = {
-							infantry = { x = 0 y = 0 }
-							infantry = { x = 0 y = 1 }
-							infantry = { x = 0 y = 2 }
-							infantry = { x = 0 y = 3 }
-							infantry = { x = 1 y = 0 }
-							infantry = { x = 1 y = 1 }
-							infantry = { x = 1 y = 2 }
-							infantry = { x = 1 y = 3 }
+							motorized = { x = 0 y = 0 }
+							motorized = { x = 0 y = 1 }
+							motorized = { x = 0 y = 2 }
+							motorized = { x = 0 y = 3 }
+							motorized = { x = 1 y = 0 }
+							motorized = { x = 1 y = 1 }
+							motorized = { x = 1 y = 2 }
+							motorized = { x = 1 y = 3 }
 						}
 						support = {
 							artillery = { x = 0 y = 0 }
@@ -1277,9 +1295,84 @@ on_actions = {
 					}
 					every_controlled_state = {
 						create_unit = {
-							division = "division_template = \"Basic Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
-							count = 1
+							division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
+							count = 2
 							owner = PREV
+						}
+					}
+					if = {
+						limit = { tag = ACR }
+						every_controlled_state = {
+							create_unit = {
+								division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
+								count = 2
+								owner = PREV
+							}
+						}
+					}
+				}
+				if = { #airplanes
+					limit = {
+						is_herzlands_warlord = no
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = early_fighter
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = small_plane_airframe
+								amount = 100
+							}
+						}
+					}
+				}
+				if = { #cas
+					limit = {
+						is_herzlands_warlord = no
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = CAS1
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = small_plane_cas_airframe
+								amount = 30
+							}
+						}
+					}
+				}
+				#katzens get bigger planes
+				if = { #airplanes
+					limit = {
+						is_herzlands_warlord = yes
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = early_bomber
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = medium_plane_fighter_airframe
+								amount = 70
+							}
+						}
+					}
+				}
+				if = { #cas
+					limit = {
+						is_herzlands_warlord = yes
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = early_bomber
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = medium_plane_airframe
+								amount = 20
+							}
 						}
 					}
 				}

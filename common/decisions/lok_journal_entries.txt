@@ -1028,6 +1028,68 @@ lok_journal_entries_cat = {
 	}
 
 	#DOMINIONTRACKS
+	DOM_raid_neighbor_for_materials = {
+		icon = GFX_decision_generic_military
+		allowed = {
+			tag = DOM
+		}
+		
+		visible = {
+			has_war = no
+			country_exists = FSR
+		}
+
+		available = {
+			NOT = { has_global_flag = ssu_formed }
+			NOT = { has_country_flag = DOM_raiding_neighbor }
+		}
+
+		target_array = neighbors
+
+		complete_effect = {
+			set_country_flag = DOM_raiding_neighbor
+		}
+
+		remove_effect = {
+			FROM = {
+				random_owned_state = {
+					limit = { any_neighbor_state = { is_owned_by = DOM } }
+					save_event_target_as = DOM_defender_state
+					random_neighbor_state = {
+						limit = { is_owned_by = DOM }
+						save_event_target_as = DOM_attacker_state
+					}
+				}
+			}
+			start_border_war = {
+				change_state_after_war = no
+				attacker = {
+					state = event_target:DOM_attacker_state
+					num_provinces = 4
+					on_win = DOM_event.3
+					on_lose = DOM_event.4
+					on_cancel = DOM_event.4
+				}
+				defender = {
+					state = event_target:DOM_defender_state
+					num_provinces = 4
+					on_win = DOM_event.4
+					on_lose = DOM_event.4
+					on_cancel = DOM_event.4
+				}
+			}
+		}
+
+		cost = 25
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+
 	DOM_unite_east_solakean_katzens = {
 		icon = GFX_decision_generic_nationalism
 		allowed = {
@@ -1127,6 +1189,10 @@ lok_journal_entries_cat = {
 			country_exists = FSR
 		}
 
+		available = {
+			date > "101.6.1"
+		}
+
 		fire_only_once = yes
 
 		remove_effect = {
@@ -1148,13 +1214,36 @@ lok_journal_entries_cat = {
 
 		ai_will_do = {
 			base = 1000
-			modifier = {
-				factor = 0
-				date < "100.6.1"
-			}
 		}
 	}
 
+	DOM_false_flag_solaria = {
+		icon = GFX_decision_generic_confiscation
+		allowed = {
+			tag = DOM
+		}
+		
+		available = {
+			NOT = { is_in_faction_with = MCF }
+			has_country_flag = united_east_solakea_katzens
+			date > "102.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			MCF = { country_event = { id = DOM_event.1 } }
+			custom_effect_tooltip = DOM_false_flag_solaria_tt
+		}
+
+		cost = 50
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
 
 	DOM_blitz_kusnurk = {
 		icon = GFX_decision_generic_confiscation
@@ -1165,7 +1254,7 @@ lok_journal_entries_cat = {
 		available = {
 			NOT = { is_in_faction_with = MCF }
 			has_country_flag = united_east_solakea_katzens
-			date < "101.6.1"
+			date > "101.6.1"
 		}
 
 		fire_only_once = yes
@@ -1196,45 +1285,45 @@ lok_journal_entries_cat = {
 		}
 	}
 
-
-	DOM_blitz_nekaston = {
-		icon = GFX_decision_generic_arrest
-		allowed = {
-			tag = DOM
-		}
+	# DOM_blitz_nekaston = {
+	# 	icon = GFX_decision_generic_arrest
+	# 	allowed = {
+	# 		tag = DOM
+	# 	}
 		
-		available = {
-			NOT = { is_in_faction_with = MCF }
-			controls_state = 218
-			has_country_flag = united_east_solakea_katzens
-		}
+	# 	available = {
+	# 		NOT = { is_in_faction_with = MCF }
+	# 		controls_state = 218
+	# 		has_country_flag = united_east_solakea_katzens
+	# 		date > "103.6.1"
+	# 	}
 
-		fire_only_once = yes
+	# 	fire_only_once = yes
 
-		remove_effect = {
-			declare_war_on = {
-				target = NEK
-				type = annex_everything
-			}
-			NEK = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_set_40
-					clear_compliance_coring_threshold = yes
-					set_state_flag = compliance_40_@ROOT
-					add_to_array = { array = ROOT.potential_cores_array }
-					add_claim_by = ROOT
-				}
-			}
-		}
+	# 	remove_effect = {
+	# 		declare_war_on = {
+	# 			target = NEK
+	# 			type = annex_everything
+	# 		}
+	# 		NEK = {
+	# 			every_core_state = {
+	# 				custom_effect_tooltip = state_core_threshold_set_40
+	# 				clear_compliance_coring_threshold = yes
+	# 				set_state_flag = compliance_40_@ROOT
+	# 				add_to_array = { array = ROOT.potential_cores_array }
+	# 				add_claim_by = ROOT
+	# 			}
+	# 		}
+	# 	}
 
-		cost = 50
+	# 	cost = 50
 
-		days_remove = 15
+	# 	days_remove = 15
 
-		ai_will_do = {
-			base = 1000
-		}
-	}
+	# 	ai_will_do = {
+	# 		base = 1000
+	# 	}
+	# }
 
 	DOM_backstab_ssu = {
 		icon = GFX_decision_generic_assassination
@@ -1743,8 +1832,12 @@ lok_journal_entries_cat = {
 
 		complete_effect = {
 			if = {
-				limit = { has_war_with = SLR }
+				limit = { has_war_with = SLR SLR = { is_puppet = no } }
 				325 = { transfer_state_to = SLR }
+			}
+			else_if = {
+				limit = { has_war_with = MCF }
+				325 = { transfer_state_to = MCF }
 			}
 			hidden_effect = {
 				DOM = { white_peace = ROQ }
@@ -2851,7 +2944,7 @@ lok_journal_entries_cat = {
 		}
 
 		available = {
-			date > "102.1.1"
+			date > "102.6.1"
 		}
 
 		modifier = {
@@ -2864,6 +2957,7 @@ lok_journal_entries_cat = {
 
 		remove_effect = {
 			create_faction = "Steel Steppes Union"
+			set_global_flag = ssu_formed
 			every_country = {
 				limit = { is_puppet_of = MCR }
 				add_to_faction = ROOT
