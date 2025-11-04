@@ -109,12 +109,13 @@ focus_tree = {
 		icon = TAK_petites_charles
 		x = 0
 		y = 2
-		cost = 5
+		cost = 10
 		relative_position_id = TAK_develop_the_peripherie
 		prerequisite = { focus = TAK_agricultural_programs }
 		prerequisite = { focus = TAK_routes_du_roi }
 		completion_reward = {
 			347 = {
+				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
 				increase_state_category = yes
 				add_manpower = 50000
 				add_victory_points = {
@@ -127,6 +128,7 @@ focus_tree = {
 				}
 			}
 			340 = {
+				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
 				increase_state_category = yes
 				add_manpower = 50000
 				add_victory_points = {
@@ -576,15 +578,15 @@ focus_tree = {
 		icon = GFX_SOV_depoliticize_the_military_ccp_2d_sov_compatibility
 		x = 2
 		y = 1
-		cost = 5
+		cost = 10
 		relative_position_id = TAK_learn_about_it_all
 		prerequisite = { focus = TAK_learn_about_it_all }
 		completion_reward = {
-			army_experience = 50
+			army_experience = 100
 			add_doctrine_cost_reduction = {
 				name = LOK_doctrine_bonus
 				cost_reduction = 0.5
-				uses = 1
+				uses = 3
 				category = land_doctrine
 			}
 		}
@@ -1261,7 +1263,7 @@ focus_tree = {
 
 	focus = { #brain drain
 		id = TAK_brain_drain
-		icon = TAK_civi
+		icon = GFX_goal_tfv_generic_tech_sharing
 		x = 2
 		y = 0
 		cost = 5
@@ -1274,7 +1276,7 @@ focus_tree = {
 
 	focus = { #brain drain
 		id = TAK_a_united_realm
-		icon = TAK_civi
+		icon = GFX_goal_generic_national_unity
 		x = -2
 		y = 0
 		cost = 5
@@ -1344,10 +1346,10 @@ focus_tree = {
 				limit = { 
 					has_state_flag = TAK_potential_cores_in_roqualia
 				}
-				set_state_flag = compliance_40_@ROOT
+				set_state_flag = compliance_60_@ROOT
 				add_to_array = { array = TAK.potential_cores_array }
 				add_claim_by = TAK
-				custom_effect_tooltip = state_core_threshold_set_40
+				custom_effect_tooltip = state_core_threshold_set_60
 				clr_state_flag = TAK_potential_cores_in_roqualia
 			}
 		}
@@ -1355,19 +1357,29 @@ focus_tree = {
 
 	focus = { #scrap dofus & co
 		id = TAK_scrap_dofus
-		icon = TAK_civi
+		icon = TAK_scrap_dofus
 		x = 0
 		y = 2
 		cost = 5
 		relative_position_id = TAK_greater_takicardie
 		prerequisite = { focus = TAK_greater_takicardie }
+		available = {
+			has_war = no
+			320 = { is_controlled_by_ROOT_or_subject = yes }
+		}
 		completion_reward = {
+			ROQ = {
+				ROQ_Dofus = { retire = yes }
+				ROQ_Saxeton = { retire = yes }
+				ROQ_sonya = { retire = yes }
+			}
+			TAK_gain_10_brush = yes
 		}
 	}
 
 	focus = { #decentralized
 		id = TAK_many_many_charles
-		icon = TAK_civi
+		icon = GFX_focus_SWE_urbanization
 		x = -1
 		y = 1
 		cost = 5
@@ -1393,6 +1405,9 @@ focus_tree = {
 			focus = TAK_many_many_charles
 		}
 		completion_reward = {
+			349 = {
+				set_state_category = megalopolis
+			}
 		}
 	}
 
@@ -1405,9 +1420,15 @@ focus_tree = {
 		relative_position_id = TAK_greater_takicardie
 		prerequisite = { focus = TAK_many_many_charles focus = TAK_everything_on_charles }
 		bypass = {
-			NOT = { country_exists = ALK }
+			NOT = { country_exists = DOM }
+			NOT = { country_exists = NEK }
+			NOT = { country_exists = KUS }
+			NOT = { country_exists = FSR }
 		}
-		will_lead_to_war_with = ALK
+		will_lead_to_war_with = DOM
+		will_lead_to_war_with = NEK
+		will_lead_to_war_with = KUS
+		will_lead_to_war_with = FSR
 		completion_reward = {
 			custom_effect_tooltip = TAK_katzen_wargoal_effect
 			DOM = { every_controlled_state = { add_claim_by = DOM } }
