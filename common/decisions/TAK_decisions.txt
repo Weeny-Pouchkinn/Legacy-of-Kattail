@@ -75,7 +75,7 @@ TAK_painting_cat = {
 
 		visible = {
 			tag = TAK
-			has_completed_focus = TAK_recruit_painters
+			has_completed_focus = TAK_figure_it_out
 		}
 
 		available = {
@@ -106,7 +106,7 @@ TAK_painting_cat = {
 
 		visible = {
 			tag = TAK
-			has_completed_focus = TAK_recruit_painters
+			has_completed_focus = TAK_figure_it_out
 		}
 
 		available = {
@@ -268,17 +268,35 @@ TAK_painting_cat = {
 
 		cost = 50
 
+		days_remove = 30
+
 		remove_effect = {
 			random_list = {
 				40 = {
 					TAK_recruit_painter_1 = yes
 					modifier = { factor = 2 FROM = { tak_is_non_artistic_species_country = yes } }
 					modifier = { factor = 0.5 FROM = { tak_is_artistic_species_country = yes } }
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 50 } }
+					}
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 90 } }
+					}
 				}
 				40 = { 
 					TAK_recruit_painter_3 = yes
 					modifier = { factor = 2 FROM = { tak_is_non_artistic_species_country = yes } }
 					modifier = { factor = 0.5 FROM = { tak_is_artistic_species_country = yes } }
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 50 } }
+					}
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 90 } }
+					}
 				}
 				20 = {
 					TAK_recruit_painter_5 = yes
@@ -294,6 +312,14 @@ TAK_painting_cat = {
 					TAK_recruit_painter_20 = yes
 					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species_country = yes } }
 					modifier = { factor = 2 FROM = { tak_is_artistic_species_country = yes } }
+					modifier = {
+						factor = 1.5
+						FROM = { has_opinion = { target = TAK value > 50 } }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { has_opinion = { target = TAK value > 90 } }
+					}
 				}
 			}
 		}

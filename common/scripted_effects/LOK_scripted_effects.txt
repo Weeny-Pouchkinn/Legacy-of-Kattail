@@ -74,6 +74,10 @@ ACR_dissolve_nation = {
 	KRO = {
 		news_event = { id = ACR_news.1 days = 3 }
 	}
+	every_state = {
+		limit = { is_core_of = ACR }
+		remove_core_of = ACR
+	}
 }
 
 nuke_state_fission = {
@@ -489,6 +493,7 @@ calculate_orbital_logistics_capacity = {
 	set_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = 0 }
 	
 	add_to_variable = { orbital_logistics_demand = lok_muno_colonies_upkeep } #Say 100.
+	add_to_variable = { orbital_logistics_demand = lok_xenon_colonies_upkeep } #Say 100.
 	add_to_variable = { orbital_logistics_demand = modifier@lok_orbital_logistics_extra }
 
 	set_variable = { remaining_orbital_logistics_demand = orbital_logistics_demand } #How many we need now.

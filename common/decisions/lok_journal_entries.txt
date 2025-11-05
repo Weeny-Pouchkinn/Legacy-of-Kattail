@@ -1,4 +1,143 @@
 lok_journal_entries_cat = {
+	#MEOWNICH
+	MEW_invade_struken = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			date > "101.1.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = STR
+				type = annex_everything
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEW_struken_partisans = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			has_war_with = STR
+			date > "101.6.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			STR = {
+				every_controlled_state = {
+					random = {
+						chance = 50
+						create_unit = {
+							division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+							count = 3
+							owner = MEW
+							allow_spawning_on_enemy_provs = yes
+						}
+					}
+				}
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEW_trigger_quarries_civil_war = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			has_cosmetic_tag = MEW_CSS
+			country_exists = PTQ
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = PTQ
+				type = annex_everything
+			}
+			PTQ = {
+				every_controlled_state = {
+					add_core_of = MEW
+					random = {
+						chance = 50
+						transfer_state_to = MEW
+						create_unit = {
+							division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+							count = 6
+							owner = MEW
+							allow_spawning_on_enemy_provs = yes
+						}
+					}
+				}
+			}
+			568 = { transfer_state_to = NAV add_core_of = NAV }
+			37 = { transfer_state_to = NAV add_core_of = NAV }
+			567 = { transfer_state_to = IMF add_core_of = IMF }
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	MEW_form_CSS = {
+		icon = generic_form_nation
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			date > "103.1.1"
+			NOT = { country_exists = STR }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			annex_country = {
+				target = WAC
+				transfer_troops = yes
+			}
+			WAC = {
+				every_core_state = { add_core_of = MEW }
+			}
+			set_cosmetic_tag = MEW_CSS
+			hidden_effect = {
+				set_country_flag = formed_css
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
 	#ACR
 	ACR_dismantle_katlantropa_dam = {
 		icon = GFX_decision_generic_tank
@@ -2965,35 +3104,35 @@ lok_journal_entries_cat = {
 			if = {
 				limit = {
 					country_exists = TEN
-					TEN = { is_puppet = no }
+					TEN = { is_puppet = no has_war = no }
 				}
 				TEN = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}
 			if = {
 				limit = {
 					country_exists = KHA
-					KHA = { is_puppet = no }
+					KHA = { is_puppet = no has_war = no }
 				}
 				KHA = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}
 			if = {
 				limit = {
 					country_exists = SLR
-					SLR = { is_puppet = no }
+					SLR = { is_puppet = no has_war = no }
 				}
 				SLR = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}
 			if = {
 				limit = {
 					country_exists = FSR
-					FSR = { is_puppet = no }
+					FSR = { is_puppet = no has_war = no }
 				}
 				FSR = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}
 			if = {
 				limit = {
 					country_exists = DOM
-					DOM = { is_puppet = no }
+					DOM = { is_puppet = no has_war = no }
 				}
 				DOM = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}

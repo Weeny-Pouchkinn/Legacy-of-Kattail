@@ -1151,6 +1151,46 @@ on_actions = {
 
 			# TKW = { set_country_flag = herzlands_warlord_uniter }
 
+			# Setup space colonies
+			every_state = {
+				limit = {
+					is_space_state = yes
+					var:owner = { is_non_playable_country = no }
+				}
+				set_state_flag = lok_space_state_surveyed_by_@var:owner
+				set_variable = { space_colony_level = 3 }
+				add_extra_state_shared_building_slots = 3
+				add_manpower = 7500
+				var:owner = {
+					add_equipment_to_stockpile = {
+						type = lok_reusable_heavy_chemical_rocket_0
+						amount = 300
+					}
+					if = {
+						limit = { NOT = { has_country_flag = space_tech_set } }
+						set_country_flag = space_tech_set
+						set_country_flag = lok_muno_landing_done
+						add_to_variable = { space_exp = 200 }
+						add_to_variable = { muno_exp = 200 }
+						set_technology = {
+							experimental_rockets = 1
+							rocket_engines = 1
+							light_chemical_rocket = 1
+							heavy_chemical_rocket = 1
+							improved_rocket_engines = 1
+							reusable_light_chemical_rocket = 1
+							reusable_heavy_chemical_rocket = 1
+							popup = no
+						}
+					}
+				}
+			}
+
+			every_possible_country = {
+				calculate_orbital_logistics_capacity = yes
+				calculate_xenon_colonies_stats = yes
+				calculate_muno_colonies_stats = yes
+			}
 
 			count_nukes_in_stockpile = yes
 			calculate_salvo_capacity = yes
