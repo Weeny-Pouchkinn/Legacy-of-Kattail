@@ -1042,6 +1042,7 @@ count_nukes_in_stockpile = {
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fission_nuke_equipment }
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fusion_nuke_equipment }
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_cobalt_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_mondkanone_nuke_equipment }
 }
 
 calculate_salvo_capacity = {
@@ -1555,9 +1556,12 @@ fire_thermonuclear_salvo = {
 			set_temp_variable = { anti_wmd_level_negative = anti_wmd_level }
 			multiply_temp_variable = { anti_wmd_level_negative = -1 }
 		}
-		subtract_from_variable = { lok_current_salvo_capacity = 1 }
-		clamp_variable = { var = lok_current_salvo_capacity min = 0 max = 100000 }
-		country_event = { id = LOK_nuke.1 days = 7 } #Refill salvo capacity in a bit
+		if = { #use salvo capacity IF it is not mondkanone
+			limit = { NOT = { check_variable = { current_nuke_type = 4 } } }
+			subtract_from_variable = { lok_current_salvo_capacity = 1 }
+			clamp_variable = { var = lok_current_salvo_capacity min = 0 max = 100000 }
+			country_event = { id = LOK_nuke.1 days = 7 } #Refill salvo capacity in a bit
+		}
 		random_list = {
 			100 = {
 				launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
@@ -1597,6 +1601,19 @@ fire_thermonuclear_salvo = {
 							limit = { always = yes }
 							org_damage = 0.035
 							str_damage = 0.035
+							ratio = yes
+							army = yes
+						}
+					}
+					else_if = { #Mondkanone
+						limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
+						set_variable = { lok_added_radiation_level = 0 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
+						damage_units = { #Damage troops
+							state = THIS
+							limit = { always = yes }
+							org_damage = 0.1
+							str_damage = 0.1
 							ratio = yes
 							army = yes
 						}
@@ -1643,6 +1660,10 @@ fire_thermonuclear_salvo = {
 							limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
 							multiply_temp_variable = { lok_nuke_casualties = 0.5 }
 						}
+						else_if = { #Mondkanone - 1% death (it targets armies)
+							limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 1 }
+						}
 						if = { #Katown Pyramid protects!
 							limit = { check_variable = { wonder = 1 } }
 							multiply_temp_variable = { lok_nuke_casualties = 0 }
@@ -1672,6 +1693,10 @@ fire_thermonuclear_salvo = {
 				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level_negative }
 			}
 			0 = {
+				modifier = { #Mondkanone cannot be intercepted
+					factor = 0
+					check_variable = { current_nuke_type = 4 }
+				}
 				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level }
 			}
 		}

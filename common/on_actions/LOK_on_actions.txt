@@ -1726,6 +1726,18 @@ on_actions = {
 				calculate_salvo_capacity = yes
 				calculate_strategic_resource_modifiers = yes
 			}
+			if = { #Mondkanone!
+				limit = {
+					FROM.FROM = { state = 708 }
+					ROOT = { NOT = { has_tech = mondkanone_nuke_tech } }
+				}
+				ROOT = {
+					set_technology = {
+						mondkanone_nuke_tech = 1
+						popup = yes
+					}
+				}
+			}
 			FROM.FROM = { #Clear and apply species match modifiers
 				if = {
 					limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
