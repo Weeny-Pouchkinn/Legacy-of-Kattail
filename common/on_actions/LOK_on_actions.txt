@@ -62,6 +62,22 @@ on_actions = {
 				}
 			}
 
+			every_state = {
+				limit = { is_on_continent = muno }
+				add_to_array = { global.muno_states_array = THIS }
+			}
+
+			every_state = {
+				limit = { is_on_continent = xenon }
+				add_to_array = { global.xenon_states_array = THIS }
+			}
+
+			every_state = {
+				limit = { is_space_state = yes }
+				add_to_array = { global.space_states_array = THIS }
+			}
+
+
 			WSF = {
 				activate_mission = WSF_civil_war_timer
 			}
@@ -148,6 +164,10 @@ on_actions = {
 				if = {
 					limit = { is_space_state = no }
 					add_dynamic_modifier = { modifier = lok_soot_state_modifier }
+				}
+				if = {
+					limit = { is_space_state = yes }
+					add_dynamic_modifier = { modifier = space_colony_supply_modifier }
 				}
 			}
 
@@ -1160,12 +1180,11 @@ on_actions = {
 				set_state_flag = lok_space_state_surveyed_by_@var:owner
 				set_variable = { space_colony_level = 3 }
 				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = infrastructure level = 1 }
+				add_building_construction = { type = industrial_complex level = 1 }
+				add_building_construction = { type = arms_factory level = 1 }
 				add_manpower = 7500
 				var:owner = {
-					add_equipment_to_stockpile = {
-						type = lok_reusable_heavy_chemical_rocket_0
-						amount = 300
-					}
 					if = {
 						limit = { NOT = { has_country_flag = space_tech_set } }
 						set_country_flag = space_tech_set
@@ -1182,6 +1201,10 @@ on_actions = {
 							reusable_heavy_chemical_rocket = 1
 							popup = no
 						}
+					}
+					add_equipment_to_stockpile = {
+						type = lok_reusable_heavy_chemical_rocket_0
+						amount = 300
 					}
 				}
 			}
@@ -1344,6 +1367,7 @@ on_actions = {
 						}
 					}
 					every_controlled_state = {
+						limit = { is_space_state = no }
 						create_unit = {
 							division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
 							count = 2
@@ -1353,6 +1377,7 @@ on_actions = {
 					if = {
 						limit = { tag = ACR }
 						every_controlled_state = {
+							limit = { is_space_state = no }
 							create_unit = {
 								division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
 								count = 2
@@ -1553,6 +1578,30 @@ on_actions = {
 
 			if = {
 				limit = { is_non_playable_country = no }
+				#Nuclear Facility Buffs
+				clear_nuclear_facility_ideas = yes
+				set_variable = { nuclear_facility_count = 0 }
+				every_controlled_state = {
+					limit = { check_variable = { non_damaged_building_level@nuclear_facility > 0 } }
+					if = {
+						limit = { is_core_of = ROOT }
+						add_to_variable = { ROOT.nuclear_facility_count = 2 }
+					}
+					else = {
+						add_to_variable = { ROOT.nuclear_facility_count = 1 }
+					}
+				}
+				if = {
+					limit = { check_variable = { nuclear_facility_count > 0 } }
+					if = {
+						limit = { check_variable = { nuclear_facility_count > 20 } }
+						set_variable = { nuclear_facility_count = 20 }
+					}
+					meta_effect = {
+						text = { add_ideas = LOK_nuclear_facility_[NUCLEAR_FACILITY_COUNT] }
+						NUCLEAR_FACILITY_COUNT = "[?ROOT.nuclear_facility_count]"
+					}
+				}
 
 				#Various calculations
 				calculate_combat_casualties = yes #Casualties in states
@@ -1737,6 +1786,12 @@ on_actions = {
 						popup = yes
 					}
 				}
+			}
+			if = {
+				limit = { FROM.FROM = { check_variable = { building_level@nuclear_facility > 0 } } }
+				FROM.FROM = { save_event_target_as = nuclear_facility_state }
+				ROOT = { country_event = { id = lok_notification.1 } }
+				FROM = { country_event = { id = lok_notification.2 } }
 			}
 			FROM.FROM = { #Clear and apply species match modifiers
 				if = {
