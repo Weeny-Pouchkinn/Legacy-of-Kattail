@@ -561,3 +561,57 @@ country_event = { #nuclear facility lost
 		add_political_power = -20
 	}
 }
+
+#global herz events
+add_namespace = lok_herzlands
+#herzland warlords mobilize
+country_event = {
+	id = lok_herzlands.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_herzlands.1"}
+	is_triggered_only = yes
+	title = lok_herzlands.1.t
+	desc = lok_herzlands.1.d
+	picture = GFX_report_event_kattail
+
+	option = {
+		name = lok_herzlands.1.a
+		custom_effect_tooltip = lok_herzlands.1.a.tt
+		if = { #Uniters and Hegemon claim it all
+			limit = {
+				NOT = { tag = AUR }
+				OR = {
+					has_country_flag = herzlands_warlord_uniter
+					has_country_flag = herzlands_warlord_hegemon
+				}
+			}
+			every_state = {
+				limit = {
+					is_in_array = { global.herzlands_states_array = THIS }
+					NOT = { is_core_of = ROOT }
+					NOT = { is_claimed_by = ROOT }
+					NOT = { is_owned_by = ROOT }
+				}
+				add_claim_by = ROOT
+				reduce_compliance_coring_threshold_by_10 = yes
+				reduce_compliance_coring_threshold_by_10 = yes
+			}
+		}
+		else_if = { #Regionalists claim their neighbors
+			limit = {
+				has_country_flag = herzlands_warlord_regionalist
+			}
+			every_state = {
+				limit = {
+					var:owner = { is_neighbor_of = ROOT }
+					is_in_array = { global.herzlands_states_array = THIS }
+					NOT = { is_core_of = ROOT }
+					NOT = { is_claimed_by = ROOT }
+					NOT = { is_owned_by = ROOT }
+				}
+				add_claim_by = ROOT
+				reduce_compliance_coring_threshold_by_10 = yes
+				reduce_compliance_coring_threshold_by_10 = yes
+			}
+		}
+	}
+}
