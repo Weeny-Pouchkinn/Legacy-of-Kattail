@@ -767,12 +767,20 @@ country_event = {
 		name = AUR_event.28.a
 		add_stability = 0.05
 		add_war_support = -0.20
+		hidden_effect = {
+			add_to_variable = { AUR_the_kaiser_must_return_compliance_growth = 0.10 }
+		}
+		custom_effect_tooltip = AUR_event.28.a.tooltip
 	}
 
 	option = {
 		name = AUR_event.28.b
 		add_stability = -0.05
 		add_war_support = 0.20
+		hidden_effect = {
+			add_to_variable = { AUR_the_kaiser_must_return_army_attack_factor = 0.10 }
+		}
+		custom_effect_tooltip = AUR_event.28.b.tooltip
 	}
 }
 
@@ -1053,5 +1061,103 @@ country_event = {
 
 	option = {
 		name = AUR_event.39.a
+	}
+}
+
+#Sanity is 0
+country_event = {
+	id = AUR_event.40
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.40"}
+	title = AUR_event.40.t
+	desc = AUR_event.40.d
+	picture = GFX_report_event_herald
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.40.a
+		add_ideas = AUR_utter_failstate
+		load_focus_tree = EMPTY_TREE
+		every_country = {
+			limit = { is_puppet_of = AUR }
+			AUR = { set_autonomy = { target = PREV autonomy_state = autonomy_free } }
+		}
+		every_country = {
+			limit = { is_in_faction_with = AUR }
+			leave_faction = yes
+		}
+		every_country = {
+			limit = { is_herzlands_warlord = yes }
+			AUR = {
+				declare_war_on = {
+					target = PREV
+					type = annex_everything
+				}
+			}
+		}
+		start_civil_war = { ideology = neutrality }
+	}
+}
+
+#Out of Time
+country_event = {
+	id = AUR_event.41
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.41"}
+	title = AUR_event.41.t
+	desc = AUR_event.41.d
+	picture = GFX_report_event_herald
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.41.a
+		add_ideas = AUR_utter_failstate
+		load_focus_tree = EMPTY_TREE
+		kill_country_leader = yes
+		every_country = {
+			limit = { is_puppet_of = AUR }
+			AUR = { set_autonomy = { target = PREV autonomy_state = autonomy_free } }
+		}
+		every_country = {
+			limit = { is_in_faction_with = AUR }
+			leave_faction = yes
+		}
+		start_civil_war = {
+			ideology = fascism
+			size = 0.7
+		}
+		every_neighbor_country = {
+			limit = { NOT = { has_war_with = AUR } OR = { is_herzlands_warlord = yes is_herzlands_neighbor = yes } }
+			country_event = { id = AUR_event.42 days = 5 }
+		}
+	}
+}
+
+#Kill the Herald?
+country_event = {
+	id = AUR_event.42
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.42"}
+	title = AUR_event.42.t
+	desc = AUR_event.42.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.42.a
+		declare_war_on = {
+			target = AUR
+			type = annex_everything
+		}
+	}
+
+	option = {
+		name = AUR_event.42.b
+		add_political_power = 25
+		trigger = {
+			is_ai = no
+		}
 	}
 }
