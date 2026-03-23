@@ -2064,55 +2064,20 @@ focus_tree = {
 		}
 	}
 
-	focus = {
-		id = AUR_restructure_the_imperium
-		icon = GFX_goal_KTZ_a_success
-		x = 0
-		y = 2
-		cost = 5
-		prerequisite = { focus = AUR_central_promises_kept }
-		prerequisite = { focus = AUR_eastern_promises_kept }
-		prerequisite = { focus = AUR_northern_promises_kept }
-		relative_position_id = AUR_northern_promises_kept
-		available = {
-			has_war = no
-		}
-		completion_reward = {
-			set_cosmetic_tag = AUR_KATOWN
-			custom_effect_tooltip = AUR_restructure_the_imperium_tt
-			hidden_effect = {
-				44 = { transfer_state_to = AUR add_core_of = AUR }
-				45 = { transfer_state_to = AUR add_core_of = AUR }
-				34 = { transfer_state_to = AUR add_core_of = AUR }
-				36 = { transfer_state_to = AUR add_core_of = AUR }
-				50 = { transfer_state_to = AUR add_core_of = AUR }
-				42 = { transfer_state_to = AUR add_core_of = AUR }
-				29 = { transfer_state_to = AUR add_core_of = AUR }
-				27 = { transfer_state_to = AUR add_core_of = AUR }
-				30 = { transfer_state_to = AUR add_core_of = AUR }
-				39 = { transfer_state_to = AUR add_core_of = AUR }
-				509 = { transfer_state_to = AUR add_core_of = AUR }
-			}
-			set_capital = {
-				state = 509
-			}
-		}
-	}
 
 	focus = {
 		id = AUR_a_small_foothold
 		icon = GFX_focus_RAJ_a_policy_of_silence
 		x = 0
-		y = 1
+		y = 2
 		cost = 5
-		prerequisite = { focus = AUR_restructure_the_imperium }
-		relative_position_id = AUR_restructure_the_imperium
+		prerequisite = { focus = AUR_northern_promises_kept }
+		prerequisite = { focus = AUR_eastern_promises_kept }
+		prerequisite = { focus = AUR_central_promises_kept }
+		relative_position_id = AUR_northern_promises_kept
 		will_lead_to_war_with = MEC
 		bypass = {
 			NOT = { country_exists = MEC }
-		}
-		mutually_exclusive = {
-			focus = AUR_secure_the_western_flank
 		}
 		completion_reward = {
 			set_temp_variable = { herald_sanity_change = -3 }
@@ -2214,7 +2179,6 @@ focus_tree = {
 		}
 	}
 
-
 	focus = {
 		id = AUR_secure_the_western_flank
 		icon = GFX_goal_generic_territory_or_war
@@ -2237,14 +2201,48 @@ focus_tree = {
 		}
 	}
 
+	focus = {
+		id = AUR_restructure_the_imperium
+		icon = GFX_goal_KTZ_a_success
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = { focus = AUR_secure_the_western_flank focus = AUR_fortify_the_western_flank }
+		relative_position_id = AUR_a_small_foothold
+		available = {
+			has_war = no
+		}
+		completion_reward = {
+			set_cosmetic_tag = AUR_KATOWN
+			custom_effect_tooltip = AUR_restructure_the_imperium_tt
+			hidden_effect = {
+				clr_country_flag = AUR_herald_sanity_active
+				44 = { transfer_state_to = AUR add_core_of = AUR }
+				45 = { transfer_state_to = AUR add_core_of = AUR }
+				34 = { transfer_state_to = AUR add_core_of = AUR }
+				36 = { transfer_state_to = AUR add_core_of = AUR }
+				50 = { transfer_state_to = AUR add_core_of = AUR }
+				42 = { transfer_state_to = AUR add_core_of = AUR }
+				29 = { transfer_state_to = AUR add_core_of = AUR }
+				27 = { transfer_state_to = AUR add_core_of = AUR }
+				30 = { transfer_state_to = AUR add_core_of = AUR }
+				39 = { transfer_state_to = AUR add_core_of = AUR }
+				509 = { transfer_state_to = AUR add_core_of = AUR }
+			}
+			set_capital = {
+				state = 509
+			}
+		}
+	}
+
 
 	focus = {
 		id = AUR_grand_reorganization
 		icon = AUR_grand_reorganization
 		x = 0
-		y = 3
+		y = 1
 		cost = 15
-		prerequisite = { focus = AUR_secure_the_western_flank focus = AUR_fortify_the_western_flank }
+		prerequisite = { focus = AUR_restructure_the_imperium  }
 		relative_position_id = AUR_restructure_the_imperium
 		available = {
 			has_war = no

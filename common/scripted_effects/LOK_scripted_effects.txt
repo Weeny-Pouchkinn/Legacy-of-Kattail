@@ -1367,11 +1367,12 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 		}
 		multiply_variable = { state_food_consumption = 1.15 }
 	}
-	if = { #Lithoids do not eat food at all
+	if = { #Lithoids and robots do not eat food at all
 		limit = {
 			OR = {
 				check_variable = { species = 5 }
 				check_variable = { species = 8 }
+				check_variable = { species = 49 }
 			}
 		}
 		multiply_variable = { state_food_consumption = 0 }
@@ -1862,6 +1863,12 @@ calculate_radiation_state_modifiers = {
 		} 
 		multiply_variable = { lok_radiation_modifier = 0.25 }
 	}
+	if = {
+		limit = { #-90% for Machines
+			check_variable = { species = 49 }
+		} 
+		multiply_variable = { lok_radiation_modifier = 0.10 }
+	}
 	clamp_variable = { var = lok_radiation_army_attrition_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
 	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and -0.9
 	clamp_variable = { var = lok_radiation_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
@@ -1876,6 +1883,10 @@ apply_radiation_effects = {
 				AND = {
 					OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
 					check_variable = { lok_radiation_level < 5 } #NMI + Nekeox don't die below 5
+				}
+				AND = {
+					check_variable = { species = 49 }
+					check_variable = { lok_radiation_level < 10 } #Robots don't die below 10
 				}
 			}
 		}
@@ -1895,6 +1906,13 @@ apply_radiation_effects = {
 				OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
 			} 
 			multiply_variable = { lok_radiation_death_percent = 0.25 }
+		}
+
+		if = {
+			limit = { #-90% for Robots
+				check_variable = { species = 49 }
+			} 
+			multiply_variable = { lok_radiation_death_percent = 0.90 }
 		}
 
 		set_variable = { lok_radiation_death_count = state_population_k }

@@ -1,34 +1,39 @@
 
 AUR_change_herald_sanity = {
-	custom_effect_tooltip = change_herald_sanity_tooltip
-	add_to_variable = { herald_sanity = herald_sanity_change }
-	clamp_variable = { var = herald_sanity min = 0 max = 100 }
-	AUR_clear_herald_sanity_ideas = yes
-	hidden_effect = {
-		if = {
-			limit = { check_variable = { herald_sanity > 89 } }
-			add_ideas = AUR_herald_sanity_100_to_90
+	if = {
+		limit = {
+			has_country_flag = AUR_herald_sanity_active
 		}
-		else_if = {
-			limit = { check_variable = { herald_sanity > 69 } }
-			add_ideas = AUR_herald_sanity_89_to_70
+		custom_effect_tooltip = change_herald_sanity_tooltip
+		add_to_variable = { herald_sanity = herald_sanity_change }
+		clamp_variable = { var = herald_sanity min = 0 max = 100 }
+		AUR_clear_herald_sanity_ideas = yes
+		hidden_effect = {
+			if = {
+				limit = { check_variable = { herald_sanity > 89 } }
+				add_ideas = AUR_herald_sanity_100_to_90
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 69 } }
+				add_ideas = AUR_herald_sanity_89_to_70
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 49 } }
+				add_ideas = AUR_herald_sanity_69_to_50
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 19 } }
+				add_ideas = AUR_herald_sanity_49_to_20
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 0 } }
+				add_ideas = AUR_herald_sanity_19_to_0
+			}
+			else_if = { #It's over.
+				limit = { check_variable = { herald_sanity = 0 } }
+				country_event = { id = AUR_event.40 days = 5 }
+			}	
 		}
-		else_if = {
-			limit = { check_variable = { herald_sanity > 49 } }
-			add_ideas = AUR_herald_sanity_69_to_50
-		}
-		else_if = {
-			limit = { check_variable = { herald_sanity > 19 } }
-			add_ideas = AUR_herald_sanity_49_to_20
-		}
-		else_if = {
-			limit = { check_variable = { herald_sanity > 0 } }
-			add_ideas = AUR_herald_sanity_19_to_0
-		}
-		else_if = { #It's over.
-			limit = { check_variable = { herald_sanity = 0 } }
-			country_event = { id = AUR_event.40 days = 5 }
-		}	
 	}
 }
 

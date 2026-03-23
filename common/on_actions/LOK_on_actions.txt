@@ -1,6 +1,29 @@
 on_actions = {
 	on_startup = {
 		effect = {
+
+			#Food for Arivoejobiden
+			every_country = {
+				limit = {
+					OR = {
+						tag = KTN
+						tag = SMP
+						tag = MUL
+						tag = PRC
+						tag = KAP
+						tag = LTR
+					}
+				}
+				every_owned_state = {
+					set_temp_variable = { new_food_spawn = state_population_k }
+					divide_temp_variable = { new_food_spawn = 200 }
+					add_resource = {
+						type = food
+						amount = new_food_spawn
+					}
+				}
+			}
+
 			#COUNTRIES CLAIMING LAND
 			#Nordkrabben and Krokatzia claim each other
 			123 = { add_claim_by = WAC }
@@ -535,6 +558,10 @@ on_actions = {
 
 			NMI = { remove_ideas = var_species_0 add_ideas = var_species_8 add_ideas = var_species_1 }
 
+			SLC = { remove_ideas = var_species_0 add_ideas = var_species_49 }
+			DUR = { remove_ideas = var_species_0 add_ideas = var_species_50 }
+
+
 			#Setup STATE species
 			every_state = { set_variable = { species = 0 } }
 			every_state = { set_variable = { minority = 1000 } }
@@ -958,6 +985,10 @@ on_actions = {
             800 = { set_variable = { minority = 9 } }
             796 = { set_variable = { minority = 19 } }
 
+			#Sillycrons and Poltros
+			SLC = { every_owned_state = { set_variable = { species = 49 } } }
+			DUR = { every_owned_state = { set_variable = { species = 50 } } }
+			
 			#Strait
 			334 = { set_variable = { species = 3 } }
 			343 = { set_variable = { species = 15 } set_variable = { minority = 3 } }
