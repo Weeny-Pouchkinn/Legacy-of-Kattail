@@ -1,3 +1,32 @@
+
+LOK_change_state_manpower = {
+	custom_effect_tooltip = LOK_change_state_manpower_tooltip
+	add_manpower = manpower_change
+	hidden_effect = {
+		update_state_productivity_modifier = yes		
+	}
+}
+
+update_state_productivity_modifier = {
+	if = {
+		limit = { 
+			is_space_state = no
+			var:controller = { is_non_playable_country = no }
+		}
+		set_variable = { population_relative_to_game_start = state_population_k }
+		divide_variable = { population_relative_to_game_start = population_at_game_start }
+		set_variable = { lok_state_productivity_modifier = 1 }
+		#Say population_relative_to_game_start is 0.8 or 1.4
+		#1 - 0.8 = 0.2
+		#1 - 1.4 = -0.4
+		subtract_from_variable = { lok_state_productivity_modifier = population_relative_to_game_start }
+		#0.2 x -1 = -0.2
+		#-0.4 x -1 = 0.4
+		multiply_variable = { lok_state_productivity_modifier = -1 }
+	}
+	else = { set_variable = { lok_state_productivity_modifier = 0 } }
+}
+
 clear_nuclear_facility_ideas = {
 	if = {
 		limit = { has_idea = LOK_nuclear_facility_1 }

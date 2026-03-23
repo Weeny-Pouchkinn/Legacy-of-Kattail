@@ -498,4 +498,30 @@ LOK_food_management_cat = {
 			calculate_total_food_consumption = yes
 		}
 	}
+	lok_update_pop_relative_to_game_start_debug = {
+		icon = generic_research
+		priority = 1000
+
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			every_country = {
+				every_controlled_state = {
+					update_state_productivity_modifier = yes
+				}
+			}
+		}
+	}
 }
