@@ -155,12 +155,13 @@ on_actions = {
 			set_variable = { global.lok_nuclear_soot_perc_negative = 1 } #The actual food debuff, divided by 100
 
 			#Casualty counters
-			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL combat-deaths for ALL countries
+			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL deaths for ALL countries
 
 			set_variable = { global.lok_global_combat_deaths = 0 } #Sum of ALL combatt deaths for ALL countries
 			set_variable = { global.lok_global_bombing_deaths = 0 } #Sum of ALL bombing deaths for ALL countries
 			set_variable = { global.lok_global_starvation_deaths = 0 } #Sum of ALL starvation deaths for ALL countries
 			set_variable = { global.lok_global_radiation_deaths = 0 } #Sum of ALL radiation deaths for ALL countries
+			set_variable = { global.lok_global_misc_deaths = 0 } #Sum of ALL misc deaths for ALL countries
 
 			set_variable = { global.lok_global_deaths_display = 0 }
 
@@ -171,6 +172,7 @@ on_actions = {
 				set_variable = { lok_country_bombing_deaths = 0 } #Nuke/bomb deaths
 				set_variable = { lok_country_starvation_deaths = 0 } #Starvation deaths
 				set_variable = { lok_country_radiation_deaths = 0 } #Radiation deaths
+				set_variable = { lok_country_misc_deaths = 0 } #misc deaths
 
 				set_variable = { lok_country_deaths_display = 0 }
 			}
@@ -182,6 +184,7 @@ on_actions = {
 				set_variable = { lok_state_starvation_deaths = 0 }
 				set_variable = { lok_state_radiation_deaths = 0 }
 				set_variable = { lok_state_combat_deaths = 0 }
+				set_variable = { lok_state_misc_deaths = 0 }
 
 				set_variable = { lok_state_deaths_display = 0 }
 
@@ -1755,6 +1758,9 @@ on_actions = {
 				set_variable = { lok_state_starvation_deaths_display = lok_state_starvation_deaths }
 				round_variable = lok_state_starvation_deaths_display
 
+				set_variable = { lok_state_misc_deaths_display = lok_state_misc_deaths }
+				round_variable = lok_state_misc_deaths_display
+
 				if = { #State got so depopulated that it just collapses
 					limit = { var:controller = { is_non_playable_country = no } check_variable = { state_population_k < lok_min_manpower_before_collapse } }
 					collapse_into_anarchy = yes
@@ -1778,6 +1784,8 @@ on_actions = {
 			set_variable = { global.lok_global_starvation_deaths_display = global.lok_global_starvation_deaths }
 			divide_variable = { global.lok_global_starvation_deaths_display = 1000 } #Turn to millions
 
+			set_variable = { global.lok_global_misc_deaths_display = global.lok_global_misc_deaths }
+			divide_variable = { global.lok_global_misc_deaths_display = 1000 } #Turn to millions
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 			#force_update_map_mode = { mapmode = LOK_food_map_mode }

@@ -3,7 +3,20 @@ LOK_change_state_manpower = {
 	custom_effect_tooltip = LOK_change_state_manpower_tooltip
 	add_manpower = manpower_change
 	hidden_effect = {
-		update_state_productivity_modifier = yes		
+		update_state_productivity_modifier = yes
+		if = {
+			limit = { check_variable = { manpower_change < 0 } }
+			divide_variable = { manpower_change = -1000 }
+			add_to_variable = { lok_state_misc_deaths = manpower_change }
+			add_to_variable = { lok_state_deaths = manpower_change }
+			add_to_variable = { lok_state_misc_deaths_display = manpower_change }
+			var:controller = {
+				add_to_variable = { lok_country_misc_deaths = PREV.manpower_change }
+				add_to_variable = { lok_country_deaths = PREV.manpower_change }
+				add_to_variable = { global.lok_global_misc_deaths = PREV.manpower_change }
+				add_to_variable = { global.lok_global_deaths = PREV.manpower_change }
+			}
+		}
 	}
 }
 
