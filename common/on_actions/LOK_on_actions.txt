@@ -1591,14 +1591,21 @@ on_actions = {
 		}
 	}
 	
-	# on_weekly_ROQ = {
-	# 	effect = {
-	# 		if = {
-	# 			limit = { has_completed_focus = ROQ_the_votation_is_on }
-	# 			roq_count_votation_results = yes
-	# 		}
-	# 	}
-	# }
+	on_weekly_ROQ = {
+		effect = {
+			# if = {
+			# 	limit = { has_completed_focus = ROQ_the_votation_is_on }
+			# 	roq_count_votation_results = yes
+			# }
+			if = {
+				limit = { surrender_progress > 0.50 }
+				random = {
+					chance = 50
+					country_event = { id = ROQ_event.5 }
+				}
+			}
+		}
+	}
 
 	on_weekly_ZZZ = { #for weekly effects that are only needed ONCE
 		effect = {
