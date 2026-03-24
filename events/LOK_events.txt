@@ -6,10 +6,11 @@ country_event = {
 	title = "LOK_tutorial.1.t"
 	desc = "LOK_tutorial.1.d"
 	is_triggered_only = yes
-	picture = GFX_report_event_space_exploration
+	picture = GFX_report_event_kattail
 
 	option = { #Play
 		name = "LOK_tutorial.1.a"
+		country_event = { id = LOK_country_intro.1 }
 	}
 
 	option = { #Tutorial
@@ -29,10 +30,11 @@ country_event = { #Credits
 	title = "LOK_tutorial.10.t"
 	desc = "LOK_tutorial.10.d"
 	is_triggered_only = yes
-	picture = GFX_report_event_space_exploration
+	picture = GFX_report_event_kattail
 
 	option = { #Play
 		name = "LOK_tutorial.10.a"
+		country_event = { id = LOK_country_intro.1 }
 	}
 
 	option = { #Tutorial
@@ -53,7 +55,7 @@ country_event = {
 	title = "LOK_tutorial.2.t"
 	desc = "LOK_tutorial.2.d"
 	is_triggered_only = yes
-	picture = GFX_report_event_space_exploration
+	picture = GFX_report_event_kattail
 
 	option = { #Food
 		name = "LOK_tutorial.2.a"
@@ -67,6 +69,7 @@ country_event = {
 
 	option = { #Ok got it
 		name = "LOK_tutorial.gotit"
+		country_event = { id = LOK_country_intro.1 }
 	}
 }
 
@@ -77,7 +80,7 @@ country_event = {
 	title = "LOK_tutorial.3.t"
 	desc = "LOK_tutorial.3.d"
 	is_triggered_only = yes
-	picture = GFX_report_event_space_exploration
+	picture = GFX_report_event_nuclear_plant
 
 	option = { #Go to Nuclear War
 		name = "LOK_tutorial.3.a"
@@ -91,6 +94,7 @@ country_event = {
 
 	option = { #Ok got it
 		name = "LOK_tutorial.gotit"
+		country_event = { id = LOK_country_intro.1 }
 	}
 }
 
@@ -101,7 +105,7 @@ country_event = {
 	title = "LOK_tutorial.4.t"
 	desc = "LOK_tutorial.4.d"
 	is_triggered_only = yes
-	picture = GFX_report_event_space_exploration
+	picture = GFX_report_event_rocket_explosion
 
 	option = { #Go to Space
 		name = "LOK_tutorial.4.a"
@@ -115,6 +119,7 @@ country_event = {
 
 	option = { #Ok got it
 		name = "LOK_tutorial.gotit"
+		country_event = { id = LOK_country_intro.1 }
 	}
 }
 
@@ -127,20 +132,65 @@ country_event = {
 	is_triggered_only = yes
 	picture = GFX_report_event_space_exploration
 
-	option = { #Go to Nuclear War
-		name = "LOK_tutorial.4.a"
-		country_event = { id = LOK_tutorial.6 }
-	}
-
 	option = { #Back to Nuclear War
-		name = "LOK_tutorial.4.b"
+		name = "LOK_tutorial.5.b"
 		country_event = { id = LOK_tutorial.4 }
 	}
 
 	option = { #Ok got it
 		name = "LOK_tutorial.gotit"
+		country_event = { id = LOK_country_intro.1 }
 	}
 }
+
+
+add_namespace = LOK_country_intro
+country_event = { #
+	id = LOK_country_intro.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_country_intro.1"}
+	title = "LOK_country_intro.1.t"
+	desc = "LOK_country_intro.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_kattail
+
+	option = { #Play
+		name = "LOK_country_intro.1.a"
+	}
+
+	option = { #Tell me about my region...
+		name = "LOK_country_intro.1.b"
+		country_event = { id = LOK_country_intro.2 }
+	}
+
+	option = { #welcome screen
+		name = "LOK_country_intro.1.c"
+		country_event = { id = LOK_tutorial.1 }
+	}
+}
+
+country_event = { #
+	id = LOK_country_intro.2
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_country_intro.2"}
+	title = "LOK_country_intro.2.t"
+	desc = "LOK_country_intro.2.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_kattail
+
+	option = { #Play
+		name = "LOK_country_intro.2.a"
+	}
+
+	option = { #Back to nation
+		name = "LOK_country_intro.2.b"
+		country_event = { id = LOK_country_intro.1 }
+	}
+
+	option = { #welcome screen
+		name = "LOK_country_intro.1.c"
+		country_event = { id = LOK_tutorial.1 }
+	}
+}
+
 
 add_namespace = LOK_high_command
 #Leader Found and they want to work
