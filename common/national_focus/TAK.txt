@@ -452,6 +452,75 @@ focus_tree = {
 		}
 	}
 
+
+	#Develop conquered lands
+	#SOLARIA
+
+	focus = {
+		id = TAK_hire_solarian_city_planners
+		icon = GFX_focus_SWE_urbanization
+		x = 0
+		y = 10
+		cost = 5
+		relative_position_id = TAK_bulk_housing
+		prerequisite = { focus = TAK_bulk_housing }
+		available = {
+			OR = {
+				NOT = { country_exists = SLR }
+				SLR = { is_puppet_of = TAK }
+			}
+			SLR = {
+				any_core_state = {
+					is_controlled_by_ROOT_or_subject = yes
+				}
+			}
+		}
+		completion_reward = {
+			TAK_recruit_painter_5 = yes
+			TAK_recruit_painter_10 = yes
+			TAK_recruit_painter_10 = yes
+		}
+	}
+
+	focus = {
+		id = TAK_remodel_solarian_cities
+		icon = GFX_focus_SWE_urbanization
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_hire_solarian_city_planners
+		prerequisite = { focus = TAK_hire_solarian_city_planners }
+		available = {
+			820 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			820 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_stamp_out_solarian_communism
+		icon = GFX_focus_SWE_urbanization
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_hire_solarian_city_planners
+		prerequisite = { focus = TAK_hire_solarian_city_planners }
+		completion_reward = {
+			349 = { increase_state_category = yes }
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = construction_tech
+				bonus = 2
+			}
+		}
+	}
+
 	focus = { #roi tries to find out what exactly makes the portraits come to life
 		id = TAK_figure_it_out
 		icon = GFX_focus_ARG_defense_and_democracy
