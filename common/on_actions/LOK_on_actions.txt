@@ -124,7 +124,7 @@ on_actions = {
 
 			SIL = {
 				country_event = { id = LOK_SIL.1 days = 365 }
-				activate_mission = SIL_collapse_timer
+				#activate_mission = SIL_collapse_timer
 			}
 
 			#Katlantropa Dam
@@ -436,6 +436,7 @@ on_actions = {
 						tag = PER
 						tag = LMB
 						tag = RQA
+						is_roqualian_releasable = yes
 					}
 				}
 				add_ideas = specialty_computing
@@ -448,6 +449,21 @@ on_actions = {
 				}
 			}
 
+			TAK = {
+				add_ideas = specialty_lacking_tech
+			}
+
+			every_possible_country = {
+				limit = {
+					NOT = {
+						has_idea = specialty_lacking_tech
+						has_idea = specialty_nuclear
+						has_idea = specialty_computing
+					}
+				}
+				add_ideas = specialty_nothing
+			}
+
 			#Setup COUNTRY species
 			every_possible_country = {
 				add_ideas = var_species_0
@@ -455,6 +471,11 @@ on_actions = {
 					limit = { is_herzlands_warlord = yes }
 					remove_ideas = var_species_0
 					add_ideas = var_species_1
+				}
+				if = {
+					limit = { is_roqualian_splinter = yes }
+					remove_ideas = var_species_0
+					add_ideas = var_species_3
 				}
 			}
 			#Katzens
@@ -1263,12 +1284,12 @@ on_actions = {
 
 			every_possible_country = {
 				calculate_orbital_logistics_capacity = yes
+				count_nukes_in_stockpile = yes
+				calculate_salvo_capacity = yes
 				calculate_xenon_colonies_stats = yes
 				calculate_muno_colonies_stats = yes
 			}
 
-			count_nukes_in_stockpile = yes
-			calculate_salvo_capacity = yes
 			set_variable = { lok_current_salvo_capacity = 0 }
 
 			#Mewtail
@@ -1419,7 +1440,7 @@ on_actions = {
 						}
 					}
 					every_controlled_state = {
-						limit = { is_space_state = no }
+						limit = { is_space_state = no impassable = no }
 						create_unit = {
 							division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
 							count = 2
@@ -1429,7 +1450,7 @@ on_actions = {
 					if = {
 						limit = { tag = ACR }
 						every_controlled_state = {
-							limit = { is_space_state = no }
+							limit = { is_space_state = no impassable = no }
 							create_unit = {
 								division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
 								count = 2
