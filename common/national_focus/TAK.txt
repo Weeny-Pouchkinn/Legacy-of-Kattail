@@ -482,6 +482,7 @@ focus_tree = {
 		cost = 10
 		relative_position_id = TAK_alkroa_wargoal
 		prerequisite = { focus = TAK_alkroa_wargoal }
+		prerequisite = { focus = TAK_burn_down_aurelia }
 		available = {
 			336 = { is_controlled_by_ROOT_or_subject = yes }
 		}
@@ -489,6 +490,47 @@ focus_tree = {
 			add_stability = 0.10
 		}
 	}
+
+	focus = {
+		id = TAK_burn_down_aurelia
+		icon = GFX_focus_SWE_urbanization
+		x = 7
+		y = 1
+		cost = 10
+		relative_position_id = TAK_overseas_department
+		prerequisite = { focus = TAK_overseas_department }
+		prerequisite = { focus = TAK_charlesling_vanguard }
+		available = {
+			825 = { is_controlled_by_ROOT_or_subject = yes }
+			826 = { is_controlled_by_ROOT_or_subject = yes }
+			827 = { is_controlled_by_ROOT_or_subject = yes }
+			829 = { is_controlled_by_ROOT_or_subject = yes }
+			828 = { is_controlled_by_ROOT_or_subject = yes }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_25000_painting_charles
+				check_variable = { TAK_painting_charles_count > 24999 }
+			}
+		}
+		completion_reward = {
+			SPQ = {
+				every_core_state = {
+					remove_building = {
+						type = infrastructure
+						level = 2
+					}
+					remove_building = {
+						type = arms_factory
+						level = 1
+					}
+					remove_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+			}
+		}
+	}
+
 
 	focus = {
 		id = TAK_a_new_charles_in_alkroa
@@ -558,6 +600,14 @@ focus_tree = {
 			ALK = {
 				every_core_state = {
 					limit = { NOT = { has_state_flag = compliance_40_@ROOT } }
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = TAK.potential_cores_array }
+					add_claim_by = TAK
+					custom_effect_tooltip = state_core_threshold_set_40
+				}
+			}
+			SPQ = {
+				every_core_state = {
 					set_state_flag = compliance_40_@ROOT
 					add_to_array = { array = TAK.potential_cores_array }
 					add_claim_by = TAK
@@ -681,8 +731,55 @@ focus_tree = {
 				add_claim_by = TAK
 				custom_effect_tooltip = state_core_threshold_set_40
 			}
+			402 = {
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
 		}
 	}
+
+	focus = {
+		id = TAK_a_second_charles_on_quepler_crown
+		icon = GFX_focus_SWE_urbanization
+		x = 1
+		y = 2
+		cost = 10
+		relative_position_id = TAK_remodel_the_dam
+		prerequisite = { focus = TAK_remodel_the_dam }
+		available = {
+			804 = { is_controlled_by_ROOT_or_subject = yes }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_25000_painting_charles
+				check_variable = { TAK_painting_charles_count > 24999 }
+			}
+		}
+		completion_reward = {
+			364 = {
+				add_victory_points = {
+					province = 6245
+					value = 15
+				}
+				add_manpower = 50000
+				set_province_name = {
+					id = 6245
+					name = "Charleslylone"
+				}
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
+			396 = {
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
+		}
+	}
+
 
 	focus = {
 		id = TAK_remodel_the_dam
@@ -1376,8 +1473,6 @@ focus_tree = {
 			}
 			hidden_effect = { #define cores for pupppets
 				#Quepler
-				396 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
-				364 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
 				358 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
 				806 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
 				421 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
