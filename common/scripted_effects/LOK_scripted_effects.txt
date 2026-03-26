@@ -35,7 +35,8 @@ update_state_productivity_modifier = {
 		subtract_from_variable = { lok_state_productivity_modifier = population_relative_to_game_start }
 		#0.2 x -1 = -0.2
 		#-0.4 x -1 = 0.4
-		multiply_variable = { lok_state_productivity_modifier = -1 }
+		multiply_variable = { lok_state_productivity_modifier = -0.5 }
+		clamp_variable = { var = lok_state_productivity_modifier min = -0.75 max = 1.25 } #ultimately shoving one million people into the factory wont make it more efficient
 	}
 	else = { set_variable = { lok_state_productivity_modifier = 0 } }
 }
