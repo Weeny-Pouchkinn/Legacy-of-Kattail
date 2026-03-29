@@ -1,4 +1,96 @@
 TAK_painting_cat = {
+	TAK_support_roq_state_independence = {
+		icon = GFX_decision_infiltrate_state
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = TAK_possible_independence_supports
+
+		target_non_existing = yes
+
+
+		highlight_states = {
+			highlight_states_trigger = {
+				is_core_of = FROM
+			}
+		}
+
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			NOT = { country_exists = FROM }
+		}
+
+		visible = {
+			tag = TAK
+			# country_exists = ROQ
+			# NOT = { has_war_with = ROQ }
+			has_completed_focus = TAK_war_economy
+		}
+
+		available = {
+			FROM = {
+				any_core_state = {
+					check_variable = { TAK_infiltration_level > 1 }
+				}
+			}
+			NOT = { #no more than 4
+				check_variable = { TAK_roq_states_supported > 2 }
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		days_remove = 30
+
+		cost = 10
+
+		modifier = {
+			TAK_painting_power_usage = 100
+		}
+
+		complete_effect = {
+			add_to_variable = { TAK_painting_power_usage = 100 }
+			TAK_update_painting_stats = yes
+			FROM = {
+				set_country_flag = TAK_supported_independence
+			}
+			hidden_effect = {
+				add_to_variable = { TAK_roq_states_supported = 1 }
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_support_roq_state_independence_tt
+			subtract_from_variable = { TAK_painting_power_usage = 100 }
+			TAK_update_painting_stats = yes
+			FROM = {
+				set_country_flag = TAK_supported_independence
+			}
+		}
+
+		cancel_effect = {
+			subtract_from_variable = { TAK_painting_power_usage = 100 }
+			TAK_update_painting_stats = yes
+			hidden_effect = {
+				subtract_from_variable = { TAK_roq_states_supported = 1 }
+			}			
+		}
+
+		cancel_trigger = {
+			OR = {
+				country_exists = FROM
+				has_war_with = ROQ
+				has_war_with = FROM
+			}
+		}
+	}
+
 	#the roi can recruit painters
 	#each painter gives a painting power
 	#painters are listed in an array
@@ -434,6 +526,7 @@ TAK_painting_cat = {
 
 		cancel_effect = {
 			subtract_from_variable = { TAK_painting_power_usage = 25 }
+			TAK_update_painting_stats = yes
 		}
 	}
 
@@ -475,6 +568,64 @@ TAK_painting_cat = {
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
+			}
+			if = {
+				limit = {
+					FROM = { tag = ROQ }
+					check_variable = { TAK_roq_states_supported > 0 }
+				}
+				every_possible_country = {
+					limit = {
+						NOT = { country_exists = THIS }
+						has_country_flag = TAK_supported_independence
+					}
+					division_template = {
+						name = "Standard Infantry"
+						is_locked = no
+						regiments = {
+							motorized = { x = 0 y = 0 }
+							motorized = { x = 0 y = 1 }
+							motorized = { x = 0 y = 2 }
+							motorized = { x = 1 y = 0 }
+							motorized = { x = 1 y = 1 }
+							motorized = { x = 1 y = 2 }
+						}
+					}
+					save_global_event_target_as = TAK_supported_independence_country
+					ROQ = {
+						every_controlled_state = {
+							limit = {
+								is_core_of = event_target:TAK_supported_independence_country
+							}
+							if = {
+								limit = {
+									check_variable = {
+										TAK_infiltration_level > 1
+									}
+								}
+								transfer_state_to = event_target:TAK_supported_independence_country
+								create_unit = {
+									division = "division_template = \"Standard Infantry\" start_experience_factor = 0.5 start_equipment_factor = 1"
+									count = 4
+									owner = event_target:TAK_supported_independence_country
+								}
+								create_unit = {
+									division = "division_template = \"Tableaux Infiltrés\" start_experience_factor = 0.5 start_equipment_factor = 1.0"
+									count = 2
+									owner = TAK
+									allow_spawning_on_enemy_provs = yes
+								}
+							}
+							add_claim_by = event_target:TAK_supported_independence_country
+						}
+					}
+					give_military_access = TAK
+					TAK = { give_military_access = PREV }
+					declare_war_on = {
+						target = ROQ
+						type = take_claimed_state
+					}
+				}
 			}
 		}
 
