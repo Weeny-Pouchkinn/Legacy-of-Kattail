@@ -793,29 +793,31 @@ calculate_orbital_logistics_capacity = {
 
 	if = {
 		limit = { has_equipment = { lok_nerva_heavy_rocket > 0 } }
+		set_temp_variable = { temp_nerva_max = num_equipment@lok_nerva_heavy_rocket }
 		clamp_variable = {
 			var = lok_nerva_heavy_rocket_for_orbital_logistics
 			min = 0
-			max = num_equipment@lok_nerva_heavy_rocket
+			max = temp_nerva_max
 		}
 	}
 
-	#FIX LATER THE ERROR LOG HATES THIS FOR SOME REASON
-	# if = {
-	# 	limit = { has_equipment = { lok_reusable_heavy_chemical_rocket > 0 } }
-	# 	clamp_variable = {
-	# 		var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
-	# 		min = 0
-	# 		max = num_equipment@lok_reusable_heavy_chemical_rocket
-	# 	}
-	# }
+	if = {
+		limit = { has_equipment = { lok_reusable_heavy_chemical_rocket > 0 } }
+		set_temp_variable = { temp_heavy_chem_max = num_equipment@lok_reusable_heavy_chemical_rocket }
+		clamp_variable = {
+			var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
+			min = 0
+			max = temp_heavy_chem_max
+		}
+	}
 
 	if = {
 		limit = { has_equipment = { lok_reusable_light_chemical_rocket > 0 } }
+		set_temp_variable = { temp_light_chem_max = num_equipment@lok_reusable_light_chemical_rocket }
 		clamp_variable = {
 			var = lok_reusable_light_chemical_rocket_for_orbital_logistics
 			min = 0
-			max = num_equipment@lok_reusable_light_chemical_rocket
+			max = temp_light_chem_max
 		}
 	}
 }
