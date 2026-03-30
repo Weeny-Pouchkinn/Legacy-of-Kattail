@@ -1371,10 +1371,10 @@ country_event = {
 	option = {
 		name = "LOK_SIL.1.a"
 		activate_mission = SIL_crush_all_rebels
-		KEP = {
+		ROQ = {
 			add_opinion_modifier = {
 				target = SIL
-				modifier = KEP_shot_down_joe_biden
+				modifier = ROQ_shot_down_joe_biden
 			}
 		}
 		ai_chance = {
@@ -1390,10 +1390,10 @@ country_event = {
 		ai_chance = {
 			base = 10
 		}
-		KEP = {
+		ROQ = {
 			add_opinion_modifier = {
 				target = SIL
-				modifier = KEP_shot_down_joe_biden
+				modifier = ROQ_shot_down_joe_biden
 			}
 		}
 		trigger = {
@@ -1439,19 +1439,19 @@ country_event = {
 	#Whatever
 	option = {
 		name = "LOK_SIL.2.a"
-		set_country_flag = SIL_small_kepler_aid
+		set_country_flag = SIL_small_roq_help
 		set_country_flag = SIL_elwin_is_fascist
-		KEP = {
+		ROQ = {
 			country_event = { id = LOK_KEP.4 }
 			effect_tooltip = {
 				add_timed_idea = {
-					idea = KEP_small_kepler_aid
+					idea = ROQ_small_roq_aid
 					days = 180
 				}
 			}
 			add_opinion_modifier = {
 				target = SIL
-				modifier = KEP_making_it_up
+				modifier = ROQ_making_it_up
 			}
 		}
 	}
@@ -1461,8 +1461,11 @@ country_event = {
 		name = "LOK_SIL.2.b"
 		set_country_flag = SIL_elwin_is_crazy
 		declare_war_on = {
-			target = KEP
+			target = ROQ
 			type = annex_everything
+		}
+		ai_chance = {
+			base = 0
 		}
 	}
 }
@@ -1478,27 +1481,26 @@ country_event = {
 	#Whatever
 	option = {
 		name = "LOK_SIL.3.a"
-		set_country_flag = SIL_small_kepler_aid
+		set_country_flag = SIL_small_roq_help
 		set_country_flag = SIL_elwin_is_nice
 		add_popularity = {
 			ideology = neutrality
 			popularity = 0.1
 		}
 		add_timed_idea = {
-			idea = SIL_small_kepler_aid
+			idea = SIL_small_roq_help
 			days = 180
 		}
-		KEP = {
-			country_event = { id = LOK_KEP.4 }
+		ROQ = {
 			effect_tooltip = {
 				add_timed_idea = {
-					idea = KEP_small_kepler_aid
+					idea = ROQ_small_roq_aid
 					days = 180
 				}
 			}
 			add_opinion_modifier = {
 				target = SIL
-				modifier = KEP_making_it_up
+				modifier = ROQ_making_it_up
 			}
 		}
 	}
@@ -1506,7 +1508,7 @@ country_event = {
 	#Help em a lot
 	option = {
 		name = "LOK_SIL.3.b"
-		set_country_flag = SIL_big_kepler_aid
+		set_country_flag = SIL_big_roq_aid
 		set_country_flag = SIL_elwin_is_nice
 		add_stability = -0.10
 		add_popularity = {
@@ -1514,20 +1516,19 @@ country_event = {
 			popularity = 0.1
 		}
 		add_timed_idea = {
-			idea = SIL_big_kepler_aid
+			idea = SIL_big_roq_aid
 			days = 180
 		}
-		KEP = {
-			country_event = { id = LOK_KEP.4 }
+		ROQ = {
 			effect_tooltip = {
 				add_timed_idea = {
-					idea = KEP_big_kepler_aid
+					idea = ROQ_big_roq_aid
 					days = 180
 				}
 			}
 			add_opinion_modifier = {
 				target = SIL
-				modifier = KEP_making_it_up_a_lot
+				modifier = ROQ_making_it_up_a_lot
 			}
 		}
 	}
@@ -1650,6 +1651,50 @@ country_event = {
 	}
 }
 
+#Mondkanone Meeting
+news_event = {
+	id = LOK_SIL.8
+	title = "LOK_SIL.8.t"
+	desc = "LOK_SIL.8.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_muno_landing
+	major = yes
+
+	#Whatever
+	option = {
+		name = "LOK_SIL.8.a"
+	}
+}
+
+#They go home!
+news_event = {
+	id = LOK_SIL.9
+	title = "LOK_SIL.9.t"
+	desc = "LOK_SIL.9.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_colony_ship
+	major = yes
+
+	#Whatever
+	option = {
+		name = "LOK_SIL.9.a"
+	}
+}
+
+#Mondkanone Destruction
+news_event = {
+	id = LOK_SIL.10
+	title = "LOK_SIL.10.t"
+	desc = "LOK_SIL.10.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_exploding_ship
+	major = yes
+
+	#Whatever
+	option = {
+		name = "LOK_SIL.10.a"
+	}
+}
 
 add_namespace = LOK_KEP
 
