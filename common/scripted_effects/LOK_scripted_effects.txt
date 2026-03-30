@@ -1185,7 +1185,7 @@ calculate_salvo_capacity = {
 	set_temp_variable = { lok_salvo_capacity_added_last_week = lok_total_salvo_capacity } #Say 100
 	set_variable = { lok_total_salvo_capacity = 0 }
 			
-	every_controlled_state = { add_to_variable = { ROOT.lok_total_salvo_capacity = non_damaged_building_level@rocket_site } }
+	every_controlled_state = { add_to_variable = { PREV.lok_total_salvo_capacity = non_damaged_building_level@rocket_site } }
 	multiply_variable = { lok_total_salvo_capacity = 10 } #10 nukes per silo
 	set_temp_variable = { salvo_capacity_from_subs = num_ships_with_type@ballistic_submarine }
 
@@ -1447,12 +1447,22 @@ calculate_food_production_in_state = {
 calculate_total_food_consumption = {
 	set_variable = { country_food_stockpile_max = 0 } #reset food stockpile capacity
 	set_variable = { country_food_consumption = 0 } #Food that is being eaten
-	set_variable = { country_food_balance = resource_produced@food } #Total food balance
-	set_variable = { country_food_imports = resource_imported@food } #Imports
-	add_to_variable = { country_food_balance = country_food_imports } #Total food balance (with imports)
+	set_variable = { country_food_balance = 0 }
+
+	# 1. Fetch current Net Balance from the engine (This still has LAST week's consumption subtracted)
+	set_variable = { country_food_balance = resource_produced@food } 
+	set_variable = { country_food_imports = resource_imported@food } 
+	add_to_variable = { country_food_balance = country_food_imports } 
+
+	# 2. Calculate TRUE Gross Production by adding back LAST week's consumption modifier
+	# We do this before overwriting the modifier so the math perfectly zeroes out the engine delay
+	set_variable = { country_food_production = country_food_balance }
+	add_to_variable = { country_food_production = country_food_consumption_modifier }
+
+	# 3. Calculate NEW consumption from current territory
 	every_controlled_state = { #Fetch how much food each state eats.
 		calculate_food_consumption_in_state = yes
-		ROOT = {
+		PREV = {
 			add_to_variable = { country_food_consumption = PREV.state_food_consumption }
 
 			set_variable = { country_food_stockpile_from_infra = PREV.non_damaged_building_level@infrastructure }
@@ -1464,14 +1474,15 @@ calculate_total_food_consumption = {
 			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_silos }
 		}
 	}
+
+	# 4. Update the modifier for the engine to use on the next tick
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
-	#multiply_variable = { country_food_consumption_modifier = -1 }
-	# set_temp_variable = { negate_exacavation_tech_food = modifier@local_resources_factor } #This is to undo the effects of excavation techs.
-	# add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
-	# divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
+	# (Your commented-out excavation tech logic can safely stay here if you re-enable it later)
 	round_variable = country_food_consumption_modifier
-	set_variable = { country_food_production = country_food_balance } #The food that we're actually producing
-	add_to_variable = { country_food_production = country_food_consumption } #We add our consumption to the balance to get production, yippe!
+
+	# 5. Calculate the CORRECT New Balance for the rest of this script to use
+	set_variable = { country_food_balance = country_food_production }
+	subtract_from_variable = { country_food_balance = country_food_consumption }
 
 	#FOOD STOCKPILING
 

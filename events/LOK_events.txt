@@ -548,7 +548,25 @@ country_event = {
 }
 
 add_namespace = LOK_food
+country_event = {
+	id = LOK_food.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_nuke.1"}
+	hidden = yes
+	is_triggered_only = yes
 
+	immediate = {
+		if = { #Make sure to apply the food modifier if it's not there for some reason
+			limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
+			add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+		}
+		calculate_total_food_consumption = yes #Food effects
+		if = {
+			limit = { NOT = { has_country_flag = game_start_food_stockpile_refill_done } }
+			set_variable = { country_food_stockpile = country_food_stockpile_max }
+			set_country_flag = game_start_food_stockpile_refill_done
+		}
+	}
+}
 
 
 #Events regarding post-war peacedeals with decisions
