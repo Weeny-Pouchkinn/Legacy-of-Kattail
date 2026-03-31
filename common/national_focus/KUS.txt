@@ -1,1981 +1,1441 @@
 focus_tree = {
-	id = KUS_TREE
-	continuous_focus_position = { x = 2700 y = 300 }
-	country = {
-		factor = 0
-		modifier = {
-			add = 100
-			tag = KUS
-		}
-	}
-
-	##################################
-	# POLITICAL BRANCH
-	##################################
-
-	focus = {
-		id = KUS_steady_the_course
-		icon = GFX_goal_generic_propaganda
-		x = 12
-		y = 0
-		cost = 10
-		ai_will_do = {
-			factor = 10
-		}
-		completion_reward = {
-			activate_advisor = KUS_Talvan_Rahha
-		}
-	}
-
-	focus = {
-		id = KUS_civil_reform
-		icon = GFX_focus_generic_court
-		x = 11
-		y = 1
-		cost = 10
-		prerequisite = {
-			focus = KUS_steady_the_course
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_political_power = 100
-			activate_advisor = KUS_Jon_Trike
-			activate_advisor = KUS_Larmet_Dae
-			add_popularity = {
-				ideology = democratic
-				popularity = 0.05
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_ministry_of_public_affairs
-		icon = GFX_focus_generic_public_works
-		x = 13
-		y = 1
-		cost = 10
-		prerequisite = {
-			focus = KUS_steady_the_course
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			218 = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes
-				}
-			}
-			add_popularity = {
-				ideology = democratic
-				popularity = 0.10
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_clamp_down_on_extremists
-		icon = GFX_focus_generic_national_security
-		x = 11
-		y = 2
-		cost = 10
-		prerequisite = {
-			focus = KUS_civil_reform
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_stability = 0.05
-			add_popularity = {
-				ideology = communism
-				popularity = -0.04
-			}
-			add_popularity = {
-				ideology = fascism
-				popularity = -0.05
-			}
-			add_timed_idea = {
-				idea = KUS_crackdown_effect
-				days = 30
-			}
-			swap_ideas = {
-				remove_idea = KUS_rampant_extremism
-				add_idea = KUS_suppressed_extremism
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_food_security_aid
-		icon = GFX_focus_generic_farmland
-		x = 13
-		y = 2
-		cost = 10
-		prerequisite = {
-			focus = KUS_ministry_of_public_affairs
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			225 = {
-				add_resource = {
-					type = food
-					amount = 2
-				}
-			}
-			231 = {
-				add_resource = {
-					type = food
-					amount = 1
-				}
-			}
-		}
-	}
-
-	##################################
-	# ECONOMIC BRANCH
-	##################################
-
-	focus = {
-		id = KUS_expedited_recovery
-		icon = GFX_focus_generic_industry_1
-		x = 11
-		y = 3
-		cost = 7
-		prerequisite = {
-			focus = KUS_clamp_down_on_extremists
-		}
-		prerequisite = {
-			focus = KUS_food_security_aid
-		}
-		mutually_exclusive = {
-			focus = KUS_sustainable_development
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			custom_effect_tooltip = KUS_expedited_recovery_tt
-			every_owned_state = {
-				limit = {
-					is_core_of = KUS
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_sustainable_development
-		icon = GFX_focus_generic_road_investment
-		x = 13
-		y = 3
-		cost = 7
-		prerequisite = {
-			focus = KUS_clamp_down_on_extremists
-		}
-		prerequisite = {
-			focus = KUS_food_security_aid
-		}
-		mutually_exclusive = {
-			focus = KUS_expedited_recovery
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			custom_effect_tooltip = KUS_sustainable_development_tt
-			every_owned_state = {
-				limit = {
-					is_core_of = KUS
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_stimulus_package
-		icon = GFX_focus_generic_reorient_production
-		x = 10
-		y = 4
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_expedited_recovery
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = KUS_ruined_economy
-				add_idea = KUS_stimulus_economy
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_increase_manufacturing
-		icon = GFX_focus_generic_military_industry
-		x = 13
-		y = 4
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_expedited_recovery
-			focus = KUS_sustainable_development
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = KUS_ruined_economy
-				add_idea = KUS_manufacturing_economy
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_infrastructure_investments
-		icon = GFX_focus_generic_railroad
-		x = 15
-		y = 4
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_sustainable_development
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			every_owned_state = {
-				limit = {
-					is_core_of = KUS
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_through_the_bottleneck
-		icon = GFX_focus_generic_industry_1
-		x = 10
-		y = 5
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_stimulus_package
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_stimulus_economy }
-				swap_ideas = {
-					remove_idea = KUS_stimulus_economy
-					add_idea = KUS_bottleneck_economy
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_careful_investment
-		icon = GFX_focus_generic_refit_civilian_ships
-		x = 13
-		y = 5
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_increase_manufacturing
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_manufacturing_economy }
-				swap_ideas = {
-					remove_idea = KUS_manufacturing_economy
-					add_idea = KUS_careful_economy
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_schools_hospitals_farms
-		icon = GFX_focus_generic_low_cost_housing
-		x = 15
-		y = 5
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_infrastructure_investments
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_stability = 0.05
-			add_research_slot = 1
-		}
-	}
-
-	focus = {
-		id = KUS_a_recovering_economy
-		icon = GFX_focus_generic_industry_1
-		x = 10
-		y = 6
-		cost = 7
-		prerequisite = {
-			focus = KUS_through_the_bottleneck
-		}
-		mutually_exclusive = {
-			focus = KUS_a_new_foundation
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_bottleneck_economy }
-				remove_ideas = KUS_bottleneck_economy
-			}
-			if = {
-				limit = { has_idea = KUS_ruined_economy }
-				remove_ideas = KUS_ruined_economy
-			}
-			add_ideas = KUS_recovering_economy
-		}
-	}
-
-	focus = {
-		id = KUS_a_new_foundation
-		icon = GFX_focus_generic_public_works
-		x = 14
-		y = 6
-		cost = 7
-		prerequisite = {
-			focus = KUS_careful_investment
-			focus = KUS_schools_hospitals_farms
-		}
-		mutually_exclusive = {
-			focus = KUS_a_recovering_economy
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_careful_economy }
-				remove_ideas = KUS_careful_economy
-			}
-			if = {
-				limit = { has_idea = KUS_ruined_economy }
-				remove_ideas = KUS_ruined_economy
-			}
-			add_ideas = KUS_economic_resources
-			add_ideas = KUS_solid_foundation
-		}
-	}
-
-	##################################
-	# POLITICAL POWER BRANCH
-	##################################
-
-	focus = {
-		id = KUS_merit_group
-		icon = GFX_focus_generic_military_academy
-		x = 9
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_a_recovering_economy
-			focus = KUS_a_new_foundation
-		}
-		mutually_exclusive = {
-			focus = KUS_endow_presidential_power
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_merit_group
-		}
-	}
-
-	focus = {
-		id = KUS_endow_presidential_power
-		icon = GFX_focus_generic_court
-		x = 12
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_a_recovering_economy
-			focus = KUS_a_new_foundation
-		}
-		mutually_exclusive = {
-			focus = KUS_merit_group
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_political_power = 100
-			add_stability = 0.05
-			add_war_support = 0.05
-		}
-	}
-
-	# Merit Group sub-branch
-
-	focus = {
-		id = KUS_invite_back_exiles
-		icon = GFX_focus_generic_diplomatic_treaty
-		x = 9
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_merit_group
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = KUS_merit_group
-				add_idea = KUS_merit_group_improved
-			}
-			activate_advisor = KUS_Keira_Knit
-			activate_advisor = KUS_Robin_Mudie
-		}
-	}
-
-	focus = {
-		id = KUS_technology_institute
-		icon = GFX_focus_generic_navy_research_bonus
-		x = 9
-		y = 9
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_invite_back_exiles
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_research_slot = 1
-		}
-	}
-
-	# Endow Presidential Power sub-branch
-
-	focus = {
-		id = KUS_align_the_military
-		icon = GFX_focus_generic_military_dictatorship
-		x = 11
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_endow_presidential_power
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_political_power = 50
-			add_country_leader_trait = {
-				ideology = centrism
-				trait = political_connections
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_endorse_political_party
-		icon = GFX_focus_generic_full_social_mobilization
-		x = 13
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_endow_presidential_power
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_national_power
-		}
-	}
-
-	focus = {
-		id = KUS_kulsnudgj
-		icon = GFX_focus_generic_secret_service_agency
-		x = 15
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_endow_presidential_power
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_kulsnudgj_idea
-		}
-	}
-
-	focus = {
-		id = KUS_drum_up_war_support
-		icon = GFX_focus_generic_total_war
-		x = 11
-		y = 9
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_align_the_military
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_war_support = 0.12
-			add_stability = 0.04
-		}
-	}
-
-	focus = {
-		id = KUS_development_funds
-		icon = GFX_focus_generic_public_works
-		x = 13
-		y = 9
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_endorse_political_party
-			focus = KUS_kulsnudgj
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			every_owned_state = {
-				limit = {
-					is_core_of = KUS
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-		}
-	}
-
-	##################################
-	# GREATER KUSNURK BRANCH
-	##################################
-
-	focus = {
-		id = KUS_research_greater_kusnurk
-		icon = GFX_focus_generic_annex_country
-		x = 12
-		y = 10
-		cost = 7
-		prerequisite = {
-			focus = KUS_technology_institute
-			focus = KUS_drum_up_war_support
-			focus = KUS_development_funds
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_nation_of_free
-		}
-	}
-
-	focus = {
-		id = KUS_on_our_own
-		icon = GFX_focus_generic_monarchy_1
-		x = 10
-		y = 11
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_research_greater_kusnurk
-		}
-		mutually_exclusive = {
-			focus = KUS_alliance_with_roquale
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_destiny_of_kusnurk
-			set_rule = { can_create_factions = yes }
-		}
-	}
-
-	focus = {
-		id = KUS_alliance_with_roquale
-		icon = GFX_focus_generic_diplomatic_treaty
-		x = 14
-		y = 11
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_research_greater_kusnurk
-		}
-		mutually_exclusive = {
-			focus = KUS_on_our_own
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_opinion_modifier = {
-				target = ROQ
-				modifier = KUS_alliance_opinion
-			}
-			ROQ = {
-				add_opinion_modifier = {
-					target = KUS
-					modifier = KUS_alliance_opinion
-				}
-			}
-		}
-	}
-
-	##################################
-	# FREE CORPS AND DIPLOMACY
-	##################################
-
-	focus = {
-		id = KUS_establish_free_corps
-		icon = GFX_focus_generic_fascist_troops
-		x = 9
-		y = 12
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_on_our_own
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			set_rule = {
-				can_send_volunteers = yes
-			}
-			add_modifier = {
-				modifier = send_volunteers_tension
-				amount = -1.0
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_anti_katzen_diplomacy
-		icon = GFX_focus_generic_provoke_border_clashes
-		x = 13
-		y = 12
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_establish_free_corps
-			focus = KUS_alliance_with_roquale
-		}
-		mutually_exclusive = {
-			focus = KUS_forgive_and_forget
-		}
-		ai_will_do = {
-			factor = 3
-		}
-		completion_reward = {
-			add_war_support = 0.10
-		}
-	}
-
-	focus = {
-		id = KUS_forgive_and_forget
-		icon = GFX_focus_generic_royal_wedding
-		x = 15
-		y = 12
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_establish_free_corps
-			focus = KUS_alliance_with_roquale
-		}
-		mutually_exclusive = {
-			focus = KUS_anti_katzen_diplomacy
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_stability = 0.05
-			if = {
-				limit = { has_idea = KUS_racial_tensions }
-				remove_ideas = KUS_racial_tensions
-			}
-		}
-	}
-
-	focus = {
-	    id = KUS_align_roquale
-	    icon = GFX_focus_generic_strike_at_democracy1
-	    x = 10
-	    y = 13
-	    cost = 3.5
-	    prerequisite = { focus = KUS_anti_katzen_diplomacy }
-	    ai_will_do = {
-         factor = 3
-	    }
-	    completion_reward = {
-         create_wargoal = {
-             type = topple_government
-             target = ROQ
-         }
-	    }
-	}
-
-	focus = {
-		id = KUS_align_nakaton
-		icon = GFX_focus_generic_strike_at_democracy2
-		x = 12
-		y = 13
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_anti_katzen_diplomacy
-		}
-		ai_will_do = {
-			factor = 3
-		}
-		completion_reward = {
-			create_wargoal = {
-				type = topple_government
-				target = NEK
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_protectorate_in_the_meridale
-		icon = GFX_focus_generic_naval_invasion
-		x = 14
-		y = 13
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_forgive_and_forget
-		}
-		ai_will_do = {
-			factor = 3
-		}
-		completion_reward = {
-			create_wargoal = {
-				type = puppet_wargoal_focus
-				target = PRL
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_alliance_in_the_meridale
-		icon = GFX_focus_generic_diplomatic_treaty
-		x = 16
-		y = 13
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_forgive_and_forget
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			every_other_country = {
-				limit = {
-					is_herzlands_warlord = yes
-					has_government = ROOT
-					NOT = { has_war_with = ROOT }
-				}
-				ROOT = {
-					add_opinion_modifier = {
-						target = PREV
-						modifier = KUS_alliance_opinion
-					}
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_joint_technology_board
-		icon = GFX_focus_generic_nuclear_development
-		x = 16
-		y = 15
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_align_roquale
-			focus = KUS_align_nakaton
-			focus = KUS_protectorate_in_the_meridale
-			focus = KUS_alliance_in_the_meridale
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_research_slot = 1
-			add_tech_bonus = {
-				name = KUS_tech_sharing
-				bonus = 0.50
-				uses = 3
-				category = electronics
-			}
-		}
-	}
-
-	##################################
-	# INDUSTRY BRANCH
-	##################################
-
-	# Row 0: Starting focuses
-
-	focus = {
-		id = KUS_get_off_the_ground
-		icon = GFX_goal_generic_construction
-		x = -8
-		y = 0
-		cost = 10
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_ind_military_recovery
-		}
-	}
-
-	focus = {
-		id = KUS_lay_a_foundation
-		icon = GFX_focus_generic_industry_1
-		x = -4
-		y = 0
-		cost = 10
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_ind_civilian_recovery
-		}
-	}
-
-	# Row 1: Economic direction
-
-	focus = {
-		id = KUS_take_modern_economy_exam
-		icon = GFX_focus_generic_reorient_production
-		x = -8
-		y = 1
-		cost = 7
-		prerequisite = {
-			focus = KUS_get_off_the_ground
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_ind_modern_economy
-		}
-	}
-
-	focus = {
-		id = KUS_invest_in_rural_regions
-		icon = GFX_focus_generic_farmland
-		x = -6
-		y = 1
-		cost = 7
-		prerequisite = {
-			focus = KUS_get_off_the_ground
-			focus = KUS_lay_a_foundation
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			717 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-			716 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-			715 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_invest_in_urban_regions
-		icon = GFX_focus_generic_public_works
-		x = -4
-		y = 1
-		cost = 7
-		prerequisite = {
-			focus = KUS_lay_a_foundation
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			225 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			218 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-		}
-	}
-
-	# Row 2: Specific investments
-
-	focus = {
-		id = KUS_populate_the_economy
-		icon = GFX_focus_generic_full_social_mobilization
-		x = -9
-		y = 2
-		cost = 7
-		prerequisite = {
-			focus = KUS_take_modern_economy_exam
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_ind_populated_economy
-		}
-	}
-
-	focus = {
-		id = KUS_focus_on_coastal_infrastructure
-		icon = GFX_focus_generic_road_investment
-		x = -7
-		y = 2
-		cost = 7
-		prerequisite = {
-			focus = KUS_take_modern_economy_exam
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			218 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			225 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 2
-					instant_build = yes
-				}
-			}
-			add_ideas = KUS_ind_coastal_boost
-		}
-	}
-
-	focus = {
-		id = KUS_plug_energy_gaps
-		icon = GFX_focus_generic_oil_refineries
-		x = -5
-		y = 2
-		cost = 7
-		prerequisite = {
-			focus = KUS_invest_in_rural_regions
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			716 = {
-				add_resource = {
-					type = oil
-					amount = 14
-				}
-			}
-			add_ideas = KUS_ind_energy_boost
-		}
-	}
-
-	focus = {
-		id = KUS_revitalize_civilian_industry
-		icon = GFX_focus_generic_refit_civilian_ships
-		x = -3
-		y = 2
-		cost = 7
-		prerequisite = {
-			focus = KUS_invest_in_urban_regions
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_ind_civilian_boost
-			213 = {
-				add_extra_state_shared_building_slots = 1
-			}
-			229 = {
-				add_extra_state_shared_building_slots = 1
-			}
-		}
-	}
-
-	# Row 3: Convergence + Independent concerns
-
-	focus = {
-		id = KUS_public_investments
-		icon = GFX_focus_generic_industry_1
-		x = -6
-		y = 3
-		cost = 10
-		prerequisite = {
-			focus = KUS_populate_the_economy
-		}
-		prerequisite = {
-			focus = KUS_focus_on_coastal_infrastructure
-		}
-		prerequisite = {
-			focus = KUS_plug_energy_gaps
-		}
-		prerequisite = {
-			focus = KUS_revitalize_civilian_industry
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_ruined_economy }
-				swap_ideas = {
-					remove_idea = KUS_ruined_economy
-					add_idea = KUS_ind_recovering_economy
-				}
-			}
-			custom_effect_tooltip = KUS_public_investments_tt
-		}
-	}
-
-	focus = {
-		id = KUS_divikatel
-		icon = GFX_focus_generic_military_industry
-		x = 1
-		y = 3
-		cost = 3.5
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_divikatel_idea
-		}
-	}
-
-	# Row 4: Foreign investment + concerns
-
-	focus = {
-		id = KUS_tarva_polytechnical
-		icon = GFX_focus_generic_navy_research_bonus
-		x = 1
-		y = 4
-		cost = 3.5
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_tarva_polytechnical_idea
-		}
-	}
-
-	focus = {
-		id = KUS_undeveloped_navar
-		icon = GFX_focus_generic_provoke_border_clashes
-		x = -10
-		y = 5
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_public_investments
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			213 = {
-				add_dynamic_modifier = {
-					modifier = KUS_undeveloped_state
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_foreign_construction
-		icon = GFX_focus_generic_construction
-		x = -8
-		y = 5
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_public_investments
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_foreign_construction_idea
-		}
-	}
-
-	focus = {
-		id = KUS_invite_foreign_experts
-		icon = GFX_focus_generic_diplomatic_treaty
-		x = -6
-		y = 5
-		cost = 7
-		prerequisite = {
-			focus = KUS_public_investments
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_foreign_experts_idea
-		}
-	}
-
-	focus = {
-		id = KUS_fund_national_specialists
-		icon = GFX_focus_generic_military_academy
-		x = -4
-		y = 5
-		cost = 7
-		prerequisite = {
-			focus = KUS_invite_foreign_experts
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_divikatel_idea }
-				swap_ideas = {
-					remove_idea = KUS_divikatel_idea
-					add_idea = KUS_divikatel_idea_2
-				}
-			}
-			if = {
-				limit = { has_idea = KUS_tarva_polytechnical_idea }
-				swap_ideas = {
-					remove_idea = KUS_tarva_polytechnical_idea
-					add_idea = KUS_tarva_polytechnical_idea_2
-				}
-			}
-			if = {
-				limit = { has_idea = KUS_vao_extraction_idea }
-				swap_ideas = {
-					remove_idea = KUS_vao_extraction_idea
-					add_idea = KUS_vao_extraction_idea_2
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_hydroponics_factories
-		icon = GFX_focus_generic_farmland
-		x = -2
-		y = 5
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_public_investments
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			715 = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	# Row 4-5: Våo Extraction concern
-
-	focus = {
-		id = KUS_vao_extraction
-		icon = GFX_focus_generic_oil_refineries
-		x = 1
-		y = 5
-		cost = 3.5
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_vao_extraction_idea
-		}
-	}
-
-	# Row 6: Development row
-
-	focus = {
-		id = KUS_restore_navar
-		icon = GFX_focus_generic_construction
-		x = -10
-		y = 6
-		cost = 7
-		prerequisite = {
-			focus = KUS_undeveloped_navar
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			213 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 5
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = dockyard
-					level = 2
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_focus_teentraat
-		icon = GFX_focus_generic_road_investment
-		x = -8
-		y = 6
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_foreign_construction
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_teentraat_auto
-				bonus = 0.50
-				uses = 2
-				category = motorized_equipment
-			}
-			add_ideas = KUS_teentraat_idea
-		}
-	}
-
-	focus = {
-		id = KUS_begin_rearmament
-		icon = GFX_focus_generic_fascist_troops
-		x = -6
-		y = 6
-		cost = 7
-		prerequisite = {
-			focus = KUS_invite_foreign_experts
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_ind_recovering_economy }
-				swap_ideas = {
-					remove_idea = KUS_ind_recovering_economy
-					add_idea = KUS_ind_normalized_economy
-				}
-			}
-			218 = {
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = {
-					type = arms_factory
-					level = 3
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_found_nuclear_energy_org
-		icon = GFX_focus_generic_nuclear_development
-		x = -4
-		y = 6
-		cost = 7
-		prerequisite = {
-			focus = KUS_fund_national_specialists
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_nuclear_research
-				bonus = 1.0
-				uses = 2
-				category = nuclear
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_state_resource_investment
-		icon = GFX_focus_generic_reorient_production
-		x = -2
-		y = 6
-		cost = 7
-		prerequisite = {
-			focus = KUS_fund_national_specialists
-			focus = KUS_hydroponics_factories
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_ind_recovering_economy }
-				swap_ideas = {
-					remove_idea = KUS_ind_recovering_economy
-					add_idea = KUS_ind_normalized_economy
-				}
-			}
-			add_ideas = KUS_ind_resource_investment
-		}
-	}
-
-	focus = {
-		id = KUS_found_elning
-		icon = GFX_focus_generic_industry_1
-		x = 0
-		y = 6
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_hydroponics_factories
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_elning_idea
-		}
-	}
-
-	# Row 7: Industry expansion row
-
-	focus = {
-		id = KUS_finalize_development
-		icon = GFX_focus_generic_public_works
-		x = -10
-		y = 7
-		cost = 7
-		prerequisite = {
-			focus = KUS_restore_navar
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			213 = {
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = {
-					type = industrial_complex
-					level = 3
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = arms_factory
-					level = 4
-					instant_build = yes
-				}
-				remove_dynamic_modifier = {
-					modifier = KUS_undeveloped_state
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_domestic_arms_industry
-		icon = GFX_focus_generic_military_industry
-		x = -8
-		y = 7
-		cost = 7
-		prerequisite = {
-			focus = KUS_focus_teentraat
-		}
-		prerequisite = {
-			focus = KUS_begin_rearmament
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_ind_normalized_economy }
-				swap_ideas = {
-					remove_idea = KUS_ind_normalized_economy
-					add_idea = KUS_ind_normalized_economy_2
-				}
-			}
-			716 = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-			}
-			218 = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_reserve_kaiser_machinery
-		icon = GFX_focus_generic_refit_civilian_ships
-		x = -6
-		y = 7
-		cost = 7
-		prerequisite = {
-			focus = KUS_begin_rearmament
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_ind_normalized_economy }
-				swap_ideas = {
-					remove_idea = KUS_ind_normalized_economy
-					add_idea = KUS_ind_normalized_economy_2
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_expand_nuclear_institute
-		icon = GFX_focus_generic_nuclear_development
-		x = -4
-		y = 7
-		cost = 7
-		prerequisite = {
-			focus = KUS_found_nuclear_energy_org
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_research_slot = 1
-		}
-	}
-
-	focus = {
-		id = KUS_expand_vao_extraction
-		icon = GFX_focus_generic_oil_refineries
-		x = -2
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_state_resource_investment
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			229 = {
-				add_resource = {
-					type = oil
-					amount = 10
-				}
-			}
-			716 = {
-				add_resource = {
-					type = oil
-					amount = 8
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_rebuild_excavation_facility
-		icon = GFX_focus_generic_construction
-		x = 0
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_state_resource_investment
-			focus = KUS_found_elning
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			225 = {
-				add_resource = {
-					type = steel
-					amount = 9
-				}
-			}
-			231 = {
-				add_resource = {
-					type = chromium
-					amount = 4
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_modernize_extraction
-		icon = GFX_focus_generic_railroad
-		x = 2
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_found_elning
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			225 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			231 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_empower_divikatel
-		icon = GFX_focus_generic_military_industry
-		x = 4
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_found_elning
-		}
-		prerequisite = {
-			focus = KUS_divikatel
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_divikatel_idea_2 }
-				swap_ideas = {
-					remove_idea = KUS_divikatel_idea_2
-					add_idea = KUS_divikatel_idea_3
-				}
-			}
-			if = {
-				limit = { has_idea = KUS_divikatel_idea }
-				swap_ideas = {
-					remove_idea = KUS_divikatel_idea
-					add_idea = KUS_divikatel_idea_3
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_rare_earth_refineries
-		icon = GFX_focus_generic_reorient_production
-		x = 5
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_modernize_extraction
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			231 = {
-				add_resource = {
-					type = chromium
-					amount = 3
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_rare_earth_refineries_2
-		icon = GFX_focus_generic_reorient_production
-		x = 6
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_rare_earth_refineries
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			225 = {
-				add_resource = {
-					type = steel
-					amount = 5
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_create_bauxite_refineries
-		icon = GFX_focus_generic_industry_1
-		x = 7
-		y = 7
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_modernize_extraction
-			focus = KUS_empower_divikatel
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			717 = {
-				add_resource = {
-					type = aluminium
-					amount = 4
-				}
-			}
-			225 = {
-				add_resource = {
-					type = aluminium
-					amount = 3
-				}
-			}
-		}
-	}
-
-	# Row 8: Processing and mining
-
-	focus = {
-		id = KUS_kusnurk_war_economy
-		icon = GFX_focus_generic_total_war
-		x = -8
-		y = 8
-		cost = 10
-		prerequisite = {
-			focus = KUS_domestic_arms_industry
-		}
-		prerequisite = {
-			focus = KUS_reserve_kaiser_machinery
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_war_economy_idea
-		}
-	}
-
-	focus = {
-		id = KUS_recall_arms_experts
-		icon = GFX_focus_generic_military_academy
-		x = -6
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_reserve_kaiser_machinery
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_ind_normalized_economy_2 }
-				swap_ideas = {
-					remove_idea = KUS_ind_normalized_economy_2
-					add_idea = KUS_ind_normalized_economy_3
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_monazite_excavation
-		icon = GFX_focus_generic_construction
-		x = -3
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_expand_vao_extraction
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			231 = {
-				add_resource = {
-					type = fissiles
-					amount = 4
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_restore_copperzinc
-		icon = GFX_focus_generic_refit_civilian_ships
-		x = -1
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_rebuild_excavation_facility
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			225 = {
-				add_resource = {
-					type = steel
-					amount = 10
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_open_kohla_mining
-		icon = GFX_focus_generic_construction
-		x = 1
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_rebuild_excavation_facility
-			focus = KUS_modernize_extraction
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			717 = {
-				add_resource = {
-					type = aluminium
-					amount = 5
-				}
-				add_resource = {
-					type = chromium
-					amount = 3
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_monazite_processing
-		icon = GFX_focus_generic_reorient_production
-		x = 3
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_rare_earth_refineries_2
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			231 = {
-				add_resource = {
-					type = fissiles
-					amount = 5
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_expand_bauxite
-		icon = GFX_focus_generic_industry_1
-		x = 5
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_create_bauxite_refineries
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			717 = {
-				add_resource = {
-					type = aluminium
-					amount = 6
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_expand_jarvalin_aluminum
-		icon = GFX_focus_generic_reorient_production
-		x = 6
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_create_bauxite_refineries
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			218 = {
-				add_resource = {
-					type = aluminium
-					amount = 12
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_synthetic_refineries
-		icon = GFX_focus_generic_oil_refineries
-		x = 8
-		y = 8
-		cost = 3.5
-		prerequisite = {
-			focus = KUS_create_bauxite_refineries
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			716 = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = synthetic_refinery
-					level = 2
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	# Row 9: Final focuses
-
-	focus = {
-		id = KUS_military_industrial_complex
-		icon = GFX_focus_generic_total_war
-		x = -7
-		y = 9
-		cost = 10
-		prerequisite = {
-			focus = KUS_kusnurk_war_economy
-		}
-		prerequisite = {
-			focus = KUS_recall_arms_experts
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			add_ideas = KUS_military_industrial_complex_idea
-		}
-	}
-
-	focus = {
-		id = KUS_develop_nuclear_energy
-		icon = GFX_focus_generic_nuclear_development
-		x = -3
-		y = 9
-		cost = 10
-		prerequisite = {
-			focus = KUS_expand_nuclear_institute
-		}
-		prerequisite = {
-			focus = KUS_monazite_excavation
-		}
-		ai_will_do = {
-			factor = 5
-		}
-		completion_reward = {
-			218 = {
-				add_building_construction = {
-					type = nuclear_reactor
-					level = 1
-					instant_build = yes
-				}
-			}
-			225 = {
-				add_building_construction = {
-					type = nuclear_reactor
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-	}
+    id = KUS_TREE
+    country = {
+        factor = 0
+        modifier = {
+            add = 100
+            tag = KUS
+        }
+    }
+    continuous_focus_position = { x = 2700 y = 300 }
+
+    focus = {
+        id = KUS_steady_the_course
+        icon = GFX_goal_generic_propaganda
+        x = 12
+        y = 0
+        cost = 10
+        ai_will_do = {
+            factor = 10
+        }
+        completion_reward = {
+            activate_advisor = KUS_Talvan_Rahha
+        }
+    }
+
+    focus = {
+        id = KUS_civil_reform
+        icon = GFX_focus_generic_court
+        x = 11
+        y = 1
+        cost = 10
+        prerequisite = { focus = KUS_steady_the_course }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_political_power = 100
+            activate_advisor = KUS_Jon_Trike
+            activate_advisor = KUS_Larmet_Dae
+            add_popularity = {
+                ideology = democratic
+                popularity = 0.05
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_ministry_of_public_affairs
+        icon = GFX_focus_generic_public_works
+        x = 13
+        y = 1
+        cost = 10
+        prerequisite = { focus = KUS_steady_the_course }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            218 = {
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 1
+                    instant_build = yes
+                }
+            }
+            add_popularity = {
+                ideology = democratic
+                popularity = 0.10
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_clamp_down_on_extremists
+        icon = GFX_focus_generic_national_security
+        x = 11
+        y = 2
+        cost = 10
+        prerequisite = { focus = KUS_civil_reform }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_stability = 0.05
+            add_popularity = {
+                ideology = communism
+                popularity = -0.04
+            }
+            add_popularity = {
+                ideology = fascism
+                popularity = -0.05
+            }
+            add_timed_idea = {
+                idea = KUS_crackdown_effect
+                days = 30
+            }
+            swap_ideas = {
+                remove_idea = KUS_rampant_extremism
+                add_idea = KUS_suppressed_extremism
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_food_security_aid
+        icon = GFX_focus_generic_farmland
+        x = 13
+        y = 2
+        cost = 10
+        prerequisite = { focus = KUS_ministry_of_public_affairs }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            225 = {
+                add_resource = {
+                    type = food
+                    amount = 2
+                }
+            }
+            231 = {
+                add_resource = {
+                    type = food
+                    amount = 1
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_expedited_recovery
+        icon = GFX_focus_generic_industry_1
+        x = 11
+        y = 3
+        cost = 7
+        prerequisite = { focus = KUS_clamp_down_on_extremists }
+        prerequisite = { focus = KUS_food_security_aid }
+        mutually_exclusive = { focus = KUS_sustainable_development }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            custom_effect_tooltip = KUS_expedited_recovery_tt
+            every_owned_state = {
+                limit = {
+                    is_core_of = KUS
+                }
+                add_extra_state_shared_building_slots = 1
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_sustainable_development
+        icon = GFX_focus_generic_road_investment
+        x = 13
+        y = 3
+        cost = 7
+        prerequisite = { focus = KUS_clamp_down_on_extremists }
+        prerequisite = { focus = KUS_food_security_aid }
+        mutually_exclusive = { focus = KUS_expedited_recovery }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            custom_effect_tooltip = KUS_sustainable_development_tt
+            every_owned_state = {
+                limit = {
+                    is_core_of = KUS
+                }
+                add_extra_state_shared_building_slots = 1
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_stimulus_package
+        icon = GFX_focus_generic_reorient_production
+        x = 10
+        y = 4
+        cost = 3.5
+        prerequisite = { focus = KUS_expedited_recovery }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            swap_ideas = {
+                remove_idea = KUS_ruined_economy
+                add_idea = KUS_stimulus_economy
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_increase_manufacturing
+        icon = GFX_focus_generic_military_industry
+        x = 13
+        y = 4
+        cost = 3.5
+        prerequisite = { focus = KUS_expedited_recovery focus = KUS_sustainable_development }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            swap_ideas = {
+                remove_idea = KUS_ruined_economy
+                add_idea = KUS_manufacturing_economy
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_infrastructure_investments
+        icon = GFX_focus_generic_railroad
+        x = 15
+        y = 4
+        cost = 3.5
+        prerequisite = { focus = KUS_sustainable_development }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            every_owned_state = {
+                limit = {
+                    is_core_of = KUS
+                }
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_through_the_bottleneck
+        icon = GFX_focus_generic_industry_1
+        x = 10
+        y = 5
+        cost = 3.5
+        prerequisite = { focus = KUS_stimulus_package }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_stimulus_economy }
+                swap_ideas = {
+                    remove_idea = KUS_stimulus_economy
+                    add_idea = KUS_bottleneck_economy
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_careful_investment
+        icon = GFX_focus_generic_refit_civilian_ships
+        x = 13
+        y = 5
+        cost = 3.5
+        prerequisite = { focus = KUS_increase_manufacturing }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_manufacturing_economy }
+                swap_ideas = {
+                    remove_idea = KUS_manufacturing_economy
+                    add_idea = KUS_careful_economy
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_schools_hospitals_farms
+        icon = GFX_focus_generic_low_cost_housing
+        x = 15
+        y = 5
+        cost = 3.5
+        prerequisite = { focus = KUS_infrastructure_investments }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_stability = 0.05
+            add_research_slot = 1
+        }
+    }
+
+    focus = {
+        id = KUS_a_recovering_economy
+        icon = GFX_focus_generic_industry_1
+        x = 10
+        y = 6
+        cost = 7
+        prerequisite = { focus = KUS_through_the_bottleneck }
+        mutually_exclusive = { focus = KUS_a_new_foundation }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_bottleneck_economy }
+                remove_ideas = KUS_bottleneck_economy
+            }
+            if = {
+                limit = { has_idea = KUS_ruined_economy }
+                remove_ideas = KUS_ruined_economy
+            }
+            add_ideas = KUS_recovering_economy
+        }
+    }
+
+    focus = {
+        id = KUS_a_new_foundation
+        icon = GFX_focus_generic_public_works
+        x = 14
+        y = 6
+        cost = 7
+        prerequisite = { focus = KUS_careful_investment focus = KUS_schools_hospitals_farms }
+        mutually_exclusive = { focus = KUS_a_recovering_economy }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_careful_economy }
+                remove_ideas = KUS_careful_economy
+            }
+            if = {
+                limit = { has_idea = KUS_ruined_economy }
+                remove_ideas = KUS_ruined_economy
+            }
+            add_ideas = KUS_economic_resources
+            add_ideas = KUS_solid_foundation
+        }
+    }
+
+    focus = {
+        id = KUS_merit_group
+        icon = GFX_focus_generic_military_academy
+        x = 9
+        y = 7
+        cost = 3.5
+        prerequisite = { focus = KUS_a_recovering_economy focus = KUS_a_new_foundation }
+        mutually_exclusive = { focus = KUS_endow_presidential_power }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_merit_group
+        }
+    }
+
+    focus = {
+        id = KUS_endow_presidential_power
+        icon = GFX_focus_generic_court
+        x = 12
+        y = 7
+        cost = 3.5
+        prerequisite = { focus = KUS_a_recovering_economy focus = KUS_a_new_foundation }
+        mutually_exclusive = { focus = KUS_merit_group }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_political_power = 100
+            add_stability = 0.05
+            add_war_support = 0.05
+        }
+    }
+
+    focus = {
+        id = KUS_invite_back_exiles
+        icon = GFX_focus_generic_diplomatic_treaty
+        x = 9
+        y = 8
+        cost = 3.5
+        prerequisite = { focus = KUS_merit_group }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            swap_ideas = {
+                remove_idea = KUS_merit_group
+                add_idea = KUS_merit_group_improved
+            }
+            activate_advisor = KUS_Keira_Knit
+            activate_advisor = KUS_Robin_Mudie
+        }
+    }
+
+    focus = {
+        id = KUS_technology_institute
+        icon = GFX_focus_generic_navy_research_bonus
+        x = 9
+        y = 9
+        cost = 3.5
+        prerequisite = { focus = KUS_invite_back_exiles }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_research_slot = 1
+        }
+    }
+
+    focus = {
+        id = KUS_align_the_military
+        icon = GFX_focus_generic_military_dictatorship
+        x = 11
+        y = 8
+        cost = 3.5
+        prerequisite = { focus = KUS_endow_presidential_power }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_political_power = 50
+            add_country_leader_trait = {
+                ideology = centrism
+                trait = political_connections
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_endorse_political_party
+        icon = GFX_focus_generic_full_social_mobilization
+        x = 13
+        y = 8
+        cost = 3.5
+        prerequisite = { focus = KUS_endow_presidential_power }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_national_power
+        }
+    }
+
+    focus = {
+        id = KUS_kulsnudgj
+        icon = GFX_focus_generic_secret_service_agency
+        x = 15
+        y = 8
+        cost = 3.5
+        prerequisite = { focus = KUS_endow_presidential_power }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_kulsnudgj_idea
+        }
+    }
+
+    focus = {
+        id = KUS_drum_up_war_support
+        icon = GFX_focus_generic_total_war
+        x = 11
+        y = 9
+        cost = 3.5
+        prerequisite = { focus = KUS_align_the_military }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_war_support = 0.12
+            add_stability = 0.04
+        }
+    }
+
+    focus = {
+        id = KUS_development_funds
+        icon = GFX_focus_generic_public_works
+        x = 13
+        y = 9
+        cost = 3.5
+        prerequisite = { focus = KUS_endorse_political_party focus = KUS_kulsnudgj }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            every_owned_state = {
+                limit = {
+                    is_core_of = KUS
+                }
+                add_extra_state_shared_building_slots = 1
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_research_greater_kusnurk
+        icon = GFX_focus_generic_annex_country
+        x = 12
+        y = 10
+        cost = 7
+        prerequisite = { focus = KUS_technology_institute focus = KUS_drum_up_war_support focus = KUS_development_funds }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_nation_of_free
+        }
+    }
+
+    focus = {
+        id = KUS_on_our_own
+        icon = GFX_focus_generic_monarchy_1
+        x = 10
+        y = 11
+        cost = 3.5
+        prerequisite = { focus = KUS_research_greater_kusnurk }
+        mutually_exclusive = { focus = KUS_alliance_with_roquale }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_destiny_of_kusnurk
+            set_rule = { can_create_factions = yes }
+        }
+    }
+
+    focus = {
+        id = KUS_alliance_with_roquale
+        icon = GFX_focus_generic_diplomatic_treaty
+        x = 14
+        y = 11
+        cost = 3.5
+        prerequisite = { focus = KUS_research_greater_kusnurk }
+        mutually_exclusive = { focus = KUS_on_our_own }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_opinion_modifier = {
+                target = ROQ
+                modifier = KUS_alliance_opinion
+            }
+            ROQ = {
+                add_opinion_modifier = {
+                    target = KUS
+                    modifier = KUS_alliance_opinion
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_establish_free_corps
+        icon = GFX_focus_generic_fascist_troops
+        x = 9
+        y = 12
+        cost = 3.5
+        prerequisite = { focus = KUS_on_our_own }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            set_rule = {
+                can_send_volunteers = yes
+            }
+            add_modifier = {
+                modifier = send_volunteers_tension
+                amount = -1.0
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_anti_katzen_diplomacy
+        icon = GFX_focus_generic_provoke_border_clashes
+        x = 13
+        y = 12
+        cost = 3.5
+        prerequisite = { focus = KUS_establish_free_corps focus = KUS_alliance_with_roquale }
+        mutually_exclusive = { focus = KUS_forgive_and_forget }
+        ai_will_do = {
+            factor = 3
+        }
+        completion_reward = {
+            add_war_support = 0.10
+        }
+    }
+
+    focus = {
+        id = KUS_forgive_and_forget
+        icon = GFX_focus_generic_royal_wedding
+        x = 15
+        y = 12
+        cost = 3.5
+        prerequisite = { focus = KUS_establish_free_corps focus = KUS_alliance_with_roquale }
+        mutually_exclusive = { focus = KUS_anti_katzen_diplomacy }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_stability = 0.05
+            if = {
+                limit = { has_idea = KUS_racial_tensions }
+                remove_ideas = KUS_racial_tensions
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_align_roquale
+        icon = GFX_focus_generic_strike_at_democracy1
+        x = 10
+        y = 13
+        cost = 3.5
+        prerequisite = { focus = KUS_anti_katzen_diplomacy }
+        ai_will_do = {
+            factor = 3
+        }
+        completion_reward = {
+            create_wargoal = {
+                type = topple_government
+                target = ROQ
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_align_nakaton
+        icon = GFX_focus_generic_strike_at_democracy2
+        x = 12
+        y = 13
+        cost = 3.5
+        prerequisite = { focus = KUS_anti_katzen_diplomacy }
+        ai_will_do = {
+            factor = 3
+        }
+        completion_reward = {
+            create_wargoal = {
+                type = topple_government
+                target = NEK
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_protectorate_in_the_meridale
+        icon = GFX_focus_generic_naval_invasion
+        x = 14
+        y = 13
+        cost = 3.5
+        prerequisite = { focus = KUS_forgive_and_forget }
+        ai_will_do = {
+            factor = 3
+        }
+        completion_reward = {
+            create_wargoal = {
+                type = puppet_wargoal_focus
+                target = PRL
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_alliance_in_the_meridale
+        icon = GFX_focus_generic_diplomatic_treaty
+        x = 16
+        y = 13
+        cost = 3.5
+        prerequisite = { focus = KUS_forgive_and_forget }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            every_other_country = {
+                limit = {
+                    is_herzlands_warlord = yes
+                    has_government = ROOT
+                    NOT = { has_war_with = ROOT }
+                }
+                ROOT = {
+                    add_opinion_modifier = {
+                        target = PREV
+                        modifier = KUS_alliance_opinion
+                    }
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_joint_technology_board
+        icon = GFX_focus_generic_nuclear_development
+        x = 16
+        y = 15
+        cost = 3.5
+        prerequisite = { focus = KUS_align_roquale focus = KUS_align_nakaton focus = KUS_protectorate_in_the_meridale focus = KUS_alliance_in_the_meridale }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_research_slot = 1
+            add_tech_bonus = {
+                name = KUS_tech_sharing
+                bonus = 0.50
+                uses = 3
+                category = electronics
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_get_off_the_ground
+        icon = GFX_goal_generic_construction
+        x = -8
+        y = 0
+        cost = 10
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_ind_military_recovery
+        }
+    }
+
+    focus = {
+        id = KUS_lay_a_foundation
+        icon = GFX_focus_generic_industry_1
+        x = -4
+        y = 0
+        cost = 10
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_ind_civilian_recovery
+        }
+    }
+
+    focus = {
+        id = KUS_take_modern_economy_exam
+        icon = GFX_focus_generic_reorient_production
+        x = -6
+        y = 1
+        cost = 7
+        prerequisite = { focus = KUS_lay_a_foundation }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_ind_modern_economy
+        }
+    }
+
+    focus = {
+        id = KUS_invest_in_rural_regions
+        icon = GFX_focus_generic_farmland
+        x = -4
+        y = 1
+        cost = 7
+        prerequisite = { focus = KUS_get_off_the_ground focus = KUS_lay_a_foundation }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            717 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+                add_extra_state_shared_building_slots = 1
+            }
+            716 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+                add_extra_state_shared_building_slots = 1
+            }
+            715 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+                add_extra_state_shared_building_slots = 1
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_invest_in_urban_regions
+        icon = GFX_focus_generic_public_works
+        x = -2
+        y = 1
+        cost = 7
+        prerequisite = { focus = KUS_lay_a_foundation }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            225 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+                add_extra_state_shared_building_slots = 2
+            }
+            218 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+                add_extra_state_shared_building_slots = 2
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_populate_the_economy
+        icon = GFX_focus_generic_full_social_mobilization
+        x = -9
+        y = 2
+        cost = 7
+        prerequisite = { focus = KUS_take_modern_economy_exam }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_ind_populated_economy
+        }
+    }
+
+    focus = {
+        id = KUS_focus_on_coastal_infrastructure
+        icon = GFX_focus_generic_road_investment
+        x = -7
+        y = 2
+        cost = 7
+        prerequisite = { focus = KUS_take_modern_economy_exam }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            218 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+            }
+            225 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 2
+                    instant_build = yes
+                }
+            }
+            add_ideas = KUS_ind_coastal_boost
+        }
+    }
+
+    focus = {
+        id = KUS_plug_energy_gaps
+        icon = GFX_focus_generic_oil_refineries
+        x = -5
+        y = 2
+        cost = 7
+        prerequisite = { focus = KUS_invest_in_rural_regions }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            716 = {
+                add_resource = {
+                    type = oil
+                    amount = 14
+                }
+            }
+            add_ideas = KUS_ind_energy_boost
+        }
+    }
+
+    focus = {
+        id = KUS_revitalize_civilian_industry
+        icon = GFX_focus_generic_refit_civilian_ships
+        x = -3
+        y = 2
+        cost = 7
+        prerequisite = { focus = KUS_invest_in_urban_regions }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_ind_civilian_boost
+            213 = {
+                add_extra_state_shared_building_slots = 1
+            }
+            229 = {
+                add_extra_state_shared_building_slots = 1
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_public_investments
+        icon = GFX_focus_generic_industry_1
+        x = -6
+        y = 3
+        cost = 10
+        prerequisite = { focus = KUS_populate_the_economy }
+        prerequisite = { focus = KUS_focus_on_coastal_infrastructure }
+        prerequisite = { focus = KUS_plug_energy_gaps }
+        prerequisite = { focus = KUS_revitalize_civilian_industry }
+        ai_will_do = {
+            factor = 10
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_ruined_economy }
+                swap_ideas = {
+                    remove_idea = KUS_ruined_economy
+                    add_idea = KUS_ind_recovering_economy
+                }
+            }
+            custom_effect_tooltip = KUS_public_investments_tt
+        }
+    }
+
+    focus = {
+        id = KUS_foreign_construction
+        icon = GFX_focus_generic_construction
+        x = -11
+        y = 6
+        cost = 3.5
+        prerequisite = { focus = KUS_public_investments }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_foreign_construction_idea
+        }
+    }
+
+    focus = {
+        id = KUS_invite_foreign_experts
+        icon = GFX_focus_generic_diplomatic_treaty
+        x = -7
+        y = 4
+        cost = 7
+        prerequisite = { focus = KUS_public_investments }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_foreign_experts_idea
+        }
+    }
+
+    focus = {
+        id = KUS_fund_national_specialists
+        icon = GFX_focus_generic_military_academy
+        x = -5
+        y = 4
+        cost = 7
+        prerequisite = { focus = KUS_invite_foreign_experts }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_divikatel_idea }
+                swap_ideas = {
+                    remove_idea = KUS_divikatel_idea
+                    add_idea = KUS_divikatel_idea_2
+                }
+            }
+            if = {
+                limit = { has_idea = KUS_tarva_polytechnical_idea }
+                swap_ideas = {
+                    remove_idea = KUS_tarva_polytechnical_idea
+                    add_idea = KUS_tarva_polytechnical_idea_2
+                }
+            }
+            if = {
+                limit = { has_idea = KUS_vao_extraction_idea }
+                swap_ideas = {
+                    remove_idea = KUS_vao_extraction_idea
+                    add_idea = KUS_vao_extraction_idea_2
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_hydroponics_factories
+        icon = GFX_focus_generic_farmland
+        x = -3
+        y = 5
+        cost = 3.5
+        prerequisite = { focus = KUS_public_investments }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            715 = {
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 2
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_restore_navar
+        icon = GFX_focus_generic_construction
+        x = -11
+        y = 7
+        cost = 7
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            213 = {
+                add_building_construction = {
+                    type = infrastructure
+                    level = 2
+                    instant_build = yes
+                }
+                add_extra_state_shared_building_slots = 5
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 1
+                    instant_build = yes
+                }
+                add_building_construction = {
+                    type = dockyard
+                    level = 2
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_focus_teentraat
+        icon = GFX_focus_generic_road_investment
+        x = -10
+        y = 5
+        cost = 3.5
+        prerequisite = { focus = KUS_foreign_construction }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_tech_bonus = {
+                name = KUS_teentraat_auto
+                bonus = 0.50
+                uses = 2
+                category = motorized_equipment
+            }
+            add_ideas = KUS_teentraat_idea
+        }
+    }
+
+    focus = {
+        id = KUS_begin_rearmament
+        icon = GFX_focus_generic_fascist_troops
+        x = -8
+        y = 5
+        cost = 7
+        prerequisite = { focus = KUS_invite_foreign_experts }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_ind_recovering_economy }
+                swap_ideas = {
+                    remove_idea = KUS_ind_recovering_economy
+                    add_idea = KUS_ind_normalized_economy
+                }
+            }
+            218 = {
+                add_extra_state_shared_building_slots = 3
+                add_building_construction = {
+                    type = arms_factory
+                    level = 3
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_found_nuclear_energy_org
+        icon = GFX_focus_generic_nuclear_development
+        x = -5
+        y = 6
+        cost = 7
+        prerequisite = { focus = KUS_fund_national_specialists }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_tech_bonus = {
+                name = KUS_nuclear_research
+                bonus = 1.0
+                uses = 2
+                category = nuclear
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_state_resource_investment
+        icon = GFX_focus_generic_reorient_production
+        x = -3
+        y = 6
+        cost = 7
+        prerequisite = { focus = KUS_fund_national_specialists focus = KUS_hydroponics_factories }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_ind_recovering_economy }
+                swap_ideas = {
+                    remove_idea = KUS_ind_recovering_economy
+                    add_idea = KUS_ind_normalized_economy
+                }
+            }
+            add_ideas = KUS_ind_resource_investment
+        }
+    }
+
+    focus = {
+        id = KUS_found_elning
+        icon = GFX_focus_generic_industry_1
+        x = -1
+        y = 6
+        cost = 3.5
+        prerequisite = { focus = KUS_hydroponics_factories }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_elning_idea
+        }
+    }
+
+    focus = {
+        id = KUS_finalize_development
+        icon = GFX_focus_generic_public_works
+        x = -11
+        y = 8
+        cost = 7
+        prerequisite = { focus = KUS_restore_navar }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            213 = {
+                add_extra_state_shared_building_slots = 3
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 3
+                    instant_build = yes
+                }
+                add_building_construction = {
+                    type = arms_factory
+                    level = 4
+                    instant_build = yes
+                }
+                remove_dynamic_modifier = {
+                    modifier = KUS_undeveloped_state
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_domestic_arms_industry
+        icon = GFX_focus_generic_military_industry
+        x = -9
+        y = 6
+        cost = 7
+        prerequisite = { focus = KUS_focus_teentraat }
+        prerequisite = { focus = KUS_begin_rearmament }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_ind_normalized_economy }
+                swap_ideas = {
+                    remove_idea = KUS_ind_normalized_economy
+                    add_idea = KUS_ind_normalized_economy_2
+                }
+            }
+            716 = {
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = arms_factory
+                    level = 2
+                    instant_build = yes
+                }
+            }
+            218 = {
+                add_extra_state_shared_building_slots = 1
+                add_building_construction = {
+                    type = arms_factory
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_reserve_kaiser_machinery
+        icon = GFX_focus_generic_refit_civilian_ships
+        x = -7
+        y = 6
+        cost = 7
+        prerequisite = { focus = KUS_begin_rearmament }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_ind_normalized_economy }
+                swap_ideas = {
+                    remove_idea = KUS_ind_normalized_economy
+                    add_idea = KUS_ind_normalized_economy_2
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_expand_nuclear_institute
+        icon = GFX_focus_generic_nuclear_development
+        x = -5
+        y = 7
+        cost = 7
+        prerequisite = { focus = KUS_found_nuclear_energy_org }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_research_slot = 1
+        }
+    }
+
+    focus = {
+        id = KUS_expand_vao_extraction
+        icon = GFX_focus_generic_oil_refineries
+        x = -3
+        y = 7
+        cost = 3.5
+        prerequisite = { focus = KUS_state_resource_investment }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            229 = {
+                add_resource = {
+                    type = oil
+                    amount = 10
+                }
+            }
+            716 = {
+                add_resource = {
+                    type = oil
+                    amount = 8
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_empower_divikatel
+        icon = GFX_focus_generic_military_industry
+        x = -1
+        y = 7
+        cost = 3.5
+        prerequisite = { focus = KUS_found_elning }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_divikatel_idea_2 }
+                swap_ideas = {
+                    remove_idea = KUS_divikatel_idea_2
+                    add_idea = KUS_divikatel_idea_3
+                }
+            }
+            if = {
+                limit = { has_idea = KUS_divikatel_idea }
+                swap_ideas = {
+                    remove_idea = KUS_divikatel_idea
+                    add_idea = KUS_divikatel_idea_3
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_kusnurk_war_economy
+        icon = GFX_focus_generic_total_war
+        x = -9
+        y = 7
+        cost = 10
+        prerequisite = { focus = KUS_domestic_arms_industry }
+        prerequisite = { focus = KUS_reserve_kaiser_machinery }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_war_economy_idea
+        }
+    }
+
+    focus = {
+        id = KUS_recall_arms_experts
+        icon = GFX_focus_generic_military_academy
+        x = -7
+        y = 7
+        cost = 3.5
+        prerequisite = { focus = KUS_reserve_kaiser_machinery }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            if = {
+                limit = { has_idea = KUS_ind_normalized_economy_2 }
+                swap_ideas = {
+                    remove_idea = KUS_ind_normalized_economy_2
+                    add_idea = KUS_ind_normalized_economy_3
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_monazite_excavation
+        icon = GFX_focus_generic_construction
+        x = -3
+        y = 8
+        cost = 3.5
+        prerequisite = { focus = KUS_expand_vao_extraction }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            231 = {
+                add_resource = {
+                    type = fissiles
+                    amount = 4
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_synthetic_refineries
+        icon = GFX_focus_generic_oil_refineries
+        x = -1
+        y = 8
+        cost = 3.5
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            716 = {
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = synthetic_refinery
+                    level = 2
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = KUS_military_industrial_complex
+        icon = GFX_focus_generic_total_war
+        x = -8
+        y = 8
+        cost = 10
+        prerequisite = { focus = KUS_kusnurk_war_economy }
+        prerequisite = { focus = KUS_recall_arms_experts }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            add_ideas = KUS_military_industrial_complex_idea
+        }
+    }
+
+    focus = {
+        id = KUS_develop_nuclear_energy
+        icon = GFX_focus_generic_nuclear_development
+        x = -4
+        y = 9
+        cost = 10
+        prerequisite = { focus = KUS_expand_nuclear_institute }
+        prerequisite = { focus = KUS_monazite_excavation }
+        ai_will_do = {
+            factor = 5
+        }
+        completion_reward = {
+            218 = {
+                add_building_construction = {
+                    type = nuclear_reactor
+                    level = 1
+                    instant_build = yes
+                }
+            }
+            225 = {
+                add_building_construction = {
+                    type = nuclear_reactor
+                    level = 1
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
 }
