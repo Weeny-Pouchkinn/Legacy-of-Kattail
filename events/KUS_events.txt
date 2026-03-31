@@ -1,0 +1,69 @@
+add_namespace = KUS_army
+
+# MkT Project - Tank Research Choice Event
+country_event = {
+	id = KUS_army.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_army.1" }
+	title = KUS_army.1.t
+	desc = KUS_army.1.d
+	picture = GFX_report_event_generic_military
+
+	is_triggered_only = yes
+
+	# Focus on Tank Destroyers and hard attack
+	option = {
+		name = KUS_army.1.a
+		add_tech_bonus = {
+			name = KUS_mkt_td
+			bonus = 1.0
+			uses = 1
+			category = cat_anti_tank
+		}
+	}
+
+	# Focus on SPG and Motorized speed
+	option = {
+		name = KUS_army.1.b
+		add_tech_bonus = {
+			name = KUS_mkt_spg
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		add_to_variable = { KUS_KAF_army_speed_factor = 0.05 }
+	}
+}
+
+# PKP Project - Tank Research Choice Event
+country_event = {
+	id = KUS_army.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_army.2" }
+	title = KUS_army.2.t
+	desc = KUS_army.2.d
+	picture = GFX_report_event_generic_military
+
+	is_triggered_only = yes
+
+	# Focus on Tank Destroyer hard attack
+	option = {
+		name = KUS_army.2.a
+		add_tech_bonus = {
+			name = KUS_pkp_td
+			bonus = 1.0
+			uses = 1
+			category = cat_anti_tank
+		}
+	}
+
+	# Focus on Tank Destroyer and Motorized speed
+	option = {
+		name = KUS_army.2.b
+		add_to_variable = { KUS_KAF_army_speed_factor = 0.05 }
+		add_tech_bonus = {
+			name = KUS_pkp_motor
+			bonus = 1.0
+			uses = 1
+			category = motorized_equipment
+		}
+	}
+}

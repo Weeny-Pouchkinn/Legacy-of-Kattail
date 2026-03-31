@@ -1438,4 +1438,569 @@ focus_tree = {
         }
     }
 
+	### ARMY TREE - Kusnurk Armed Forces (KAF) ###
+
+	focus = {
+		id = KUS_kaf_max
+		icon = GFX_focus_generic_military_academy
+		x = 26
+		y = 0
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_dynamic_modifier = { modifier = KUS_KAF }
+			army_experience = 25
+			add_tech_bonus = {
+				name = KUS_land_doctrine
+				bonus = 0.75
+				uses = 1
+				category = land_doctrine
+			}
+			custom_effect_tooltip = KUS_kaf_max_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_experience_gain_army_factor = 0.05 }
+			}
+		}
+	}
+
+	### Flexible Support Branch (Left) ###
+
+	focus = {
+		id = KUS_flexible_support
+		icon = GFX_goal_generic_allies_build_infantry
+		x = -6
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_max
+		prerequisite = { focus = KUS_kaf_max }
+		mutually_exclusive = { focus = KUS_doctrinal_aspiration focus = KUS_concentration_of_force }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_flexible_support_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_org_regain = 0.10 }
+				add_to_variable = { KUS_KAF_decryption_power_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_maximum_firepower
+		icon = GFX_goal_generic_army_artillery
+		x = -2
+		y = 2
+		cost = 10
+		relative_position_id = KUS_flexible_support
+		prerequisite = { focus = KUS_flexible_support }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_maximum_firepower_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_artillery_attack_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_postmodern_artillery
+		icon = GFX_goal_generic_army_artillery2
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_flexible_support
+		prerequisite = { focus = KUS_flexible_support }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_artillery_research
+				bonus = 0.50
+				uses = 2
+				category = artillery
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_mobile_coordinators
+		icon = GFX_focus_generic_combined_arms
+		x = 2
+		y = 2
+		cost = 10
+		relative_position_id = KUS_flexible_support
+		prerequisite = { focus = KUS_flexible_support }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_mobile_coordinators_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_land_reinforce_rate = 0.01 }
+				add_to_variable = { KUS_KAF_army_org_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_rearline_guard_units
+		icon = GFX_focus_generic_little_entente
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_maximum_firepower
+		prerequisite = { focus = KUS_maximum_firepower }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_rearline_guard_units_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_org = 10 }
+				add_to_variable = { KUS_KAF_army_morale_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_practical_railguns
+		icon = GFX_focus_generic_railway_gun
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_postmodern_artillery
+		prerequisite = { focus = KUS_postmodern_artillery }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KUS_railway_railguns
+		}
+	}
+
+	focus = {
+		id = KUS_machiavellian_high_command
+		icon = GFX_focus_generic_military_mission
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_mobile_coordinators
+		prerequisite = { focus = KUS_mobile_coordinators }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_max_planning = 0.10 }
+				add_to_variable = { KUS_KAF_planning_speed = 0.05 }
+			}
+			custom_effect_tooltip = KUS_machiavellian_high_command_tt
+		}
+	}
+
+	focus = {
+		id = KUS_deep_recon_units
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_rearline_guard_units
+		prerequisite = { focus = KUS_rearline_guard_units }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KUS_deep_recon
+		}
+	}
+
+	focus = {
+		id = KUS_theoretical_saturation
+		icon = GFX_goal_generic_army_doctrines
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_practical_railguns
+		prerequisite = { focus = KUS_practical_railguns }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			army_experience = 25
+			add_tech_bonus = {
+				name = KUS_doctrine_saturation
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_halberd_lr
+		icon = GFX_goal_generic_army_artillery
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_machiavellian_high_command
+		prerequisite = { focus = KUS_machiavellian_high_command }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_halberd_at
+				bonus = 1.0
+				uses = 1
+				category = cat_anti_tank
+			}
+			add_tech_bonus = {
+				name = KUS_halberd_inf
+				bonus = 1.0
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_officers_initiative
+		icon = GFX_focus_generic_military_academy
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_machiavellian_high_command
+		prerequisite = { focus = KUS_machiavellian_high_command }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			every_army_leader = {
+				add_attack = 1
+			}
+			custom_effect_tooltip = KUS_officers_initiative_tt
+		}
+	}
+
+	focus = {
+		id = KUS_like_rolling_thunder
+		icon = GFX_goal_generic_army_tanks
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_theoretical_saturation
+		prerequisite = { focus = KUS_deep_recon_units }
+		prerequisite = { focus = KUS_theoretical_saturation }
+		prerequisite = { focus = KUS_halberd_lr }
+		prerequisite = { focus = KUS_officers_initiative }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_like_rolling_thunder_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_attack_factor = 0.05 }
+				add_to_variable = { KUS_KAF_org_loss_when_moving = -0.50 }
+				add_to_variable = { KUS_KAF_breakthrough_factor = 0.10 }
+			}
+		}
+	}
+
+	### Doctrinal Aspiration Branch (Center) ###
+
+	focus = {
+		id = KUS_doctrinal_aspiration
+		icon = GFX_goal_generic_army_doctrines
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_max
+		prerequisite = { focus = KUS_kaf_max }
+		mutually_exclusive = { focus = KUS_flexible_support focus = KUS_concentration_of_force }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_doctrine_aspiration
+				bonus = 0.50
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_integrated_communications
+		icon = GFX_goal_generic_radar
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_doctrinal_aspiration
+		prerequisite = { focus = KUS_doctrinal_aspiration }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_integrated_communications_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_land_reinforce_rate = 0.01 }
+				add_to_variable = { KUS_KAF_air_superiority_bonus_in_combat = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_centralized_command
+		icon = GFX_focus_generic_military_dictatorship
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_integrated_communications
+		prerequisite = { focus = KUS_integrated_communications }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_centralized_command_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_planning_speed = 0.10 }
+				add_to_variable = { KUS_KAF_max_planning = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_doctrinal_application
+		icon = GFX_goal_generic_army_doctrines
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_centralized_command
+		prerequisite = { focus = KUS_centralized_command }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_doctrine_application
+				bonus = 0.50
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_deep_recon_units_2
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_centralized_command
+		prerequisite = { focus = KUS_centralized_command }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KUS_deep_recon
+		}
+	}
+
+	### Concentration of Force Branch (Right) ###
+
+	focus = {
+		id = KUS_concentration_of_force
+		icon = GFX_goal_generic_army_tanks
+		x = 6
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_max
+		prerequisite = { focus = KUS_kaf_max }
+		mutually_exclusive = { focus = KUS_flexible_support focus = KUS_doctrinal_aspiration }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_concentration_of_force_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_unit_design_cost_factor = -0.60 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_tank_research_grants
+		icon = GFX_focus_generic_tank_production
+		x = -2
+		y = 2
+		cost = 10
+		relative_position_id = KUS_concentration_of_force
+		prerequisite = { focus = KUS_concentration_of_force }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_armor_research
+				bonus = 0.50
+				uses = 2
+				category = armor
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_speed_cult
+		icon = GFX_focus_generic_motorized_equipment
+		x = 2
+		y = 2
+		cost = 10
+		relative_position_id = KUS_concentration_of_force
+		prerequisite = { focus = KUS_concentration_of_force }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_speed_cult_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_speed_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_tank_research_grants_mkt
+		icon = GFX_focus_generic_tank_production
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_tank_research_grants
+		prerequisite = { focus = KUS_tank_research_grants }
+		mutually_exclusive = { focus = KUS_tank_research_grants_pkp }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_armor_mkt
+				bonus = 1.0
+				uses = 1
+				category = armor
+			}
+			country_event = { id = KUS_army.1 }
+		}
+	}
+
+	focus = {
+		id = KUS_tank_research_grants_pkp
+		icon = GFX_focus_generic_tank_production
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_tank_research_grants
+		prerequisite = { focus = KUS_tank_research_grants }
+		mutually_exclusive = { focus = KUS_tank_research_grants_mkt }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_armor_pkp
+				bonus = 1.0
+				uses = 1
+				category = armor
+			}
+			country_event = { id = KUS_army.2 }
+		}
+	}
+
+	focus = {
+		id = KUS_off_road_logistics
+		icon = GFX_goal_generic_army_motorized
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_speed_cult
+		prerequisite = { focus = KUS_speed_cult }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_off_road_logistics_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_supply_consumption_factor = -0.08 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_perfect_drilling
+		icon = GFX_focus_generic_military_academy
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_off_road_logistics
+		prerequisite = { focus = KUS_off_road_logistics }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			army_experience = 25
+			add_tech_bonus = {
+				name = KUS_doctrine_drilling
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_full_mechanisation
+		icon = GFX_focus_generic_motorized_equipment
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_off_road_logistics
+		prerequisite = { focus = KUS_off_road_logistics }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_full_mechanisation_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_speed_factor = 0.05 }
+			}
+			add_ideas = KUS_full_mechanisation_idea
+		}
+	}
+
+	focus = {
+		id = KUS_at_the_speed_of_light
+		icon = GFX_goal_generic_army_tanks
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_perfect_drilling
+		prerequisite = { focus = KUS_perfect_drilling }
+		prerequisite = { focus = KUS_full_mechanisation }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_at_the_speed_of_light_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_speed_factor = 0.10 }
+				add_to_variable = { KUS_KAF_breakthrough_factor = 0.05 }
+			}
+		}
+	}
+
 }
