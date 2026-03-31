@@ -1999,4 +1999,722 @@ focus_tree = {
 		}
 	}
 
+	### NAVY TREE - Kusnurk Armed Forces Naval Branch (KAF Meri) ###
+
+	focus = {
+		id = KUS_kaf_meri
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		x = 46
+		y = 0
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_dynamic_modifier = { modifier = KUS_KAF_MERI }
+			navy_experience = 25
+			add_tech_bonus = {
+				name = KUS_naval_doctrine
+				bonus = 0.75
+				uses = 1
+				category = naval_doctrine
+			}
+			custom_effect_tooltip = KUS_kaf_meri_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_experience_gain_factor = 0.05 }
+			}
+		}
+	}
+
+	### Plan Colossus Branch (Left) ###
+
+	focus = {
+		id = KUS_plan_colossus
+		icon = GFX_goal_generic_navy_battleship
+		x = -8
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_kaf_meri }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_colossus_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_production_speed_dockyard_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_pythagoras_class
+		icon = GFX_focus_generic_navy_battleship2
+		x = -9
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_plan_colossus }
+		mutually_exclusive = { focus = KUS_thales_class }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_pythagoras_class_tt
+			add_tech_bonus = {
+				name = KUS_pythagoras_research
+				bonus = 1.0
+				uses = 1
+				category = bb_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_thales_class
+		icon = GFX_focus_generic_navy_battleship2
+		x = -7
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_plan_colossus }
+		mutually_exclusive = { focus = KUS_pythagoras_class }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_thales_class_tt
+			add_tech_bonus = {
+				name = KUS_thales_research
+				bonus = 1.0
+				uses = 1
+				category = bb_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_deep_sea_monsters
+		icon = GFX_goal_generic_navy_battleship
+		x = -8
+		y = 6
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_pythagoras_class focus = KUS_thales_class }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_deep_sea_monsters_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_naval_speed_factor = 0.10 }
+				add_to_variable = { KUS_MERI_navy_capital_ship_attack_factor = 0.05 }
+			}
+		}
+	}
+
+	### Rebuild Northern Shipyards Branch ###
+
+	focus = {
+		id = KUS_rebuild_northern_shipyards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -4
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_kaf_meri }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			717 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+			}
+			715 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_ship_construction_admin
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -3
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_rebuild_northern_shipyards }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_ship_construction_admin_tt
+			717 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			715 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_production_speed_dockyard_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_screening_support_fleet
+		icon = GFX_goal_generic_navy_cruiser
+		x = -5
+		y = 5
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_ship_construction_admin }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_screening_support_fleet_tt
+			navy_experience = 20
+			add_tech_bonus = {
+				name = KUS_ship_modules
+				bonus = 1.0
+				uses = 2
+				category = naval_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_naval_effort
+		icon = GFX_goal_generic_build_navy
+		x = -5
+		y = 6
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_screening_support_fleet }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_naval_effort_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_screen_attack_factor = 0.05 }
+			}
+			add_tech_bonus = {
+				name = KUS_ship_modules_2
+				bonus = 0.75
+				uses = 2
+				category = naval_equipment
+			}
+		}
+	}
+
+	### Plan Nymph Branch (Center) ###
+
+	focus = {
+		id = KUS_plan_nymph
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_kaf_meri }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_nymph_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_spotting_chance = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_proactive_ship_positioning
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		x = -1
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_plan_nymph }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_proactive_ship_positioning_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_convoy_raiding_efficiency_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_modular_submarine_hulls
+		icon = GFX_goal_generic_navy_submarine
+		x = 1
+		y = 5
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_proactive_ship_positioning }
+		prerequisite = { focus = KUS_high_tech_raiding }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_modular_submarine_hulls_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_submarine_attack_factor = -0.15 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_warden_torpedo
+		icon = GFX_goal_generic_navy_submarine
+		x = -1
+		y = 6
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_modular_submarine_hulls }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_warden_torpedo_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_submarine_attack_factor = 0.05 }
+				add_to_variable = { KUS_MERI_positioning = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_joint_naval_detection
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		x = 2
+		y = 6
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_high_tech_raiding }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_joint_naval_detection_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_naval_detection = 0.10 }
+			}
+			every_army_leader = {
+				add_skill_level = 1
+			}
+		}
+	}
+
+	### Develop Navar Coastal Regions Branch ###
+
+	focus = {
+		id = KUS_develop_navar_coastal
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = 4
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_kaf_meri }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			213 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = dockyard
+					level = 4
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = naval_base
+					level = 4
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+			715 = {
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+			716 = {
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+			213 = {
+				add_building_construction = {
+					type = coastal_bunker
+					level = 2
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_coastal = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_high_tech_raiding
+		icon = GFX_goal_generic_navy_submarine
+		x = 2
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_develop_navar_coastal }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_submarine_tech
+				bonus = 1.0
+				uses = 1
+				category = ss_tech
+			}
+			add_tech_bonus = {
+				name = KUS_submarine_ahead
+				bonus = 1.0
+				ahead_reduction = 2
+				uses = 1
+				category = ss_tech
+			}
+		}
+	}
+
+	### Fleet Survivability / Fleet Mobility ME Branch ###
+
+	focus = {
+		id = KUS_fleet_survivability
+		icon = GFX_goal_generic_navy_battleship
+		x = 5
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_develop_navar_coastal }
+		mutually_exclusive = { focus = KUS_fleet_mobility }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_survivability_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_capital_ship_defence_factor = 0.08 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_fleet_mobility
+		icon = GFX_goal_generic_navy_cruiser
+		x = 7
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_develop_navar_coastal }
+		mutually_exclusive = { focus = KUS_fleet_survivability }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_mobility_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_naval_speed_factor = 0.10 }
+			}
+		}
+	}
+
+	### Squadron Flagships / Sealane Protectors ME Branch ###
+
+	focus = {
+		id = KUS_squadron_flagships
+		icon = GFX_goal_generic_navy_battleship
+		x = 5
+		y = 6
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_fleet_survivability focus = KUS_fleet_mobility }
+		mutually_exclusive = { focus = KUS_sealane_protectors }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_squadron_flagships_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_capital_ship_attack_factor = 0.05 }
+			}
+			add_tech_bonus = {
+				name = KUS_heavy_cruiser_tech
+				bonus = 1.0
+				uses = 2
+				category = cl_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_sealane_protectors
+		icon = GFX_goal_generic_navy_cruiser
+		x = 8
+		y = 6
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_fleet_survivability focus = KUS_fleet_mobility }
+		mutually_exclusive = { focus = KUS_squadron_flagships }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_sealane_protectors_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_screen_attack_factor = 0.05 }
+			}
+			add_tech_bonus = {
+				name = KUS_light_cruiser_tech
+				bonus = 1.0
+				uses = 2
+				category = dd_tech
+			}
+		}
+	}
+
+	### Plan Harpia Branch (Right) ###
+
+	focus = {
+		id = KUS_plan_harpia
+		icon = GFX_goal_generic_air_naval_bomber
+		x = 8
+		y = 2
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_kaf_meri }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_harpia_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_carrier_air_attack_factor = 0.10 }
+				add_to_variable = { KUS_MERI_navy_carrier_air_agility_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_post_kaiser_carrier
+		icon = GFX_goal_generic_air_naval_bomber
+		x = 9
+		y = 4
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_plan_harpia }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_carrier_tech
+				bonus = 1.0
+				uses = 1
+				category = cv_tech
+			}
+			add_tech_bonus = {
+				name = KUS_naval_bomber_tech
+				bonus = 1.0
+				uses = 1
+				category = naval_bomber
+			}
+		}
+	}
+
+	### Bottom Section - Convergence ###
+
+	focus = {
+		id = KUS_dedicated_convoy_production
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -6
+		y = 8
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_deep_sea_monsters focus = KUS_naval_effort }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_dedicated_convoy_production_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_production_speed_dockyard_factor = 0.10 }
+			}
+			213 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_naval_intelligence_gathering
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		x = 0
+		y = 8
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_warden_torpedo focus = KUS_joint_naval_detection }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_naval_intelligence_gathering_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_decryption_power_factor = 0.05 }
+				add_to_variable = { KUS_MERI_naval_intel_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_shore_up_naval_manuals
+		icon = GFX_focus_generic_navy_research_bonus
+		x = 5
+		y = 8
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_squadron_flagships focus = KUS_sealane_protectors }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_shore_up_naval_manuals_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_navy_experience_gain_factor = 0.25 }
+			}
+			navy_experience = 5
+		}
+	}
+
+	focus = {
+		id = KUS_dedicated_repair_yards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -2
+		y = 9
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_dedicated_convoy_production }
+		prerequisite = { focus = KUS_naval_intelligence_gathering }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KUS_repair_shipyards
+		}
+	}
+
+	focus = {
+		id = KUS_advanced_manoeuvres
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		x = 2
+		y = 9
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_naval_intelligence_gathering }
+		prerequisite = { focus = KUS_shore_up_naval_manuals }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_advanced_manoeuvres_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_naval_coordination = 0.10 }
+				add_to_variable = { KUS_MERI_navy_visibility = -0.05 }
+				add_to_variable = { KUS_MERI_screening_efficiency = 0.10 }
+				add_to_variable = { KUS_MERI_positioning = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_envy_of_the_world
+		icon = GFX_goal_generic_navy_battleship
+		x = 0
+		y = 10
+		cost = 10
+		relative_position_id = KUS_kaf_meri
+		prerequisite = { focus = KUS_dedicated_repair_yards }
+		prerequisite = { focus = KUS_advanced_manoeuvres }
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			custom_effect_tooltip = KUS_envy_of_the_world_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_naval_morale_factor = 0.10 }
+				add_to_variable = { KUS_MERI_strike_force_movement_org_loss = -0.05 }
+			}
+		}
+	}
+
 }
