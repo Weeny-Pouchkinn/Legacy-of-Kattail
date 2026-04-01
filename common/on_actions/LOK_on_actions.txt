@@ -130,6 +130,11 @@ on_actions = {
 				#activate_mission = SIL_collapse_timer
 			}
 
+			# PTQ Megacorp Initialization
+			PTQ = {
+				PTQ_initialize_corps = yes
+			}
+
 			#Katlantropa Dam
 			FOD = {
 				create_entity = {
@@ -2002,6 +2007,33 @@ on_actions = {
 						check_variable = { ksk_strength > 0 }
 					}
 					save_global_event_target_as = katlinin_country
+				}
+			}
+
+			# PTQ Megacorp Monthly Mechanics
+			if = {
+				limit = {
+					tag = PTQ
+					has_country_flag = PTQ_corps_initialized
+					is_puppet = no
+				}
+				# Natural opinion decay
+				hidden_effect = {
+					PTQ_monthly_opinion_decay = yes
+				}
+				# Random demand events (~30% chance per month, 60 day cooldown)
+				if = {
+					limit = { NOT = { has_country_flag = PTQ_demand_cooldown } }
+					random_list = {
+						58 = { }
+						7 = { country_event = { id = PTQ_megacorp.1 } }
+						7 = { country_event = { id = PTQ_megacorp.2 } }
+						7 = { country_event = { id = PTQ_megacorp.3 } }
+						7 = { country_event = { id = PTQ_megacorp.4 } }
+						7 = { country_event = { id = PTQ_megacorp.5 } }
+						7 = { country_event = { id = PTQ_megacorp.6 } }
+					}
+					set_country_flag = { flag = PTQ_demand_cooldown days = 60 value = 1 }
 				}
 			}
 		}

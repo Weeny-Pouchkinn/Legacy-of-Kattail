@@ -1,0 +1,666 @@
+PTQ_corporate_oversight = {
+
+	# ==================== PFOTENSTAHL AG ====================
+	# Status: Heavy Industry - Winston (481), Ost-Winston (70)
+
+	PTQ_pfotenstahl_status = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_pfotenstahl_seceded }
+		}
+
+		available = { always = no }
+		custom_cost_text = PTQ_status_no_cost
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 481
+				state = 70
+			}
+		}
+
+		complete_effect = { }
+
+		ai_will_do = { base = 0 }
+	}
+
+	PTQ_pfotenstahl_concession_pp = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_pfotenstahl_seceded }
+		}
+
+		available = {
+			has_political_power > 49
+			NOT = { has_country_flag = PTQ_pfotenstahl_concession_pp_cd }
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 60
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_pfotenstahl_concession_pp_cd days = 60 value = 1 }
+				set_country_flag = { flag = PTQ_pfotenstahl_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_pfotenstahl_opinion = 10 }
+				clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			custom_effect_tooltip = PTQ_pfotenstahl_opinion_increase_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_pfotenstahl_opinion < 30 }
+			}
+		}
+	}
+
+	PTQ_pfotenstahl_concession_material = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_pfotenstahl_seceded }
+		}
+
+		available = {
+			has_political_power > 24
+			has_equipment = { infantry_equipment > 499 }
+			NOT = { has_country_flag = PTQ_pfotenstahl_concession_mat_cd }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_pfotenstahl_concession_mat_cd days = 90 value = 1 }
+				set_country_flag = { flag = PTQ_pfotenstahl_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_pfotenstahl_opinion = 15 }
+				clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -500
+			}
+			custom_effect_tooltip = PTQ_pfotenstahl_opinion_increase_mat_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_pfotenstahl_opinion < 20 }
+			}
+		}
+	}
+
+	# ==================== BERGKRALLE EXTRAKTION ====================
+	# Status: Mining Operations - Kattenburg (37)
+
+	PTQ_bergkralle_status = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_bergkralle_seceded }
+		}
+
+		available = { always = no }
+		custom_cost_text = PTQ_status_no_cost
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 37
+			}
+		}
+
+		complete_effect = { }
+
+		ai_will_do = { base = 0 }
+	}
+
+	PTQ_bergkralle_concession_pp = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_bergkralle_seceded }
+		}
+
+		available = {
+			has_political_power > 49
+			NOT = { has_country_flag = PTQ_bergkralle_concession_pp_cd }
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 60
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_bergkralle_concession_pp_cd days = 60 value = 1 }
+				set_country_flag = { flag = PTQ_bergkralle_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_bergkralle_opinion = 10 }
+				clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			custom_effect_tooltip = PTQ_bergkralle_opinion_increase_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_bergkralle_opinion < 30 }
+			}
+		}
+	}
+
+	PTQ_bergkralle_concession_material = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_bergkralle_seceded }
+		}
+
+		available = {
+			has_political_power > 24
+			has_equipment = { support_equipment > 199 }
+			NOT = { has_country_flag = PTQ_bergkralle_concession_mat_cd }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_bergkralle_concession_mat_cd days = 90 value = 1 }
+				set_country_flag = { flag = PTQ_bergkralle_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_bergkralle_opinion = 15 }
+				clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = -200
+			}
+			custom_effect_tooltip = PTQ_bergkralle_opinion_increase_mat_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_bergkralle_opinion < 20 }
+			}
+		}
+	}
+
+	# ==================== QUARZKATZ MINERALIEN ====================
+	# Status: Research & Minerals - Deaktiviertekamera (54), Magnetischergeschwollen (565)
+
+	PTQ_quarzkatz_status = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_quarzkatz_seceded }
+		}
+
+		available = { always = no }
+		custom_cost_text = PTQ_status_no_cost
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 54
+				state = 565
+			}
+		}
+
+		complete_effect = { }
+
+		ai_will_do = { base = 0 }
+	}
+
+	PTQ_quarzkatz_concession_pp = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_quarzkatz_seceded }
+		}
+
+		available = {
+			has_political_power > 49
+			NOT = { has_country_flag = PTQ_quarzkatz_concession_pp_cd }
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 60
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_quarzkatz_concession_pp_cd days = 60 value = 1 }
+				set_country_flag = { flag = PTQ_quarzkatz_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_quarzkatz_opinion = 10 }
+				clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			custom_effect_tooltip = PTQ_quarzkatz_opinion_increase_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_quarzkatz_opinion < 30 }
+			}
+		}
+	}
+
+	PTQ_quarzkatz_concession_material = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_quarzkatz_seceded }
+		}
+
+		available = {
+			has_political_power > 24
+			has_equipment = { support_equipment > 149 }
+			NOT = { has_country_flag = PTQ_quarzkatz_concession_mat_cd }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_quarzkatz_concession_mat_cd days = 90 value = 1 }
+				set_country_flag = { flag = PTQ_quarzkatz_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_quarzkatz_opinion = 15 }
+				clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = -150
+			}
+			custom_effect_tooltip = PTQ_quarzkatz_opinion_increase_mat_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_quarzkatz_opinion < 20 }
+			}
+		}
+	}
+
+	# ==================== SCHNURRBART FERTIGUNG ====================
+	# Status: Manufacturing - Gligglepaw (88), Boogenstadt (566)
+
+	PTQ_schnurrbart_status = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_schnurrbart_seceded }
+		}
+
+		available = { always = no }
+		custom_cost_text = PTQ_status_no_cost
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 88
+				state = 566
+			}
+		}
+
+		complete_effect = { }
+
+		ai_will_do = { base = 0 }
+	}
+
+	PTQ_schnurrbart_concession_pp = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_schnurrbart_seceded }
+		}
+
+		available = {
+			has_political_power > 49
+			NOT = { has_country_flag = PTQ_schnurrbart_concession_pp_cd }
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 60
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_schnurrbart_concession_pp_cd days = 60 value = 1 }
+				set_country_flag = { flag = PTQ_schnurrbart_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_schnurrbart_opinion = 10 }
+				clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			custom_effect_tooltip = PTQ_schnurrbart_opinion_increase_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_schnurrbart_opinion < 30 }
+			}
+		}
+	}
+
+	PTQ_schnurrbart_concession_material = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_schnurrbart_seceded }
+		}
+
+		available = {
+			has_political_power > 24
+			has_equipment = { infantry_equipment > 299 }
+			NOT = { has_country_flag = PTQ_schnurrbart_concession_mat_cd }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_schnurrbart_concession_mat_cd days = 90 value = 1 }
+				set_country_flag = { flag = PTQ_schnurrbart_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_schnurrbart_opinion = 15 }
+				clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -300
+			}
+			custom_effect_tooltip = PTQ_schnurrbart_opinion_increase_mat_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_schnurrbart_opinion < 20 }
+			}
+		}
+	}
+
+	# ==================== SAMTPFOTE HANDELSGESELLSCHAFT ====================
+	# Status: Trade & Logistics - Ezikat (564), Middenpaw (567)
+
+	PTQ_samtpfote_status = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_samtpfote_seceded }
+		}
+
+		available = { always = no }
+		custom_cost_text = PTQ_status_no_cost
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 564
+				state = 567
+			}
+		}
+
+		complete_effect = { }
+
+		ai_will_do = { base = 0 }
+	}
+
+	PTQ_samtpfote_concession_pp = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_samtpfote_seceded }
+		}
+
+		available = {
+			has_political_power > 49
+			NOT = { has_country_flag = PTQ_samtpfote_concession_pp_cd }
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 60
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_samtpfote_concession_pp_cd days = 60 value = 1 }
+				set_country_flag = { flag = PTQ_samtpfote_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_samtpfote_opinion = 10 }
+				clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			custom_effect_tooltip = PTQ_samtpfote_opinion_increase_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_samtpfote_opinion < 30 }
+			}
+		}
+	}
+
+	PTQ_samtpfote_concession_material = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_samtpfote_seceded }
+		}
+
+		available = {
+			has_political_power > 24
+			has_equipment = { artillery_equipment > 99 }
+			NOT = { has_country_flag = PTQ_samtpfote_concession_mat_cd }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_samtpfote_concession_mat_cd days = 90 value = 1 }
+				set_country_flag = { flag = PTQ_samtpfote_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_samtpfote_opinion = 15 }
+				clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = -100
+			}
+			custom_effect_tooltip = PTQ_samtpfote_opinion_increase_mat_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_samtpfote_opinion < 20 }
+			}
+		}
+	}
+
+	# ==================== NORDLICHT ENERGIEWERKE ====================
+	# Status: Energy & Construction - Finstratus (568)
+
+	PTQ_nordlicht_status = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_nordlicht_seceded }
+		}
+
+		available = { always = no }
+		custom_cost_text = PTQ_status_no_cost
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 568
+			}
+		}
+
+		complete_effect = { }
+
+		ai_will_do = { base = 0 }
+	}
+
+	PTQ_nordlicht_concession_pp = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_nordlicht_seceded }
+		}
+
+		available = {
+			has_political_power > 49
+			NOT = { has_country_flag = PTQ_nordlicht_concession_pp_cd }
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 60
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_nordlicht_concession_pp_cd days = 60 value = 1 }
+				set_country_flag = { flag = PTQ_nordlicht_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_nordlicht_opinion = 10 }
+				clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			custom_effect_tooltip = PTQ_nordlicht_opinion_increase_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_nordlicht_opinion < 30 }
+			}
+		}
+	}
+
+	PTQ_nordlicht_concession_material = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_nordlicht_seceded }
+		}
+
+		available = {
+			has_political_power > 24
+			has_equipment = { artillery_equipment > 99 }
+			NOT = { has_country_flag = PTQ_nordlicht_concession_mat_cd }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_nordlicht_concession_mat_cd days = 90 value = 1 }
+				set_country_flag = { flag = PTQ_nordlicht_concession_recent days = 45 value = 1 }
+				add_to_variable = { ptq_nordlicht_opinion = 15 }
+				clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = -100
+			}
+			custom_effect_tooltip = PTQ_nordlicht_opinion_increase_mat_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				check_variable = { ptq_nordlicht_opinion < 20 }
+			}
+		}
+	}
+}

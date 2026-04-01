@@ -1,0 +1,433 @@
+add_namespace = PTQ_megacorp
+
+# ==================== DEMAND EVENTS ====================
+# Each megacorp periodically demands something from Katzpon
+# Triggered from on_monthly in LOK_on_actions.txt
+
+# Pfotenstahl AG demands increased weapons production
+country_event = {
+	id = PTQ_megacorp.1
+	title = PTQ_megacorp.1.t
+	desc = PTQ_megacorp.1.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = PTQ
+		has_country_flag = PTQ_corps_initialized
+		NOT = { has_country_flag = PTQ_pfotenstahl_seceded }
+	}
+
+	# Comply - Pay equipment
+	option = {
+		name = PTQ_megacorp.1.a
+		ai_chance = { base = 70 }
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -300
+		}
+		hidden_effect = {
+			add_to_variable = { ptq_pfotenstahl_opinion = 10 }
+			clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+			set_country_flag = { flag = PTQ_pfotenstahl_concession_recent days = 45 value = 1 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_pfotenstahl_opinion_increase_tt
+	}
+
+	# Compromise - Pay less but less opinion
+	option = {
+		name = PTQ_megacorp.1.b
+		ai_chance = { base = 20 }
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -100
+		}
+		hidden_effect = {
+			add_to_variable = { ptq_pfotenstahl_opinion = 3 }
+			clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_pfotenstahl_opinion_small_increase_tt
+	}
+
+	# Refuse - Opinion penalty + stability hit
+	option = {
+		name = PTQ_megacorp.1.c
+		ai_chance = { base = 10 }
+		add_stability = -0.03
+		hidden_effect = {
+			subtract_from_variable = { ptq_pfotenstahl_opinion = 15 }
+			clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+			PTQ_check_secession = yes
+		}
+		custom_effect_tooltip = PTQ_pfotenstahl_opinion_decrease_tt
+	}
+}
+
+# Bergkralle Extraktion demands mining expansion
+country_event = {
+	id = PTQ_megacorp.2
+	title = PTQ_megacorp.2.t
+	desc = PTQ_megacorp.2.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = PTQ
+		has_country_flag = PTQ_corps_initialized
+		NOT = { has_country_flag = PTQ_bergkralle_seceded }
+	}
+
+	# Comply - Pay PP for mining rights
+	option = {
+		name = PTQ_megacorp.2.a
+		ai_chance = { base = 70 }
+		add_political_power = -75
+		hidden_effect = {
+			add_to_variable = { ptq_bergkralle_opinion = 10 }
+			clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+			set_country_flag = { flag = PTQ_bergkralle_concession_recent days = 45 value = 1 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_bergkralle_opinion_increase_tt
+	}
+
+	# Compromise
+	option = {
+		name = PTQ_megacorp.2.b
+		ai_chance = { base = 20 }
+		add_political_power = -25
+		hidden_effect = {
+			add_to_variable = { ptq_bergkralle_opinion = 3 }
+			clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_bergkralle_opinion_small_increase_tt
+	}
+
+	# Refuse
+	option = {
+		name = PTQ_megacorp.2.c
+		ai_chance = { base = 10 }
+		add_stability = -0.03
+		hidden_effect = {
+			subtract_from_variable = { ptq_bergkralle_opinion = 15 }
+			clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+			PTQ_check_secession = yes
+		}
+		custom_effect_tooltip = PTQ_bergkralle_opinion_decrease_tt
+	}
+}
+
+# Quarzkatz Mineralien demands research funding
+country_event = {
+	id = PTQ_megacorp.3
+	title = PTQ_megacorp.3.t
+	desc = PTQ_megacorp.3.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = PTQ
+		has_country_flag = PTQ_corps_initialized
+		NOT = { has_country_flag = PTQ_quarzkatz_seceded }
+	}
+
+	# Comply - Pay PP for research grants
+	option = {
+		name = PTQ_megacorp.3.a
+		ai_chance = { base = 70 }
+		add_political_power = -60
+		hidden_effect = {
+			add_to_variable = { ptq_quarzkatz_opinion = 10 }
+			clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+			set_country_flag = { flag = PTQ_quarzkatz_concession_recent days = 45 value = 1 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_quarzkatz_opinion_increase_tt
+	}
+
+	# Compromise
+	option = {
+		name = PTQ_megacorp.3.b
+		ai_chance = { base = 20 }
+		add_political_power = -20
+		hidden_effect = {
+			add_to_variable = { ptq_quarzkatz_opinion = 3 }
+			clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_quarzkatz_opinion_small_increase_tt
+	}
+
+	# Refuse
+	option = {
+		name = PTQ_megacorp.3.c
+		ai_chance = { base = 10 }
+		add_stability = -0.03
+		hidden_effect = {
+			subtract_from_variable = { ptq_quarzkatz_opinion = 15 }
+			clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+			PTQ_check_secession = yes
+		}
+		custom_effect_tooltip = PTQ_quarzkatz_opinion_decrease_tt
+	}
+}
+
+# Schnurrbart Fertigung demands manufacturing contracts
+country_event = {
+	id = PTQ_megacorp.4
+	title = PTQ_megacorp.4.t
+	desc = PTQ_megacorp.4.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = PTQ
+		has_country_flag = PTQ_corps_initialized
+		NOT = { has_country_flag = PTQ_schnurrbart_seceded }
+	}
+
+	# Comply - Pay equipment
+	option = {
+		name = PTQ_megacorp.4.a
+		ai_chance = { base = 70 }
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -200
+		}
+		add_political_power = -25
+		hidden_effect = {
+			add_to_variable = { ptq_schnurrbart_opinion = 10 }
+			clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+			set_country_flag = { flag = PTQ_schnurrbart_concession_recent days = 45 value = 1 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_schnurrbart_opinion_increase_tt
+	}
+
+	# Compromise
+	option = {
+		name = PTQ_megacorp.4.b
+		ai_chance = { base = 20 }
+		add_political_power = -10
+		hidden_effect = {
+			add_to_variable = { ptq_schnurrbart_opinion = 3 }
+			clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_schnurrbart_opinion_small_increase_tt
+	}
+
+	# Refuse
+	option = {
+		name = PTQ_megacorp.4.c
+		ai_chance = { base = 10 }
+		add_stability = -0.03
+		hidden_effect = {
+			subtract_from_variable = { ptq_schnurrbart_opinion = 15 }
+			clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+			PTQ_check_secession = yes
+		}
+		custom_effect_tooltip = PTQ_schnurrbart_opinion_decrease_tt
+	}
+}
+
+# Samtpfote Handelsgesellschaft demands trade concessions
+country_event = {
+	id = PTQ_megacorp.5
+	title = PTQ_megacorp.5.t
+	desc = PTQ_megacorp.5.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = PTQ
+		has_country_flag = PTQ_corps_initialized
+		NOT = { has_country_flag = PTQ_samtpfote_seceded }
+	}
+
+	# Comply - Pay PP for trade rights
+	option = {
+		name = PTQ_megacorp.5.a
+		ai_chance = { base = 70 }
+		add_political_power = -75
+		hidden_effect = {
+			add_to_variable = { ptq_samtpfote_opinion = 10 }
+			clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+			set_country_flag = { flag = PTQ_samtpfote_concession_recent days = 45 value = 1 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_samtpfote_opinion_increase_tt
+	}
+
+	# Compromise
+	option = {
+		name = PTQ_megacorp.5.b
+		ai_chance = { base = 20 }
+		add_political_power = -25
+		hidden_effect = {
+			add_to_variable = { ptq_samtpfote_opinion = 3 }
+			clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_samtpfote_opinion_small_increase_tt
+	}
+
+	# Refuse
+	option = {
+		name = PTQ_megacorp.5.c
+		ai_chance = { base = 10 }
+		add_stability = -0.03
+		hidden_effect = {
+			subtract_from_variable = { ptq_samtpfote_opinion = 15 }
+			clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+			PTQ_check_secession = yes
+		}
+		custom_effect_tooltip = PTQ_samtpfote_opinion_decrease_tt
+	}
+}
+
+# Nordlicht Energiewerke demands energy infrastructure
+country_event = {
+	id = PTQ_megacorp.6
+	title = PTQ_megacorp.6.t
+	desc = PTQ_megacorp.6.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = PTQ
+		has_country_flag = PTQ_corps_initialized
+		NOT = { has_country_flag = PTQ_nordlicht_seceded }
+	}
+
+	# Comply - Pay PP and equipment
+	option = {
+		name = PTQ_megacorp.6.a
+		ai_chance = { base = 70 }
+		add_political_power = -50
+		add_equipment_to_stockpile = {
+			type = support_equipment
+			amount = -100
+		}
+		hidden_effect = {
+			add_to_variable = { ptq_nordlicht_opinion = 10 }
+			clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+			set_country_flag = { flag = PTQ_nordlicht_concession_recent days = 45 value = 1 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_nordlicht_opinion_increase_tt
+	}
+
+	# Compromise
+	option = {
+		name = PTQ_megacorp.6.b
+		ai_chance = { base = 20 }
+		add_political_power = -15
+		hidden_effect = {
+			add_to_variable = { ptq_nordlicht_opinion = 3 }
+			clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+		}
+		custom_effect_tooltip = PTQ_nordlicht_opinion_small_increase_tt
+	}
+
+	# Refuse
+	option = {
+		name = PTQ_megacorp.6.c
+		ai_chance = { base = 10 }
+		add_stability = -0.03
+		hidden_effect = {
+			subtract_from_variable = { ptq_nordlicht_opinion = 15 }
+			clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+			PTQ_recalculate_all_corps = yes
+			PTQ_check_secession = yes
+		}
+		custom_effect_tooltip = PTQ_nordlicht_opinion_decrease_tt
+	}
+}
+
+# ==================== SECESSION CRISIS EVENT ====================
+# Fires when any corp's opinion drops below 10
+
+country_event = {
+	id = PTQ_megacorp.10
+	title = PTQ_megacorp.10.t
+	desc = PTQ_megacorp.10.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	# Emergency bailout - Pay heavy PP cost to save the relationship
+	option = {
+		name = PTQ_megacorp.10.a
+		ai_chance = { base = 80 }
+
+		trigger = {
+			has_political_power > 149
+		}
+
+		add_political_power = -150
+
+		hidden_effect = {
+			# Reset the corp's opinion to 25
+			if = {
+				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 1 } }
+				set_variable = { ptq_pfotenstahl_opinion = 25 }
+			}
+			if = {
+				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 2 } }
+				set_variable = { ptq_bergkralle_opinion = 25 }
+			}
+			if = {
+				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 3 } }
+				set_variable = { ptq_quarzkatz_opinion = 25 }
+			}
+			if = {
+				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 4 } }
+				set_variable = { ptq_schnurrbart_opinion = 25 }
+			}
+			if = {
+				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 5 } }
+				set_variable = { ptq_samtpfote_opinion = 25 }
+			}
+			if = {
+				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 6 } }
+				set_variable = { ptq_nordlicht_opinion = 25 }
+			}
+			clr_country_flag = PTQ_secession_pending_corp
+			# Reset warning flags so they can warn again
+			clr_country_flag = PTQ_pfotenstahl_secession_warned
+			clr_country_flag = PTQ_bergkralle_secession_warned
+			clr_country_flag = PTQ_quarzkatz_secession_warned
+			clr_country_flag = PTQ_schnurrbart_secession_warned
+			clr_country_flag = PTQ_samtpfote_secession_warned
+			clr_country_flag = PTQ_nordlicht_secession_warned
+			PTQ_recalculate_all_corps = yes
+		}
+
+		custom_effect_tooltip = PTQ_secession_averted_tt
+	}
+
+	# Accept the secession - Lose the corp permanently
+	option = {
+		name = PTQ_megacorp.10.b
+		ai_chance = { base = 20 }
+
+		PTQ_execute_secession = yes
+		custom_effect_tooltip = PTQ_secession_executed_tt
+	}
+}
