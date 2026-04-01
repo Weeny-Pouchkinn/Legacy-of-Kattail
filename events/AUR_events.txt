@@ -1194,3 +1194,119 @@ country_event = {
 		}
 	}
 }
+
+### His Armee Events ###
+
+# His Armee - narrative event
+country_event = {
+	id = AUR_event.50
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.50" }
+	title = AUR_event.50.t
+	desc = AUR_event.50.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.50.a
+	}
+}
+
+# KPK receives the Amends proposal
+country_event = {
+	id = AUR_event.51
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.51" }
+	title = AUR_event.51.t
+	desc = AUR_event.51.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept
+	option = {
+		name = AUR_event.51.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				is_in_faction_with = PRL
+			}
+			modifier = {
+				factor = 2
+				has_opinion = {
+					target = AUR
+					value > 50
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_opinion = {
+					target = AUR
+					value < 0
+				}
+			}
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.05
+		}
+		capital_scope = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		AUR = {
+			set_country_flag = AUR_kpk_agreed_autohubs
+			country_event = { id = AUR_event.52 days = 3 }
+		}
+	}
+
+	# Decline
+	option = {
+		name = AUR_event.51.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 100
+				is_in_faction_with = PRL
+			}
+		}
+		AUR = {
+			country_event = { id = AUR_event.53 days = 3 }
+		}
+	}
+}
+
+# KPK agreed to Autohubs cooperation
+country_event = {
+	id = AUR_event.52
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.52" }
+	title = AUR_event.52.t
+	desc = AUR_event.52.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.52.a
+		add_political_power = 15
+	}
+}
+
+# KPK refused Autohubs cooperation
+country_event = {
+	id = AUR_event.53
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.53" }
+	title = AUR_event.53.t
+	desc = AUR_event.53.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.53.a
+	}
+}

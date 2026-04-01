@@ -180,11 +180,12 @@ focus_tree = {
 	focus = {
 		id = AUR_neu_seetruppen
 		icon = GFX_goal_KTZ_true_navy
-		x = -1
+		x = 3
 		y = 1
 		cost = 5
+		prerequisite = { focus = AUR_state_of_arms }
 		prerequisite = { focus = AUR_a_grand_fleet }
-		relative_position_id = AUR_a_grand_fleet
+		relative_position_id = AUR_state_of_arms
 		completion_reward = {
 			add_political_power = 100
 			navy_experience = 50
@@ -745,11 +746,11 @@ focus_tree = {
 	focus = {
 		id = AUR_wunderwaffe_buro
 		icon = GFX_focus_ARG_develop_the_electricity_sector
-		x = -5
-		y = 2
+		x = -12
+		y = 3
 		cost = 10
 		relative_position_id = AUR_controlled_thought
-		prerequisite = { focus = AUR_controlled_thought }
+		prerequisite = { focus = AUR_state_of_arms }
 		completion_reward = {
 			add_tech_bonus = {
 				name = secret_bonus
@@ -3203,6 +3204,247 @@ focus_tree = {
 			set_cosmetic_tag = KTZ_UNITED_AUR
 			hidden_effect = {
 				country_event = { id = AUR_event.14 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_state_of_arms
+		icon = GFX_goal_KTZ_a_flood_of_violence
+		x = -8
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_controlled_thought }
+		relative_position_id = AUR_building_better_imperium
+		completion_reward = {
+			army_experience = 25
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 25
+		}
+	}
+
+	### ARMY TREE - Neu-Katzenarmee ###
+
+	focus = {
+		id = AUR_his_armee
+		icon = GFX_goal_KTZ_conscript_colonists
+		x = -3
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_state_of_arms }
+		relative_position_id = AUR_state_of_arms
+		completion_reward = {
+			army_experience = 50
+			hidden_effect = {
+				add_dynamic_modifier = { modifier = AUR_neu_katzenarmee }
+				country_event = { id = AUR_event.50 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_doctrinal_efficiency
+		icon = GFX_goal_KTZ_super_planning
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_his_armee }
+		relative_position_id = AUR_his_armee
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_land_doctrine_bonus
+				bonus = 0.50
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_amends_engineering_korps
+		icon = GFX_goal_KTZ_keep_native_authorities
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_his_armee }
+		relative_position_id = AUR_his_armee
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_engineering_support_bonus
+				ahead_reduction = 2
+				uses = 1
+				category = support_tech
+			}
+			KPK = {
+				country_event = { id = AUR_event.51 days = 5 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_reeducate_officers
+		icon = GFX_goal_KTZ_general_training
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_doctrinal_efficiency }
+		relative_position_id = AUR_doctrinal_efficiency
+		completion_reward = {
+			custom_effect_tooltip = AUR_reeducate_officers_tt
+			hidden_effect = {
+				every_unit_leader = {
+					add_attack = 1
+					add_defense = 1
+					add_planning = 1
+					add_logistics = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_redistribute_funding
+		icon = GFX_goal_KTZ_corruption_issue
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_amends_engineering_korps }
+		relative_position_id = AUR_doctrinal_efficiency
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_artillery_research_bonus
+				bonus = 1.0
+				uses = 2
+				category = artillery
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_autohubs
+		icon = GFX_goal_KTZ_build_new_transportation
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_amends_engineering_korps }
+		relative_position_id = AUR_amends_engineering_korps
+		available = {
+			has_country_flag = AUR_kpk_agreed_autohubs
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_autohubs_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_production_speed_supply_node_factor = 0.25 }
+				add_to_variable = { AUR_neu_katzenarmee_production_speed_rail_way_factor = 0.25 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_absolute_loyalty
+		icon = GFX_goal_KTZ_foreign_delegations
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_redistribute_funding }
+		prerequisite = { focus = AUR_reeducate_officers }
+		relative_position_id = AUR_reeducate_officers
+		completion_reward = {
+			custom_effect_tooltip = AUR_absolute_loyalty_tt
+			add_stability = 0.10
+			add_war_support = -0.05
+			hidden_effect = {
+				every_unit_leader = {
+					add_attack = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_fully_mechanized
+		icon = GFX_goal_KTZ_katzenwagen
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_redistribute_funding }
+		relative_position_id = AUR_redistribute_funding
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_tank_research_bonus
+				bonus = 1.0
+				uses = 2
+				category = cat_mechanized_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_encourage_war_crimes
+		icon = GFX_goal_KTZ_brace_world_war
+		x = 2
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_redistribute_funding }
+		relative_position_id = AUR_redistribute_funding
+		completion_reward = {
+			custom_effect_tooltip = AUR_encourage_war_crimes_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_army_attack_factor = 0.05 }
+				add_to_variable = { AUR_neu_katzenarmee_experience_loss_factor = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_integrate_unterkatzens
+		icon = GFX_goal_KTZ_first_contact
+		x = -1
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_absolute_loyalty }
+		prerequisite = { focus = AUR_fully_mechanized }
+		relative_position_id = AUR_fully_mechanized
+		mutually_exclusive = { focus = AUR_the_sobakis_let_loose }
+		available = {
+			OR = {
+				has_completed_focus = AUR_chew_slowly
+				has_country_flag = AUR_did_not_kill_roqualians
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_integrate_unterkatzens_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_non_core_manpower = 0.15 }
+				add_to_variable = { AUR_neu_katzenarmee_compliance_growth = 0.05 }
+				add_to_variable = { AUR_neu_katzenarmee_resistance_growth = 0.20 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_the_sobakis_let_loose
+		icon = GFX_goal_KTZ_make_division
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_encourage_war_crimes }
+		prerequisite = { focus = AUR_fully_mechanized }
+		relative_position_id = AUR_fully_mechanized
+		mutually_exclusive = { focus = AUR_integrate_unterkatzens }
+		available = {
+			OR = {
+				has_completed_focus = AUR_i_need_it_all
+				has_country_flag = AUR_killed_roqualians
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_the_sobakis_let_loose_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_experience_loss_factor = 0.15 }
+				add_to_variable = { AUR_neu_katzenarmee_equipment_capture_factor = 0.05 }
+				add_to_variable = { AUR_neu_katzenarmee_army_attack_factor = 0.05 }
 			}
 		}
 	}
