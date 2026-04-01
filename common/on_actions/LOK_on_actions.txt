@@ -1882,12 +1882,22 @@ on_actions = {
 				calculate_strategic_resource_modifiers = yes
 			}
 			# PTQ Megacorp: when PTQ conquers a non-core state, two corps compete for it
+			# Requires at least 2 non-seceded corps
 			if = {
 				limit = {
 					ROOT = {
 						tag = PTQ
 						has_country_flag = PTQ_corps_initialized
 						is_puppet = no
+						count_triggers = {
+							amount = 2
+							NOT = { has_country_flag = PTQ_pfotenstahl_seceded }
+							NOT = { has_country_flag = PTQ_bergkralle_seceded }
+							NOT = { has_country_flag = PTQ_quarzkatz_seceded }
+							NOT = { has_country_flag = PTQ_schnurrbart_seceded }
+							NOT = { has_country_flag = PTQ_samtpfote_seceded }
+							NOT = { has_country_flag = PTQ_nordlicht_seceded }
+						}
 					}
 					FROM = { NOT = { tag = PTQ } }
 					FROM.FROM = {
@@ -2041,7 +2051,8 @@ on_actions = {
 				hidden_effect = {
 					PTQ_monthly_opinion_decay = yes
 				}
-				# Random demand events (~50% chance per month, 30 day cooldown)
+				# Random demand events (50% chance per month, 30 day cooldown)
+				# Weights: 50% no event, 10% each for corps 1/2/3/6, 5% each for corps 4/5
 				if = {
 					limit = { NOT = { has_country_flag = PTQ_demand_cooldown } }
 					random_list = {
