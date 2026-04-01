@@ -180,11 +180,12 @@ focus_tree = {
 	focus = {
 		id = AUR_neu_seetruppen
 		icon = GFX_goal_KTZ_true_navy
-		x = -1
+		x = 3
 		y = 1
 		cost = 5
+		prerequisite = { focus = AUR_state_of_arms }
 		prerequisite = { focus = AUR_a_grand_fleet }
-		relative_position_id = AUR_a_grand_fleet
+		relative_position_id = AUR_state_of_arms
 		completion_reward = {
 			add_political_power = 100
 			navy_experience = 50
@@ -745,11 +746,11 @@ focus_tree = {
 	focus = {
 		id = AUR_wunderwaffe_buro
 		icon = GFX_focus_ARG_develop_the_electricity_sector
-		x = -5
-		y = 2
+		x = -12
+		y = 3
 		cost = 10
 		relative_position_id = AUR_controlled_thought
-		prerequisite = { focus = AUR_controlled_thought }
+		prerequisite = { focus = AUR_state_of_arms }
 		completion_reward = {
 			add_tech_bonus = {
 				name = secret_bonus
@@ -3207,20 +3208,36 @@ focus_tree = {
 		}
 	}
 
+	focus = {
+		id = AUR_state_of_arms
+		icon = GFX_goal_KTZ_a_flood_of_violence
+		x = -8
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_controlled_thought }
+		relative_position_id = AUR_building_better_imperium
+		completion_reward = {
+			army_experience = 25
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 25
+		}
+	}
+
 	### ARMY TREE - Neu-Katzenarmee ###
 
 	focus = {
 		id = AUR_his_armee
-		icon = GFX_goal_generic_major_war
-		x = -10
-		y = 4
+		icon = GFX_goal_KTZ_conscript_colonists
+		x = -3
+		y = 1
 		cost = 5
-		prerequisite = { focus = AUR_building_better_imperium }
-		relative_position_id = AUR_building_better_imperium
+		prerequisite = { focus = AUR_state_of_arms }
+		relative_position_id = AUR_state_of_arms
 		completion_reward = {
-			add_political_power = 25
-			add_dynamic_modifier = { modifier = AUR_neu_katzenarmee }
+			army_experience = 50
 			hidden_effect = {
+				add_dynamic_modifier = { modifier = AUR_neu_katzenarmee }
 				country_event = { id = AUR_event.50 }
 			}
 		}
@@ -3228,7 +3245,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_doctrinal_efficiency
-		icon = GFX_goal_generic_army_doctrines
+		icon = GFX_goal_KTZ_super_planning
 		x = -1
 		y = 1
 		cost = 5
@@ -3246,7 +3263,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_amends_engineering_korps
-		icon = GFX_focus_generic_diplomatic_treaty
+		icon = GFX_goal_KTZ_keep_native_authorities
 		x = 1
 		y = 1
 		cost = 5
@@ -3267,8 +3284,8 @@ focus_tree = {
 
 	focus = {
 		id = AUR_reeducate_officers
-		icon = GFX_focus_generic_military_academy
-		x = 0
+		icon = GFX_goal_KTZ_general_training
+		x = -1
 		y = 1
 		cost = 5
 		prerequisite = { focus = AUR_doctrinal_efficiency }
@@ -3288,7 +3305,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_redistribute_funding
-		icon = GFX_goal_generic_construct_mil_factory
+		icon = GFX_goal_KTZ_corruption_issue
 		x = 1
 		y = 1
 		cost = 5
@@ -3307,7 +3324,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_autohubs
-		icon = GFX_focus_generic_supply_line
+		icon = GFX_goal_KTZ_build_new_transportation
 		x = 1
 		y = 1
 		cost = 5
@@ -3327,7 +3344,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_absolute_loyalty
-		icon = GFX_goal_generic_demand_territory
+		icon = GFX_goal_KTZ_foreign_delegations
 		x = 0
 		y = 1
 		cost = 5
@@ -3347,7 +3364,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_fully_mechanized
-		icon = GFX_goal_generic_army_tanks
+		icon = GFX_goal_KTZ_katzenwagen
 		x = 0
 		y = 1
 		cost = 5
@@ -3358,21 +3375,15 @@ focus_tree = {
 				name = AUR_tank_research_bonus
 				bonus = 1.0
 				uses = 2
-				category = armor
-			}
-			add_equipment_bonus = {
-				name = AUR_mechanized_cost_reduction
-				type = mechanized_equipment
-				instant = yes
-				build_cost_ic = -0.05
+				category = cat_mechanized_equipment
 			}
 		}
 	}
 
 	focus = {
 		id = AUR_encourage_war_crimes
-		icon = GFX_goal_generic_secret_weapon
-		x = 1
+		icon = GFX_goal_KTZ_brace_world_war
+		x = 2
 		y = 1
 		cost = 5
 		prerequisite = { focus = AUR_redistribute_funding }
@@ -3388,7 +3399,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_integrate_unterkatzens
-		icon = GFX_goal_generic_propaganda
+		icon = GFX_goal_KTZ_first_contact
 		x = -1
 		y = 1
 		cost = 10
@@ -3414,7 +3425,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_the_sobakis_let_loose
-		icon = GFX_focus_generic_strike_at_democracy1
+		icon = GFX_goal_KTZ_make_division
 		x = 1
 		y = 1
 		cost = 5
