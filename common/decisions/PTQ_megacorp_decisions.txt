@@ -43,6 +43,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_pfotenstahl_concession_pp_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 481
+				state = 70
+			}
+		}
+
 		cost = 50
 		fire_only_once = no
 		days_re_enable = 60
@@ -83,6 +90,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_pfotenstahl_concession_mat_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 481
+				state = 70
+			}
+		}
+
 		cost = 25
 		fire_only_once = no
 		days_re_enable = 90
@@ -107,6 +121,53 @@ PTQ_corporate_oversight = {
 			modifier = {
 				add = 100
 				check_variable = { ptq_pfotenstahl_opinion < 20 }
+			}
+		}
+	}
+
+	PTQ_pfotenstahl_pressure = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_pfotenstahl_seceded }
+		}
+
+		available = {
+			has_political_power > 74
+			check_variable = { ptq_pfotenstahl_opinion > 30 }
+			NOT = { has_country_flag = PTQ_pfotenstahl_pressure_cd }
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 481
+				state = 70
+			}
+		}
+
+		cost = 75
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_pfotenstahl_pressure_cd days = 120 value = 1 }
+				subtract_from_variable = { ptq_pfotenstahl_opinion = 10 }
+				clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_stability = 0.03
+			custom_effect_tooltip = PTQ_pressure_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				check_variable = { ptq_pfotenstahl_opinion > 70 }
 			}
 		}
 	}
@@ -153,6 +214,12 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_bergkralle_concession_pp_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 37
+			}
+		}
+
 		cost = 50
 		fire_only_once = no
 		days_re_enable = 60
@@ -193,6 +260,12 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_bergkralle_concession_mat_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 37
+			}
+		}
+
 		cost = 25
 		fire_only_once = no
 		days_re_enable = 90
@@ -217,6 +290,52 @@ PTQ_corporate_oversight = {
 			modifier = {
 				add = 100
 				check_variable = { ptq_bergkralle_opinion < 20 }
+			}
+		}
+	}
+
+	PTQ_bergkralle_pressure = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_bergkralle_seceded }
+		}
+
+		available = {
+			has_political_power > 74
+			check_variable = { ptq_bergkralle_opinion > 30 }
+			NOT = { has_country_flag = PTQ_bergkralle_pressure_cd }
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 37
+			}
+		}
+
+		cost = 75
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_bergkralle_pressure_cd days = 120 value = 1 }
+				subtract_from_variable = { ptq_bergkralle_opinion = 10 }
+				clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_stability = 0.03
+			custom_effect_tooltip = PTQ_pressure_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				check_variable = { ptq_bergkralle_opinion > 70 }
 			}
 		}
 	}
@@ -264,6 +383,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_quarzkatz_concession_pp_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 54
+				state = 565
+			}
+		}
+
 		cost = 50
 		fire_only_once = no
 		days_re_enable = 60
@@ -304,6 +430,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_quarzkatz_concession_mat_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 54
+				state = 565
+			}
+		}
+
 		cost = 25
 		fire_only_once = no
 		days_re_enable = 90
@@ -328,6 +461,53 @@ PTQ_corporate_oversight = {
 			modifier = {
 				add = 100
 				check_variable = { ptq_quarzkatz_opinion < 20 }
+			}
+		}
+	}
+
+	PTQ_quarzkatz_pressure = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_quarzkatz_seceded }
+		}
+
+		available = {
+			has_political_power > 74
+			check_variable = { ptq_quarzkatz_opinion > 30 }
+			NOT = { has_country_flag = PTQ_quarzkatz_pressure_cd }
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 54
+				state = 565
+			}
+		}
+
+		cost = 75
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_quarzkatz_pressure_cd days = 120 value = 1 }
+				subtract_from_variable = { ptq_quarzkatz_opinion = 10 }
+				clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_stability = 0.03
+			custom_effect_tooltip = PTQ_pressure_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				check_variable = { ptq_quarzkatz_opinion > 70 }
 			}
 		}
 	}
@@ -375,6 +555,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_schnurrbart_concession_pp_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 88
+				state = 566
+			}
+		}
+
 		cost = 50
 		fire_only_once = no
 		days_re_enable = 60
@@ -415,6 +602,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_schnurrbart_concession_mat_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 88
+				state = 566
+			}
+		}
+
 		cost = 25
 		fire_only_once = no
 		days_re_enable = 90
@@ -439,6 +633,53 @@ PTQ_corporate_oversight = {
 			modifier = {
 				add = 100
 				check_variable = { ptq_schnurrbart_opinion < 20 }
+			}
+		}
+	}
+
+	PTQ_schnurrbart_pressure = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_schnurrbart_seceded }
+		}
+
+		available = {
+			has_political_power > 74
+			check_variable = { ptq_schnurrbart_opinion > 30 }
+			NOT = { has_country_flag = PTQ_schnurrbart_pressure_cd }
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 88
+				state = 566
+			}
+		}
+
+		cost = 75
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_schnurrbart_pressure_cd days = 120 value = 1 }
+				subtract_from_variable = { ptq_schnurrbart_opinion = 10 }
+				clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_stability = 0.03
+			custom_effect_tooltip = PTQ_pressure_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				check_variable = { ptq_schnurrbart_opinion > 70 }
 			}
 		}
 	}
@@ -486,6 +727,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_samtpfote_concession_pp_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 564
+				state = 567
+			}
+		}
+
 		cost = 50
 		fire_only_once = no
 		days_re_enable = 60
@@ -526,6 +774,13 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_samtpfote_concession_mat_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 564
+				state = 567
+			}
+		}
+
 		cost = 25
 		fire_only_once = no
 		days_re_enable = 90
@@ -550,6 +805,53 @@ PTQ_corporate_oversight = {
 			modifier = {
 				add = 100
 				check_variable = { ptq_samtpfote_opinion < 20 }
+			}
+		}
+	}
+
+	PTQ_samtpfote_pressure = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_samtpfote_seceded }
+		}
+
+		available = {
+			has_political_power > 74
+			check_variable = { ptq_samtpfote_opinion > 30 }
+			NOT = { has_country_flag = PTQ_samtpfote_pressure_cd }
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 564
+				state = 567
+			}
+		}
+
+		cost = 75
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_samtpfote_pressure_cd days = 120 value = 1 }
+				subtract_from_variable = { ptq_samtpfote_opinion = 10 }
+				clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_stability = 0.03
+			custom_effect_tooltip = PTQ_pressure_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				check_variable = { ptq_samtpfote_opinion > 70 }
 			}
 		}
 	}
@@ -596,6 +898,12 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_nordlicht_concession_pp_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 568
+			}
+		}
+
 		cost = 50
 		fire_only_once = no
 		days_re_enable = 60
@@ -636,6 +944,12 @@ PTQ_corporate_oversight = {
 			NOT = { has_country_flag = PTQ_nordlicht_concession_mat_cd }
 		}
 
+		highlight_states = {
+			highlight_state_targets = {
+				state = 568
+			}
+		}
+
 		cost = 25
 		fire_only_once = no
 		days_re_enable = 90
@@ -661,6 +975,114 @@ PTQ_corporate_oversight = {
 				add = 100
 				check_variable = { ptq_nordlicht_opinion < 20 }
 			}
+		}
+	}
+
+	PTQ_nordlicht_pressure = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+			NOT = { has_country_flag = PTQ_nordlicht_seceded }
+		}
+
+		available = {
+			has_political_power > 74
+			check_variable = { ptq_nordlicht_opinion > 30 }
+			NOT = { has_country_flag = PTQ_nordlicht_pressure_cd }
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 568
+			}
+		}
+
+		cost = 75
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_nordlicht_pressure_cd days = 120 value = 1 }
+				subtract_from_variable = { ptq_nordlicht_opinion = 10 }
+				clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+				PTQ_recalculate_all_corps = yes
+			}
+			add_stability = 0.03
+			custom_effect_tooltip = PTQ_pressure_tt
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				check_variable = { ptq_nordlicht_opinion > 70 }
+			}
+		}
+	}
+
+	# ==================== CORPORATE SUMMIT ====================
+	PTQ_corporate_summit = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { tag = PTQ }
+
+		visible = {
+			has_country_flag = PTQ_corps_initialized
+		}
+
+		available = {
+			has_political_power > 99
+			NOT = { has_country_flag = PTQ_summit_cd }
+		}
+
+		cost = 100
+		fire_only_once = no
+		days_re_enable = 180
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = { flag = PTQ_summit_cd days = 180 value = 1 }
+				if = {
+					limit = { NOT = { has_country_flag = PTQ_pfotenstahl_seceded } }
+					add_to_variable = { ptq_pfotenstahl_opinion = 5 }
+					clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+				}
+				if = {
+					limit = { NOT = { has_country_flag = PTQ_bergkralle_seceded } }
+					add_to_variable = { ptq_bergkralle_opinion = 5 }
+					clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+				}
+				if = {
+					limit = { NOT = { has_country_flag = PTQ_quarzkatz_seceded } }
+					add_to_variable = { ptq_quarzkatz_opinion = 5 }
+					clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+				}
+				if = {
+					limit = { NOT = { has_country_flag = PTQ_schnurrbart_seceded } }
+					add_to_variable = { ptq_schnurrbart_opinion = 5 }
+					clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+				}
+				if = {
+					limit = { NOT = { has_country_flag = PTQ_samtpfote_seceded } }
+					add_to_variable = { ptq_samtpfote_opinion = 5 }
+					clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+				}
+				if = {
+					limit = { NOT = { has_country_flag = PTQ_nordlicht_seceded } }
+					add_to_variable = { ptq_nordlicht_opinion = 5 }
+					clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+				}
+				PTQ_recalculate_all_corps = yes
+			}
+			custom_effect_tooltip = PTQ_summit_tt
+		}
+
+		ai_will_do = {
+			base = 50
 		}
 	}
 }

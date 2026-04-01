@@ -24,13 +24,8 @@ PTQ_initialize_corps = {
 	set_variable = { PTQ_nordlicht_construction = 0 }
 	set_variable = { PTQ_nordlicht_war_support = 0 }
 
-	# Add all dynamic modifiers
-	add_dynamic_modifier = { modifier = PTQ_pfotenstahl_modifier }
-	add_dynamic_modifier = { modifier = PTQ_bergkralle_modifier }
-	add_dynamic_modifier = { modifier = PTQ_quarzkatz_modifier }
-	add_dynamic_modifier = { modifier = PTQ_schnurrbart_modifier }
-	add_dynamic_modifier = { modifier = PTQ_samtpfote_modifier }
-	add_dynamic_modifier = { modifier = PTQ_nordlicht_modifier }
+	# Add the single unified dynamic modifier
+	add_dynamic_modifier = { modifier = PTQ_megacorp_modifier }
 
 	# Set initialized flag
 	set_country_flag = PTQ_corps_initialized
@@ -168,6 +163,38 @@ PTQ_recalculate_all_corps = {
 	multiply_variable = { PTQ_nordlicht_construction = 0.05 }
 	set_variable = { PTQ_nordlicht_war_support = temp_factor }
 	multiply_variable = { PTQ_nordlicht_war_support = 0.04 }
+
+	# Zero out seceded corps
+	if = {
+		limit = { has_country_flag = PTQ_pfotenstahl_seceded }
+		set_variable = { PTQ_pfotenstahl_industry = 0 }
+		set_variable = { PTQ_pfotenstahl_arms_speed = 0 }
+	}
+	if = {
+		limit = { has_country_flag = PTQ_bergkralle_seceded }
+		set_variable = { PTQ_bergkralle_stability = 0 }
+		set_variable = { PTQ_bergkralle_aluminium = 0 }
+	}
+	if = {
+		limit = { has_country_flag = PTQ_quarzkatz_seceded }
+		set_variable = { PTQ_quarzkatz_research = 0 }
+		set_variable = { PTQ_quarzkatz_efficiency = 0 }
+	}
+	if = {
+		limit = { has_country_flag = PTQ_schnurrbart_seceded }
+		set_variable = { PTQ_schnurrbart_consumer = 0 }
+		set_variable = { PTQ_schnurrbart_line_efficiency = 0 }
+	}
+	if = {
+		limit = { has_country_flag = PTQ_samtpfote_seceded }
+		set_variable = { PTQ_samtpfote_pp = 0 }
+		set_variable = { PTQ_samtpfote_supply = 0 }
+	}
+	if = {
+		limit = { has_country_flag = PTQ_nordlicht_seceded }
+		set_variable = { PTQ_nordlicht_construction = 0 }
+		set_variable = { PTQ_nordlicht_war_support = 0 }
+	}
 }
 
 # Monthly opinion decay - all corps lose 2 opinion per month unless recently given concessions
@@ -206,138 +233,317 @@ PTQ_monthly_opinion_decay = {
 	PTQ_recalculate_all_corps = yes
 }
 
-# Check if any corp has reached secession threshold
-PTQ_check_secession = {
+# Check if any corp has reached revolt threshold (opinion < 10)
+PTQ_check_revolt = {
 	if = {
 		limit = {
 			check_variable = { ptq_pfotenstahl_opinion < 10 }
 			NOT = { has_country_flag = PTQ_pfotenstahl_seceded }
-			NOT = { has_country_flag = PTQ_pfotenstahl_secession_warned }
+			NOT = { has_country_flag = PTQ_pfotenstahl_revolt_warned }
 		}
-		set_country_flag = PTQ_pfotenstahl_secession_warned
-		set_country_flag = { flag = PTQ_secession_pending_corp value = 1 }
-		country_event = { id = PTQ_megacorp.10 days = 1 }
+		set_country_flag = PTQ_pfotenstahl_revolt_warned
+		set_variable = { PTQ_revolting_corp = 1 }
+		country_event = { id = PTQ_megacorp.20 days = 1 }
 	}
 	if = {
 		limit = {
 			check_variable = { ptq_bergkralle_opinion < 10 }
 			NOT = { has_country_flag = PTQ_bergkralle_seceded }
-			NOT = { has_country_flag = PTQ_bergkralle_secession_warned }
+			NOT = { has_country_flag = PTQ_bergkralle_revolt_warned }
 		}
-		set_country_flag = PTQ_bergkralle_secession_warned
-		set_country_flag = { flag = PTQ_secession_pending_corp value = 2 }
-		country_event = { id = PTQ_megacorp.10 days = 1 }
+		set_country_flag = PTQ_bergkralle_revolt_warned
+		set_variable = { PTQ_revolting_corp = 2 }
+		country_event = { id = PTQ_megacorp.20 days = 1 }
 	}
 	if = {
 		limit = {
 			check_variable = { ptq_quarzkatz_opinion < 10 }
 			NOT = { has_country_flag = PTQ_quarzkatz_seceded }
-			NOT = { has_country_flag = PTQ_quarzkatz_secession_warned }
+			NOT = { has_country_flag = PTQ_quarzkatz_revolt_warned }
 		}
-		set_country_flag = PTQ_quarzkatz_secession_warned
-		set_country_flag = { flag = PTQ_secession_pending_corp value = 3 }
-		country_event = { id = PTQ_megacorp.10 days = 1 }
+		set_country_flag = PTQ_quarzkatz_revolt_warned
+		set_variable = { PTQ_revolting_corp = 3 }
+		country_event = { id = PTQ_megacorp.20 days = 1 }
 	}
 	if = {
 		limit = {
 			check_variable = { ptq_schnurrbart_opinion < 10 }
 			NOT = { has_country_flag = PTQ_schnurrbart_seceded }
-			NOT = { has_country_flag = PTQ_schnurrbart_secession_warned }
+			NOT = { has_country_flag = PTQ_schnurrbart_revolt_warned }
 		}
-		set_country_flag = PTQ_schnurrbart_secession_warned
-		set_country_flag = { flag = PTQ_secession_pending_corp value = 4 }
-		country_event = { id = PTQ_megacorp.10 days = 1 }
+		set_country_flag = PTQ_schnurrbart_revolt_warned
+		set_variable = { PTQ_revolting_corp = 4 }
+		country_event = { id = PTQ_megacorp.20 days = 1 }
 	}
 	if = {
 		limit = {
 			check_variable = { ptq_samtpfote_opinion < 10 }
 			NOT = { has_country_flag = PTQ_samtpfote_seceded }
-			NOT = { has_country_flag = PTQ_samtpfote_secession_warned }
+			NOT = { has_country_flag = PTQ_samtpfote_revolt_warned }
 		}
-		set_country_flag = PTQ_samtpfote_secession_warned
-		set_country_flag = { flag = PTQ_secession_pending_corp value = 5 }
-		country_event = { id = PTQ_megacorp.10 days = 1 }
+		set_country_flag = PTQ_samtpfote_revolt_warned
+		set_variable = { PTQ_revolting_corp = 5 }
+		country_event = { id = PTQ_megacorp.20 days = 1 }
 	}
 	if = {
 		limit = {
 			check_variable = { ptq_nordlicht_opinion < 10 }
 			NOT = { has_country_flag = PTQ_nordlicht_seceded }
-			NOT = { has_country_flag = PTQ_nordlicht_secession_warned }
+			NOT = { has_country_flag = PTQ_nordlicht_revolt_warned }
 		}
-		set_country_flag = PTQ_nordlicht_secession_warned
-		set_country_flag = { flag = PTQ_secession_pending_corp value = 6 }
-		country_event = { id = PTQ_megacorp.10 days = 1 }
+		set_country_flag = PTQ_nordlicht_revolt_warned
+		set_variable = { PTQ_revolting_corp = 6 }
+		country_event = { id = PTQ_megacorp.20 days = 1 }
 	}
 }
 
-# Execute secession for a specific corp
-# Uses country flag PTQ_secession_pending_corp to determine which corp
-PTQ_execute_secession = {
+# Execute revolt - corp secedes and their modifiers zeroed out
+PTQ_execute_revolt = {
 	if = {
-		limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 1 } }
+		limit = { check_variable = { PTQ_revolting_corp = 1 } }
 		set_country_flag = PTQ_pfotenstahl_seceded
-		if = {
-			limit = { has_dynamic_modifier = { modifier = PTQ_pfotenstahl_modifier } }
-			remove_dynamic_modifier = { modifier = PTQ_pfotenstahl_modifier }
-		}
 		add_stability = -0.15
 		add_war_support = -0.10
 		add_popularity = { ideology = communism popularity = 0.05 }
 	}
 	if = {
-		limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 2 } }
+		limit = { check_variable = { PTQ_revolting_corp = 2 } }
 		set_country_flag = PTQ_bergkralle_seceded
-		if = {
-			limit = { has_dynamic_modifier = { modifier = PTQ_bergkralle_modifier } }
-			remove_dynamic_modifier = { modifier = PTQ_bergkralle_modifier }
-		}
 		add_stability = -0.15
 		add_war_support = -0.10
 		add_popularity = { ideology = communism popularity = 0.05 }
 	}
 	if = {
-		limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 3 } }
+		limit = { check_variable = { PTQ_revolting_corp = 3 } }
 		set_country_flag = PTQ_quarzkatz_seceded
-		if = {
-			limit = { has_dynamic_modifier = { modifier = PTQ_quarzkatz_modifier } }
-			remove_dynamic_modifier = { modifier = PTQ_quarzkatz_modifier }
-		}
 		add_stability = -0.15
 		add_war_support = -0.10
 		add_popularity = { ideology = communism popularity = 0.05 }
 	}
 	if = {
-		limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 4 } }
+		limit = { check_variable = { PTQ_revolting_corp = 4 } }
 		set_country_flag = PTQ_schnurrbart_seceded
-		if = {
-			limit = { has_dynamic_modifier = { modifier = PTQ_schnurrbart_modifier } }
-			remove_dynamic_modifier = { modifier = PTQ_schnurrbart_modifier }
-		}
 		add_stability = -0.15
 		add_war_support = -0.10
 		add_popularity = { ideology = communism popularity = 0.05 }
 	}
 	if = {
-		limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 5 } }
+		limit = { check_variable = { PTQ_revolting_corp = 5 } }
 		set_country_flag = PTQ_samtpfote_seceded
-		if = {
-			limit = { has_dynamic_modifier = { modifier = PTQ_samtpfote_modifier } }
-			remove_dynamic_modifier = { modifier = PTQ_samtpfote_modifier }
-		}
 		add_stability = -0.15
 		add_war_support = -0.10
 		add_popularity = { ideology = communism popularity = 0.05 }
 	}
 	if = {
-		limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 6 } }
+		limit = { check_variable = { PTQ_revolting_corp = 6 } }
 		set_country_flag = PTQ_nordlicht_seceded
-		if = {
-			limit = { has_dynamic_modifier = { modifier = PTQ_nordlicht_modifier } }
-			remove_dynamic_modifier = { modifier = PTQ_nordlicht_modifier }
-		}
 		add_stability = -0.15
 		add_war_support = -0.10
 		add_popularity = { ideology = communism popularity = 0.05 }
 	}
-	clr_country_flag = PTQ_secession_pending_corp
+	PTQ_recalculate_all_corps = yes
+}
+
+# After putting down a revolt, redistribute the defeated corp's lands to a random neighboring corp
+PTQ_redistribute_revolt_lands = {
+	# Pick a random non-seceded corp to receive the lands
+	random_list = {
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_pfotenstahl_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_revolting_corp = 1 } }
+			set_variable = { PTQ_receiving_corp = 1 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_bergkralle_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_revolting_corp = 2 } }
+			set_variable = { PTQ_receiving_corp = 2 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_quarzkatz_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_revolting_corp = 3 } }
+			set_variable = { PTQ_receiving_corp = 3 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_schnurrbart_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_revolting_corp = 4 } }
+			set_variable = { PTQ_receiving_corp = 4 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_samtpfote_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_revolting_corp = 5 } }
+			set_variable = { PTQ_receiving_corp = 5 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_nordlicht_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_revolting_corp = 6 } }
+			set_variable = { PTQ_receiving_corp = 6 }
+		}
+	}
+
+	# Increase the receiving corp's opinion as a reward
+	if = {
+		limit = { check_variable = { PTQ_receiving_corp = 1 } }
+		add_to_variable = { ptq_pfotenstahl_opinion = 15 }
+		clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_receiving_corp = 2 } }
+		add_to_variable = { ptq_bergkralle_opinion = 15 }
+		clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_receiving_corp = 3 } }
+		add_to_variable = { ptq_quarzkatz_opinion = 15 }
+		clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_receiving_corp = 4 } }
+		add_to_variable = { ptq_schnurrbart_opinion = 15 }
+		clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_receiving_corp = 5 } }
+		add_to_variable = { ptq_samtpfote_opinion = 15 }
+		clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_receiving_corp = 6 } }
+		add_to_variable = { ptq_nordlicht_opinion = 15 }
+		clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+	}
+
+	PTQ_recalculate_all_corps = yes
+}
+
+# Pick two random non-seceded corps for the conquered state competition
+PTQ_pick_two_competing_corps = {
+	# Pick first corp
+	random_list = {
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_pfotenstahl_seceded }
+			set_variable = { PTQ_competing_corp_1 = 1 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_bergkralle_seceded }
+			set_variable = { PTQ_competing_corp_1 = 2 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_quarzkatz_seceded }
+			set_variable = { PTQ_competing_corp_1 = 3 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_schnurrbart_seceded }
+			set_variable = { PTQ_competing_corp_1 = 4 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_samtpfote_seceded }
+			set_variable = { PTQ_competing_corp_1 = 5 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_nordlicht_seceded }
+			set_variable = { PTQ_competing_corp_1 = 6 }
+		}
+	}
+	# Pick second corp (must be different from first)
+	random_list = {
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_pfotenstahl_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_competing_corp_1 = 1 } }
+			set_variable = { PTQ_competing_corp_2 = 1 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_bergkralle_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_competing_corp_1 = 2 } }
+			set_variable = { PTQ_competing_corp_2 = 2 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_quarzkatz_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_competing_corp_1 = 3 } }
+			set_variable = { PTQ_competing_corp_2 = 3 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_schnurrbart_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_competing_corp_1 = 4 } }
+			set_variable = { PTQ_competing_corp_2 = 4 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_samtpfote_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_competing_corp_1 = 5 } }
+			set_variable = { PTQ_competing_corp_2 = 5 }
+		}
+		1 = {
+			modifier = { factor = 0 has_country_flag = PTQ_nordlicht_seceded }
+			modifier = { factor = 0 check_variable = { PTQ_competing_corp_1 = 6 } }
+			set_variable = { PTQ_competing_corp_2 = 6 }
+		}
+	}
+}
+
+# Apply result of conquest state competition: give state to chosen corp, anger the other
+PTQ_award_state_to_corp = {
+	# Corp that won gets +10 opinion
+	if = {
+		limit = { check_variable = { PTQ_chosen_corp = 1 } }
+		add_to_variable = { ptq_pfotenstahl_opinion = 10 }
+		clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_chosen_corp = 2 } }
+		add_to_variable = { ptq_bergkralle_opinion = 10 }
+		clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_chosen_corp = 3 } }
+		add_to_variable = { ptq_quarzkatz_opinion = 10 }
+		clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_chosen_corp = 4 } }
+		add_to_variable = { ptq_schnurrbart_opinion = 10 }
+		clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_chosen_corp = 5 } }
+		add_to_variable = { ptq_samtpfote_opinion = 10 }
+		clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_chosen_corp = 6 } }
+		add_to_variable = { ptq_nordlicht_opinion = 10 }
+		clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+	}
+
+	# Corp that lost gets -10 opinion
+	if = {
+		limit = { check_variable = { PTQ_rejected_corp = 1 } }
+		subtract_from_variable = { ptq_pfotenstahl_opinion = 10 }
+		clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_rejected_corp = 2 } }
+		subtract_from_variable = { ptq_bergkralle_opinion = 10 }
+		clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_rejected_corp = 3 } }
+		subtract_from_variable = { ptq_quarzkatz_opinion = 10 }
+		clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_rejected_corp = 4 } }
+		subtract_from_variable = { ptq_schnurrbart_opinion = 10 }
+		clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_rejected_corp = 5 } }
+		subtract_from_variable = { ptq_samtpfote_opinion = 10 }
+		clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
+	}
+	if = {
+		limit = { check_variable = { PTQ_rejected_corp = 6 } }
+		subtract_from_variable = { ptq_nordlicht_opinion = 10 }
+		clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
+	}
+
+	PTQ_recalculate_all_corps = yes
 }

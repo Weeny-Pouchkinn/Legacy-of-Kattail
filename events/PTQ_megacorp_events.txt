@@ -61,7 +61,7 @@ country_event = {
 			subtract_from_variable = { ptq_pfotenstahl_opinion = 15 }
 			clamp_variable = { var = ptq_pfotenstahl_opinion min = 0 max = 100 }
 			PTQ_recalculate_all_corps = yes
-			PTQ_check_secession = yes
+			PTQ_check_revolt = yes
 		}
 		custom_effect_tooltip = PTQ_pfotenstahl_opinion_decrease_tt
 	}
@@ -118,7 +118,7 @@ country_event = {
 			subtract_from_variable = { ptq_bergkralle_opinion = 15 }
 			clamp_variable = { var = ptq_bergkralle_opinion min = 0 max = 100 }
 			PTQ_recalculate_all_corps = yes
-			PTQ_check_secession = yes
+			PTQ_check_revolt = yes
 		}
 		custom_effect_tooltip = PTQ_bergkralle_opinion_decrease_tt
 	}
@@ -175,7 +175,7 @@ country_event = {
 			subtract_from_variable = { ptq_quarzkatz_opinion = 15 }
 			clamp_variable = { var = ptq_quarzkatz_opinion min = 0 max = 100 }
 			PTQ_recalculate_all_corps = yes
-			PTQ_check_secession = yes
+			PTQ_check_revolt = yes
 		}
 		custom_effect_tooltip = PTQ_quarzkatz_opinion_decrease_tt
 	}
@@ -236,7 +236,7 @@ country_event = {
 			subtract_from_variable = { ptq_schnurrbart_opinion = 15 }
 			clamp_variable = { var = ptq_schnurrbart_opinion min = 0 max = 100 }
 			PTQ_recalculate_all_corps = yes
-			PTQ_check_secession = yes
+			PTQ_check_revolt = yes
 		}
 		custom_effect_tooltip = PTQ_schnurrbart_opinion_decrease_tt
 	}
@@ -293,7 +293,7 @@ country_event = {
 			subtract_from_variable = { ptq_samtpfote_opinion = 15 }
 			clamp_variable = { var = ptq_samtpfote_opinion min = 0 max = 100 }
 			PTQ_recalculate_all_corps = yes
-			PTQ_check_secession = yes
+			PTQ_check_revolt = yes
 		}
 		custom_effect_tooltip = PTQ_samtpfote_opinion_decrease_tt
 	}
@@ -354,26 +354,26 @@ country_event = {
 			subtract_from_variable = { ptq_nordlicht_opinion = 15 }
 			clamp_variable = { var = ptq_nordlicht_opinion min = 0 max = 100 }
 			PTQ_recalculate_all_corps = yes
-			PTQ_check_secession = yes
+			PTQ_check_revolt = yes
 		}
 		custom_effect_tooltip = PTQ_nordlicht_opinion_decrease_tt
 	}
 }
 
-# ==================== SECESSION CRISIS EVENT ====================
+# ==================== CORPORATE REVOLT EVENT ====================
 # Fires when any corp's opinion drops below 10
 
 country_event = {
-	id = PTQ_megacorp.10
-	title = PTQ_megacorp.10.t
-	desc = PTQ_megacorp.10.d
+	id = PTQ_megacorp.20
+	title = PTQ_megacorp.20.t
+	desc = PTQ_megacorp.20.d
 	picture = GFX_report_event_generic_factory
 
 	is_triggered_only = yes
 
 	# Emergency bailout - Pay heavy PP cost to save the relationship
 	option = {
-		name = PTQ_megacorp.10.a
+		name = PTQ_megacorp.20.a
 		ai_chance = { base = 80 }
 
 		trigger = {
@@ -385,49 +385,106 @@ country_event = {
 		hidden_effect = {
 			# Reset the corp's opinion to 25
 			if = {
-				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 1 } }
+				limit = { check_variable = { PTQ_revolting_corp = 1 } }
 				set_variable = { ptq_pfotenstahl_opinion = 25 }
+				clr_country_flag = PTQ_pfotenstahl_revolt_warned
 			}
 			if = {
-				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 2 } }
+				limit = { check_variable = { PTQ_revolting_corp = 2 } }
 				set_variable = { ptq_bergkralle_opinion = 25 }
+				clr_country_flag = PTQ_bergkralle_revolt_warned
 			}
 			if = {
-				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 3 } }
+				limit = { check_variable = { PTQ_revolting_corp = 3 } }
 				set_variable = { ptq_quarzkatz_opinion = 25 }
+				clr_country_flag = PTQ_quarzkatz_revolt_warned
 			}
 			if = {
-				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 4 } }
+				limit = { check_variable = { PTQ_revolting_corp = 4 } }
 				set_variable = { ptq_schnurrbart_opinion = 25 }
+				clr_country_flag = PTQ_schnurrbart_revolt_warned
 			}
 			if = {
-				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 5 } }
+				limit = { check_variable = { PTQ_revolting_corp = 5 } }
 				set_variable = { ptq_samtpfote_opinion = 25 }
+				clr_country_flag = PTQ_samtpfote_revolt_warned
 			}
 			if = {
-				limit = { has_country_flag = { flag = PTQ_secession_pending_corp value = 6 } }
+				limit = { check_variable = { PTQ_revolting_corp = 6 } }
 				set_variable = { ptq_nordlicht_opinion = 25 }
+				clr_country_flag = PTQ_nordlicht_revolt_warned
 			}
-			clr_country_flag = PTQ_secession_pending_corp
-			# Reset warning flags so they can warn again
-			clr_country_flag = PTQ_pfotenstahl_secession_warned
-			clr_country_flag = PTQ_bergkralle_secession_warned
-			clr_country_flag = PTQ_quarzkatz_secession_warned
-			clr_country_flag = PTQ_schnurrbart_secession_warned
-			clr_country_flag = PTQ_samtpfote_secession_warned
-			clr_country_flag = PTQ_nordlicht_secession_warned
 			PTQ_recalculate_all_corps = yes
 		}
 
-		custom_effect_tooltip = PTQ_secession_averted_tt
+		custom_effect_tooltip = PTQ_revolt_averted_tt
 	}
 
-	# Accept the secession - Lose the corp permanently
+	# Let them revolt - crush them and give their lands to a neighbor
 	option = {
-		name = PTQ_megacorp.10.b
+		name = PTQ_megacorp.20.b
 		ai_chance = { base = 20 }
 
-		PTQ_execute_secession = yes
-		custom_effect_tooltip = PTQ_secession_executed_tt
+		PTQ_execute_revolt = yes
+		custom_effect_tooltip = PTQ_revolt_executed_tt
+
+		# After revolt is crushed, redistribute lands
+		hidden_effect = {
+			PTQ_redistribute_revolt_lands = yes
+			country_event = { id = PTQ_megacorp.21 days = 30 }
+		}
+	}
+}
+
+# Revolt aftermath - lands given to another corp
+country_event = {
+	id = PTQ_megacorp.21
+	title = PTQ_megacorp.21.t
+	desc = PTQ_megacorp.21.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = PTQ_megacorp.21.a
+		ai_chance = { base = 100 }
+		custom_effect_tooltip = PTQ_revolt_aftermath_tt
+	}
+}
+
+# ==================== CONQUERED STATE COMPETITION ====================
+# Fires when PTQ takes a non-core state from another country
+# Two megacorps compete for control of the new territory
+
+country_event = {
+	id = PTQ_megacorp.30
+	title = PTQ_megacorp.30.t
+	desc = PTQ_megacorp.30.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	# Give it to Corp 1
+	option = {
+		name = PTQ_megacorp.30.a
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			set_variable = { PTQ_chosen_corp = PTQ_competing_corp_1 }
+			set_variable = { PTQ_rejected_corp = PTQ_competing_corp_2 }
+			PTQ_award_state_to_corp = yes
+		}
+		custom_effect_tooltip = PTQ_state_awarded_corp1_tt
+	}
+
+	# Give it to Corp 2
+	option = {
+		name = PTQ_megacorp.30.b
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			set_variable = { PTQ_chosen_corp = PTQ_competing_corp_2 }
+			set_variable = { PTQ_rejected_corp = PTQ_competing_corp_1 }
+			PTQ_award_state_to_corp = yes
+		}
+		custom_effect_tooltip = PTQ_state_awarded_corp2_tt
 	}
 }

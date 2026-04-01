@@ -1881,6 +1881,26 @@ on_actions = {
 				calculate_salvo_capacity = yes
 				calculate_strategic_resource_modifiers = yes
 			}
+			# PTQ Megacorp: when PTQ conquers a non-core state, two corps compete for it
+			if = {
+				limit = {
+					ROOT = {
+						tag = PTQ
+						has_country_flag = PTQ_corps_initialized
+						is_puppet = no
+					}
+					FROM = { NOT = { tag = PTQ } }
+					FROM.FROM = {
+						NOT = { is_core_of = PTQ }
+					}
+				}
+				ROOT = {
+					hidden_effect = {
+						PTQ_pick_two_competing_corps = yes
+					}
+					country_event = { id = PTQ_megacorp.30 days = 3 }
+				}
+			}
 			if = { #Mondkanone!
 				limit = {
 					FROM.FROM = { state = 708 }
@@ -2021,19 +2041,19 @@ on_actions = {
 				hidden_effect = {
 					PTQ_monthly_opinion_decay = yes
 				}
-				# Random demand events (~30% chance per month, 60 day cooldown)
+				# Random demand events (~50% chance per month, 30 day cooldown)
 				if = {
 					limit = { NOT = { has_country_flag = PTQ_demand_cooldown } }
 					random_list = {
-						70 = { }
-						5 = { country_event = { id = PTQ_megacorp.1 } }
-						5 = { country_event = { id = PTQ_megacorp.2 } }
-						5 = { country_event = { id = PTQ_megacorp.3 } }
+						50 = { }
+						10 = { country_event = { id = PTQ_megacorp.1 } }
+						10 = { country_event = { id = PTQ_megacorp.2 } }
+						10 = { country_event = { id = PTQ_megacorp.3 } }
 						5 = { country_event = { id = PTQ_megacorp.4 } }
 						5 = { country_event = { id = PTQ_megacorp.5 } }
-						5 = { country_event = { id = PTQ_megacorp.6 } }
+						10 = { country_event = { id = PTQ_megacorp.6 } }
 					}
-					set_country_flag = { flag = PTQ_demand_cooldown days = 60 value = 1 }
+					set_country_flag = { flag = PTQ_demand_cooldown days = 30 value = 1 }
 				}
 			}
 		}
