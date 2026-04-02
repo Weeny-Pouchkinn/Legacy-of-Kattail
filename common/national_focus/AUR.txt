@@ -1,6 +1,6 @@
 focus_tree = {
 	id = AUR_REGENCY_TREE
-	continuous_focus_position = { x = 2700 y = 300 }
+	continuous_focus_position = { x = 3700 y = 300 }
 	country = {
 		factor = 0
 		modifier = {
@@ -338,7 +338,7 @@ focus_tree = {
 		icon = GFX_goal_KTZ_modular_ship_engineering
 		x = 0
 		y = 4
-		cost = 5
+		cost = 10
 		relative_position_id = AUR_neu_seetruppen
 		prerequisite = { focus = AUR_famed_efficiency focus = AUR_new_goalposts }
 		completion_reward = {
@@ -746,11 +746,290 @@ focus_tree = {
 	focus = {
 		id = AUR_wunderwaffe_buro
 		icon = GFX_focus_ARG_develop_the_electricity_sector
-		x = -12
+		x = -15
 		y = 3
 		cost = 10
 		relative_position_id = AUR_controlled_thought
 		prerequisite = { focus = AUR_state_of_arms }
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+	focus = {
+		id = AUR_superb_infanteriewaffen
+		icon = GFX_goal_KTZ_the_eradication_principle
+		x = -4
+		y = 1
+		cost = 10
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_wunderwaffe_buro }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_superb_infanteriewaffen
+				uses = 2
+				ahead_reduction = 1
+				category = infantry_tech
+			}
+		}
+	}
+	focus = {
+		id = AUR_mechanization_ideal
+		icon = GFX_goal_KTZ_from_the_west
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = AUR_superb_infanteriewaffen
+		prerequisite = { focus = AUR_superb_infanteriewaffen }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_mechanization_ideal
+				ahead_reduction = 1
+				uses = 2
+				category = exoskeleton_equipment
+			}
+		}
+	}
+	focus = {
+		id = AUR_soulsearching_project
+		icon = GFX_focus_ARG_develop_the_electricity_sector
+		x = -1
+		y = 1
+		cost = 10
+		available = {
+			num_of_civilian_factories > 50
+			OR = {
+				320 = { is_controlled_by_ROOT_or_ally = yes }
+				7 = { is_controlled_by_ROOT_or_ally = yes }
+			}
+		}
+		relative_position_id = AUR_superb_infanteriewaffen
+		prerequisite = { focus = AUR_superb_infanteriewaffen }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_soulsearching_project
+				ahead_reduction = 2
+				uses = 2
+				category = computing_tech
+			}
+		}
+	}
+	focus = {
+		id = AUR_achieve_regentbots
+		icon = GFX_focus_ARG_develop_the_electricity_sector
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = AUR_superb_infanteriewaffen
+		available = {
+			num_of_civilian_factories > 100
+			has_tech = advanced_computing_machine3
+		}
+		prerequisite = { focus = AUR_mechanization_ideal }
+		prerequisite = { focus = AUR_soulsearching_project }
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+	focus = {
+		id = AUR_siegebreaker_reverse_engineering
+		icon = GFX_goal_KTZ_project_two
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_wunderwaffe_buro }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_siegebreaker_reverse_engineering
+				ahead_reduction = 1
+				uses = 2
+				category = cat_heavy_armor
+			}
+		}
+	}
+	focus = {
+		id = AUR_riesigerworks
+		icon = GFX_goal_KTZ_towards_the_sturmer
+		x = -1
+		y = 1
+		cost = 10
+		available = {
+			num_of_military_factories > 50
+			owns_state = 173
+		}
+		relative_position_id = AUR_siegebreaker_reverse_engineering
+		prerequisite = { focus = AUR_siegebreaker_reverse_engineering }
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+	focus = {
+		id = AUR_asmd_systems
+		icon = GFX_focus_ARG_develop_the_electricity_sector
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = AUR_siegebreaker_reverse_engineering
+		prerequisite = { focus = AUR_siegebreaker_reverse_engineering }
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+	focus = {
+		id = AUR_prototype_imperialrise
+		icon = GFX_goal_KTZ_the_sieger_project
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = AUR_siegebreaker_reverse_engineering
+		prerequisite = { focus = AUR_asmd_systems }
+		prerequisite = { focus = AUR_riesigerworks }
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+	focus = {
+		id = AUR_superjets
+		icon = GFX_goal_KTZ_making_landfall
+		x = 4
+		y = 1
+		cost = 10
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_wunderwaffe_buro }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_superjets
+				ahead_reduction = 1
+				uses = 2
+				category = medium_air
+			}
+		}
+	}
+	focus = {
+		id = AUR_weltbomber_projekt
+		icon = GFX_goal_KTZ_the_flying_fortresses
+		x = -1
+		y = 1
+		cost = 10
+		available = {
+			num_of_military_factories > 50
+		}
+		relative_position_id = AUR_superjets
+		prerequisite = { focus = AUR_superjets }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_weltbomber_projekt
+				bonus = 2
+				ahead_reduction = 2
+				uses = 1
+				category = heavy_air
+			}
+		}
+	}
+	focus = {
+		id = AUR_fabricate_weltaufseher
+		icon = GFX_goal_KTZ_from_the_air
+		x = 0
+		y = 1
+		cost = 10
+		available = {
+			num_of_military_factories > 100
+		}
+		relative_position_id = AUR_weltbomber_projekt
+		prerequisite = { focus = AUR_weltbomber_projekt }
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+	focus = {
+		id = AUR_study_kst_douclaw
+		icon = GFX_goal_KTZ_projekt_atominsel
+		x = 1
+		y = 1
+		cost = 10
+		available = {
+			num_of_naval_factories > 15
+			475 = {
+				is_controlled_by_ROOT_or_ally = yes
+			}
+			NOT = {
+				country_exists = NAV
+			}
+		}
+		relative_position_id = AUR_superjets
+		prerequisite = { focus = AUR_superjets }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_study_kst_douclaw
+				bonus = 2
+				ahead_reduction = 2
+				uses = 1
+				category = shbb_tech
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_recreate_supervessels
+		icon = GFX_goal_KTZ_the_floating_islands
+		x = 0
+		y = 1
+		cost = 10
+		available = {
+			num_of_naval_factories > 30
+		}
+		relative_position_id = AUR_study_kst_douclaw
+		prerequisite = { focus = AUR_study_kst_douclaw }
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 2.0
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+	focus = {
+		id = AUR_continue_mondkanone
+		icon = GFX_goal_KTZ_projekt_mondkanone
+		x = 0
+		y = 4
+		cost = 10
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_achieve_regentbots }
+		prerequisite = { focus = AUR_prototype_imperialrise }
+		prerequisite = { focus = AUR_fabricate_weltaufseher }
+		prerequisite = { focus = AUR_recreate_supervessels }
 		completion_reward = {
 			add_tech_bonus = {
 				name = secret_bonus
@@ -3428,7 +3707,7 @@ focus_tree = {
 		icon = GFX_goal_KTZ_make_division
 		x = 1
 		y = 1
-		cost = 5
+		cost = 10
 		prerequisite = { focus = AUR_encourage_war_crimes }
 		prerequisite = { focus = AUR_fully_mechanized }
 		relative_position_id = AUR_fully_mechanized
