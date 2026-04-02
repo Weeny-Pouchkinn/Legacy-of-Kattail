@@ -1,0 +1,961 @@
+focus_tree = {
+	id = KPK_TREE
+	continuous_focus_position = { x = 2700 y = 300 }
+	country = {
+		factor = 0
+		modifier = {
+			add = 100
+			tag = KPK
+		}
+	}
+
+	##################################
+	# INTRODUCTORY FOCUSES (7 day)
+	##################################
+
+	focus = {
+		id = KPK_history_of_the_korps
+		icon = GFX_goal_generic_propaganda
+		cost = 1
+		x = 10
+		y = 0
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			country_event = KPK_events.1
+		}
+	}
+
+	focus = {
+		id = KPK_settling_between_the_mountains
+		icon = GFX_goal_generic_propaganda
+		cost = 1
+		x = 4
+		y = 0
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			country_event = KPK_events.2
+		}
+	}
+
+	focus = {
+		id = KPK_an_interim_government
+		icon = GFX_goal_generic_propaganda
+		cost = 1
+		x = 17
+		y = 0
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			country_event = KPK_events.3
+			swap_ideas = {
+				remove_idea = KPK_uncertain_political_future
+				add_idea = KPK_uncertain_political_future_mitigated
+			}
+		}
+	}
+
+	##################################
+	# POLITICAL TREE
+	##################################
+
+	focus = {
+		id = KPK_draft_a_constitution
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 17
+		y = 1
+		prerequisite = {
+			focus = KPK_an_interim_government
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			remove_ideas = KPK_uncertain_political_future_mitigated
+			add_political_power = 50
+			country_event = KPK_events.10
+		}
+	}
+
+	# Neutral Path - The Factory-State
+	focus = {
+		id = KPK_the_factory_state
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 13
+		y = 2
+		prerequisite = {
+			focus = KPK_draft_a_constitution
+		}
+		mutually_exclusive = {
+			focus = KPK_the_old_katzen_ways
+			focus = KPK_democratic_communist_path
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KPK_the_factory_state
+			set_politics = {
+				ruling_party = neutrality
+				elections_allowed = no
+				long_name = KPK_neutrality_party_long
+				name = KPK_neutrality_party
+			}
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.15
+			}
+			set_cosmetic_tag = KPK_MERCHANT
+		}
+	}
+
+	focus = {
+		id = KPK_industrial_council
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 13
+		y = 3
+		prerequisite = {
+			focus = KPK_the_factory_state
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.10
+			}
+			add_political_power = 100
+			597 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_power_trading
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 12
+		y = 4
+		prerequisite = {
+			focus = KPK_industrial_council
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_resource = {
+				type = energy
+				amount = 30
+				state = 597
+			}
+			add_political_power = 50
+		}
+	}
+
+	focus = {
+		id = KPK_industrial_expansion
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 14
+		y = 4
+		prerequisite = {
+			focus = KPK_industrial_council
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			599 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = industrial_complex
+					level = 3
+					instant_build = yes
+				}
+			}
+			598 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_merchant_republic
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 13
+		y = 5
+		prerequisite = {
+			focus = KPK_power_trading
+		}
+		prerequisite = {
+			focus = KPK_industrial_expansion
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = KPK_the_factory_state
+				add_idea = KPK_the_factory_state
+			}
+			add_research_slot = 1
+			add_stability = 0.10
+		}
+	}
+
+	# Fascist Path - The Old Katzen Ways
+	focus = {
+		id = KPK_the_old_katzen_ways
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 17
+		y = 2
+		prerequisite = {
+			focus = KPK_draft_a_constitution
+		}
+		mutually_exclusive = {
+			focus = KPK_the_factory_state
+			focus = KPK_democratic_communist_path
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KPK_the_old_katzen_ways
+			set_politics = {
+				ruling_party = fascism
+				elections_allowed = no
+				long_name = KPK_fascism_party_long
+				name = KPK_fascism_party
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.25
+			}
+			set_cosmetic_tag = KPK_KATZEN_STATE
+		}
+	}
+
+	focus = {
+		id = KPK_rebuild_the_officer_corps
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 17
+		y = 3
+		prerequisite = {
+			focus = KPK_the_old_katzen_ways
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_war_support = 0.10
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.05
+			}
+			army_experience = 25
+		}
+	}
+
+	focus = {
+		id = KPK_katzen_militarism
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 16
+		y = 4
+		prerequisite = {
+			focus = KPK_rebuild_the_officer_corps
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.05
+			}
+			597 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = arms_factory
+					level = 3
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_southern_vanguard
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 18
+		y = 4
+		prerequisite = {
+			focus = KPK_rebuild_the_officer_corps
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_war_support = 0.10
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = KPK_southeast_katzen_state
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 17
+		y = 5
+		prerequisite = {
+			focus = KPK_katzen_militarism
+		}
+		prerequisite = {
+			focus = KPK_southern_vanguard
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = KPK_the_old_katzen_ways
+				add_idea = KPK_the_old_katzen_ways
+			}
+			add_research_slot = 1
+			add_war_support = 0.05
+		}
+	}
+
+	# Democratic/Communist Shared Entry
+	focus = {
+		id = KPK_democratic_communist_path
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 22
+		y = 2
+		prerequisite = {
+			focus = KPK_draft_a_constitution
+		}
+		mutually_exclusive = {
+			focus = KPK_the_factory_state
+			focus = KPK_the_old_katzen_ways
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = 75
+			add_stability = 0.05
+		}
+	}
+
+	# Democratic Subpath - A Katzen Republic
+	focus = {
+		id = KPK_a_katzen_republic
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 20
+		y = 3
+		prerequisite = {
+			focus = KPK_democratic_communist_path
+		}
+		mutually_exclusive = {
+			focus = KPK_a_peoples_republic
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KPK_a_katzen_republic
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = yes
+				long_name = KPK_democratic_party_long
+				name = KPK_democratic_party
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.35
+			}
+			set_cosmetic_tag = KPK_REPUBLIC
+		}
+	}
+
+	focus = {
+		id = KPK_social_democratic_reforms
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 20
+		y = 4
+		prerequisite = {
+			focus = KPK_a_katzen_republic
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.10
+			}
+			add_stability = 0.10
+			add_political_power = 75
+		}
+	}
+
+	focus = {
+		id = KPK_republic_of_southeast_felinia
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 20
+		y = 5
+		prerequisite = {
+			focus = KPK_social_democratic_reforms
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = KPK_a_katzen_republic
+				add_idea = KPK_a_katzen_republic
+			}
+			add_research_slot = 1
+			add_stability = 0.05
+		}
+	}
+
+	# Communist Subpath - A People's Republic
+	focus = {
+		id = KPK_a_peoples_republic
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 24
+		y = 3
+		prerequisite = {
+			focus = KPK_democratic_communist_path
+		}
+		mutually_exclusive = {
+			focus = KPK_a_katzen_republic
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_ideas = KPK_a_peoples_republic
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+				long_name = KPK_communism_party_long
+				name = KPK_communism_party
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.15
+			}
+			set_cosmetic_tag = KPK_PEOPLES
+		}
+	}
+
+	focus = {
+		id = KPK_libertarian_socialist_economy
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 24
+		y = 4
+		prerequisite = {
+			focus = KPK_a_peoples_republic
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.10
+			}
+			add_stability = 0.05
+			599 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = industrial_complex
+					level = 3
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_peoples_republic_of_southeast_felinia
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 24
+		y = 5
+		prerequisite = {
+			focus = KPK_libertarian_socialist_economy
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = KPK_a_peoples_republic
+				add_idea = KPK_a_peoples_republic
+			}
+			add_research_slot = 1
+			add_stability = 0.05
+		}
+	}
+
+	##################################
+	# MILITARY TREE
+	##################################
+
+	focus = {
+		id = KPK_the_grand_machine
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 4
+		y = 1
+		prerequisite = {
+			focus = KPK_settling_between_the_mountains
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+			army_experience = 50
+			add_ideas = KPK_the_design_of_the_machine
+		}
+	}
+
+	# Kabelschneiderdoktrin (Maneuver Warfare / Cable-Cutter Doctrine)
+	focus = {
+		id = KPK_kabelschneiderdoktrin
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 1
+		y = 2
+		prerequisite = {
+			focus = KPK_the_grand_machine
+		}
+		mutually_exclusive = {
+			focus = KPK_wasserschlagdoktrin
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+			army_experience = 25
+			custom_effect_tooltip = KPK_kabelschneiderdoktrin_tt
+		}
+	}
+
+	# Wasserschlagdoktrin (Overwhelming Firepower / Water-Strike Doctrine)
+	focus = {
+		id = KPK_wasserschlagdoktrin
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 4
+		y = 2
+		prerequisite = {
+			focus = KPK_the_grand_machine
+		}
+		mutually_exclusive = {
+			focus = KPK_kabelschneiderdoktrin
+			focus = KPK_uhrwerkdoktrin
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+			army_experience = 25
+			custom_effect_tooltip = KPK_wasserschlagdoktrin_tt
+		}
+	}
+
+	# Uhrwerkdoktrin (Grand Battleplan / Clockwork Doctrine)
+	focus = {
+		id = KPK_uhrwerkdoktrin
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 7
+		y = 2
+		prerequisite = {
+			focus = KPK_the_grand_machine
+		}
+		mutually_exclusive = {
+			focus = KPK_wasserschlagdoktrin
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+			army_experience = 25
+			custom_effect_tooltip = KPK_uhrwerkdoktrin_tt
+		}
+	}
+
+	# Establish the Südberg Military Academy
+	focus = {
+		id = KPK_establish_sudberg_military_academy
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 4
+		y = 3
+		prerequisite = {
+			focus = KPK_kabelschneiderdoktrin
+			focus = KPK_wasserschlagdoktrin
+			focus = KPK_uhrwerkdoktrin
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+			army_experience = 25
+			add_political_power = 25
+		}
+	}
+
+	# Reform the Command Structure
+	focus = {
+		id = KPK_reform_command_structure
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 1
+		y = 4
+		prerequisite = {
+			focus = KPK_establish_sudberg_military_academy
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = KPK_the_design_of_the_machine
+				add_idea = KPK_the_design_of_the_machine_reformed
+			}
+			army_experience = 25
+		}
+	}
+
+	# Developing the Next Generation of Equipment
+	focus = {
+		id = KPK_developing_next_gen_equipment
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 4
+		y = 4
+		prerequisite = {
+			focus = KPK_establish_sudberg_military_academy
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = infantry_bonus
+				bonus = 0.50
+				uses = 2
+				category = infantry_weapons
+			}
+			add_tech_bonus = {
+				name = armor_bonus
+				bonus = 0.50
+				uses = 1
+				category = armor
+			}
+		}
+	}
+
+	# Integrate the Lessons of the Collapse
+	focus = {
+		id = KPK_integrate_lessons_of_collapse
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 7
+		y = 4
+		prerequisite = {
+			focus = KPK_establish_sudberg_military_academy
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+			army_experience = 25
+		}
+	}
+
+	# The New Southeastern Army (Capstone)
+	focus = {
+		id = KPK_the_new_southeastern_army
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 4
+		y = 5
+		prerequisite = {
+			focus = KPK_reform_command_structure
+		}
+		prerequisite = {
+			focus = KPK_developing_next_gen_equipment
+		}
+		prerequisite = {
+			focus = KPK_integrate_lessons_of_collapse
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = KPK_the_design_of_the_machine_reformed
+				add_idea = KPK_wir_konnen_wir_machten
+			}
+			swap_ideas = {
+				remove_idea = KPK_disarray_of_the_collapse
+				add_idea = KPK_the_hydroelectric_state
+			}
+			army_experience = 50
+			add_war_support = 0.10
+		}
+	}
+
+	##################################
+	# INDUSTRY / INFRASTRUCTURE
+	# (from "Settling between the Mountains")
+	##################################
+
+	focus = {
+		id = KPK_assess_regional_resources
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 10
+		y = 1
+		prerequisite = {
+			focus = KPK_history_of_the_korps
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 0.50
+				uses = 2
+				category = industry
+			}
+			add_political_power = 25
+		}
+	}
+
+	focus = {
+		id = KPK_restore_the_sudberg_damm
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 9
+		y = 2
+		prerequisite = {
+			focus = KPK_assess_regional_resources
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			597 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_resource = {
+				type = energy
+				amount = 20
+				state = 597
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_expand_dam_capacity
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 9
+		y = 3
+		prerequisite = {
+			focus = KPK_restore_the_sudberg_damm
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_resource = {
+				type = energy
+				amount = 20
+				state = 597
+			}
+			add_resource = {
+				type = food
+				amount = 10
+				state = 597
+			}
+			597 = {
+				add_extra_state_shared_building_slots = 2
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_rebuild_regional_infrastructure
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 11
+		y = 2
+		prerequisite = {
+			focus = KPK_assess_regional_resources
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			598 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			599 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			146 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_civilian_industry_effort
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 11
+		y = 3
+		prerequisite = {
+			focus = KPK_rebuild_regional_infrastructure
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			598 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			146 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KPK_heart_of_the_region
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		x = 10
+		y = 4
+		prerequisite = {
+			focus = KPK_expand_dam_capacity
+		}
+		prerequisite = {
+			focus = KPK_civilian_industry_effort
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 0.50
+				uses = 2
+				category = industry
+			}
+			add_research_slot = 1
+		}
+	}
+}
