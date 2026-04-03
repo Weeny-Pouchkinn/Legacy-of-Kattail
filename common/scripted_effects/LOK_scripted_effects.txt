@@ -1169,6 +1169,10 @@ calculate_ai_nuke_production = {
 				add_equipment_to_stockpile = { type = lok_cobalt_nuke_equipment_0 amount = 1 }
 				modifier = { add = 1 has_tech = dirty_nuke }
 			}
+			0 = {
+				add_equipment_to_stockpile = { type = lok_sturmer_nuke_equipment amount = 1 }
+				modifier = { add = 1 has_tech = ultra_heavy_armor_tech }
+			}
 		}
 	}
 	multiply_variable = { factories_for_nukes = -1 }
@@ -1181,6 +1185,7 @@ count_nukes_in_stockpile = {
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fusion_nuke_equipment }
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_cobalt_nuke_equipment }
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_mondkanone_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_sturmer_nuke_equipment }
 }
 
 calculate_salvo_capacity = {
@@ -1189,10 +1194,14 @@ calculate_salvo_capacity = {
 			
 	every_controlled_state = { add_to_variable = { PREV.lok_total_salvo_capacity = non_damaged_building_level@rocket_site } }
 	multiply_variable = { lok_total_salvo_capacity = 10 } #10 nukes per silo
-	set_temp_variable = { salvo_capacity_from_subs = num_ships_with_type@ballistic_submarine }
 
+	set_temp_variable = { salvo_capacity_from_subs = num_ships_with_type@ballistic_submarine }
 	multiply_temp_variable = { salvo_capacity_from_subs = 20 } #10 nukes per ballistic sub
 	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_subs }
+
+	set_temp_variable = { salvo_capacity_from_riesigers = num_battalions_with_type@ultra_heavy_armor }
+	multiply_temp_variable = { salvo_capacity_from_riesigers = 50 } #50 nukes per Riesiger
+	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_riesigers }
 
 	if = {
 		limit = { is_ai = yes }
@@ -1225,6 +1234,11 @@ ai_fire_nuke = {
 			set_variable = { current_nuke_type = 3 }
 			modifier = { add = 1 has_tech = dirty_nuke }
 			modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
+		}
+		0 = {
+			set_variable = { current_nuke_type = 5 }
+			modifier = { add = 1 has_tech = ultra_heavy_armor_tech }
+			modifier = { factor = 0 has_equipment = { lok_sturmer_nuke_equipment < 1 } }
 		}
 	}
 	#AI will fire half of their salvo capacity
@@ -1264,6 +1278,13 @@ ai_fire_nuke = {
 						limit = { check_variable = { current_nuke_type = 3 } }
 						add_equipment_to_stockpile = {
 							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 5 } }
+						add_equipment_to_stockpile = {
+							type = lok_sturmer_nuke_equipment
 							amount = -1
 						}
 					}
@@ -1768,6 +1789,19 @@ fire_thermonuclear_salvo = {
 							army = yes
 						}
 					}
+					else_if = { #Sturmer
+						limit = { ROOT = { check_variable = { current_nuke_type = 5 } } }
+						set_variable = { lok_added_radiation_level = 0.75 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.02 }
+						damage_units = { #Damage troops
+							state = THIS
+							limit = { always = yes }
+							org_damage = 0.15
+							str_damage = 0.15
+							ratio = yes
+							army = yes
+						}
+					}
 					#FIRESTORMS!!! Cities multiply soot
 					if = {
 						limit = { OR = { has_state_category = large_town has_state_category = city } }
@@ -1814,6 +1848,10 @@ fire_thermonuclear_salvo = {
 							limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
 							multiply_temp_variable = { lok_nuke_casualties = 1 }
 						}
+						else_if = { #Sturmer - 10% death
+							limit = { ROOT = { check_variable = { current_nuke_type = 5 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 2 }
+						}
 						if = { #Katown Pyramid protects!
 							limit = { check_variable = { wonder = 1 } }
 							multiply_temp_variable = { lok_nuke_casualties = 0 }
@@ -1846,6 +1884,13 @@ fire_thermonuclear_salvo = {
 				modifier = { #Mondkanone cannot be intercepted
 					factor = 0
 					check_variable = { current_nuke_type = 4 }
+				}
+				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level }
+			}
+			0 = {
+				modifier = { #Sturmer is hard to intercept
+					factor = 0.25
+					check_variable = { current_nuke_type = 5 }
 				}
 				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level }
 			}

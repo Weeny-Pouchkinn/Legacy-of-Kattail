@@ -315,6 +315,11 @@ country_event = {
 				modifier = { add = 1 has_tech = dirty_nuke }
 				modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
 			}
+			0 = {
+				set_variable = { current_nuke_type = 5 }
+				modifier = { add = 1 has_tech = ultra_heavy_armor_tech }
+				modifier = { factor = 0 has_equipment = { lok_sturmer_nuke_equipment < 1 } }
+			}
 		}
 		random_country = { #PICK A TARGET!!!
 			limit = {
@@ -344,6 +349,13 @@ country_event = {
 						limit = { check_variable = { current_nuke_type = 3 } }
 						add_equipment_to_stockpile = {
 							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 5 } }
+						add_equipment_to_stockpile = {
+							type = lok_sturmer_nuke_equipment
 							amount = -1
 						}
 					}

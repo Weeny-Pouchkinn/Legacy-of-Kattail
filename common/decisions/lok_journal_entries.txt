@@ -3,6 +3,159 @@ herzlands_unification_cat = {
 }
 
 lok_journal_entries_cat = {
+	#OST
+	OST_restore_kocura = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = OST
+		}
+
+		visible = {
+			hidden_trigger = { NOT = { has_cosmetic_tag = KOC } }
+		}
+
+		available = {
+			controls_state = 540
+			controls_state = 560
+			controls_state = 97
+			has_war = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				random = {
+					chance = 50
+					create_dynamic_country = {
+						original_tag = OST
+						set_cosmetic_tag = KOC
+						set_temp_variable = { new_country = this }
+						540 = {
+							transfer_state_to = var:new_country
+							create_unit = {
+								division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+								count = 3
+								owner = var:new_country
+							}
+						}
+						560 = {
+							transfer_state_to = var:new_country
+							create_unit = {
+								division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+								count = 3
+								owner = var:new_country
+							}
+						}
+						97 = {
+							transfer_state_to = var:new_country
+							create_unit = {
+								division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+								count = 3
+								owner = var:new_country
+							}
+						}
+						OST = {
+							transfer_units_fraction = {
+								target = var:new_country
+								stockpile_ratio = 0.50
+								army_ratio = 0.50
+								navy_ratio = 0.50
+								air_ratio = 0.50
+							}
+						}
+						var:new_country = {
+							add_ideas = var_species_1
+							add_ideas = specialty_nothing
+							set_politics = {
+								ruling_party = neutrality
+							}
+							set_popularities = {
+								neutrality = 70
+								democratic = 10
+								communism = 10
+								fascism = 10
+							}
+							set_cosmetic_tag = KOC
+							declare_war_on = {
+								target = OST
+								type = annex_everything
+							}
+							add_equipment_to_stockpile = {
+								type = motorized_equipment_1
+								amount = 500
+							}
+							add_equipment_to_stockpile = {
+								type = train_equipment_1
+								amount = 50
+							}
+						}
+					}
+				}
+			}
+			else = {
+				create_dynamic_country = {
+					original_tag = OST
+					set_temp_variable = { new_country = this }
+					540 = {
+						transfer_state_to = var:new_country
+					}
+					560 = {
+						transfer_state_to = var:new_country
+					}
+					97 = {
+						transfer_state_to = var:new_country
+					}
+					OST = {
+						transfer_units_fraction = {
+							target = var:new_country
+							stockpile_ratio = 0.50
+							army_ratio = 0.50
+							navy_ratio = 0.50
+							air_ratio = 0.50
+						}
+					}
+					var:new_country = {
+						add_ideas = var_species_1
+						add_ideas = specialty_nothing
+						set_politics = {
+							ruling_party = neutrality
+						}
+						set_popularities = {
+							neutrality = 70
+							democratic = 10
+							communism = 10
+							fascism = 10
+						}
+						set_cosmetic_tag = KOC
+						declare_war_on = {
+							target = OST
+							type = annex_everything
+						}
+						add_equipment_to_stockpile = {
+							type = motorized_equipment_1
+							amount = 500
+						}
+						add_equipment_to_stockpile = {
+							type = train_equipment_1
+							amount = 50
+						}
+						change_tag_from = ROOT
+					}
+				}
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
 	#PALUUSH
 	PLR_paidi_progress = {
 		icon = generic_form_nation
@@ -13,7 +166,10 @@ lok_journal_entries_cat = {
 		available = {
 			date > "105.1.1"
 			has_war = no
-			HAR = { is_ai = yes is_puppet_of = PLR }
+			PLR = {
+				is_puppet = no
+			}
+			HAR = { is_ai = yes }
 		}
 
 		fire_only_once = yes
@@ -78,7 +234,8 @@ lok_journal_entries_cat = {
 		available = {
 			date > "110.1.1"
 			has_war = no
-			KAR = { is_ai = yes is_puppet_of = PLR }
+			PLR = { is_puppet = no }
+			KAR = { is_ai = yes }
 		}
 
 		fire_only_once = yes
