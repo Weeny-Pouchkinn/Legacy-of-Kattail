@@ -839,6 +839,9 @@ focus_tree = {
 		prerequisite = { focus = AUR_mechanization_ideal }
 		prerequisite = { focus = AUR_soulsearching_project }
 		completion_reward = {
+			every_army_leader = {
+				add_unit_leader_trait = lok_katzen_soulbot
+			}
 			add_ideas = AUR_early_katzbots
 		}
 	}
@@ -885,11 +888,18 @@ focus_tree = {
 			hidden_effect = {
 				apply_wonder_effects = yes
 			}
+			add_tech_bonus = {
+				name = AUR_riesigerworks
+				bonus = 0.5
+				ahead_reduction = 1
+				uses = 2
+				category = cat_supertensiles
+			}
 		}
 	}
 	focus = {
 		id = AUR_asmd_systems
-		icon = GFX_focus_ARG_develop_the_electricity_sector
+		icon = GFX_goal_KTZ_applied_avionics
 		x = 1
 		y = 1
 		cost = 10
@@ -897,11 +907,13 @@ focus_tree = {
 		prerequisite = { focus = AUR_siegebreaker_reverse_engineering }
 		completion_reward = {
 			add_tech_bonus = {
-				name = secret_bonus
+				name = AUR_asmd_systems
 				bonus = 2.0
+				ahead_reduction = 1
 				uses = 2
-				category = nuclear
+				category = cat_anti_air
 			}
+			add_ideas = AUR_asmd
 		}
 	}
 	focus = {
@@ -909,16 +921,39 @@ focus_tree = {
 		icon = GFX_goal_KTZ_the_sieger_project
 		x = 0
 		y = 2
-		cost = 10
+		cost = 15
 		relative_position_id = AUR_siegebreaker_reverse_engineering
 		prerequisite = { focus = AUR_asmd_systems }
 		prerequisite = { focus = AUR_riesigerworks }
+		cancelable = no
+		cancel = {
+			173 = { is_controlled_by_ROOT_or_ally = no }
+		}
+		cancel_if_invalid = yes
+		available = {
+			173 = { is_controlled_by_ROOT_or_ally = yes }
+		}
 		completion_reward = {
-			add_tech_bonus = {
-				name = secret_bonus
-				bonus = 2.0
-				uses = 2
-				category = nuclear
+			division_template = { #shitty riesiger
+				name = "Heraldtracks"
+				is_locked = yes
+				regiments = {
+					ultra_heavy_armor = { x = 0 y = 0 }
+				}
+			}
+			custom_effect_tooltip = AUR_prototype_imperialrise_tt
+			hidden_effect = {
+				173 = {
+					create_unit = {
+						division = "division_template = \"Heraldtracks\" start_experience_factor = 0 start_equipment_factor = 0.1"
+						count = 1
+						owner = AUR
+					}
+				}
+				set_technology = {
+					popup = no
+					ultra_heavy_armor_tech = 1
+				}
 			}
 		}
 	}
@@ -1015,6 +1050,8 @@ focus_tree = {
 		y = 1
 		cost = 20
 		available = {
+			has_tech = heavy_carrier
+			has_tech = heavy_battleship
 			num_of_naval_factories > 100
 		}
 		cancelable = no
@@ -3677,6 +3714,7 @@ focus_tree = {
 				uses = 2
 				category = cat_mechanized_equipment
 			}
+			add_ideas = AUR_mechanization
 		}
 	}
 
