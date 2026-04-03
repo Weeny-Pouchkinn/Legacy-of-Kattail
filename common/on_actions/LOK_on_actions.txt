@@ -33,6 +33,7 @@ on_actions = {
 
 			#POPULATION SHARE REMAINING
 			every_state = {
+				set_variable = { damaged_infra_level_last_week = 0 }
 				set_variable = { population_at_game_start = state_population_k }
 				set_variable = { population_relative_to_game_start = 1 }
 				set_variable = { lok_state_productivity_modifier = 0 }
@@ -1653,6 +1654,30 @@ on_actions = {
 
 	on_weekly = {
 		effect = {
+			#DEBUG for casualties
+			if = {
+				limit = {
+					has_war = yes
+				}
+				every_controlled_state = {
+					if = {
+						limit = {
+							check_variable = { damaged_building_level@infrastructure > damaged_infra_level_last_week }
+						}
+						set_temp_variable = { lok_combat_deaths_to_be_removed_for_state = state_population_k } #state pop in thousands
+						divide_temp_variable = { lok_combat_deaths_to_be_removed_for_state = 1000 } #0.1%
+						round_temp_variable = lok_combat_deaths_to_be_removed_for_state
+
+						multiply_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1000 } #x1000 for straight amount
+						add_manpower = lok_combat_deaths_to_be_removed_for_state
+
+						divide_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1000 }
+						add_to_variable = { lok_state_combat_deaths = lok_combat_deaths_to_be_removed_for_state }
+						add_to_variable = { lok_state_deaths = lok_combat_deaths_to_be_removed_for_state }
+					}
+					set_variable = { damaged_infra_level_last_week = damaged_building_level@infrastructure }
+				}
+			}
 			apply_wonder_effects = yes #for if capitals or cores change
 			every_controlled_state = { #Soot! Soot! Soot!
 				limit = { is_space_state = no }

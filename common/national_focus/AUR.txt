@@ -796,7 +796,7 @@ focus_tree = {
 	}
 	focus = {
 		id = AUR_soulsearching_project
-		icon = GFX_focus_ARG_develop_the_electricity_sector
+		icon = AUR_controlled_thought
 		x = -1
 		y = 1
 		cost = 10
@@ -820,24 +820,26 @@ focus_tree = {
 	}
 	focus = {
 		id = AUR_achieve_regentbots
-		icon = GFX_focus_ARG_develop_the_electricity_sector
+		icon = AUR_building_better_imperium
 		x = 0
 		y = 2
 		cost = 10
 		relative_position_id = AUR_superb_infanteriewaffen
 		available = {
 			num_of_civilian_factories > 100
-			has_tech = advanced_computing_machine3
+			has_tech = exoskeleton_3
+			OR = {
+				has_tech = advanced_computing_machine4
+				AND = {
+					has_tech = advanced_computing_machine3
+					320 = { is_controlled_by_ROOT_or_ally = yes }
+				}
+			}
 		}
 		prerequisite = { focus = AUR_mechanization_ideal }
 		prerequisite = { focus = AUR_soulsearching_project }
 		completion_reward = {
-			add_tech_bonus = {
-				name = secret_bonus
-				bonus = 2.0
-				uses = 2
-				category = nuclear
-			}
+			add_ideas = AUR_early_katzbots
 		}
 	}
 	focus = {
@@ -862,7 +864,7 @@ focus_tree = {
 		icon = GFX_goal_KTZ_towards_the_sturmer
 		x = -1
 		y = 1
-		cost = 10
+		cost = 20
 		available = {
 			num_of_military_factories > 50
 			owns_state = 173
@@ -870,11 +872,18 @@ focus_tree = {
 		relative_position_id = AUR_siegebreaker_reverse_engineering
 		prerequisite = { focus = AUR_siegebreaker_reverse_engineering }
 		completion_reward = {
-			add_tech_bonus = {
-				name = secret_bonus
-				bonus = 2.0
-				uses = 2
-				category = nuclear
+			custom_effect_tooltip = AUR_riesigerworks_tt
+			173 = {
+				add_extra_state_shared_building_slots = 5
+				add_building_construction = {
+					type = arms_factory
+					level = 5
+				}
+				multiply_variable = { wonder_modifiers_values^5 = 3 }
+				multiply_variable = { wonder_modifiers_values^6 = 3 }
+			}
+			hidden_effect = {
+				apply_wonder_effects = yes
 			}
 		}
 	}
@@ -1004,18 +1013,30 @@ focus_tree = {
 		icon = GFX_goal_KTZ_the_floating_islands
 		x = 0
 		y = 1
-		cost = 10
+		cost = 20
 		available = {
-			num_of_naval_factories > 30
+			num_of_naval_factories > 100
 		}
+		cancelable = no
 		relative_position_id = AUR_study_kst_douclaw
+		select_effect = {
+			add_ideas = dockyard_payment_100
+		}
 		prerequisite = { focus = AUR_study_kst_douclaw }
 		completion_reward = {
-			add_tech_bonus = {
-				name = secret_bonus
-				bonus = 2.0
-				uses = 2
-				category = nuclear
+			add_manpower = -100000
+			set_technology = {
+				hyper_carrier1 = 1
+			}
+			remove_ideas = dockyard_payment_100
+			add_equipment_production = {
+				equipment = {
+					type = hyper_carrier_1
+					creator = "AUR" 
+				}
+				requested_factories = 10
+				progress = 0.95
+				amount = 1
 			}
 		}
 	}
