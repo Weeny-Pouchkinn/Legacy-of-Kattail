@@ -2123,24 +2123,28 @@ on_actions = {
 						limit = { is_ai = yes }
 						if = { #Fission = 1 point
 							limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 1 }
+							set_variable = { lok_nuke_retaliation_score_add = 1 }
 						}
 						else_if = { #Fusion = 3 points
 							limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 3 }
+							set_variable = { lok_nuke_retaliation_score_add = 3 }
 						}
 						else_if = { #Cobalt = 3 points
 							limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 3 }
+							set_variable = { lok_nuke_retaliation_score_add = 3 }
 						}
 						else_if = { #Mondkanone = 2 points
 							limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 2 }
+							set_variable = { lok_nuke_retaliation_score_add = 2 }
 						}
 						#Multiply for like ideologies
 						set_variable = { lok_nuke_retaliation_mult = modifier@lok_nuclear_retaliation_factor }
 						add_to_variable = { lok_nuke_retaliation_mult = 1 }
-						multiply_variable = { lok_nuke_retaliation_score = lok_nuke_retaliation_mult }
+						multiply_variable = { lok_nuke_retaliation_score_add = lok_nuke_retaliation_mult }
+						round_variable = lok_nuke_retaliation_score_add
+
+						#Add to final score
+						add_to_variable = { lok_nuke_retaliation_score = lok_nuke_retaliation_score_add }
 					}
 				}
 			}
