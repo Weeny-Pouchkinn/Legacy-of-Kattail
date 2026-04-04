@@ -1257,9 +1257,36 @@ ai_fire_nuke = {
 			for_loop_effect = {
 				end = fusion_to_fire
 				PREV = { #Enemy country
+					
+					# FAILSAFE: If every valid state has already been targeted in this salvo, 
+					# clear the flags so we can double-nuke them.
+					if = {
+						limit = {
+							NOT = {
+								any_controlled_state = {
+									NOT = { is_core_of = ROOT }
+									is_space_state = no
+									NOT = { has_state_flag = ai_targeted_this_salvo }
+								}
+							}
+						}
+						every_controlled_state = {
+							limit = { has_state_flag = ai_targeted_this_salvo }
+							clear_state_flag = ai_targeted_this_salvo
+						}
+					}
+
+					# Pick a random state, EXCLUDING ones we already flagged
 					random_controlled_state = {
-						limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+						limit = { 
+							NOT = { is_core_of = ROOT } 
+							is_space_state = no 
+							NOT = { has_state_flag = ai_targeted_this_salvo } # The RNG breaker
+						}
+						
+						set_state_flag = ai_targeted_this_salvo # Mark it as hit
 						save_global_event_target_as = lok_thermonuclear_salvo_state
+						
 						ROOT = {
 							fire_thermonuclear_salvo = yes
 							add_equipment_to_stockpile = { type = lok_fusion_nuke_equipment amount = -1 }
@@ -1283,9 +1310,36 @@ ai_fire_nuke = {
 			for_loop_effect = {
 				end = cobalt_to_fire
 				PREV = { #Enemy country
+					
+					# FAILSAFE: If every valid state has already been targeted in this salvo, 
+					# clear the flags so we can double-nuke them.
+					if = {
+						limit = {
+							NOT = {
+								any_controlled_state = {
+									NOT = { is_core_of = ROOT }
+									is_space_state = no
+									NOT = { has_state_flag = ai_targeted_this_salvo }
+								}
+							}
+						}
+						every_controlled_state = {
+							limit = { has_state_flag = ai_targeted_this_salvo }
+							clear_state_flag = ai_targeted_this_salvo
+						}
+					}
+
+					# Pick a random state, EXCLUDING ones we already flagged
 					random_controlled_state = {
-						limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+						limit = { 
+							NOT = { is_core_of = ROOT } 
+							is_space_state = no 
+							NOT = { has_state_flag = ai_targeted_this_salvo } # The RNG breaker
+						}
+						
+						set_state_flag = ai_targeted_this_salvo # Mark it as hit
 						save_global_event_target_as = lok_thermonuclear_salvo_state
+						
 						ROOT = {
 							fire_thermonuclear_salvo = yes
 							add_equipment_to_stockpile = { type = lok_cobalt_nuke_equipment amount = -1 }
@@ -1309,9 +1363,36 @@ ai_fire_nuke = {
 			for_loop_effect = {
 				end = mondkanone_to_fire
 				PREV = { #Enemy country
+					
+					# FAILSAFE: If every valid state has already been targeted in this salvo, 
+					# clear the flags so we can double-nuke them.
+					if = {
+						limit = {
+							NOT = {
+								any_controlled_state = {
+									NOT = { is_core_of = ROOT }
+									is_space_state = no
+									NOT = { has_state_flag = ai_targeted_this_salvo }
+								}
+							}
+						}
+						every_controlled_state = {
+							limit = { has_state_flag = ai_targeted_this_salvo }
+							clear_state_flag = ai_targeted_this_salvo
+						}
+					}
+
+					# Pick a random state, EXCLUDING ones we already flagged
 					random_controlled_state = {
-						limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+						limit = { 
+							NOT = { is_core_of = ROOT } 
+							is_space_state = no 
+							NOT = { has_state_flag = ai_targeted_this_salvo } # The RNG breaker
+						}
+						
+						set_state_flag = ai_targeted_this_salvo # Mark it as hit
 						save_global_event_target_as = lok_thermonuclear_salvo_state
+						
 						ROOT = {
 							fire_thermonuclear_salvo = yes
 							add_equipment_to_stockpile = { type = lok_mondkanone_nuke_equipment amount = -1 }
@@ -1333,9 +1414,36 @@ ai_fire_nuke = {
 			for_loop_effect = {
 				end = fission_to_fire
 				PREV = { #Enemy country
+					
+					# FAILSAFE: If every valid state has already been targeted in this salvo, 
+					# clear the flags so we can double-nuke them.
+					if = {
+						limit = {
+							NOT = {
+								any_controlled_state = {
+									NOT = { is_core_of = ROOT }
+									is_space_state = no
+									NOT = { has_state_flag = ai_targeted_this_salvo }
+								}
+							}
+						}
+						every_controlled_state = {
+							limit = { has_state_flag = ai_targeted_this_salvo }
+							clear_state_flag = ai_targeted_this_salvo
+						}
+					}
+
+					# Pick a random state, EXCLUDING ones we already flagged
 					random_controlled_state = {
-						limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+						limit = { 
+							NOT = { is_core_of = ROOT } 
+							is_space_state = no 
+							NOT = { has_state_flag = ai_targeted_this_salvo } # The RNG breaker
+						}
+						
+						set_state_flag = ai_targeted_this_salvo # Mark it as hit
 						save_global_event_target_as = lok_thermonuclear_salvo_state
+						
 						ROOT = {
 							fire_thermonuclear_salvo = yes
 							add_equipment_to_stockpile = { type = lok_fission_nuke_equipment amount = -1 }
@@ -1348,8 +1456,16 @@ ai_fire_nuke = {
 			#Save remaining per-country score (if salvo capacity or stockpile ran out)
 			clamp_temp_variable = { var = ai_remaining_score min = 0 }
 			set_variable = { lok_nuke_retaliation_score@PREV = ai_remaining_score }
-		}
-	}
+			
+			# Clean up the targeting flags for the next time the script fires!
+			PREV = {
+				every_controlled_state = {
+					limit = { has_state_flag = ai_targeted_this_salvo }
+					clear_state_flag = ai_targeted_this_salvo
+				}
+			}
+		} # <-- End of ROOT block
+	} # <-- End of every_enemy_country block
 }
 
 reduce_compliance_coring_threshold_by_10 = {
