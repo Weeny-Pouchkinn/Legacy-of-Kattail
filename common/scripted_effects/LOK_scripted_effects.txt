@@ -1575,6 +1575,7 @@ calculate_total_food_consumption = {
 		limit = { check_variable = { country_food_balance < 0 } check_variable = { country_food_stockpile > 0 } }
 		add_to_variable = { country_food_stockpile = country_food_balance }
 		clamp_variable = {  var = country_food_stockpile min = 0 max = 1000000 } #Cant go below 0
+		round_variable = country_food_stockpile
 	}
 
 	#CALCULATE % THAT IS MET - This is what determines the actual effects of food deficit
