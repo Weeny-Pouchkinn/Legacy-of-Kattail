@@ -1218,37 +1218,29 @@ calculate_salvo_capacity = {
 
 ai_fire_nuke = {
 	set_variable = { nuke_launch_count = 1 }
-	#Pick a nuke type.
-	random_list = {
-		0 = {
-			set_variable = { current_nuke_type = 1 }
-			modifier = { add = 1 has_tech = nukes }
-			modifier = { factor = 0 has_equipment = { lok_fission_nuke_equipment < 1 } }
-		}
-		0 = {
-			set_variable = { current_nuke_type = 2 }
-			modifier = { add = 1 has_tech = fusion_nuke }
-			modifier = { factor = 0 has_equipment = { lok_fusion_nuke_equipment < 1 } }
-		}
-		0 = {
-			set_variable = { current_nuke_type = 3 }
-			modifier = { add = 1 has_tech = dirty_nuke }
-			modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
-		}
-		0 = {
-			set_variable = { current_nuke_type = 5 }
-			modifier = { add = 1 has_tech = ultra_heavy_armor_tech }
-			modifier = { factor = 0 has_equipment = { lok_sturmer_nuke_equipment < 1 } }
-		}
-	}
-	#AI will fire half of their salvo capacity
-	set_temp_variable = { ai_nukes_being_fired = lok_current_salvo_capacity }
-	divide_temp_variable = { ai_nukes_being_fired = 2 }
-	round_temp_variable = ai_nukes_being_fired
-	clamp_temp_variable = { var = ai_nukes_being_fired min = 0 max = lok_total_nuke_stockpile }
+	count_nukes_in_stockpile = yes
+
+	#Count individual nuke types available
+	set_temp_variable = { ai_fusion_available = num_equipment@lok_fusion_nuke_equipment }
+	set_temp_variable = { ai_cobalt_available = num_equipment@lok_cobalt_nuke_equipment }
+	set_temp_variable = { ai_mondkanone_available = num_equipment@lok_mondkanone_nuke_equipment }
+	set_temp_variable = { ai_fission_available = num_equipment@lok_fission_nuke_equipment }
+
+	#Track remaining score to spend this salvo
+	set_temp_variable = { ai_remaining_score = lok_nuke_retaliation_score }
+
+	### FUSION NUKES (score 3 each) - highest priority ###
+	set_temp_variable = { fusion_to_fire = ai_remaining_score }
+	divide_temp_variable = { fusion_to_fire = 3 }
+	subtract_from_temp_variable = { fusion_to_fire = 0.499 } #Floor division
+	round_temp_variable = fusion_to_fire
+	clamp_temp_variable = { var = fusion_to_fire min = 0 max = ai_fusion_available }
+	clamp_temp_variable = { var = fusion_to_fire min = 0 max = lok_current_salvo_capacity }
+
+	set_variable = { current_nuke_type = 2 }
 	for_loop_effect = {
-		end = ai_nukes_being_fired
-		random_enemy_country = { #PICK A TARGET!!! We pick a country that nuked us beforehand.
+		end = fusion_to_fire
+		random_enemy_country = {
 			limit = {
 				OR = {
 					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
@@ -1259,39 +1251,112 @@ ai_fire_nuke = {
 				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
 				save_global_event_target_as = lok_thermonuclear_salvo_state
 				ROOT = {
-					fire_thermonuclear_salvo = yes #FIRE!!!!
-					if = {
-						limit = { check_variable = { current_nuke_type = 1 } }
-						add_equipment_to_stockpile = {
-							type = lok_fission_nuke_equipment
-							amount = -1
-						}
-					}
-					else_if = {
-						limit = { check_variable = { current_nuke_type = 2 } }
-						add_equipment_to_stockpile = {
-							type = lok_fusion_nuke_equipment
-							amount = -1
-						}
-					}
-					else_if = {
-						limit = { check_variable = { current_nuke_type = 3 } }
-						add_equipment_to_stockpile = {
-							type = lok_cobalt_nuke_equipment
-							amount = -1
-						}
-					}
-					else_if = {
-						limit = { check_variable = { current_nuke_type = 5 } }
-						add_equipment_to_stockpile = {
-							type = lok_sturmer_nuke_equipment
-							amount = -1
-						}
-					}
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_fusion_nuke_equipment amount = -1 }
 				}
 			}
 		}
 	}
+	#Update remaining score (fire_thermonuclear_salvo already decremented lok_current_salvo_capacity)
+	set_temp_variable = { fusion_score_spent = fusion_to_fire }
+	multiply_temp_variable = { fusion_score_spent = 3 }
+	subtract_from_temp_variable = { ai_remaining_score = fusion_score_spent }
+
+	### COBALT NUKES (score 3 each) ###
+	set_temp_variable = { cobalt_to_fire = ai_remaining_score }
+	divide_temp_variable = { cobalt_to_fire = 3 }
+	subtract_from_temp_variable = { cobalt_to_fire = 0.499 }
+	round_temp_variable = cobalt_to_fire
+	clamp_temp_variable = { var = cobalt_to_fire min = 0 max = ai_cobalt_available }
+	clamp_temp_variable = { var = cobalt_to_fire min = 0 max = lok_current_salvo_capacity }
+
+	set_variable = { current_nuke_type = 3 }
+	for_loop_effect = {
+		end = cobalt_to_fire
+		random_enemy_country = {
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
+			}
+			random_controlled_state = {
+				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_cobalt_nuke_equipment amount = -1 }
+				}
+			}
+		}
+	}
+	set_temp_variable = { cobalt_score_spent = cobalt_to_fire }
+	multiply_temp_variable = { cobalt_score_spent = 3 }
+	subtract_from_temp_variable = { ai_remaining_score = cobalt_score_spent }
+
+	### MONDKANONE NUKES (score 2 each) - does NOT use salvo capacity ###
+	set_temp_variable = { mondkanone_to_fire = ai_remaining_score }
+	divide_temp_variable = { mondkanone_to_fire = 2 }
+	subtract_from_temp_variable = { mondkanone_to_fire = 0.499 }
+	round_temp_variable = mondkanone_to_fire
+	clamp_temp_variable = { var = mondkanone_to_fire min = 0 max = ai_mondkanone_available }
+	#Mondkanone does not consume salvo capacity (see fire_thermonuclear_salvo), so no salvo clamp
+
+	set_variable = { current_nuke_type = 4 }
+	for_loop_effect = {
+		end = mondkanone_to_fire
+		random_enemy_country = {
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
+			}
+			random_controlled_state = {
+				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_mondkanone_nuke_equipment amount = -1 }
+				}
+			}
+		}
+	}
+	set_temp_variable = { mondkanone_score_spent = mondkanone_to_fire }
+	multiply_temp_variable = { mondkanone_score_spent = 2 }
+	subtract_from_temp_variable = { ai_remaining_score = mondkanone_score_spent }
+
+	### FISSION NUKES (score 1 each) - lowest priority ###
+	set_temp_variable = { fission_to_fire = ai_remaining_score }
+	round_temp_variable = fission_to_fire
+	clamp_temp_variable = { var = fission_to_fire min = 0 max = ai_fission_available }
+	clamp_temp_variable = { var = fission_to_fire min = 0 max = lok_current_salvo_capacity }
+
+	set_variable = { current_nuke_type = 1 }
+	for_loop_effect = {
+		end = fission_to_fire
+		random_enemy_country = {
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
+			}
+			random_controlled_state = {
+				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_fission_nuke_equipment amount = -1 }
+				}
+			}
+		}
+	}
+	subtract_from_temp_variable = { ai_remaining_score = fission_to_fire }
+
+	#Save remaining score for next month (if salvo capacity or stockpile ran out)
+	clamp_temp_variable = { var = ai_remaining_score min = 0 }
+	set_variable = { lok_nuke_retaliation_score = ai_remaining_score }
 }
 
 reduce_compliance_coring_threshold_by_10 = {
