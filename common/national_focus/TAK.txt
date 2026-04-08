@@ -5,6 +5,10 @@ focus_tree = {
 	continuous_focus_position = { x = 2700 y = 300 }
 	country = {
 		factor = 0
+		modifier = {
+			add = 10
+			tag = TAK
+		}
 	}
 	focus = { #roi gives an awkward speech abt greatness
 		id = TAK_address_the_people
@@ -1238,6 +1242,25 @@ focus_tree = {
 		}
 	}
 
+	focus = { #prepare to fight roqualia
+		id = TAK_break_roqualia
+		icon = GFX_focus_SWI_dissolve_the_federal_council
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = TAK_roqualia_wargoal
+		prerequisite = { focus = TAK_roqualia_wargoal }
+		available = {
+			NOT = {
+				has_war_with = ROQ
+			}
+			country_exists = ROQ
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_break_roqualia_tt
+		}
+	}
+	
 	focus = { #fill charles with clones of charles
 		id = TAK_the_new_charles
 		icon = TAK_the_new_charles
@@ -2155,10 +2178,10 @@ focus_tree = {
     id = TAK_PRETREE
 	country = {
 		factor = 0
-		modifier = {
-			add = 10
-			tag = TAK
-		}
+		# modifier = {
+		# 	add = 10
+		# 	tag = TAK
+		# }
 	}
     continuous_focus_position = { x = 2700 y = 300 }
 
