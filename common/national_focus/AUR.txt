@@ -180,7 +180,7 @@ focus_tree = {
 	focus = {
 		id = AUR_neu_seetruppen
 		icon = GFX_goal_KTZ_true_navy
-		x = 3
+		x = 6
 		y = 1
 		cost = 5
 		prerequisite = { focus = AUR_state_of_arms }
@@ -750,7 +750,7 @@ focus_tree = {
 		y = 6
 		cost = 10
 		relative_position_id = AUR_state_of_arms
-		prerequisite = { focus = AUR_state_of_arms }
+		prerequisite = { focus = AUR_integrate_unterkatzens focus = AUR_the_sobakis_let_loose focus = AUR_bigger_planes focus = AUR_more_planes focus = AUR_reinvigorate_studies }
 		completion_reward = {
 			add_tech_bonus = {
 				name = secret_bonus
@@ -963,6 +963,13 @@ focus_tree = {
 		x = 4
 		y = 1
 		cost = 10
+		available = {
+			NOT = {
+				has_idea = AUR_mishandled_airforce
+				has_idea = AUR_mishandled_navy
+				has_idea = AUR_mishandled_navy_airforce
+			}
+		}
 		relative_position_id = AUR_wunderwaffe_buro
 		prerequisite = { focus = AUR_wunderwaffe_buro }
 		completion_reward = {
@@ -997,7 +1004,7 @@ focus_tree = {
 	}
 	focus = {
 		id = AUR_fabricate_weltaufseher
-		icon = GFX_goal_KTZ_from_the_air
+		icon = GFX_goal_KTZ_flying_carriers
 		x = 0
 		y = 1
 		cost = 10
@@ -1591,6 +1598,13 @@ focus_tree = {
 			random_country = {
 				limit = { has_country_flag = nmi_signed_regency_pakt }
 				country_event = { id = AUR_event.38 }
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < "104.1.1"
 			}
 		}
 	}
@@ -2582,7 +2596,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_grand_reorganization
-		icon = AUR_grand_reorganization
+		icon = GFX_goal_KTZ_grand_reorganization
 		x = 0
 		y = 1
 		cost = 15
@@ -3547,7 +3561,7 @@ focus_tree = {
 	focus = {
 		id = AUR_state_of_arms
 		icon = GFX_goal_KTZ_a_flood_of_violence
-		x = -9
+		x = -12
 		y = 3
 		cost = 5
 		prerequisite = { focus = AUR_controlled_thought }
@@ -3560,12 +3574,366 @@ focus_tree = {
 		}
 	}
 
+	### AIR TREE ###
+	#AIRFORCE BRANCH
+	#to the skies
+	focus = {
+		id = AUR_unfamiliar_skies
+		icon = GFX_goal_KTZ_unfamiliar_skies
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = AUR_state_of_arms
+		prerequisite = { focus = AUR_state_of_arms }
+		completion_reward = {
+			520 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			106 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			94 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = AUR_unfamiliar_skies
+				bonus = 0.5
+				uses = 2
+				category = air_equipment
+			}
+			air_experience = 50
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#big plane
+	focus = {
+		id = AUR_go_big_planes
+		icon = GFX_goal_KTZ_go_big_planes
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_unfamiliar_skies }
+		mutually_exclusive = { focus = AUR_go_small_planes }
+		completion_reward = {
+			custom_effect_tooltip = AUR_go_big_planes_tooltip
+			add_doctrine_cost_reduction = {
+				name = cat_operational_integrity
+				cost_reduction = 0.5
+				uses = 2
+				category = cat_operational_integrity
+			}
+			air_experience = 30
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#heavy fighters
+	focus = {
+		id = AUR_heavy_fighters
+		icon = GFX_goal_KTZ_heavy_fighters
+		x = 2
+		y = 2
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_go_big_planes }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_heavy_fighters
+				category = cat_heavy_fighter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#tac
+	focus = {
+		id = AUR_new_tac
+		icon = GFX_goal_KTZ_new_tac
+		x = 3
+		y = 3
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_heavy_fighters }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_new_tac
+				category = tactical_bomber
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#better tac
+	focus = {
+		id = AUR_tac_torpedo
+		icon = GFX_goal_KTZ_tac_torpedo
+		x = 4
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_strategic_bombers }
+		prerequisite = { focus = AUR_new_tac }
+		completion_reward = {
+			add_ideas = AUR_tactical_torpedo
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#strength in size
+	focus = {
+		id = AUR_bigger_planes
+		icon = GFX_goal_KTZ_bigger_planes
+		x = 2
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_new_tac }
+		completion_reward = {
+			add_ideas = AUR_ever_larger_airframe
+			air_experience = 10
+			if = {
+				limit = { has_idea = AUR_mishandled_navy_airforce }
+				swap_ideas = {
+					remove_idea = AUR_mishandled_navy_airforce
+					add_idea = AUR_mishandled_navy
+				}
+			}
+			else_if = {
+				limit = { has_idea = AUR_mishandled_airforce }
+				remove_ideas = AUR_mishandled_airforce
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#small planes
+	focus = {
+		id = AUR_go_small_planes
+		icon = GFX_goal_KTZ_go_small_planes
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_unfamiliar_skies }
+		mutually_exclusive = { focus = AUR_go_big_planes }
+		completion_reward = {
+			custom_effect_tooltip = AUR_go_small_planes_tooltip
+			add_doctrine_cost_reduction = {
+				name = cat_battlefield_support
+				cost_reduction = 0.5
+				uses = 2
+				category = cat_battlefield_support
+			}
+			air_experience = 30
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#fighters
+	focus = {
+		id = AUR_light_fighters
+		icon = GFX_goal_KTZ_light_fighters
+		x = -2
+		y = 2
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_go_small_planes }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_light_fighters
+				category = light_fighter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#cas
+	focus = {
+		id = AUR_new_cas
+		icon = GFX_goal_KTZ_new_cas
+		x = -3
+		y = 3
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_light_fighters }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_new_cas
+				category = cas_bomber
+				uses = 2
+				bonus = 1
+			}
+			add_tech_bonus = {
+				name = AUR_new_cas
+				category = attack_helicopter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#nav
+	focus = {
+		id = AUR_naval_bombers
+		icon = GFX_goal_KTZ_naval_bombers
+		x = -4
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_new_cas }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_naval_bombers
+				category = naval_bomber
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#strength in numbers
+	focus = {
+		id = AUR_more_planes
+		icon = GFX_goal_KTZ_more_planes
+		x = -2
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_new_cas }
+		prerequisite = { focus = AUR_air_transport }
+		completion_reward = {
+			add_ideas = AUR_strength_in_numbers
+			air_experience = 10
+			if = {
+				limit = { has_idea = AUR_mishandled_navy_airforce }
+				swap_ideas = {
+					remove_idea = AUR_mishandled_navy_airforce
+					add_idea = AUR_mishandled_navy
+				}
+			}
+			else_if = {
+				limit = { has_idea = AUR_mishandled_airforce }
+				remove_ideas = AUR_mishandled_airforce
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	#Shared airforce focuses
+	#Adjust to atmo
+	focus = {
+		id = AUR_adjust_to_atmo
+		icon = GFX_goal_KTZ_adjust_to_atmo
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_go_big_planes focus = AUR_go_small_planes }
+		completion_reward = {
+			air_experience = 10
+			add_doctrine_cost_reduction = {
+				name = AUR_adjust_to_atmo
+				cost_reduction = 0.5
+				uses = 2
+				category = air_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#Transports
+	focus = {
+		id = AUR_air_transport
+		icon = GFX_goal_KTZ_air_transport
+		x = -1
+		y = 3
+		relative_position_id = AUR_unfamiliar_skies
+		cost = 5
+		#prerequisite = { focus = AUR_heavy_fighters focus = AUR_light_fighters }
+		prerequisite = { focus = AUR_adjust_to_atmo }
+		completion_reward = {
+			add_ideas = AUR_air_transport
+			add_tech_bonus = {
+				name = AUR_air_transport
+				category = para_tech
+				uses = 2
+				bonus = 2
+			}
+			add_tech_bonus = {
+				name = AUR_air_transport
+				category = transport_helicopter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#Strategic Bombers
+	focus = {
+		id = AUR_strategic_bombers
+		icon = GFX_goal_KTZ_strategic_bombers
+		x = 1
+		y = 3
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		#prerequisite = { focus = AUR_heavy_fighters focus = AUR_light_fighters }
+		prerequisite = { focus = AUR_adjust_to_atmo }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_strategic_bombers
+				category = cat_strategic_bomber
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#Jets!
+	focus = {
+		id = AUR_new_jets
+		icon = GFX_goal_KTZ_project_creeo
+		x = 0
+		y = 4
+		relative_position_id = AUR_unfamiliar_skies
+		cost = 5
+		prerequisite = { focus = AUR_air_transport focus = AUR_strategic_bombers  }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_new_jets
+				category = jet_technology
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
 	### ARMY TREE - Neu-Katzenarmee ###
+
 
 	focus = {
 		id = AUR_his_armee
 		icon = GFX_goal_KTZ_conscript_colonists
-		x = -3
+		x = -7
 		y = 1
 		cost = 5
 		prerequisite = { focus = AUR_state_of_arms }
