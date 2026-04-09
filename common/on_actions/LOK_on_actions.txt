@@ -2037,6 +2037,32 @@ on_actions = {
 	on_daily = {
 		effect = {
 			if = {
+				limit = { has_country_flag = has_armored_blimp_carrier }
+				every_controlled_state = {
+					limit = { has_state_flag = has_armored_blimp_carrier_state }
+					clr_state_flag = has_armored_blimp_carrier_state
+					remove_building = { type = air_base level = 2 }
+					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
+				}
+				every_controlled_state = {
+					limit = {
+						ROOT = {
+							divisions_in_state = {
+								unit = armored_blimp_carrier
+								size > 0
+								state = PREV
+							}
+						}
+					}
+					add_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
+					set_state_flag = has_armored_blimp_carrier_state
+					if = {
+						limit = { check_variable = { building_level@air_base > 0 } }
+						add_building_construction = { type = air_base level = 2 }
+					}
+				}
+			}
+			if = {
 				limit = { NOT = { has_government = gestalt } }
 				add_popularity = {
 					ideology = gestalt

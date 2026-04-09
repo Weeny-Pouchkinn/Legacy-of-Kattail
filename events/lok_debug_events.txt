@@ -449,3 +449,33 @@ country_event = { #species
 		name = "[?TAI.lok_nuke_retaliation_score@NKB]"
 	}
 }
+
+country_event = { #species
+	id = lok_debug.13
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.13"}
+	is_triggered_only = yes
+	title = ""
+	desc = "blomp"
+	
+	option = {
+		name = "wowzers"
+		set_technology = {
+			armored_blimp_carrier1 = 1
+		}
+		set_country_flag = has_armored_blimp_carrier
+		division_template = {
+			name = "Armored Blimp Carrier"
+			is_locked = yes
+			regiments = {
+				armored_blimp_carrier = { x = 0 y = 0 }
+			}
+		}
+		capital_scope = {
+			create_unit = {
+				division = "division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.3 start_equipment_factor = 1"
+				count = 1
+				owner = PREV
+			}
+		}
+	}
+}

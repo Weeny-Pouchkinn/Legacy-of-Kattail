@@ -1013,12 +1013,29 @@ focus_tree = {
 		}
 		relative_position_id = AUR_weltbomber_projekt
 		prerequisite = { focus = AUR_weltbomber_projekt }
+		cancelable = no
+		select_effect = {
+			add_ideas = military_payment_100
+		}
 		completion_reward = {
-			add_tech_bonus = {
-				name = secret_bonus
-				bonus = 2.0
-				uses = 2
-				category = nuclear
+			custom_effect_tooltip = AUR_fabricate_weltaufseher_tt
+			remove_ideas = military_payment_100
+			hidden_effect = {
+				set_country_flag = has_armored_blimp_carrier
+				division_template = {
+					name = "Armored Blimp Carrier"
+					is_locked = yes
+					regiments = {
+						armored_blimp_carrier = { x = 0 y = 0 }
+					}
+				}
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.3 start_equipment_factor = 1"
+						count = 1
+						owner = PREV
+					}
+				}
 			}
 		}
 	}

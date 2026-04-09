@@ -285,3 +285,50 @@ political_actions = {
 		}
 	}
 }
+
+economy_decisions = {
+	LOK_build_armored_blimp_carrier = {
+		icon = GFX_decision_armored_blimp_carrier
+
+		visible = {
+			has_completed_focus = AUR_fabricate_weltaufseher
+		}
+
+		available = {
+			has_equipment = {
+				armored_blimp_carrier_equipment > 99
+			}
+		}
+
+		modifier = {
+			civilian_factory_use = 15
+		}
+
+		days_remove = 270
+
+		complete_effect = {
+			add_equipment_to_stockpile = { type = armored_blimp_carrier_equipment amount = -100 }
+			hidden_effect = {
+				set_country_flag = building_blimp_carrier
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = LOK_build_armored_blimp_carrier_tt
+			hidden_effect = {
+				clr_country_flag = building_blimp_carrier
+				if = {
+					limit = { NOT = { has_country_flag = has_armored_blimp_carrier } }
+					set_country_flag = has_armored_blimp_carrier
+				}
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.3 start_equipment_factor = 1"
+						count = 1
+						owner = ROOT
+					}
+				}
+			}
+		}
+	}
+}
