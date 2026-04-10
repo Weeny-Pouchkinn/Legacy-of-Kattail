@@ -1,0 +1,445 @@
+
+PRC_communist_power_struggle = {
+	initial_value = -0.0
+	left_side = PRC_bop_left_side	
+	right_side = PRC_bop_right_side	
+	decision_category = PRC_the_communist_power_struggle_balance_of_power_category
+	### Mao
+	side = {
+		id = PRC_bop_left_side	
+		icon = GFX_PRC_bop_left_side
+		range = {
+			id = PRC_total_mao_support_range
+			min = -1
+			max = -0.9
+			modifier = {
+				political_power_factor = 0.15
+				command_power_gain = 0.2
+				max_command_power = 20
+				pocket_penalty = -0.15
+				equipment_capture_factor = 0.1 #unsure how powerful this is
+				army_defence_factor = 0.075
+
+
+			}
+			on_activate = {
+				set_power_balance_gfx = { ## Change BOP icon
+					id = PRC_communist_power_struggle
+					side = PRC_bop_left_side
+					gfx = GFX_PRC_bop_left_side_max
+				}
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_right
+					}
+				}
+			}
+			on_deactivate = {
+				set_power_balance_gfx = { ## Change BOP icon
+					id = PRC_communist_power_struggle
+					side = PRC_bop_left_side
+					gfx = GFX_PRC_bop_left_side
+				}
+			}
+
+		}
+		range = {
+			id = PRC_strong_mao_support_range
+			min = -0.9
+			max = -0.7
+			modifier = {
+				political_power_factor = 0.1
+				command_power_gain = 0.1
+				max_command_power = 15
+				pocket_penalty = -0.1
+				equipment_capture_factor = 0.05 #unsure how powerful this is
+				army_defence_factor = 0.05
+
+
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_right
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+
+		}
+		range = {
+			id = PRC_noteable_mao_support_range
+			min = -0.7
+			max = -0.4
+			modifier = {
+				political_power_factor = 0.1
+				command_power_gain = 0.05
+				max_command_power = 10
+				pocket_penalty = -0.05
+				equipment_capture_factor = 0.025 #unsure how powerful this is
+				army_defence_factor = 0.025
+
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_right
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+		}
+
+		range = {
+			id = PRC_slight_mao_support_range
+			min = -0.4
+			max = -0.15
+			modifier = {
+				command_power_gain = 0.05
+				political_power_factor = 0.05
+				max_command_power = 5 
+				political_advisor_cost_factor = 0.15
+				trade_laws_cost_factor = 0.15
+				mobilization_laws_cost_factor = 0.15
+				economy_cost_factor = 0.15
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea_drifting_right
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea_drifting_right
+						add_idea = PRC_mediating_general_secretary_idea
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea_drifting_left
+						add_idea = PRC_mediating_general_secretary_idea
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+		}
+	}
+
+	### Mao and the 28 in balance
+	range = {
+		id = PRC_unstable_cooperation
+		min = -0.15
+		max = 0.15
+		modifier = { #yes this is supposed to be VERY bad, they can't agree about ANYTHING
+			stability_factor = -0.1
+			political_power_gain = -0.1
+			political_advisor_cost_factor = 0.25
+			trade_laws_cost_factor = 0.25
+			mobilization_laws_cost_factor = 0.25
+			economy_cost_factor = 0.25
+		}
+		on_activate = {
+			if = {
+				limit = {
+					has_idea = PRC_mediating_general_secretary_idea_drifting_right
+				}
+				swap_ideas = {
+					remove_idea = PRC_mediating_general_secretary_idea_drifting_right
+					add_idea = PRC_mediating_general_secretary_idea
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = PRC_mediating_general_secretary_idea_drifting_left
+				}
+				swap_ideas = {
+					remove_idea = PRC_mediating_general_secretary_idea_drifting_left
+					add_idea = PRC_mediating_general_secretary_idea
+				}
+			}
+		}
+		on_deactivate = {
+		}
+	}
+
+	# The 28 Bolsheviks
+	side = {
+		id = PRC_bop_right_side	
+		icon = GFX_PRC_bop_right_side
+		range = {
+			id = PRC_slight_28_support_range
+			min = 0.15
+			max = 0.4
+			modifier = {
+				political_advisor_cost_factor = 0.15
+				trade_laws_cost_factor = 0.15
+				mobilization_laws_cost_factor = 0.15
+				economy_cost_factor = 0.15
+				production_speed_industrial_complex_factor = 0.05
+				opinion_gain_monthly_same_ideology_factor = 0.05
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea_drifting_left
+						add_idea = PRC_mediating_general_secretary_idea
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea_drifting_right
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea_drifting_right
+						add_idea = PRC_mediating_general_secretary_idea
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+		}
+
+		range = {
+			id = PRC_noteable_28_support_range
+			min = 0.4
+			max = 0.7
+			modifier = {
+				political_power_factor = 0.05
+				production_speed_industrial_complex_factor = 0.075
+				#industrial_capacity_dockyard = 0.05
+				opinion_gain_monthly_same_ideology_factor = 0.05
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+
+		}
+		range = {
+			id = PRC_strong_28_support_range
+			min = 0.7
+			max = 0.9
+			modifier = {
+				political_power_factor = 0.05
+				production_speed_industrial_complex_factor = 0.1
+				research_speed_factor = 0.02
+				opinion_gain_monthly_same_ideology_factor = 0.1
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+
+		}
+		range = {
+			id = PRC_total_28_support_range
+			min = 0.9
+			max = 1
+			modifier = {
+				political_power_factor = 0.1
+				production_speed_industrial_complex_factor = 0.1
+				#industrial_capacity_dockyard = 0.1
+				research_speed_factor = 0.05
+				opinion_gain_monthly_same_ideology_factor = 0.15
+			}
+			on_activate = {
+				set_power_balance_gfx = { ## Change BOP icon
+					id = PRC_communist_power_struggle
+					side = PRC_bop_right_side
+					gfx = GFX_PRC_bop_right_side_max
+				}
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+				}
+			}
+			on_deactivate = {
+				set_power_balance_gfx = { ## Change BOP icon
+					id = PRC_communist_power_struggle
+					side = PRC_bop_right_side
+					gfx = GFX_PRC_bop_right_side
+				}
+			}
+
+		}
+	}
+
+	#Guotao
+	side = {
+		id = PRC_bop_right_side_guotao	
+		icon = GFX_PRC_bop_right_side_guotao
+		range = {
+			id = PRC_slight_guotao_support_range
+			min = 0.15
+			max = 0.4
+			modifier = {
+				political_advisor_cost_factor = 0.15
+				trade_laws_cost_factor = 0.15
+				mobilization_laws_cost_factor = 0.15
+				economy_cost_factor = 0.15
+				production_speed_arms_factory_factor = 0.05
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea_drifting_left
+						add_idea = PRC_mediating_general_secretary_idea
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea_drifting_right
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea_drifting_right
+						add_idea = PRC_mediating_general_secretary_idea
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+		}
+
+		range = {
+			id = PRC_noteable_guotao_support_range
+			min = 0.4
+			max = 0.7
+			modifier = {
+				political_power_factor = 0.05
+				production_speed_arms_factory_factor = 0.05
+				industrial_capacity_factory = 0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+
+		}
+		range = {
+			id = PRC_strong_guotao_support_range
+			min = 0.7
+			max = 0.9
+			modifier = {
+				political_power_factor = 0.05
+				production_speed_arms_factory_factor = 0.1
+				industrial_capacity_factory = 0.025
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+
+		}
+		range = {
+			id = PRC_total_guotao_support_range
+			min = 0.9
+			max = 1
+			modifier = {
+				political_power_factor = 0.1
+				production_speed_arms_factory_factor = 0.1
+				industrial_capacity_factory = 0.05
+				industrial_capacity_dockyard = 0.05
+			}
+			on_activate = {
+				set_power_balance_gfx = { ## Change BOP icon
+					id = PRC_communist_power_struggle
+					side = PRC_bop_right_side_guotao
+					gfx = GFX_PRC_bop_right_side_guotao_max
+				}
+				if = {
+					limit = {
+						has_idea = PRC_mediating_general_secretary_idea
+					}
+					swap_ideas = {
+						remove_idea = PRC_mediating_general_secretary_idea
+						add_idea = PRC_mediating_general_secretary_idea_drifting_left
+					}
+				}
+			}
+			on_deactivate = {
+				set_power_balance_gfx = { ## Change BOP icon
+					id = PRC_communist_power_struggle
+					side = PRC_bop_right_side_guotao
+					gfx = GFX_PRC_bop_right_side_guotao
+				}
+			}
+
+		}
+	}
+
+
+}
+
