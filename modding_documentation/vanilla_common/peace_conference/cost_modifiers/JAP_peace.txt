@@ -1,0 +1,103 @@
+# Scripted cost modifiers for peace actions.
+# See documentation.info file for more detailed scripting information.
+
+peace_action_modifiers = {
+
+    JAP_spiritual_mobilization = {
+        category = events_or_focuses
+        peace_action_type = { take_states }
+        enable = {
+            FROM.FROM = {
+                original_tag = JAP
+                OR = {
+                    has_completed_focus = JAP_spiritual_mobilization
+                    has_completed_focus = JAP_issue_the_shinmin_no_michi_manifesto
+                    has_completed_focus = JAP_embrace_kokutai
+                }
+            }
+            FROM.FROM.FROM = {
+                region = 154
+            }
+        }
+        cost_multiplier = 1.5
+    }
+	
+	USA_the_baddies_no_broadcast = {
+        category = events_or_focuses
+        peace_action_type = { puppet }
+        enable = {
+            FROM.FROM = {
+                original_tag = JAP
+                NOT = {
+                    has_completed_focus = JAP_the_surrender_broadcast
+                }
+            }
+            FROM.FROM.FROM = {
+                region = 154
+				NOT = {
+					state = 526 #Okinawa
+				}
+            }
+        }
+        cost_multiplier = 0.6 
+    }
+
+    USA_the_baddies_broadcast = {
+        category = events_or_focuses
+        peace_action_type = { puppet }
+        enable = {
+            FROM.FROM = {
+                original_tag = JAP
+                has_completed_focus = JAP_the_surrender_broadcast
+            }
+            FROM.FROM.FROM = {
+                region = 154
+                NOT = {
+                    state = 526 #Okinawa
+                }
+            }
+        }
+        cost_multiplier = 0.25 
+    }
+	
+	USA_the_baddies_take_japanese_islands = {
+        category = events_or_focuses
+        peace_action_type = { take_states }
+        enable = {
+            FROM.FROM = {
+                original_tag = JAP
+            }
+            FROM.FROM.FROM = {
+                OR = {
+					region = 94 # Iwo Jima, Marcus Islands and Saipan
+					region = 84 # Caroline Islands 
+					region = 97 # Marshall Islands 
+					region = 78 # Palau 
+                    state = 526 # Okinawa
+				}
+            }
+        }
+        cost_multiplier = 0.75 
+    }
+
+    JAP_sea_greater_east_asian_co_properity_sphere_peace_puppeting = {
+        category = events_or_focuses
+        peace_action_type = { puppet liberate }
+        enable = {
+            ROOT = {
+                original_tag = JAP
+                has_completed_focus = JAP_sea_greater_east_asian_co_properity_sphere  
+            }
+            FROM = { 
+                capital_scope = {
+                    OR = {
+                        is_on_continent = asia
+                        is_on_continent = australia
+                    }
+                }
+            }
+        }
+        cost_multiplier = 0.75 #25% cost reduction
+    }
+
+}

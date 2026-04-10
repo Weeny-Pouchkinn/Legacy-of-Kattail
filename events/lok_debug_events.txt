@@ -463,11 +463,14 @@ country_event = { #species
 			armored_blimp_carrier1 = 1
 		}
 		set_country_flag = has_armored_blimp_carrier
-		division_template = {
-			name = "Armored Blimp Carrier"
-			is_locked = yes
-			regiments = {
-				armored_blimp_carrier = { x = 0 y = 0 }
+		if = {
+			limit = { NOT = { has_template = "Armored Blimp Carrier" } }
+			division_template = {
+				name = "Armored Blimp Carrier"
+				is_locked = yes
+				regiments = {
+					armored_blimp_carrier = { x = 0 y = 0 }
+				}
 			}
 		}
 		capital_scope = {

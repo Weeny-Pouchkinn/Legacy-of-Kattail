@@ -1310,3 +1310,153 @@ country_event = {
 		name = AUR_event.53.a
 	}
 }
+
+### Contact Himezulte Fascists Events ###
+
+# HIM receives request from AUR-aligned fascists
+country_event = {
+	id = AUR_event.60
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.60" }
+	title = AUR_event.60.t
+	desc = AUR_event.60.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Let the fascists go - they join AUR
+	option = {
+		name = AUR_event.60.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0.1
+				has_war_with = AUR
+			}
+			modifier = {
+				factor = 1.5
+				has_opinion = {
+					target = AUR
+					value > 25
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_opinion = {
+					target = AUR
+					value < -25
+				}
+			}
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = -0.05
+		}
+		add_stability = 0.03
+		AUR = {
+			country_event = { id = AUR_event.61 days = 3 }
+		}
+	}
+
+	# Appease the Regency instead - deny but offer tech sharing
+	option = {
+		name = AUR_event.60.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 5
+				has_war_with = AUR
+			}
+			modifier = {
+				factor = 2
+				has_opinion = {
+					target = AUR
+					value < -25
+				}
+			}
+		}
+		add_political_power = 25
+		AUR = {
+			country_event = { id = AUR_event.62 days = 3 }
+		}
+	}
+
+	# Outright refuse - AUR gets nothing
+	option = {
+		name = AUR_event.60.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				is_in_faction_with = PRL
+			}
+			modifier = {
+				factor = 1000
+				has_war_with = AUR
+			}
+		}
+		add_political_power = 50
+		add_stability = 0.05
+		AUR = {
+			country_event = { id = AUR_event.63 days = 3 }
+		}
+	}
+}
+
+# AUR receives fascist volunteers from Himezulte
+country_event = {
+	id = AUR_event.61
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.61" }
+	title = AUR_event.61.t
+	desc = AUR_event.61.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.61.a
+		add_equipment_to_stockpile = {
+			type = medium_plane_fighter_airframe
+			amount = 100
+			producer = HIM
+		}
+		air_experience = 25
+		add_manpower = 5000
+	}
+}
+
+# HIM appeases AUR with air tech sharing instead
+country_event = {
+	id = AUR_event.62
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.62" }
+	title = AUR_event.62.t
+	desc = AUR_event.62.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.62.a
+		add_tech_bonus = {
+			name = AUR_himezulte_air_tech
+			bonus = 0.5
+			uses = 2
+			category = air_equipment
+		}
+		air_experience = 75
+	}
+}
+
+# HIM outright refuses - AUR gets nothing
+country_event = {
+	id = AUR_event.63
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.63" }
+	title = AUR_event.63.t
+	desc = AUR_event.63.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.63.a
+	}
+}

@@ -1,0 +1,109 @@
+
+#Important to put LOWEST first
+IRQ_agrarian_society_modifier_level_down = {
+	IF = {
+		limit = {
+			OR = {
+				has_idea = IRQ_agrarian_society
+				has_idea = IRQ_agrarian_society_2
+				has_idea = IRQ_agrarian_society_3
+				has_idea = IRQ_agrarian_society_4
+			}
+		}
+		custom_effect_tooltip = IRQ_agrarian_society_modifier_level_down_tt
+	}
+	
+	IF = {
+		limit = {
+			has_idea = IRQ_agrarian_society
+		}
+		swap_ideas = {
+			remove_idea = IRQ_agrarian_society
+			add_idea = IRQ_agrarian_society_2
+		}	
+	}
+	ELSE_IF = {
+		limit = {
+			has_idea = IRQ_agrarian_society_2
+		}
+		swap_ideas = {
+			remove_idea = IRQ_agrarian_society_2
+			add_idea = IRQ_agrarian_society_3
+		}
+	}
+	ELSE_IF = {
+		limit = {
+			has_idea = IRQ_agrarian_society_3
+		}
+		swap_ideas = {
+			remove_idea = IRQ_agrarian_society_3
+			add_idea = IRQ_agrarian_society_4
+		}
+	}
+	ELSE_IF = {
+		limit = {
+			has_idea = IRQ_agrarian_society_4
+		}
+		remove_ideas = IRQ_agrarian_society_4
+	}
+}
+
+
+IRQ_create_arab_free_legion_div = {
+	create_unit = {
+		division = "division_template = \"Arab Free Legion\" start_experience_factor = 0.05 start_equipment_factor = 1"
+		owner = IRQ
+		count = 1
+	}
+}
+
+IRQ_modify_army_modifier_version = {
+	if = {
+		limit = {
+			OR = {
+				has_dynamic_modifier = {
+					modifier = IRQ_royal_army_modifier_KUR
+				}
+				has_completed_focus = IRQ_kurdish_revolt
+			}
+		}
+		custom_effect_tooltip = IRQ_royal_army_KUR_intro_tt
+	}
+	else = {
+		custom_effect_tooltip = IRQ_royal_army_IRQ_intro_tt
+	}
+}
+
+IRQ_modify_navy_modifier_version = {
+	if = {
+		limit = {
+			OR = {
+				has_dynamic_modifier = {
+					modifier = IRQ_navy_modifier_KUR
+				}
+				has_completed_focus = IRQ_kurdish_revolt
+			}
+		}
+		custom_effect_tooltip = IRQ_navy_modifier_KUR_intro_tt
+	}
+	else = {
+		custom_effect_tooltip = IRQ_navy_modifier_IRQ_intro_tt
+	}
+}
+
+IRQ_modify_air_force_modifier_version = {
+	if = {
+		limit = {
+			OR = {
+				has_dynamic_modifier = {
+					modifier = IRQ_air_force_modifier_KUR
+				}
+				has_completed_focus = IRQ_kurdish_revolt
+			}
+		}
+		custom_effect_tooltip = IRQ_royal_air_force_KUR_intro_tt
+	}
+	else = {
+		custom_effect_tooltip = IRQ_royal_air_force_IRQ_intro_tt
+	}
+}
