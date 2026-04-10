@@ -1379,6 +1379,27 @@ country_event = {
 			country_event = { id = AUR_event.62 days = 3 }
 		}
 	}
+
+	# Outright refuse - AUR gets nothing
+	option = {
+		name = AUR_event.60.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				is_in_faction_with = PRL
+			}
+			modifier = {
+				factor = 1000
+				has_war_with = AUR
+			}
+		}
+		add_political_power = 50
+		add_stability = 0.05
+		AUR = {
+			country_event = { id = AUR_event.63 days = 3 }
+		}
+	}
 }
 
 # AUR receives fascist volunteers from Himezulte
@@ -1422,5 +1443,20 @@ country_event = {
 			category = air_equipment
 		}
 		air_experience = 75
+	}
+}
+
+# HIM outright refuses - AUR gets nothing
+country_event = {
+	id = AUR_event.63
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.63" }
+	title = AUR_event.63.t
+	desc = AUR_event.63.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.63.a
 	}
 }
