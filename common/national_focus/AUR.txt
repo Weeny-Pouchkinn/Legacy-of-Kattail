@@ -178,6 +178,22 @@ focus_tree = {
 	}
 
 	focus = {
+		id = AUR_state_of_arms
+		icon = GFX_goal_KTZ_a_flood_of_violence
+		x = -12
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_controlled_thought }
+		relative_position_id = AUR_building_better_imperium
+		completion_reward = {
+			army_experience = 25
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 25
+		}
+	}
+
+	focus = {
 		id = AUR_neu_seetruppen
 		icon = GFX_goal_KTZ_true_navy
 		x = 6
@@ -1022,11 +1038,14 @@ focus_tree = {
 			remove_ideas = military_payment_100
 			hidden_effect = {
 				set_country_flag = has_armored_blimp_carrier
-				division_template = {
-					name = "Armored Blimp Carrier"
-					is_locked = yes
-					regiments = {
-						armored_blimp_carrier = { x = 0 y = 0 }
+				if = {
+					limit = { NOT = { has_template = "Armored Blimp Carrier" } }
+					division_template = {
+						name = "Armored Blimp Carrier"
+						is_locked = yes
+						regiments = {
+							armored_blimp_carrier = { x = 0 y = 0 }
+						}
 					}
 				}
 				capital_scope = {
@@ -3572,22 +3591,6 @@ focus_tree = {
 			hidden_effect = {
 				country_event = { id = AUR_event.14 }
 			}
-		}
-	}
-
-	focus = {
-		id = AUR_state_of_arms
-		icon = GFX_goal_KTZ_a_flood_of_violence
-		x = -12
-		y = 3
-		cost = 5
-		prerequisite = { focus = AUR_controlled_thought }
-		relative_position_id = AUR_building_better_imperium
-		completion_reward = {
-			army_experience = 25
-			air_experience = 25
-			navy_experience = 25
-			add_political_power = 25
 		}
 	}
 
