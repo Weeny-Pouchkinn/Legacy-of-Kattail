@@ -1,0 +1,672 @@
+guiTypes = {
+	containerWindowType = {
+		name = "save_to_file_popup"
+		size = { width = 480 height=382 }
+		orientation= center
+		origo = center
+		moveable = yes
+		fade_time = 200
+		fade_type = linear
+		click_to_front = yes
+
+		background = {
+			name = "Background"
+			quadTextureSprite ="GFX_pol_goal_popup_bg"
+		}
+
+		instantTextBoxType = {
+			name = "title"
+			position = { x = 10 y = 16 }
+			textureFile = ""
+			font = "hoi_24header"
+			borderSize = {x = 0 y = 10}
+			text = "Title"
+			maxWidth = 450
+			maxHeight = 40
+			fixedsize = yes
+			vertical_alignment = center
+			format = centre
+		}
+		
+		containerWindowType = {
+			name = "editbox_bg"
+			size = { width = 285 height = 30 }
+			position = { x=90 y=200 }
+			background = {
+				name = "name_bg"
+				quadTextureSprite = "GFX_generic_background"
+				position = { x = 0 y = 0 }
+				alwaystransparent = yes
+			}
+		}
+		
+		editBoxType = {
+			name = "name"
+			position = { x = 94 y = 205 }
+			font = "hoi_18mbs"
+			size = { x=277 y=40 }
+		}
+		
+		instantTextBoxType = {
+			name = "overwrite_existing"
+			position = { x = 23 y = 246 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			text = "OVERWRITE_EXISTING"
+			maxWidth = 430
+			maxHeight = 40
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+		
+		buttonType = {
+			name = "overwrite_button"
+			position = { x=228 y =275 }
+			quadTextureSprite ="GFX_generic_checkbox3"
+			pdx_tooltip = "OVERWRITE_EXISTING_DESIGN_DESC"
+			clicksound = click_checkbox
+			frame = 1
+		}
+		
+		buttonType = {
+			name = "decline_button"
+			position = { x=90 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "PDXO_CANCEL"
+			buttonFont = "hoi_16mbs"
+			shortcut = "ESCAPE"
+			clicksound = click_close
+		}
+
+		buttonType = {
+			name = "accept_button"
+			position = { x=260 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "BUTTON_YES"
+			buttonFont = "hoi_16mbs"
+			shortcut = "RETURN"
+			clicksound = click_default
+		}
+		
+		instantTextBoxType = {
+			name = "description"
+			position = { x = 23 y = 176 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			text = "Long text here!"
+			maxWidth = 430
+			maxHeight = 40
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+		
+		instantTextBoxType = {
+			name = "body_2"
+			position = { x = 23 y = 90 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			text = "CHOOSE_EXISTING_FOLDER"
+			maxWidth = 430
+			maxHeight = 128
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+		
+		dropDownBoxType = {
+			name = "folder_dropdown"
+			position = { x = 90 y = 115 }
+			size = { width = 285 height = 40 }
+
+			containerWindowType = {
+				name = "equipment_name_bg"
+				size = { width = 100% height = 100% }
+
+				background = {
+					name = "name_bg"
+					quadTextureSprite = "GFX_generic_background"
+					alwaystransparent = yes
+				}
+			}
+
+			instantTextboxType = {
+				name = "text"
+				position = { x = 4 y = 10 }
+				font = "hoi_18mbs"
+				maxWidth = 256
+				maxHeight = 18
+				alwaystransparent = no
+                multiline = no
+			}
+
+			expandButton = {
+				name = "expand_button"
+				position = { x = -25 y = 10 }
+				quadTextureSprite ="GFX_expand_button"
+				buttonFont = "Main_14_black"
+				Orientation = "UPPER_RIGHT"
+				clicksound = "ui_tank_designer_expand"
+				alwaystransparent = no
+			}
+
+			expandedWindow = {
+				name = "expanded_window"
+				position = { x = 0 y = -250 }
+				show_position = { x = 0 y = 42 }
+				size = { width=285 height=200 }
+				verticalScrollbar = "right_vertical_slider"
+				margin = { left = 4 right = 4 top = 4 bottom = 4 }
+				show_animation_type = decelerated
+				hide_animation_type = accelerated
+				animation_time = 300
+
+				background = {
+					name = "Background"
+					quadTextureSprite ="GFX_generic_background"
+					position = { x = 0 y = 0 }
+				}
+
+				gridBoxType = {
+					name = "folder_grid"
+					size = { width = 100% height = 100% }
+					slotsize = { width = 100% height = 36 }
+					max_slots_horizontal = 1
+					format = "UPPER_LEFT"
+
+					# contains design_folder_list_item
+
+				}
+			}
+		}
+
+	}
+	
+	containerWindowType = {
+		name = "create_folder_popup"
+		size = { width = 480 height=382 }
+		orientation= center
+		origo = center
+		moveable = yes
+		fade_time = 200
+		fade_type = linear
+		click_to_front = yes
+
+		background = {
+			name = "Background"
+			quadTextureSprite ="GFX_pol_goal_popup_bg"
+		}
+		
+		containerWindowType = {
+			name = "equipment_name_bg"
+			size = { width = 400 height = 30 }
+			position = { x=40 y=120 }
+			background = {
+				name = "name_bg"
+				quadTextureSprite = "GFX_generic_background"
+				position = { x = 0 y = 0 }
+				alwaystransparent = yes
+			}
+		}
+		
+		editBoxType = {
+			name = "name"
+			position = { x = 44 y = 125 }
+			font = "hoi_18mbs"
+			size = { x=392 y=40 }
+		}
+		
+		instantTextBoxType = {
+			name = "title"
+			position = { x = 10 y = 16 }
+			textureFile = ""
+			font = "hoi_24header"
+			borderSize = {x = 0 y = 10}
+			text = "Title"
+			maxWidth = 450
+			maxHeight = 40
+			fixedsize = yes
+			vertical_alignment = center
+			format = centre
+		}
+
+		instantTextBoxType = {
+			name = "description"
+			position = { x = 23 y = 90 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			maxWidth = 430
+			maxHeight = 128
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+
+		buttonType = {
+			name = "decline_button"
+			position = { x=90 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "PDXO_CANCEL"
+			buttonFont = "hoi_16mbs"
+			shortcut = "ESCAPE"
+			clicksound = click_close
+		}
+
+		buttonType = {
+			name = "accept_button"
+			position = { x=260 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "BUTTON_YES"
+			buttonFont = "hoi_16mbs"
+			shortcut = "RETURN"
+			clicksound = click_default
+		}
+	}
+	
+	containerWindowType = {
+		name = "design_folder_list_item"
+		size = { width=250 height=34 }
+		
+		background = {
+			name = "Background"
+			quadTextureSprite ="GFX_mini_tooltip"
+			clicksound = click_scroll
+		}
+		
+		instantTextboxType = {
+			name = "name"
+			position = { x = 24 y = -2 }
+			font = "hoi_18mbs"
+			maxWidth = 184
+			maxHeight = 36
+			fixedsize = yes
+			vertical_alignment = center
+			alwaystransparent = yes
+			multiline = no
+		}
+	}
+	
+	containerWindowType = {
+		name = "delete_design_popup"
+		size = { width = 480 height=382 }
+		orientation= center
+		origo = center
+		moveable = yes
+		fade_time = 200
+		fade_type = linear
+		click_to_front = yes
+
+		background = {
+			name = "Background"
+			quadTextureSprite ="GFX_pol_goal_popup_bg"
+		}
+		
+		instantTextBoxType = {
+			name = "title"
+			position = { x = 10 y = 16 }
+			textureFile = ""
+			font = "hoi_24header"
+			borderSize = {x = 0 y = 10}
+			text = "Title"
+			maxWidth = 450
+			maxHeight = 40
+			fixedsize = yes
+			vertical_alignment = center
+			format = centre
+		}
+
+		instantTextBoxType = {
+			name = "description"
+			position = { x = 23 y = 90 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			maxWidth = 430
+			maxHeight = 128
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+
+		buttonType = {
+			name = "decline_button"
+			position = { x=90 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "PDXO_CANCEL"
+			buttonFont = "hoi_16mbs"
+			shortcut = "ESCAPE"
+			clicksound = click_close
+		}
+
+		buttonType = {
+			name = "accept_button"
+			position = { x=260 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "BUTTON_YES"
+			buttonFont = "hoi_16mbs"
+			shortcut = "RETURN"
+			clicksound = click_default
+		}
+	}
+	
+	containerWindowType = {
+		name = "delete_or_rename_folder_popup"
+		size = { width = 480 height=382 }
+		orientation= center
+		origo = center
+		moveable = yes
+		fade_time = 200
+		fade_type = linear
+		click_to_front = yes
+
+		background = {
+			name = "Background"
+			quadTextureSprite ="GFX_pol_goal_popup_bg"
+		}
+		
+		containerWindowType = {
+			name = "equipment_name_bg"
+			size = { width = 400 height = 30 }
+			position = { x=40 y=160 }
+			background = {
+				name = "name_bg"
+				quadTextureSprite = "GFX_generic_background"
+				position = { x = 0 y = 0 }
+				alwaystransparent = yes
+			}
+		}
+		
+		editBoxType = {
+			name = "name"
+			position = { x = 44 y = 165 }
+			font = "hoi_18mbs"
+			size = { x=392 y=40 }
+		}
+		
+		instantTextBoxType = {
+			name = "title"
+			position = { x = 10 y = 16 }
+			textureFile = ""
+			font = "hoi_24header"
+			borderSize = {x = 0 y = 10}
+			text = "Title"
+			maxWidth = 450
+			maxHeight = 40
+			fixedsize = yes
+			vertical_alignment = center
+			format = centre
+		}
+
+		instantTextBoxType = {
+			name = "description"
+			position = { x = 23 y = 90 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			maxWidth = 430
+			maxHeight = 128
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+
+		buttonType = {
+			name = "decline_button"
+			position = { x=90 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "PDXO_CANCEL"
+			buttonFont = "hoi_16mbs"
+			shortcut = "ESCAPE"
+			clicksound = click_close
+		}
+
+		buttonType = {
+			name = "accept_button"
+			position = { x=260 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "BUTTON_YES"
+			buttonFont = "hoi_16mbs"
+			shortcut = "RETURN"
+			clicksound = click_default
+		}
+	}
+	
+	containerWindowType = {
+		name = "edit_designer_note"
+		size = { width = 480 height=382 }
+		orientation= center
+		origo = center
+		moveable = yes
+		fade_time = 200
+		fade_type = linear
+		click_to_front = yes
+
+		background = {
+			name = "Background"
+			quadTextureSprite ="GFX_pol_goal_popup_bg"
+		}
+		
+		containerWindowType = {
+			name = "equipment_name_bg"
+			size = { width = 400 height = 28 }
+			position = { x=40 y=160 }
+			background = {
+				name = "name_bg"
+				quadTextureSprite = "GFX_generic_background"
+				position = { x = 0 y = 0 }
+				alwaystransparent = yes
+			}
+		}
+		
+		instantTextBoxType = {
+			name = "title"
+			position = { x = 10 y = 16 }
+			textureFile = ""
+			font = "hoi_24header"
+			borderSize = {x = 0 y = 10}
+			maxWidth = 450
+			maxHeight = 40
+			fixedsize = yes
+			vertical_alignment = center
+			format = centre
+		}		
+
+		instantTextBoxType = {
+			name = "description"
+			position = { x = 23 y = 90 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			maxWidth = 430
+			maxHeight = 128
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+		
+		editBoxType = {
+			name = "name"
+			position = { x = 44 y = 165 }
+			font = "hoi_16mbs"
+			size = { x=392 y=100 }
+			is_multiline = yes
+		}
+
+		buttonType = {
+			name = "decline_button"
+			position = { x=90 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "PDXO_CANCEL"
+			buttonFont = "hoi_16mbs"
+			shortcut = "ESCAPE"
+			clicksound = click_close
+		}
+
+		buttonType = {
+			name = "accept_button"
+			position = { x=260 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "BUTTON_YES"
+			buttonFont = "hoi_16mbs"
+			shortcut = "RETURN"
+			clicksound = click_default
+		}
+	}
+	
+	containerWindowType = {
+		name = "change_design_folder_popup"
+		size = { width = 480 height=382 }
+		orientation= center
+		origo = center
+		moveable = yes
+		fade_time = 200
+		fade_type = linear
+		click_to_front = yes
+
+		background = {
+			name = "Background"
+			quadTextureSprite ="GFX_pol_goal_popup_bg"
+		}
+
+		instantTextBoxType = {
+			name = "title"
+			position = { x = 10 y = 16 }
+			textureFile = ""
+			font = "hoi_24header"
+			borderSize = {x = 0 y = 10}
+			text = "Title"
+			maxWidth = 450
+			maxHeight = 40
+			fixedsize = yes
+			vertical_alignment = center
+			format = centre
+		}
+		
+		containerWindowType = {
+			name = "editbox_bg"
+			size = { width = 400 height = 30 }
+			position = { x=40 y=240 }
+			background = {
+				name = "name_bg"
+				quadTextureSprite = "GFX_generic_background"
+				position = { x = 0 y = 0 }
+				alwaystransparent = yes
+			}
+		}
+		
+		editBoxType = {
+			name = "name"
+			position = { x = 44 y = 245 }
+			font = "hoi_18mbs"
+			size = { x=392 y=40 }
+		}
+		
+		buttonType = {
+			name = "decline_button"
+			position = { x=90 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "PDXO_CANCEL"
+			buttonFont = "hoi_16mbs"
+			shortcut = "ESCAPE"
+			clicksound = click_close
+		}
+
+		buttonType = {
+			name = "accept_button"
+			position = { x=260 y=323}
+			quadTextureSprite ="GFX_button_148x34"
+			buttonText = "BUTTON_YES"
+			buttonFont = "hoi_16mbs"
+			shortcut = "RETURN"
+			clicksound = click_default
+		}
+		
+		instantTextBoxType = {
+			name = "description"
+			position = { x = 23 y = 176 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			maxWidth = 430
+			maxHeight = 40
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+		
+		instantTextBoxType = {
+			name = "body_2"
+			position = { x = 23 y = 90 }
+			textureFile = ""
+			font = "hoi_18mbs"
+			borderSize = {x = 0 y = 0}
+			text = "CHOOSE_EXISTING_FOLDER"
+			maxWidth = 430
+			maxHeight = 128
+			format = centre
+			scrollbartype = "standardtext_slider"
+		}
+		
+		dropDownBoxType = {
+			name = "folder_dropdown"
+			position = { x = 90 y = 115 }
+			size = { width = 285 height = 40 }
+
+			containerWindowType = {
+				name = "equipment_name_bg"
+				size = { width = 100% height = 100% }
+
+				background = {
+					name = "name_bg"
+					quadTextureSprite = "GFX_generic_background"
+					alwaystransparent = yes
+				}
+			}
+
+			instantTextboxType = {
+				name = "text"
+				position = { x = 48 y = 10 }
+				font = "hoi_18mbs"
+				maxWidth = 180
+				maxHeight = 18
+				alwaystransparent = yes
+			}
+
+			expandButton = {
+				name = "expand_button"
+				position = { x = -25 y = 10 }
+				quadTextureSprite ="GFX_expand_button"
+				buttonFont = "Main_14_black"
+				Orientation = "UPPER_RIGHT"
+				clicksound = "ui_tank_designer_expand"
+				alwaystransparent = no
+			}
+
+			expandedWindow = {
+				name = "expanded_window"
+				position = { x = 0 y = -250 }
+				show_position = { x = 0 y = 42 }
+				size = { width=285 height=200 }
+				verticalScrollbar = "right_vertical_slider"
+				margin = { left = 4 right = 4 top = 4 bottom = 4 }
+				show_animation_type = decelerated
+				hide_animation_type = accelerated
+				animation_time = 300
+
+				background = {
+					name = "Background"
+					quadTextureSprite ="GFX_generic_background"
+					position = { x = 0 y = 0 }
+				}
+
+				gridBoxType = {
+					name = "folder_grid"
+					size = { width = 100% height = 100% }
+					slotsize = { width = 100% height = 36 }
+					max_slots_horizontal = 1
+					format = "UPPER_LEFT"
+
+					# contains design_folder_list_item
+
+				}
+			}
+		}
+	}
+}
