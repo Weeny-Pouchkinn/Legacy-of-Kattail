@@ -1921,7 +1921,17 @@ on_actions = {
 				ROOT = { country_event = { id = lok_notification.1 } }
 				FROM = { country_event = { id = lok_notification.2 } }
 			}
-			FROM.FROM = { #Clear and apply species match modifiers
+			FROM.FROM = {
+				#Remove ABC effects
+				if = {
+					limit = {
+						has_state_flag = has_armored_blimp_carrier_state
+					}
+					clr_state_flag = has_armored_blimp_carrier_state
+					remove_building = { type = air_base level = 2 }
+					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
+				}
+				#Clear and apply species match modifiers
 				if = {
 					limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
 					remove_dynamic_modifier = { modifier = lok_matching_species }
