@@ -190,6 +190,7 @@ focus_tree = {
 			air_experience = 25
 			navy_experience = 25
 			add_political_power = 25
+			country_event = { id = AUR_event.71 }
 		}
 	}
 
@@ -859,6 +860,7 @@ focus_tree = {
 				add_unit_leader_trait = lok_katzen_soulbot
 			}
 			add_ideas = AUR_early_katzbots
+			country_event = { id = AUR_event.72 }
 		}
 	}
 	focus = {
@@ -971,6 +973,7 @@ focus_tree = {
 					ultra_heavy_armor_tech = 1
 				}
 			}
+			country_event = { id = AUR_event.73 }
 		}
 	}
 	focus = {
@@ -1059,6 +1062,7 @@ focus_tree = {
 					}
 				}
 			}
+			country_event = { id = AUR_event.74 }
 		}
 	}
 	focus = {
@@ -1121,6 +1125,7 @@ focus_tree = {
 				progress = 0.95
 				amount = 1
 			}
+			country_event = { id = AUR_event.75 }
 		}
 	}
 	focus = {
@@ -1139,6 +1144,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_recreate_supervessels }
 		completion_reward = {
 			add_equipment_to_stockpile = { type = lok_reusable_heavy_chemical_rocket_0 amount = 250 producer = AUR } 
+			country_event = { id = AUR_event.76 }
 		}
 	}
 
@@ -2197,6 +2203,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_reform_the_high_command }
 		relative_position_id = AUR_biding_our_time
 		completion_reward = {
+			country_event = { id = AUR_event.70 }
 		}
 	}
 
@@ -2629,6 +2636,7 @@ focus_tree = {
 			set_capital = {
 				state = 509
 			}
+			country_event = { id = AUR_event.77 }
 		}
 	}
 
@@ -3367,6 +3375,7 @@ focus_tree = {
 				}
 				add_claim_by = AUR
 			}
+			country_event = { id = AUR_event.79 }
 		}
 	}
 
@@ -4125,6 +4134,7 @@ focus_tree = {
 				add_to_variable = { AUR_neu_katzenarmee_army_attack_factor = 0.05 }
 				add_to_variable = { AUR_neu_katzenarmee_experience_loss_factor = 0.05 }
 			}
+			country_event = { id = AUR_event.80 }
 		}
 	}
 
@@ -4176,6 +4186,213 @@ focus_tree = {
 				add_to_variable = { AUR_neu_katzenarmee_experience_loss_factor = 0.15 }
 				add_to_variable = { AUR_neu_katzenarmee_equipment_capture_factor = 0.05 }
 				add_to_variable = { AUR_neu_katzenarmee_army_attack_factor = 0.05 }
+			}
+		}
+	}
+
+	### LATE-GAME INDUSTRY ###
+
+	focus = {
+		id = AUR_kickstart_industrial_development
+		icon = GFX_goal_KTZ_fix_up_infrastructure
+		x = 0
+		y = 4
+		cost = 10
+		prerequisite = { focus = AUR_re_mint_the_katzmark }
+		prerequisite = { focus = AUR_re_establish_the_katzregion }
+		relative_position_id = AUR_bomb_the_heart
+		completion_reward = {
+			add_timed_idea = {
+				idea = AUR_industrial_kickstart
+				days = 120
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_develop_the_itchiloo_belt
+		icon = GFX_goal_KTZ_militarize_architecture
+		x = -1
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_kickstart_industrial_development }
+		relative_position_id = AUR_kickstart_industrial_development
+		available = {
+			controls_state = 140
+			controls_state = 138
+			controls_state = 516
+		}
+		completion_reward = {
+			140 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			138 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			516 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_resume_drakwald_logging
+		icon = GFX_focus_CHL_expand_the_forestry
+		x = 1
+		y = 2
+		cost = 10
+		prerequisite = { focus = AUR_kickstart_industrial_development }
+		relative_position_id = AUR_kickstart_industrial_development
+		available = {
+			controls_state = 532
+			controls_state = 496
+			controls_state = 531
+			controls_state = 533
+			controls_state = 534
+		}
+		completion_reward = {
+			532 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				increase_state_category = yes
+			}
+			496 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				increase_state_category = yes
+			}
+			531 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				increase_state_category = yes
+			}
+			533 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				increase_state_category = yes
+			}
+			534 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				increase_state_category = yes
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_meojave_solar_concentrators
+		icon = GFX_goal_KTZ_mass_electrification
+		x = 0
+		y = 3
+		cost = 10
+		prerequisite = { focus = AUR_develop_the_itchiloo_belt focus = AUR_resume_drakwald_logging }
+		relative_position_id = AUR_kickstart_industrial_development
+		available = {
+			controls_state = 177
+			controls_state = 204
+			controls_state = 530
+			controls_state = 529
+		}
+		completion_reward = {
+			177 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = renewable_power_plant
+					level = 1
+					instant_build = yes
+				}
+			}
+			204 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = renewable_power_plant
+					level = 1
+					instant_build = yes
+				}
+			}
+			530 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = renewable_power_plant
+					level = 1
+					instant_build = yes
+				}
+			}
+			529 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = renewable_power_plant
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_double_himezulte_airbase
+		icon = GFX_goal_KTZ_into_the_desert
+		x = 0
+		y = 4
+		cost = 10
+		prerequisite = { focus = AUR_meojave_solar_concentrators }
+		relative_position_id = AUR_kickstart_industrial_development
+		available = {
+			controls_state = 220
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_double_himezulte_airbase_tt
+			220 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+				multiply_variable = { wonder_modifiers_values^8 = 2 }
+				multiply_variable = { wonder_modifiers_values^9 = 2 }
+			}
+			591 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+			}
+			hidden_effect = {
+				apply_wonder_effects = yes
 			}
 		}
 	}
