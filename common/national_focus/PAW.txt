@@ -1,0 +1,192 @@
+focus_tree = {
+	id = PAW_TREE
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = PAW
+		}
+	}
+
+	continuous_focus_position = { x = 50 y = 1000 }
+
+	# [1] Bring an End to the Anarchy
+	focus = {
+		id = PAW_bring_an_end_to_the_anarchy
+		icon = GFX_goal_generic_demand_territory
+		x = 4
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_no_central_authority
+				add_idea = PAW_no_central_authority_1
+			}
+		}
+	}
+
+	# [2a] Reign in the Banditism (ME with 2b)
+	focus = {
+		id = PAW_reign_in_the_banditism
+		icon = GFX_goal_generic_police_action
+		x = 2
+		y = 2
+		cost = 10
+
+		prerequisite = { focus = PAW_bring_an_end_to_the_anarchy }
+		mutually_exclusive = { focus = PAW_take_advantage_of_the_bandits }
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_banditism
+				add_idea = PAW_banditism_2a
+			}
+		}
+	}
+
+	# [2b] Take Advantage of the Bandits (ME with 2a)
+	focus = {
+		id = PAW_take_advantage_of_the_bandits
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 6
+		y = 2
+		cost = 10
+
+		prerequisite = { focus = PAW_bring_an_end_to_the_anarchy }
+		mutually_exclusive = { focus = PAW_reign_in_the_banditism }
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_banditism
+				add_idea = PAW_banditism_2b
+			}
+		}
+	}
+
+	# [3] Reclaim the Streets of Pawris (requires 2a OR 2b)
+	focus = {
+		id = PAW_reclaim_the_streets_of_pawris
+		icon = GFX_goal_generic_occupy_states_ongoing_war
+		x = 4
+		y = 4
+		cost = 10
+
+		prerequisite = { focus = PAW_reign_in_the_banditism focus = PAW_take_advantage_of_the_bandits }
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_underground_resistance
+				add_idea = PAW_underground_resistance_3
+			}
+		}
+	}
+
+	# [4a] Through Labour the Rebels Will Pay (ME with 4b)
+	focus = {
+		id = PAW_through_labour_the_rebels_will_pay
+		icon = GFX_goal_generic_construction2
+		x = 2
+		y = 6
+		cost = 10
+
+		prerequisite = { focus = PAW_reclaim_the_streets_of_pawris }
+		mutually_exclusive = { focus = PAW_through_death_the_rebels_will_pay }
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_underground_resistance_3
+				add_idea = PAW_imprisoned_resistance
+			}
+			add_offsite_building = {
+				type = industrial_complex
+				level = 5
+			}
+			hidden_effect = {
+				subtract_from_variable = { ipf_strength = 2 }
+				subtract_from_variable = { ksk_strength = 2 }
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+	}
+
+	# [4b] Through Death the Rebels Will Pay (ME with 4a)
+	focus = {
+		id = PAW_through_death_the_rebels_will_pay
+		icon = GFX_goal_generic_major_war
+		x = 6
+		y = 6
+		cost = 10
+
+		prerequisite = { focus = PAW_reclaim_the_streets_of_pawris }
+		mutually_exclusive = { focus = PAW_through_labour_the_rebels_will_pay }
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_underground_resistance_3
+				add_idea = PAW_executed_resistance
+			}
+			add_offsite_building = {
+				type = arms_factory
+				level = 5
+			}
+			add_offsite_building = {
+				type = industrial_complex
+				level = 2
+			}
+			hidden_effect = {
+				subtract_from_variable = { ipf_strength = 3 }
+				subtract_from_variable = { ksk_strength = 3 }
+				calculate_ipf_ksk_resistance = yes
+			}
+		}
+	}
+
+	# [5] Strike Against Elwin (requires 4a OR 4b)
+	focus = {
+		id = PAW_strike_against_elwin
+		icon = GFX_goal_generic_army_mobilization
+		x = 4
+		y = 8
+		cost = 10
+
+		prerequisite = { focus = PAW_through_labour_the_rebels_will_pay focus = PAW_through_death_the_rebels_will_pay }
+
+		completion_reward = {
+			add_ideas = { PAW_breaking_elwins_hold }
+			hidden_effect = {
+				set_technology = {
+					popup = no
+					basic_medium_art = 1
+				}
+			}
+			if = {
+				limit = { NOT = { has_template = "Meowrine Divisions" } }
+				division_template = {
+					name = "Meowrine Divisions"
+					is_locked = yes
+					regiments = {
+						mechanized = { x = 0 y = 0 }
+						mechanized = { x = 0 y = 1 }
+						mechanized = { x = 0 y = 2 }
+						mechanized = { x = 1 y = 0 }
+						mechanized = { x = 1 y = 1 }
+						mechanized = { x = 1 y = 2 }
+						mechanized = { x = 2 y = 0 }
+						mechanized = { x = 2 y = 1 }
+						mechanized = { x = 2 y = 2 }
+						medium_sp_artillery_brigade = { x = 3 y = 0 }
+						medium_sp_artillery_brigade = { x = 3 y = 1 }
+					}
+				}
+			}
+			capital_scope = {
+				create_unit = {
+					division = "division_template = \"Meowrine Divisions\" start_experience_factor = 0.3 start_equipment_factor = 1"
+					count = 3
+					owner = PAW
+				}
+			}
+		}
+	}
+}
