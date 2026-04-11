@@ -4194,7 +4194,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_kickstart_industrial_development
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_goal_KTZ_fix_up_infrastructure
 		x = 0
 		y = 4
 		cost = 10
@@ -4202,7 +4202,6 @@ focus_tree = {
 		prerequisite = { focus = AUR_re_establish_the_katzregion }
 		relative_position_id = AUR_bomb_the_heart
 		completion_reward = {
-			custom_effect_tooltip = AUR_kickstart_industrial_development_tt
 			add_timed_idea = {
 				idea = AUR_industrial_kickstart
 				days = 120
@@ -4212,7 +4211,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_develop_the_itchiloo_belt
-		icon = GFX_goal_generic_construct_mil_factory
+		icon = GFX_goal_KTZ_militarize_architecture
 		x = -1
 		y = 1
 		cost = 10
@@ -4253,9 +4252,9 @@ focus_tree = {
 
 	focus = {
 		id = AUR_resume_drakwald_logging
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_focus_CHL_expand_the_forestry
 		x = 1
-		y = 1
+		y = 2
 		cost = 10
 		prerequisite = { focus = AUR_kickstart_industrial_development }
 		relative_position_id = AUR_kickstart_industrial_development
@@ -4317,9 +4316,9 @@ focus_tree = {
 
 	focus = {
 		id = AUR_meojave_solar_concentrators
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_goal_KTZ_mass_electrification
 		x = 0
-		y = 2
+		y = 3
 		cost = 10
 		prerequisite = { focus = AUR_develop_the_itchiloo_belt focus = AUR_resume_drakwald_logging }
 		relative_position_id = AUR_kickstart_industrial_development
@@ -4367,9 +4366,9 @@ focus_tree = {
 
 	focus = {
 		id = AUR_double_himezulte_airbase
-		icon = GFX_goal_KTZ_unfamiliar_skies
+		icon = GFX_goal_KTZ_into_the_desert
 		x = 0
-		y = 3
+		y = 4
 		cost = 10
 		prerequisite = { focus = AUR_meojave_solar_concentrators }
 		relative_position_id = AUR_kickstart_industrial_development
@@ -4379,8 +4378,18 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = AUR_double_himezulte_airbase_tt
 			220 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
 				multiply_variable = { wonder_modifiers_values^8 = 2 }
 				multiply_variable = { wonder_modifiers_values^9 = 2 }
+			}
+			591 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
 			}
 			hidden_effect = {
 				apply_wonder_effects = yes
