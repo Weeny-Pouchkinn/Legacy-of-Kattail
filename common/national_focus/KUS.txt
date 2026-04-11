@@ -1,0 +1,615 @@
+focus_tree = {
+	id = KUS_TREE
+	country = {
+		factor = 0
+		modifier = {
+			add = 100
+			tag = KUS
+		}
+	}
+	continuous_focus_position = { x = 1000 y = 3000 }
+
+	# ==========================================
+	# INDUSTRY TREE
+	# ==========================================
+
+	# ---- Row 0: Mutually Exclusive starting pair ----
+
+	focus = {
+		id = KUS_get_off_the_ground
+		icon = GFX_goal_KTZ_establish_production_lines
+		x = 4
+		y = 0
+		cost = 5
+		mutually_exclusive = { focus = KUS_lay_a_foundation }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_get_off_the_ground_tt
+			hidden_effect = {
+				remove_ideas = KUS_ruined_economy
+				set_variable = { KUS_economy_factory_output = -0.15 }
+				set_variable = { KUS_economy_prod_eff_cap = -0.05 }
+				set_variable = { KUS_economy_prod_eff_gain = -0.10 }
+				set_variable = { KUS_economy_consumer_goods = 0.15 }
+				set_variable = { KUS_economy_construction_speed = -0.20 }
+				add_dynamic_modifier = { modifier = KUS_economy_ruined }
+			}
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 1.0
+				uses = 1
+				category = industry
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_lay_a_foundation
+		icon = GFX_goal_KTZ_new_superhighway
+		x = 6
+		y = 0
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		mutually_exclusive = { focus = KUS_get_off_the_ground }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_lay_a_foundation_tt
+			hidden_effect = {
+				remove_ideas = KUS_ruined_economy
+				set_variable = { KUS_economy_factory_output = -0.20 }
+				set_variable = { KUS_economy_prod_eff_cap = -0.10 }
+				set_variable = { KUS_economy_prod_eff_gain = -0.10 }
+				set_variable = { KUS_economy_consumer_goods = 0.12 }
+				set_variable = { KUS_economy_construction_speed = -0.20 }
+				add_dynamic_modifier = { modifier = KUS_economy_ruined }
+			}
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 1.0
+				uses = 1
+				category = industry
+			}
+		}
+	}
+
+	# ---- Row 1: Four branch focuses ----
+
+	focus = {
+		id = KUS_populate_ministry
+		icon = GFX_goal_KTZ_katzen_authorities
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		prerequisite = { focus = KUS_get_off_the_ground }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_populate_ministry_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_factory_output = 0.05 }
+				add_to_variable = { KUS_economy_construction_speed = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_focus_industrial_infrastructure
+		icon = GFX_goal_KTZ_fix_up_infrastructure
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		prerequisite = { focus = KUS_get_off_the_ground }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_focus_industrial_infrastructure_tt
+			225 = {
+				add_building_construction = { type = infrastructure level = 2 instant_build = yes }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_seek_expert_economists
+		icon = GFX_goal_KTZ_foreign_delegations
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_lay_a_foundation
+		prerequisite = { focus = KUS_lay_a_foundation }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_seek_expert_economists_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_factory_output = 0.05 }
+				add_to_variable = { KUS_economy_construction_speed = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_sustainable_development
+		icon = GFX_focus_ARG_develop_the_electricity_sector
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_lay_a_foundation
+		prerequisite = { focus = KUS_lay_a_foundation }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_sustainable_development_tt
+		}
+	}
+
+	# ---- Row 2: Convergence focuses ----
+
+	focus = {
+		id = KUS_military_contracts
+		icon = GFX_goal_KTZ_kiloforges
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		prerequisite = { focus = KUS_populate_ministry focus = KUS_seek_expert_economists }
+
+		completion_reward = {
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = arms_factory level = 2 instant_build = yes }
+			}
+			715 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_careful_investments
+		icon = GFX_goal_KTZ_new_katzmark
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_lay_a_foundation
+		prerequisite = { focus = KUS_focus_industrial_infrastructure focus = KUS_sustainable_development }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_careful_investments_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_economy_ruined }
+				add_to_variable = { KUS_economy_prod_eff_cap = 0.25 }
+				add_to_variable = { KUS_economy_prod_eff_gain = 0.01 }
+				add_dynamic_modifier = { modifier = KUS_economy_recovering }
+			}
+		}
+	}
+
+	# ---- Row 3: Further convergence ----
+
+	focus = {
+		id = KUS_retool_military_industry
+		icon = GFX_goal_KTZ_a_mountain_of_iron
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_military_contracts
+		prerequisite = { focus = KUS_military_contracts }
+		prerequisite = { focus = KUS_careful_investments }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_retool_military_industry_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_factory_output = 0.05 }
+				add_to_variable = { KUS_economy_construction_speed = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_found_strong
+		icon = GFX_goal_KTZ_mass_electrification
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_careful_investments
+		prerequisite = { focus = KUS_careful_investments }
+
+		completion_reward = {
+			716 = {
+				add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+			}
+			229 = {
+				add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+			}
+			717 = {
+				add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 1
+			}
+			715 = {
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
+
+	# ---- Row 4: Mutually Exclusive economy resolution ----
+
+	focus = {
+		id = KUS_rapid_recovery
+		icon = GFX_goal_KTZ_a_success
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_retool_military_industry
+		prerequisite = { focus = KUS_retool_military_industry }
+		prerequisite = { focus = KUS_found_strong }
+		mutually_exclusive = { focus = KUS_industrial_cornerstone }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_rapid_recovery_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_economy_recovering }
+			}
+			add_timed_idea = {
+				idea = KUS_economic_rebound
+				days = 180
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_industrial_cornerstone
+		icon = GFX_focus_NORDIC_com_capstone_civilian
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_found_strong
+		prerequisite = { focus = KUS_retool_military_industry }
+		prerequisite = { focus = KUS_found_strong }
+		mutually_exclusive = { focus = KUS_rapid_recovery }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_industrial_cornerstone_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_economy_recovering }
+			}
+			add_ideas = KUS_land_revaluation
+		}
+	}
+
+	# ---- Row 5: Four major branches ----
+
+	focus = {
+		id = KUS_reconnect_navar
+		icon = GFX_focus_POL_warsaw_main_station
+		x = -7
+		y = 1
+		cost = 5
+		relative_position_id = KUS_rapid_recovery
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
+
+		completion_reward = {
+			229 = {
+				add_extra_state_shared_building_slots = 5
+				add_building_construction = { type = infrastructure level = 2 instant_build = yes }
+				add_building_construction = { type = industrial_complex level = 3 instant_build = yes }
+				add_building_construction = { type = dockyard level = 2 instant_build = yes }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_bureau_state_industry
+		icon = GFX_focus_ARG_keep_it_in_the_party
+		x = -3
+		y = 1
+		cost = 5
+		relative_position_id = KUS_rapid_recovery
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_bureau_state_industry_tt
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				218 = {
+					add_extra_state_shared_building_slots = 3
+					add_building_construction = { type = arms_factory level = 3 instant_build = yes }
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				hidden_effect = {
+					set_variable = { KUS_bureau_factory_output = 0.05 }
+					set_variable = { KUS_bureau_construction_speed = 0 }
+					set_variable = { KUS_bureau_mil_construction = 0 }
+					add_dynamic_modifier = { modifier = KUS_bureau_state_industry }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_found_nuclear_energy_org
+		icon = GFX_goal_KTZ_atomic_power
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_rapid_recovery
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = KUS_bureau_resource_extraction
+		icon = GFX_goal_KTZ_dig_for_resources
+		x = 5
+		y = 1
+		cost = 5
+		relative_position_id = KUS_rapid_recovery
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
+
+		completion_reward = {
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				add_tech_bonus = {
+					name = construction_bonus
+					bonus = 0.71
+					uses = 3
+					category = construction_tech
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				hidden_effect = {
+					add_to_variable = { KUS_economy_factory_output = 0.10 }
+				}
+				custom_effect_tooltip = KUS_bureau_resource_extraction_tt
+			}
+		}
+	}
+
+	# ---- Row 6: Branch sub-focuses ----
+
+	focus = {
+		id = KUS_permanent_integration
+		icon = GFX_focus_POL_develop_polish_shipbuilding
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_reconnect_navar
+		prerequisite = { focus = KUS_reconnect_navar }
+
+		completion_reward = {
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = industrial_complex level = 2 instant_build = yes }
+			}
+			213 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_domestic_arms_industry
+		icon = GFX_goal_KTZ_kiloforges
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_state_industry
+		prerequisite = { focus = KUS_bureau_state_industry }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_domestic_arms_industry_tt
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				218 = {
+					add_extra_state_shared_building_slots = 5
+					add_building_construction = { type = arms_factory level = 3 instant_build = yes }
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				custom_effect_tooltip = KUS_domestic_arms_industry_cornerstone_tt
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_factory_output = 0.05 }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_recover_katser_sea_machinery
+		icon = GFX_focus_FIN_coastal_defense
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_state_industry
+		prerequisite = { focus = KUS_bureau_state_industry }
+
+		completion_reward = {
+			715 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = industrial_complex level = 2 instant_build = yes }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_expand_future_energy_institute
+		icon = GFX_goal_KTZ_atomic_power
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_found_nuclear_energy_org
+		prerequisite = { focus = KUS_found_nuclear_energy_org }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = nuclear_bonus
+				bonus = 1.0
+				ahead_reduction = 2
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_expand_vao_extraction
+		icon = GFX_goal_KTZ_dig_for_resources
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_resource_extraction
+		prerequisite = { focus = KUS_bureau_resource_extraction }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_expand_vao_extraction_tt
+		}
+	}
+
+	focus = {
+		id = KUS_halt_ond_divikatel
+		icon = GFX_focus_CONGO_bakwanga_mine
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_resource_extraction
+		prerequisite = { focus = KUS_bureau_resource_extraction }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_halt_ond_divikatel_tt
+		}
+	}
+
+	# ---- Row 7: Deep branch focuses ----
+
+	focus = {
+		id = KUS_military_industrial_mediators
+		icon = GFX_focus_ARG_the_war_machine
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_domestic_arms_industry
+		prerequisite = { focus = KUS_domestic_arms_industry }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_military_industrial_mediators_tt
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_construction_speed = 0.03 }
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				add_ideas = KUS_new_construction_methods
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_support_private_enterprises
+		icon = GFX_focus_DEN_no_regulations
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_recover_katser_sea_machinery
+		prerequisite = { focus = KUS_recover_katser_sea_machinery }
+		prerequisite = { focus = KUS_expand_future_energy_institute }
+
+		completion_reward = {
+			add_ideas = KUS_private_enterprises
+		}
+	}
+
+	focus = {
+		id = KUS_monazite_exploitation
+		icon = GFX_focus_CONGO_bakwanga_mine
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_expand_vao_extraction
+		prerequisite = { focus = KUS_expand_vao_extraction }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_monazite_exploitation_tt
+		}
+	}
+
+	focus = {
+		id = KUS_synthetic_polymers
+		icon = GFX_focus_CHL_expand_the_forestry
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_halt_ond_divikatel
+		prerequisite = { focus = KUS_halt_ond_divikatel }
+
+		completion_reward = {
+			717 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = synthetic_refinery level = 3 instant_build = yes }
+			}
+		}
+	}
+
+	# ---- Row 8: Capstone left branch ----
+
+	focus = {
+		id = KUS_military_industrial_complex
+		icon = GFX_goal_KTZ_establish_production_lines
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_military_industrial_mediators
+		prerequisite = { focus = KUS_military_industrial_mediators }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_military_industrial_complex_tt
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_factory_output = 0.05 }
+					add_to_variable = { KUS_bureau_construction_speed = 0.05 }
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_factory_output = 0.05 }
+					add_to_variable = { KUS_bureau_construction_speed = 0.05 }
+					add_to_variable = { KUS_bureau_mil_construction = 0.10 }
+				}
+			}
+		}
+	}
+
+	# ---- Row 9: Nuclear capstone ----
+
+	focus = {
+		id = KUS_new_generation_reactors
+		icon = GFX_focus_RAJ_i_am_death
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_support_private_enterprises
+		prerequisite = { focus = KUS_military_industrial_complex }
+		prerequisite = { focus = KUS_support_private_enterprises }
+
+		completion_reward = {
+			218 = {
+				add_building_construction = { type = nuclear_reactor level = 1 instant_build = yes }
+			}
+			717 = {
+				add_building_construction = { type = nuclear_reactor level = 1 instant_build = yes }
+			}
+		}
+	}
+}
