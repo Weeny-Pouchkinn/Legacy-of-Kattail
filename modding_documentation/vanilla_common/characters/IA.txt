@@ -1,0 +1,202 @@
+characters = {
+	IA_emma_goldman = {
+		name = IA_emma_goldman
+		portraits = {
+			army = {
+				small = GFX_portrait_IA_emma_goldman_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = IA_emma_goldman
+			allowed  = {
+				OR = {
+					original_tag  = ETH
+					original_tag = SWE
+					original_tag = CHL
+				}
+			}
+			available = {
+				OR = {
+					has_anarchist_government = yes 
+					SWE_refuge_for_revolutionaries_trigger = yes
+					CHL_hub_of_the_revolution_trigger = yes
+				}
+			}
+			visible = { 
+				OR = { 
+					has_country_flag = IA_anarchists_recruited_flag 
+					has_country_flag =  IA_emma_goldman_recruited_flag
+					SWE_refuge_for_revolutionaries_trigger = yes
+					CHL_hub_of_the_revolution_trigger = yes
+				}
+			}
+			traits  = {
+				international_anarchist 
+			}
+			on_add = {
+				owner = {
+					IF = {
+						limit = {
+							NOT = { 
+								OR = {
+									original_tag = SWE 
+									original_tag = CHL 
+								}
+							}
+							has_power_balance = {
+								id = ETH_centralization_balance
+							}
+						}
+						
+						hidden_effect = {
+							ETH_BOP_decentralization_large_effect = yes
+						}
+					}				
+				}
+			}
+		}
+	}
+	IA_sakutaro_iwasa = {
+		name = IA_sakutaro_iwasa
+		portraits = {
+			army = {
+				small = GFX_portrait_IA_sakutaro_iwasa_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = IA_sakutaro_iwasa
+			allowed  = {
+				OR = {
+					original_tag = ETH
+					original_tag = SWE
+					original_tag = JAP
+				}
+			}
+			available = {
+				OR = {
+					SWE_refuge_for_revolutionaries_trigger = yes
+					AND = {
+						has_anarchist_government = yes 
+						NOT = { has_idea = IA_sanshiro_ishikawa }
+					}
+					has_completed_focus = JAP_cooperate_with_anarchists
+				}
+			}
+			visible = { 
+				OR = {
+					has_country_flag = IA_anarchists_recruited_flag 
+					SWE_refuge_for_revolutionaries_trigger = yes
+					has_completed_focus = JAP_cooperate_with_anarchists
+				}
+			}
+			traits  = {
+				anti_unionist_pure_anarchist
+			}
+			on_add = {
+				owner = {
+					IF = {
+						limit = {
+							NOT = { original_tag = SWE }
+							has_power_balance = {
+								id = ETH_centralization_balance
+							}
+						}
+						
+						hidden_effect = {
+							ETH_BOP_decentralization_large_effect = yes
+						}
+					}				
+				}
+			}
+		}
+	}
+	IA_sanshiro_ishikawa = {
+		name = IA_sanshiro_ishikawa
+		portraits = {
+			army = {
+				small = GFX_portrait_IA_sanshiro_ishikawa_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = IA_sanshiro_ishikawa
+			allowed  = {
+				OR = {
+					original_tag  = ETH
+					original_tag = SWE
+					original_tag = JAP
+				}
+			}
+			available = {	
+				OR = {
+					SWE_refuge_for_revolutionaries_trigger = yes
+					AND = {
+						has_anarchist_government = yes 
+						NOT = { has_idea = IA_sakutaro_iwasa }
+					}
+					has_completed_focus = JAP_cooperate_with_anarchists
+				}
+			}
+			visible = {
+				OR = { 
+					has_country_flag = IA_anarchists_recruited_flag 
+					SWE_refuge_for_revolutionaries_trigger = yes
+					has_completed_focus = JAP_cooperate_with_anarchists
+				}
+			}
+			traits  = {
+				transnational_anarchist
+			}
+			on_add = {
+				owner = {
+					IF = {
+						limit = {
+							NOT = { original_tag = SWE }
+							has_power_balance = {
+								id = ETH_centralization_balance
+							}
+						}
+						
+						hidden_effect = {
+							ETH_BOP_decentralization_large_effect = yes
+						}
+					}				
+				}
+			}
+		}
+	}
+
+	IA_olga_taratuta = {
+		name = IA_olga_taratuta
+		portraits = {
+			army = {
+				small = GFX_portrait_IA_olga_taratuta_small 
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = IA_olga_taratuta
+			allowed  = {
+				OR = {
+					original_tag  = UKR
+					original_tag = AUS
+				}
+			}
+			available = {	
+				OR = {
+					has_government = communism
+					has_completed_focus = AUS_a_safe_harbor_for_dissidents
+				}
+			}
+			visible = {
+				always = yes
+			}
+			traits  = {
+				black_cross_anarchist
+			}
+		}
+	}
+}
+	

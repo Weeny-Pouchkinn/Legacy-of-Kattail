@@ -6,6 +6,7 @@ tags={
 	"Alternative History"
 }
 picture="thumbnail.png"
+replace_path="common/autonomous_states"
 replace_path="common/abilities"
 replace_path="common/ai_equipment"
 replace_path="common/ai_focuses"

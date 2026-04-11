@@ -1,6 +1,6 @@
 focus_tree = {
 	id = AUR_REGENCY_TREE
-	continuous_focus_position = { x = 2700 y = 300 }
+	continuous_focus_position = { x = 3700 y = 300 }
 	country = {
 		factor = 0
 		modifier = {
@@ -178,13 +178,30 @@ focus_tree = {
 	}
 
 	focus = {
+		id = AUR_state_of_arms
+		icon = GFX_goal_KTZ_a_flood_of_violence
+		x = -12
+		y = 3
+		cost = 5
+		prerequisite = { focus = AUR_controlled_thought }
+		relative_position_id = AUR_building_better_imperium
+		completion_reward = {
+			army_experience = 25
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 25
+		}
+	}
+
+	focus = {
 		id = AUR_neu_seetruppen
 		icon = GFX_goal_KTZ_true_navy
-		x = -1
+		x = 6
 		y = 1
 		cost = 5
+		prerequisite = { focus = AUR_state_of_arms }
 		prerequisite = { focus = AUR_a_grand_fleet }
-		relative_position_id = AUR_a_grand_fleet
+		relative_position_id = AUR_state_of_arms
 		completion_reward = {
 			add_political_power = 100
 			navy_experience = 50
@@ -337,7 +354,7 @@ focus_tree = {
 		icon = GFX_goal_KTZ_modular_ship_engineering
 		x = 0
 		y = 4
-		cost = 5
+		cost = 10
 		relative_position_id = AUR_neu_seetruppen
 		prerequisite = { focus = AUR_famed_efficiency focus = AUR_new_goalposts }
 		completion_reward = {
@@ -745,11 +762,11 @@ focus_tree = {
 	focus = {
 		id = AUR_wunderwaffe_buro
 		icon = GFX_focus_ARG_develop_the_electricity_sector
-		x = -5
-		y = 2
+		x = 0
+		y = 6
 		cost = 10
-		relative_position_id = AUR_controlled_thought
-		prerequisite = { focus = AUR_controlled_thought }
+		relative_position_id = AUR_state_of_arms
+		prerequisite = { focus = AUR_integrate_unterkatzens focus = AUR_the_sobakis_let_loose focus = AUR_bigger_planes focus = AUR_more_planes focus = AUR_reinvigorate_studies }
 		completion_reward = {
 			add_tech_bonus = {
 				name = secret_bonus
@@ -757,6 +774,371 @@ focus_tree = {
 				uses = 2
 				category = nuclear
 			}
+		}
+	}
+	focus = {
+		id = AUR_superb_infanteriewaffen
+		icon = GFX_goal_KTZ_the_eradication_principle
+		x = -4
+		y = 1
+		cost = 10
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_wunderwaffe_buro }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_superb_infanteriewaffen
+				uses = 2
+				ahead_reduction = 1
+				category = infantry_tech
+			}
+		}
+	}
+	focus = {
+		id = AUR_mechanization_ideal
+		icon = GFX_goal_KTZ_from_the_west
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = AUR_superb_infanteriewaffen
+		prerequisite = { focus = AUR_superb_infanteriewaffen }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_mechanization_ideal
+				ahead_reduction = 1
+				uses = 2
+				category = exoskeleton_equipment
+			}
+		}
+	}
+	focus = {
+		id = AUR_soulsearching_project
+		icon = AUR_controlled_thought
+		x = -1
+		y = 1
+		cost = 10
+		available = {
+			num_of_civilian_factories > 50
+			OR = {
+				320 = { is_controlled_by_ROOT_or_ally = yes }
+				7 = { is_controlled_by_ROOT_or_ally = yes }
+			}
+		}
+		relative_position_id = AUR_superb_infanteriewaffen
+		prerequisite = { focus = AUR_superb_infanteriewaffen }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_soulsearching_project
+				ahead_reduction = 2
+				uses = 2
+				category = computing_tech
+			}
+		}
+	}
+	focus = {
+		id = AUR_achieve_regentbots
+		icon = AUR_building_better_imperium
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = AUR_superb_infanteriewaffen
+		available = {
+			num_of_civilian_factories > 100
+			has_tech = exoskeleton_3
+			OR = {
+				has_tech = advanced_computing_machine4
+				AND = {
+					has_tech = advanced_computing_machine3
+					320 = { is_controlled_by_ROOT_or_ally = yes }
+				}
+			}
+		}
+		prerequisite = { focus = AUR_mechanization_ideal }
+		prerequisite = { focus = AUR_soulsearching_project }
+		completion_reward = {
+			every_army_leader = {
+				add_unit_leader_trait = lok_katzen_soulbot
+			}
+			add_ideas = AUR_early_katzbots
+		}
+	}
+	focus = {
+		id = AUR_siegebreaker_reverse_engineering
+		icon = GFX_goal_KTZ_project_two
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_wunderwaffe_buro }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_siegebreaker_reverse_engineering
+				ahead_reduction = 1
+				uses = 2
+				category = cat_heavy_armor
+			}
+		}
+	}
+	focus = {
+		id = AUR_riesigerworks
+		icon = GFX_goal_KTZ_towards_the_sturmer
+		x = -1
+		y = 1
+		cost = 20
+		available = {
+			num_of_military_factories > 50
+			owns_state = 173
+		}
+		relative_position_id = AUR_siegebreaker_reverse_engineering
+		prerequisite = { focus = AUR_siegebreaker_reverse_engineering }
+		completion_reward = {
+			custom_effect_tooltip = AUR_riesigerworks_tt
+			173 = {
+				add_extra_state_shared_building_slots = 5
+				add_building_construction = {
+					type = arms_factory
+					level = 5
+				}
+				multiply_variable = { wonder_modifiers_values^5 = 3 }
+				multiply_variable = { wonder_modifiers_values^6 = 3 }
+			}
+			hidden_effect = {
+				apply_wonder_effects = yes
+			}
+			add_tech_bonus = {
+				name = AUR_riesigerworks
+				bonus = 0.5
+				ahead_reduction = 1
+				uses = 2
+				category = cat_supertensiles
+			}
+		}
+	}
+	focus = {
+		id = AUR_asmd_systems
+		icon = GFX_goal_KTZ_applied_avionics
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = AUR_siegebreaker_reverse_engineering
+		prerequisite = { focus = AUR_siegebreaker_reverse_engineering }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_asmd_systems
+				bonus = 2.0
+				ahead_reduction = 1
+				uses = 2
+				category = cat_anti_air
+			}
+			add_ideas = AUR_asmd
+		}
+	}
+	focus = {
+		id = AUR_prototype_imperialrise
+		icon = GFX_goal_KTZ_the_sieger_project
+		x = 0
+		y = 2
+		cost = 15
+		relative_position_id = AUR_siegebreaker_reverse_engineering
+		prerequisite = { focus = AUR_asmd_systems }
+		prerequisite = { focus = AUR_riesigerworks }
+		cancelable = no
+		cancel = {
+			173 = { is_controlled_by_ROOT_or_ally = no }
+		}
+		cancel_if_invalid = yes
+		available = {
+			173 = { is_controlled_by_ROOT_or_ally = yes }
+		}
+		completion_reward = {
+			division_template = { #shitty riesiger
+				name = "Imperialrise"
+				is_locked = yes
+				regiments = {
+					ultra_heavy_armor = { x = 0 y = 0 }
+				}
+			}
+			custom_effect_tooltip = AUR_prototype_imperialrise_tt
+			hidden_effect = {
+				173 = {
+					create_unit = {
+						division = "division_template = \"Imperialrise\" start_experience_factor = 0 start_equipment_factor = 0.1"
+						count = 1
+						owner = AUR
+					}
+				}
+				set_technology = {
+					popup = no
+					ultra_heavy_armor_tech = 1
+				}
+			}
+		}
+	}
+	focus = {
+		id = AUR_superjets
+		icon = GFX_goal_KTZ_making_landfall
+		x = 4
+		y = 1
+		cost = 10
+		available = {
+			NOT = {
+				has_idea = AUR_mishandled_airforce
+				has_idea = AUR_mishandled_navy
+				has_idea = AUR_mishandled_navy_airforce
+			}
+		}
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_wunderwaffe_buro }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_superjets
+				ahead_reduction = 1
+				uses = 2
+				category = medium_air
+			}
+		}
+	}
+	focus = {
+		id = AUR_weltbomber_projekt
+		icon = GFX_goal_KTZ_the_flying_fortresses
+		x = -1
+		y = 1
+		cost = 10
+		available = {
+			num_of_military_factories > 50
+		}
+		relative_position_id = AUR_superjets
+		prerequisite = { focus = AUR_superjets }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_weltbomber_projekt
+				bonus = 2
+				ahead_reduction = 2
+				uses = 1
+				category = heavy_air
+			}
+		}
+	}
+	focus = {
+		id = AUR_fabricate_weltaufseher
+		icon = GFX_goal_KTZ_flying_carriers
+		x = 0
+		y = 1
+		cost = 10
+		available = {
+			num_of_military_factories > 100
+		}
+		relative_position_id = AUR_weltbomber_projekt
+		prerequisite = { focus = AUR_weltbomber_projekt }
+		cancelable = no
+		select_effect = {
+			add_ideas = military_payment_100
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_fabricate_weltaufseher_tt
+			remove_ideas = military_payment_100
+			hidden_effect = {
+				set_technology = {
+					armored_blimp_carrier1 = 1
+				}
+				set_country_flag = has_armored_blimp_carrier
+				if = {
+					limit = { NOT = { has_template = "Armored Blimp Carrier" } }
+					division_template = {
+						name = "Armored Blimp Carrier"
+						is_locked = yes
+						regiments = {
+							armored_blimp_carrier = { x = 0 y = 0 }
+						}
+					}
+				}
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.3 start_equipment_factor = 1"
+						count = 1
+						owner = PREV
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = AUR_study_kst_douclaw
+		icon = GFX_goal_KTZ_projekt_atominsel
+		x = 1
+		y = 1
+		cost = 10
+		available = {
+			num_of_naval_factories > 15
+			475 = {
+				is_controlled_by_ROOT_or_ally = yes
+			}
+			NOT = {
+				country_exists = NAV
+			}
+		}
+		relative_position_id = AUR_superjets
+		prerequisite = { focus = AUR_superjets }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_study_kst_douclaw
+				bonus = 2
+				ahead_reduction = 2
+				uses = 1
+				category = shbb_tech
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_recreate_supervessels
+		icon = GFX_goal_KTZ_the_floating_islands
+		x = 0
+		y = 1
+		cost = 20
+		available = {
+			has_tech = heavy_carrier
+			has_tech = heavy_battleship
+			num_of_naval_factories > 100
+		}
+		cancelable = no
+		relative_position_id = AUR_study_kst_douclaw
+		select_effect = {
+			add_ideas = dockyard_payment_100
+		}
+		prerequisite = { focus = AUR_study_kst_douclaw }
+		completion_reward = {
+			add_manpower = -100000
+			set_technology = {
+				hyper_carrier1 = 1
+			}
+			remove_ideas = dockyard_payment_100
+			add_equipment_production = {
+				equipment = {
+					type = hyper_carrier_1
+					creator = "AUR" 
+				}
+				requested_factories = 10
+				progress = 0.95
+				amount = 1
+			}
+		}
+	}
+	focus = {
+		id = AUR_continue_mondkanone
+		icon = GFX_goal_KTZ_projekt_mondkanone
+		x = 0
+		y = 4
+		cost = 10
+		available = {
+			has_tech = reusable_heavy_chemical_rocket
+		}
+		relative_position_id = AUR_wunderwaffe_buro
+		prerequisite = { focus = AUR_achieve_regentbots }
+		prerequisite = { focus = AUR_prototype_imperialrise }
+		prerequisite = { focus = AUR_fabricate_weltaufseher }
+		prerequisite = { focus = AUR_recreate_supervessels }
+		completion_reward = {
+			add_equipment_to_stockpile = { type = lok_reusable_heavy_chemical_rocket_0 amount = 250 producer = AUR } 
 		}
 	}
 
@@ -1255,6 +1637,13 @@ focus_tree = {
 			random_country = {
 				limit = { has_country_flag = nmi_signed_regency_pakt }
 				country_event = { id = AUR_event.38 }
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < "104.1.1"
 			}
 		}
 	}
@@ -1756,6 +2145,9 @@ focus_tree = {
 		completion_reward = {
 			add_stability = 0.05
 			set_cosmetic_tag = AUR_SOUTHERN_KTZ
+			hidden_effect = {
+				country_event = { id = AUR_event.27 days = 15 }
+			}
 		}
 	}
 
@@ -1769,6 +2161,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_demobilize_slightly }
 		relative_position_id = AUR_biding_our_time
 		completion_reward = {
+			custom_effect_tooltip = AUR_reform_the_high_command_tt
 		}
 	}
 
@@ -2242,7 +2635,7 @@ focus_tree = {
 
 	focus = {
 		id = AUR_grand_reorganization
-		icon = AUR_grand_reorganization
+		icon = GFX_goal_KTZ_grand_reorganization
 		x = 0
 		y = 1
 		cost = 15
@@ -2270,7 +2663,9 @@ focus_tree = {
 		relative_position_id = AUR_grand_reorganization
 		completion_reward = {
 			set_cosmetic_tag = KTZ_UNITED_AUR
-			country_event = { id = AUR_event.14 }
+			hidden_effect = {
+				country_event = { id = AUR_event.33 }
+			}
 		}
 	}
 
@@ -2324,6 +2719,9 @@ focus_tree = {
 				add_to_variable = { AUR_the_kaiser_must_return_resistance_growth = 0.50 }
 				add_to_variable = { AUR_the_kaiser_must_return_resistance_target = 0.50 }
 				add_to_variable = { AUR_the_kaiser_must_return_compliance_growth = 0.50 }	
+				add_to_variable = { ipf_strength = 4 }
+				add_to_variable = { ksk_strength = 4 }
+				calculate_ipf_ksk_resistance = yes
 			}
 		}
 	}
@@ -2348,6 +2746,9 @@ focus_tree = {
 				uses = 2
 				ahead_reduction = 0.5
 				category = military_police_tech
+			}
+			hidden_effect = {
+				country_event = { id = AUR_event.27 days = 15 }
 			}
 		}
 	}
@@ -3190,7 +3591,592 @@ focus_tree = {
 		}
 		completion_reward = {
 			set_cosmetic_tag = KTZ_UNITED_AUR
-			country_event = { id = AUR_event.14 }
+			hidden_effect = {
+				country_event = { id = AUR_event.14 }
+			}
+		}
+	}
+
+	### AIR TREE ###
+	#AIRFORCE BRANCH
+	#to the skies
+	focus = {
+		id = AUR_unfamiliar_skies
+		icon = GFX_goal_KTZ_unfamiliar_skies
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = AUR_state_of_arms
+		prerequisite = { focus = AUR_state_of_arms }
+		completion_reward = {
+			520 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			106 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			94 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = AUR_unfamiliar_skies
+				bonus = 0.5
+				uses = 2
+				category = air_equipment
+			}
+			air_experience = 50
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#big plane
+	focus = {
+		id = AUR_go_big_planes
+		icon = GFX_goal_KTZ_go_big_planes
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_unfamiliar_skies }
+		mutually_exclusive = { focus = AUR_go_small_planes }
+		completion_reward = {
+			custom_effect_tooltip = AUR_go_big_planes_tooltip
+			add_doctrine_cost_reduction = {
+				name = cat_operational_integrity
+				cost_reduction = 0.5
+				uses = 2
+				category = cat_operational_integrity
+			}
+			air_experience = 30
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#heavy fighters
+	focus = {
+		id = AUR_heavy_fighters
+		icon = GFX_goal_KTZ_heavy_fighters
+		x = 2
+		y = 2
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_go_big_planes }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_heavy_fighters
+				category = cat_heavy_fighter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#tac
+	focus = {
+		id = AUR_new_tac
+		icon = GFX_goal_KTZ_new_tac
+		x = 3
+		y = 3
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_heavy_fighters }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_new_tac
+				category = tactical_bomber
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#better tac
+	focus = {
+		id = AUR_tac_torpedo
+		icon = GFX_goal_KTZ_tac_torpedo
+		x = 4
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_strategic_bombers }
+		prerequisite = { focus = AUR_new_tac }
+		completion_reward = {
+			add_ideas = AUR_tactical_torpedo
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#strength in size
+	focus = {
+		id = AUR_bigger_planes
+		icon = GFX_goal_KTZ_bigger_planes
+		x = 2
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_new_tac }
+		completion_reward = {
+			add_ideas = AUR_ever_larger_airframe
+			air_experience = 10
+			if = {
+				limit = { has_idea = AUR_mishandled_navy_airforce }
+				swap_ideas = {
+					remove_idea = AUR_mishandled_navy_airforce
+					add_idea = AUR_mishandled_navy
+				}
+			}
+			else_if = {
+				limit = { has_idea = AUR_mishandled_airforce }
+				remove_ideas = AUR_mishandled_airforce
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#small planes
+	focus = {
+		id = AUR_go_small_planes
+		icon = GFX_goal_KTZ_go_small_planes
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_unfamiliar_skies }
+		mutually_exclusive = { focus = AUR_go_big_planes }
+		completion_reward = {
+			custom_effect_tooltip = AUR_go_small_planes_tooltip
+			add_doctrine_cost_reduction = {
+				name = cat_battlefield_support
+				cost_reduction = 0.5
+				uses = 2
+				category = cat_battlefield_support
+			}
+			air_experience = 30
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#fighters
+	focus = {
+		id = AUR_light_fighters
+		icon = GFX_goal_KTZ_light_fighters
+		x = -2
+		y = 2
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_go_small_planes }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_light_fighters
+				category = light_fighter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#cas
+	focus = {
+		id = AUR_new_cas
+		icon = GFX_goal_KTZ_new_cas
+		x = -3
+		y = 3
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_light_fighters }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_new_cas
+				category = cas_bomber
+				uses = 2
+				bonus = 1
+			}
+			add_tech_bonus = {
+				name = AUR_new_cas
+				category = attack_helicopter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#nav
+	focus = {
+		id = AUR_naval_bombers
+		icon = GFX_goal_KTZ_naval_bombers
+		x = -4
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_new_cas }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_naval_bombers
+				category = naval_bomber
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#strength in numbers
+	focus = {
+		id = AUR_more_planes
+		icon = GFX_goal_KTZ_more_planes
+		x = -2
+		y = 4
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_new_cas }
+		prerequisite = { focus = AUR_air_transport }
+		completion_reward = {
+			add_ideas = AUR_strength_in_numbers
+			air_experience = 10
+			if = {
+				limit = { has_idea = AUR_mishandled_navy_airforce }
+				swap_ideas = {
+					remove_idea = AUR_mishandled_navy_airforce
+					add_idea = AUR_mishandled_navy
+				}
+			}
+			else_if = {
+				limit = { has_idea = AUR_mishandled_airforce }
+				remove_ideas = AUR_mishandled_airforce
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	#Shared airforce focuses
+	#Adjust to atmo
+	focus = {
+		id = AUR_adjust_to_atmo
+		icon = GFX_goal_KTZ_adjust_to_atmo
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		prerequisite = { focus = AUR_go_big_planes focus = AUR_go_small_planes }
+		completion_reward = {
+			air_experience = 10
+			add_doctrine_cost_reduction = {
+				name = AUR_adjust_to_atmo
+				cost_reduction = 0.5
+				uses = 2
+				category = air_doctrine
+			}
+			HIM = {
+				country_event = { id = AUR_event.60 days = 5 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#Transports
+	focus = {
+		id = AUR_air_transport
+		icon = GFX_goal_KTZ_air_transport
+		x = -1
+		y = 3
+		relative_position_id = AUR_unfamiliar_skies
+		cost = 5
+		#prerequisite = { focus = AUR_heavy_fighters focus = AUR_light_fighters }
+		prerequisite = { focus = AUR_adjust_to_atmo }
+		completion_reward = {
+			add_ideas = AUR_air_transport
+			add_tech_bonus = {
+				name = AUR_air_transport
+				category = para_tech
+				uses = 2
+				bonus = 2
+			}
+			add_tech_bonus = {
+				name = AUR_air_transport
+				category = transport_helicopter
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#Strategic Bombers
+	focus = {
+		id = AUR_strategic_bombers
+		icon = GFX_goal_KTZ_strategic_bombers
+		x = 1
+		y = 3
+		cost = 5
+		relative_position_id = AUR_unfamiliar_skies
+		#prerequisite = { focus = AUR_heavy_fighters focus = AUR_light_fighters }
+		prerequisite = { focus = AUR_adjust_to_atmo }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_strategic_bombers
+				category = cat_strategic_bomber
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	#Jets!
+	focus = {
+		id = AUR_new_jets
+		icon = GFX_goal_KTZ_project_creeo
+		x = 0
+		y = 4
+		relative_position_id = AUR_unfamiliar_skies
+		cost = 5
+		prerequisite = { focus = AUR_air_transport focus = AUR_strategic_bombers  }
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_new_jets
+				category = jet_technology
+				uses = 2
+				bonus = 1
+			}
+			air_experience = 10
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+	### ARMY TREE - Neu-Katzenarmee ###
+
+
+	focus = {
+		id = AUR_his_armee
+		icon = GFX_goal_KTZ_conscript_colonists
+		x = -7
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_state_of_arms }
+		relative_position_id = AUR_state_of_arms
+		completion_reward = {
+			army_experience = 50
+			hidden_effect = {
+				add_dynamic_modifier = { modifier = AUR_neu_katzenarmee }
+				country_event = { id = AUR_event.50 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_doctrinal_efficiency
+		icon = GFX_goal_KTZ_super_planning
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_his_armee }
+		relative_position_id = AUR_his_armee
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_land_doctrine_bonus
+				bonus = 0.50
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_amends_engineering_korps
+		icon = GFX_goal_KTZ_keep_native_authorities
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_his_armee }
+		relative_position_id = AUR_his_armee
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_engineering_support_bonus
+				ahead_reduction = 2
+				uses = 1
+				category = support_tech
+			}
+			KPK = {
+				country_event = { id = AUR_event.51 days = 5 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_reeducate_officers
+		icon = GFX_goal_KTZ_general_training
+		x = -1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_doctrinal_efficiency }
+		relative_position_id = AUR_doctrinal_efficiency
+		completion_reward = {
+			custom_effect_tooltip = AUR_reeducate_officers_tt
+			hidden_effect = {
+				every_unit_leader = {
+					add_attack = 1
+					add_defense = 1
+					add_planning = 1
+					add_logistics = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_redistribute_funding
+		icon = GFX_goal_KTZ_corruption_issue
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_amends_engineering_korps }
+		relative_position_id = AUR_doctrinal_efficiency
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_artillery_research_bonus
+				bonus = 1.0
+				uses = 2
+				category = artillery
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_autohubs
+		icon = GFX_goal_KTZ_build_new_transportation
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_amends_engineering_korps }
+		relative_position_id = AUR_amends_engineering_korps
+		available = {
+			has_country_flag = AUR_kpk_agreed_autohubs
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_autohubs_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_production_speed_supply_node_factor = 0.25 }
+				add_to_variable = { AUR_neu_katzenarmee_production_speed_rail_way_factor = 0.25 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_absolute_loyalty
+		icon = GFX_goal_KTZ_foreign_delegations
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_redistribute_funding }
+		prerequisite = { focus = AUR_reeducate_officers }
+		relative_position_id = AUR_reeducate_officers
+		completion_reward = {
+			custom_effect_tooltip = AUR_absolute_loyalty_tt
+			add_stability = 0.10
+			add_war_support = -0.05
+			hidden_effect = {
+				every_unit_leader = {
+					add_attack = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_fully_mechanized
+		icon = GFX_goal_KTZ_katzenwagen
+		x = 0
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_redistribute_funding }
+		relative_position_id = AUR_redistribute_funding
+		completion_reward = {
+			add_tech_bonus = {
+				name = AUR_tank_research_bonus
+				bonus = 1.0
+				uses = 2
+				category = cat_mechanized_equipment
+			}
+			add_ideas = AUR_mechanization
+		}
+	}
+
+	focus = {
+		id = AUR_encourage_war_crimes
+		icon = GFX_goal_KTZ_brace_world_war
+		x = 2
+		y = 1
+		cost = 5
+		prerequisite = { focus = AUR_redistribute_funding }
+		relative_position_id = AUR_redistribute_funding
+		completion_reward = {
+			custom_effect_tooltip = AUR_encourage_war_crimes_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_army_attack_factor = 0.05 }
+				add_to_variable = { AUR_neu_katzenarmee_experience_loss_factor = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_integrate_unterkatzens
+		icon = GFX_goal_KTZ_first_contact
+		x = -1
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_absolute_loyalty }
+		prerequisite = { focus = AUR_fully_mechanized }
+		relative_position_id = AUR_fully_mechanized
+		mutually_exclusive = { focus = AUR_the_sobakis_let_loose }
+		available = {
+			OR = {
+				has_completed_focus = AUR_chew_slowly
+				has_country_flag = AUR_did_not_kill_roqualians
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_integrate_unterkatzens_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_non_core_manpower = 0.15 }
+				add_to_variable = { AUR_neu_katzenarmee_compliance_growth = 0.05 }
+				add_to_variable = { AUR_neu_katzenarmee_resistance_growth = 0.20 }
+			}
+		}
+	}
+
+	focus = {
+		id = AUR_the_sobakis_let_loose
+		icon = GFX_goal_KTZ_make_division
+		x = 1
+		y = 1
+		cost = 10
+		prerequisite = { focus = AUR_encourage_war_crimes }
+		prerequisite = { focus = AUR_fully_mechanized }
+		relative_position_id = AUR_fully_mechanized
+		mutually_exclusive = { focus = AUR_integrate_unterkatzens }
+		available = {
+			OR = {
+				has_completed_focus = AUR_i_need_it_all
+				has_country_flag = AUR_killed_roqualians
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = AUR_the_sobakis_let_loose_tt
+			hidden_effect = {
+				add_to_variable = { AUR_neu_katzenarmee_experience_loss_factor = 0.15 }
+				add_to_variable = { AUR_neu_katzenarmee_equipment_capture_factor = 0.05 }
+				add_to_variable = { AUR_neu_katzenarmee_army_attack_factor = 0.05 }
+			}
 		}
 	}
 }

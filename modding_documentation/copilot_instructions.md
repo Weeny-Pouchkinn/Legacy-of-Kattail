@@ -1,0 +1,1 @@
+When generating HOI4 code, always refer to the syntax patterns found in the `modding_documentation` folder.

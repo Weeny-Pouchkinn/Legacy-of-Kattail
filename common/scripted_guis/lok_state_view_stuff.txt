@@ -173,7 +173,7 @@ scripted_gui = {
 				ROOT = {
 					add_to_variable = { current_nuke_type = 1 }
 					if = {
-						limit = { check_variable = { current_nuke_type = 5 } }
+						limit = { check_variable = { current_nuke_type = 6 } }
 						set_variable = { current_nuke_type = 0 }
 					}
 				}
@@ -184,7 +184,7 @@ scripted_gui = {
 					subtract_from_variable = { current_nuke_type = 1 }
 					if = {
 						limit = { check_variable = { current_nuke_type = -1 } }
-						set_variable = { current_nuke_type = 4 }
+						set_variable = { current_nuke_type = 5 }
 					}
 				}
 			}
@@ -264,6 +264,13 @@ scripted_gui = {
 							amount = lok_nukes_spent
 						}
 					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 5 } }
+						add_equipment_to_stockpile = {
+							type = lok_sturmer_nuke_equipment
+							amount = lok_nukes_spent
+						}
+					}
 				}
 			}
 		}
@@ -335,6 +342,16 @@ scripted_gui = {
 										OR = {
 											check_variable = { num_equipment@lok_mondkanone_nuke_equipment > nuke_launch_count }
 											check_variable = { num_equipment@lok_mondkanone_nuke_equipment = nuke_launch_count }
+										}
+									}
+								}
+								AND = {
+									check_variable = { current_nuke_type = 5 }
+									AND = {
+										has_tech = ultra_heavy_armor_tech
+										OR = {
+											check_variable = { num_equipment@lok_sturmer_nuke_equipment > nuke_launch_count }
+											check_variable = { num_equipment@lok_sturmer_nuke_equipment = nuke_launch_count }
 										}
 									}
 								}

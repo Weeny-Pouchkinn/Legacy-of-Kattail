@@ -3,6 +3,512 @@ herzlands_unification_cat = {
 }
 
 lok_journal_entries_cat = {
+	#NEU
+	NEU_meo_blitz = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = NEU
+		}
+
+		available = {
+			date > "106.6.1"
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			if = {
+				limit = {
+					country_exists = AKR
+					NOT = {
+						has_war_with = AKR
+						is_in_faction_with = AKR
+						AKR = { is_subject_of = NEU }
+					}
+				}
+				AKR = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = AKR type = annex_everything }
+			}
+			if = {
+				limit = {
+					country_exists = BLM
+					NOT = {
+						has_war_with = BLM
+						is_in_faction_with = BLM
+						BLM = { is_subject_of = NEU }
+					}
+				}
+				BLM = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = BLM type = annex_everything }
+			}
+			if = {
+				limit = {
+					country_exists = PMB
+					NOT = {
+						has_war_with = PMB
+						is_in_faction_with = PMB
+						BLM = { is_subject_of = NEU }
+					}
+				}
+				PMB = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = PMB type = annex_everything }
+			}
+			if = {
+				limit = {
+					country_exists = SIL
+					NOT = {
+						has_war_with = SIL
+						is_in_faction_with = SIL
+						SIL = { is_subject_of = NEU }
+					}
+				}
+				SIL = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = SIL type = annex_everything }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	
+	#CLE
+	CLE_demand_land_from_TAI = {
+		icon = generic_form_nation
+		
+		allowed = {
+			original_tag = CLE
+		}
+
+		available = {
+			date > "105.1.1"
+			is_subject = no
+			NOT = {
+				has_war_with = TAI
+				is_in_faction_with = TAI
+				TAI = { is_subject_of = CLE }
+			}
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			TAI = {
+				country_event = { id = LOK_CLE.1 days = 2 }
+				every_core_state = {
+					limit = { any_neighbor_state = { is_controlled_by = CLE } }
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					add_claim_by = ROOT
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CLE_fight_PAW = {
+		icon = generic_form_nation
+		
+		allowed = {
+			original_tag = CLE
+		}
+
+		visible = {
+			NOT = { has_war_with = PAW }
+			NOT = { is_in_faction_with = PAW }
+			NOT = { PAW = { is_subject_of = CLE } }
+		}
+
+		available = {
+			date > "105.6.1"
+			is_subject = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = PAW
+				type = annex_everything
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	PAW_annex_tailsbaden = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = PAW
+		}
+
+		visible = {
+			NOT = { has_war_with = TAI }
+			NOT = { is_in_faction_with = TAI }
+			NOT = { TAI = { is_subject_of = PAW } }
+		}
+
+		available = {
+			tag = PAW
+			date > "106.1.1"
+			is_subject = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = TAI
+				type = annex_everything
+			}
+			TAI = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					add_claim_by = ROOT
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	
+	PAW_seize_the_north = {
+		icon = generic_form_nation
+		
+		allowed = {
+			original_tag = PAW
+		}
+
+		available = {
+			date > "107.1.1"
+			is_subject = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			if = {
+				limit = {
+					country_exists = KVK
+					NOT = {
+						has_war_with = KVK
+						is_in_faction_with = KVK
+						KVK = { is_subject_of = PAW }
+					}
+				}
+				KVK = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = KVK type = annex_everything }
+			}
+			if = {
+				limit = {
+					country_exists = KKH
+					NOT = {
+						has_war_with = KKH
+						is_in_faction_with = KKH
+						KKH = { is_subject_of = PAW }
+					}
+				}
+				KKH = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = KKH type = annex_everything }
+			}
+			if = {
+				limit = {
+					country_exists = KTV
+					NOT = {
+						has_war_with = KTV
+						is_in_faction_with = KTV
+						KTV = { is_subject_of = PAW }
+					}
+				}
+				KTV = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = KTV type = annex_everything }
+			}
+			if = {
+				limit = {
+					country_exists = SIL
+					NOT = {
+						has_war_with = SIL
+						is_in_faction_with = SIL
+						SIL = { is_subject_of = PAW }
+					}
+				}
+				SIL = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = SIL type = annex_everything }
+			}
+			if = {
+				limit = {
+					country_exists = KTW
+					NOT = {
+						has_war_with = KTW
+						is_in_faction_with = KTW
+						KTW = { is_subject_of = PAW }
+					}
+				}
+				KTW = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					every_owned_state = { add_claim_by = ROOT }
+				}
+				declare_war_on = { target = KTW type = annex_everything }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+
+	#OST
+	OST_restore_kocura = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = OST
+		}
+
+		visible = {
+			hidden_trigger = { NOT = { has_cosmetic_tag = KOC } }
+		}
+
+		available = {
+			controls_state = 540
+			controls_state = 560
+			controls_state = 97
+			has_war = no
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				random = {
+					chance = 50
+					create_dynamic_country = {
+						original_tag = OST
+						set_cosmetic_tag = KOC
+						set_temp_variable = { new_country = this }
+						540 = {
+							transfer_state_to = var:new_country
+							create_unit = {
+								division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+								count = 3
+								owner = var:new_country
+							}
+						}
+						560 = {
+							transfer_state_to = var:new_country
+							create_unit = {
+								division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+								count = 3
+								owner = var:new_country
+							}
+						}
+						97 = {
+							transfer_state_to = var:new_country
+							create_unit = {
+								division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 0.7"
+								count = 3
+								owner = var:new_country
+							}
+						}
+						OST = {
+							transfer_units_fraction = {
+								target = var:new_country
+								stockpile_ratio = 0.50
+								army_ratio = 0.50
+								navy_ratio = 0.50
+								air_ratio = 0.50
+							}
+						}
+						var:new_country = {
+							add_ideas = var_species_1
+							add_ideas = specialty_nothing
+							set_politics = {
+								ruling_party = neutrality
+							}
+							set_popularities = {
+								neutrality = 70
+								democratic = 10
+								communism = 10
+								fascism = 10
+							}
+							set_cosmetic_tag = KOC
+							declare_war_on = {
+								target = OST
+								type = annex_everything
+							}
+							add_equipment_to_stockpile = {
+								type = motorized_equipment_1
+								amount = 500
+							}
+							add_equipment_to_stockpile = {
+								type = train_equipment_1
+								amount = 50
+							}
+						}
+					}
+				}
+			}
+			else = {
+				create_dynamic_country = {
+					original_tag = OST
+					set_temp_variable = { new_country = this }
+					540 = {
+						transfer_state_to = var:new_country
+					}
+					560 = {
+						transfer_state_to = var:new_country
+					}
+					97 = {
+						transfer_state_to = var:new_country
+					}
+					OST = {
+						transfer_units_fraction = {
+							target = var:new_country
+							stockpile_ratio = 0.50
+							army_ratio = 0.50
+							navy_ratio = 0.50
+							air_ratio = 0.50
+						}
+					}
+					var:new_country = {
+						add_ideas = var_species_1
+						add_ideas = specialty_nothing
+						set_politics = {
+							ruling_party = neutrality
+						}
+						set_popularities = {
+							neutrality = 70
+							democratic = 10
+							communism = 10
+							fascism = 10
+						}
+						set_cosmetic_tag = KOC
+						declare_war_on = {
+							target = OST
+							type = annex_everything
+						}
+						add_equipment_to_stockpile = {
+							type = motorized_equipment_1
+							amount = 500
+						}
+						add_equipment_to_stockpile = {
+							type = train_equipment_1
+							amount = 50
+						}
+						change_tag_from = ROOT
+					}
+				}
+			}
+		}
+
+		days_remove = 15
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
 	#PALUUSH
 	PLR_paidi_progress = {
 		icon = generic_form_nation
@@ -13,7 +519,10 @@ lok_journal_entries_cat = {
 		available = {
 			date > "105.1.1"
 			has_war = no
-			HAR = { is_ai = yes is_puppet_of = PLR }
+			PLR = {
+				is_puppet = no
+			}
+			HAR = { is_ai = yes }
 		}
 
 		fire_only_once = yes
@@ -78,7 +587,8 @@ lok_journal_entries_cat = {
 		available = {
 			date > "110.1.1"
 			has_war = no
-			KAR = { is_ai = yes is_puppet_of = PLR }
+			PLR = { is_puppet = no }
+			KAR = { is_ai = yes }
 		}
 
 		fire_only_once = yes
@@ -235,6 +745,7 @@ lok_journal_entries_cat = {
 
 		available = {
 			date > "103.1.1"
+			WAC = { is_ai = yes }
 			NOT = { country_exists = STR }
 		}
 
@@ -260,6 +771,125 @@ lok_journal_entries_cat = {
 			base = 1000
 		}
 	}
+	MEW_attack_WPR = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			has_government = communism
+			has_country_flag = formed_css
+			is_subject = no
+			date > "103.6.1"
+			NOT = { is_in_faction_with = WPR }
+			country_exists = WPR
+			WPR = { is_ai = yes }
+			NOT = { has_war_with = WPR }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = WPR
+				type = annex_everything
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	MEW_up_the_seaboard = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			has_government = communism
+			has_country_flag = formed_css
+			is_subject = no
+			date > "105.6.1"
+			NOT = { is_in_faction_with = OST }
+			country_exists = OST
+			NOT = { has_war_with = OST }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = OST
+				type = annex_everything
+			}
+			OST = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes					
+						reduce_compliance_coring_threshold_by_10 = yes					
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					add_claim_by = MEW
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	MEW_liberation_of_zuspri = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = MEW
+		}
+
+		available = {
+			has_government = communism
+			has_country_flag = formed_css
+			is_subject = no
+			date > "105.6.1"
+			NOT = { is_in_faction_with = IMF }
+			country_exists = IMF
+			NOT = { has_war_with = IMF }
+			ZUS = { is_subject = no }
+			NOT = { has_war_with = ZUS }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			create_faction = "Front for Herzlandish Communism"
+			declare_war_on = {
+				target = IMF
+				type = annex_everything
+			}
+			if = {
+				limit = {
+					country_exists = ZUS
+					NOT = { is_in_faction_with = ZUS }
+				}
+				ZUS = {
+					country_event = { id = LOK_MEW.1 days = 3 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+
 
 	#ACR
 	ACR_dismantle_katlantropa_dam = {
@@ -607,7 +1237,6 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			KOL = {
 				every_core_state = {
-					add_claim_by = ROOT
 					custom_effect_tooltip = state_core_threshold_set_40
 					set_state_flag = compliance_40_@ROOT
 					add_to_array = { array = ROOT.potential_cores_array }
@@ -1005,6 +1634,41 @@ lok_journal_entries_cat = {
 		}
 	}
 
+	PRL_safeguard_WPR = {
+		icon = generic_form_nation
+		
+		allowed = {
+			tag = PRL
+		}
+
+		available = {
+			has_country_flag = sfl_formed
+			is_subject = no
+			date > "103.6.1"
+			NOT = { is_in_faction_with = WPR }
+			country_exists = WPR
+			WPR = { is_ai = yes }
+			WPR = {
+				surrender_progress > 0.5
+			}
+			NOT = { has_war_with = WPR }
+			WPR = { has_war_with = MEW }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			declare_war_on = {
+				target = WPR
+				type = annex_everything
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
 
 	#NORTH OSHIA
 	WSF_civil_war_timer = {
@@ -1212,7 +1876,6 @@ lok_journal_entries_cat = {
 			OR = {
 				tag = STR
 				tag = MEW
-				tag = PTQ
 			}
 		}
 
@@ -1248,8 +1911,8 @@ lok_journal_entries_cat = {
 					custom_effect_tooltip = state_core_threshold_lower_40
 					hidden_effect = {
 						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes					reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes					reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes					
+						reduce_compliance_coring_threshold_by_10 = yes					
 						reduce_compliance_coring_threshold_by_10 = yes	
 					}
 					add_to_array = { array = ROOT.potential_cores_array }
@@ -1261,8 +1924,8 @@ lok_journal_entries_cat = {
 					custom_effect_tooltip = state_core_threshold_lower_40
 					hidden_effect = {
 						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes					reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes					reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes					
+						reduce_compliance_coring_threshold_by_10 = yes					
 						reduce_compliance_coring_threshold_by_10 = yes	
 					}
 					add_to_array = { array = ROOT.potential_cores_array }

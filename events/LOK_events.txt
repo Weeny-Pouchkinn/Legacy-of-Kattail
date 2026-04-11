@@ -87,10 +87,10 @@ country_event = {
 	is_triggered_only = yes
 	picture = GFX_report_event_nuclear_plant
 
-	option = { #Food
-		name = "LOK_tutorial.2.a"
-		country_event = { id = LOK_tutorial.3 }
-	}
+	# option = { #Food
+	# 	name = "LOK_tutorial.2.a"
+	# 	country_event = { id = LOK_tutorial.3 }
+	# }
 	
 	option = { #Go to Nuclear War
 		name = "LOK_tutorial.3.a"
@@ -122,10 +122,10 @@ country_event = {
 		country_event = { id = LOK_tutorial.3 }
 	}
 	
-	option = { #Go to Nuclear War
-		name = "LOK_tutorial.3.a"
-		country_event = { id = LOK_tutorial.4 }
-	}
+	# option = { #Go to Nuclear War
+	# 	name = "LOK_tutorial.3.a"
+	# 	country_event = { id = LOK_tutorial.4 }
+	# }
 
 	option = { #Go to Space
 		name = "LOK_tutorial.4.a"
@@ -157,10 +157,10 @@ country_event = {
 		country_event = { id = LOK_tutorial.4 }
 	}
 
-	option = { #Go to Space
-		name = "LOK_tutorial.4.a"
-		country_event = { id = LOK_tutorial.5 }
-	}
+	# option = { #Go to Space
+	# 	name = "LOK_tutorial.4.a"
+	# 	country_event = { id = LOK_tutorial.5 }
+	# }
 
 	option = { #Back to summary
 		name = "LOK_tutorial.3.b"
@@ -548,7 +548,25 @@ country_event = {
 }
 
 add_namespace = LOK_food
+country_event = {
+	id = LOK_food.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_nuke.1"}
+	hidden = yes
+	is_triggered_only = yes
 
+	immediate = {
+		if = { #Make sure to apply the food modifier if it's not there for some reason
+			limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
+			add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+		}
+		calculate_total_food_consumption = yes #Food effects
+		if = {
+			limit = { NOT = { has_country_flag = game_start_food_stockpile_refill_done } }
+			set_variable = { country_food_stockpile = country_food_stockpile_max }
+			set_country_flag = game_start_food_stockpile_refill_done
+		}
+	}
+}
 
 
 #Events regarding post-war peacedeals with decisions

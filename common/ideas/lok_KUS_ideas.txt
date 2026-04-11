@@ -1,0 +1,170 @@
+ideas = {
+	country = {
+		KUS_racial_tensions = {
+			picture = generic_fascism_drift_2
+			modifier = {
+				recruitable_population_factor = -0.20
+				stability_factor = -0.15
+			}
+		}
+		KUS_rampant_extremism = {
+			picture = generic_communism_drift
+			cancel = {
+				AND = {
+					check_variable = { var = party_popularity@fascism value = 0.10 compare = less_than }
+					check_variable = { var = party_popularity@communism value = 0.10 compare = less_than }
+				}
+			}
+			modifier = {
+				stability_weekly = -0.002
+				political_power_gain = -0.25
+			}
+		}
+		KUS_ruined_economy = {
+			picture = great_depression
+			modifier = {
+				consumer_goods_factor = 0.20
+				production_speed_arms_factory_factor = -0.20
+				production_factory_max_efficiency_factor = -0.50
+				line_change_production_efficiency_factor = -0.25
+			}
+		}
+		KUS_suppressed_extremism = {
+			picture = generic_communism_drift
+			cancel = {
+				AND = {
+					check_variable = { var = party_popularity@fascism value = 0.10 compare = less_than }
+					check_variable = { var = party_popularity@communism value = 0.10 compare = less_than }
+				}
+			}
+			modifier = {
+				political_power_gain = -0.25
+			}
+		}
+		KUS_crackdown_effect = {
+			picture = generic_communism_drift
+			modifier = {
+				fascism_drift = -0.05
+				communism_drift = -0.05
+			}
+		}
+		KUS_stimulus_economy = {
+			picture = great_depression
+			modifier = {
+				consumer_goods_factor = 0.15
+				production_speed_arms_factory_factor = -0.10
+				production_factory_max_efficiency_factor = -0.35
+				line_change_production_efficiency_factor = -0.15
+			}
+		}
+		KUS_manufacturing_economy = {
+			picture = great_depression
+			modifier = {
+				consumer_goods_factor = 0.15
+				production_speed_arms_factory_factor = -0.10
+				production_factory_max_efficiency_factor = -0.30
+				line_change_production_efficiency_factor = -0.10
+			}
+		}
+		KUS_bottleneck_economy = {
+			picture = generic_goods_red_bonus
+			modifier = {
+				consumer_goods_factor = 0.10
+				production_factory_max_efficiency_factor = -0.15
+				line_change_production_efficiency_factor = -0.02
+			}
+		}
+		KUS_careful_economy = {
+			picture = generic_goods_red_bonus
+			modifier = {
+				consumer_goods_factor = 0.10
+				production_speed_arms_factory_factor = -0.05
+				production_factory_max_efficiency_factor = -0.10
+				line_change_production_efficiency_factor = -0.05
+			}
+		}
+		KUS_recovering_economy = {
+			picture = generic_goods_red_bonus
+			modifier = {
+				production_speed_buildings_factor = 0.15
+				production_factory_max_efficiency_factor = 0.05
+				line_change_production_efficiency_factor = 0.05
+			}
+		}
+		KUS_economic_resources = {
+			picture = generic_goods_red_bonus
+			modifier = {
+				production_factory_max_efficiency_factor = 0.25
+				line_change_production_efficiency_factor = 0.25
+				production_speed_buildings_factor = 0.15
+			}
+		}
+		KUS_solid_foundation = {
+			picture = generic_production_bonus
+			modifier = {
+				production_speed_buildings_factor = 0.15
+				consumer_goods_factor = -0.10
+				production_factory_start_efficiency_factor = 0.25
+			}
+		}
+		KUS_merit_group = {
+			picture = generic_military_academy
+			modifier = {
+				military_leader_cost_factor = -0.50
+				experience_loss_factor = -0.25
+			}
+		}
+		KUS_merit_group_improved = {
+			picture = generic_military_academy
+			modifier = {
+				military_leader_cost_factor = -0.50
+				experience_loss_factor = -0.25
+				research_speed_factor = 0.05
+				consumer_goods_factor = -0.10
+			}
+			research_bonus = {
+				electronics = 0.10
+			}
+		}
+		KUS_national_power = {
+			picture = generic_manpower_bonus
+			modifier = {
+				recruitable_population_factor = 0.10
+				army_core_defence_factor = 0.10
+			}
+		}
+		KUS_kulsnudgj_idea = {
+			picture = generic_secret_service_agency
+			modifier = {
+				decryption_factor = 1.5
+				encryption_factor = 1.5
+			}
+		}
+		KUS_nation_of_free = {
+			picture = generic_manpower_bonus
+			modifier = {
+				recruitable_population_factor = 0.05
+				army_core_defence_factor = 0.10
+				surrender_limit = 0.15
+			}
+		}
+		KUS_destiny_of_kusnurk = {
+			picture = generic_manpower_bonus
+			modifier = {
+				recruitable_population_factor = 0.05
+				army_core_defence_factor = 0.10
+				surrender_limit = 0.15
+			}
+		}
+		KUS_free_corps_volunteers = {
+			allowed = {
+				always = no
+			}
+			removal_cost = -1
+
+			modifier = {
+				send_volunteers_tension = -1.0
+			}
+		}
+	}
+}

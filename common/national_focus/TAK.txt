@@ -249,10 +249,9 @@ focus_tree = {
 				equipment = {
 					type = SH_battleship_1
 					creator = "TAK" 
-					version_name = "Super-Charles Class"
 				}
-				requested_factories = 1
-				progress = 0.60
+				requested_factories = 10
+				progress = 0.95
 				amount = 1
 			}
 			navy_experience = 50
@@ -1231,10 +1230,37 @@ focus_tree = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
 					}
 				}
+				every_possible_country = {
+					limit = {
+						is_roqualian_splinter = yes
+						NOT = { tag = TAK }
+					}
+					add_to_array = { array = TAK.TAK_possible_independence_supports }
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+				}
 			}
 		}
 	}
 
+	focus = { #prepare to fight roqualia
+		id = TAK_break_roqualia
+		icon = GFX_focus_SWI_dissolve_the_federal_council
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = TAK_roqualia_wargoal
+		prerequisite = { focus = TAK_roqualia_wargoal }
+		available = {
+			NOT = {
+				has_war_with = ROQ
+			}
+			country_exists = ROQ
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_break_roqualia_tt
+		}
+	}
+	
 	focus = { #fill charles with clones of charles
 		id = TAK_the_new_charles
 		icon = TAK_the_new_charles
@@ -2146,4 +2172,33 @@ focus_tree = {
 			}
 		}
 	}
+}
+
+focus_tree = {
+    id = TAK_PRETREE
+	country = {
+		factor = 0
+		# modifier = {
+		# 	add = 10
+		# 	tag = TAK
+		# }
+	}
+    continuous_focus_position = { x = 2700 y = 300 }
+
+    focus = {
+        id = TAK_all_is_well
+        icon = TAK_address_the_people
+		x = 10
+		y = 1
+		cost = 5
+        ai_will_do = {
+            factor = 1
+        }
+        available = {
+			always = no
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_all_is_well_tt
+		}
+    }
 }

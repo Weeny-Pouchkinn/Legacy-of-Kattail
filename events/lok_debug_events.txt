@@ -214,10 +214,6 @@ country_event = { #Unresearch techs test
 			#cv_early_fighter = 0
 			#cv_naval_bomber0 = 0
 			early_bomber = 0
-			#tactical_bomber0 = 0
-			#CAS0 = 0
-			trench_warfare = 0
-			fleet_in_being = 0
 			fuel_silos = 0
 			fuel_refining = 0
 			basic_train = 0
@@ -319,6 +315,11 @@ country_event = {
 				modifier = { add = 1 has_tech = dirty_nuke }
 				modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
 			}
+			0 = {
+				set_variable = { current_nuke_type = 5 }
+				modifier = { add = 1 has_tech = ultra_heavy_armor_tech }
+				modifier = { factor = 0 has_equipment = { lok_sturmer_nuke_equipment < 1 } }
+			}
 		}
 		random_country = { #PICK A TARGET!!!
 			limit = {
@@ -348,6 +349,13 @@ country_event = {
 						limit = { check_variable = { current_nuke_type = 3 } }
 						add_equipment_to_stockpile = {
 							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 5 } }
+						add_equipment_to_stockpile = {
+							type = lok_sturmer_nuke_equipment
 							amount = -1
 						}
 					}
@@ -435,24 +443,42 @@ country_event = { #species
 	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
 	is_triggered_only = yes
 	title = ""
-	desc = "[?251.population_at_game_start]"
+	desc = "[?TAK.TAK_roq_states_supported]"
+	
+	option = {
+		name = "[?TAI.lok_nuke_retaliation_score@NKB]"
+	}
+}
 
-	immediate = {
-		ROQ = {
-			kill_country_leader = yes
-			ROQ_Edouard = {
-				add_country_leader_role = {
-					promote_leader = yes
-					country_leader={
-						expire = "1965.1.1"
-						ideology = market_democracy
-					}
+country_event = { #species
+	id = lok_debug.13
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.13"}
+	is_triggered_only = yes
+	title = ""
+	desc = "blomp"
+	
+	option = {
+		name = "wowzers"
+		set_technology = {
+			armored_blimp_carrier1 = 1
+		}
+		set_country_flag = has_armored_blimp_carrier
+		if = {
+			limit = { NOT = { has_template = "Armored Blimp Carrier" } }
+			division_template = {
+				name = "Armored Blimp Carrier"
+				is_locked = yes
+				regiments = {
+					armored_blimp_carrier = { x = 0 y = 0 }
 				}
 			}
 		}
-	}
-	
-	option = {
-		name = "aaah"
+		capital_scope = {
+			create_unit = {
+				division = "division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.3 start_equipment_factor = 1"
+				count = 1
+				owner = PREV
+			}
+		}
 	}
 }
