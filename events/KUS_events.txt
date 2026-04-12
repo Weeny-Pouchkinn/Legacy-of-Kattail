@@ -33,3 +33,284 @@ country_event = {
 		}
 	}
 }
+
+###########################
+# KUS Political Events
+###########################
+
+# Aligning the Opposition - triggered by Bolster Presidential Power focus
+country_event = {
+id = KUS_event.10
+title = KUS_event.10.t
+desc = KUS_event.10.desc
+picture = GFX_report_event_generic_parliament
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.10.a
+add_stability = 0.05
+add_political_power = 25
+}
+}
+
+# Public Protests - triggered after losing war
+country_event = {
+id = KUS_event.20
+title = KUS_event.20.t
+desc = KUS_event.20.desc
+picture = GFX_report_event_generic_riot
+
+is_triggered_only = yes
+
+trigger = {
+has_country_flag = KUS_lost_war
+OR = {
+has_idea = KUS_rampant_extremism
+has_idea = KUS_suppressed_extremism
+has_idea = KUS_underground_extremism
+}
+}
+
+option = {
+name = KUS_event.20.a
+add_stability = -0.05
+hidden_effect = {
+country_event = { id = KUS_event.21 days = 7 }
+}
+}
+}
+
+# The President is dead
+country_event = {
+id = KUS_event.21
+title = KUS_event.21.t
+desc = KUS_event.21.desc
+picture = GFX_report_event_generic_funeral
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.21.a
+add_stability = -0.15
+retire_country_leader = yes
+hidden_effect = {
+set_politics = {
+ruling_party = democratic
+}
+create_country_leader = {
+name = "Fallen Government"
+picture = "GFX_portrait_KUS_Fallen_Government"
+expire = "1965.1.1"
+ideology = centrism
+}
+country_event = { id = KUS_event.22 days = 14 }
+}
+}
+}
+
+# Technocrat Propaganda
+country_event = {
+id = KUS_event.22
+title = KUS_event.22.t
+desc = KUS_event.22.desc
+picture = GFX_report_event_generic_propaganda
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.22.a
+add_ideas = KUS_technocrat_propaganda
+add_popularity = {
+ideology = fascism
+popularity = 0.15
+}
+hidden_effect = {
+country_event = { id = KUS_event.23 days = 7 }
+}
+}
+}
+
+# Capitolium Bombing
+country_event = {
+id = KUS_event.23
+title = KUS_event.23.t
+desc = KUS_event.23.desc
+picture = GFX_report_event_generic_destruction
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.23.a
+add_stability = -0.10
+add_war_support = -0.05
+hidden_effect = {
+country_event = { id = KUS_event.24 days = 7 }
+}
+}
+}
+
+# Technocrat Coup
+country_event = {
+id = KUS_event.24
+title = KUS_event.24.t
+desc = KUS_event.24.desc
+picture = GFX_report_event_generic_military_parade
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.24.a
+set_politics = {
+ruling_party = fascism
+elections_allowed = no
+}
+add_popularity = {
+ideology = fascism
+popularity = 0.30
+}
+if = {
+limit = { has_idea = KUS_rampant_extremism }
+remove_ideas = KUS_rampant_extremism
+}
+if = {
+limit = { has_idea = KUS_suppressed_extremism }
+remove_ideas = KUS_suppressed_extremism
+}
+if = {
+limit = { has_idea = KUS_underground_extremism }
+remove_ideas = KUS_underground_extremism
+}
+if = {
+limit = { has_idea = KUS_technocrat_propaganda }
+remove_ideas = KUS_technocrat_propaganda
+}
+add_ideas = KUS_extremism_ascendant
+create_country_leader = {
+name = "Konstantin Roko"
+picture = "GFX_portrait_KUS_Konstantin_Roko"
+expire = "1965.1.1"
+ideology = fascism_ideology
+traits = { KUS_mad_scientist }
+}
+set_country_flag = KUS_technocratic_coup_complete
+}
+}
+
+# Roqualian Alliance - sent to ROQ
+country_event = {
+id = KUS_event.30
+title = KUS_event.30.t
+desc = KUS_event.30.desc
+picture = GFX_report_event_generic_diplomacy
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.30.a
+add_opinion_modifier = { target = KUS modifier = large_increase }
+KUS = {
+add_opinion_modifier = { target = ROOT modifier = large_increase }
+}
+}
+
+option = {
+name = KUS_event.30.b
+add_political_power = 25
+}
+}
+
+# The Awakening - triggered after Final Touches
+country_event = {
+id = KUS_event.40
+title = KUS_event.40.t
+desc = KUS_event.40.desc
+picture = GFX_report_event_generic_factory
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.40.a
+retire_country_leader = yes
+hidden_effect = {
+create_country_leader = {
+name = "Provisional Government"
+picture = "GFX_portrait_KUS_Provisional_Government"
+expire = "1965.1.1"
+ideology = fascism_ideology
+}
+country_event = { id = KUS_event.41 days = 30 }
+}
+}
+}
+
+# The Next Step
+country_event = {
+id = KUS_event.41
+title = KUS_event.41.t
+desc = KUS_event.41.desc
+picture = GFX_report_event_generic_factory
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.41.a
+hidden_effect = {
+country_event = { id = KUS_event.42 days = 30 }
+}
+}
+}
+
+# The Ascension
+country_event = {
+id = KUS_event.42
+title = KUS_event.42.t
+desc = KUS_event.42.desc
+picture = GFX_report_event_generic_factory
+
+is_triggered_only = yes
+
+# Accept the Basilisk
+option = {
+name = KUS_event.42.a
+create_country_leader = {
+name = "Roko's Basilisk"
+picture = "GFX_portrait_KUS_Rokos_Basilisk"
+expire = "1965.1.1"
+ideology = fascism_ideology
+traits = { KUS_hypercognition }
+}
+add_stability = 0.20
+add_war_support = 0.20
+}
+
+# Attempt containment
+option = {
+name = KUS_event.42.b
+hidden_effect = {
+country_event = { id = KUS_event.43 days = 7 }
+}
+}
+}
+
+# Containment Breach
+country_event = {
+id = KUS_event.43
+title = KUS_event.43.t
+desc = KUS_event.43.desc
+picture = GFX_report_event_generic_destruction
+
+is_triggered_only = yes
+
+option = {
+name = KUS_event.43.a
+create_country_leader = {
+name = "Roko's Basilisk"
+picture = "GFX_portrait_KUS_Rokos_Basilisk"
+expire = "1965.1.1"
+ideology = fascism_ideology
+traits = { KUS_hypercognition }
+}
+add_stability = -0.10
+}
+}

@@ -2450,4 +2450,1619 @@ focus_tree = {
 		}
 	}
 
+
+#############################
+# DEMOCRATIC POLITICAL PATH
+#############################
+
+# ==========================================
+# A Loyal Friend - Democratic Root
+# ==========================================
+focus = {
+id = KUS_a_loyal_friend
+icon = GFX_goal_generic_national_unity
+x = 12
+y = 0
+cost = 3
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_political_power = 50
+custom_effect_tooltip = KUS_talvan_rahha_available_tt
+}
+}
+
+# ==========================================
+# Expand the Cabinet
+# ==========================================
+focus = {
+id = KUS_expand_the_cabinet
+icon = GFX_goal_generic_intelligence_exchange
+relative_position_id = KUS_a_loyal_friend
+x = -1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_a_loyal_friend }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+custom_effect_tooltip = KUS_expand_cabinet_tt
+}
+}
+
+# ==========================================
+# Support Ministry of Public Affairs
+# ==========================================
+focus = {
+id = KUS_support_ministry_public_affairs
+icon = GFX_goal_generic_propaganda
+relative_position_id = KUS_a_loyal_friend
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_a_loyal_friend }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+218 = {
+add_building_construction = {
+type = industrial_complex
+level = 1
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+add_popularity = {
+ideology = democratic
+popularity = 0.10
+}
+}
+}
+
+# ==========================================
+# Food Security Act
+# ==========================================
+focus = {
+id = KUS_food_security_act
+icon = GFX_goal_generic_consumer_goods
+relative_position_id = KUS_support_ministry_public_affairs
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_support_ministry_public_affairs }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+717 = {
+add_building_construction = {
+type = hydroponics_farm
+level = 1
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 1
+}
+231 = {
+add_building_construction = {
+type = hydroponics_farm
+level = 1
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 1
+}
+}
+}
+
+# ==========================================
+# Reinforce Ministries
+# ==========================================
+focus = {
+id = KUS_reinforce_ministries
+icon = GFX_goal_generic_major_alliance
+relative_position_id = KUS_expand_the_cabinet
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_expand_the_cabinet }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_political_power = 100
+army_experience = 20
+}
+}
+
+# ==========================================
+# Combat Extremism
+# ==========================================
+focus = {
+id = KUS_combat_extremism
+icon = GFX_goal_generic_demand_territory
+relative_position_id = KUS_reinforce_ministries
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_reinforce_ministries }
+prerequisite = { focus = KUS_food_security_act }
+
+ai_will_do = { factor = 2 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_rampant_extremism }
+swap_ideas = {
+remove_idea = KUS_rampant_extremism
+add_idea = KUS_suppressed_extremism
+}
+}
+}
+}
+
+# ==========================================
+# Support Independent Militaries
+# ==========================================
+focus = {
+id = KUS_support_independent_militaries
+icon = GFX_goal_generic_allies_build_infantry
+relative_position_id = KUS_combat_extremism
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_combat_extremism }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+random_owned_controlled_state = {
+add_building_construction = {
+type = arms_factory
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+custom_effect_tooltip = KUS_spawn_infantry_tt
+hidden_effect = {
+division_template = {
+name = "Kusnurk Militia"
+regiments = {
+infantry = { x = 0 y = 0 }
+infantry = { x = 0 y = 1 }
+infantry = { x = 0 y = 2 }
+infantry = { x = 1 y = 0 }
+infantry = { x = 1 y = 1 }
+infantry = { x = 1 y = 2 }
+}
+}
+218 = {
+create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+}
+}
+}
+}
+
+# ==========================================
+# Mobilize for War
+# ==========================================
+focus = {
+id = KUS_mobilize_for_war
+icon = GFX_goal_generic_military_sphere
+relative_position_id = KUS_support_independent_militaries
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_support_independent_militaries }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = {
+NOT = { has_idea = partial_economic_mobilisation }
+NOT = { has_idea = war_economy }
+NOT = { has_idea = tot_economic_mobilisation }
+}
+add_ideas = partial_economic_mobilisation
+}
+if = {
+limit = {
+OR = {
+has_idea = partial_economic_mobilisation
+has_idea = war_economy
+has_idea = tot_economic_mobilisation
+}
+}
+add_political_power = 150
+}
+}
+}
+
+# ==========================================
+# Threat on the Border
+# ==========================================
+focus = {
+id = KUS_threat_on_border
+icon = GFX_goal_generic_fortify_city
+relative_position_id = KUS_mobilize_for_war
+x = 2
+y = 0
+cost = 5
+
+prerequisite = { focus = KUS_support_independent_militaries }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+225 = {
+add_building_construction = {
+type = bunker
+level = 2
+province = {
+all_provinces = yes
+limit_to_border = yes
+}
+instant_build = yes
+}
+}
+}
+}
+
+# ==========================================
+# Reform Military Academy
+# ==========================================
+focus = {
+id = KUS_reform_military_academy
+icon = GFX_goal_generic_army_doctrines
+relative_position_id = KUS_threat_on_border
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_threat_on_border }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_ideas = KUS_reformed_military_academy
+}
+}
+
+# ==========================================
+# Bolster Presidential Power
+# ==========================================
+focus = {
+id = KUS_bolster_presidential_power
+icon = GFX_goal_generic_demand_territory
+relative_position_id = KUS_mobilize_for_war
+x = 0
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_mobilize_for_war }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_political_power = 50
+hidden_effect = {
+KUS_Jon_Geemetra = {
+add_country_leader_trait = KUS_backed_by_coalition
+}
+}
+custom_effect_tooltip = KUS_backed_by_coalition_tt
+country_event = { id = KUS_event.10 }
+}
+}
+
+# ==========================================
+# Endorse National Pride
+# ==========================================
+focus = {
+id = KUS_endorse_national_pride
+icon = GFX_goal_generic_national_unity
+relative_position_id = KUS_bolster_presidential_power
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_bolster_presidential_power }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_war_support = 0.20
+add_ideas = KUS_uhkus
+}
+}
+
+# ==========================================
+# State Development Funds
+# ==========================================
+focus = {
+id = KUS_state_development_funds
+icon = GFX_goal_generic_construct_civ_factory
+relative_position_id = KUS_bolster_presidential_power
+x = -1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_bolster_presidential_power }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+231 = { set_state_category = large_town }
+715 = { set_state_category = large_town }
+229 = { set_state_category = large_town }
+}
+}
+
+# ==========================================
+# Kubervagi (Intelligence Service)
+# ==========================================
+focus = {
+id = KUS_kubervagi
+icon = GFX_goal_generic_intelligence_exchange
+relative_position_id = KUS_endorse_national_pride
+x = 2
+y = 0
+cost = 5
+
+prerequisite = { focus = KUS_reform_military_academy }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_dlc = "La Resistance" }
+add_ideas = KUS_kubervagi_lar
+}
+if = {
+limit = { NOT = { has_dlc = "La Resistance" } }
+add_ideas = KUS_kubervagi
+}
+}
+}
+
+# ==========================================
+# Proclaim Greater Kusnurk
+# ==========================================
+focus = {
+id = KUS_proclaim_greater_kusnurk
+icon = GFX_goal_generic_major_alliance
+relative_position_id = KUS_state_development_funds
+x = 0
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_state_development_funds }
+prerequisite = { focus = KUS_endorse_national_pride }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_uhkus }
+swap_ideas = {
+remove_idea = KUS_uhkus
+add_idea = KUS_uhkus_greater
+}
+}
+}
+}
+
+# ==========================================
+# Roqualian Alliance
+# ==========================================
+focus = {
+id = KUS_roqualian_alliance
+icon = GFX_goal_generic_major_alliance
+relative_position_id = KUS_endorse_national_pride
+x = 0
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_state_development_funds }
+prerequisite = { focus = KUS_endorse_national_pride }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_opinion_modifier = { target = ROQ modifier = large_increase }
+add_opinion_modifier = { target = LMB modifier = large_increase }
+add_opinion_modifier = { target = RQA modifier = large_increase }
+add_opinion_modifier = { target = PER modifier = large_increase }
+if = {
+limit = { country_exists = ROQ }
+ROQ = { country_event = { id = KUS_event.30 } }
+}
+}
+}
+
+# ==========================================
+# Anti-Katzen Diplomacy
+# ==========================================
+focus = {
+id = KUS_anti_katzen_diplomacy
+icon = GFX_goal_generic_demand_territory
+relative_position_id = KUS_roqualian_alliance
+x = 0
+y = 2
+cost = 10
+
+prerequisite = { focus = KUS_roqualian_alliance }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_uhkus_greater }
+swap_ideas = {
+remove_idea = KUS_uhkus_greater
+add_idea = KUS_uhkus_anti_katzen
+}
+}
+every_country = {
+limit = {
+OR = {
+tag = SIL
+tag = DOM
+tag = FST
+tag = KTN
+}
+}
+add_opinion_modifier = { target = KUS modifier = large_decrease }
+ROOT = {
+add_opinion_modifier = { target = PREV modifier = large_decrease }
+}
+}
+}
+}
+
+# ==========================================
+# Operation: Nekastoni Freedom
+# ==========================================
+focus = {
+id = KUS_operation_nekastoni_freedom
+icon = GFX_goal_generic_occupy_states_ongoing_war
+relative_position_id = KUS_anti_katzen_diplomacy
+x = 0
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_anti_katzen_diplomacy }
+
+bypass = {
+NOT = { country_exists = NEK }
+}
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+create_wargoal = {
+type = topple_government
+target = NEK
+}
+}
+}
+
+# ==========================================
+# Operation: Riesieger Down
+# ==========================================
+focus = {
+id = KUS_operation_riesieger_down
+icon = GFX_goal_generic_occupy_states_ongoing_war
+relative_position_id = KUS_operation_nekastoni_freedom
+x = -2
+y = 0
+cost = 10
+
+prerequisite = { focus = KUS_proclaim_greater_kusnurk }
+prerequisite = { focus = KUS_anti_katzen_diplomacy }
+
+bypass = {
+NOT = { country_exists = DOM }
+}
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+create_wargoal = {
+type = topple_government
+target = DOM
+}
+}
+}
+
+# ==========================================
+# Operation: Unified Freistaat
+# ==========================================
+focus = {
+id = KUS_operation_unified_freistaat
+icon = GFX_goal_generic_occupy_states_ongoing_war
+relative_position_id = KUS_operation_riesieger_down
+x = -2
+y = 0
+cost = 5
+
+prerequisite = { focus = KUS_proclaim_greater_kusnurk }
+
+bypass = {
+NOT = { country_exists = FSR }
+}
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+create_wargoal = {
+type = topple_government
+target = FSR
+}
+}
+}
+
+# ==========================================
+# Union of Our Own
+# ==========================================
+focus = {
+id = KUS_union_of_our_own
+icon = GFX_goal_generic_major_alliance
+relative_position_id = KUS_operation_unified_freistaat
+x = 1
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_operation_riesieger_down }
+prerequisite = { focus = KUS_operation_unified_freistaat }
+prerequisite = { focus = KUS_operation_nekastoni_freedom }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { is_in_faction = no }
+create_faction = "Flusiobalkan Union"
+}
+every_country = {
+limit = {
+OR = {
+tag = FSR
+tag = DOM
+tag = NEK
+tag = VIX
+tag = MCF
+tag = TEN
+tag = KHA
+tag = SLR
+tag = IZW
+tag = FST
+}
+has_government = democratic
+is_in_faction = no
+}
+KUS = { add_to_faction = PREV }
+}
+every_country = {
+limit = {
+OR = {
+tag = FSR
+tag = DOM
+tag = NEK
+tag = VIX
+tag = MCF
+tag = TEN
+tag = KHA
+tag = SLR
+tag = IZW
+tag = FST
+}
+NOT = { has_government = democratic }
+NOT = { is_in_faction_with = KUS }
+}
+ROOT = {
+create_wargoal = {
+type = topple_government
+target = PREV
+}
+}
+}
+}
+}
+
+# ==========================================
+# Joint Technology Board
+# ==========================================
+focus = {
+id = KUS_joint_technology_board
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_union_of_our_own
+x = 7
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_roqualian_alliance }
+prerequisite = { focus = KUS_union_of_our_own }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_tech_bonus = {
+name = KUS_joint_tech_bonus
+bonus = 1.0
+uses = 2
+category = electronics
+}
+if = {
+limit = { has_dlc = "Together for Victory" }
+add_to_tech_sharing_group = flusiobalkan_research
+}
+}
+}
+
+# ==========================================
+# Flusiobalkan Economic Region
+# ==========================================
+focus = {
+id = KUS_flusiobalkan_economic_region
+icon = GFX_goal_generic_consumer_goods
+relative_position_id = KUS_union_of_our_own
+x = 0
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_union_of_our_own }
+
+available = {
+is_faction_leader = yes
+}
+cancel_if_invalid = yes
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+every_country = {
+limit = { is_in_faction_with = KUS }
+add_offsite_building = { type = industrial_complex level = 2 }
+}
+add_ideas = KUS_flusiobalkan_economic_region
+}
+}
+
+# ==========================================
+# Pan-Flusiobalkan Bank
+# ==========================================
+focus = {
+id = KUS_pan_flusiobalkan_bank
+icon = GFX_goal_generic_consumer_goods
+relative_position_id = KUS_flusiobalkan_economic_region
+x = -1
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_flusiobalkan_economic_region }
+
+available = {
+is_faction_leader = yes
+}
+cancel_if_invalid = yes
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_flusiobalkan_economic_region }
+swap_ideas = {
+remove_idea = KUS_flusiobalkan_economic_region
+add_idea = KUS_flusiobalkan_economic_region_2
+}
+}
+}
+}
+
+# ==========================================
+# Flusiobalkan Defence Army
+# ==========================================
+focus = {
+id = KUS_flusiobalkan_defence_army
+icon = GFX_goal_generic_allies_build_infantry
+relative_position_id = KUS_flusiobalkan_economic_region
+x = 1
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_flusiobalkan_economic_region }
+
+available = {
+is_faction_leader = yes
+}
+cancel_if_invalid = yes
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+every_country = {
+limit = { is_in_faction_with = KUS }
+add_offsite_building = { type = arms_factory level = 2 }
+add_ideas = KUS_fbda
+}
+}
+}
+
+# ==========================================
+# United Flusiobalkans
+# ==========================================
+focus = {
+id = KUS_united_flusiobalkans
+icon = GFX_goal_generic_major_alliance
+relative_position_id = KUS_flusiobalkan_economic_region
+x = 0
+y = 2
+cost = 10
+
+prerequisite = { focus = KUS_flusiobalkan_defence_army }
+prerequisite = { focus = KUS_pan_flusiobalkan_bank }
+
+available = {
+is_faction_leader = yes
+}
+cancel_if_invalid = yes
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+every_country = {
+limit = { is_in_faction_with = KUS }
+if = {
+limit = { has_idea = KUS_flusiobalkan_economic_region_2 }
+remove_ideas = KUS_flusiobalkan_economic_region_2
+}
+if = {
+limit = { has_idea = KUS_fbda }
+remove_ideas = KUS_fbda
+}
+add_ideas = KUS_solabalkan_union
+}
+}
+}
+
+# ==========================================
+# True Union
+# ==========================================
+focus = {
+id = KUS_true_union
+icon = GFX_goal_generic_major_alliance
+relative_position_id = KUS_united_flusiobalkans
+x = 0
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_united_flusiobalkans }
+
+available = {
+is_faction_leader = yes
+}
+cancel_if_invalid = yes
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+custom_effect_tooltip = KUS_true_union_integration_tt
+}
+}
+
+#############################
+# TECHNOCRATIC/FASCIST PATH
+#############################
+
+# ==========================================
+# Subdue Jarvalin
+# ==========================================
+focus = {
+id = KUS_subdue_jarvalin
+icon = GFX_goal_generic_demand_territory
+x = 25
+y = 0
+cost = 5
+
+available = {
+has_country_flag = KUS_technocratic_coup_complete
+}
+
+ai_will_do = {
+factor = 1
+modifier = {
+factor = 0
+NOT = { has_country_flag = KUS_technocratic_coup_complete }
+}
+}
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_extremism_ascendant }
+remove_ideas = KUS_extremism_ascendant
+}
+add_ideas = KUS_public_opposition
+}
+}
+
+# ==========================================
+# Crush Rebel Groups
+# ==========================================
+focus = {
+id = KUS_crush_rebel_groups
+icon = GFX_goal_generic_occupy_states_ongoing_war
+relative_position_id = KUS_subdue_jarvalin
+x = -1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_subdue_jarvalin }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_stability = 0.05
+add_war_support = 0.05
+custom_effect_tooltip = KUS_demilitarized_zones_tt
+}
+}
+
+# ==========================================
+# Unite Aligned Political Groups
+# ==========================================
+focus = {
+id = KUS_unite_aligned_political_groups
+icon = GFX_goal_generic_intelligence_exchange
+relative_position_id = KUS_subdue_jarvalin
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_subdue_jarvalin }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_stability = 0.10
+add_war_support = 0.10
+custom_effect_tooltip = KUS_political_advisors_unlocked_tt
+}
+}
+
+# ==========================================
+# Form Technocratic Council
+# ==========================================
+focus = {
+id = KUS_form_technocratic_council
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_subdue_jarvalin
+x = 0
+y = 2
+cost = 5
+
+prerequisite = { focus = KUS_crush_rebel_groups }
+prerequisite = { focus = KUS_unite_aligned_political_groups }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_public_opposition }
+remove_ideas = KUS_public_opposition
+}
+add_ideas = KUS_burgeoning_technocracy
+}
+}
+
+# ==========================================
+# New Leap Program
+# ==========================================
+focus = {
+id = KUS_new_leap_program
+icon = GFX_goal_generic_construct_civ_factory
+relative_position_id = KUS_form_technocratic_council
+x = -1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_form_technocratic_council }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+218 = {
+add_building_construction = {
+type = industrial_complex
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+add_building_construction = {
+type = infrastructure
+level = 1
+instant_build = yes
+}
+}
+set_country_flag = { flag = KUS_leap_cooldown days_remove = 70 }
+}
+}
+
+# ==========================================
+# Direct Scientific Development
+# ==========================================
+focus = {
+id = KUS_direct_scientific_development
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_form_technocratic_council
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_form_technocratic_council }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_burgeoning_technocracy }
+swap_ideas = {
+remove_idea = KUS_burgeoning_technocracy
+add_idea = KUS_burgeoning_technocracy_2
+}
+}
+add_tech_bonus = {
+name = KUS_industry_research
+bonus = 2.0
+uses = 1
+category = industry
+}
+}
+}
+
+# ==========================================
+# End to Starvation
+# ==========================================
+focus = {
+id = KUS_end_to_starvation
+icon = GFX_goal_generic_consumer_goods
+relative_position_id = KUS_form_technocratic_council
+x = 3
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_form_technocratic_council }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+715 = {
+add_building_construction = {
+type = hydroponics_farm
+level = 3
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 3
+}
+231 = {
+add_building_construction = {
+type = hydroponics_farm
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+}
+}
+
+# ==========================================
+# Agromaxx
+# ==========================================
+focus = {
+id = KUS_agromaxx
+icon = GFX_goal_generic_consumer_goods
+relative_position_id = KUS_end_to_starvation
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_end_to_starvation }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_ideas = KUS_agromaxx
+218 = {
+add_building_construction = {
+type = hydroponics_farm
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+}
+}
+
+# ==========================================
+# Encourage Technical Education
+# ==========================================
+focus = {
+id = KUS_encourage_technical_education
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_form_technocratic_council
+x = 0
+y = 2
+cost = 5
+
+prerequisite = { focus = KUS_direct_scientific_development }
+prerequisite = { focus = KUS_new_leap_program }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_timed_idea = {
+idea = KUS_tech_education_bonus
+days = 365
+}
+add_research_slot = 1
+}
+}
+
+# ==========================================
+# Economic Insulation
+# ==========================================
+focus = {
+id = KUS_economic_insulation
+icon = GFX_goal_generic_consumer_goods
+relative_position_id = KUS_form_technocratic_council
+x = 2
+y = 2
+cost = 5
+
+prerequisite = { focus = KUS_direct_scientific_development }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_burgeoning_technocracy_2 }
+swap_ideas = {
+remove_idea = KUS_burgeoning_technocracy_2
+add_idea = KUS_burgeoning_technocracy_3
+}
+}
+}
+}
+
+# ==========================================
+# Second Leap
+# ==========================================
+focus = {
+id = KUS_second_leap
+icon = GFX_goal_generic_construct_civ_factory
+relative_position_id = KUS_form_technocratic_council
+x = -2
+y = 2
+cost = 5
+
+prerequisite = { focus = KUS_new_leap_program }
+
+available = {
+NOT = { has_country_flag = KUS_leap_cooldown }
+}
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+225 = {
+add_building_construction = {
+type = industrial_complex
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+716 = {
+add_building_construction = {
+type = industrial_complex
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+set_country_flag = { flag = KUS_leap_cooldown days_remove = 105 }
+}
+}
+
+# ==========================================
+# High-Tech Factories
+# ==========================================
+focus = {
+id = KUS_high_tech_factories
+icon = GFX_goal_generic_construct_mil_factory
+relative_position_id = KUS_economic_insulation
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_economic_insulation }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_burgeoning_technocracy_3 }
+swap_ideas = {
+remove_idea = KUS_burgeoning_technocracy_3
+add_idea = KUS_burgeoning_technocracy_4
+}
+}
+}
+}
+
+# ==========================================
+# Third Leap
+# ==========================================
+focus = {
+id = KUS_third_leap
+icon = GFX_goal_generic_construct_civ_factory
+relative_position_id = KUS_second_leap
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_second_leap }
+
+available = {
+NOT = { has_country_flag = KUS_leap_cooldown }
+}
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+231 = {
+add_building_construction = {
+type = industrial_complex
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+715 = {
+add_building_construction = {
+type = industrial_complex
+level = 3
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+717 = {
+add_building_construction = {
+type = industrial_complex
+level = 1
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 1
+}
+set_country_flag = { flag = KUS_leap_cooldown days_remove = 140 }
+}
+}
+
+# ==========================================
+# The Landing
+# ==========================================
+focus = {
+id = KUS_the_landing
+icon = GFX_goal_generic_construct_civ_factory
+relative_position_id = KUS_third_leap
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_third_leap }
+
+available = {
+NOT = { has_country_flag = KUS_leap_cooldown }
+}
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+229 = {
+add_building_construction = {
+type = industrial_complex
+level = 4
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 4
+}
+213 = {
+add_building_construction = {
+type = industrial_complex
+level = 4
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 4
+}
+}
+}
+
+# ==========================================
+# Cybernetics Program
+# ==========================================
+focus = {
+id = KUS_cybernetics_program
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_the_landing
+x = 2
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_high_tech_factories }
+prerequisite = { focus = KUS_encourage_technical_education }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_burgeoning_technocracy_4 }
+swap_ideas = {
+remove_idea = KUS_burgeoning_technocracy_4
+add_idea = KUS_burgeoning_technocracy_5
+}
+}
+}
+}
+
+# ==========================================
+# Revive Moore's Law
+# ==========================================
+focus = {
+id = KUS_revive_moores_law
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_high_tech_factories
+x = 0
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_high_tech_factories }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_tech_bonus = {
+name = KUS_electronics_research
+bonus = 0.10
+uses = 3
+category = electronics
+}
+}
+}
+
+# ==========================================
+# AMAT
+# ==========================================
+focus = {
+id = KUS_amat
+icon = GFX_goal_generic_construct_mil_factory
+relative_position_id = KUS_high_tech_factories
+x = 2
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_high_tech_factories }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+custom_effect_tooltip = KUS_amat_unlocked_tt
+}
+}
+
+# ==========================================
+# Project Babuloon
+# ==========================================
+focus = {
+id = KUS_project_babuloon
+icon = GFX_goal_generic_army_artillery2
+relative_position_id = KUS_amat
+x = 5
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_amat }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_tech_bonus = {
+name = KUS_railway_gun_research
+bonus = 1.0
+uses = 2
+ahead_reduction = 5
+category = train_tech
+}
+add_ideas = KUS_babuloon
+}
+}
+
+# ==========================================
+# Project Adaptiv
+# ==========================================
+focus = {
+id = KUS_project_adaptiv
+icon = GFX_goal_generic_army_doctrines
+relative_position_id = KUS_amat
+x = 3
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_amat }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_ideas = KUS_adaptiv
+}
+}
+
+# ==========================================
+# Project Fooniks
+# ==========================================
+focus = {
+id = KUS_project_fooniks
+icon = GFX_goal_generic_air_fighter2
+relative_position_id = KUS_amat
+x = 1
+y = 1
+cost = 10
+
+prerequisite = { focus = KUS_amat }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_ideas = KUS_fooniks
+}
+}
+
+# ==========================================
+# Further Beyond
+# ==========================================
+focus = {
+id = KUS_further_beyond
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_amat
+x = -2
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_amat }
+prerequisite = { focus = KUS_revive_moores_law }
+prerequisite = { focus = KUS_cybernetics_program }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+if = {
+limit = { has_idea = KUS_burgeoning_technocracy_5 }
+swap_ideas = {
+remove_idea = KUS_burgeoning_technocracy_5
+add_idea = KUS_reaching_singularity
+}
+}
+}
+}
+
+# ==========================================
+# Construct AI Infrastructure
+# ==========================================
+focus = {
+id = KUS_construct_ai_infrastructure
+icon = GFX_goal_generic_construct_civ_factory
+relative_position_id = KUS_further_beyond
+x = 1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_further_beyond }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+218 = {
+add_building_construction = {
+type = industrial_complex
+level = 3
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 3
+}
+}
+}
+
+# ==========================================
+# Prepare Defense Installations
+# ==========================================
+focus = {
+id = KUS_prepare_defense_installations
+icon = GFX_goal_generic_fortify_city
+relative_position_id = KUS_further_beyond
+x = -1
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_further_beyond }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+218 = {
+add_building_construction = {
+type = bunker
+level = 3
+province = {
+all_provinces = yes
+limit_to_border = yes
+}
+instant_build = yes
+}
+add_building_construction = {
+type = anti_air_building
+level = 3
+instant_build = yes
+}
+}
+}
+}
+
+# ==========================================
+# Mass Cybernetics Program
+# ==========================================
+focus = {
+id = KUS_mass_cybernetics_program
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_further_beyond
+x = 3
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_further_beyond }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_manpower = 50000
+add_war_support = 0.10
+}
+}
+
+# ==========================================
+# Construct Computronium Factories
+# ==========================================
+focus = {
+id = KUS_construct_computronium_factories
+icon = GFX_goal_generic_construct_mil_factory
+relative_position_id = KUS_further_beyond
+x = 5
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_further_beyond }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+218 = {
+add_building_construction = {
+type = arms_factory
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+231 = {
+add_building_construction = {
+type = arms_factory
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+225 = {
+add_building_construction = {
+type = arms_factory
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 2
+}
+}
+}
+
+# ==========================================
+# Supercomputer Facility
+# ==========================================
+focus = {
+id = KUS_supercomputer_facility
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_further_beyond
+x = -2
+y = 2
+cost = 5
+
+prerequisite = { focus = KUS_construct_ai_infrastructure }
+prerequisite = { focus = KUS_prepare_defense_installations }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+218 = {
+add_building_construction = {
+type = infrastructure
+level = 2
+instant_build = yes
+}
+add_extra_state_shared_building_slots = 4
+}
+add_research_slot = 1
+}
+}
+
+# ==========================================
+# Create MilNet
+# ==========================================
+focus = {
+id = KUS_create_milnet
+icon = GFX_goal_generic_army_doctrines
+relative_position_id = KUS_supercomputer_facility
+x = 4
+y = 0
+cost = 5
+
+prerequisite = { focus = KUS_mass_cybernetics_program }
+prerequisite = { focus = KUS_construct_computronium_factories }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+add_ideas = KUS_milnet
+}
+}
+
+# ==========================================
+# The Final Touches
+# ==========================================
+focus = {
+id = KUS_the_final_touches
+icon = GFX_goal_generic_scientific_exchange
+relative_position_id = KUS_supercomputer_facility
+x = 2
+y = 1
+cost = 5
+
+prerequisite = { focus = KUS_supercomputer_facility }
+prerequisite = { focus = KUS_create_milnet }
+
+ai_will_do = { factor = 1 }
+
+completion_reward = {
+retire_country_leader = yes
+country_event = { id = KUS_event.40 }
+}
+}
+
 }

@@ -239,9 +239,330 @@ ideas = {
 				experience_gain_army_factor = 0.15
 			}
 		}
-	}
 
-	# Industrial Concerns
+		## Political Focus Tree Spirits
+
+		# Extremism chain
+		KUS_rampant_extremism = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_political_discourse
+			modifier = {
+				political_power_cost = 0.50
+				stability_factor = -0.10
+				stability_weekly = -0.002
+			}
+		}
+		KUS_suppressed_extremism = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_political_discourse
+			modifier = {
+				political_power_cost = 0.25
+				stability_factor = -0.10
+			}
+		}
+		KUS_underground_extremism = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_political_discourse
+			modifier = {
+				stability_factor = -0.05
+			}
+		}
+
+		# Uhkus chain
+		KUS_uhkus = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_morale_bonus
+			modifier = {
+				war_support_weekly = 0.005
+				war_support_weekly_for_combat_casualties = 0.005
+			}
+		}
+		KUS_uhkus_greater = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_morale_bonus
+			modifier = {
+				war_support_weekly = 0.005
+				war_support_weekly_for_combat_casualties = 0.005
+				recruitable_population_factor = 0.10
+				army_core_attack_factor = 0.05
+				army_core_defence_factor = 0.05
+				surrender_limit = 0.10
+			}
+		}
+		KUS_uhkus_anti_katzen = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_morale_bonus
+			modifier = {
+				war_support_weekly = 0.005
+				war_support_weekly_for_combat_casualties = 0.005
+				recruitable_population_factor = 0.10
+				army_core_attack_factor = 0.05
+				army_core_defence_factor = 0.05
+				surrender_limit = 0.10
+			}
+			targeted_modifier = {
+				tag = SIL
+				attack_bonus_against = 0.10
+				defense_bonus_against = 0.10
+			}
+			targeted_modifier = {
+				tag = DOM
+				attack_bonus_against = 0.10
+				defense_bonus_against = 0.10
+			}
+			targeted_modifier = {
+				tag = FST
+				attack_bonus_against = 0.10
+				defense_bonus_against = 0.10
+			}
+			targeted_modifier = {
+				tag = KTN
+				attack_bonus_against = 0.10
+				defense_bonus_against = 0.10
+			}
+		}
+
+		# Military spirits
+		KUS_reformed_military_academy = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_army_bonus
+			modifier = {
+				army_leader_cost_factor = -0.30
+				military_leader_cost_factor = -0.30
+			}
+		}
+
+		# Intelligence spirits
+		KUS_kubervagi = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_intel_bonus
+			modifier = {
+				encryption = 1
+				decryption = 1.5
+			}
+		}
+		KUS_kubervagi_lar = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_intel_bonus
+			modifier = {
+				decryption_power_factor = 0.25
+				crypto_department_defense_level = 2
+			}
+		}
+
+		# Flusiobalkan spirits
+		KUS_flusiobalkan_economic_region = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_goods_red_bonus
+			modifier = {
+				consumer_goods_factor = -0.10
+				industrial_capacity_factory = 0.05
+			}
+		}
+		KUS_flusiobalkan_economic_region_2 = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_goods_red_bonus
+			modifier = {
+				consumer_goods_factor = -0.15
+				industrial_capacity_factory = 0.10
+			}
+		}
+		KUS_fbda = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_army_bonus
+			modifier = {
+				recruitable_population_factor = 0.15
+				training_time_factor = -0.10
+				experience_loss_factor = -0.10
+			}
+		}
+		KUS_solabalkan_union = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_production_bonus
+			modifier = {
+				recruitable_population_factor = 0.20
+				training_time_factor = -0.10
+				experience_loss_factor = -0.10
+				consumer_goods_factor = -0.20
+				industrial_capacity_factory = 0.10
+			}
+		}
+
+		# Crisis spirits
+		KUS_public_opposition = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_political_discourse
+			modifier = {
+				stability_factor = -0.20
+				recruitable_population_factor = -0.50
+			}
+		}
+		KUS_extremism_ascendant = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_political_discourse
+			modifier = {
+				stability_factor = -0.30
+				democratic_drift = -0.02
+			}
+		}
+		KUS_technocrat_propaganda = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_political_discourse
+			modifier = {
+				drift_defence_factor = -0.50
+			}
+		}
+
+		# Technocracy chain
+		KUS_burgeoning_technocracy = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_research_bonus
+			modifier = {
+				political_power_factor = 0.10
+			}
+		}
+		KUS_burgeoning_technocracy_2 = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_research_bonus
+			modifier = {
+				political_power_factor = 0.10
+				research_speed_factor = 0.05
+				consumer_goods_factor = 0.05
+			}
+		}
+		KUS_burgeoning_technocracy_3 = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_research_bonus
+			modifier = {
+				political_power_factor = 0.10
+				research_speed_factor = 0.05
+				consumer_goods_factor = 0.05
+				local_resources_factor = 0.10
+				global_building_slots_factor = 0.10
+			}
+		}
+		KUS_burgeoning_technocracy_4 = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_research_bonus
+			modifier = {
+				political_power_factor = 0.10
+				research_speed_factor = 0.05
+				consumer_goods_factor = 0.05
+				local_resources_factor = 0.10
+				global_building_slots_factor = 0.10
+				production_factory_max_efficiency_factor = 0.10
+				industrial_capacity_factory = 0.05
+			}
+		}
+		KUS_burgeoning_technocracy_5 = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_research_bonus
+			modifier = {
+				political_power_factor = 0.10
+				research_speed_factor = 0.10
+				consumer_goods_factor = 0.10
+				local_resources_factor = 0.10
+				global_building_slots_factor = 0.10
+				production_factory_max_efficiency_factor = 0.10
+				industrial_capacity_factory = 0.05
+			}
+		}
+		KUS_reaching_singularity = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_research_bonus
+			modifier = {
+				political_power_factor = 0.10
+				research_speed_factor = 0.15
+				consumer_goods_factor = 0.10
+				local_resources_factor = 0.10
+				global_building_slots_factor = 0.10
+				production_factory_max_efficiency_factor = 0.10
+				industrial_capacity_factory = 0.05
+				justify_war_goal_time = -0.33
+			}
+		}
+
+		# Tech project spirits
+		KUS_agromaxx = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_goods_red_bonus
+			modifier = {
+				lok_hydroponics_food_multiplier = 0.05
+			}
+		}
+		KUS_milnet = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_army_bonus
+			modifier = {
+				army_org_factor = 0.10
+				army_speed_factor = 0.10
+				experience_loss_factor = -0.10
+			}
+		}
+		KUS_babuloon = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_army_bonus
+			modifier = {
+				railway_gun_bombardment_factor = 0.20
+			}
+		}
+		KUS_adaptiv = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_army_bonus
+			equipment_bonus = {
+				recon_equipment = {
+					defense = 1.0
+					breakthrough = 1.0
+					instant = yes
+				}
+			}
+		}
+		KUS_fooniks = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_air_bonus
+			modifier = {
+				air_wing_xp_loss_when_killed_factor = -0.20
+				air_manpower_requirement_factor = -0.20
+			}
+		}
+
+		# Timed spirit from Encourage Technical Education
+		KUS_tech_education_bonus = {
+			allowed = { always = no }
+			removal_cost = -1
+			picture = generic_research_bonus
+			modifier = {
+				research_speed_factor = 0.05
+			}
+		}
+	}
 	industrial_concern = {
 		KUS_elrong = {
 			picture = generic_industrial_concern_1
@@ -331,6 +652,25 @@ ideas = {
 				industry = 0.05
 			}
 
+			traits = { industrial_concern }
+		}
+
+		## AMAT Advanced Military Technologies
+		KUS_amat = {
+			picture = generic_industrial_concern_1
+			allowed = { original_tag = KUS }
+			visible = { has_completed_focus = KUS_amat }
+			available = { has_completed_focus = KUS_amat }
+			cost = 150
+			removal_cost = 10
+			research_bonus = {
+				infantry_weapons = 0.15
+				artillery = 0.15
+				support_tech = 0.15
+			}
+			modifier = {
+				production_speed_arms_factory_factor = 0.20
+			}
 			traits = { industrial_concern }
 		}
 	}
