@@ -1,0 +1,254 @@
+###########################
+# KUS Political Events
+# Kusnurk Confederation
+###########################
+
+add_namespace = KUS_political_event
+
+# Aligning the Opposition
+# Triggered by Bolster Presidential Power focus completion
+country_event = {
+	id = KUS_political_event.1
+	title = KUS_political_event.1.t
+	desc = KUS_political_event.1.desc
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+
+	# Option 1: Stand firm
+	option = {
+		name = KUS_political_event.1.a
+		add_stability = 0.05
+		if = {
+			limit = { has_idea = KUS_suppressed_extremism }
+			swap_ideas = {
+				remove_idea = KUS_suppressed_extremism
+				add_idea = KUS_underground_extremism
+			}
+		}
+	}
+
+	# Option 2: Bid for unity
+	option = {
+		name = KUS_political_event.1.b
+		add_stability = -0.05
+		add_political_power = 100
+	}
+}
+
+# Public Protests
+# Occurs 1 week after losing the war
+country_event = {
+	id = KUS_political_event.2
+	title = KUS_political_event.2.t
+	desc = KUS_political_event.2.desc
+	picture = GFX_report_event_generic_riot
+
+	trigger = {
+		original_tag = KUS
+		has_country_flag = KUS_lost_the_war
+		NOT = { has_country_flag = KUS_public_protests_fired }
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	immediate = {
+		set_country_flag = KUS_public_protests_fired
+	}
+
+	# Option 1: Send the army
+	option = {
+		name = KUS_political_event.2.a
+		add_stability = -0.10
+		add_war_support = 0.05
+		hidden_effect = {
+			country_event = { id = KUS_political_event.3 days = 7 }
+		}
+	}
+
+	# Option 2: Let them be
+	option = {
+		name = KUS_political_event.2.b
+		add_stability = 0.05
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = KUS_political_event.3 days = 7 }
+		}
+	}
+}
+
+# The President is Dead
+# Occurs 2 weeks after losing the war
+country_event = {
+	id = KUS_political_event.3
+	title = KUS_political_event.3.t
+	desc = KUS_political_event.3.desc
+	picture = GFX_report_event_generic_funeral
+
+	is_triggered_only = yes
+
+	# Option 1: Investigate
+	option = {
+		name = KUS_political_event.3.a
+		add_stability = -0.10
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = KUS_political_event.4 days = 14 }
+		}
+	}
+
+	# Option 2: Our government carries on
+	option = {
+		name = KUS_political_event.3.b
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = KUS_political_event.4 days = 14 }
+		}
+	}
+}
+
+# Technocrat Propaganda
+# Occurs 4 weeks after losing the war
+country_event = {
+	id = KUS_political_event.4
+	title = KUS_political_event.4.t
+	desc = KUS_political_event.4.desc
+	picture = GFX_report_event_generic_propaganda
+
+	is_triggered_only = yes
+
+	# Option 1: Silence them
+	option = {
+		name = KUS_political_event.4.a
+		add_stability = 0.05
+		add_political_power = -100
+		hidden_effect = {
+			country_event = { id = KUS_political_event.5 days = 7 }
+		}
+	}
+
+	# Option 2: Let's support their movement
+	option = {
+		name = KUS_political_event.4.b
+		add_stability = -0.10
+		add_political_power = 50
+		hidden_effect = {
+			country_event = { id = KUS_political_event.5 days = 7 }
+		}
+	}
+}
+
+# Capitalism Bombing [UNFINISHED]
+# Occurs 5 weeks after losing the war
+country_event = {
+	id = KUS_political_event.5
+	title = KUS_political_event.5.t
+	desc = KUS_political_event.5.desc
+	picture = GFX_report_event_generic_destroyed_city
+
+	is_triggered_only = yes
+
+	# Option 1
+	option = {
+		name = KUS_political_event.5.a
+		add_stability = -0.10
+		hidden_effect = {
+			country_event = { id = KUS_political_event.6 days = 7 }
+		}
+	}
+}
+
+# Technocrat Coup
+# Occurs 6 weeks after losing the war
+country_event = {
+	id = KUS_political_event.6
+	title = KUS_political_event.6.t
+	desc = KUS_political_event.6.desc
+	picture = GFX_report_event_generic_military_parade
+
+	is_triggered_only = yes
+
+	# Option 1: All fall into one world order
+	option = {
+		name = KUS_political_event.6.a
+		add_research_slot = 1
+		add_stability = -0.15
+		every_owned_state = {
+			limit = {
+				NOT = { state = 218 }
+			}
+			add_building_construction = {
+				type = bunker
+				level = 1
+				province = { all_provinces = yes limit_to_border = yes }
+				instant_build = yes
+			}
+		}
+	}
+}
+
+# Flusiobalkan Union Invitation
+# Sent to democratic Flusiobalkan countries when An Union of Our Own is completed
+country_event = {
+	id = KUS_political_event.10
+	title = KUS_political_event.10.t
+	desc = KUS_political_event.10.desc
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	# Option 1: Accept the invitation
+	option = {
+		name = KUS_political_event.10.a
+		ai_chance = {
+			factor = 80
+		}
+		KUS = {
+			add_to_faction = PREV
+		}
+	}
+
+	# Option 2: Decline
+	option = {
+		name = KUS_political_event.10.b
+		ai_chance = {
+			factor = 20
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_declined_union }
+	}
+}
+
+# A True Union - Integration Proposal
+# Sent to faction members when A True Union is completed
+country_event = {
+	id = KUS_political_event.20
+	title = KUS_political_event.20.t
+	desc = KUS_political_event.20.desc
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	# Option 1: Accept integration
+	option = {
+		name = KUS_political_event.20.a
+		ai_chance = {
+			factor = 70
+		}
+		KUS = {
+			set_autonomy = {
+				target = PREV
+				autonomous_state = autonomy_integrated_puppet
+			}
+		}
+	}
+
+	# Option 2: Refuse
+	option = {
+		name = KUS_political_event.20.b
+		ai_chance = {
+			factor = 30
+		}
+	}
+}
