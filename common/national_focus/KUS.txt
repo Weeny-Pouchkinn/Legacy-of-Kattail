@@ -639,6 +639,7 @@ focus_tree = {
 				set_variable = { KUS_KAF_max_planning = 0 }
 				set_variable = { KUS_KAF_supply_consumption = 0 }
 				set_variable = { KUS_KAF_breakthrough = 0 }
+				set_variable = { KUS_KAF_army_armor_attack_factor = 0 }
 				set_variable = { KUS_KAF_org_loss_moving = 0 }
 				set_variable = { KUS_KAF_air_superiority = 0 }
 				set_variable = { KUS_KAF_artillery_attack = 0 }
@@ -668,7 +669,7 @@ focus_tree = {
 		cost = 5
 		relative_position_id = KUS_maavoim
 		prerequisite = { focus = KUS_maavoim }
-		mutually_exclusive = { focus = KUS_doctrinal_adaptation focus = KUS_concentration_of_force }
+		mutually_exclusive = { focus = KUS_concentration_of_force }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_flexible_support_tt
@@ -683,11 +684,10 @@ focus_tree = {
 		id = KUS_doctrinal_adaptation
 		icon = GFX_goal_generic_army_doctrines
 		x = 0
-		y = 1
+		y = 2
 		cost = 5
 		relative_position_id = KUS_maavoim
 		prerequisite = { focus = KUS_maavoim }
-		mutually_exclusive = { focus = KUS_flexible_support focus = KUS_concentration_of_force }
 
 		completion_reward = {
 			add_tech_bonus = {
@@ -707,7 +707,7 @@ focus_tree = {
 		cost = 5
 		relative_position_id = KUS_maavoim
 		prerequisite = { focus = KUS_maavoim }
-		mutually_exclusive = { focus = KUS_flexible_support focus = KUS_doctrinal_adaptation }
+		mutually_exclusive = { focus = KUS_flexible_support }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_concentration_of_force_tt
@@ -723,7 +723,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		relative_position_id = KUS_flexible_support
-		prerequisite = { focus = KUS_flexible_support focus = KUS_doctrinal_adaptation }
+		prerequisite = { focus = KUS_flexible_support }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_maximum_firepower_tt
@@ -740,7 +740,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		relative_position_id = KUS_flexible_support
-		prerequisite = { focus = KUS_flexible_support focus = KUS_doctrinal_adaptation }
+		prerequisite = { focus = KUS_flexible_support }
 
 		completion_reward = {
 			add_tech_bonus = {
@@ -760,7 +760,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		relative_position_id = KUS_flexible_support
-		prerequisite = { focus = KUS_flexible_support focus = KUS_doctrinal_adaptation }
+		prerequisite = { focus = KUS_flexible_support }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_mobile_coordinators_tt
@@ -781,7 +781,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		relative_position_id = KUS_concentration_of_force
-		prerequisite = { focus = KUS_doctrinal_adaptation focus = KUS_concentration_of_force }
+		prerequisite = { focus = KUS_concentration_of_force }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_integrated_communications_tt
@@ -799,7 +799,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		relative_position_id = KUS_concentration_of_force
-		prerequisite = { focus = KUS_doctrinal_adaptation focus = KUS_concentration_of_force }
+		prerequisite = { focus = KUS_concentration_of_force }
 
 		completion_reward = {
 			add_tech_bonus = {
@@ -819,7 +819,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		relative_position_id = KUS_concentration_of_force
-		prerequisite = { focus = KUS_doctrinal_adaptation focus = KUS_concentration_of_force }
+		prerequisite = { focus = KUS_concentration_of_force }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_speed_cult_tt
@@ -1074,6 +1074,7 @@ focus_tree = {
 		relative_position_id = KUS_industrial_saturation
 		prerequisite = { focus = KUS_industrial_saturation }
 		prerequisite = { focus = KUS_perfect_training_methodology }
+		prerequisite = { focus = KUS_officer_initiative }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_strike_like_supernova_tt
@@ -1094,7 +1095,8 @@ focus_tree = {
 		y = 5
 		cost = 5
 		relative_position_id = KUS_maavoim
-		prerequisite = { focus = KUS_officer_initiative focus = KUS_full_mechanization }
+		prerequisite = { focus = KUS_machiavellian_high_command focus = KUS_centralized_command }
+		prerequisite = { focus = KUS_doctrinal_adaptation }
 
 		completion_reward = {
 			add_ideas = KUS_eog
@@ -1110,6 +1112,7 @@ focus_tree = {
 		relative_position_id = KUS_logistical_considerations
 		prerequisite = { focus = KUS_perfect_training_methodology_cof }
 		prerequisite = { focus = KUS_logistical_considerations }
+		prerequisite = { focus = KUS_full_mechanization }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_at_speed_of_light_tt
@@ -1132,7 +1135,6 @@ focus_tree = {
 		cost = 5
 		relative_position_id = KUS_erioperatsioonide_grupp
 		prerequisite = { focus = KUS_strike_like_supernova focus = KUS_at_speed_of_light }
-		prerequisite = { focus = KUS_erioperatsioonide_grupp }
 
 		completion_reward = {
 			add_timed_idea = {
