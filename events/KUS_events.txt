@@ -1,0 +1,37 @@
+###########################
+# KUS Events
+# Kusnurk Confederation
+###########################
+
+add_namespace = KUS_event
+
+# Project Boom - Self-Propelled Artillery Dilemma
+# Triggered by the Project Boom focus
+country_event = {
+	id = KUS_event.1
+	title = KUS_event.1.t
+	desc = KUS_event.1.desc
+	picture = GFX_report_event_generic_tank
+
+	is_triggered_only = yes
+
+	# Option 1: Big Gun Good - Focus on firepower
+	option = {
+		name = KUS_event.1.a
+		custom_effect_tooltip = KUS_project_boom_gun_tt
+		hidden_effect = {
+			add_to_variable = { KUS_KAF_army_armor_attack_factor = 0.10 }
+			set_country_flag = KUS_project_boom_gun
+		}
+	}
+
+	# Option 2: Thick Armor Good - Focus on survivability
+	option = {
+		name = KUS_event.1.b
+		custom_effect_tooltip = KUS_project_boom_armor_tt
+		hidden_effect = {
+			add_to_variable = { KUS_KAF_breakthrough = 0.05 }
+			set_country_flag = KUS_project_boom_armor
+		}
+	}
+}
