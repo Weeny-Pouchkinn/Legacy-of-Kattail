@@ -1,0 +1,35 @@
+###########################
+# KUS Events
+###########################
+
+add_namespace = KUS_event
+
+# Project Boom - SP Artillery dilemma
+country_event = {
+	id = KUS_event.1
+	title = KUS_event.1.t
+	desc = KUS_event.1.desc
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	# Option 1: Big Gun Good
+	option = {
+		name = KUS_event.1.a
+		custom_effect_tooltip = KUS_project_boom_gun_tt
+		hidden_effect = {
+			add_to_variable = { KUS_maavõim_division_attack = 0.10 }
+			set_country_flag = KUS_project_boom_gun
+		}
+	}
+
+	# Option 2: Thick Armor Good
+	option = {
+		name = KUS_event.1.b
+		custom_effect_tooltip = KUS_project_boom_armor_tt
+		hidden_effect = {
+			add_to_variable = { KUS_maavõim_breakthrough = 0.05 }
+			set_country_flag = KUS_project_boom_armor
+		}
+	}
+}
