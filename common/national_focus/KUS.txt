@@ -1143,4 +1143,433 @@ focus_tree = {
 			}
 		}
 	}
+
+	# ==========================================
+	# AIR FORCE TREE (Õhuvagi)
+	# ==========================================
+
+	# ---- Row 0: Root ----
+
+	focus = {
+		id = KUS_ohuvagi
+		icon = GFX_goal_generic_air_doctrine
+		x = -24
+		y = 0
+		cost = 5
+
+		completion_reward = {
+			air_experience = 25
+			custom_effect_tooltip = KUS_ohuvagi_tt
+			hidden_effect = {
+				set_variable = { KUS_OHU_xp_gain = 0.05 }
+				set_variable = { KUS_OHU_ace_gen = 0 }
+				set_variable = { KUS_OHU_night_pen = 0 }
+				set_variable = { KUS_OHU_weather_pen = 0 }
+				set_variable = { KUS_OHU_doctrine_cost = 0 }
+				set_variable = { KUS_OHU_range = 0 }
+				set_variable = { KUS_OHU_strat_vis = 0 }
+				set_variable = { KUS_OHU_agility = 0 }
+				set_variable = { KUS_OHU_speed = 0 }
+				set_variable = { KUS_OHU_wing_xp = 0 }
+				add_dynamic_modifier = { modifier = KUS_OHUVAGI }
+			}
+			add_tech_bonus = {
+				name = air_doctrine_bonus
+				bonus = 0.75
+				uses = 1
+				category = air_doctrine
+			}
+		}
+	}
+
+	# ---- Row 1: Two branches from root ----
+
+	focus = {
+		id = KUS_expand_tarva_air_academy
+		icon = GFX_goal_generic_air_fighter
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_ohuvagi }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_expand_tarva_air_academy_tt
+			hidden_effect = {
+				add_to_variable = { KUS_OHU_ace_gen = 0.05 }
+				add_to_variable = { KUS_OHU_night_pen = -0.10 }
+				add_to_variable = { KUS_OHU_weather_pen = -0.15 }
+				add_to_variable = { KUS_OHU_doctrine_cost = -0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_baltair_investments
+		icon = GFX_goal_generic_production
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_ohuvagi }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_baltair_investments_tt
+			717 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = arms_factory level = 2 instant_build = yes }
+			}
+		}
+	}
+
+	# ---- Row 2: Three branches from Expand Tarva ----
+
+	focus = {
+		id = KUS_naval_air_development
+		icon = GFX_goal_generic_air_naval_bomber
+		x = -4
+		y = 2
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_expand_tarva_air_academy }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = naval_bomber_bonus
+				bonus = 1.0
+				uses = 2
+				category = naval_bomber
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_aerial_tech_development
+		icon = GFX_goal_generic_air_doctrine
+		x = -1
+		y = 2
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_expand_tarva_air_academy }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_aerial_tech_development_tt
+			add_tech_bonus = {
+				name = air_equipment_bonus
+				bonus = 1.0
+				uses = 2
+				category = air_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_supermanoevers
+		icon = GFX_goal_generic_air_fighter
+		x = 3
+		y = 2
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_expand_tarva_air_academy }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_supermanoevers_tt
+			add_ideas = KUS_supermanoevers_spirit
+		}
+	}
+
+	# ---- Row 3: Naval air Coordination + ME pair ----
+
+	focus = {
+		id = KUS_naval_air_coordination
+		icon = GFX_goal_generic_air_naval_bomber
+		x = -4
+		y = 3
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_development }
+		prerequisite = { focus = KUS_aerial_tech_development }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_naval_air_coordination_tt
+			add_ideas = KUS_naval_air_coordinators
+			air_experience = 40
+			navy_experience = 40
+		}
+	}
+
+	focus = {
+		id = KUS_standardization
+		icon = GFX_goal_generic_production
+		x = 2
+		y = 3
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_supermanoevers }
+		mutually_exclusive = { focus = KUS_specialization }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_standardization_tt
+		}
+	}
+
+	focus = {
+		id = KUS_specialization
+		icon = GFX_goal_generic_production2
+		x = 4
+		y = 3
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_supermanoevers }
+		mutually_exclusive = { focus = KUS_standardization }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_specialization_tt
+		}
+	}
+
+	# ---- Row 4: Convergence of Naval Air Coord + ME pair ----
+
+	focus = {
+		id = KUS_advanced_bombers
+		icon = GFX_goal_generic_air_bomber
+		x = -3
+		y = 4
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_coordination }
+		prerequisite = { focus = KUS_standardization focus = KUS_specialization }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_advanced_bombers_tt
+			hidden_effect = {
+				add_to_variable = { KUS_OHU_range = 0.10 }
+				add_to_variable = { KUS_OHU_strat_vis = -0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_maximize_performance
+		icon = GFX_goal_generic_air_fighter
+		x = 0
+		y = 4
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_coordination }
+		prerequisite = { focus = KUS_standardization focus = KUS_specialization }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_maximize_performance_tt
+			hidden_effect = {
+				add_to_variable = { KUS_OHU_agility = 0.05 }
+				add_to_variable = { KUS_OHU_speed = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_multirole_aircraft_design
+		icon = GFX_goal_generic_air_doctrine
+		x = 3
+		y = 4
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_coordination }
+		prerequisite = { focus = KUS_standardization focus = KUS_specialization }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_multirole_aircraft_design_tt
+			hidden_effect = {
+				add_to_variable = { KUS_OHU_wing_xp = 0.25 }
+			}
+		}
+	}
+
+	# ---- Row 5: Ghosts of Flusion ----
+
+	focus = {
+		id = KUS_ghosts_of_flusion
+		icon = GFX_goal_generic_air_fighter
+		x = 0
+		y = 5
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_advanced_bombers }
+		prerequisite = { focus = KUS_maximize_performance }
+		prerequisite = { focus = KUS_multirole_aircraft_design }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_ghosts_of_flusion_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_OHUVAGI }
+				add_ideas = KUS_flying_foxes
+			}
+		}
+	}
+
+	# ---- Row 6: Finalize Airforce Reform ----
+
+	focus = {
+		id = KUS_finalize_airforce_reform
+		icon = GFX_goal_generic_air_doctrine
+		x = 0
+		y = 6
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_ghosts_of_flusion }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = KUS_airforce_reform_mastery
+				days = 365
+			}
+		}
+	}
+
+	# ---- Row 7: Taskforce Y (Nuclear branch root) ----
+
+	focus = {
+		id = KUS_taskforce_y
+		icon = GFX_goal_KTZ_atomic_power
+		x = 0
+		y = 7
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_finalize_airforce_reform }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_taskforce_y_tt
+			hidden_effect = {
+				set_variable = { KUS_TUUM_nuke_prod = 0.05 }
+				set_variable = { KUS_TUUM_radiation = 0 }
+				add_dynamic_modifier = { modifier = KUS_TUUMAVAGI }
+			}
+		}
+	}
+
+	# ---- Row 8: Three nuclear branches ----
+
+	focus = {
+		id = KUS_naval_nuclear_platforms
+		icon = GFX_goal_generic_navy_submarine
+		x = -3
+		y = 8
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_taskforce_y }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = nuclear_sub_bonus
+				bonus = 0.50
+				ahead_reduction = 1
+				uses = 1
+				category = ss_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_weapon_3234
+		icon = GFX_goal_KTZ_atomic_power
+		x = 0
+		y = 8
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_taskforce_y }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = nuclear_research_bonus
+				bonus = 0.50
+				ahead_reduction = 2
+				uses = 1
+				category = nuclear
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_mandate_nuclear_safehouses
+		icon = GFX_goal_generic_radar
+		x = 3
+		y = 8
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_taskforce_y }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_mandate_nuclear_safehouses_tt
+			hidden_effect = {
+				add_to_variable = { KUS_TUUM_radiation = -0.10 }
+			}
+		}
+	}
+
+	# ---- Row 9: Two convergence focuses ----
+
+	focus = {
+		id = KUS_kohla_silo_system
+		icon = GFX_goal_generic_production
+		x = -2
+		y = 9
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_nuclear_platforms }
+		prerequisite = { focus = KUS_weapon_3234 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_kohla_silo_system_tt
+			717 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = rocket_site level = 3 instant_build = yes }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_icbm_defense_array
+		icon = GFX_goal_generic_radar
+		x = 2
+		y = 9
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_weapon_3234 }
+		prerequisite = { focus = KUS_mandate_nuclear_safehouses }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_icbm_defense_array_tt
+			218 = {
+				add_building_construction = { type = anti_air_building level = 4 instant_build = yes }
+			}
+			every_owned_state = {
+				limit = {
+					is_core_of = ROOT
+					NOT = { state = 218 }
+				}
+				add_building_construction = { type = anti_air_building level = 2 instant_build = yes }
+			}
+		}
+	}
+
+	# ---- Row 10: Capstone ----
+
+	focus = {
+		id = KUS_operation_darkest_hour
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 10
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_kohla_silo_system }
+		prerequisite = { focus = KUS_icbm_defense_array }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_operation_darkest_hour_tt
+			hidden_effect = {
+				add_to_variable = { KUS_TUUM_nuke_prod = 0.05 }
+			}
+		}
+	}
 }
