@@ -175,12 +175,16 @@ country_event = {
 		name = KUS_political_event.6.a
 		add_research_slot = 1
 		add_stability = -0.15
-		set_country_flag = KUS_technocrat_coup
 		every_owned_state = {
 			limit = {
 				NOT = { state = 218 }
 			}
-			set_demilitarized_zone = yes
+			add_building_construction = {
+				type = bunker
+				level = 1
+				province = { all_provinces = yes limit_to_border = yes }
+				instant_build = yes
+			}
 		}
 	}
 }
@@ -246,78 +250,5 @@ country_event = {
 		ai_chance = {
 			factor = 30
 		}
-	}
-}
-
-# ==========================================
-# Technocrat Tree Event Chain
-# Triggered by The Final Touches focus (3 years later)
-# ==========================================
-
-# The Awakening
-country_event = {
-	id = KUS_political_event.30
-	title = KUS_political_event.30.t
-	desc = KUS_political_event.30.desc
-	picture = GFX_report_event_generic_research_lab
-
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_political_event.30.a
-		country_event = { id = KUS_political_event.31 days = 180 }
-	}
-}
-
-# The Next Step
-country_event = {
-	id = KUS_political_event.31
-	title = KUS_political_event.31.t
-	desc = KUS_political_event.31.desc
-	picture = GFX_report_event_generic_research_lab
-
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_political_event.31.a
-		country_event = { id = KUS_political_event.32 days = 365 }
-	}
-}
-
-# The Ascension
-country_event = {
-	id = KUS_political_event.32
-	title = KUS_political_event.32.t
-	desc = KUS_political_event.32.desc
-	picture = GFX_report_event_generic_research_lab
-
-	is_triggered_only = yes
-
-	# Start the safeguards and evolve it
-	option = {
-		name = KUS_political_event.32.a
-		country_event = { id = KUS_political_event.33 days = 365 }
-	}
-
-	# Permanently deactivate it
-	option = {
-		name = KUS_political_event.32.b
-		add_stability = 0.05
-	}
-}
-
-# Containment Breach
-country_event = {
-	id = KUS_political_event.33
-	title = KUS_political_event.33.t
-	desc = KUS_political_event.33.desc
-	picture = GFX_report_event_generic_research_lab
-
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_political_event.33.a
-		add_stability = -0.10
-		add_war_support = 0.15
 	}
 }
