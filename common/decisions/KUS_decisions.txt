@@ -3,7 +3,7 @@
 # ==========================================
 # Factory Construction Decisions (Focus on Industrial Infrastructure)
 # ==========================================
-KUS_industrial_construction = {
+economy_decisions = {
 	KUS_industrial_construction_1 = {
 		icon = GFX_decision_generic_factory
 
@@ -24,7 +24,7 @@ KUS_industrial_construction = {
 			civilian_factory_use = 3
 		}
 
-		days_remove = 60
+		days_remove = 45
 
 		remove_effect = {
 			random_owned_controlled_state = {
@@ -63,7 +63,7 @@ KUS_industrial_construction = {
 			civilian_factory_use = 3
 		}
 
-		days_remove = 60
+		days_remove = 45
 
 		remove_effect = {
 			random_owned_controlled_state = {
@@ -102,7 +102,7 @@ KUS_industrial_construction = {
 			civilian_factory_use = 3
 		}
 
-		days_remove = 60
+		days_remove = 45
 
 		remove_effect = {
 			random_owned_controlled_state = {
@@ -141,7 +141,7 @@ KUS_industrial_construction = {
 			civilian_factory_use = 3
 		}
 
-		days_remove = 60
+		days_remove = 45
 
 		remove_effect = {
 			random_owned_controlled_state = {
@@ -163,7 +163,7 @@ KUS_industrial_construction = {
 # ==========================================
 # Sustainable Construction Decisions (Sustainable Development)
 # ==========================================
-KUS_sustainable_construction = {
+economy_decisions = {
 	KUS_sustainable_construction_1 = {
 		icon = GFX_decision_generic_factory
 
@@ -253,13 +253,13 @@ KUS_sustainable_construction = {
 		}
 
 		available = {
-			num_of_civilian_factories_available_for_projects > 2
+			num_of_civilian_factories_available_for_projects > 3
 		}
 
 		cost = 0
 
 		modifier = {
-			civilian_factory_use = 3
+			civilian_factory_use = 4
 		}
 
 		days_remove = 60
@@ -292,13 +292,13 @@ KUS_sustainable_construction = {
 		}
 
 		available = {
-			num_of_civilian_factories_available_for_projects > 2
+			num_of_civilian_factories_available_for_projects > 3
 		}
 
 		cost = 0
 
 		modifier = {
-			civilian_factory_use = 3
+			civilian_factory_use = 4
 		}
 
 		days_remove = 60
@@ -370,13 +370,13 @@ KUS_sustainable_construction = {
 		}
 
 		available = {
-			num_of_civilian_factories_available_for_projects > 2
+			num_of_civilian_factories_available_for_projects > 4
 		}
 
 		cost = 0
 
 		modifier = {
-			civilian_factory_use = 3
+			civilian_factory_use = 5
 		}
 
 		days_remove = 60
@@ -409,13 +409,13 @@ KUS_sustainable_construction = {
 		}
 
 		available = {
-			num_of_civilian_factories_available_for_projects > 2
+			num_of_civilian_factories_available_for_projects > 4
 		}
 
 		cost = 0
 
 		modifier = {
-			civilian_factory_use = 3
+			civilian_factory_use = 5
 		}
 
 		days_remove = 60
@@ -423,7 +423,12 @@ KUS_sustainable_construction = {
 		remove_effect = {
 			random_owned_controlled_state = {
 				limit = { is_core_of = KUS }
-				add_extra_state_shared_building_slots = 1
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
 				add_building_construction = {
 					type = industrial_complex
 					level = 1
@@ -440,7 +445,7 @@ KUS_sustainable_construction = {
 # ==========================================
 # Väo Extraction Decisions
 # ==========================================
-KUS_vao_extraction_decisions = {
+prospect_for_resources = {
 	KUS_deep_hematite_mining = {
 		icon = GFX_decision_generic_construction
 
@@ -611,7 +616,7 @@ KUS_vao_extraction_decisions = {
 		remove_effect = {
 			225 = { # Krrama
 				add_resource = {
-					type = chromium
+					type = tungsten
 					amount = 10
 				}
 			}
@@ -647,7 +652,7 @@ KUS_vao_extraction_decisions = {
 		remove_effect = {
 			225 = { # Krrama
 				add_resource = {
-					type = chromium
+					type = tungsten
 					amount = 8
 				}
 			}
@@ -661,7 +666,7 @@ KUS_vao_extraction_decisions = {
 # ==========================================
 # Divikatel Decisions
 # ==========================================
-KUS_divikatel_decisions = {
+prospect_for_resources = {
 	KUS_rare_earth_refineries = {
 		icon = GFX_decision_generic_construction
 
@@ -882,7 +887,7 @@ KUS_divikatel_decisions = {
 # ==========================================
 # Monazite Decisions
 # ==========================================
-KUS_monazite_decisions = {
+prospect_for_resources = {
 	KUS_industrial_sand_sifting = {
 		icon = GFX_decision_generic_construction
 
@@ -985,7 +990,7 @@ KUS_monazite_decisions = {
 					amount = 5
 				}
 				add_resource = {
-					type = tungsten
+					type = chromium
 					amount = 10
 				}
 			}
@@ -1025,7 +1030,7 @@ KUS_monazite_decisions = {
 					amount = 4
 				}
 				add_resource = {
-					type = tungsten
+					type = chromium
 					amount = 6
 				}
 			}

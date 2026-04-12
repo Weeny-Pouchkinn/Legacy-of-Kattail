@@ -103,7 +103,7 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			unlock_decision_category_tooltip = KUS_industrial_construction
+			custom_effect_tooltip = KUS_focus_on_industrial_infrastructure_tt
 			218 = { # Jarvalin
 				add_building_construction = {
 					type = infrastructure
@@ -154,7 +154,7 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			unlock_decision_category_tooltip = KUS_sustainable_construction
+			custom_effect_tooltip = KUS_sustainable_development_tt
 		}
 	}
 
@@ -457,13 +457,18 @@ focus_tree = {
 
 		completion_reward = {
 			if = {
-				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				limit = {
+					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
+				}
 				custom_effect_tooltip = KUS_bureau_cornerstone_tt
+				custom_effect_tooltip = KUS_bureau_rapid_tt
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
 				add_ideas = KUS_bureau_of_state_industry
 			}
 			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
-				custom_effect_tooltip = KUS_bureau_rapid_tt
 				218 = { # Jarvalin
 					add_extra_state_shared_building_slots = 3
 					add_building_construction = {
@@ -505,13 +510,18 @@ focus_tree = {
 
 		completion_reward = {
 			if = {
-				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				limit = {
+					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
+				}
 				custom_effect_tooltip = KUS_bureau_resource_cornerstone_tt
+				custom_effect_tooltip = KUS_bureau_resource_rapid_tt
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
 				add_ideas = KUS_bureau_of_resource_extraction
 			}
 			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
-				custom_effect_tooltip = KUS_bureau_resource_rapid_tt
 				add_tech_bonus = {
 					name = KUS_construction_bonus
 					bonus = 0.75
@@ -567,8 +577,14 @@ focus_tree = {
 
 		completion_reward = {
 			if = {
-				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				limit = {
+					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
+				}
 				custom_effect_tooltip = KUS_domestic_arms_cornerstone_tt
+				custom_effect_tooltip = KUS_domestic_arms_rapid_tt
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
 				if = {
 					limit = { has_idea = KUS_bureau_of_state_industry }
 					swap_ideas = {
@@ -579,7 +595,6 @@ focus_tree = {
 			}
 			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
-				custom_effect_tooltip = KUS_domestic_arms_rapid_tt
 				218 = { # Jarvalin
 					add_extra_state_shared_building_slots = 3
 					add_building_construction = {
@@ -656,7 +671,6 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			unlock_decision_category_tooltip = KUS_vao_extraction_decisions
 			custom_effect_tooltip = KUS_expand_vao_tt
 		}
 	}
@@ -673,7 +687,6 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			unlock_decision_category_tooltip = KUS_divikatel_decisions
 			custom_effect_tooltip = KUS_bail_out_divikatel_tt
 		}
 	}
@@ -694,8 +707,14 @@ focus_tree = {
 
 		completion_reward = {
 			if = {
-				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				limit = {
+					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
+				}
 				custom_effect_tooltip = KUS_mediators_cornerstone_tt
+				custom_effect_tooltip = KUS_mediators_rapid_tt
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
 				if = {
 					limit = { has_idea = KUS_bureau_of_state_industry_2 }
 					swap_ideas = {
@@ -706,7 +725,6 @@ focus_tree = {
 			}
 			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
-				custom_effect_tooltip = KUS_mediators_rapid_tt
 				add_ideas = KUS_fine_tuned_industry
 			}
 		}
@@ -724,27 +742,7 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_dlc = "Arms Against Tyranny" }
-				custom_effect_tooltip = KUS_support_private_aat_tt
-				# Infantry equipment MIO: Gain +1 size, Funds gain +25%
-				# Artillery equipment MIO: Gain +1 size, Funds gain +25%
-				# Motorized equipment MIO: Gain +1 size, Funds gain +25%
-				every_military_industrial_organization = {
-					limit = {
-						OR = {
-							is_mio_trait_category = infantry_equipment_manufacturer
-							is_mio_trait_category = artillery_manufacturer
-							is_mio_trait_category = motorized_equipment_manufacturer
-						}
-					}
-					add_mio_size = 1
-					add_mio_funds_gain_factor = 0.25
-				}
-			}
-			else = {
-				add_ideas = KUS_private_enterprise
-			}
+			add_ideas = KUS_private_enterprise
 		}
 	}
 
@@ -760,7 +758,7 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			unlock_decision_category_tooltip = KUS_monazite_decisions
+			custom_effect_tooltip = KUS_monazite_exploitation_tt
 		}
 	}
 
@@ -805,8 +803,14 @@ focus_tree = {
 
 		completion_reward = {
 			if = {
-				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				limit = {
+					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
+				}
 				custom_effect_tooltip = KUS_mic_cornerstone_tt
+				custom_effect_tooltip = KUS_mic_rapid_tt
+			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
 				if = {
 					limit = { has_idea = KUS_bureau_of_state_industry_3 }
 					swap_ideas = {
@@ -817,7 +821,6 @@ focus_tree = {
 			}
 			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
-				custom_effect_tooltip = KUS_mic_rapid_tt
 				if = {
 					limit = { has_idea = KUS_fine_tuned_industry }
 					swap_ideas = {
