@@ -1670,13 +1670,33 @@ focus_tree = {
 	}
 
 	focus = {
-		id = KUS_centralized_command
-		icon = GFX_goal_generic_army_doctrines
+		id = KUS_integrated_communications
+		icon = GFX_goal_generic_radar
 		x = -2
 		y = 1
 		cost = 5
-		relative_position_id = KUS_armored_research_right
-		prerequisite = { focus = KUS_armored_research_right }
+		relative_position_id = KUS_concentration_of_force
+		prerequisite = { focus = KUS_concentration_of_force }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_integrated_communications_tt
+			hidden_effect = {
+			add_to_variable = { KUS_maavoim_reinforce_rate = 0.01 }
+			add_to_variable = { KUS_maavoim_air_superiority = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_centralized_command
+		icon = GFX_goal_generic_army_doctrines
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_integrated_communications
+		prerequisite = { focus = KUS_integrated_communications }
 
 		ai_will_do = { factor = 1 }
 
@@ -2050,9 +2070,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_fleet_colossus_tt
 			hidden_effect = {
-			remove_dynamic_modifier = { modifier = KUS_merevagi }
+			add_to_variable = { KUS_merevagi_capital_ship_attack = 0.05 }
 			}
-			add_ideas = KUS_fleet_colossus
 			KUS_Karl_Erijk = {
 			add_unit_leader_trait = blue_water_expert
 			}
@@ -2077,9 +2096,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_fleet_nymph_tt
 			hidden_effect = {
-				remove_dynamic_modifier = { modifier = KUS_merevagi }
+				add_to_variable = { KUS_merevagi_sub_production_cost = -0.15 }
 			}
-			add_ideas = KUS_fleet_nymph
 			KUS_Karl_Erijk = {
 				add_unit_leader_trait = green_water_expert
 			}
@@ -2104,9 +2122,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_fleet_harpie_tt
 			hidden_effect = {
-			remove_dynamic_modifier = { modifier = KUS_merevagi }
+			add_to_variable = { KUS_merevagi_sub_production_cost = -0.15 }
 			}
-			add_ideas = KUS_fleet_harpie
 			KUS_Karl_Erijk = {
 			add_unit_leader_trait = torpedo_bomber
 			}
@@ -2132,9 +2149,10 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_ghosts_of_flusion_tt
 			hidden_effect = {
-			remove_dynamic_modifier = { modifier = KUS_ohuvagi }
+			add_to_variable = { KUS_ohuvagi_air_superiority_efficiency = 0.05 }
+			add_to_variable = { KUS_ohuvagi_interception_efficiency = 0.05 }
+			add_to_variable = { KUS_ohuvagi_air_sup_combat = 0.10 }
 			}
-			add_ideas = KUS_flying_foxes
 		}
 	}
 
@@ -2156,9 +2174,7 @@ focus_tree = {
 			add_to_variable = { KUS_maavoim_division_attack = 0.05 }
 			add_to_variable = { KUS_maavoim_org_loss_moving = -0.25 }
 			add_to_variable = { KUS_maavoim_breakthrough = 0.10 }
-			remove_dynamic_modifier = { modifier = KUS_maavoim }
 			}
-			add_ideas = KUS_supernoova
 		}
 	}
 
@@ -2196,15 +2212,6 @@ focus_tree = {
 			hidden_effect = {
 			add_to_variable = { KUS_maavoim_division_speed = 0.10 }
 			add_to_variable = { KUS_maavoim_breakthrough = 0.05 }
-			remove_dynamic_modifier = { modifier = KUS_maavoim }
-			}
-			if = {
-			limit = { has_country_flag = KUS_project_boom_gun }
-			add_ideas = KUS_valguskiirusel_gun
-			}
-			if = {
-			limit = { has_country_flag = KUS_project_boom_armor }
-			add_ideas = KUS_valguskiirusel_armor
 			}
 		}
 	}
