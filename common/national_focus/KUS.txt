@@ -1,0 +1,864 @@
+focus_tree = {
+	id = KUS_TREE
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = KUS
+		}
+	}
+
+	continuous_focus_position = { x = 50 y = 1200 }
+
+	#############################
+	# INDUSTRY FOCUS TREE
+	#############################
+
+	# ==========================================
+	# ROW 0 - Mutually Exclusive starting focuses
+	# ==========================================
+	focus = {
+		id = KUS_get_off_the_ground
+		icon = GFX_goal_generic_construct_mil_factory
+		x = 4
+		y = 0
+		cost = 5
+		mutually_exclusive = { focus = KUS_lay_a_foundation }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_get_off_the_ground_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_factory_output = 0.05 }
+				add_to_variable = { KUS_economy_efficiency_retention = -0.10 }
+			}
+			add_tech_bonus = {
+				name = KUS_industry_bonus
+				bonus = 1.0
+				uses = 1
+				category = industry
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_lay_a_foundation
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 4
+		y = 0
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		mutually_exclusive = { focus = KUS_get_off_the_ground }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_lay_a_foundation_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_consumer_goods = -0.05 }
+			}
+			add_tech_bonus = {
+				name = KUS_industry_bonus
+				bonus = 1.0
+				uses = 1
+				category = industry
+			}
+		}
+	}
+
+	# ==========================================
+	# ROW 1 - Second tier
+	# ==========================================
+	focus = {
+		id = KUS_populate_ministry_of_economy
+		icon = GFX_goal_generic_intelligence_exchange
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		prerequisite = { focus = KUS_get_off_the_ground }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_populate_ministry_of_economy_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_consumer_goods = -0.10 }
+				add_to_variable = { KUS_economy_factory_output = 0.05 }
+				add_to_variable = { KUS_economy_dockyard_output = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_focus_on_industrial_infrastructure
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		prerequisite = { focus = KUS_get_off_the_ground }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			unlock_decision_category_tooltip = KUS_industrial_construction
+			218 = { # Jarvalin
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			225 = { # Krrama
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_seek_expert_economists
+		icon = GFX_goal_generic_scientific_exchange
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_lay_a_foundation
+		prerequisite = { focus = KUS_lay_a_foundation }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_seek_expert_economists_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_consumer_goods = -0.05 }
+				add_to_variable = { KUS_economy_factory_output = 0.05 }
+				add_to_variable = { KUS_economy_dockyard_output = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_sustainable_development
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_lay_a_foundation
+		prerequisite = { focus = KUS_lay_a_foundation }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			unlock_decision_category_tooltip = KUS_sustainable_construction
+		}
+	}
+
+	# ==========================================
+	# ROW 2 - Third tier
+	# ==========================================
+	focus = {
+		id = KUS_military_contracts
+		icon = GFX_goal_generic_army_doctrines
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = KUS_get_off_the_ground
+		prerequisite = { focus = KUS_populate_ministry_of_economy }
+		prerequisite = { focus = KUS_focus_on_industrial_infrastructure }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			716 = { # Tarva
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+			715 = { # Evla
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_careful_investments
+		icon = GFX_goal_generic_consumer_goods
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_lay_a_foundation
+		prerequisite = { focus = KUS_seek_expert_economists }
+		prerequisite = { focus = KUS_sustainable_development }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_careful_investments_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_efficiency_retention = 0.25 }
+				add_to_variable = { KUS_economy_efficiency_gain = 0.15 }
+				add_to_variable = { KUS_economy_consumer_goods = -0.05 }
+				remove_dynamic_modifier = { modifier = KUS_ruined_economy }
+				add_dynamic_modifier = { modifier = KUS_recovering_economy }
+			}
+		}
+	}
+
+	# ==========================================
+	# ROW 3 - Fourth tier
+	# ==========================================
+	focus = {
+		id = KUS_retool_military_industry
+		icon = GFX_goal_generic_construct_mil_factory
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_military_contracts
+		prerequisite = { focus = KUS_military_contracts }
+		prerequisite = { focus = KUS_careful_investments }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_retool_military_industry_tt
+			hidden_effect = {
+				add_to_variable = { KUS_economy_efficiency_retention = 0.25 }
+				add_to_variable = { KUS_economy_efficiency_gain = 0.10 }
+				add_to_variable = { KUS_economy_factory_output = 0.05 }
+				add_to_variable = { KUS_economy_dockyard_output = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_found_elrong
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_careful_investments
+		prerequisite = { focus = KUS_careful_investments }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			716 = { # Tarva
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			229 = { # Navar (Northern Akiba)
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			231 = { # Kikol
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			213 = { # Solakatzen Isle
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			# Upgrade railway from Navar to Northern Akiba by 1 level
+			build_railway = {
+				level = 3
+				path = { 16020 3133 }
+			}
+			# Upgrade Tarva seaport to level 5
+			716 = {
+				set_building_level = {
+					type = naval_base
+					level = 5
+					province = 9182
+					instant_build = yes
+				}
+			}
+			# Upgrade Evla seaport to level 5
+			715 = {
+				set_building_level = {
+					type = naval_base
+					level = 5
+					province = 8457
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = KUS_support_equipment_bonus
+				bonus = 0.15
+				uses = 1
+				category = support_tech
+			}
+		}
+	}
+
+	# ==========================================
+	# ROW 4 - Fifth tier
+	# ==========================================
+	focus = {
+		id = KUS_rapid_recovery
+		icon = GFX_goal_generic_production
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_retool_military_industry
+		prerequisite = { focus = KUS_military_contracts }
+		prerequisite = { focus = KUS_retool_military_industry }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_dynamic_modifier = { modifier = KUS_recovering_economy } }
+				remove_dynamic_modifier = { modifier = KUS_recovering_economy }
+			}
+			if = {
+				limit = { has_dynamic_modifier = { modifier = KUS_ruined_economy } }
+				remove_dynamic_modifier = { modifier = KUS_ruined_economy }
+			}
+			add_timed_idea = {
+				idea = KUS_economic_rebound
+				days = 180
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_industrial_cornerstone
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_retool_military_industry
+		prerequisite = { focus = KUS_retool_military_industry }
+		prerequisite = { focus = KUS_found_elrong }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_dynamic_modifier = { modifier = KUS_recovering_economy } }
+				remove_dynamic_modifier = { modifier = KUS_recovering_economy }
+			}
+			if = {
+				limit = { has_dynamic_modifier = { modifier = KUS_ruined_economy } }
+				remove_dynamic_modifier = { modifier = KUS_ruined_economy }
+			}
+			add_timed_idea = {
+				idea = KUS_economic_rebound
+				days = 365
+			}
+			add_ideas = KUS_solid_foundation
+		}
+	}
+
+	# ==========================================
+	# ROW 5 - Sixth tier (OR prerequisites)
+	# ==========================================
+	focus = {
+		id = KUS_reconnect_navar
+		icon = GFX_goal_generic_construct_infrastructure
+		x = -5
+		y = 1
+		cost = 5
+		relative_position_id = KUS_rapid_recovery
+		prerequisite = { focus = KUS_industrial_cornerstone focus = KUS_rapid_recovery }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			213 = { # Solakatzen Isle
+				add_extra_state_shared_building_slots = 5
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 3
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			# Upgrade railways on Southern Solakatzen Bridge (SE) by 2 levels, add 3 infrastructure
+			1403 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 3
+					instant_build = yes
+				}
+			}
+			build_railway = {
+				level = 2
+				path = { 11035 }
+			}
+			# Upgrade railway in Southern Solakatzen Bridge (SW) by 2 levels, add 3 infrastructure
+			1402 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 3
+					instant_build = yes
+				}
+			}
+			build_railway = {
+				level = 2
+				path = { 12259 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_bureau_of_state_industry
+		icon = GFX_goal_generic_intelligence_exchange
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_rapid_recovery
+		prerequisite = { focus = KUS_industrial_cornerstone focus = KUS_rapid_recovery }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				custom_effect_tooltip = KUS_bureau_cornerstone_tt
+				add_ideas = KUS_bureau_of_state_industry
+			}
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				custom_effect_tooltip = KUS_bureau_rapid_tt
+				218 = { # Jarvalin
+					add_extra_state_shared_building_slots = 3
+					add_building_construction = {
+						type = arms_factory
+						level = 3
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_found_nuclear_energy_org
+		icon = GFX_focus_wonderweapons
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_industrial_cornerstone
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = KUS_bureau_of_resource_extraction
+		icon = GFX_goal_generic_oil_refinery
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_industrial_cornerstone
+		prerequisite = { focus = KUS_industrial_cornerstone focus = KUS_rapid_recovery }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				custom_effect_tooltip = KUS_bureau_resource_cornerstone_tt
+				add_ideas = KUS_bureau_of_resource_extraction
+			}
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				custom_effect_tooltip = KUS_bureau_resource_rapid_tt
+				add_tech_bonus = {
+					name = KUS_construction_bonus
+					bonus = 0.75
+					uses = 3
+					category = construction_tech
+				}
+			}
+		}
+	}
+
+	# ==========================================
+	# ROW 6 - Seventh tier
+	# ==========================================
+	focus = {
+		id = KUS_permanent_integration
+		icon = GFX_goal_generic_territory_or_war
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_reconnect_navar
+		prerequisite = { focus = KUS_reconnect_navar }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			213 = { # Solakatzen Isle
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_resource = {
+				type = steel
+				amount = 8
+				state = 213
+			}
+			add_state_core = 213
+		}
+	}
+
+	focus = {
+		id = KUS_domestic_arms_industry
+		icon = GFX_goal_generic_construct_mil_factory
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_of_state_industry
+		prerequisite = { focus = KUS_bureau_of_state_industry }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				custom_effect_tooltip = KUS_domestic_arms_cornerstone_tt
+				if = {
+					limit = { has_idea = KUS_bureau_of_state_industry }
+					swap_ideas = {
+						remove_idea = KUS_bureau_of_state_industry
+						add_idea = KUS_bureau_of_state_industry_2
+					}
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				custom_effect_tooltip = KUS_domestic_arms_rapid_tt
+				218 = { # Jarvalin
+					add_extra_state_shared_building_slots = 3
+					add_building_construction = {
+						type = arms_factory
+						level = 3
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_recover_kaiser_era_machinery
+		icon = GFX_goal_generic_production
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_of_state_industry
+		prerequisite = { focus = KUS_bureau_of_state_industry }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			715 = { # Evla
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			231 = { # Kikol
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_expand_future_energy_institute
+		icon = GFX_focus_wonderweapons
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_found_nuclear_energy_org
+		prerequisite = { focus = KUS_found_nuclear_energy_org }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = KUS_nuclear_bonus
+				ahead_reduction = 1
+				uses = 2
+				category = nuclear
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_expand_vao_extraction
+		icon = GFX_goal_generic_oil_refinery
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_of_resource_extraction
+		prerequisite = { focus = KUS_bureau_of_resource_extraction }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			unlock_decision_category_tooltip = KUS_vao_extraction_decisions
+			custom_effect_tooltip = KUS_expand_vao_tt
+		}
+	}
+
+	focus = {
+		id = KUS_bail_out_divikatel
+		icon = GFX_goal_generic_consumer_goods
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bureau_of_resource_extraction
+		prerequisite = { focus = KUS_bureau_of_resource_extraction }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			unlock_decision_category_tooltip = KUS_divikatel_decisions
+			custom_effect_tooltip = KUS_bail_out_divikatel_tt
+		}
+	}
+
+	# ==========================================
+	# ROW 7 - Eighth tier
+	# ==========================================
+	focus = {
+		id = KUS_military_industrial_mediators
+		icon = GFX_goal_generic_army_doctrines
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_domestic_arms_industry
+		prerequisite = { focus = KUS_domestic_arms_industry }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				custom_effect_tooltip = KUS_mediators_cornerstone_tt
+				if = {
+					limit = { has_idea = KUS_bureau_of_state_industry_2 }
+					swap_ideas = {
+						remove_idea = KUS_bureau_of_state_industry_2
+						add_idea = KUS_bureau_of_state_industry_3
+					}
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				custom_effect_tooltip = KUS_mediators_rapid_tt
+				add_ideas = KUS_fine_tuned_industry
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_support_private_enterprises
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_recover_kaiser_era_machinery
+		prerequisite = { focus = KUS_recover_kaiser_era_machinery }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_dlc = "Arms Against Tyranny" }
+				custom_effect_tooltip = KUS_support_private_aat_tt
+				# Infantry equipment MIO: Gain +1 size, Funds gain +25%
+				# Artillery equipment MIO: Gain +1 size, Funds gain +25%
+				# Motorized equipment MIO: Gain +1 size, Funds gain +25%
+				every_military_industrial_organization = {
+					limit = {
+						OR = {
+							is_mio_trait_category = infantry_equipment_manufacturer
+							is_mio_trait_category = artillery_manufacturer
+							is_mio_trait_category = motorized_equipment_manufacturer
+						}
+					}
+					add_mio_size = 1
+					add_mio_funds_gain_factor = 0.25
+				}
+			}
+			else = {
+				add_ideas = KUS_private_enterprise
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_monazite_exploitation
+		icon = GFX_goal_generic_oil_refinery
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_expand_vao_extraction
+		prerequisite = { focus = KUS_expand_vao_extraction }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			unlock_decision_category_tooltip = KUS_monazite_decisions
+		}
+	}
+
+	focus = {
+		id = KUS_synthetic_polymers
+		icon = GFX_goal_generic_oil_refinery
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bail_out_divikatel
+		prerequisite = { focus = KUS_bail_out_divikatel }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			716 = { # Tarva
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_ideas = KUS_synthetic_polymers
+		}
+	}
+
+	# ==========================================
+	# ROW 8 - Final tier
+	# ==========================================
+	focus = {
+		id = KUS_military_industrial_complex
+		icon = GFX_goal_generic_construct_mil_factory
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_military_industrial_mediators
+		prerequisite = { focus = KUS_military_industrial_mediators }
+		prerequisite = { focus = KUS_support_private_enterprises }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				custom_effect_tooltip = KUS_mic_cornerstone_tt
+				if = {
+					limit = { has_idea = KUS_bureau_of_state_industry_3 }
+					swap_ideas = {
+						remove_idea = KUS_bureau_of_state_industry_3
+						add_idea = KUS_military_industrial_complex
+					}
+				}
+			}
+			if = {
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				custom_effect_tooltip = KUS_mic_rapid_tt
+				if = {
+					limit = { has_idea = KUS_fine_tuned_industry }
+					swap_ideas = {
+						remove_idea = KUS_fine_tuned_industry
+						add_idea = KUS_military_industrial_complex_rapid
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_new_generation_reactors
+		icon = GFX_focus_wonderweapons
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_expand_future_energy_institute
+		prerequisite = { focus = KUS_expand_future_energy_institute }
+		prerequisite = { focus = KUS_monazite_exploitation }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			218 = { # Jarvalin
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = nuclear_reactor
+					level = 1
+					instant_build = yes
+				}
+			}
+			225 = { # Krrama
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = nuclear_reactor
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+}
