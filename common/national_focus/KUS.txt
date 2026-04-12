@@ -1289,6 +1289,7 @@ focus_tree = {
 		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_naval_air_development }
 		prerequisite = { focus = KUS_aerial_tech_development }
+		prerequisite = { focus = KUS_squadron_flagships }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_naval_air_coordination_tt
@@ -1569,6 +1570,559 @@ focus_tree = {
 			custom_effect_tooltip = KUS_operation_darkest_hour_tt
 			hidden_effect = {
 				add_to_variable = { KUS_TUUM_nuke_prod = 0.05 }
+			}
+		}
+	}
+
+	# ==========================================
+	# NAVY TREE (Merevagi)
+	# ==========================================
+
+	# ---- Row 0: Root ----
+
+	focus = {
+		id = KUS_merevagi
+		icon = GFX_goal_generic_navy_doctrines
+		x = -40
+		y = 0
+		cost = 5
+
+		completion_reward = {
+			navy_experience = 25
+			custom_effect_tooltip = KUS_merevagi_tt
+			hidden_effect = {
+				set_variable = { KUS_MERI_xp_gain = 0.05 }
+				set_variable = { KUS_MERI_capital_prod_cost = 0 }
+				set_variable = { KUS_MERI_spotting = 0 }
+				set_variable = { KUS_MERI_carrier_air_attack = 0 }
+				set_variable = { KUS_MERI_carrier_air_agility = 0 }
+				set_variable = { KUS_MERI_capital_attack = 0 }
+				set_variable = { KUS_MERI_cruiser_prod_cost = 0 }
+				set_variable = { KUS_MERI_convoy_raiding = 0 }
+				set_variable = { KUS_MERI_sub_crit = 0 }
+				set_variable = { KUS_MERI_capital_speed = 0 }
+				set_variable = { KUS_MERI_naval_hit = 0 }
+				set_variable = { KUS_MERI_sub_attack = 0 }
+				set_variable = { KUS_MERI_naval_detection = 0 }
+				set_variable = { KUS_MERI_sortie_eff = 0 }
+				set_variable = { KUS_MERI_fighter_sortie = 0 }
+				set_variable = { KUS_MERI_screening = 0 }
+				set_variable = { KUS_MERI_sub_prod_cost = 0 }
+				add_dynamic_modifier = { modifier = KUS_MEREVAGI }
+			}
+			add_tech_bonus = {
+				name = naval_doctrine_bonus
+				bonus = 0.75
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+	}
+
+	# ---- Row 2: Mutually Exclusive plans + Squadron Flagships ----
+
+	focus = {
+		id = KUS_plan_colossus
+		icon = GFX_goal_generic_navy_battleship
+		x = -6
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+		mutually_exclusive = { focus = KUS_plan_nymph focus = KUS_plan_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_colossus_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_prod_cost = -0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_plan_nymph
+		icon = GFX_goal_generic_navy_submarine
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+		mutually_exclusive = { focus = KUS_plan_colossus focus = KUS_plan_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_nymph_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_spotting = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_plan_harpie
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+		mutually_exclusive = { focus = KUS_plan_colossus focus = KUS_plan_nymph }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_harpie_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_carrier_air_attack = 0.10 }
+				add_to_variable = { KUS_MERI_carrier_air_agility = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_squadron_flagships
+		icon = GFX_goal_generic_navy_cruiser
+		x = 10
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_squadron_flagships_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_attack = 0.05 }
+				add_to_variable = { KUS_MERI_cruiser_prod_cost = -0.10 }
+			}
+		}
+	}
+
+	# ---- Row 3: Plan sub-focuses ----
+
+	focus = {
+		id = KUS_expand_naval_yards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -8
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_colossus }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_expand_naval_yards_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_prod_cost = -0.10 }
+			}
+			229 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = dockyard level = 3 instant_build = yes }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_modern_ship_design
+		icon = GFX_goal_generic_navy_doctrines
+		x = -4
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_colossus focus = KUS_plan_nymph }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_modern_ship_design_tt
+			add_tech_bonus = {
+				name = bb_tech_bonus
+				bonus = 1.0
+				uses = 1
+				category = bb_tech
+			}
+			add_tech_bonus = {
+				name = dd_tech_bonus
+				bonus = 1.0
+				ahead_reduction = 1
+				uses = 1
+				category = dd_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_predictive_ship_positioning
+		icon = GFX_goal_generic_radar
+		x = 0
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_nymph }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_predictive_ship_positioning_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_convoy_raiding = 0.10 }
+				add_to_variable = { KUS_MERI_sub_crit = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_post_kaiser_carrier
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_post_kaiser_carrier_tt
+			add_tech_bonus = {
+				name = cv_tech_bonus
+				bonus = 1.0
+				uses = 1
+				category = cv_tech
+			}
+			add_tech_bonus = {
+				name = naval_bomber_bonus
+				bonus = 1.0
+				uses = 1
+				category = naval_bomber
+			}
+		}
+	}
+
+	# ---- Row 4: Second tier ----
+
+	focus = {
+		id = KUS_pythagoras_class
+		icon = GFX_goal_generic_navy_battleship
+		x = -8
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_expand_naval_yards }
+
+		available = {
+			has_tech = ship_hull_super_heavy
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_pythagoras_class_tt
+			hidden_effect = {
+				create_equipment_variant = {
+					name = "Pythagoras"
+					type = ship_hull_super_heavy_1
+					parent_version = 0
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_train_admiralty
+		icon = GFX_goal_generic_navy_doctrines
+		x = -4
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_modern_ship_design }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_train_admiralty_tt
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_skill_level = 1
+				add_attack = 1
+				add_trait = { trait = battleship_adherent }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_skill_level = 1
+				add_attack = 1
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_high_tech_raiding
+		icon = GFX_goal_generic_navy_submarine
+		x = 0
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_predictive_ship_positioning }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_high_tech_raiding_tt
+			add_tech_bonus = {
+				name = ss_tech_bonus
+				bonus = 1.0
+				uses = 1
+				category = ss_tech
+			}
+			add_tech_bonus = {
+				name = ss_tech_ahead_bonus
+				bonus = 1.0
+				ahead_reduction = 2
+				uses = 1
+				category = ss_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_carrier_research_commission
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_post_kaiser_carrier }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_carrier_research_commission_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_carrier_air_agility = 0.05 }
+			}
+		}
+	}
+
+	# ---- Row 5: Third tier ----
+
+	focus = {
+		id = KUS_deep_sea_monsters
+		icon = GFX_goal_generic_navy_battleship
+		x = -6
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_pythagoras_class }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_deep_sea_monsters_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_speed = 0.10 }
+				add_to_variable = { KUS_MERI_naval_hit = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_warden_torpedo
+		icon = GFX_goal_generic_navy_submarine
+		x = -2
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_train_admiralty focus = KUS_high_tech_raiding }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_warden_torpedo_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_sub_crit = 0.05 }
+				add_to_variable = { KUS_MERI_sub_attack = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_unrestricted_submarine_warfare
+		icon = GFX_goal_generic_navy_submarine
+		x = 2
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_high_tech_raiding }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_unrestricted_submarine_warfare_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_naval_detection = 0.10 }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_skill_level = 1
+				add_attack = 1
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_skill_level = 1
+				add_attack = 1
+				add_trait = { trait = seawolf }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_establish_carrier_groups
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_carrier_research_commission }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_establish_carrier_groups_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_sortie_eff = 0.05 }
+				add_to_variable = { KUS_MERI_carrier_air_agility = 0.05 }
+				add_to_variable = { KUS_MERI_fighter_sortie = 0.05 }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_skill_level = 1
+				add_maneuvering = 1
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_skill_level = 1
+				add_maneuvering = 1
+				add_trait = { trait = air_controller }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_fleet_mobility
+		icon = GFX_goal_generic_navy_cruiser
+		x = 10
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_squadron_flagships }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_mobility_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_speed = 0.10 }
+			}
+		}
+	}
+
+	# ---- Row 6: Fleet Capstones ----
+
+	focus = {
+		id = KUS_fleet_colossus
+		icon = GFX_goal_generic_navy_battleship
+		x = -4
+		y = 6
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_deep_sea_monsters }
+		prerequisite = { focus = KUS_warden_torpedo }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_colossus_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_attack = 0.05 }
+				remove_dynamic_modifier = { modifier = KUS_MEREVAGI }
+				add_dynamic_modifier = { modifier = KUS_MEREVAGI_COLOSSUS }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_trait = { trait = blue_water_expert }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_trait = { trait = blue_water_expert }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_fleet_nymph
+		icon = GFX_goal_generic_navy_submarine
+		x = 0
+		y = 6
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_warden_torpedo }
+		prerequisite = { focus = KUS_unrestricted_submarine_warfare }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_nymph_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_sub_prod_cost = -0.15 }
+				remove_dynamic_modifier = { modifier = KUS_MEREVAGI }
+				add_dynamic_modifier = { modifier = KUS_MEREVAGI_NYMPH }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_trait = { trait = green_water_expert }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_trait = { trait = green_water_expert }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_fleet_harpie
+		icon = GFX_goal_generic_navy_carrier
+		x = 8
+		y = 6
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_establish_carrier_groups }
+		prerequisite = { focus = KUS_fleet_mobility }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_harpie_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_sub_prod_cost = -0.15 }
+				remove_dynamic_modifier = { modifier = KUS_MEREVAGI }
+				add_dynamic_modifier = { modifier = KUS_MEREVAGI_HARPIE }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_trait = { trait = torpedo_bomber }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_trait = { trait = fighter_director }
+			}
+		}
+	}
+
+	# ---- Row 8: Final Capstone ----
+
+	focus = {
+		id = KUS_finalize_navy_reform
+		icon = GFX_goal_generic_navy_doctrines
+		x = 0
+		y = 8
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_fleet_colossus focus = KUS_fleet_nymph focus = KUS_fleet_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_finalize_navy_reform_tt
+			add_timed_idea = {
+				idea = KUS_navy_reform_mastery
+				days = 365
 			}
 		}
 	}
