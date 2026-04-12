@@ -49,6 +49,11 @@ is_triggered_only = yes
 
 option = {
 name = KUS_event.10.a
+# To Stability!
+if = {
+limit = { has_idea = KUS_underground_extremism }
+remove_ideas = KUS_underground_extremism
+}
 add_stability = 0.05
 add_political_power = 25
 }
@@ -79,6 +84,14 @@ hidden_effect = {
 country_event = { id = KUS_event.21 days = 7 }
 }
 }
+
+option = {
+name = KUS_event.20.b
+add_stability = -0.10
+hidden_effect = {
+country_event = { id = KUS_event.21 days = 7 }
+}
+}
 }
 
 # The President is dead
@@ -93,6 +106,7 @@ is_triggered_only = yes
 option = {
 name = KUS_event.21.a
 add_stability = -0.15
+add_ideas = KUS_extremism_ascendant
 retire_country_leader = yes
 hidden_effect = {
 set_politics = {
@@ -120,10 +134,13 @@ is_triggered_only = yes
 
 option = {
 name = KUS_event.22.a
-add_ideas = KUS_technocrat_propaganda
+add_timed_idea = {
+idea = KUS_technocrat_propaganda
+days = 120
+}
 add_popularity = {
 ideology = fascism
-popularity = 0.15
+popularity = 0.10
 }
 hidden_effect = {
 country_event = { id = KUS_event.23 days = 7 }
@@ -194,6 +211,16 @@ ideology = fascism_ideology
 traits = { KUS_mad_scientist }
 }
 set_country_flag = KUS_technocratic_coup_complete
+# Demilitarize all states except Jarvalin
+hidden_effect = {
+213 = { set_demilitarized_zone = yes }
+225 = { set_demilitarized_zone = yes }
+229 = { set_demilitarized_zone = yes }
+231 = { set_demilitarized_zone = yes }
+715 = { set_demilitarized_zone = yes }
+716 = { set_demilitarized_zone = yes }
+717 = { set_demilitarized_zone = yes }
+}
 }
 }
 
@@ -231,15 +258,8 @@ is_triggered_only = yes
 
 option = {
 name = KUS_event.40.a
-retire_country_leader = yes
 hidden_effect = {
-create_country_leader = {
-name = "Provisional Government"
-picture = "GFX_portrait_KUS_Provisional_Government"
-expire = "1965.1.1"
-ideology = fascism_ideology
-}
-country_event = { id = KUS_event.41 days = 30 }
+country_event = { id = KUS_event.41 days = 150 }
 }
 }
 }
@@ -255,8 +275,15 @@ is_triggered_only = yes
 
 option = {
 name = KUS_event.41.a
+add_research_slot = 1
+add_tech_bonus = {
+name = KUS_basilisk_tech
+bonus = 2.0
+uses = 3
+category = electronics
+}
 hidden_effect = {
-country_event = { id = KUS_event.42 days = 30 }
+country_event = { id = KUS_event.42 days = 180 }
 }
 }
 }
@@ -270,25 +297,23 @@ picture = GFX_report_event_generic_factory
 
 is_triggered_only = yes
 
-# Accept the Basilisk
+# Fix safeguards (leads to containment breach)
 option = {
 name = KUS_event.42.a
-create_country_leader = {
-name = "Roko's Basilisk"
-picture = "GFX_portrait_KUS_Rokos_Basilisk"
-expire = "1965.1.1"
-ideology = fascism_ideology
-traits = { KUS_hypercognition }
+hidden_effect = {
+country_event = { id = KUS_event.43 days = 10 }
 }
-add_stability = 0.20
-add_war_support = 0.20
 }
 
-# Attempt containment
+# Permanently deactivate
 option = {
 name = KUS_event.42.b
-hidden_effect = {
-country_event = { id = KUS_event.43 days = 7 }
+create_country_leader = {
+name = "Konstantin Roko"
+picture = "GFX_portrait_KUS_Konstantin_Roko"
+expire = "1965.1.1"
+ideology = fascism_ideology
+traits = { KUS_mad_scientist }
 }
 }
 }
