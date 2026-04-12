@@ -901,18 +901,18 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			custom_effect_tooltip = KUS_merevagi_tt
 			hidden_effect = {
-			add_to_variable = { KUS_merevagi_navy_xp_gain = 0.05 }
+				add_to_variable = { KUS_merevagi_navy_xp_gain = 0.05 }
+				add_dynamic_modifier = { modifier = KUS_merevagi }
 			}
-			add_dynamic_modifier = { modifier = KUS_merevagi }
+			custom_effect_tooltip = KUS_merevagi_tt
+			navy_experience = 25
 			add_tech_bonus = {
-			name = KUS_navy_doctrine_bonus
-			bonus = 0.75
-			uses = 1
-			category = naval_doctrine
+				name = KUS_navy_doctrine_bonus
+				bonus = 0.75
+				uses = 1
+				category = naval_doctrine
 			}
-			add_naval_experience = 25
 		}
 	}
 
@@ -928,7 +928,7 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			add_air_experience = 25
+			air_experience = 25
 			add_dynamic_modifier = { modifier = KUS_ohuvagi }
 			custom_effect_tooltip = KUS_ohuvagi_add_tt
 			hidden_effect = {
@@ -944,7 +944,7 @@ focus_tree = {
 	}
 
 	focus = {
-		id = KUS_maavõim
+		id = KUS_maavoim
 		icon = GFX_goal_generic_army_doctrines
 		x = 11
 		y = 1
@@ -955,16 +955,15 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			add_dynamic_modifier = { modifier = KUS_maavõim }
-			custom_effect_tooltip = KUS_maavõim_add_tt
+			add_dynamic_modifier = { modifier = KUS_maavoim }
+			custom_effect_tooltip = KUS_maavoim_add_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_army_xp_gain = 0.05 }
-			}
+			add_to_variable = { KUS_maavoim_army_xp_gain = 0.05 } }
 			add_tech_bonus = {
 			name = KUS_land_doctrine_bonus
-			bonus = 0.75
-			uses = 1
-			category = land_doctrine
+				bonus = 0.75
+				uses = 1
+				category = land_doctrine
 			}
 		}
 	}
@@ -1087,17 +1086,17 @@ focus_tree = {
 		x = -4
 		y = 1
 		cost = 5
-		relative_position_id = KUS_maavõim
+		relative_position_id = KUS_maavoim
 		mutually_exclusive = { focus = KUS_concentration_of_force }
-		prerequisite = { focus = KUS_maavõim }
+		prerequisite = { focus = KUS_maavoim }
 
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_flexible_support_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_recovery_rate = 0.10 }
-			add_to_variable = { KUS_maavõim_intelligence = 0.10 }
+			add_to_variable = { KUS_maavoim_recovery_rate = 0.10 }
+			add_to_variable = { KUS_maavoim_intelligence = 0.10 }
 			}
 		}
 	}
@@ -1106,10 +1105,10 @@ focus_tree = {
 		id = KUS_doctrinal_adaptation
 		icon = GFX_goal_generic_army_doctrines
 		x = 0
-		y = 1
+		y = 2
 		cost = 5
-		relative_position_id = KUS_maavõim
-		prerequisite = { focus = KUS_maavõim }
+		relative_position_id = KUS_maavoim
+		prerequisite = { focus = KUS_maavoim }
 
 		ai_will_do = { factor = 1 }
 
@@ -1129,9 +1128,9 @@ focus_tree = {
 		x = 4
 		y = 1
 		cost = 5
-		relative_position_id = KUS_maavõim
+		relative_position_id = KUS_maavoim
 		mutually_exclusive = { focus = KUS_flexible_support }
-		prerequisite = { focus = KUS_maavõim }
+		prerequisite = { focus = KUS_maavoim }
 
 		ai_will_do = { factor = 1 }
 
@@ -1337,7 +1336,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_maximum_firepower_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_division_attack = 0.10 }
+			add_to_variable = { KUS_maavoim_division_attack = 0.10 }
 			}
 		}
 	}
@@ -1377,8 +1376,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_mobile_coordinators_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_reinforce_rate = 0.01 }
-			add_to_variable = { KUS_maavõim_org = 0.10 }
+			add_to_variable = { KUS_maavoim_reinforce_rate = 0.01 }
+			add_to_variable = { KUS_maavoim_org = 0.10 }
 			}
 		}
 	}
@@ -1418,7 +1417,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_speed_cult_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_division_speed = 0.10 }
+			add_to_variable = { KUS_maavoim_division_speed = 0.10 }
 			}
 		}
 	}
@@ -1465,7 +1464,7 @@ focus_tree = {
 
 	focus = {
 		id = KUS_train_admirality
-		icon = GFX_goal_generic_navy_doctrines
+		icon = GFX_focus_BRA_navy
 		x = 1
 		y = 1
 		cost = 5
@@ -1563,13 +1562,14 @@ focus_tree = {
 		cost = 5
 		relative_position_id = KUS_naval_air_development
 		prerequisite = { focus = KUS_naval_air_development }
+		prerequisite = { focus = KUS_squadron_flagships }
 
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			add_ideas = KUS_naval_air_coordinators
-			add_air_experience = 40
-			add_naval_experience = 40
+			air_experience = 40
+			navy_experience = 40
 		}
 	}
 
@@ -1621,7 +1621,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_rearline_guard_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_org = 0.10 }
+			add_to_variable = { KUS_maavoim_org = 0.10 }
 			}
 		}
 	}
@@ -1663,8 +1663,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_machiavellian_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_max_planning = 0.10 }
-			add_to_variable = { KUS_maavõim_planning_speed = 0.05 }
+			add_to_variable = { KUS_maavoim_max_planning = 0.10 }
+			add_to_variable = { KUS_maavoim_planning_speed = 0.05 }
 			}
 		}
 	}
@@ -1683,8 +1683,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_centralized_command_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_planning_speed = 0.10 }
-			add_to_variable = { KUS_maavõim_max_planning = 0.05 }
+			add_to_variable = { KUS_maavoim_planning_speed = 0.10 }
+			add_to_variable = { KUS_maavoim_max_planning = 0.05 }
 			}
 		}
 	}
@@ -1719,7 +1719,7 @@ focus_tree = {
 
 	focus = {
 		id = KUS_off_road_logistics
-		icon = GFX_goal_generic_army_motorized
+		icon = GFX_focus_generic_road_investment
 		x = 0
 		y = 1
 		cost = 5
@@ -1731,7 +1731,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_off_road_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_supply_usage = -0.08 }
+			add_to_variable = { KUS_maavoim_supply_usage = -0.08 }
 			}
 		}
 	}
@@ -1936,7 +1936,7 @@ focus_tree = {
 
 	focus = {
 		id = KUS_perfect_training_left
-		icon = GFX_goal_generic_army_doctrines
+		icon = GFX_SOV_intensify_pilot_training_program_ccp_2d_sov_compatibility
 		x = 0
 		y = 1
 		cost = 5
@@ -1983,7 +1983,8 @@ focus_tree = {
 		cost = 5
 		relative_position_id = KUS_centralized_command
 		prerequisite = { focus = KUS_centralized_command }
-
+		prerequisite = { focus = KUS_project_boom }
+		
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
@@ -2010,7 +2011,7 @@ focus_tree = {
 
 	focus = {
 		id = KUS_logistical_considerations
-		icon = GFX_goal_generic_army_motorized
+		icon = GFX_focus_generic_railroad
 		x = 2
 		y = 1
 		cost = 5
@@ -2076,14 +2077,14 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_fleet_nymph_tt
 			hidden_effect = {
-			remove_dynamic_modifier = { modifier = KUS_merevagi }
+				remove_dynamic_modifier = { modifier = KUS_merevagi }
 			}
 			add_ideas = KUS_fleet_nymph
 			KUS_Karl_Erijk = {
-			add_unit_leader_trait = green_water_expert
+				add_unit_leader_trait = green_water_expert
 			}
 			KUS_Markus_Mori = {
-			add_unit_leader_trait = green_water_expert
+				add_unit_leader_trait = green_water_expert
 			}
 		}
 	}
@@ -2152,10 +2153,10 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_strike_supernova_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_division_attack = 0.05 }
-			add_to_variable = { KUS_maavõim_org_loss_moving = -0.25 }
-			add_to_variable = { KUS_maavõim_breakthrough = 0.10 }
-			remove_dynamic_modifier = { modifier = KUS_maavõim }
+			add_to_variable = { KUS_maavoim_division_attack = 0.05 }
+			add_to_variable = { KUS_maavoim_org_loss_moving = -0.25 }
+			add_to_variable = { KUS_maavoim_breakthrough = 0.10 }
+			remove_dynamic_modifier = { modifier = KUS_maavoim }
 			}
 			add_ideas = KUS_supernoova
 		}
@@ -2165,12 +2166,11 @@ focus_tree = {
 		id = KUS_erioperatsioonide
 		icon = GFX_goal_generic_special_forces
 		x = 0
-		y = 4
+		y = 3
 		cost = 5
 		relative_position_id = KUS_doctrinal_adaptation
 		prerequisite = { focus = KUS_doctrinal_adaptation }
-		prerequisite = { focus = KUS_machiavellian_high_command }
-		prerequisite = { focus = KUS_centralized_command }
+		prerequisite = { focus = KUS_centralized_command focus = KUS_machiavellian_high_command }
 
 		ai_will_do = { factor = 1 }
 
@@ -2187,15 +2187,16 @@ focus_tree = {
 		cost = 5
 		relative_position_id = KUS_logistical_considerations
 		prerequisite = { focus = KUS_logistical_considerations }
-
+		prerequisite = { focus = KUS_full_mechanization }
+		
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_speed_of_light_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavõim_division_speed = 0.10 }
-			add_to_variable = { KUS_maavõim_breakthrough = 0.05 }
-			remove_dynamic_modifier = { modifier = KUS_maavõim }
+			add_to_variable = { KUS_maavoim_division_speed = 0.10 }
+			add_to_variable = { KUS_maavoim_breakthrough = 0.05 }
+			remove_dynamic_modifier = { modifier = KUS_maavoim }
 			}
 			if = {
 			limit = { has_country_flag = KUS_project_boom_gun }
@@ -2213,7 +2214,7 @@ focus_tree = {
 	# ==========================================
 	focus = {
 		id = KUS_finalize_navy
-		icon = GFX_goal_generic_navy_doctrines
+		icon = GFX_goal_KTZ_perfect_navy
 		x = 7
 		y = 1
 		cost = 5
@@ -2232,7 +2233,7 @@ focus_tree = {
 
 	focus = {
 		id = KUS_finalize_airforce
-		icon = GFX_goal_generic_air_doctrine
+		icon = GFX_goal_KTZ_blot_out_sun
 		x = 0
 		y = 1
 		cost = 5
@@ -2243,15 +2244,15 @@ focus_tree = {
 
 		completion_reward = {
 			add_timed_idea = {
-			idea = KUS_airforce_mastery_boost
-			days = 365
+				idea = KUS_airforce_mastery_boost
+				days = 365
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_finalize_army
-		icon = GFX_goal_generic_army_doctrines
+		icon = GFX_goal_KTZ_true_blitzkrieg
 		x = 4
 		y = 1
 		cost = 5
