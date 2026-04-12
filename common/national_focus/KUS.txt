@@ -2119,4 +2119,715 @@ focus_tree = {
 			}
 		}
 	}
+
+	# ==========================================
+	# POLITICAL TREE
+	# ==========================================
+
+	# ---- Row 0: Root ----
+
+	focus = {
+		id = KUS_a_loyal_friend
+		icon = GFX_goal_KTZ_katzen_authorities
+		x = 18
+		y = 0
+		cost = 3
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_a_loyal_friend_tt
+			hidden_effect = {
+				activate_advisor = KUS_Sasse_Rudas
+			}
+		}
+	}
+
+	# ---- Row 1: Cabinet / Ministry branches ----
+
+	focus = {
+		id = KUS_expand_cabinet
+		icon = GFX_goal_generic_intelligence_exchange
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_a_loyal_friend
+		prerequisite = { focus = KUS_a_loyal_friend }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_expand_cabinet_tt
+		}
+	}
+
+	focus = {
+		id = KUS_support_public_affairs
+		icon = GFX_goal_generic_propaganda
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_a_loyal_friend
+		prerequisite = { focus = KUS_a_loyal_friend }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_support_public_affairs_tt
+			add_political_power = 50
+			add_stability = 0.05
+		}
+	}
+
+	# ---- Row 2: Reinforce / Food Security ----
+
+	focus = {
+		id = KUS_reinforce_ministries
+		icon = GFX_focus_generic_court
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_expand_cabinet
+		prerequisite = { focus = KUS_expand_cabinet }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_reinforce_ministries_tt
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = KUS_food_security_act
+		icon = GFX_focus_generic_agricultural_subsidies
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_support_public_affairs
+		prerequisite = { focus = KUS_support_public_affairs }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_food_security_act_tt
+			225 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			231 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	# ---- Row 3: Combat Extremism (convergence) ----
+
+	focus = {
+		id = KUS_combat_extremism
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 0
+		y = 3
+		cost = 5
+		relative_position_id = KUS_a_loyal_friend
+		prerequisite = { focus = KUS_reinforce_ministries }
+		prerequisite = { focus = KUS_food_security_act }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_combat_extremism_tt
+			hidden_effect = {
+				remove_ideas = KUS_rampant_extremism
+				add_ideas = KUS_suppressed_extremism
+			}
+		}
+	}
+
+	# ---- Row 4: Support Independent Militiamen ----
+
+	focus = {
+		id = KUS_support_independent_militiamen
+		icon = GFX_goal_generic_allies_build_infantry
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_combat_extremism
+		prerequisite = { focus = KUS_combat_extremism }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_support_independent_militiamen_tt
+			218 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				division_template = {
+					name = "Kusnurk Militia"
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+					}
+				}
+				218 = {
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
+				}
+			}
+		}
+	}
+
+	# ---- Row 5: Three policy branches ----
+
+	focus = {
+		id = KUS_schools_hospitals_parks
+		icon = GFX_goal_KTZ_free_healthcare
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_support_independent_militiamen }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_schools_hospitals_parks_tt
+			add_stability = 0.05
+			add_tech_bonus = {
+				name = medical_bonus
+				bonus = 1.0
+				uses = 1
+				category = hospital_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_mobilize_for_war
+		icon = GFX_focus_generic_total_war
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_support_independent_militiamen }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_mobilize_for_war_tt
+			if = {
+				limit = {
+					NOT = { has_idea = partial_economic_mobilisation }
+					NOT = { has_idea = war_economy }
+					NOT = { has_idea = tot_economic_mobilisation }
+				}
+				add_ideas = partial_economic_mobilisation
+			}
+			if = {
+				limit = {
+					OR = {
+						has_idea = partial_economic_mobilisation
+						has_idea = war_economy
+						has_idea = tot_economic_mobilisation
+					}
+				}
+				add_political_power = 150
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_threat_on_border
+		icon = GFX_focus_generic_provoke_border_clashes
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_support_independent_militiamen }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_threat_on_border_tt
+			every_owned_state = {
+				add_building_construction = {
+					type = bunker
+					level = 1
+					province = { all_provinces = yes limit_to_border = yes }
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	# ---- Row 6: Bolster Presidential Power / Reform Military Academy ----
+
+	focus = {
+		id = KUS_bolster_presidential_power
+		icon = GFX_goal_generic_national_unity
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_schools_hospitals_parks }
+		prerequisite = { focus = KUS_mobilize_for_war }
+		prerequisite = { focus = KUS_threat_on_border }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_bolster_presidential_power_tt
+			add_political_power = 50
+			hidden_effect = {
+				country_event = { id = KUS_political_event.1 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_reform_military_academy
+		icon = GFX_focus_generic_military_academy
+		x = 4
+		y = 2
+		cost = 5
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_schools_hospitals_parks }
+		prerequisite = { focus = KUS_mobilize_for_war }
+		prerequisite = { focus = KUS_threat_on_border }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_reform_military_academy_tt
+			add_ideas = KUS_reformed_military_academy
+		}
+	}
+
+	# ---- Row 7: State Development / National Pride / Kibernyg ----
+
+	focus = {
+		id = KUS_state_development_funds
+		icon = GFX_goal_generic_construct_civ_factory
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bolster_presidential_power
+		prerequisite = { focus = KUS_bolster_presidential_power }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_state_development_funds_tt
+			231 = {
+				set_state_category = large_city
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_embrace_national_pride
+		icon = GFX_goal_generic_propaganda
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bolster_presidential_power
+		prerequisite = { focus = KUS_bolster_presidential_power }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_embrace_national_pride_tt
+			add_war_support = 0.15
+			add_ideas = KUS_valiance
+		}
+	}
+
+	focus = {
+		id = KUS_kibernyg
+		icon = GFX_focus_generic_secret_service_agency
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bolster_presidential_power
+		prerequisite = { focus = KUS_bolster_presidential_power }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_kibernyg_tt
+			add_ideas = KUS_kibernyg_spirit
+		}
+	}
+
+	# ---- Row 8: Mutually Exclusive - Greater Kusnurk / Roapokian Alliance ----
+
+	focus = {
+		id = KUS_proclaim_greater_kusnurk
+		icon = GFX_goal_generic_demand_territory
+		x = -2
+		y = 1
+		cost = 10
+		relative_position_id = KUS_embrace_national_pride
+		prerequisite = { focus = KUS_embrace_national_pride }
+		mutually_exclusive = { focus = KUS_roapokian_alliance }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_proclaim_greater_kusnurk_tt
+			hidden_effect = {
+				swap_ideas = {
+					remove_idea = KUS_valiance
+					add_idea = KUS_valiance_greater
+				}
+			}
+			add_war_support = 0.15
+		}
+	}
+
+	focus = {
+		id = KUS_roapokian_alliance
+		icon = GFX_goal_generic_alliance
+		x = 2
+		y = 1
+		cost = 10
+		relative_position_id = KUS_embrace_national_pride
+		prerequisite = { focus = KUS_embrace_national_pride }
+		mutually_exclusive = { focus = KUS_proclaim_greater_kusnurk }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_roapokian_alliance_tt
+			MCF = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			TEN = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			FSR = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			DOM = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			NEK = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			VIX = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			SLR = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			IZW = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			KHA = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			FST = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			hidden_effect = {
+				set_country_flag = KUS_kusnurk_offers_alliance
+			}
+		}
+	}
+
+	# ---- Row 9: Anti-Katzen Diplomacy ----
+
+	focus = {
+		id = KUS_anti_katzen_diplomacy
+		icon = GFX_focus_generic_diplomatic_treaty
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_embrace_national_pride
+		prerequisite = { focus = KUS_proclaim_greater_kusnurk focus = KUS_roapokian_alliance }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_anti_katzen_diplomacy_tt
+			hidden_effect = {
+				if = {
+					limit = { has_idea = KUS_valiance_greater }
+					swap_ideas = {
+						remove_idea = KUS_valiance_greater
+						add_idea = KUS_valiance_anti_katzen
+					}
+				}
+				if = {
+					limit = { has_idea = KUS_valiance }
+					swap_ideas = {
+						remove_idea = KUS_valiance
+						add_idea = KUS_valiance_anti_katzen
+					}
+				}
+			}
+		}
+	}
+
+	# ---- Row 10: Three Operations ----
+
+	focus = {
+		id = KUS_operation_unified_froststat
+		icon = GFX_goal_generic_territory_or_war
+		x = -3
+		y = 1
+		cost = 5
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_anti_katzen_diplomacy }
+
+		bypass = {
+			NOT = {
+				country_exists = FST
+			}
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_operation_unified_froststat_tt
+			create_wargoal = {
+				type = topple_government
+				target = FST
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_operation_steinager_dawe
+		icon = GFX_goal_generic_territory_or_war
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_anti_katzen_diplomacy }
+
+		bypass = {
+			NOT = {
+				country_exists = DOM
+			}
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_operation_steinager_dawe_tt
+			create_wargoal = {
+				type = topple_government
+				target = DOM
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_operation_nekusnurik_freedom
+		icon = GFX_goal_generic_territory_or_war
+		x = 3
+		y = 1
+		cost = 10
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_anti_katzen_diplomacy }
+
+		bypass = {
+			NOT = {
+				country_exists = NEK
+			}
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_operation_nekusnurik_freedom_tt
+			create_wargoal = {
+				type = topple_government
+				target = NEK
+			}
+		}
+	}
+
+	# ---- Row 11: An Union of Our Own ----
+
+	focus = {
+		id = KUS_an_union_of_our_own
+		icon = GFX_goal_generic_alliance
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_operation_unified_froststat }
+		prerequisite = { focus = KUS_operation_steinager_dawe }
+		prerequisite = { focus = KUS_operation_nekusnurik_freedom }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_an_union_of_our_own_tt
+			set_rule = { can_create_factions = yes }
+			create_faction = KUS_flusiobalkan_union
+			every_country = {
+				limit = {
+					OR = {
+						tag = MCF
+						tag = TEN
+						tag = FSR
+						tag = DOM
+						tag = NEK
+						tag = VIX
+						tag = SLR
+						tag = IZW
+						tag = KHA
+						tag = FST
+					}
+					is_subject = no
+					has_government = democratic
+					NOT = { has_war_with = KUS }
+				}
+				country_event = { id = KUS_political_event.10 days = 1 }
+			}
+		}
+	}
+
+	# ---- Row 12: Flusiobalkan Economic Regard / Joint Technology Board ----
+
+	focus = {
+		id = KUS_flusiobalkan_economic_regard
+		icon = GFX_goal_generic_positive_trade_relations
+		x = -2
+		y = 1
+		cost = 10
+		relative_position_id = KUS_an_union_of_our_own
+		prerequisite = { focus = KUS_an_union_of_our_own }
+
+		available = {
+			is_faction_leader = yes
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_flusiobalkan_economic_regard_tt
+			every_country = {
+				limit = {
+					is_in_faction_with = KUS
+					NOT = { tag = KUS }
+				}
+				add_offsite_building = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+			add_ideas = KUS_flusiobalkan_economic_region
+		}
+	}
+
+	focus = {
+		id = KUS_joint_technology_board
+		icon = GFX_goal_tfv_generic_tech_sharing
+		x = 3
+		y = 1
+		cost = 5
+		relative_position_id = KUS_an_union_of_our_own
+		prerequisite = { focus = KUS_an_union_of_our_own }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_joint_technology_board_tt
+			add_tech_bonus = {
+				name = joint_research
+				bonus = 0.5
+				uses = 2
+				category = electronics
+			}
+			add_tech_bonus = {
+				name = joint_research
+				bonus = 0.5
+				uses = 2
+				category = industry
+			}
+		}
+	}
+
+	# ---- Row 13: Pan-Flusiobalkan Bank / Flusiobalkan Defence Army ----
+
+	focus = {
+		id = KUS_pan_flusiobalkan_bank
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_flusiobalkan_economic_regard
+		prerequisite = { focus = KUS_flusiobalkan_economic_regard }
+
+		available = {
+			is_faction_leader = yes
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_pan_flusiobalkan_bank_tt
+			add_ideas = KUS_pan_flusiobalkan_bank_spirit
+		}
+	}
+
+	focus = {
+		id = KUS_flusiobalkan_defence_army
+		icon = GFX_goal_generic_allies_build_infantry
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = KUS_flusiobalkan_economic_regard
+		prerequisite = { focus = KUS_flusiobalkan_economic_regard }
+
+		available = {
+			is_faction_leader = yes
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_flusiobalkan_defence_army_tt
+			every_country = {
+				limit = {
+					is_in_faction_with = KUS
+				}
+				add_ideas = KUS_fdu
+			}
+		}
+	}
+
+	# ---- Row 14: A United Flusiobalkan ----
+
+	focus = {
+		id = KUS_a_united_flusiobalkan
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_flusiobalkan_economic_regard
+		prerequisite = { focus = KUS_pan_flusiobalkan_bank }
+		prerequisite = { focus = KUS_flusiobalkan_defence_army }
+
+		available = {
+			is_faction_leader = yes
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_a_united_flusiobalkan_tt
+			hidden_effect = {
+				remove_ideas = KUS_flusiobalkan_economic_region
+				every_country = {
+					limit = {
+						is_in_faction_with = KUS
+					}
+					remove_ideas = KUS_fdu
+				}
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = KUS
+				}
+				add_ideas = KUS_catbalkan_union
+			}
+		}
+	}
+
+	# ---- Row 15: A True Union ----
+
+	focus = {
+		id = KUS_a_true_union
+		icon = GFX_focus_generic_annex_country
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_a_united_flusiobalkan
+		prerequisite = { focus = KUS_a_united_flusiobalkan }
+
+		available = {
+			is_faction_leader = yes
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_a_true_union_tt
+			every_country = {
+				limit = {
+					is_in_faction_with = KUS
+					NOT = { tag = KUS }
+					is_subject = no
+				}
+				country_event = { id = KUS_political_event.20 days = 1 }
+			}
+		}
+	}
 }
