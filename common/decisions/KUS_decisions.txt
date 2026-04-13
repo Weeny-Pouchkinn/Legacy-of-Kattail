@@ -1623,12 +1623,18 @@ KUS_pressure_influence_cat = {
 			custom_trigger_tooltip = {
 				tooltip = KUS_pressure_2x_industry_tt
 				# KUS faction needs 2x the target's factories (4x if target is in a faction)
-				if = {
-					limit = { FROM = { is_in_faction = yes } }
-					check_variable = { KUS_faction_total_factories > FROM.KUS_pressure_4x_threshold }
-				}
-				else = {
-					check_variable = { KUS_faction_total_factories > FROM.KUS_pressure_2x_threshold }
+				# Calculate target's total factories * multiplier as temp var
+				hidden_trigger = {
+					set_temp_variable = { KUS_temp_target_fac = FROM.num_of_civilian_factories }
+					add_to_temp_variable = { KUS_temp_target_fac = FROM.num_of_military_factories }
+					if = {
+						limit = { FROM = { is_in_faction = yes } }
+						multiply_temp_variable = { KUS_temp_target_fac = 4 }
+					}
+					else = {
+						multiply_temp_variable = { KUS_temp_target_fac = 2 }
+					}
+					check_variable = { KUS_faction_total_factories > KUS_temp_target_fac }
 				}
 			}
 		}
