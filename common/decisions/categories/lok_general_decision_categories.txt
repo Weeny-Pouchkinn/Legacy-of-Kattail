@@ -166,22 +166,29 @@ TAK_automata_cat = {
 }
 
 #Kusnurk
-KUS_vao_extraction_decisions = {
+KUS_construction_cat = {
 	icon = GFX_decision_category_generic_industry
 	allowed = { tag = KUS }
 	visible = {
-		has_completed_focus = KUS_expand_vao_extraction
+		OR = {
+			has_completed_focus = KUS_focus_industrial_infrastructure
+			has_completed_focus = KUS_sustainable_development
+		}
 	}
 	priority = 900
 	visible_when_empty = no
 }
 
-KUS_flusiobalkans_union_cat = {
-	icon = GFX_decision_category_generic_diplomacy
+KUS_resource_extraction_cat = {
+	icon = GFX_decision_category_generic_industry
 	allowed = { tag = KUS }
 	visible = {
-		has_completed_focus = KUS_union_of_our_own
+		OR = {
+			has_completed_focus = KUS_expand_vao_extraction
+			has_completed_focus = KUS_halt_ond_divikatel
+			has_completed_focus = KUS_monazite_exploitation
+		}
 	}
-	priority = 800
-	visible_when_empty = yes
+	priority = 900
+	visible_when_empty = no
 }

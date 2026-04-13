@@ -1,40 +1,41 @@
-﻿focus_tree = {
+focus_tree = {
 	id = KUS_TREE
 	country = {
 		factor = 0
 		modifier = {
-			add = 10
+			add = 100
 			tag = KUS
 		}
 	}
-
-	continuous_focus_position = { x = 50 y = 1200 }
-
-	#############################
-	# INDUSTRY FOCUS TREE
-	#############################
+	continuous_focus_position = { x = 1000 y = 3000 }
 
 	# ==========================================
-	# ROW 0 - Mutually Exclusive starting focuses
+	# INDUSTRY TREE
 	# ==========================================
+
+	# ---- Row 0: Mutually Exclusive starting pair ----
+
 	focus = {
 		id = KUS_get_off_the_ground
-		icon = GFX_focus_generic_military_industry
+		icon = GFX_goal_KTZ_establish_production_lines
 		x = 4
 		y = 0
 		cost = 5
 		mutually_exclusive = { focus = KUS_lay_a_foundation }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			custom_effect_tooltip = KUS_get_off_the_ground_tt
 			hidden_effect = {
-				add_to_variable = { KUS_economy_factory_output = 0.05 }
-				add_to_variable = { KUS_economy_efficiency_retention = -0.10 }
+				remove_ideas = KUS_ruined_economy
+				set_variable = { KUS_economy_factory_output = -0.15 }
+				set_variable = { KUS_economy_prod_eff_cap = -0.05 }
+				set_variable = { KUS_economy_prod_eff_gain = -0.10 }
+				set_variable = { KUS_economy_consumer_goods = 0.15 }
+				set_variable = { KUS_economy_construction_speed = -0.20 }
+				add_dynamic_modifier = { modifier = KUS_economy_ruined }
 			}
 			add_tech_bonus = {
-				name = KUS_industry_bonus
+				name = industrial_bonus
 				bonus = 1.0
 				uses = 1
 				category = industry
@@ -44,22 +45,26 @@
 
 	focus = {
 		id = KUS_lay_a_foundation
-		icon = GFX_SOV_reorganize_the_pc_of_heavy_industry_ccp_2d_sov_compatibility
-		x = 4
+		icon = GFX_goal_KTZ_new_superhighway
+		x = 6
 		y = 0
 		cost = 5
 		relative_position_id = KUS_get_off_the_ground
 		mutually_exclusive = { focus = KUS_get_off_the_ground }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			custom_effect_tooltip = KUS_lay_a_foundation_tt
 			hidden_effect = {
-				add_to_variable = { KUS_economy_consumer_goods = -0.05 }
+				remove_ideas = KUS_ruined_economy
+				set_variable = { KUS_economy_factory_output = -0.20 }
+				set_variable = { KUS_economy_prod_eff_cap = -0.10 }
+				set_variable = { KUS_economy_prod_eff_gain = -0.10 }
+				set_variable = { KUS_economy_consumer_goods = 0.12 }
+				set_variable = { KUS_economy_construction_speed = -0.20 }
+				add_dynamic_modifier = { modifier = KUS_economy_ruined }
 			}
 			add_tech_bonus = {
-				name = KUS_industry_bonus
+				name = industrial_bonus
 				bonus = 1.0
 				uses = 1
 				category = industry
@@ -67,286 +72,184 @@
 		}
 	}
 
-	# ==========================================
-	# ROW 1 - Second tier
-	# ==========================================
+	# ---- Row 1: Four branch focuses ----
+
 	focus = {
-		id = KUS_populate_ministry_of_economy
-		icon = GFX_goal_generic_intelligence_exchange
-		x = -1
+		id = KUS_populate_ministry
+		icon = GFX_goal_KTZ_katzen_authorities
+		x = -2
 		y = 1
 		cost = 5
 		relative_position_id = KUS_get_off_the_ground
 		prerequisite = { focus = KUS_get_off_the_ground }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			custom_effect_tooltip = KUS_populate_ministry_of_economy_tt
+			custom_effect_tooltip = KUS_populate_ministry_tt
 			hidden_effect = {
-				add_to_variable = { KUS_economy_consumer_goods = -0.10 }
 				add_to_variable = { KUS_economy_factory_output = 0.05 }
-				add_to_variable = { KUS_economy_dockyard_output = 0.10 }
+				add_to_variable = { KUS_economy_construction_speed = 0.05 }
 			}
 		}
 	}
 
 	focus = {
-		id = KUS_focus_on_industrial_infrastructure
-		icon = GFX_goal_generic_construct_infrastructure
-		x = 1
+		id = KUS_focus_industrial_infrastructure
+		icon = GFX_goal_KTZ_fix_up_infrastructure
+		x = 2
 		y = 1
 		cost = 5
 		relative_position_id = KUS_get_off_the_ground
 		prerequisite = { focus = KUS_get_off_the_ground }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			custom_effect_tooltip = KUS_focus_on_industrial_infrastructure_tt
-			218 = { # Jarvalin
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			225 = { # Krrama
-				add_building_construction = {
-					type = infrastructure
-					level = 2
-					instant_build = yes
-				}
+			custom_effect_tooltip = KUS_focus_industrial_infrastructure_tt
+			225 = {
+				add_building_construction = { type = infrastructure level = 2 instant_build = yes }
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_seek_expert_economists
-		icon = GFX_goal_generic_scientific_exchange
-		x = -1
+		icon = GFX_goal_KTZ_foreign_delegations
+		x = -2
 		y = 1
 		cost = 5
 		relative_position_id = KUS_lay_a_foundation
 		prerequisite = { focus = KUS_lay_a_foundation }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			custom_effect_tooltip = KUS_seek_expert_economists_tt
 			hidden_effect = {
-				add_to_variable = { KUS_economy_consumer_goods = -0.05 }
 				add_to_variable = { KUS_economy_factory_output = 0.05 }
-				add_to_variable = { KUS_economy_dockyard_output = 0.05 }
+				add_to_variable = { KUS_economy_construction_speed = 0.05 }
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_sustainable_development
-		icon = GFX_goal_generic_positive_trade_relations
-		x = 1
+		icon = GFX_focus_ARG_develop_the_electricity_sector
+		x = 2
 		y = 1
 		cost = 5
 		relative_position_id = KUS_lay_a_foundation
 		prerequisite = { focus = KUS_lay_a_foundation }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_sustainable_development_tt
 		}
 	}
 
-	# ==========================================
-	# ROW 2 - Third tier
-	# ==========================================
+	# ---- Row 2: Convergence focuses ----
+
 	focus = {
 		id = KUS_military_contracts
-		icon = GFX_goal_generic_army_doctrines
+		icon = GFX_goal_KTZ_kiloforges
 		x = 0
 		y = 2
 		cost = 5
 		relative_position_id = KUS_get_off_the_ground
-		prerequisite = { focus = KUS_populate_ministry_of_economy }
-		prerequisite = { focus = KUS_focus_on_industrial_infrastructure }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_populate_ministry focus = KUS_seek_expert_economists }
 
 		completion_reward = {
-			716 = { # Tarva
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = dockyard
-					level = 1
-					instant_build = yes
-				}
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = arms_factory level = 2 instant_build = yes }
 			}
-			715 = { # Evla
+			715 = {
 				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = dockyard
-					level = 1
-					instant_build = yes
-				}
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_careful_investments
-		icon = GFX_focus_CHL_devalue_the_peso_export
+		icon = GFX_goal_KTZ_new_katzmark
 		x = 0
 		y = 2
 		cost = 10
 		relative_position_id = KUS_lay_a_foundation
-		prerequisite = { focus = KUS_seek_expert_economists }
-		prerequisite = { focus = KUS_sustainable_development }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_focus_industrial_infrastructure focus = KUS_sustainable_development }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_careful_investments_tt
 			hidden_effect = {
-				add_to_variable = { KUS_economy_efficiency_retention = 0.25 }
-				add_to_variable = { KUS_economy_efficiency_gain = 0.15 }
-				add_to_variable = { KUS_economy_consumer_goods = -0.05 }
-				remove_dynamic_modifier = { modifier = KUS_ruined_economy }
-				add_dynamic_modifier = { modifier = KUS_recovering_economy }
+				remove_dynamic_modifier = { modifier = KUS_economy_ruined }
+				add_to_variable = { KUS_economy_prod_eff_cap = 0.25 }
+				add_to_variable = { KUS_economy_prod_eff_gain = 0.01 }
+				add_dynamic_modifier = { modifier = KUS_economy_recovering }
 			}
 		}
 	}
 
-	# ==========================================
-	# ROW 3 - Fourth tier
-	# ==========================================
+	# ---- Row 3: Further convergence ----
+
 	focus = {
 		id = KUS_retool_military_industry
-		icon = GFX_goal_generic_construct_mil_factory
+		icon = GFX_goal_KTZ_a_mountain_of_iron
 		x = 2
 		y = 1
 		cost = 5
 		relative_position_id = KUS_military_contracts
-		prerequisite = { focus = KUS_military_contracts focus = KUS_careful_investments }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_military_contracts }
+		prerequisite = { focus = KUS_careful_investments }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_retool_military_industry_tt
 			hidden_effect = {
-				add_to_variable = { KUS_economy_efficiency_retention = 0.25 }
-				add_to_variable = { KUS_economy_efficiency_gain = 0.10 }
 				add_to_variable = { KUS_economy_factory_output = 0.05 }
-				add_to_variable = { KUS_economy_dockyard_output = 0.05 }
+				add_to_variable = { KUS_economy_construction_speed = 0.05 }
 			}
 		}
 	}
 
 	focus = {
-		id = KUS_found_elrong
-		icon = GFX_goal_generic_construct_infrastructure
+		id = KUS_found_strong
+		icon = GFX_goal_KTZ_mass_electrification
 		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_careful_investments
 		prerequisite = { focus = KUS_careful_investments }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			716 = { # Tarva
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			229 = { # Navar (Northern Akiba)
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			231 = { # Kikol
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			213 = { # Solakatzen Isle
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			# Upgrade railway from Navar to Northern Akiba by 1 level
-			build_railway = {
-				level = 3
-				path = { 16020 3133 }
-			}
-			# Upgrade Tarva seaport to level 5
 			716 = {
-				set_building_level = {
-					type = naval_base
-					level = 5
-					province = 9182
-					instant_build = yes
-				}
+				add_building_construction = { type = infrastructure level = 1 instant_build = yes }
 			}
-			# Upgrade Evla seaport to level 5
+			229 = {
+				add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+			}
+			717 = {
+				add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 1
+			}
 			715 = {
-				set_building_level = {
-					type = naval_base
-					level = 5
-					province = 8457
-					instant_build = yes
-				}
-			}
-			add_tech_bonus = {
-				name = KUS_support_equipment_bonus
-				bonus = 0.15
-				uses = 1
-				category = support_tech
+				add_extra_state_shared_building_slots = 1
 			}
 		}
 	}
 
-	# ==========================================
-	# ROW 4 - Fifth tier
-	# ==========================================
+	# ---- Row 4: Mutually Exclusive economy resolution ----
+
 	focus = {
 		id = KUS_rapid_recovery
-		icon = GFX_focus_generic_economic_recovery
-		x = -1
+		icon = GFX_goal_KTZ_a_success
+		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_retool_military_industry
-		prerequisite = { focus = KUS_military_contracts }
 		prerequisite = { focus = KUS_retool_military_industry }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_found_strong }
+		mutually_exclusive = { focus = KUS_industrial_cornerstone }
 
 		completion_reward = {
-			if = {
-				limit = { has_dynamic_modifier = { modifier = KUS_recovering_economy } }
-				remove_dynamic_modifier = { modifier = KUS_recovering_economy }
-			}
-			if = {
-				limit = { has_dynamic_modifier = { modifier = KUS_ruined_economy } }
-				remove_dynamic_modifier = { modifier = KUS_ruined_economy }
+			custom_effect_tooltip = KUS_rapid_recovery_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_economy_recovering }
 			}
 			add_timed_idea = {
 				idea = KUS_economic_rebound
@@ -357,125 +260,70 @@
 
 	focus = {
 		id = KUS_industrial_cornerstone
-		icon = GFX_focus_generic_modernize_industry
-		x = 1
+		icon = GFX_focus_NORDIC_com_capstone_civilian
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = KUS_retool_military_industry
+		relative_position_id = KUS_found_strong
 		prerequisite = { focus = KUS_retool_military_industry }
-		prerequisite = { focus = KUS_found_elrong }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_found_strong }
+		mutually_exclusive = { focus = KUS_rapid_recovery }
 
 		completion_reward = {
-			if = {
-				limit = { has_dynamic_modifier = { modifier = KUS_recovering_economy } }
-				remove_dynamic_modifier = { modifier = KUS_recovering_economy }
+			custom_effect_tooltip = KUS_industrial_cornerstone_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_economy_recovering }
 			}
-			if = {
-				limit = { has_dynamic_modifier = { modifier = KUS_ruined_economy } }
-				remove_dynamic_modifier = { modifier = KUS_ruined_economy }
-			}
-			add_timed_idea = {
-				idea = KUS_economic_rebound
-				days = 365
-			}
-			add_ideas = KUS_solid_foundation
+			add_ideas = KUS_land_revaluation
 		}
 	}
 
-	# ==========================================
-	# ROW 5 - Sixth tier (OR prerequisites)
-	# ==========================================
+	# ---- Row 5: Four major branches ----
+
 	focus = {
 		id = KUS_reconnect_navar
-		icon = GFX_focus_BEL_engine_of_the_economy
-		x = -5
+		icon = GFX_focus_POL_warsaw_main_station
+		x = -7
 		y = 1
 		cost = 5
 		relative_position_id = KUS_rapid_recovery
-		prerequisite = { focus = KUS_industrial_cornerstone focus = KUS_rapid_recovery }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
 
 		completion_reward = {
-			213 = { # Solakatzen Isle
+			229 = {
 				add_extra_state_shared_building_slots = 5
-				add_building_construction = {
-					type = infrastructure
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = industrial_complex
-					level = 3
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = dockyard
-					level = 2
-					instant_build = yes
-				}
-			}
-			# Upgrade railways on Southern Solakatzen Bridge (SE) by 2 levels, add 3 infrastructure
-			1403 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 3
-					instant_build = yes
-				}
-			}
-			build_railway = {
-				level = 2
-				path = { 11035 }
-			}
-			# Upgrade railway in Southern Solakatzen Bridge (SW) by 2 levels, add 3 infrastructure
-			1402 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 3
-					instant_build = yes
-				}
-			}
-			build_railway = {
-				level = 2
-				path = { 12259 }
+				add_building_construction = { type = infrastructure level = 2 instant_build = yes }
+				add_building_construction = { type = industrial_complex level = 3 instant_build = yes }
+				add_building_construction = { type = dockyard level = 2 instant_build = yes }
 			}
 		}
 	}
 
 	focus = {
-		id = KUS_bureau_of_state_industry
-		icon = GFX_goal_generic_intelligence_exchange
-		x = -2
+		id = KUS_bureau_state_industry
+		icon = GFX_focus_ARG_keep_it_in_the_party
+		x = -3
 		y = 1
 		cost = 5
 		relative_position_id = KUS_rapid_recovery
-		prerequisite = { focus = KUS_industrial_cornerstone focus = KUS_rapid_recovery }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_bureau_state_industry_tt
 			if = {
-				limit = {
-					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				218 = {
+					add_extra_state_shared_building_slots = 3
+					add_building_construction = { type = arms_factory level = 3 instant_build = yes }
 				}
-				custom_effect_tooltip = KUS_bureau_cornerstone_tt
-				custom_effect_tooltip = KUS_bureau_rapid_tt
 			}
 			if = {
 				limit = { has_completed_focus = KUS_industrial_cornerstone }
-				add_ideas = KUS_bureau_of_state_industry
-			}
-			if = {
-				limit = { has_completed_focus = KUS_rapid_recovery }
-				218 = { # Jarvalin
-					add_extra_state_shared_building_slots = 3
-					add_building_construction = {
-						type = arms_factory
-						level = 3
-						instant_build = yes
-					}
+				hidden_effect = {
+					set_variable = { KUS_bureau_factory_output = 0.05 }
+					set_variable = { KUS_bureau_construction_speed = 0 }
+					set_variable = { KUS_bureau_mil_construction = 0 }
+					add_dynamic_modifier = { modifier = KUS_bureau_state_industry }
 				}
 			}
 		}
@@ -483,14 +331,12 @@
 
 	focus = {
 		id = KUS_found_nuclear_energy_org
-		icon = GFX_focus_wonderweapons
-		x = -1
+		icon = GFX_goal_KTZ_atomic_power
+		x = 1
 		y = 1
 		cost = 5
-		relative_position_id = KUS_industrial_cornerstone
+		relative_position_id = KUS_rapid_recovery
 		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			add_research_slot = 1
@@ -498,161 +344,116 @@
 	}
 
 	focus = {
-		id = KUS_bureau_of_resource_extraction
-		icon = GFX_focus_generic_mining_industry
-		x = 2
+		id = KUS_bureau_resource_extraction
+		icon = GFX_goal_KTZ_dig_for_resources
+		x = 5
 		y = 1
 		cost = 5
-		relative_position_id = KUS_industrial_cornerstone
-		prerequisite = { focus = KUS_industrial_cornerstone focus = KUS_rapid_recovery }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_rapid_recovery
+		prerequisite = { focus = KUS_rapid_recovery focus = KUS_industrial_cornerstone }
 
 		completion_reward = {
 			if = {
-				limit = {
-					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
-				}
-				custom_effect_tooltip = KUS_bureau_resource_cornerstone_tt
-				custom_effect_tooltip = KUS_bureau_resource_rapid_tt
-			}
-			if = {
-				limit = { has_completed_focus = KUS_industrial_cornerstone }
-				add_ideas = KUS_bureau_of_resource_extraction
-			}
-			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
 				add_tech_bonus = {
-					name = KUS_construction_bonus
-					bonus = 0.75
+					name = construction_bonus
+					bonus = 0.71
 					uses = 3
 					category = construction_tech
 				}
 			}
+			if = {
+				limit = { has_completed_focus = KUS_industrial_cornerstone }
+				hidden_effect = {
+					add_to_variable = { KUS_economy_factory_output = 0.10 }
+				}
+				custom_effect_tooltip = KUS_bureau_resource_extraction_tt
+			}
 		}
 	}
 
-	# ==========================================
-	# ROW 6 - Seventh tier
-	# ==========================================
+	# ---- Row 6: Branch sub-focuses ----
+
 	focus = {
 		id = KUS_permanent_integration
-		icon = GFX_focus_GER_integrated_economies
+		icon = GFX_focus_POL_develop_polish_shipbuilding
 		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_reconnect_navar
 		prerequisite = { focus = KUS_reconnect_navar }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			213 = { # Solakatzen Isle
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = industrial_complex level = 2 instant_build = yes }
 			}
-			add_resource = {
-				type = steel
-				amount = 8
-				state = 213
+			213 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
 			}
-			add_state_core = 213
 		}
 	}
 
 	focus = {
 		id = KUS_domestic_arms_industry
-		icon = GFX_focus_generic_military_industry
-		x = -1
+		icon = GFX_goal_KTZ_kiloforges
+		x = -2
 		y = 1
 		cost = 5
-		relative_position_id = KUS_bureau_of_state_industry
-		prerequisite = { focus = KUS_bureau_of_state_industry }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_bureau_state_industry
+		prerequisite = { focus = KUS_bureau_state_industry }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_domestic_arms_industry_tt
 			if = {
-				limit = {
-					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
+				limit = { has_completed_focus = KUS_rapid_recovery }
+				218 = {
+					add_extra_state_shared_building_slots = 5
+					add_building_construction = { type = arms_factory level = 3 instant_build = yes }
 				}
-				custom_effect_tooltip = KUS_domestic_arms_cornerstone_tt
-				custom_effect_tooltip = KUS_domestic_arms_rapid_tt
 			}
 			if = {
 				limit = { has_completed_focus = KUS_industrial_cornerstone }
-				if = {
-					limit = { has_idea = KUS_bureau_of_state_industry }
-					swap_ideas = {
-						remove_idea = KUS_bureau_of_state_industry
-						add_idea = KUS_bureau_of_state_industry_2
-					}
-				}
-			}
-			if = {
-				limit = { has_completed_focus = KUS_rapid_recovery }
-				218 = { # Jarvalin
-					add_extra_state_shared_building_slots = 3
-					add_building_construction = {
-						type = arms_factory
-						level = 3
-						instant_build = yes
-					}
+				custom_effect_tooltip = KUS_domestic_arms_industry_cornerstone_tt
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_factory_output = 0.05 }
 				}
 			}
 		}
 	}
 
 	focus = {
-		id = KUS_recover_kaiser_era_machinery
-		icon = GFX_focus_AUS_raid_military_storages
-		x = 1
+		id = KUS_recover_katser_sea_machinery
+		icon = GFX_focus_FIN_coastal_defense
+		x = 2
 		y = 1
 		cost = 5
-		relative_position_id = KUS_bureau_of_state_industry
-		prerequisite = { focus = KUS_bureau_of_state_industry }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_bureau_state_industry
+		prerequisite = { focus = KUS_bureau_state_industry }
 
 		completion_reward = {
-			715 = { # Evla
+			715 = {
 				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-			}
-			231 = { # Kikol
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
+				add_building_construction = { type = industrial_complex level = 2 instant_build = yes }
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_expand_future_energy_institute
-		icon = GFX_focus_generic_nuclear_development
+		icon = GFX_goal_KTZ_atomic_power
 		x = 0
 		y = 1
 		cost = 10
 		relative_position_id = KUS_found_nuclear_energy_org
 		prerequisite = { focus = KUS_found_nuclear_energy_org }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			add_tech_bonus = {
-				name = KUS_nuclear_bonus
-				ahead_reduction = 1
+				name = nuclear_bonus
+				bonus = 1.0
+				ahead_reduction = 2
 				uses = 2
 				category = nuclear
 			}
@@ -661,101 +462,81 @@
 
 	focus = {
 		id = KUS_expand_vao_extraction
-		icon = GFX_focus_CONGO_bakwanga_mine
+		icon = GFX_goal_KTZ_dig_for_resources
 		x = -1
 		y = 1
 		cost = 5
-		relative_position_id = KUS_bureau_of_resource_extraction
-		prerequisite = { focus = KUS_bureau_of_resource_extraction }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_bureau_resource_extraction
+		prerequisite = { focus = KUS_bureau_resource_extraction }
 
 		completion_reward = {
-			custom_effect_tooltip = KUS_expand_vao_tt
+			custom_effect_tooltip = KUS_expand_vao_extraction_tt
 		}
 	}
 
 	focus = {
-		id = KUS_bail_out_divikatel
-		icon = GFX_goal_generic_consumer_goods
+		id = KUS_halt_ond_divikatel
+		icon = GFX_focus_CONGO_bakwanga_mine
 		x = 2
 		y = 1
 		cost = 5
-		relative_position_id = KUS_bureau_of_resource_extraction
-		prerequisite = { focus = KUS_bureau_of_resource_extraction }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_bureau_resource_extraction
+		prerequisite = { focus = KUS_bureau_resource_extraction }
 
 		completion_reward = {
-			custom_effect_tooltip = KUS_bail_out_divikatel_tt
+			custom_effect_tooltip = KUS_halt_ond_divikatel_tt
 		}
 	}
 
-	# ==========================================
-	# ROW 7 - Eighth tier
-	# ==========================================
+	# ---- Row 7: Deep branch focuses ----
+
 	focus = {
 		id = KUS_military_industrial_mediators
-		icon = GFX_focus_generic_women_in_military
+		icon = GFX_focus_ARG_the_war_machine
 		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_domestic_arms_industry
 		prerequisite = { focus = KUS_domestic_arms_industry }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			if = {
-				limit = {
-					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
-				}
-				custom_effect_tooltip = KUS_mediators_cornerstone_tt
-				custom_effect_tooltip = KUS_mediators_rapid_tt
-			}
+			custom_effect_tooltip = KUS_military_industrial_mediators_tt
 			if = {
 				limit = { has_completed_focus = KUS_industrial_cornerstone }
-				if = {
-					limit = { has_idea = KUS_bureau_of_state_industry_2 }
-					swap_ideas = {
-						remove_idea = KUS_bureau_of_state_industry_2
-						add_idea = KUS_bureau_of_state_industry_3
-					}
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_construction_speed = 0.03 }
 				}
 			}
 			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
-				add_ideas = KUS_fine_tuned_industry
+				add_ideas = KUS_new_construction_methods
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_support_private_enterprises
-		icon = GFX_focus_BRA_reach_out_to_military_dem
-		x = 0
+		icon = GFX_focus_DEN_no_regulations
+		x = 1
 		y = 1
 		cost = 5
-		relative_position_id = KUS_recover_kaiser_era_machinery
-		prerequisite = { focus = KUS_recover_kaiser_era_machinery }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_recover_katser_sea_machinery
+		prerequisite = { focus = KUS_recover_katser_sea_machinery }
+		prerequisite = { focus = KUS_expand_future_energy_institute }
 
 		completion_reward = {
-			add_ideas = KUS_private_enterprise
+			add_ideas = KUS_private_enterprises
 		}
 	}
 
 	focus = {
 		id = KUS_monazite_exploitation
-		icon = GFX_SOV_steel_casting_industry_ccp_2d_sov_compatibility
+		icon = GFX_focus_CONGO_bakwanga_mine
 		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_expand_vao_extraction
 		prerequisite = { focus = KUS_expand_vao_extraction }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_monazite_exploitation_tt
@@ -764,203 +545,113 @@
 
 	focus = {
 		id = KUS_synthetic_polymers
-		icon = GFX_goal_generic_oil_refinery
+		icon = GFX_focus_CHL_expand_the_forestry
 		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = KUS_bail_out_divikatel
-		prerequisite = { focus = KUS_bail_out_divikatel }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_halt_ond_divikatel
+		prerequisite = { focus = KUS_halt_ond_divikatel }
 
 		completion_reward = {
-			716 = { # Tarva
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = synthetic_refinery
-					level = 2
-					instant_build = yes
-				}
+			717 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = synthetic_refinery level = 3 instant_build = yes }
 			}
-			add_ideas = KUS_synthetic_polymers
 		}
 	}
 
-	# ==========================================
-	# ROW 8 - Final tier
-	# ==========================================
+	# ---- Row 8: Capstone left branch ----
+
 	focus = {
 		id = KUS_military_industrial_complex
-		icon = GFX_goal_generic_construct_mil_factory
-		x = 1
+		icon = GFX_goal_KTZ_establish_production_lines
+		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_military_industrial_mediators
 		prerequisite = { focus = KUS_military_industrial_mediators }
-		prerequisite = { focus = KUS_support_private_enterprises }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = {
-					NOT = { has_completed_focus = KUS_industrial_cornerstone has_completed_focus = KUS_rapid_recovery }
-				}
-				custom_effect_tooltip = KUS_mic_cornerstone_tt
-				custom_effect_tooltip = KUS_mic_rapid_tt
-			}
+			custom_effect_tooltip = KUS_military_industrial_complex_tt
 			if = {
 				limit = { has_completed_focus = KUS_industrial_cornerstone }
-				if = {
-					limit = { has_idea = KUS_bureau_of_state_industry_3 }
-					swap_ideas = {
-						remove_idea = KUS_bureau_of_state_industry_3
-						add_idea = KUS_military_industrial_complex
-					}
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_factory_output = 0.05 }
+					add_to_variable = { KUS_bureau_construction_speed = 0.05 }
 				}
 			}
 			if = {
 				limit = { has_completed_focus = KUS_rapid_recovery }
-				if = {
-					limit = { has_idea = KUS_fine_tuned_industry }
-					swap_ideas = {
-						remove_idea = KUS_fine_tuned_industry
-						add_idea = KUS_military_industrial_complex_rapid
-					}
+				hidden_effect = {
+					add_to_variable = { KUS_bureau_factory_output = 0.05 }
+					add_to_variable = { KUS_bureau_construction_speed = 0.05 }
+					add_to_variable = { KUS_bureau_mil_construction = 0.10 }
 				}
 			}
 		}
 	}
+
+	# ---- Row 9: Nuclear capstone ----
 
 	focus = {
 		id = KUS_new_generation_reactors
-		icon = GFX_goal_KTZ_atomic_power
+		icon = GFX_focus_RAJ_i_am_death
 		x = 0
 		y = 2
 		cost = 10
-		relative_position_id = KUS_expand_future_energy_institute
-		prerequisite = { focus = KUS_expand_future_energy_institute }
-		prerequisite = { focus = KUS_monazite_exploitation }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_support_private_enterprises
+		prerequisite = { focus = KUS_military_industrial_complex }
+		prerequisite = { focus = KUS_support_private_enterprises }
 
 		completion_reward = {
-			218 = { # Jarvalin
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = nuclear_reactor
-					level = 1
-					instant_build = yes
-				}
+			218 = {
+				add_building_construction = { type = nuclear_reactor level = 1 instant_build = yes }
 			}
-			225 = { # Krrama
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = nuclear_reactor
-					level = 1
-					instant_build = yes
-				}
+			717 = {
+				add_building_construction = { type = nuclear_reactor level = 1 instant_build = yes }
 			}
 		}
 	}
 
-	#############################
-	# MILITARY FOCUS TREE
-	#############################
-
 	# ==========================================
-	# ROW 0 - KUA Reborn (Military Root)
+	# ARMY TREE
 	# ==========================================
-	focus = {
-		id = KUS_kua_reborn
-		icon = GFX_goal_generic_army_doctrines
-		x = -19
-		y = 0
-		cost = 5
 
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			army_experience = 25
-			custom_effect_tooltip = KUS_kua_reborn_tt
-		}
-	}
-
-	# ==========================================
-	# ROW 1 - Branch Roots (Merevagi, Õhuvagi, Maavõim)
-	# ==========================================
-	focus = {
-		id = KUS_merevagi
-		icon = GFX_focus_PER_establish_the_navy
-		x = -9
-		y = 1
-		cost = 5
-		relative_position_id = KUS_kua_reborn
-		prerequisite = { focus = KUS_kua_reborn }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_navy_xp_gain = 0.05 }
-				add_dynamic_modifier = { modifier = KUS_merevagi }
-			}
-			custom_effect_tooltip = KUS_merevagi_tt
-			navy_experience = 25
-			add_tech_bonus = {
-				name = KUS_navy_doctrine_bonus
-				bonus = 0.75
-				uses = 1
-				category = naval_doctrine
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_ohuvagi
-		icon = GFX_focus_generic_multi_role_aircraft
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_kua_reborn
-		prerequisite = { focus = KUS_kua_reborn }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			air_experience = 25
-			custom_effect_tooltip = KUS_ohuvagi_add_tt
-			hidden_effect = {
-				add_dynamic_modifier = { modifier = KUS_ohuvagi }
-				add_to_variable = { KUS_ohuvagi_air_xp_gain = 0.05 }
-			}
-			add_tech_bonus = {
-				name = KUS_ohuvagi
-				bonus = 0.75
-				uses = 1
-				category = air_doctrine
-			}
-		}
-	}
+	# ---- Row 0: Root ----
 
 	focus = {
 		id = KUS_maavoim
 		icon = GFX_goal_generic_army_doctrines
-		x = 11
-		y = 1
+		x = -10
+		y = 0
 		cost = 5
-		relative_position_id = KUS_kua_reborn
-		prerequisite = { focus = KUS_kua_reborn }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			add_dynamic_modifier = { modifier = KUS_maavoim }
+			custom_effect_tooltip = KUS_maavoim_tt
 			hidden_effect = {
-				add_to_variable = { KUS_maavoim_army_xp_gain = 0.05 }
+				set_variable = { KUS_KAF_xp_gain = 0.05 }
+				set_variable = { KUS_KAF_org_regain = 0 }
+				set_variable = { KUS_KAF_decryption = 0 }
+				set_variable = { KUS_KAF_army_attack = 0 }
+				set_variable = { KUS_KAF_reinforce_rate = 0 }
+				set_variable = { KUS_KAF_army_speed = 0 }
+				set_variable = { KUS_KAF_planning_speed = 0 }
+				set_variable = { KUS_KAF_max_planning = 0 }
+				set_variable = { KUS_KAF_supply_consumption = 0 }
+				set_variable = { KUS_KAF_breakthrough = 0 }
+				set_variable = { KUS_KAF_army_armor_attack_factor = 0 }
+				set_variable = { KUS_KAF_org_loss_moving = 0 }
+				set_variable = { KUS_KAF_air_superiority = 0 }
+				set_variable = { KUS_KAF_artillery_attack = 0 }
+				set_variable = { KUS_KAF_infantry_attack = 0 }
+				set_variable = { KUS_KAF_org_factor = 0 }
+				set_variable = { KUS_KAF_leader_start_attack = 0 }
+				set_variable = { KUS_KAF_leader_start_planning = 0 }
+				set_variable = { KUS_KAF_leader_start_logistics = 0 }
+				add_dynamic_modifier = { modifier = KUS_KAF }
 			}
 			add_tech_bonus = {
-				name = KUS_maavoim
+				name = land_doctrine_bonus
 				bonus = 0.75
 				uses = 1
 				category = land_doctrine
@@ -968,150 +659,39 @@
 		}
 	}
 
-	# ==========================================
-	# ROW 2 - Navy Plans (ME), Air/Army branches
-	# ==========================================
-	focus = {
-		id = KUS_plan_colossus
-		icon = GFX_focus_GER_high_seas_fleet
-		x = -5
-		y = 1
-		cost = 5
-		relative_position_id = KUS_merevagi
-		mutually_exclusive = { focus = KUS_plan_nymph }
-		mutually_exclusive = { focus = KUS_plan_harpie }
-		prerequisite = { focus = KUS_merevagi }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_plan_colossus_equipment
-		}
-	}
-
-	focus = {
-		id = KUS_plan_nymph
-		icon = GFX_focus_generic_cruiser_submarines
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_merevagi
-		mutually_exclusive = { focus = KUS_plan_colossus }
-		mutually_exclusive = { focus = KUS_plan_harpie }
-		prerequisite = { focus = KUS_merevagi }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_plan_nymph_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_spotting = 0.10 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_plan_harpie
-		icon = GFX_goal_generic_navy_carrier
-		x = 4
-		y = 1
-		cost = 5
-		relative_position_id = KUS_merevagi
-		mutually_exclusive = { focus = KUS_plan_colossus }
-		mutually_exclusive = { focus = KUS_plan_nymph }
-		prerequisite = { focus = KUS_merevagi }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_plan_harpie_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_carrier_air_attack = 0.10 }
-				add_to_variable = { KUS_merevagi_carrier_air_agility = 0.10 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_expand_tarva_air
-		icon = GFX_focus_generic_air_bases
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_ohuvagi
-		prerequisite = { focus = KUS_ohuvagi }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_expand_tarva_air_tt
-			hidden_effect = {
-				add_to_variable = { KUS_ohuvagi_ace_generation = 0.05 }
-				add_to_variable = { KUS_ohuvagi_night_penalty = -0.10 }
-				add_to_variable = { KUS_ohuvagi_weather_penalty = -0.10 }
-				add_to_variable = { KUS_ohuvagi_doctrine_cost = -0.10 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_baltair
-		icon = GFX_focus_HUN_establish_the_mavag_aircraft_factory
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_ohuvagi
-		prerequisite = { focus = KUS_ohuvagi }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			717 = { # Kohla
-			add_extra_state_shared_building_slots = 2
-			add_building_construction = {
-			type = arms_factory
-			level = 2
-			instant_build = yes
-			}
-			}
-		}
-	}
+	# ---- Row 1: Mutually Exclusive doctrine branches ----
 
 	focus = {
 		id = KUS_flexible_support
-		icon = GFX_focus_generic_armored_air_support
+		icon = GFX_goal_generic_army_artillery
 		x = -4
 		y = 1
 		cost = 5
 		relative_position_id = KUS_maavoim
-		mutually_exclusive = { focus = KUS_concentration_of_force }
 		prerequisite = { focus = KUS_maavoim }
-
-		ai_will_do = { factor = 1 }
+		mutually_exclusive = { focus = KUS_concentration_of_force }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_flexible_support_tt
 			hidden_effect = {
-				add_to_variable = { KUS_maavoim_recovery_rate = 0.10 }
-				add_to_variable = { KUS_maavoim_intelligence = 0.10 }
+				add_to_variable = { KUS_KAF_org_regain = 0.10 }
+				add_to_variable = { KUS_KAF_decryption = 0.15 }
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_doctrinal_adaptation
-		icon = GFX_focus_AFG_mountain_training
+		icon = GFX_goal_generic_army_doctrines
 		x = 0
 		y = 2
 		cost = 5
 		relative_position_id = KUS_maavoim
 		prerequisite = { focus = KUS_maavoim }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			add_tech_bonus = {
-				name = KUS_army_doctrine_bonus
+				name = land_doctrine_bonus
 				bonus = 0.50
 				uses = 2
 				category = land_doctrine
@@ -1121,196 +701,20 @@
 
 	focus = {
 		id = KUS_concentration_of_force
-		icon = GFX_goal_generic_army_doctrines
+		icon = GFX_goal_generic_build_tank
 		x = 4
 		y = 1
 		cost = 5
 		relative_position_id = KUS_maavoim
-		mutually_exclusive = { focus = KUS_flexible_support }
 		prerequisite = { focus = KUS_maavoim }
-
-		ai_will_do = { factor = 1 }
+		mutually_exclusive = { focus = KUS_flexible_support }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_concentration_of_force_tt
 		}
 	}
 
-	# ==========================================
-	# ROW 3
-	# ==========================================
-	focus = {
-		id = KUS_expand_naval_yards
-		icon = GFX_goal_generic_construct_naval_dockyard
-		x = -2
-		y = 1
-		cost = 5
-		relative_position_id = KUS_plan_colossus
-		prerequisite = { focus = KUS_plan_colossus }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_expand_naval_yards_equipment
-		}
-	}
-
-	focus = {
-		id = KUS_modern_ship_design
-		icon = GFX_focus_generic_navy_battleship2
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_plan_colossus
-		prerequisite = { focus = KUS_plan_colossus }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_bb_bonus
-				bonus = 1.0
-				uses = 1
-				category = bb_tech
-			}
-			add_tech_bonus = {
-				name = KUS_dd_bonus
-				bonus = 1.0
-				ahead_reduction = 1
-				uses = 1
-				category = dd_tech
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_predictive_ship_positioning
-		icon = GFX_goal_generic_navy_submarine
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_plan_nymph
-		prerequisite = { focus = KUS_plan_nymph }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_predictive_ship_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_convoy_raiding = 0.10 }
-				add_to_variable = { KUS_merevagi_sub_crit = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_post_kaiser_carrier
-		icon = GFX_goal_generic_navy_carrier
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_plan_harpie
-		prerequisite = { focus = KUS_plan_harpie }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_cv_bonus
-				bonus = 1.0
-				uses = 1
-				category = cv_tech
-			}
-			add_tech_bonus = {
-				name = KUS_naval_bomber_bonus
-				bonus = 1.0
-				uses = 1
-				category = naval_bomber
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_squadron_flagships
-		icon = GFX_focus_SMB_blue_water_fleet
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_plan_harpie
-		prerequisite = { focus = KUS_plan_harpie }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_squadron_flagships_equipment
-		}
-	}
-
-	focus = {
-		id = KUS_naval_air_development
-		icon = GFX_goal_generic_air_naval_bomber
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_expand_tarva_air
-		prerequisite = { focus = KUS_expand_tarva_air }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_naval_bomber_bonus
-				bonus = 1.0
-				uses = 2
-				category = naval_bomber
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_aerial_tech_development
-		icon = GFX_focus_generic_air_research_boost
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_expand_tarva_air
-		prerequisite = { focus = KUS_expand_tarva_air focus = KUS_baltair }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_aerial_tech_tt
-			hidden_effect = {
-				add_to_variable = { KUS_ohuvagi_range = 0.10 }
-			}
-			add_tech_bonus = {
-				name = KUS_aircraft_bonus
-				bonus = 1.0
-				uses = 2
-				category = light_fighter
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_supermanoevers
-		icon = GFX_focus_generic_jet_planes
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_baltair
-		prerequisite = { focus = KUS_baltair }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_supermanoevers_tt
-			hidden_effect = {
-				add_to_variable = { KUS_ohuvagi_mission_efficiency = 0.05 }
-				add_to_variable = { KUS_ohuvagi_wing_xp_gain = 0.10 }
-			}
-		}
-	}
+	# ---- Row 2: Left branch (Flexible Support / Doctrinal Adaptation) ----
 
 	focus = {
 		id = KUS_maximum_firepower
@@ -1321,34 +725,31 @@
 		relative_position_id = KUS_flexible_support
 		prerequisite = { focus = KUS_flexible_support }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			custom_effect_tooltip = KUS_maximum_firepower_tt
 			hidden_effect = {
-				add_to_variable = { KUS_maavoim_division_attack = 0.10 }
+				add_to_variable = { KUS_KAF_army_attack = 0.15 }
 			}
 		}
 	}
 
 	focus = {
-		id = KUS_armored_research_left
-		icon = GFX_focus_generic_tank_assembly
+		id = KUS_armored_research_grants
+		icon = GFX_goal_generic_army_tanks
 		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_flexible_support
 		prerequisite = { focus = KUS_flexible_support }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			add_tech_bonus = {
-				name = KUS_armor_bonus
+				name = armor_bonus
 				bonus = 0.50
 				uses = 2
 				category = armor
 			}
+			custom_effect_tooltip = KUS_armored_research_grants_tt
 		}
 	}
 
@@ -1361,35 +762,53 @@
 		relative_position_id = KUS_flexible_support
 		prerequisite = { focus = KUS_flexible_support }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			custom_effect_tooltip = KUS_mobile_coordinators_tt
 			hidden_effect = {
-				add_to_variable = { KUS_maavoim_reinforce_rate = 0.01 }
-				add_to_variable = { KUS_maavoim_org = 0.10 }
+				add_to_variable = { KUS_KAF_reinforce_rate = 0.01 }
+				add_to_variable = { KUS_KAF_artillery_attack = 0.05 }
+				add_to_variable = { KUS_KAF_org_factor = 0.05 }
+			}
+		}
+	}
+
+	# ---- Row 2: Right branch (Concentration of Force / Doctrinal Adaptation) ----
+
+	focus = {
+		id = KUS_integrated_communications
+		icon = GFX_goal_generic_radar
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_concentration_of_force
+		prerequisite = { focus = KUS_concentration_of_force }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_integrated_communications_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_reinforce_rate = 0.01 }
+				add_to_variable = { KUS_KAF_air_superiority = 0.05 }
 			}
 		}
 	}
 
 	focus = {
-		id = KUS_armored_research_right
-		icon = GFX_focus_generic_tank_assembly
+		id = KUS_armored_research_grants_cof
+		icon = GFX_goal_generic_army_tanks
 		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = KUS_concentration_of_force
 		prerequisite = { focus = KUS_concentration_of_force }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			add_tech_bonus = {
-				name = KUS_armor_bonus
+				name = armor_bonus
 				bonus = 0.50
 				uses = 2
 				category = armor
 			}
+			custom_effect_tooltip = KUS_armored_research_grants_cof_tt
 		}
 	}
 
@@ -1402,156 +821,478 @@
 		relative_position_id = KUS_concentration_of_force
 		prerequisite = { focus = KUS_concentration_of_force }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			custom_effect_tooltip = KUS_speed_cult_tt
 			hidden_effect = {
-				add_to_variable = { KUS_maavoim_division_speed = 0.10 }
+				add_to_variable = { KUS_KAF_army_speed = 0.15 }
 			}
 		}
 	}
 
-	# ==========================================
-	# ROW 4
-	# ==========================================
-	focus = {
-		id = KUS_pythagoras_class
-		icon = GFX_goal_generic_navy_battleship
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_modern_ship_design
-		prerequisite = { focus = KUS_modern_ship_design }
-		prerequisite = { focus = KUS_expand_naval_yards }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			create_equipment_variant = {
-				name = "Pythagoras"
-				type = SH_battleship_1
-				upgrades = {
-					ship_reliability_upgrade = 0
-					ship_engine_upgrade = 0
-					ship_armor_upgrade = 0
-					ship_gun_upgrade = 0
-				}
-			}
-			add_equipment_production = {
-				equipment = {
-					type = SH_battleship_1
-					creator = "KUS"
-					version_name = "Pythagoras"
-				}
-				requested_factories = 5
-				progress = 0.10
-				amount = 1
-			}
-		}
-	}
+	# ---- Row 3: Left branch ----
 
 	focus = {
-		id = KUS_train_admirality
-		icon = GFX_focus_BRA_navy
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_modern_ship_design
-		prerequisite = { focus = KUS_modern_ship_design }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			KUS_Karl_Erijk = {
-				add_unit_leader_trait = battleship_adherent
-				add_skill_level = 1
-				add_attack = 1
-			}
-			KUS_Markus_Mori = {
-				add_skill_level = 1
-				add_attack = 1
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_high_tech_raiding
-		icon = GFX_SOV_long_range_raiders_ccp_2d_sov_compatibility
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_predictive_ship_positioning
-		prerequisite = { focus = KUS_predictive_ship_positioning }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_sub_bonus
-				bonus = 1.0
-				uses = 1
-				category = ss_tech
-			}
-			add_tech_bonus = {
-				name = KUS_sub_bonus_ahead
-				bonus = 1.0
-				ahead_reduction = 2
-				uses = 1
-				category = ss_tech
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_carrier_research_left
-		icon = GFX_goal_generic_navy_carrier
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_predictive_ship_positioning
-		prerequisite = { focus = KUS_predictive_ship_positioning }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_carrier_research_left_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_carrier_armor = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_carrier_research_right
-		icon = GFX_goal_generic_navy_carrier
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_post_kaiser_carrier
-		prerequisite = { focus = KUS_post_kaiser_carrier }
-		prerequisite = { focus = KUS_squadron_flagships }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_carrier_research_right_equipment
-		}
-	}
-
-	focus = {
-		id = KUS_naval_air_coordination
-		icon = GFX_focus_generic_air_carrier
+		id = KUS_rearline_guard_units
+		icon = GFX_goal_generic_allies_build_infantry
 		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = KUS_naval_air_development
-		prerequisite = { focus = KUS_naval_air_development }
-		prerequisite = { focus = KUS_squadron_flagships }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_maximum_firepower
+		prerequisite = { focus = KUS_maximum_firepower }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_rearline_guard_units_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_org_factor = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_halberd_at_missile
+		icon = GFX_goal_generic_army_artillery2
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_armored_research_grants
+		prerequisite = { focus = KUS_armored_research_grants }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_halberd_at_missile_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_infantry_attack = 0.15 }
+			}
+			add_tech_bonus = {
+				name = infantry_at_bonus
+				bonus = 1.0
+				ahead_reduction = 2
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_machiavellian_high_command
+		icon = GFX_goal_generic_military_sphere
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_mobile_coordinators
+		prerequisite = { focus = KUS_mobile_coordinators }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_machiavellian_high_command_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_max_planning = 0.15 }
+				add_to_variable = { KUS_KAF_planning_speed = 0.05 }
+			}
+		}
+	}
+
+	# ---- Row 3: Right branch ----
+
+	focus = {
+		id = KUS_centralized_command
+		icon = GFX_goal_generic_military_sphere
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_integrated_communications
+		prerequisite = { focus = KUS_integrated_communications }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_centralized_command_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_planning_speed = 0.10 }
+				add_to_variable = { KUS_KAF_max_planning = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_project_boom
+		icon = GFX_goal_generic_army_tanks
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_armored_research_grants_cof
+		prerequisite = { focus = KUS_armored_research_grants_cof }
+
+		completion_reward = {
+			country_event = { id = KUS_event.1 }
+			add_tech_bonus = {
+				name = armor_bonus
+				bonus = 1.0
+				uses = 1
+				category = armor
+			}
+			add_tech_bonus = {
+				name = artillery_bonus
+				bonus = 0.50
+				uses = 1
+				category = artillery
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_off_road_logistics
+		icon = GFX_goal_generic_production2
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_speed_cult
+		prerequisite = { focus = KUS_speed_cult }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_off_road_logistics_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_supply_consumption = -0.05 }
+			}
+		}
+	}
+
+	# ---- Row 4: Left branch ----
+
+	focus = {
+		id = KUS_industrial_saturation
+		icon = GFX_goal_generic_production
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_rearline_guard_units
+		prerequisite = { focus = KUS_rearline_guard_units }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_industrial_saturation_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_artillery_attack = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_perfect_training_methodology
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_halberd_at_missile
+		prerequisite = { focus = KUS_halberd_at_missile }
+
+		completion_reward = {
+			army_experience = 10
+			add_ideas = KUS_good_training
+		}
+	}
+
+	focus = {
+		id = KUS_officer_initiative
+		icon = GFX_goal_generic_military_sphere
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_machiavellian_high_command
+		prerequisite = { focus = KUS_machiavellian_high_command }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_officer_initiative_tt
+			hidden_effect = {
+				every_army_leader = {
+					add_attack = 1
+					add_planning = 1
+				}
+				add_to_variable = { KUS_KAF_leader_start_attack = 1 }
+			}
+		}
+	}
+
+	# ---- Row 4: Right branch ----
+
+	focus = {
+		id = KUS_full_mechanization
+		icon = GFX_goal_generic_army_motorized
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_centralized_command
+		prerequisite = { focus = KUS_centralized_command }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_full_mechanization_tt
+			hidden_effect = {
+				add_to_variable = { KUS_KAF_army_speed = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_perfect_training_methodology_cof
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_project_boom
+		prerequisite = { focus = KUS_project_boom }
+
+		completion_reward = {
+			army_experience = 10
+			add_ideas = KUS_good_training
+		}
+	}
+
+	focus = {
+		id = KUS_logistical_considerations
+		icon = GFX_goal_generic_production2
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_off_road_logistics
+		prerequisite = { focus = KUS_off_road_logistics }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_logistical_considerations_tt
+			hidden_effect = {
+				every_army_leader = {
+					add_planning = 1
+					add_logistics = 1
+				}
+				add_to_variable = { KUS_KAF_leader_start_logistics = 1 }
+			}
+		}
+	}
+
+	# ---- Row 5: Convergence ----
+
+	focus = {
+		id = KUS_strike_like_supernova
+		icon = GFX_goal_generic_major_war
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_industrial_saturation
+		prerequisite = { focus = KUS_industrial_saturation }
+		prerequisite = { focus = KUS_perfect_training_methodology }
+		prerequisite = { focus = KUS_officer_initiative }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_strike_like_supernova_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_KAF }
+				add_to_variable = { KUS_KAF_army_attack = 0.05 }
+				add_to_variable = { KUS_KAF_org_loss_moving = -0.25 }
+				add_to_variable = { KUS_KAF_breakthrough = 0.10 }
+				add_dynamic_modifier = { modifier = KUS_KAF_supernova }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_erioperatsioonide_grupp
+		icon = GFX_goal_generic_special_forces
+		x = 0
+		y = 5
+		cost = 5
+		relative_position_id = KUS_maavoim
+		prerequisite = { focus = KUS_machiavellian_high_command focus = KUS_centralized_command }
+		prerequisite = { focus = KUS_doctrinal_adaptation }
+
+		completion_reward = {
+			add_ideas = KUS_eog
+		}
+	}
+
+	focus = {
+		id = KUS_at_speed_of_light
+		icon = GFX_goal_generic_army_motorized
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = KUS_logistical_considerations
+		prerequisite = { focus = KUS_perfect_training_methodology_cof }
+		prerequisite = { focus = KUS_logistical_considerations }
+		prerequisite = { focus = KUS_full_mechanization }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_at_speed_of_light_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_KAF }
+				add_to_variable = { KUS_KAF_army_speed = 0.10 }
+				add_to_variable = { KUS_KAF_breakthrough = 0.05 }
+				add_dynamic_modifier = { modifier = KUS_KAF_valguskiirus }
+			}
+		}
+	}
+
+	# ---- Row 6: Capstone ----
+
+	focus = {
+		id = KUS_finalize_army_reform
+		icon = GFX_goal_generic_army_doctrines
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_erioperatsioonide_grupp
+		prerequisite = { focus = KUS_strike_like_supernova focus = KUS_at_speed_of_light }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = KUS_army_reform_mastery
+				days = 365
+			}
+		}
+	}
+
+	# ==========================================
+	# AIR FORCE TREE (Õhuvagi)
+	# ==========================================
+
+	# ---- Row 0: Root ----
+
+	focus = {
+		id = KUS_ohuvagi
+		icon = GFX_goal_generic_air_doctrine
+		x = -24
+		y = 0
+		cost = 5
+
+		completion_reward = {
+			air_experience = 25
+			custom_effect_tooltip = KUS_ohuvagi_tt
+			hidden_effect = {
+				set_variable = { KUS_OHU_xp_gain = 0.05 }
+				set_variable = { KUS_OHU_ace_gen = 0 }
+				set_variable = { KUS_OHU_night_pen = 0 }
+				set_variable = { KUS_OHU_weather_pen = 0 }
+				set_variable = { KUS_OHU_doctrine_cost = 0 }
+				set_variable = { KUS_OHU_range = 0 }
+				set_variable = { KUS_OHU_strat_vis = 0 }
+				set_variable = { KUS_OHU_agility = 0 }
+				set_variable = { KUS_OHU_speed = 0 }
+				set_variable = { KUS_OHU_wing_xp = 0 }
+				add_dynamic_modifier = { modifier = KUS_OHUVAGI }
+			}
+			add_tech_bonus = {
+				name = air_doctrine_bonus
+				bonus = 0.75
+				uses = 1
+				category = air_doctrine
+			}
+		}
+	}
+
+	# ---- Row 1: Two branches from root ----
+
+	focus = {
+		id = KUS_expand_tarva_air_academy
+		icon = GFX_goal_generic_air_fighter
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_ohuvagi }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_expand_tarva_air_academy_tt
+			hidden_effect = {
+				add_to_variable = { KUS_OHU_ace_gen = 0.05 }
+				add_to_variable = { KUS_OHU_night_pen = -0.10 }
+				add_to_variable = { KUS_OHU_weather_pen = -0.15 }
+				add_to_variable = { KUS_OHU_doctrine_cost = -0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_baltair_investments
+		icon = GFX_goal_generic_production
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_ohuvagi }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_baltair_investments_tt
+			717 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = { type = arms_factory level = 2 instant_build = yes }
+			}
+		}
+	}
+
+	# ---- Row 2: Three branches from Expand Tarva ----
+
+	focus = {
+		id = KUS_naval_air_development
+		icon = GFX_goal_generic_air_naval_bomber
+		x = -4
+		y = 2
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_expand_tarva_air_academy }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = naval_bomber_bonus
+				bonus = 1.0
+				uses = 2
+				category = naval_bomber
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_aerial_tech_development
+		icon = GFX_goal_generic_air_doctrine
+		x = -1
+		y = 2
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_expand_tarva_air_academy }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_aerial_tech_development_tt
+			add_tech_bonus = {
+				name = air_equipment_bonus
+				bonus = 1.0
+				uses = 2
+				category = air_equipment
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_supermanoevers
+		icon = GFX_goal_generic_air_fighter
+		x = 3
+		y = 2
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_expand_tarva_air_academy }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_supermanoevers_tt
+			add_ideas = KUS_supermanoevers_spirit
+		}
+	}
+
+	# ---- Row 3: Naval air Coordination + ME pair ----
+
+	focus = {
+		id = KUS_naval_air_coordination
+		icon = GFX_goal_generic_air_naval_bomber
+		x = -4
+		y = 3
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_development }
+		prerequisite = { focus = KUS_aerial_tech_development }
+		prerequisite = { focus = KUS_squadron_flagships }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_naval_air_coordination_tt
 			add_ideas = KUS_naval_air_coordinators
 			air_experience = 40
 			navy_experience = 40
@@ -1560,738 +1301,168 @@
 
 	focus = {
 		id = KUS_standardization
-		icon = GFX_focus_NORDIC_dem_selector_airforce
-		x = -1
-		y = 1
+		icon = GFX_goal_generic_production
+		x = 2
+		y = 3
 		cost = 5
-		relative_position_id = KUS_supermanoevers
-		mutually_exclusive = { focus = KUS_specialization }
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_supermanoevers }
-
-		ai_will_do = { factor = 1 }
+		mutually_exclusive = { focus = KUS_specialization }
 
 		completion_reward = {
-			add_ideas = KUS_standardization_equipment
+			custom_effect_tooltip = KUS_standardization_tt
 		}
 	}
 
 	focus = {
 		id = KUS_specialization
-		icon = GFX_focus_NORDIC_dem_airforce
-		x = 1
-		y = 1
+		icon = GFX_goal_generic_production2
+		x = 4
+		y = 3
 		cost = 5
-		relative_position_id = KUS_supermanoevers
-		mutually_exclusive = { focus = KUS_standardization }
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_supermanoevers }
-
-		ai_will_do = { factor = 1 }
+		mutually_exclusive = { focus = KUS_standardization }
 
 		completion_reward = {
-			add_ideas = KUS_specialization_equipment
+			custom_effect_tooltip = KUS_specialization_tt
 		}
 	}
 
-	focus = {
-		id = KUS_rearline_guard
-		icon = GFX_focus_SOV_restore_cossack_units
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_maximum_firepower
-		prerequisite = { focus = KUS_maximum_firepower }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_rearline_guard_tt
-			hidden_effect = {
-				add_to_variable = { KUS_maavoim_org = 0.05 }
-				add_to_variable = { KUS_maavoim_defence = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_halberd_at
-		icon = GFX_goal_generic_army_artillery
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_armored_research_left
-		prerequisite = { focus = KUS_armored_research_left }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_halberd_at_equipment
-			add_tech_bonus = {
-				name = KUS_infantry_at_bonus
-				bonus = 1.0
-				ahead_reduction = 2
-				uses = 1
-				category = cat_anti_tank
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_machiavellian_high_command
-		icon = GFX_SOV_great_commander_ccp_2d_sov_compatibility
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_mobile_coordinators
-		prerequisite = { focus = KUS_mobile_coordinators }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_machiavellian_tt
-			hidden_effect = {
-				add_to_variable = { KUS_maavoim_max_planning = 0.10 }
-				add_to_variable = { KUS_maavoim_planning_speed = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_integrated_communications
-		icon = GFX_goal_generic_radar
-		x = -2
-		y = 1
-		cost = 5
-		relative_position_id = KUS_concentration_of_force
-		prerequisite = { focus = KUS_concentration_of_force }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_integrated_communications_tt
-			hidden_effect = {
-				add_to_variable = { KUS_maavoim_reinforce_rate = 0.01 }
-				add_to_variable = { KUS_maavoim_air_superiority = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_centralized_command
-		icon = GFX_SOV_expand_aviation_institutes_ccp_2d_sov_compatibility
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_integrated_communications
-		prerequisite = { focus = KUS_integrated_communications }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_centralized_command_tt
-			hidden_effect = {
-				add_to_variable = { KUS_maavoim_planning_speed = 0.10 }
-				add_to_variable = { KUS_maavoim_max_planning = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_project_boom
-		icon = GFX_focus_generic_self_propelled_gun
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_armored_research_right
-		prerequisite = { focus = KUS_armored_research_right }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			country_event = { id = KUS_event.1 }
-			add_tech_bonus = {
-				name = KUS_armor_bonus
-				bonus = 1.0
-				uses = 1
-				category = armor
-			}
-			add_tech_bonus = {
-				name = KUS_sp_art_bonus
-				bonus = 0.50
-				uses = 1
-				category = armor
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_off_road_logistics
-		icon = GFX_focus_generic_road_investment
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_speed_cult
-		prerequisite = { focus = KUS_speed_cult }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_off_road_tt
-			hidden_effect = {
-				add_to_variable = { KUS_maavoim_supply_usage = -0.08 }
-			}
-		}
-	}
-
-	# ==========================================
-	# ROW 5
-	# ==========================================
-	focus = {
-		id = KUS_deep_sea_monsters
-		icon = GFX_focus_ARG_study_the_battle_of_the_river_plate
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_pythagoras_class
-		prerequisite = { focus = KUS_pythagoras_class }
-		prerequisite = { focus = KUS_train_admirality }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_deep_sea_monsters_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_capital_ship_speed = 0.10 }
-				add_to_variable = { KUS_merevagi_naval_hit_chance = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_warden_torpedo
-		icon = GFX_focus_generic_cryptologic_bomb
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_high_tech_raiding
-		prerequisite = { focus = KUS_high_tech_raiding }
-		prerequisite = { focus = KUS_carrier_research_left }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_warden_torpedo_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_sub_crit = 0.05 }
-				add_to_variable = { KUS_merevagi_sub_attack = 0.05 }
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_unrestricted_sub_warfare
-		icon = GFX_focus_generic_midget_submarines
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_carrier_research_left
-		prerequisite = { focus = KUS_carrier_research_left }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_unrestricted_sub_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_naval_detection = 0.10 }
-			}
-			KUS_Karl_Erijk = {
-			add_skill_level = 1
-			add_attack = 1
-			}
-			KUS_Markus_Mori = {
-			add_unit_leader_trait = seawolf
-			add_skill_level = 1
-			add_attack = 1
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_establish_carrier_groups
-		icon = GFX_focus_SMB_blue_water_fleet
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_carrier_research_right
-		prerequisite = { focus = KUS_carrier_research_right }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_establish_carrier_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_sortie_efficiency = 0.05 }
-				add_to_variable = { KUS_merevagi_carrier_air_agility = 0.05 }
-				add_to_variable = { KUS_merevagi_fighter_sortie = 0.05 }
-			}
-			KUS_Karl_Erijk = {
-			add_skill_level = 1
-			add_maneuvering = 1
-			}
-			KUS_Markus_Mori = {
-			add_unit_leader_trait = air_controller
-			add_skill_level = 1
-			add_maneuvering = 1
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_fleet_mobility
-		icon = GFX_goal_generic_navy_cruiser
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_carrier_research_right
-		prerequisite = { focus = KUS_carrier_research_right }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_fleet_mobility_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_capital_ship_speed = 0.10 }
-			}
-		}
-	}
+	# ---- Row 4: Convergence of Naval Air Coord + ME pair ----
 
 	focus = {
 		id = KUS_advanced_bombers
 		icon = GFX_goal_generic_air_bomber
-		x = -1
-		y = 2
+		x = -3
+		y = 4
 		cost = 5
-		relative_position_id = KUS_aerial_tech_development
-		prerequisite = { focus = KUS_aerial_tech_development }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_coordination }
+		prerequisite = { focus = KUS_standardization focus = KUS_specialization }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_advanced_bombers_tt
 			hidden_effect = {
-				add_to_variable = { KUS_ohuvagi_range = 0.10 }
-				add_to_variable = { KUS_ohuvagi_strat_bomb_visibility = -0.10 }
+				add_to_variable = { KUS_OHU_range = 0.10 }
+				add_to_variable = { KUS_OHU_strat_vis = -0.10 }
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_maximize_performance
-		icon = GFX_focus_generic_long_range_aircraft
-		x = 1
-		y = 2
+		icon = GFX_goal_generic_air_fighter
+		x = 0
+		y = 4
 		cost = 5
-		relative_position_id = KUS_aerial_tech_development
-		prerequisite = { focus = KUS_aerial_tech_development }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_coordination }
+		prerequisite = { focus = KUS_standardization focus = KUS_specialization }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_maximize_performance_tt
 			hidden_effect = {
-				add_to_variable = { KUS_ohuvagi_agility = 0.05 }
-				add_to_variable = { KUS_ohuvagi_air_speed = 0.05 }
+				add_to_variable = { KUS_OHU_agility = 0.05 }
+				add_to_variable = { KUS_OHU_speed = 0.05 }
 			}
 		}
 	}
 
 	focus = {
-		id = KUS_multirole_aircraft
-		icon = GFX_focus_generic_copy_plane_designs
-		x = 2
-		y = 1
+		id = KUS_multirole_aircraft_design
+		icon = GFX_goal_generic_air_doctrine
+		x = 3
+		y = 4
 		cost = 5
-		relative_position_id = KUS_standardization
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_naval_air_coordination }
 		prerequisite = { focus = KUS_standardization focus = KUS_specialization }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			custom_effect_tooltip = KUS_multirole_tt
+			custom_effect_tooltip = KUS_multirole_aircraft_design_tt
 			hidden_effect = {
-				add_to_variable = { KUS_ohuvagi_wing_xp_gain = 0.25 }
+				add_to_variable = { KUS_OHU_wing_xp = 0.25 }
 			}
 		}
 	}
 
-	focus = {
-		id = KUS_industrial_saturation
-		icon = GFX_focus_SWE_let_fly_all_guns
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_rearline_guard
-		prerequisite = { focus = KUS_rearline_guard }
-		prerequisite = { focus = KUS_halberd_at }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_industrial_saturation_equipment
-		}
-	}
-
-	focus = {
-		id = KUS_perfect_training_left
-		icon = GFX_SOV_intensify_pilot_training_program_ccp_2d_sov_compatibility
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_halberd_at
-		prerequisite = { focus = KUS_halberd_at }
-		prerequisite = { focus = KUS_machiavellian_high_command }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			army_experience = 50
-			add_ideas = KUS_good_training
-		}
-	}
-
-	focus = {
-		id = KUS_officer_initiative
-		icon = GFX_focus_CONGO_congolese_generals
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_machiavellian_high_command
-		prerequisite = { focus = KUS_machiavellian_high_command }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			every_unit_leader = {
-				limit = {
-					is_unit_leader_type = corps_commander
-				}
-				add_attack = 1
-				add_planning = 1
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_full_mechanization
-		icon = GFX_focus_generic_mechanized
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_centralized_command
-		prerequisite = { focus = KUS_centralized_command }
-		prerequisite = { focus = KUS_project_boom }
-		
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_full_mechanization_equipment
-		}
-	}
-
-	focus = {
-		id = KUS_perfect_training_right
-		icon = GFX_goal_generic_army_doctrines
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_project_boom
-		prerequisite = { focus = KUS_project_boom }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			army_experience = 50
-			add_ideas = KUS_good_training
-		}
-	}
-
-	focus = {
-		id = KUS_logistical_considerations
-		icon = GFX_focus_generic_railroad
-		x = 2
-		y = 1
-		cost = 5
-		relative_position_id = KUS_project_boom
-		prerequisite = { focus = KUS_project_boom }
-		prerequisite = { focus = KUS_off_road_logistics }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			every_unit_leader = {
-				limit = {
-					is_unit_leader_type = corps_commander
-				}
-				add_planning = 1
-				add_logistics = 1
-			}
-		}
-	}
-
-	# ==========================================
-	# ROW 6 - Branch Capstones
-	# ==========================================
-	focus = {
-		id = KUS_fleet_colossus
-		icon = GFX_focus_GER_high_seas_fleet
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_deep_sea_monsters
-		prerequisite = { focus = KUS_deep_sea_monsters }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_fleet_colossus_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_capital_ship_attack = 0.05 }
-			}
-			KUS_Karl_Erijk = {
-				add_unit_leader_trait = blue_water_expert
-			}
-			KUS_Markus_Mori = {
-				add_unit_leader_trait = blue_water_expert
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_fleet_nymph
-		icon = GFX_focus_generic_cruiser_submarines
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_warden_torpedo
-		prerequisite = { focus = KUS_warden_torpedo }
-		prerequisite = { focus = KUS_unrestricted_sub_warfare }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_fleet_nymph_equipment
-			KUS_Karl_Erijk = {
-				add_unit_leader_trait = green_water_expert
-			}
-			KUS_Markus_Mori = {
-				add_unit_leader_trait = green_water_expert
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_fleet_harpie
-		icon = GFX_goal_generic_navy_carrier
-		x = 1
-		y = 1
-		cost = 5
-		relative_position_id = KUS_establish_carrier_groups
-		prerequisite = { focus = KUS_establish_carrier_groups }
-		prerequisite = { focus = KUS_fleet_mobility }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_fleet_harpie_tt
-			KUS_Karl_Erijk = {
-				add_unit_leader_trait = torpedo_bomber
-			}
-			KUS_Markus_Mori = {
-				add_unit_leader_trait = fighter_director
-			}
-		}
-	}
+	# ---- Row 5: Ghosts of Flusion ----
 
 	focus = {
 		id = KUS_ghosts_of_flusion
-		icon = GFX_focus_FIN_expand_air_force_academy
-		x = 2
-		y = 1
+		icon = GFX_goal_generic_air_fighter
+		x = 0
+		y = 5
 		cost = 5
-		relative_position_id = KUS_advanced_bombers
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_advanced_bombers }
 		prerequisite = { focus = KUS_maximize_performance }
-		prerequisite = { focus = KUS_multirole_aircraft }
-
-		ai_will_do = { factor = 1 }
+		prerequisite = { focus = KUS_multirole_aircraft_design }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_ghosts_of_flusion_tt
 			hidden_effect = {
-				add_to_variable = { KUS_ohuvagi_air_superiority_efficiency = 0.05 }
-				add_to_variable = { KUS_ohuvagi_interception_efficiency = 0.05 }
-				add_to_variable = { KUS_ohuvagi_air_sup_combat = 0.10 }
+				remove_dynamic_modifier = { modifier = KUS_OHUVAGI }
+				add_ideas = KUS_flying_foxes
 			}
 		}
 	}
 
-	focus = {
-		id = KUS_strike_supernova
-		icon = GFX_focus_generic_strike_at_democracy1
-		x = 2
-		y = 1
-		cost = 5
-		relative_position_id = KUS_industrial_saturation
-		prerequisite = { focus = KUS_industrial_saturation }
-		prerequisite = { focus = KUS_officer_initiative }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_strike_supernova_tt
-			hidden_effect = {
-				add_to_variable = { KUS_maavoim_division_attack = 0.05 }
-				add_to_variable = { KUS_maavoim_org_loss_moving = -0.25 }
-				add_to_variable = { KUS_maavoim_breakthrough = 0.10 }
-			}
-		}
-	}
+	# ---- Row 6: Finalize Airforce Reform ----
 
 	focus = {
-		id = KUS_erioperatsioonide
-		icon = GFX_goal_generic_special_forces
+		id = KUS_finalize_airforce_reform
+		icon = GFX_goal_generic_air_doctrine
 		x = 0
-		y = 3
+		y = 6
 		cost = 5
-		relative_position_id = KUS_doctrinal_adaptation
-		prerequisite = { focus = KUS_doctrinal_adaptation }
-		prerequisite = { focus = KUS_centralized_command focus = KUS_machiavellian_high_command }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_eog
-		}
-	}
-
-	focus = {
-		id = KUS_speed_of_light
-		icon = GFX_focus_generic_tank_assault
-		x = -2
-		y = 1
-		cost = 5
-		relative_position_id = KUS_logistical_considerations
-		prerequisite = { focus = KUS_logistical_considerations }
-		prerequisite = { focus = KUS_full_mechanization }
-		
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_speed_of_light_tt
-			hidden_effect = {
-				add_to_variable = { KUS_maavoim_division_speed = 0.10 }
-				add_to_variable = { KUS_maavoim_breakthrough = 0.05 }
-			}
-		}
-	}
-
-	# ==========================================
-	# ROW 7 - Finalize Reforms
-	# ==========================================
-	focus = {
-		id = KUS_finalize_navy
-		icon = GFX_goal_KTZ_perfect_navy
-		x = 7
-		y = 1
-		cost = 5
-		relative_position_id = KUS_fleet_colossus
-		prerequisite = { focus = KUS_fleet_colossus focus = KUS_fleet_nymph focus = KUS_fleet_harpie }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_timed_idea = {
-			idea = KUS_navy_mastery_boost
-			days = 365
-			}
-		}
-	}
-
-	focus = {
-		id = KUS_finalize_airforce
-		icon = GFX_goal_KTZ_blot_out_sun
-		x = 0
-		y = 1
-		cost = 5
-		relative_position_id = KUS_ghosts_of_flusion
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_ghosts_of_flusion }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
 			add_timed_idea = {
-				idea = KUS_airforce_mastery_boost
+				idea = KUS_airforce_reform_mastery
 				days = 365
 			}
 		}
 	}
 
-	focus = {
-		id = KUS_finalize_army
-		icon = GFX_goal_KTZ_true_blitzkrieg
-		x = 4
-		y = 1
-		cost = 5
-		relative_position_id = KUS_strike_supernova
-		prerequisite = { focus = KUS_strike_supernova focus = KUS_speed_of_light }
+	# ---- Row 7: Taskforce Y (Nuclear branch root) ----
 
-		ai_will_do = { factor = 1 }
+	focus = {
+		id = KUS_taskforce_y
+		icon = GFX_goal_KTZ_atomic_power
+		x = 0
+		y = 7
+		cost = 5
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_finalize_airforce_reform }
 
 		completion_reward = {
-			add_timed_idea = {
-			idea = KUS_army_mastery_boost
-			days = 365
+			custom_effect_tooltip = KUS_taskforce_y_tt
+			hidden_effect = {
+				set_variable = { KUS_TUUM_nuke_prod = 0.05 }
+				set_variable = { KUS_TUUM_radiation = 0 }
+				add_dynamic_modifier = { modifier = KUS_TUUMAVAGI }
 			}
 		}
 	}
 
-	# ==========================================
-	# ROW 8 - Taskforce Y (Nuclear)
-	# ==========================================
-	focus = {
-		id = KUS_taskforce_y
-		icon = GFX_focus_generic_uranium_extraction
-		x = 8
-		y = 1
-		cost = 5
-		relative_position_id = KUS_finalize_navy
-		prerequisite = { focus = KUS_finalize_navy }
-		prerequisite = { focus = KUS_finalize_airforce }
-		prerequisite = { focus = KUS_finalize_army }
+	# ---- Row 8: Three nuclear branches ----
 
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_tuumavagi
-		}
-	}
-
-	# ==========================================
-	# ROW 9 - Nuclear Sub-branches
-	# ==========================================
 	focus = {
 		id = KUS_naval_nuclear_platforms
-		icon = GFX_goal_generic_navy_anti_submarine
-		x = -2
-		y = 1
+		icon = GFX_goal_generic_navy_submarine
+		x = -3
+		y = 8
 		cost = 5
-		relative_position_id = KUS_taskforce_y
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_taskforce_y }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			add_tech_bonus = {
-				name = KUS_nuclear_sub_bonus
+				name = nuclear_sub_bonus
 				bonus = 0.50
 				ahead_reduction = 1
 				uses = 1
@@ -2302,18 +1473,16 @@
 
 	focus = {
 		id = KUS_weapon_3234
-		icon = GFX_focus_generic_nuclear_development
+		icon = GFX_goal_KTZ_atomic_power
 		x = 0
-		y = 1
+		y = 8
 		cost = 5
-		relative_position_id = KUS_taskforce_y
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_taskforce_y }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			add_tech_bonus = {
-				name = KUS_nuclear_bonus
+				name = nuclear_research_bonus
 				bonus = 0.50
 				ahead_reduction = 2
 				uses = 1
@@ -2324,292 +1493,774 @@
 
 	focus = {
 		id = KUS_mandate_nuclear_safehouses
-		icon = GFX_focus_generic_mountain_fortification
-		x = 2
-		y = 1
+		icon = GFX_goal_generic_radar
+		x = 3
+		y = 8
 		cost = 5
-		relative_position_id = KUS_taskforce_y
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_taskforce_y }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_tuumavagi }
-				swap_ideas = {
-					remove_idea = KUS_tuumavagi
-					add_idea = KUS_tuumavagi_2
-				}
+			custom_effect_tooltip = KUS_mandate_nuclear_safehouses_tt
+			hidden_effect = {
+				add_to_variable = { KUS_TUUM_radiation = -0.10 }
 			}
 		}
 	}
 
-	# ==========================================
-	# ROW 10
-	# ==========================================
+	# ---- Row 9: Two convergence focuses ----
+
 	focus = {
 		id = KUS_kohla_silo_system
-		icon = GFX_focus_rocketry
-		x = 1
-		y = 1
+		icon = GFX_goal_generic_production
+		x = -2
+		y = 9
 		cost = 5
-		relative_position_id = KUS_naval_nuclear_platforms
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_naval_nuclear_platforms }
 		prerequisite = { focus = KUS_weapon_3234 }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			717 = { # Kohla
-			add_extra_state_shared_building_slots = 3
-			add_building_construction = {
-			type = rocket_site
-			level = 3
-			instant_build = yes
-			}
+			custom_effect_tooltip = KUS_kohla_silo_system_tt
+			717 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = rocket_site level = 3 instant_build = yes }
 			}
 		}
 	}
 
 	focus = {
 		id = KUS_icbm_defense_array
-		icon = GFX_focus_generic_air_defense
-		x = 3
-		y = 1
+		icon = GFX_goal_generic_radar
+		x = 2
+		y = 9
 		cost = 5
-		relative_position_id = KUS_naval_nuclear_platforms
-		prerequisite = { focus = KUS_naval_nuclear_platforms }
+		relative_position_id = KUS_ohuvagi
+		prerequisite = { focus = KUS_weapon_3234 }
 		prerequisite = { focus = KUS_mandate_nuclear_safehouses }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			custom_effect_tooltip = KUS_icbm_defense_tt
-			218 = { # Jarvalin
-			add_building_construction = {
-			type = nuclear_facility
-			level = 4
-			instant_build = yes
+			custom_effect_tooltip = KUS_icbm_defense_array_tt
+			218 = {
+				add_building_construction = { type = anti_air_building level = 4 instant_build = yes }
 			}
+			every_owned_state = {
+				limit = {
+					is_core_of = ROOT
+					NOT = { state = 218 }
+				}
+				add_building_construction = { type = anti_air_building level = 2 instant_build = yes }
 			}
 		}
 	}
 
-	# ==========================================
-	# ROW 11 - Operation Darkest Hour
-	# ==========================================
+	# ---- Row 10: Capstone ----
+
 	focus = {
 		id = KUS_operation_darkest_hour
-		icon = GFX_goal_generic_secret_weapon
-		x = 1
-		y = 1
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 10
 		cost = 5
-		relative_position_id = KUS_kohla_silo_system
+		relative_position_id = KUS_ohuvagi
 		prerequisite = { focus = KUS_kohla_silo_system }
 		prerequisite = { focus = KUS_icbm_defense_array }
 
-		ai_will_do = { factor = 1 }
+		completion_reward = {
+			custom_effect_tooltip = KUS_operation_darkest_hour_tt
+			hidden_effect = {
+				add_to_variable = { KUS_TUUM_nuke_prod = 0.05 }
+			}
+		}
+	}
+
+	# ==========================================
+	# NAVY TREE (Merevagi)
+	# ==========================================
+
+	# ---- Row 0: Root ----
+
+	focus = {
+		id = KUS_merevagi
+		icon = GFX_goal_generic_navy_doctrines
+		x = -40
+		y = 0
+		cost = 5
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_tuumavagi_2 }
-				swap_ideas = {
-					remove_idea = KUS_tuumavagi_2
-					add_idea = KUS_operation_darkest_hour
-				}
+			navy_experience = 25
+			custom_effect_tooltip = KUS_merevagi_tt
+			hidden_effect = {
+				set_variable = { KUS_MERI_xp_gain = 0.05 }
+				set_variable = { KUS_MERI_capital_prod_cost = 0 }
+				set_variable = { KUS_MERI_spotting = 0 }
+				set_variable = { KUS_MERI_carrier_air_attack = 0 }
+				set_variable = { KUS_MERI_carrier_air_agility = 0 }
+				set_variable = { KUS_MERI_capital_attack = 0 }
+				set_variable = { KUS_MERI_cruiser_prod_cost = 0 }
+				set_variable = { KUS_MERI_convoy_raiding = 0 }
+				set_variable = { KUS_MERI_sub_crit = 0 }
+				set_variable = { KUS_MERI_capital_speed = 0 }
+				set_variable = { KUS_MERI_naval_hit = 0 }
+				set_variable = { KUS_MERI_sub_attack = 0 }
+				set_variable = { KUS_MERI_naval_detection = 0 }
+				set_variable = { KUS_MERI_sortie_eff = 0 }
+				set_variable = { KUS_MERI_fighter_sortie = 0 }
+				set_variable = { KUS_MERI_screening = 0 }
+				set_variable = { KUS_MERI_sub_prod_cost = 0 }
+				add_dynamic_modifier = { modifier = KUS_MEREVAGI }
 			}
-			if = {
-				limit = { has_idea = KUS_tuumavagi }
-				swap_ideas = {
-					remove_idea = KUS_tuumavagi
-					add_idea = KUS_operation_darkest_hour
+			add_tech_bonus = {
+				name = naval_doctrine_bonus
+				bonus = 0.75
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+	}
+
+	# ---- Row 2: Mutually Exclusive plans + Squadron Flagships ----
+
+	focus = {
+		id = KUS_plan_colossus
+		icon = GFX_goal_generic_navy_battleship
+		x = -6
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+		mutually_exclusive = { focus = KUS_plan_nymph focus = KUS_plan_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_colossus_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_prod_cost = -0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_plan_nymph
+		icon = GFX_goal_generic_navy_submarine
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+		mutually_exclusive = { focus = KUS_plan_colossus focus = KUS_plan_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_nymph_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_spotting = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_plan_harpie
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+		mutually_exclusive = { focus = KUS_plan_colossus focus = KUS_plan_nymph }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_plan_harpie_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_carrier_air_attack = 0.10 }
+				add_to_variable = { KUS_MERI_carrier_air_agility = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_squadron_flagships
+		icon = GFX_goal_generic_navy_cruiser
+		x = 10
+		y = 2
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_merevagi }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_squadron_flagships_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_attack = 0.05 }
+				add_to_variable = { KUS_MERI_cruiser_prod_cost = -0.10 }
+			}
+		}
+	}
+
+	# ---- Row 3: Plan sub-focuses ----
+
+	focus = {
+		id = KUS_expand_naval_yards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -8
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_colossus }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_expand_naval_yards_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_prod_cost = -0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_modern_ship_design
+		icon = GFX_goal_generic_navy_doctrines
+		x = -4
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_colossus focus = KUS_plan_nymph }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_modern_ship_design_tt
+			add_tech_bonus = {
+				name = bb_tech_bonus
+				bonus = 1.0
+				uses = 1
+				category = bb_tech
+			}
+			add_tech_bonus = {
+				name = dd_tech_bonus
+				bonus = 1.0
+				ahead_reduction = 1
+				uses = 1
+				category = dd_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_predictive_ship_positioning
+		icon = GFX_goal_generic_radar
+		x = 0
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_nymph }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_predictive_ship_positioning_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_convoy_raiding = 0.10 }
+				add_to_variable = { KUS_MERI_sub_crit = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_post_kaiser_carrier
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 3
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_plan_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_post_kaiser_carrier_tt
+			add_tech_bonus = {
+				name = cv_tech_bonus
+				bonus = 1.0
+				uses = 1
+				category = cv_tech
+			}
+			add_tech_bonus = {
+				name = naval_bomber_bonus
+				bonus = 1.0
+				uses = 1
+				category = naval_bomber
+			}
+		}
+	}
+
+	# ---- Row 4: Second tier ----
+
+	focus = {
+		id = KUS_pythagoras_class
+		icon = GFX_goal_generic_navy_battleship
+		x = -8
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_expand_naval_yards }
+
+		available = {
+			has_tech = ship_hull_super_heavy
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_pythagoras_class_tt
+			hidden_effect = {
+				create_equipment_variant = {
+					name = "Pythagoras"
+					type = ship_hull_super_heavy_1
+					parent_version = 0
 				}
 			}
 		}
 	}
 
+	focus = {
+		id = KUS_train_admiralty
+		icon = GFX_goal_generic_navy_doctrines
+		x = -4
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_modern_ship_design }
 
-	#############################
-	# DEMOCRATIC POLITICAL PATH
-	#############################
+		completion_reward = {
+			custom_effect_tooltip = KUS_train_admiralty_tt
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_skill_level = 1
+				add_attack = 1
+				add_trait = { trait = battleship_adherent }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_skill_level = 1
+				add_attack = 1
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_high_tech_raiding
+		icon = GFX_goal_generic_navy_submarine
+		x = 0
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_predictive_ship_positioning }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_high_tech_raiding_tt
+			add_tech_bonus = {
+				name = ss_tech_bonus
+				bonus = 1.0
+				uses = 1
+				category = ss_tech
+			}
+			add_tech_bonus = {
+				name = ss_tech_ahead_bonus
+				bonus = 1.0
+				ahead_reduction = 2
+				uses = 1
+				category = ss_tech
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_carrier_research_commission
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 4
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_post_kaiser_carrier }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_carrier_research_commission_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_carrier_air_agility = 0.05 }
+			}
+		}
+	}
+
+	# ---- Row 5: Third tier ----
+
+	focus = {
+		id = KUS_deep_sea_monsters
+		icon = GFX_goal_generic_navy_battleship
+		x = -6
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_pythagoras_class }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_deep_sea_monsters_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_speed = 0.10 }
+				add_to_variable = { KUS_MERI_naval_hit = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_warden_torpedo
+		icon = GFX_goal_generic_navy_submarine
+		x = -2
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_train_admiralty focus = KUS_high_tech_raiding }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_warden_torpedo_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_sub_crit = 0.05 }
+				add_to_variable = { KUS_MERI_sub_attack = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_unrestricted_submarine_warfare
+		icon = GFX_goal_generic_navy_submarine
+		x = 2
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_high_tech_raiding }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_unrestricted_submarine_warfare_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_naval_detection = 0.10 }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_skill_level = 1
+				add_attack = 1
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_skill_level = 1
+				add_attack = 1
+				add_trait = { trait = seawolf }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_establish_carrier_groups
+		icon = GFX_goal_generic_navy_carrier
+		x = 6
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_carrier_research_commission }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_establish_carrier_groups_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_sortie_eff = 0.05 }
+				add_to_variable = { KUS_MERI_carrier_air_agility = 0.05 }
+				add_to_variable = { KUS_MERI_fighter_sortie = 0.05 }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_skill_level = 1
+				add_maneuvering = 1
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_skill_level = 1
+				add_maneuvering = 1
+				add_trait = { trait = air_controller }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_fleet_mobility
+		icon = GFX_goal_generic_navy_cruiser
+		x = 10
+		y = 5
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_squadron_flagships }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_mobility_tt
+			hidden_effect = {
+				add_to_variable = { KUS_MERI_capital_speed = 0.10 }
+			}
+		}
+	}
+
+	# ---- Row 6: Fleet Capstones ----
+
+	focus = {
+		id = KUS_fleet_colossus
+		icon = GFX_goal_generic_navy_battleship
+		x = -4
+		y = 6
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_deep_sea_monsters }
+		prerequisite = { focus = KUS_warden_torpedo }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_colossus_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_MEREVAGI }
+			}
+			add_ideas = KUS_fleet_colossus_spirit
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_trait = { trait = blue_water_expert }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_trait = { trait = blue_water_expert }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_fleet_nymph
+		icon = GFX_goal_generic_navy_submarine
+		x = 0
+		y = 6
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_warden_torpedo }
+		prerequisite = { focus = KUS_unrestricted_submarine_warfare }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_nymph_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_MEREVAGI }
+			}
+			add_ideas = KUS_fleet_nymph_spirit
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_trait = { trait = green_water_expert }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_trait = { trait = green_water_expert }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_fleet_harpie
+		icon = GFX_goal_generic_navy_carrier
+		x = 8
+		y = 6
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_establish_carrier_groups }
+		prerequisite = { focus = KUS_fleet_mobility }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_harpie_tt
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = KUS_MEREVAGI }
+			}
+			add_ideas = KUS_fleet_harpie_spirit
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Karl_Erijb
+				}
+				add_trait = { trait = torpedo_bomber }
+			}
+			every_navy_leader = {
+				limit = {
+					is_character = KUS_Markus_Mori
+				}
+				add_trait = { trait = fighter_director }
+			}
+		}
+	}
+
+	# ---- Row 8: Final Capstone ----
+
+	focus = {
+		id = KUS_finalize_navy_reform
+		icon = GFX_goal_generic_navy_doctrines
+		x = 0
+		y = 8
+		cost = 5
+		relative_position_id = KUS_merevagi
+		prerequisite = { focus = KUS_fleet_colossus focus = KUS_fleet_nymph focus = KUS_fleet_harpie }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_finalize_navy_reform_tt
+			add_timed_idea = {
+				idea = KUS_navy_reform_mastery
+				days = 365
+			}
+		}
+	}
 
 	# ==========================================
-	# A Loyal Friend - Democratic Root
+	# POLITICAL TREE
 	# ==========================================
+
+	# ---- Row 0: Root ----
+
 	focus = {
 		id = KUS_a_loyal_friend
-		icon = GFX_goal_generic_national_unity
-		x = 14
+		icon = GFX_goal_KTZ_katzen_authorities
+		x = 18
 		y = 0
 		cost = 3
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			add_political_power = 50
-			custom_effect_tooltip = KUS_talvan_rahha_available_tt
+			custom_effect_tooltip = KUS_a_loyal_friend_tt
+			hidden_effect = {
+				activate_advisor = KUS_Sasse_Rudas
+			}
 		}
 	}
 
-	# ==========================================
-	# Expand the Cabinet
-	# ==========================================
+	# ---- Row 1: Cabinet / Ministry branches ----
+
 	focus = {
-		id = KUS_expand_the_cabinet
-		icon = GFX_focus_GER_strengthen_the_proletarian_international
-		relative_position_id = KUS_a_loyal_friend
-		x = -1
+		id = KUS_expand_cabinet
+		icon = GFX_goal_generic_intelligence_exchange
+		x = -2
 		y = 1
 		cost = 5
-
+		relative_position_id = KUS_a_loyal_friend
 		prerequisite = { focus = KUS_a_loyal_friend }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_expand_cabinet_tt
 		}
 	}
 
-	# ==========================================
-	# Support Ministry of Public Affairs
-	# ==========================================
 	focus = {
-		id = KUS_support_ministry_public_affairs
+		id = KUS_support_public_affairs
 		icon = GFX_goal_generic_propaganda
-		relative_position_id = KUS_a_loyal_friend
-		x = 1
+		x = 2
 		y = 1
 		cost = 5
-
+		relative_position_id = KUS_a_loyal_friend
 		prerequisite = { focus = KUS_a_loyal_friend }
 
-		ai_will_do = { factor = 1 }
+		completion_reward = {
+			custom_effect_tooltip = KUS_support_public_affairs_tt
+			add_political_power = 50
+			add_stability = 0.05
+		}
+	}
+
+	# ---- Row 2: Reinforce / Food Security ----
+
+	focus = {
+		id = KUS_reinforce_ministries
+		icon = GFX_focus_generic_court
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_expand_cabinet
+		prerequisite = { focus = KUS_expand_cabinet }
 
 		completion_reward = {
-			218 = {
+			custom_effect_tooltip = KUS_reinforce_ministries_tt
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = KUS_food_security_act
+		icon = GFX_focus_generic_agricultural_subsidies
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = KUS_support_public_affairs
+		prerequisite = { focus = KUS_support_public_affairs }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_food_security_act_tt
+			225 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			231 = {
+				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
 					type = industrial_complex
 					level = 1
 					instant_build = yes
 				}
-				add_extra_state_shared_building_slots = 2
-			}
-			add_popularity = {
-				ideology = democratic
-				popularity = 0.10
 			}
 		}
 	}
 
-	# ==========================================
-	# Food Security Act
-	# ==========================================
-	focus = {
-		id = KUS_food_security_act
-		icon = GFX_focus_generic_farmland
-		relative_position_id = KUS_support_ministry_public_affairs
-		x = 0
-		y = 1
-		cost = 5
+	# ---- Row 3: Combat Extremism (convergence) ----
 
-		prerequisite = { focus = KUS_support_ministry_public_affairs }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			717 = {
-				add_building_construction = {
-					type = hydroponics_farm
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-			231 = {
-				add_building_construction = {
-					type = hydroponics_farm
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-		}
-	}
-
-	# ==========================================
-	# Reinforce Ministries
-	# ==========================================
-	focus = {
-		id = KUS_reinforce_ministries
-		icon = GFX_focus_PER_national_bank
-		relative_position_id = KUS_expand_the_cabinet
-		x = 0
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_expand_the_cabinet }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_political_power = 100
-			army_experience = 20
-		}
-	}
-
-	# ==========================================
-	# Combat Extremism
-	# ==========================================
 	focus = {
 		id = KUS_combat_extremism
-		icon = GFX_SOV_beaten_but_not_defeated_ccp_2d_sov_compatibility
-		relative_position_id = KUS_reinforce_ministries
-		x = 1
-		y = 1
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 0
+		y = 3
 		cost = 5
-
+		relative_position_id = KUS_a_loyal_friend
 		prerequisite = { focus = KUS_reinforce_ministries }
 		prerequisite = { focus = KUS_food_security_act }
 
-		ai_will_do = { factor = 2 }
-
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_rampant_extremism }
-				swap_ideas = {
-					remove_idea = KUS_rampant_extremism
-					add_idea = KUS_suppressed_extremism
-				}
+			custom_effect_tooltip = KUS_combat_extremism_tt
+			hidden_effect = {
+				remove_ideas = KUS_rampant_extremism
+				add_ideas = KUS_suppressed_extremism
 			}
 		}
 	}
 
-	# ==========================================
-	# Support Independent Militaries
-	# ==========================================
+	# ---- Row 4: Support Independent Militiamen ----
+
 	focus = {
-		id = KUS_support_independent_militaries
-		icon = GFX_focus_GER_demonstration_of_military_achievements
-		relative_position_id = KUS_combat_extremism
+		id = KUS_support_independent_militiamen
+		icon = GFX_goal_generic_allies_build_infantry
 		x = 0
 		y = 1
 		cost = 5
-
+		relative_position_id = KUS_combat_extremism
 		prerequisite = { focus = KUS_combat_extremism }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			random_owned_controlled_state = {
+			custom_effect_tooltip = KUS_support_independent_militiamen_tt
+			218 = {
+				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
 					type = arms_factory
 					level = 2
 					instant_build = yes
 				}
-				add_extra_state_shared_building_slots = 2
 			}
-			custom_effect_tooltip = KUS_spawn_infantry_tt
 			hidden_effect = {
 				division_template = {
 					name = "Kusnurk Militia"
@@ -2623,31 +2274,61 @@
 					}
 				}
 				218 = {
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
+					create_unit = {
+						division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3"
+						owner = KUS
+					}
 				}
 			}
 		}
 	}
 
-	# ==========================================
-	# Mobilize for War
-	# ==========================================
+	# ---- Row 5: Three policy branches ----
+
+	focus = {
+		id = KUS_schools_hospitals_parks
+		icon = GFX_goal_KTZ_free_healthcare
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_support_independent_militiamen }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_schools_hospitals_parks_tt
+			add_stability = 0.05
+			add_tech_bonus = {
+				name = medical_bonus
+				bonus = 1.0
+				uses = 1
+				category = hospital_tech
+			}
+		}
+	}
+
 	focus = {
 		id = KUS_mobilize_for_war
-		icon = GFX_goal_generic_military_sphere
-		relative_position_id = KUS_support_independent_militaries
+		icon = GFX_focus_generic_total_war
 		x = 0
 		y = 1
 		cost = 5
-
-		prerequisite = { focus = KUS_support_independent_militaries }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_support_independent_militiamen }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_mobilize_for_war_tt
 			if = {
 				limit = {
 					NOT = { has_idea = partial_economic_mobilisation }
@@ -2669,316 +2350,250 @@
 		}
 	}
 
-	# ==========================================
-	# Threat on the Border
-	# ==========================================
 	focus = {
 		id = KUS_threat_on_border
-		icon = GFX_goal_generic_fortify_city
-		relative_position_id = KUS_mobilize_for_war
+		icon = GFX_focus_generic_provoke_border_clashes
 		x = 2
-		y = 0
+		y = 1
 		cost = 5
-
-		prerequisite = { focus = KUS_support_independent_militaries }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_support_independent_militiamen }
 
 		completion_reward = {
-			225 = {
+			custom_effect_tooltip = KUS_threat_on_border_tt
+			every_owned_state = {
 				add_building_construction = {
 					type = bunker
-					level = 2
-					province = {
-						all_provinces = yes
-						limit_to_border = yes
-					}
+					level = 1
+					province = { all_provinces = yes limit_to_border = yes }
 					instant_build = yes
 				}
 			}
 		}
 	}
 
-	# ==========================================
-	# Reform Military Academy
-	# ==========================================
-	focus = {
-		id = KUS_reform_military_academy
-		icon = GFX_SOV_military_engineering_university_ccp_2d_sov_compatibility
-		relative_position_id = KUS_threat_on_border
-		x = 1
-		y = 1
-		cost = 5
+	# ---- Row 6: Bolster Presidential Power / Reform Military Academy ----
 
+	focus = {
+		id = KUS_bolster_presidential_power
+		icon = GFX_goal_generic_national_unity
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_schools_hospitals_parks }
+		prerequisite = { focus = KUS_mobilize_for_war }
 		prerequisite = { focus = KUS_threat_on_border }
 
-		ai_will_do = { factor = 1 }
+		completion_reward = {
+			custom_effect_tooltip = KUS_bolster_presidential_power_tt
+			add_political_power = 50
+			hidden_effect = {
+				country_event = { id = KUS_political_event.1 }
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_reform_military_academy
+		icon = GFX_focus_generic_military_academy
+		x = 4
+		y = 2
+		cost = 5
+		relative_position_id = KUS_support_independent_militiamen
+		prerequisite = { focus = KUS_schools_hospitals_parks }
+		prerequisite = { focus = KUS_mobilize_for_war }
+		prerequisite = { focus = KUS_threat_on_border }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_reform_military_academy_tt
 			add_ideas = KUS_reformed_military_academy
 		}
 	}
 
-	# ==========================================
-	# Bolster Presidential Power
-	# ==========================================
-	focus = {
-		id = KUS_bolster_presidential_power
-		icon = GFX_focus_AFG_parliamentary_democracy
-		relative_position_id = KUS_mobilize_for_war
-		x = 0
-		y = 1
-		cost = 10
+	# ---- Row 7: State Development / National Pride / Kibernyg ----
 
-		prerequisite = { focus = KUS_mobilize_for_war }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_political_power = 50
-			hidden_effect = {
-				KUS_Jon_Geemetra = {
-					add_country_leader_trait = KUS_backed_by_coalition
-				}
-			}
-			custom_effect_tooltip = KUS_backed_by_coalition_tt
-			country_event = { id = KUS_event.10 }
-		}
-	}
-
-	# ==========================================
-	# Endorse National Pride
-	# ==========================================
-	focus = {
-		id = KUS_endorse_national_pride
-		icon = GFX_focus_GER_strengthen_the_proletarian_international
-		relative_position_id = KUS_bolster_presidential_power
-		x = 1
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_bolster_presidential_power }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_war_support = 0.20
-			add_ideas = KUS_uhkus
-		}
-	}
-
-	# ==========================================
-	# State Development Funds
-	# ==========================================
 	focus = {
 		id = KUS_state_development_funds
-		icon = GFX_focus_RAJ_institutional_money_laundering
-		relative_position_id = KUS_bolster_presidential_power
-		x = -1
+		icon = GFX_goal_generic_construct_civ_factory
+		x = -2
 		y = 1
 		cost = 5
-
+		relative_position_id = KUS_bolster_presidential_power
 		prerequisite = { focus = KUS_bolster_presidential_power }
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
-			231 = { set_state_category = large_town }
-			715 = { set_state_category = large_town }
-			229 = { set_state_category = large_town }
+			custom_effect_tooltip = KUS_state_development_funds_tt
+			231 = {
+				set_state_category = large_city
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 
-	# ==========================================
-	# Kubervagi (Intelligence Service)
-	# ==========================================
 	focus = {
-		id = KUS_kubervagi
-		icon = GFX_focus_generic_radio_communication
-		relative_position_id = KUS_endorse_national_pride
-		x = 2
-		y = 0
+		id = KUS_embrace_national_pride
+		icon = GFX_goal_generic_propaganda
+		x = 0
+		y = 1
 		cost = 5
-
-		prerequisite = { focus = KUS_reform_military_academy }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_bolster_presidential_power
+		prerequisite = { focus = KUS_bolster_presidential_power }
 
 		completion_reward = {
-			if = {
-				limit = { has_dlc = "La Resistance" }
-				add_ideas = KUS_kubervagi_lar
-			}
-			if = {
-				limit = { NOT = { has_dlc = "La Resistance" } }
-				add_ideas = KUS_kubervagi
-			}
+			custom_effect_tooltip = KUS_embrace_national_pride_tt
+			add_war_support = 0.15
+			add_ideas = KUS_valiance
 		}
 	}
 
-	# ==========================================
-	# Proclaim Greater Kusnurk
-	# ==========================================
+	focus = {
+		id = KUS_kibernyg
+		icon = GFX_focus_generic_secret_service_agency
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = KUS_bolster_presidential_power
+		prerequisite = { focus = KUS_bolster_presidential_power }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_kibernyg_tt
+			add_ideas = KUS_kibernyg_spirit
+		}
+	}
+
+	# ---- Row 8: Mutually Exclusive - Greater Kusnurk / Roapokian Alliance ----
+
 	focus = {
 		id = KUS_proclaim_greater_kusnurk
-		icon = GFX_goal_generic_major_alliance
-		relative_position_id = KUS_state_development_funds
-		x = 1
+		icon = GFX_goal_generic_demand_territory
+		x = -2
 		y = 1
 		cost = 10
-
-		prerequisite = { focus = KUS_state_development_funds }
-		prerequisite = { focus = KUS_endorse_national_pride }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_embrace_national_pride
+		prerequisite = { focus = KUS_embrace_national_pride }
+		mutually_exclusive = { focus = KUS_roapokian_alliance }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_uhkus }
+			custom_effect_tooltip = KUS_proclaim_greater_kusnurk_tt
+			hidden_effect = {
 				swap_ideas = {
-					remove_idea = KUS_uhkus
-					add_idea = KUS_uhkus_greater
+					remove_idea = KUS_valiance
+					add_idea = KUS_valiance_greater
 				}
 			}
-			FSR = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_set_60
-					hidden_effect = {
-						set_state_flag = compliance_60_@ROOT
-						add_to_array = { array = ROOT.potential_cores_array }
-					}
-				}
-			}
-			DOM = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_set_60
-					hidden_effect = {
-						set_state_flag = compliance_60_@ROOT
-						add_to_array = { array = ROOT.potential_cores_array }
-					}
-				}
-			}
-			NEK = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_set_60
-					hidden_effect = {
-						set_state_flag = compliance_60_@ROOT
-						add_to_array = { array = ROOT.potential_cores_array }
-					}
-				}
-			}
+			add_war_support = 0.15
 		}
 	}
 
-	# ==========================================
-	# Roqualian Alliance
-	# ==========================================
 	focus = {
-		id = KUS_roqualian_alliance
-		icon = GFX_goal_generic_major_alliance
-		relative_position_id = KUS_proclaim_greater_kusnurk
-		x = 1
+		id = KUS_roapokian_alliance
+		icon = GFX_goal_generic_alliance
+		x = 2
 		y = 1
 		cost = 10
-
-		prerequisite = { focus = KUS_proclaim_greater_kusnurk }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_embrace_national_pride
+		prerequisite = { focus = KUS_embrace_national_pride }
+		mutually_exclusive = { focus = KUS_proclaim_greater_kusnurk }
 
 		completion_reward = {
-			add_opinion_modifier = { target = ROQ modifier = large_increase }
-			add_opinion_modifier = { target = LMB modifier = large_increase }
-			add_opinion_modifier = { target = RQA modifier = large_increase }
-			add_opinion_modifier = { target = PER modifier = large_increase }
-			if = {
-				limit = { country_exists = ROQ }
-				ROQ = { country_event = { id = KUS_event.30 } }
+			custom_effect_tooltip = KUS_roapokian_alliance_tt
+			MCF = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			TEN = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			FSR = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			DOM = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			NEK = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			VIX = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			SLR = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			IZW = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			KHA = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			FST = { add_opinion_modifier = { target = KUS modifier = KUS_roapokian_alliance_opinion } }
+			hidden_effect = {
+				set_country_flag = KUS_kusnurk_offers_alliance
 			}
 		}
 	}
 
-	# ==========================================
-	# Anti-Katzen Diplomacy
-	# ==========================================
+	# ---- Row 9: Anti-Katzen Diplomacy ----
+
 	focus = {
 		id = KUS_anti_katzen_diplomacy
-		icon = GFX_goal_generic_demand_territory
-		relative_position_id = KUS_proclaim_greater_kusnurk
-		x = -1
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_proclaim_greater_kusnurk }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_uhkus_greater }
-				swap_ideas = {
-					remove_idea = KUS_uhkus_greater
-					add_idea = KUS_uhkus_anti_katzen
-				}
-			}
-			every_country = {
-				limit = {
-					is_herzlands_warlord = yes
-				}
-				add_opinion_modifier = { target = KUS modifier = large_decrease }
-				ROOT = {
-					add_opinion_modifier = { target = PREV modifier = large_decrease }
-				}
-			}
-		}
-	}
-
-	# ==========================================
-	# Operation: Nekastoni Freedom
-	# ==========================================
-	focus = {
-		id = KUS_operation_nekastoni_freedom
-		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_proclaim_greater_kusnurk
-		x = 2
-		y = 2
-		cost = 10
-
-		prerequisite = { focus = KUS_anti_katzen_diplomacy focus = KUS_roqualian_alliance }
-
-		bypass = {
-			NOT = { country_exists = NEK }
-		}
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			create_wargoal = {
-				type = topple_government
-				target = NEK
-			}
-		}
-	}
-
-	# ==========================================
-	# Operation: Riesieger Down
-	# ==========================================
-	focus = {
-		id = KUS_operation_riesieger_down
-		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_proclaim_greater_kusnurk
+		icon = GFX_focus_generic_diplomatic_treaty
 		x = 0
 		y = 2
 		cost = 10
-
-		prerequisite = { focus = KUS_anti_katzen_diplomacy focus = KUS_roqualian_alliance }
-
-		bypass = {
-			NOT = { country_exists = DOM }
-		}
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_embrace_national_pride
+		prerequisite = { focus = KUS_proclaim_greater_kusnurk focus = KUS_roapokian_alliance }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_anti_katzen_diplomacy_tt
+			hidden_effect = {
+				if = {
+					limit = { has_idea = KUS_valiance_greater }
+					swap_ideas = {
+						remove_idea = KUS_valiance_greater
+						add_idea = KUS_valiance_anti_katzen
+					}
+				}
+				if = {
+					limit = { has_idea = KUS_valiance }
+					swap_ideas = {
+						remove_idea = KUS_valiance
+						add_idea = KUS_valiance_anti_katzen
+					}
+				}
+			}
+		}
+	}
+
+	# ---- Row 10: Three Operations ----
+
+	focus = {
+		id = KUS_operation_unified_froststat
+		icon = GFX_goal_generic_territory_or_war
+		x = -3
+		y = 1
+		cost = 5
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_anti_katzen_diplomacy }
+
+		bypass = {
+			NOT = {
+				country_exists = FST
+			}
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_operation_unified_froststat_tt
+			create_wargoal = {
+				type = topple_government
+				target = FST
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_operation_steinager_dawe
+		icon = GFX_goal_generic_territory_or_war
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_anti_katzen_diplomacy }
+
+		bypass = {
+			NOT = {
+				country_exists = DOM
+			}
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_operation_steinager_dawe_tt
 			create_wargoal = {
 				type = topple_government
 				target = DOM
@@ -2986,1163 +2601,233 @@
 		}
 	}
 
-	# ==========================================
-	# Operation: Unified Freistaat
-	# ==========================================
 	focus = {
-		id = KUS_operation_unified_freistaat
-		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_proclaim_greater_kusnurk
-		x = -2
-		y = 2
-		cost = 5
-
-		prerequisite = { focus = KUS_anti_katzen_diplomacy focus = KUS_roqualian_alliance }
+		id = KUS_operation_nekusnurik_freedom
+		icon = GFX_goal_generic_territory_or_war
+		x = 3
+		y = 1
+		cost = 10
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_anti_katzen_diplomacy }
 
 		bypass = {
-			NOT = { country_exists = FSR }
+			NOT = {
+				country_exists = NEK
+			}
 		}
 
-		ai_will_do = { factor = 1 }
-
 		completion_reward = {
+			custom_effect_tooltip = KUS_operation_nekusnurik_freedom_tt
 			create_wargoal = {
 				type = topple_government
-				target = FSR
+				target = NEK
 			}
 		}
 	}
 
-	# ==========================================
-	# Appease the Roqualian Titan
-	# ==========================================
+	# ---- Row 11: An Union of Our Own ----
+
 	focus = {
-		id = KUS_appease_roqualian_titan
-		icon = GFX_goal_generic_major_alliance
-		relative_position_id = KUS_operation_unified_freistaat
+		id = KUS_an_union_of_our_own
+		icon = GFX_goal_generic_alliance
 		x = 0
-		y = 1
+		y = 2
 		cost = 10
-
-		prerequisite = { focus = KUS_operation_unified_freistaat }
-		prerequisite = { focus = KUS_operation_riesieger_down }
-
-		available = {
-			country_exists = ROQ
-			ROQ = {
-				has_war = no
-				NOT = { has_government = fascism }
-			}
-			controls_state = 730
-			controls_state = 254
-			controls_state = 255
-			controls_state = 236
-		}
-
-		ai_will_do = { factor = 5 }
+		relative_position_id = KUS_anti_katzen_diplomacy
+		prerequisite = { focus = KUS_operation_unified_froststat }
+		prerequisite = { focus = KUS_operation_steinager_dawe }
+		prerequisite = { focus = KUS_operation_nekusnurik_freedom }
 
 		completion_reward = {
-			ROQ = {
-				country_event = { id = KUS_event.53 days = 3 }
-			}
-		}
-	}
-
-	# ==========================================
-	# Union of Our Own
-	# ==========================================
-	focus = {
-		id = KUS_union_of_our_own
-		icon = GFX_goal_generic_major_alliance
-		relative_position_id = KUS_operation_unified_freistaat
-		x = 2
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_operation_riesieger_down }
-		prerequisite = { focus = KUS_operation_unified_freistaat }
-		prerequisite = { focus = KUS_operation_nekastoni_freedom }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { is_in_faction = no }
-				create_faction = "Flusiobalkan Union"
-			}
-			custom_effect_tooltip = KUS_union_of_our_own_invite_tt
-			hidden_effect = {
-				every_country = {
-					limit = {
-						NOT = { tag = KUS }
-						is_flusiobalkan = yes
-						has_government = democratic
-						is_in_faction = no
-						has_war = no
+			custom_effect_tooltip = KUS_an_union_of_our_own_tt
+			set_rule = { can_create_factions = yes }
+			create_faction = KUS_flusiobalkan_union
+			every_country = {
+				limit = {
+					OR = {
+						tag = MCF
+						tag = TEN
+						tag = FSR
+						tag = DOM
+						tag = NEK
+						tag = VIX
+						tag = SLR
+						tag = IZW
+						tag = KHA
+						tag = FST
 					}
-					country_event = { id = KUS_event.50 days = 3 }
+					is_subject = no
+					has_government = democratic
+					NOT = { has_war_with = KUS }
 				}
+				country_event = { id = KUS_political_event.10 days = 1 }
 			}
 		}
 	}
 
-	# ==========================================
-	# Secure Flusiobalkans Dominance
-	# ==========================================
+	# ---- Row 12: Flusiobalkan Economic Regard / Joint Technology Board ----
+
 	focus = {
-		id = KUS_secure_flusiobalkans_dominance
-		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_union_of_our_own
+		id = KUS_flusiobalkan_economic_regard
+		icon = GFX_goal_generic_positive_trade_relations
 		x = -2
 		y = 1
 		cost = 10
-
-		prerequisite = { focus = KUS_union_of_our_own }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_secure_dominance_decisions_tt
-		}
-	}
-
-	# ==========================================
-	# Pressure Flusiobalkan Influence
-	# ==========================================
-	focus = {
-		id = KUS_pressure_flusiobalkan_influence
-		icon = GFX_goal_generic_demand_territory
-		relative_position_id = KUS_union_of_our_own
-		x = -4
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_union_of_our_own }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_pressure_influence_decisions_tt
-		}
-	}
-
-	# ==========================================
-	# Joint Technology Board
-	# ==========================================
-	focus = {
-		id = KUS_joint_technology_board
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_union_of_our_own
-		x = 2
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_union_of_our_own }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_joint_tech_bonus
-				bonus = 1.0
-				uses = 2
-				category = electronics
-			}
-			if = {
-				limit = { has_dlc = "Together for Victory" }
-				add_to_tech_sharing_group = flusiobalkan_research
-			}
-		}
-	}
-
-	# ==========================================
-	# Flusiobalkan Economic Region
-	# ==========================================
-	focus = {
-		id = KUS_flusiobalkan_economic_region
-		icon = GFX_goal_generic_consumer_goods
-		relative_position_id = KUS_union_of_our_own
-		x = 0
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_union_of_our_own }
+		relative_position_id = KUS_an_union_of_our_own
+		prerequisite = { focus = KUS_an_union_of_our_own }
 
 		available = {
 			is_faction_leader = yes
-			custom_trigger_tooltip = {
-				tooltip = KUS_faction_150_factories_tt
-				check_variable = { KUS_faction_total_factories > 149 }
-			}
 		}
-		cancel_if_invalid = yes
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_flusiobalkan_economic_regard_tt
 			every_country = {
-				limit = { is_in_faction_with = KUS }
-				add_offsite_building = { type = industrial_complex level = 2 }
+				limit = {
+					is_in_faction_with = KUS
+					NOT = { tag = KUS }
+				}
+				add_offsite_building = {
+					type = industrial_complex
+					level = 2
+				}
 			}
 			add_ideas = KUS_flusiobalkan_economic_region
 		}
 	}
 
-	# ==========================================
-	# Pan-Flusiobalkan Bank
-	# ==========================================
 	focus = {
-		id = KUS_pan_flusiobalkan_bank
-		icon = GFX_goal_generic_consumer_goods
-		relative_position_id = KUS_flusiobalkan_economic_region
-		x = -1
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_flusiobalkan_economic_region }
-
-		available = {
-			is_faction_leader = yes
-			custom_trigger_tooltip = {
-				tooltip = KUS_faction_150_civs_tt
-				check_variable = { KUS_faction_total_civs > 149 }
-			}
-		}
-		cancel_if_invalid = yes
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_flusiobalkan_economic_region }
-				swap_ideas = {
-					remove_idea = KUS_flusiobalkan_economic_region
-					add_idea = KUS_flusiobalkan_economic_region_2
-				}
-			}
-		}
-	}
-
-	# ==========================================
-	# Flusiobalkan Defence Army
-	# ==========================================
-	focus = {
-		id = KUS_flusiobalkan_defence_army
-		icon = GFX_goal_generic_allies_build_infantry
-		relative_position_id = KUS_flusiobalkan_economic_region
-		x = 1
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_flusiobalkan_economic_region }
-
-		available = {
-			is_faction_leader = yes
-			custom_trigger_tooltip = {
-				tooltip = KUS_faction_150_mils_tt
-				check_variable = { KUS_faction_total_mils > 149 }
-			}
-		}
-		cancel_if_invalid = yes
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			every_country = {
-				limit = { is_in_faction_with = KUS }
-				add_offsite_building = { type = arms_factory level = 2 }
-				add_ideas = KUS_fbda
-			}
-		}
-	}
-
-	# ==========================================
-	# United Flusiobalkans
-	# ==========================================
-	focus = {
-		id = KUS_united_flusiobalkans
-		icon = GFX_goal_generic_major_alliance
-		relative_position_id = KUS_flusiobalkan_economic_region
-		x = 0
-		y = 2
-		cost = 10
-
-		prerequisite = { focus = KUS_flusiobalkan_defence_army }
-		prerequisite = { focus = KUS_pan_flusiobalkan_bank }
-
-		available = {
-			is_faction_leader = yes
-		}
-		cancel_if_invalid = yes
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			every_country = {
-				limit = { is_in_faction_with = KUS NOT = { tag = KUS } }
-				if = {
-					limit = { has_idea = KUS_flusiobalkan_economic_region_2 }
-					remove_ideas = KUS_flusiobalkan_economic_region_2
-				}
-				if = {
-					limit = { has_idea = KUS_fbda }
-					remove_ideas = KUS_fbda
-				}
-				add_ideas = KUS_solabalkan_union
-			}
-			custom_effect_tooltip = KUS_united_flusiobalkans_puppet_decisions_tt
-		}
-	}
-
-	# ==========================================
-	# True Union
-	# ==========================================
-	focus = {
-		id = KUS_true_union
-		icon = GFX_goal_generic_major_alliance
-		relative_position_id = KUS_united_flusiobalkans
-		x = 0
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_united_flusiobalkans }
-
-		available = {
-			is_faction_leader = yes
-			custom_trigger_tooltip = {
-				tooltip = KUS_true_union_no_fascists
-				NOT = {
-					any_country = {
-						is_flusiobalkan = yes
-						has_government = fascism
-					}
-				}
-			}
-			custom_trigger_tooltip = {
-				tooltip = KUS_true_union_puppets
-				any_country = {
-					is_flusiobalkan = yes
-					is_puppet_of = KUS
-				}
-			}
-		}
-		cancel_if_invalid = yes
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_true_union_integration_tt
-			set_cosmetic_tag = KUS_FLUSIOBALKANS
-		}
-	}
-
-	#############################
-	# TECHNOCRATIC/FASCIST PATH
-	#############################
-
-	# ==========================================
-	# Subdue Jarvalin
-	# ==========================================
-	focus = {
-		id = KUS_subdue_jarvalin
-		icon = GFX_goal_generic_demand_territory
-		x = 22
-		y = 0
-		cost = 5
-
-		available = {
-			has_country_flag = KUS_technocratic_coup_complete
-		}
-
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				NOT = { has_country_flag = KUS_technocratic_coup_complete }
-			}
-		}
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_extremism_ascendant }
-				remove_ideas = KUS_extremism_ascendant
-			}
-			add_ideas = KUS_public_opposition
-		}
-	}
-
-	# ==========================================
-	# Crush Rebel Groups
-	# ==========================================
-	focus = {
-		id = KUS_crush_rebel_groups
-		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_subdue_jarvalin
-		x = -1
+		id = KUS_joint_technology_board
+		icon = GFX_goal_tfv_generic_tech_sharing
+		x = 3
 		y = 1
 		cost = 5
-
-		prerequisite = { focus = KUS_subdue_jarvalin }
-
-		ai_will_do = { factor = 1 }
+		relative_position_id = KUS_an_union_of_our_own
+		prerequisite = { focus = KUS_an_union_of_our_own }
 
 		completion_reward = {
-			add_stability = 0.05
-			add_war_support = 0.05
-			custom_effect_tooltip = KUS_demilitarized_zones_tt
-		}
-	}
-
-	# ==========================================
-	# Unite Aligned Political Groups
-	# ==========================================
-	focus = {
-		id = KUS_unite_aligned_political_groups
-		icon = GFX_goal_generic_intelligence_exchange
-		relative_position_id = KUS_subdue_jarvalin
-		x = 1
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_subdue_jarvalin }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_stability = 0.10
-			add_war_support = 0.10
-			custom_effect_tooltip = KUS_political_advisors_unlocked_tt
-		}
-	}
-
-	# ==========================================
-	# Form Technocratic Council
-	# ==========================================
-	focus = {
-		id = KUS_form_technocratic_council
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_subdue_jarvalin
-		x = 0
-		y = 2
-		cost = 5
-
-		prerequisite = { focus = KUS_crush_rebel_groups }
-		prerequisite = { focus = KUS_unite_aligned_political_groups }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_public_opposition }
-				remove_ideas = KUS_public_opposition
-			}
-			add_ideas = KUS_burgeoning_technocracy
-		}
-	}
-
-	# ==========================================
-	# New Leap Program
-	# ==========================================
-	focus = {
-		id = KUS_new_leap_program
-		icon = GFX_goal_generic_construct_civ_factory
-		relative_position_id = KUS_form_technocratic_council
-		x = -1
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_form_technocratic_council }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			218 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			set_country_flag = { flag = KUS_leap_cooldown days_remove = 70 }
-		}
-	}
-
-	# ==========================================
-	# Direct Scientific Development
-	# ==========================================
-	focus = {
-		id = KUS_direct_scientific_development
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_form_technocratic_council
-		x = 1
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_form_technocratic_council }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy
-					add_idea = KUS_burgeoning_technocracy_2
-				}
+			custom_effect_tooltip = KUS_joint_technology_board_tt
+			add_tech_bonus = {
+				name = joint_research
+				bonus = 0.5
+				uses = 2
+				category = electronics
 			}
 			add_tech_bonus = {
-				name = KUS_industry_research
-				bonus = 2.0
-				uses = 1
+				name = joint_research
+				bonus = 0.5
+				uses = 2
 				category = industry
 			}
 		}
 	}
 
-	# ==========================================
-	# End to Starvation
-	# ==========================================
+	# ---- Row 13: Pan-Flusiobalkan Bank / Flusiobalkan Defence Army ----
+
 	focus = {
-		id = KUS_end_to_starvation
-		icon = GFX_goal_generic_consumer_goods
-		relative_position_id = KUS_form_technocratic_council
-		x = 3
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_form_technocratic_council }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			715 = {
-				add_building_construction = {
-					type = hydroponics_farm
-					level = 3
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 3
-			}
-			231 = {
-				add_building_construction = {
-					type = hydroponics_farm
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-		}
-	}
-
-	# ==========================================
-	# Agromaxx
-	# ==========================================
-	focus = {
-		id = KUS_agromaxx
-		icon = GFX_goal_generic_consumer_goods
-		relative_position_id = KUS_end_to_starvation
-		x = 1
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_end_to_starvation }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_agromaxx
-			218 = {
-				add_building_construction = {
-					type = hydroponics_farm
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-		}
-	}
-
-	# ==========================================
-	# Encourage Technical Education
-	# ==========================================
-	focus = {
-		id = KUS_encourage_technical_education
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_form_technocratic_council
-		x = 0
-		y = 2
-		cost = 5
-
-		prerequisite = { focus = KUS_direct_scientific_development }
-		prerequisite = { focus = KUS_new_leap_program }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_timed_idea = {
-				idea = KUS_tech_education_bonus
-				days = 365
-			}
-			add_research_slot = 1
-		}
-	}
-
-	# ==========================================
-	# Economic Insulation
-	# ==========================================
-	focus = {
-		id = KUS_economic_insulation
-		icon = GFX_goal_generic_consumer_goods
-		relative_position_id = KUS_form_technocratic_council
-		x = 2
-		y = 2
-		cost = 5
-
-		prerequisite = { focus = KUS_direct_scientific_development }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy_2 }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy_2
-					add_idea = KUS_burgeoning_technocracy_3
-				}
-			}
-		}
-	}
-
-	# ==========================================
-	# Second Leap
-	# ==========================================
-	focus = {
-		id = KUS_second_leap
-		icon = GFX_goal_generic_construct_civ_factory
-		relative_position_id = KUS_form_technocratic_council
-		x = -2
-		y = 2
-		cost = 5
-
-		prerequisite = { focus = KUS_new_leap_program }
-
-		available = {
-			NOT = { has_country_flag = KUS_leap_cooldown }
-		}
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			225 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			716 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			set_country_flag = { flag = KUS_leap_cooldown days_remove = 105 }
-		}
-	}
-
-	# ==========================================
-	# High-Tech Factories
-	# ==========================================
-	focus = {
-		id = KUS_high_tech_factories
-		icon = GFX_goal_generic_construct_mil_factory
-		relative_position_id = KUS_economic_insulation
-		x = 0
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_economic_insulation }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy_3 }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy_3
-					add_idea = KUS_burgeoning_technocracy_4
-				}
-			}
-		}
-	}
-
-	# ==========================================
-	# Third Leap
-	# ==========================================
-	focus = {
-		id = KUS_third_leap
-		icon = GFX_goal_generic_construct_civ_factory
-		relative_position_id = KUS_second_leap
-		x = 0
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_second_leap }
-
-		available = {
-			NOT = { has_country_flag = KUS_leap_cooldown }
-		}
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			231 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			715 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 3
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			717 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 1
-			}
-			set_country_flag = { flag = KUS_leap_cooldown days_remove = 140 }
-		}
-	}
-
-	# ==========================================
-	# The Landing
-	# ==========================================
-	focus = {
-		id = KUS_the_landing
-		icon = GFX_goal_generic_construct_civ_factory
-		relative_position_id = KUS_third_leap
-		x = 0
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_third_leap }
-
-		available = {
-			NOT = { has_country_flag = KUS_leap_cooldown }
-		}
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			229 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 4
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 4
-			}
-			213 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 4
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 4
-			}
-		}
-	}
-
-	# ==========================================
-	# Cybernetics Program
-	# ==========================================
-	focus = {
-		id = KUS_cybernetics_program
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_the_landing
-		x = 2
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_high_tech_factories }
-		prerequisite = { focus = KUS_encourage_technical_education }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy_4 }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy_4
-					add_idea = KUS_burgeoning_technocracy_5
-				}
-			}
-		}
-	}
-
-	# ==========================================
-	# Revive Moore's Law
-	# ==========================================
-	focus = {
-		id = KUS_revive_moores_law
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_high_tech_factories
-		x = 0
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_high_tech_factories }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_electronics_research
-				bonus = 0.10
-				uses = 3
-				category = electronics
-			}
-		}
-	}
-
-	# ==========================================
-	# AMAT
-	# ==========================================
-	focus = {
-		id = KUS_amat
-		icon = GFX_goal_generic_construct_mil_factory
-		relative_position_id = KUS_high_tech_factories
-		x = 2
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_high_tech_factories }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			custom_effect_tooltip = KUS_amat_unlocked_tt
-		}
-	}
-
-	# ==========================================
-	# Project Babuloon
-	# ==========================================
-	focus = {
-		id = KUS_project_babuloon
-		icon = GFX_goal_generic_army_artillery2
-		relative_position_id = KUS_amat
-		x = 5
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_amat }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = KUS_railway_gun_research
-				bonus = 1.0
-				uses = 2
-				ahead_reduction = 5
-				category = train_tech
-			}
-			add_ideas = KUS_babuloon
-		}
-	}
-
-	# ==========================================
-	# Project Adaptiv
-	# ==========================================
-	focus = {
-		id = KUS_project_adaptiv
-		icon = GFX_goal_generic_army_doctrines
-		relative_position_id = KUS_amat
-		x = 3
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_amat }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_adaptiv
-		}
-	}
-
-	# ==========================================
-	# Project Fooniks
-	# ==========================================
-	focus = {
-		id = KUS_project_fooniks
-		icon = GFX_goal_generic_air_fighter2
-		relative_position_id = KUS_amat
-		x = 1
-		y = 1
-		cost = 10
-
-		prerequisite = { focus = KUS_amat }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_ideas = KUS_fooniks
-		}
-	}
-
-	# ==========================================
-	# Further Beyond
-	# ==========================================
-	focus = {
-		id = KUS_further_beyond
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_amat
-		x = -2
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_amat }
-		prerequisite = { focus = KUS_revive_moores_law }
-		prerequisite = { focus = KUS_cybernetics_program }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy_5 }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy_5
-					add_idea = KUS_reaching_singularity
-				}
-			}
-		}
-	}
-
-	# ==========================================
-	# Construct AI Infrastructure
-	# ==========================================
-	focus = {
-		id = KUS_construct_ai_infrastructure
-		icon = GFX_goal_generic_construct_civ_factory
-		relative_position_id = KUS_further_beyond
-		x = 1
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_further_beyond }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			218 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 3
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 3
-			}
-		}
-	}
-
-	# ==========================================
-	# Prepare Defense Installations
-	# ==========================================
-	focus = {
-		id = KUS_prepare_defense_installations
-		icon = GFX_goal_generic_fortify_city
-		relative_position_id = KUS_further_beyond
+		id = KUS_pan_flusiobalkan_bank
+		icon = GFX_focus_usa_reestablish_the_gold_standard
 		x = -1
 		y = 1
-		cost = 5
+		cost = 10
+		relative_position_id = KUS_flusiobalkan_economic_regard
+		prerequisite = { focus = KUS_flusiobalkan_economic_regard }
 
-		prerequisite = { focus = KUS_further_beyond }
-
-		ai_will_do = { factor = 1 }
+		available = {
+			is_faction_leader = yes
+		}
 
 		completion_reward = {
-			218 = {
-				add_building_construction = {
-					type = bunker
-					level = 3
-					province = {
-						all_provinces = yes
-						limit_to_border = yes
-					}
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = anti_air_building
-					level = 3
-					instant_build = yes
-				}
-			}
+			custom_effect_tooltip = KUS_pan_flusiobalkan_bank_tt
+			add_ideas = KUS_pan_flusiobalkan_bank_spirit
 		}
 	}
 
-	# ==========================================
-	# Mass Cybernetics Program
-	# ==========================================
 	focus = {
-		id = KUS_mass_cybernetics_program
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_further_beyond
-		x = 3
+		id = KUS_flusiobalkan_defence_army
+		icon = GFX_goal_generic_allies_build_infantry
+		x = 1
 		y = 1
-		cost = 5
+		cost = 10
+		relative_position_id = KUS_flusiobalkan_economic_regard
+		prerequisite = { focus = KUS_flusiobalkan_economic_regard }
 
-		prerequisite = { focus = KUS_further_beyond }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			add_manpower = 50000
-			add_war_support = 0.10
+		available = {
+			is_faction_leader = yes
 		}
-	}
-
-	# ==========================================
-	# Construct Computronium Factories
-	# ==========================================
-	focus = {
-		id = KUS_construct_computronium_factories
-		icon = GFX_goal_generic_construct_mil_factory
-		relative_position_id = KUS_further_beyond
-		x = 5
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_further_beyond }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			218 = {
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
+			custom_effect_tooltip = KUS_flusiobalkan_defence_army_tt
+			every_country = {
+				limit = {
+					is_in_faction_with = KUS
 				}
-				add_extra_state_shared_building_slots = 2
-			}
-			231 = {
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			225 = {
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 2
+				add_ideas = KUS_fdu
 			}
 		}
 	}
 
-	# ==========================================
-	# Supercomputer Facility
-	# ==========================================
+	# ---- Row 14: A United Flusiobalkan ----
+
 	focus = {
-		id = KUS_supercomputer_facility
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_further_beyond
-		x = -2
+		id = KUS_a_united_flusiobalkan
+		icon = GFX_goal_generic_major_war
+		x = 0
 		y = 2
-		cost = 5
+		cost = 10
+		relative_position_id = KUS_flusiobalkan_economic_regard
+		prerequisite = { focus = KUS_pan_flusiobalkan_bank }
+		prerequisite = { focus = KUS_flusiobalkan_defence_army }
 
-		prerequisite = { focus = KUS_construct_ai_infrastructure }
-		prerequisite = { focus = KUS_prepare_defense_installations }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			218 = {
-				add_building_construction = {
-					type = infrastructure
-					level = 2
-					instant_build = yes
-				}
-				add_extra_state_shared_building_slots = 4
-			}
-			add_research_slot = 1
+		available = {
+			is_faction_leader = yes
 		}
-	}
-
-	# ==========================================
-	# Create MilNet
-	# ==========================================
-	focus = {
-		id = KUS_create_milnet
-		icon = GFX_goal_generic_army_doctrines
-		relative_position_id = KUS_supercomputer_facility
-		x = 4
-		y = 0
-		cost = 5
-
-		prerequisite = { focus = KUS_mass_cybernetics_program }
-		prerequisite = { focus = KUS_construct_computronium_factories }
-
-		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			add_ideas = KUS_milnet
-		}
-	}
-
-	# ==========================================
-	# The Final Touches
-	# ==========================================
-	focus = {
-		id = KUS_the_final_touches
-		icon = GFX_goal_generic_scientific_exchange
-		relative_position_id = KUS_supercomputer_facility
-		x = 2
-		y = 1
-		cost = 5
-
-		prerequisite = { focus = KUS_supercomputer_facility }
-		prerequisite = { focus = KUS_create_milnet }
-
-		ai_will_do = { factor = 1 }
-
-		completion_reward = {
-			retire_country_leader = yes
+			custom_effect_tooltip = KUS_a_united_flusiobalkan_tt
 			hidden_effect = {
-				create_country_leader = {
-					name = "Provisional Government"
-					picture = "GFX_portrait_KUS_Provisional_Government"
-					expire = "1965.1.1"
-					ideology = fascism_ideology
+				remove_ideas = KUS_flusiobalkan_economic_region
+				every_country = {
+					limit = {
+						is_in_faction_with = KUS
+					}
+					remove_ideas = KUS_fdu
 				}
-				country_event = { id = KUS_event.40 days = 7 }
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = KUS
+				}
+				add_ideas = KUS_catbalkan_union
 			}
 		}
 	}
 
+	# ---- Row 15: A True Union ----
+
+	focus = {
+		id = KUS_a_true_union
+		icon = GFX_focus_generic_annex_country
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = KUS_a_united_flusiobalkan
+		prerequisite = { focus = KUS_a_united_flusiobalkan }
+
+		available = {
+			is_faction_leader = yes
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_a_true_union_tt
+			every_country = {
+				limit = {
+					is_in_faction_with = KUS
+					NOT = { tag = KUS }
+					is_subject = no
+				}
+				country_event = { id = KUS_political_event.20 days = 1 }
+			}
+		}
+	}
 }

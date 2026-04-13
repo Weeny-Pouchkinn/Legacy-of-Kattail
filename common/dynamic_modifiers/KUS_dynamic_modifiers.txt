@@ -1,102 +1,183 @@
-# Kusnurk Confederation - Industry Dynamic Modifiers
+# KUS Economy Dynamic Modifiers
+# Used by the industry focus tree to progressively improve the economy
 
-# Ruined Economy - starting national spirit, modified by focus tree
-# Active until Careful Investments renames it to Recovering Economy
-KUS_ruined_economy = {
+KUS_economy_ruined = {
 	enable = { always = yes }
 	icon = GFX_idea_KUS_ruined_economy
 
-	consumer_goods_factor = KUS_economy_consumer_goods
-	line_change_production_efficiency_factor = KUS_economy_efficiency_retention
-	production_factory_efficiency_gain_factor = KUS_economy_efficiency_gain
 	industrial_capacity_factory = KUS_economy_factory_output
-	industrial_capacity_dockyard = KUS_economy_dockyard_output
-}
-
-# Recovering Economy - replaces Ruined Economy after Careful Investments
-# Uses the SAME variables so accumulated changes carry over
-KUS_recovering_economy = {
-	enable = { always = yes }
-	icon = GFX_idea_KUS_recovering_economy
-
+	production_factory_max_efficiency_factor = KUS_economy_prod_eff_cap
+	production_factory_efficiency_gain_factor = KUS_economy_prod_eff_gain
 	consumer_goods_factor = KUS_economy_consumer_goods
-	line_change_production_efficiency_factor = KUS_economy_efficiency_retention
-	production_factory_efficiency_gain_factor = KUS_economy_efficiency_gain
+	production_speed_buildings_factor = KUS_economy_construction_speed
+}
+
+KUS_economy_recovering = {
+	enable = { always = yes }
+	icon = GFX_idea_KUS_ruined_economy
+
 	industrial_capacity_factory = KUS_economy_factory_output
-	industrial_capacity_dockyard = KUS_economy_dockyard_output
+	production_factory_max_efficiency_factor = KUS_economy_prod_eff_cap
+	production_factory_efficiency_gain_factor = KUS_economy_prod_eff_gain
+	consumer_goods_factor = KUS_economy_consumer_goods
+	production_speed_buildings_factor = KUS_economy_construction_speed
 }
 
-###################################
-# Military Dynamic Modifiers
-###################################
-
-# Merevagi (Navy) - dynamic modifier for naval focuses
-# Equipment-specific bonuses (ship build costs, carrier armor) are handled via national spirits
-KUS_merevagi = {
+# Bureau of State Industry dynamic modifier (from bureau focuses)
+KUS_bureau_state_industry = {
 	enable = { always = yes }
-	icon = GFX_idea_KUS_merevagi
+	icon = GFX_idea_KUS_ruined_economy
 
-	experience_gain_navy_factor = KUS_merevagi_navy_xp_gain
-	spotting_chance = KUS_merevagi_spotting
-	navy_carrier_air_attack_factor = KUS_merevagi_carrier_air_attack
-	navy_carrier_air_agility_factor = KUS_merevagi_carrier_air_agility
-	convoy_raiding_efficiency_factor = KUS_merevagi_convoy_raiding
-	naval_critical_score_chance_factor = KUS_merevagi_sub_crit
-	navy_submarine_attack_factor = KUS_merevagi_sub_attack
-	naval_speed_factor = KUS_merevagi_capital_ship_speed
-	naval_hit_chance = KUS_merevagi_naval_hit_chance
-	navy_capital_ship_attack_factor = KUS_merevagi_capital_ship_attack
-	naval_detection = KUS_merevagi_naval_detection
-	sortie_efficiency = KUS_merevagi_sortie_efficiency
-	fighter_sortie_efficiency = KUS_merevagi_fighter_sortie
-	carrier_traffic = KUS_merevagi_carrier_armor
+	industrial_capacity_factory = KUS_bureau_factory_output
+	production_speed_buildings_factor = KUS_bureau_construction_speed
+	production_speed_arms_factory_factor = KUS_bureau_mil_construction
 }
 
-# Õhuvagi (Air Force) - dynamic modifier for air focuses
-KUS_ohuvagi = {
-	enable = { always = yes }
-	icon = GFX_idea_KUS_ohuvagi
+# ==========================================
+# KUS Army Dynamic Modifiers (Maavõier)
+# Used by the army focus tree
+# ==========================================
 
-	experience_gain_air_factor = KUS_ohuvagi_air_xp_gain
-	air_ace_generation_chance_factor = KUS_ohuvagi_ace_generation
-	air_night_penalty = KUS_ohuvagi_night_penalty
-	air_weather_penalty = KUS_ohuvagi_weather_penalty
-	air_doctrine_cost_factor = KUS_ohuvagi_doctrine_cost
-	air_range_factor = KUS_ohuvagi_range
-	strategic_bomb_visibility = KUS_ohuvagi_strat_bomb_visibility
-	air_agility_factor = KUS_ohuvagi_agility
-	air_maximum_speed_factor = KUS_ohuvagi_air_speed
-	air_mission_efficiency = KUS_ohuvagi_mission_efficiency
-	air_training_xp_gain_factor = KUS_ohuvagi_wing_xp_gain
-	air_superiority_efficiency = KUS_ohuvagi_air_superiority_efficiency
-	air_interception_attack_factor = KUS_ohuvagi_interception_efficiency
-	air_superiority_bonus_in_combat = KUS_ohuvagi_air_sup_combat
+# Base army spirit - added by Maavõim focus
+KUS_KAF = {
+	enable = { always = yes }
+	icon = GFX_idea_KUS_maavoier
+
+	experience_gain_army_factor = KUS_KAF_xp_gain
+	army_org_regain = KUS_KAF_org_regain
+	decryption_factor = KUS_KAF_decryption
+	army_attack_factor = KUS_KAF_army_attack
+	land_reinforce_rate = KUS_KAF_reinforce_rate
+	army_speed_factor = KUS_KAF_army_speed
+	planning_speed = KUS_KAF_planning_speed
+	max_planning = KUS_KAF_max_planning
+	supply_consumption_factor = KUS_KAF_supply_consumption
+	breakthrough_factor = KUS_KAF_breakthrough
+	org_loss_when_moving = KUS_KAF_org_loss_moving
+	air_superiority_bonus_in_combat = KUS_KAF_air_superiority
+	army_artillery_attack_factor = KUS_KAF_artillery_attack
+	army_infantry_attack_factor = KUS_KAF_infantry_attack
+	army_org_factor = KUS_KAF_org_factor
+	army_leader_start_attack_level = KUS_KAF_leader_start_attack
+	army_leader_start_planning_level = KUS_KAF_leader_start_planning
+	army_leader_start_logistics_level = KUS_KAF_leader_start_logistics
 }
 
-# Maavõim (Army) - dynamic modifier for army focuses
-KUS_maavoim = {
+# Upgraded spirit from Strike like a Supernova (left branch capstone)
+# Uses same variables as KUS_KAF so accumulated bonuses are preserved
+KUS_KAF_supernova = {
 	enable = { always = yes }
-	icon = GFX_idea_KUS_maavoim
+	icon = GFX_idea_KUS_supernova
 
-	experience_gain_army_factor = KUS_maavoim_army_xp_gain
-	army_attack_factor = KUS_maavoim_division_attack
-	recon_factor = KUS_maavoim_intelligence
-	breakthrough_factor = KUS_maavoim_breakthrough
-	land_reinforce_rate = KUS_maavoim_reinforce_rate
-	max_planning_factor = KUS_maavoim_max_planning
-	planning_speed = KUS_maavoim_planning_speed
-	supply_consumption_factor = KUS_maavoim_supply_usage
-	army_org_factor = KUS_maavoim_org
-	org_loss_when_moving = KUS_maavoim_org_loss_moving
-	army_speed_factor = KUS_maavoim_division_speed
-	army_org_regain = KUS_maavoim_recovery_rate
-	army_bonus_air_superiority_factor = KUS_maavoim_air_superiority
-	army_defence_factor = KUS_maavoim_defence
+	experience_gain_army_factor = KUS_KAF_xp_gain
+	army_org_regain = KUS_KAF_org_regain
+	decryption_factor = KUS_KAF_decryption
+	army_attack_factor = KUS_KAF_army_attack
+	land_reinforce_rate = KUS_KAF_reinforce_rate
+	army_speed_factor = KUS_KAF_army_speed
+	planning_speed = KUS_KAF_planning_speed
+	max_planning = KUS_KAF_max_planning
+	supply_consumption_factor = KUS_KAF_supply_consumption
+	breakthrough_factor = KUS_KAF_breakthrough
+	org_loss_when_moving = KUS_KAF_org_loss_moving
+	air_superiority_bonus_in_combat = KUS_KAF_air_superiority
+	army_artillery_attack_factor = KUS_KAF_artillery_attack
+	army_infantry_attack_factor = KUS_KAF_infantry_attack
+	army_org_factor = KUS_KAF_org_factor
+	army_armor_attack_factor =  KUS_KAF_army_armor_attack_factor
+	army_leader_start_attack_level = KUS_KAF_leader_start_attack
+	army_leader_start_planning_level = KUS_KAF_leader_start_planning
+	army_leader_start_logistics_level = KUS_KAF_leader_start_logistics
 }
 
-# Total Automation - State-level modifier for Basilisk automation
-KUS_total_automation_modifier = {
-	icon = GFX_idea_generic_production_bonus
+# Upgraded spirit from At the Speed of Light (right branch capstone)
+# Uses same variables as KUS_KAF so accumulated bonuses are preserved
+KUS_KAF_valguskiirus = {
 	enable = { always = yes }
-	remove_trigger = { always = no }
+	icon = GFX_idea_KUS_valguskiirus
+
+	experience_gain_army_factor = KUS_KAF_xp_gain
+	army_org_regain = KUS_KAF_org_regain
+	decryption_factor = KUS_KAF_decryption
+	army_attack_factor = KUS_KAF_army_attack
+	land_reinforce_rate = KUS_KAF_reinforce_rate
+	army_speed_factor = KUS_KAF_army_speed
+	planning_speed = KUS_KAF_planning_speed
+	max_planning = KUS_KAF_max_planning
+	supply_consumption_factor = KUS_KAF_supply_consumption
+	breakthrough_factor = KUS_KAF_breakthrough
+	org_loss_when_moving = KUS_KAF_org_loss_moving
+	air_superiority_bonus_in_combat = KUS_KAF_air_superiority
+	army_artillery_attack_factor = KUS_KAF_artillery_attack
+	army_infantry_attack_factor = KUS_KAF_infantry_attack
+	army_org_factor = KUS_KAF_org_factor
+	army_armor_attack_factor =  KUS_KAF_army_armor_attack_factor
+	army_leader_start_attack_level = KUS_KAF_leader_start_attack
+	army_leader_start_planning_level = KUS_KAF_leader_start_planning
+	army_leader_start_logistics_level = KUS_KAF_leader_start_logistics
+}
+
+# ==========================================
+# KUS Air Force Dynamic Modifiers (Õhuvagi)
+# Used by the air force focus tree
+# ==========================================
+
+# Base air spirit - added by Õhuvagi focus
+KUS_OHUVAGI = {
+	enable = { always = yes }
+	icon = GFX_idea_KUS_maavoier
+
+	experience_gain_air_factor = KUS_OHU_xp_gain
+	air_ace_generation_chance_factor = KUS_OHU_ace_gen
+	air_night_penalty = KUS_OHU_night_pen
+	air_weather_penalty = KUS_OHU_weather_pen
+	air_doctrine_cost_factor = KUS_OHU_doctrine_cost
+	air_range_factor = KUS_OHU_range
+	strategic_bomb_visibility = KUS_OHU_strat_vis
+	air_agility_factor = KUS_OHU_agility
+	air_maximum_speed_factor = KUS_OHU_speed
+	air_training_xp_gain_factor = KUS_OHU_wing_xp
+}
+
+# ==========================================
+# KUS Nuclear Dynamic Modifiers (Tuumavagi)
+# Used by the nuclear branch of the air force focus tree
+# ==========================================
+
+# Nuclear spirit - added by Taskforce Y focus
+KUS_TUUMAVAGI = {
+	enable = { always = yes }
+	icon = GFX_idea_KUS_maavoier
+
+	nuclear_production_factor = KUS_TUUM_nuke_prod
+	lok_nuke_radiation_factor = KUS_TUUM_radiation
+}
+
+# ==========================================
+# KUS Navy Dynamic Modifiers (Merevagi)
+# Used by the navy focus tree
+# ==========================================
+
+# Base navy spirit - added by Merevagi focus
+KUS_MEREVAGI = {
+	enable = { always = yes }
+	icon = GFX_idea_KUS_maavoier
+
+	experience_gain_navy_factor = KUS_MERI_xp_gain
+	production_cost_max_ship_hull_heavy = KUS_MERI_capital_prod_cost
+	spotting_chance = KUS_MERI_spotting
+	navy_carrier_air_attack_factor = KUS_MERI_carrier_air_attack
+	navy_carrier_air_agility_factor = KUS_MERI_carrier_air_agility
+	navy_capital_ship_attack_factor = KUS_MERI_capital_attack
+	production_cost_max_ship_hull_cruiser = KUS_MERI_cruiser_prod_cost
+	convoy_raiding_efficiency_factor = KUS_MERI_convoy_raiding
+	naval_critical_score_chance_factor = KUS_MERI_sub_crit
+	naval_speed_factor = KUS_MERI_capital_speed
+	naval_hit_chance = KUS_MERI_naval_hit
+	navy_submarine_attack_factor = KUS_MERI_sub_attack
+	navy_submarine_detection_factor = KUS_MERI_naval_detection
+	sortie_efficiency = KUS_MERI_sortie_eff
+	fighter_sortie_efficiency = KUS_MERI_fighter_sortie
+	screening_efficiency = KUS_MERI_screening
+	production_cost_max_ship_hull_submarine = KUS_MERI_sub_prod_cost
 }
