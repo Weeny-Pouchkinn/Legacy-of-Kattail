@@ -189,4 +189,783 @@ focus_tree = {
 			}
 		}
 	}
+
+	# ==========================================
+	# IPF/KSK COUP PATH
+	# ==========================================
+
+	# A Daring Raid
+	focus = {
+		id = PAW_a_daring_raid
+		icon = GFX_goal_generic_occupy_states_ongoing_war
+		x = 0
+		y = 1
+		relative_position_id = PAW_strike_against_elwin
+		cost = 2
+
+		prerequisite = { focus = PAW_strike_against_elwin }
+		prerequisite = { focus = PAW_through_labour_the_rebels_will_pay }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = PAW_freed_resistance
+				days = 120
+			}
+			hidden_effect = {
+				add_to_variable = { ipf_strength = 2 }
+				add_to_variable = { ksk_strength = 2 }
+				add_to_variable = { ipf_opinion = 1 }
+				add_to_variable = { ksk_opinion = 1 }
+				calculate_ipf_ksk_resistance = yes
+			}
+			custom_effect_tooltip = PAW_a_daring_raid_ipf_ksk_tt
+		}
+	}
+
+	# IPF/KSK Coup
+	focus = {
+		id = PAW_ipf_ksk_coup
+		icon = GFX_goal_generic_demand_territory
+		x = 0
+		y = 1
+		relative_position_id = PAW_a_daring_raid
+		cost = 2
+
+		prerequisite = { focus = PAW_a_daring_raid }
+
+		completion_reward = {
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = no
+			}
+			create_country_leader = {
+				name = "Disorganised Partisans"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = centrism
+				traits = { PAW_no_concrete_leadership }
+			}
+			create_country_leader = {
+				name = "Disorganised Partisans"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = socialism
+				traits = { PAW_no_concrete_leadership }
+			}
+			add_timed_idea = {
+				idea = PAW_revolutionary_war
+				days = 30
+			}
+			if = {
+				limit = { has_idea = PAW_no_central_authority }
+				remove_ideas = PAW_no_central_authority
+			}
+			if = {
+				limit = { has_idea = PAW_no_central_authority_1 }
+				remove_ideas = PAW_no_central_authority_1
+			}
+			hidden_effect = {
+				country_event = { id = PAW.1 days = 1 }
+			}
+		}
+	}
+
+	# Legacy of the Pawrissian Commune
+	focus = {
+		id = PAW_legacy_of_the_pawrissian_commune
+		icon = GFX_goal_generic_propaganda
+		x = -3
+		y = 1
+		relative_position_id = PAW_ipf_ksk_coup
+		cost = 5
+
+		prerequisite = { focus = PAW_ipf_ksk_coup }
+		mutually_exclusive = { focus = PAW_a_free_city }
+
+		completion_reward = {
+			add_ideas = {
+				PAW_workers_movement
+				PAW_liberal_movement
+			}
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = yes
+				name = PAW_communism_party_asf
+				long_name = PAW_communism_party_asf_long
+			}
+		}
+	}
+
+	# A Free City in the Heart of Katzennia!
+	focus = {
+		id = PAW_a_free_city
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 5
+		y = 1
+		relative_position_id = PAW_ipf_ksk_coup
+		cost = 5
+
+		prerequisite = { focus = PAW_ipf_ksk_coup }
+		mutually_exclusive = { focus = PAW_legacy_of_the_pawrissian_commune }
+
+		completion_reward = {
+			add_ideas = {
+				PAW_workers_movement_free
+				PAW_liberal_movement_free
+			}
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = yes
+				name = PAW_democratic_party_vdf
+				long_name = PAW_democratic_party_vdf_long
+			}
+		}
+	}
+
+	# ==========================================
+	# COMMUNIST PATH - FORM THE FREIE ARBEITERREGIERUNG
+	# ==========================================
+
+	# Form the Freie Arbeiterregierung
+	focus = {
+		id = PAW_form_the_freie_arbeiterregierung
+		icon = GFX_goal_generic_demand_territory
+		x = 0
+		y = 1
+		relative_position_id = PAW_legacy_of_the_pawrissian_commune
+		cost = 10
+
+		prerequisite = { focus = PAW_legacy_of_the_pawrissian_commune }
+
+		completion_reward = {
+			set_party_name = {
+				ideology = communism
+				name = PAW_communism_party_asf_asfo
+				long_name = PAW_communism_party_asf_asfo_long
+			}
+			add_ideas = PAW_growing_asf_conflicts
+		}
+	}
+
+	# Solidify the Workers Congress
+	focus = {
+		id = PAW_solidify_the_workers_congress
+		icon = GFX_goal_generic_propaganda
+		x = -2
+		y = 1
+		relative_position_id = PAW_form_the_freie_arbeiterregierung
+		cost = 10
+
+		prerequisite = { focus = PAW_form_the_freie_arbeiterregierung }
+		mutually_exclusive = { focus = PAW_form_the_vanguard_party }
+
+		completion_reward = {
+			remove_ideas = PAW_growing_asf_conflicts
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = yes
+				name = PAW_communism_party_asfo
+				long_name = PAW_communism_party_asfo_long
+			}
+			create_country_leader = {
+				name = "Pawrissian Soviet Congress"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = syndicalism
+				traits = { PAW_soviet_congress }
+			}
+			custom_effect_tooltip = PAW_unlock_communist_advisors_tt
+		}
+	}
+
+	# Form the Vanguard Party
+	focus = {
+		id = PAW_form_the_vanguard_party
+		icon = GFX_goal_generic_major_war
+		x = 2
+		y = 1
+		relative_position_id = PAW_form_the_freie_arbeiterregierung
+		cost = 10
+
+		prerequisite = { focus = PAW_form_the_freie_arbeiterregierung }
+		mutually_exclusive = { focus = PAW_solidify_the_workers_congress }
+
+		completion_reward = {
+			remove_ideas = PAW_growing_asf_conflicts
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = yes
+				name = PAW_communism_party_asf
+				long_name = PAW_communism_party_asf_long
+			}
+			create_country_leader = {
+				name = "Mimi Vaska"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = kraksism
+				traits = { PAW_staunch_revolutionary }
+			}
+			add_ideas = PAW_the_vanguard
+			custom_effect_tooltip = PAW_unlock_communist_advisors_tt
+		}
+	}
+
+	# ==========================================
+	# SOLIDIFY WORKERS CONGRESS CHILDREN
+	# ==========================================
+
+	# Reach Out to Valerwria Katzin
+	focus = {
+		id = PAW_reach_out_to_valerwria_katzin
+		icon = GFX_goal_generic_intelligence_exchange
+		x = -2
+		y = 1
+		relative_position_id = PAW_solidify_the_workers_congress
+		cost = 5
+
+		prerequisite = { focus = PAW_solidify_the_workers_congress }
+
+		completion_reward = {
+			add_ideas = PAW_internationalist_support
+		}
+	}
+
+	# Form Regional Soviets
+	focus = {
+		id = PAW_form_regional_soviets
+		icon = GFX_goal_generic_construction2
+		x = 0
+		y = 1
+		relative_position_id = PAW_solidify_the_workers_congress
+		cost = 5
+
+		prerequisite = { focus = PAW_solidify_the_workers_congress }
+
+		completion_reward = {
+			hidden_effect = {
+				set_variable = { PAW_local_soviet_admin_cg = 0.10 }
+				set_variable = { PAW_local_soviet_admin_pp = 0 }
+			}
+			add_dynamic_modifier = { modifier = PAW_local_soviet_administration }
+			custom_effect_tooltip = PAW_form_regional_soviets_tt
+		}
+	}
+
+	# Instate the Peoples Militia!
+	focus = {
+		id = PAW_instate_the_peoples_militia
+		icon = GFX_goal_generic_occupy_states_ongoing_war
+		x = 2
+		y = 1
+		relative_position_id = PAW_solidify_the_workers_congress
+		cost = 5
+
+		prerequisite = { focus = PAW_solidify_the_workers_congress }
+
+		completion_reward = {
+			add_ideas = PAW_peoples_militia
+		}
+	}
+
+	# ==========================================
+	# VANGUARD PARTY CHILDREN
+	# ==========================================
+
+	# Form the Peoples Security Division
+	focus = {
+		id = PAW_form_the_peoples_security_division
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 0
+		y = 1
+		relative_position_id = PAW_form_the_vanguard_party
+		cost = 5
+
+		prerequisite = { focus = PAW_form_the_vanguard_party }
+
+		completion_reward = {
+			add_ideas = PAW_peoples_security_division
+		}
+	}
+
+	# Reform the State Apparatus
+	focus = {
+		id = PAW_reform_the_state_apparatus
+		icon = GFX_goal_generic_demand_territory
+		x = 2
+		y = 1
+		relative_position_id = PAW_form_the_vanguard_party
+		cost = 5
+
+		prerequisite = { focus = PAW_form_the_vanguard_party }
+
+		completion_reward = {
+			add_ideas = PAW_peoples_republic
+		}
+	}
+
+	# ==========================================
+	# SYNDICALIST PATH (LEFT)
+	# ==========================================
+
+	# Form a Syndicalist State
+	focus = {
+		id = PAW_form_a_syndicalist_state
+		icon = GFX_goal_generic_propaganda
+		x = 1
+		y = 1
+		relative_position_id = PAW_reach_out_to_valerwria_katzin
+		cost = 5
+
+		prerequisite = { focus = PAW_reach_out_to_valerwria_katzin }
+		prerequisite = { focus = PAW_form_regional_soviets }
+
+		completion_reward = {
+			custom_effect_tooltip = PAW_modify_local_soviet_admin_tt
+			hidden_effect = {
+				add_to_variable = { PAW_local_soviet_admin_cg = -0.20 }
+				add_to_variable = { PAW_local_soviet_admin_pp = 0.10 }
+			}
+			hidden_effect = {
+				set_variable = { PAW_syndicalist_state_stability = 0.05 }
+			}
+			add_dynamic_modifier = { modifier = PAW_syndicalist_state }
+			custom_effect_tooltip = PAW_form_a_syndicalist_state_tt
+		}
+	}
+
+	# Purge the Spartacists
+	focus = {
+		id = PAW_purge_the_spartacists
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 1
+		relative_position_id = PAW_form_the_peoples_security_division
+		cost = 10
+
+		prerequisite = { focus = PAW_form_the_peoples_security_division focus = PAW_instate_the_peoples_militia }
+
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.50
+			}
+			add_stability = 0.20
+			add_war_support = -0.10
+		}
+	}
+
+	# ==========================================
+	# ELECTIONS AND CONGRESSES
+	# ==========================================
+
+	# Hold Soviet Elections
+	focus = {
+		id = PAW_hold_soviet_elections
+		icon = GFX_goal_generic_propaganda
+		x = 0
+		y = 1
+		relative_position_id = PAW_form_a_syndicalist_state
+		cost = 10
+
+		prerequisite = { focus = PAW_form_a_syndicalist_state }
+
+		completion_reward = {
+			custom_effect_tooltip = PAW_hold_soviet_elections_tt
+		}
+	}
+
+	# The Peoples Congress
+	focus = {
+		id = PAW_the_peoples_congress
+		icon = GFX_goal_generic_demand_territory
+		x = 2
+		y = 1
+		relative_position_id = PAW_purge_the_spartacists
+		cost = 10
+
+		prerequisite = { focus = PAW_purge_the_spartacists }
+		prerequisite = { focus = PAW_reform_the_state_apparatus }
+
+		completion_reward = {
+			custom_effect_tooltip = PAW_the_peoples_congress_tt
+		}
+	}
+
+	# ==========================================
+	# LEFT BRANCH ELECTION OUTCOMES
+	# ==========================================
+
+	# Valerwria's Clique Wins (Left Branch)
+	focus = {
+		id = PAW_valerwrias_clique_wins_left
+		icon = GFX_goal_generic_propaganda
+		x = -1
+		y = 1
+		relative_position_id = PAW_hold_soviet_elections
+		cost = 5
+
+		prerequisite = { focus = PAW_hold_soviet_elections }
+		mutually_exclusive = { focus = PAW_orthodoxy_wins_out_left }
+
+		completion_reward = {
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = yes
+				name = PAW_communism_party_psb
+				long_name = PAW_communism_party_psb_long
+			}
+			create_country_leader = {
+				name = "Mikhail Clawson"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = collectivism
+				traits = { PAW_anarchist_firebrand }
+			}
+			custom_effect_tooltip = PAW_modify_syndicalist_state_negative_tt
+			hidden_effect = {
+				add_to_variable = { PAW_syndicalist_state_stability = -0.20 }
+			}
+		}
+	}
+
+	# Orthodoxy Wins Out (Left Branch)
+	focus = {
+		id = PAW_orthodoxy_wins_out_left
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 1
+		y = 1
+		relative_position_id = PAW_hold_soviet_elections
+		cost = 5
+
+		prerequisite = { focus = PAW_hold_soviet_elections }
+		mutually_exclusive = { focus = PAW_valerwrias_clique_wins_left }
+
+		completion_reward = {
+			custom_effect_tooltip = PAW_modify_syndicalist_state_positive_tt
+			hidden_effect = {
+				add_to_variable = { PAW_syndicalist_state_stability = 0.05 }
+			}
+			add_ideas = PAW_empowered_unions
+		}
+	}
+
+	# ==========================================
+	# RIGHT BRANCH ELECTION OUTCOMES
+	# ==========================================
+
+	# Valewria Clique Wins Out (Right Branch)
+	focus = {
+		id = PAW_valewria_clique_wins_right
+		icon = GFX_goal_generic_propaganda
+		x = -1
+		y = 1
+		relative_position_id = PAW_the_peoples_congress
+		cost = 5
+
+		prerequisite = { focus = PAW_the_peoples_congress }
+		mutually_exclusive = { focus = PAW_orthodoxy_wins_out_right }
+
+		completion_reward = {
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = yes
+				name = PAW_communism_party_psb
+				long_name = PAW_communism_party_psb_long
+			}
+			create_country_leader = {
+				name = "Mikhail Clawson"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = collectivism
+				traits = { PAW_anarchist_firebrand }
+			}
+		}
+	}
+
+	# Orthodoxy Wins Out (Right Branch)
+	focus = {
+		id = PAW_orthodoxy_wins_out_right
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 1
+		y = 1
+		relative_position_id = PAW_the_peoples_congress
+		cost = 5
+
+		prerequisite = { focus = PAW_the_peoples_congress }
+		mutually_exclusive = { focus = PAW_valewria_clique_wins_right focus = PAW_promote_nikholai_meowkharin }
+
+		completion_reward = {
+			add_ideas = PAW_empowered_unions
+		}
+	}
+
+	# Promote Nikholai Meowkharin
+	focus = {
+		id = PAW_promote_nikholai_meowkharin
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 3
+		y = 1
+		relative_position_id = PAW_the_peoples_congress
+		cost = 5
+
+		prerequisite = { focus = PAW_hold_soviet_elections focus = PAW_the_peoples_congress }
+		mutually_exclusive = { focus = PAW_orthodoxy_wins_out_right }
+
+		completion_reward = {
+			create_country_leader = {
+				name = "Nikolai Meowkharin"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = socialism
+				traits = { PAW_market_socialist }
+			}
+			add_ideas = PAW_focus_on_pawris_development
+		}
+	}
+
+	# ==========================================
+	# ECONOMIC PATH (CENTER)
+	# ==========================================
+
+	# Socialize the Economy
+	focus = {
+		id = PAW_socialize_the_economy
+		icon = GFX_goal_generic_construction2
+		x = 2
+		y = 4
+		relative_position_id = PAW_solidify_the_workers_congress
+		cost = 10
+
+		prerequisite = { focus = PAW_solidify_the_workers_congress focus = PAW_form_the_vanguard_party }
+
+		completion_reward = {
+			if = {
+				limit = { has_idea = PAW_banditism }
+				remove_ideas = PAW_banditism
+			}
+			if = {
+				limit = { has_idea = PAW_banditism_2a }
+				remove_ideas = PAW_banditism_2a
+			}
+			if = {
+				limit = { has_idea = PAW_banditism_2b }
+				remove_ideas = PAW_banditism_2b
+			}
+		}
+	}
+
+	# Syndicalist Economics
+	focus = {
+		id = PAW_syndicalist_economics
+		icon = GFX_goal_generic_construction2
+		x = -1
+		y = 1
+		relative_position_id = PAW_socialize_the_economy
+		cost = 10
+
+		prerequisite = { focus = PAW_socialize_the_economy }
+		mutually_exclusive = { focus = PAW_planned_economics }
+
+		completion_reward = {
+			hidden_effect = {
+				set_variable = { PAW_synd_econ_construction = 0.15 }
+			}
+			add_dynamic_modifier = { modifier = PAW_syndicalist_economics }
+			add_offsite_building = {
+				type = industrial_complex
+				level = 3
+			}
+			custom_effect_tooltip = PAW_syndicalist_economics_tt
+		}
+	}
+
+	# Planned Economics
+	focus = {
+		id = PAW_planned_economics
+		icon = GFX_goal_generic_construction2
+		x = 1
+		y = 1
+		relative_position_id = PAW_socialize_the_economy
+		cost = 10
+
+		prerequisite = { focus = PAW_socialize_the_economy }
+		mutually_exclusive = { focus = PAW_syndicalist_economics }
+
+		completion_reward = {
+			add_ideas = PAW_two_year_plan
+			add_offsite_building = {
+				type = industrial_complex
+				level = 5
+			}
+		}
+	}
+
+	# Impower the Unions
+	focus = {
+		id = PAW_impower_the_unions
+		icon = GFX_goal_generic_propaganda
+		x = -1
+		y = 1
+		relative_position_id = PAW_syndicalist_economics
+		cost = 5
+
+		prerequisite = { focus = PAW_syndicalist_economics }
+
+		completion_reward = {
+			custom_effect_tooltip = PAW_modify_synd_econ_tt
+			hidden_effect = {
+				add_to_variable = { PAW_synd_econ_construction = 0.10 }
+			}
+		}
+	}
+
+	# Develop the Productive Forces
+	focus = {
+		id = PAW_develop_the_productive_forces
+		icon = GFX_goal_generic_construction2
+		x = 1
+		y = 1
+		relative_position_id = PAW_syndicalist_economics
+		cost = 10
+
+		prerequisite = { focus = PAW_syndicalist_economics focus = PAW_planned_economics }
+
+		completion_reward = {
+			add_offsite_building = {
+				type = industrial_complex
+				level = 8
+			}
+		}
+	}
+
+	# Develop an Extraction Economy
+	focus = {
+		id = PAW_develop_an_extraction_economy
+		icon = GFX_goal_generic_construction2
+		x = 1
+		y = 1
+		relative_position_id = PAW_planned_economics
+		cost = 5
+
+		prerequisite = { focus = PAW_planned_economics }
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				limit = { is_core_of = ROOT }
+				add_resource = { type = steel amount = 20 }
+			}
+			random_owned_controlled_state = {
+				limit = { is_core_of = ROOT }
+				add_resource = { type = steel amount = 20 }
+			}
+			random_owned_controlled_state = {
+				limit = { is_core_of = ROOT }
+				add_resource = { type = steel amount = 20 }
+			}
+			add_offsite_building = {
+				type = industrial_complex
+				level = 4
+			}
+		}
+	}
+
+	# Smash Capitalist Profit
+	focus = {
+		id = PAW_smash_capitalist_profit
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 1
+		relative_position_id = PAW_impower_the_unions
+		cost = 5
+
+		prerequisite = { focus = PAW_impower_the_unions }
+
+		completion_reward = {
+			add_ideas = PAW_non_hierarchical_economy
+		}
+	}
+
+	# Rebuild the Agricultural Sector
+	focus = {
+		id = PAW_rebuild_the_agricultural_sector
+		icon = GFX_goal_generic_construction2
+		x = 0
+		y = 1
+		relative_position_id = PAW_develop_the_productive_forces
+		cost = 10
+
+		prerequisite = { focus = PAW_develop_the_productive_forces }
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				limit = { is_core_of = ROOT }
+				add_resource = { type = food amount = 10 }
+			}
+			random_owned_controlled_state = {
+				limit = { is_core_of = ROOT }
+				add_resource = { type = food amount = 10 }
+			}
+			random_owned_controlled_state = {
+				limit = { is_core_of = ROOT }
+				add_resource = { type = food amount = 10 }
+			}
+			random_owned_controlled_state = {
+				limit = { is_core_of = ROOT }
+				add_resource = { type = food amount = 10 }
+			}
+		}
+	}
+
+	# Develop Metal Refineries
+	focus = {
+		id = PAW_develop_metal_refineries
+		icon = GFX_goal_generic_construction2
+		x = 0
+		y = 1
+		relative_position_id = PAW_develop_an_extraction_economy
+		cost = 5
+
+		prerequisite = { focus = PAW_develop_an_extraction_economy }
+
+		completion_reward = {
+			add_offsite_building = {
+				type = arms_factory
+				level = 4
+			}
+		}
+	}
+
+	# Reconcile with the Agrarians
+	focus = {
+		id = PAW_reconcile_with_the_agrarians
+		icon = GFX_goal_generic_propaganda
+		x = 1
+		y = 1
+		relative_position_id = PAW_smash_capitalist_profit
+		cost = 5
+
+		prerequisite = { focus = PAW_smash_capitalist_profit }
+		prerequisite = { focus = PAW_rebuild_the_agricultural_sector }
+
+		completion_reward = {
+			add_ideas = PAW_peasant_worker_alliance
+		}
+	}
+
+	# Destroy the Petit Bourgeoisie
+	focus = {
+		id = PAW_destroy_the_petit_bourgeoisie
+		icon = GFX_goal_generic_major_war
+		x = -1
+		y = 1
+		relative_position_id = PAW_develop_metal_refineries
+		cost = 10
+
+		prerequisite = { focus = PAW_rebuild_the_agricultural_sector }
+		prerequisite = { focus = PAW_develop_metal_refineries }
+
+		completion_reward = {
+			add_ideas = PAW_workers_before_peasants
+		}
+	}
 }
