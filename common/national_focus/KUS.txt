@@ -2840,6 +2840,27 @@
 					add_idea = KUS_uhkus_greater
 				}
 			}
+			custom_effect_tooltip = KUS_proclaim_greater_kusnurk_cores_tt
+			hidden_effect = {
+				# Add FSR core states as potential cores (compliance 60%)
+				every_state = {
+					limit = { is_core_of = FSR }
+					set_state_flag = compliance_60_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+				}
+				# Add DOM core states as potential cores (compliance 60%)
+				every_state = {
+					limit = { is_core_of = DOM }
+					set_state_flag = compliance_60_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+				}
+				# Add NEK core states as potential cores (compliance 60%)
+				every_state = {
+					limit = { is_core_of = NEK }
+					set_state_flag = compliance_60_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+				}
+			}
 		}
 	}
 
@@ -2896,12 +2917,7 @@
 			}
 			every_country = {
 				limit = {
-					OR = {
-						tag = SIL
-						tag = DOM
-						tag = FST
-						tag = KTN
-					}
+					is_herzlands_warlord = yes
 				}
 				add_opinion_modifier = { target = KUS modifier = large_decrease }
 				ROOT = {
@@ -2994,6 +3010,40 @@
 	}
 
 	# ==========================================
+	# Appease the Roqualian Titan
+	# ==========================================
+	focus = {
+		id = KUS_appease_roqualian_titan
+		icon = GFX_goal_generic_major_alliance
+		relative_position_id = KUS_operation_unified_freistaat
+		x = -1
+		y = 1
+		cost = 10
+
+		prerequisite = { focus = KUS_operation_unified_freistaat }
+		prerequisite = { focus = KUS_operation_riesieger_down }
+
+		available = {
+			ROQ = {
+				has_war = no
+				NOT = { has_government = fascism }
+			}
+			controls_state = 730
+			controls_state = 254
+			controls_state = 255
+			controls_state = 236
+		}
+
+		ai_will_do = { factor = 5 }
+
+		completion_reward = {
+			ROQ = {
+				country_event = { id = KUS_event.53 }
+			}
+		}
+	}
+
+	# ==========================================
 	# Union of Our Own
 	# ==========================================
 	focus = {
@@ -3015,41 +3065,44 @@
 				limit = { is_in_faction = no }
 				create_faction = "Flusiobalkan Union"
 			}
-			every_country = {
-				limit = {
-					OR = {
-						tag = FSR
-						tag = DOM
-						tag = NEK
-						tag = VIX
-						tag = MCF
-						tag = TEN
-						tag = KHA
-						tag = SLR
-						tag = IZW
-						tag = FST
+			custom_effect_tooltip = KUS_union_of_our_own_invite_tt
+			hidden_effect = {
+				every_country = {
+					limit = {
+						NOT = { tag = KUS }
+						is_flusiobalkan = yes
+						has_government = democratic
+						is_in_faction = no
+						has_war = no
 					}
-					has_government = democratic
-					is_in_faction = no
+					country_event = { id = KUS_event.50 }
 				}
-				KUS = { add_to_faction = PREV }
 			}
+		}
+	}
+
+	# ==========================================
+	# Secure Flusiobalkans Dominance
+	# ==========================================
+	focus = {
+		id = KUS_secure_flusiobalkans_dominance
+		icon = GFX_goal_generic_occupy_states_ongoing_war
+		relative_position_id = KUS_union_of_our_own
+		x = -2
+		y = 1
+		cost = 10
+
+		prerequisite = { focus = KUS_union_of_our_own }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
 			every_country = {
 				limit = {
-					OR = {
-						tag = FSR
-						tag = DOM
-						tag = NEK
-						tag = VIX
-						tag = MCF
-						tag = TEN
-						tag = KHA
-						tag = SLR
-						tag = IZW
-						tag = FST
-					}
-					NOT = { has_government = democratic }
+					NOT = { tag = KUS }
+					is_flusiobalkan = yes
 					NOT = { is_in_faction_with = KUS }
+					NOT = { is_subject_of = KUS }
 				}
 				ROOT = {
 					create_wargoal = {
@@ -3106,6 +3159,10 @@
 
 		available = {
 			is_faction_leader = yes
+			custom_trigger_tooltip = {
+				tooltip = KUS_faction_150_factories_tt
+				check_variable = { KUS_faction_total_factories > 149 }
+			}
 		}
 		cancel_if_invalid = yes
 
@@ -3135,6 +3192,10 @@
 
 		available = {
 			is_faction_leader = yes
+			custom_trigger_tooltip = {
+				tooltip = KUS_faction_150_civs_tt
+				check_variable = { KUS_faction_total_civs > 149 }
+			}
 		}
 		cancel_if_invalid = yes
 
@@ -3166,6 +3227,10 @@
 
 		available = {
 			is_faction_leader = yes
+			custom_trigger_tooltip = {
+				tooltip = KUS_faction_150_mils_tt
+				check_variable = { KUS_faction_total_mils > 149 }
+			}
 		}
 		cancel_if_invalid = yes
 
@@ -3203,7 +3268,7 @@
 
 		completion_reward = {
 			every_country = {
-				limit = { is_in_faction_with = KUS }
+				limit = { is_in_faction_with = KUS NOT = { tag = KUS } }
 				if = {
 					limit = { has_idea = KUS_flusiobalkan_economic_region_2 }
 					remove_ideas = KUS_flusiobalkan_economic_region_2
@@ -3214,6 +3279,7 @@
 				}
 				add_ideas = KUS_solabalkan_union
 			}
+			custom_effect_tooltip = KUS_united_flusiobalkans_puppet_decisions_tt
 		}
 	}
 
