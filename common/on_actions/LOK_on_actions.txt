@@ -1976,6 +1976,27 @@ on_actions = {
 		}
 	}
 
+	on_weekly_KUS = {
+		effect = {
+			# KUS Flusiobalkan faction factory counting
+			if = {
+				limit = { is_faction_leader = yes has_completed_focus = KUS_union_of_our_own }
+				set_variable = { KUS_faction_total_factories = 0 }
+				set_variable = { KUS_faction_total_civs = 0 }
+				set_variable = { KUS_faction_total_mils = 0 }
+				every_country = {
+					limit = { is_in_faction_with = KUS }
+					KUS = {
+						add_to_variable = { KUS_faction_total_factories = PREV.num_of_civilian_factories }
+						add_to_variable = { KUS_faction_total_factories = PREV.num_of_military_factories }
+						add_to_variable = { KUS_faction_total_civs = PREV.num_of_civilian_factories }
+						add_to_variable = { KUS_faction_total_mils = PREV.num_of_military_factories }
+					}
+				}
+			}
+		}
+	}
+
 	on_monthly = {
 		effect = {
 			#Check pop evolution and apply the productivity modifier
@@ -2041,23 +2062,6 @@ on_actions = {
 						check_variable = { ksk_strength > 0 }
 					}
 					save_global_event_target_as = katlinin_country
-				}
-			}
-
-			# KUS Flusiobalkan faction factory counting
-			if = {
-				limit = { tag = KUS is_faction_leader = yes }
-				set_variable = { KUS_faction_total_factories = 0 }
-				set_variable = { KUS_faction_total_civs = 0 }
-				set_variable = { KUS_faction_total_mils = 0 }
-				every_country = {
-					limit = { is_in_faction_with = KUS }
-					KUS = {
-						add_to_variable = { KUS_faction_total_factories = PREV.num_of_civilian_factories }
-						add_to_variable = { KUS_faction_total_factories = PREV.num_of_military_factories }
-						add_to_variable = { KUS_faction_total_civs = PREV.num_of_civilian_factories }
-						add_to_variable = { KUS_faction_total_mils = PREV.num_of_military_factories }
-					}
 				}
 			}
 		}

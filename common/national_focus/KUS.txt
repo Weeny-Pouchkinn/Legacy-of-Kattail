@@ -2840,25 +2840,31 @@
 					add_idea = KUS_uhkus_greater
 				}
 			}
-			custom_effect_tooltip = KUS_proclaim_greater_kusnurk_cores_tt
-			hidden_effect = {
-				# Add FSR core states as potential cores (compliance 60%)
-				every_state = {
-					limit = { is_core_of = FSR }
-					set_state_flag = compliance_60_@ROOT
-					add_to_array = { array = ROOT.potential_cores_array }
+			FSR = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_60
+					hidden_effect = {
+						set_state_flag = compliance_60_@ROOT
+						add_to_array = { array = ROOT.potential_cores_array }
+					}
 				}
-				# Add DOM core states as potential cores (compliance 60%)
-				every_state = {
-					limit = { is_core_of = DOM }
-					set_state_flag = compliance_60_@ROOT
-					add_to_array = { array = ROOT.potential_cores_array }
+			}
+			DOM = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_60
+					hidden_effect = {
+						set_state_flag = compliance_60_@ROOT
+						add_to_array = { array = ROOT.potential_cores_array }
+					}
 				}
-				# Add NEK core states as potential cores (compliance 60%)
-				every_state = {
-					limit = { is_core_of = NEK }
-					set_state_flag = compliance_60_@ROOT
-					add_to_array = { array = ROOT.potential_cores_array }
+			}
+			NEK = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_60
+					hidden_effect = {
+						set_state_flag = compliance_60_@ROOT
+						add_to_array = { array = ROOT.potential_cores_array }
+					}
 				}
 			}
 		}
@@ -2870,13 +2876,12 @@
 	focus = {
 		id = KUS_roqualian_alliance
 		icon = GFX_goal_generic_major_alliance
-		relative_position_id = KUS_endorse_national_pride
-		x = 0
+		relative_position_id = KUS_proclaim_greater_kusnurk
+		x = 1
 		y = 1
 		cost = 10
 
-		prerequisite = { focus = KUS_state_development_funds }
-		prerequisite = { focus = KUS_endorse_national_pride }
+		prerequisite = { focus = KUS_proclaim_greater_kusnurk }
 
 		ai_will_do = { factor = 1 }
 
@@ -2898,12 +2903,12 @@
 	focus = {
 		id = KUS_anti_katzen_diplomacy
 		icon = GFX_goal_generic_demand_territory
-		relative_position_id = KUS_roqualian_alliance
-		x = 0
-		y = 2
+		relative_position_id = KUS_proclaim_greater_kusnurk
+		x = -1
+		y = 1
 		cost = 10
 
-		prerequisite = { focus = KUS_roqualian_alliance }
+		prerequisite = { focus = KUS_proclaim_greater_kusnurk }
 
 		ai_will_do = { factor = 1 }
 
@@ -2933,12 +2938,12 @@
 	focus = {
 		id = KUS_operation_nekastoni_freedom
 		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_anti_katzen_diplomacy
-		x = 0
-		y = 1
+		relative_position_id = KUS_proclaim_greater_kusnurk
+		x = 2
+		y = 2
 		cost = 10
 
-		prerequisite = { focus = KUS_anti_katzen_diplomacy }
+		prerequisite = { focus = KUS_anti_katzen_diplomacy focus = KUS_roqualian_alliance }
 
 		bypass = {
 			NOT = { country_exists = NEK }
@@ -2960,13 +2965,12 @@
 	focus = {
 		id = KUS_operation_riesieger_down
 		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_operation_nekastoni_freedom
-		x = -2
-		y = 0
+		relative_position_id = KUS_proclaim_greater_kusnurk
+		x = 0
+		y = 2
 		cost = 10
 
-		prerequisite = { focus = KUS_proclaim_greater_kusnurk }
-		prerequisite = { focus = KUS_anti_katzen_diplomacy }
+		prerequisite = { focus = KUS_anti_katzen_diplomacy focus = KUS_roqualian_alliance }
 
 		bypass = {
 			NOT = { country_exists = DOM }
@@ -2988,12 +2992,12 @@
 	focus = {
 		id = KUS_operation_unified_freistaat
 		icon = GFX_goal_generic_occupy_states_ongoing_war
-		relative_position_id = KUS_operation_riesieger_down
+		relative_position_id = KUS_proclaim_greater_kusnurk
 		x = -2
-		y = 0
+		y = 2
 		cost = 5
 
-		prerequisite = { focus = KUS_proclaim_greater_kusnurk }
+		prerequisite = { focus = KUS_anti_katzen_diplomacy focus = KUS_roqualian_alliance }
 
 		bypass = {
 			NOT = { country_exists = FSR }
@@ -3016,7 +3020,7 @@
 		id = KUS_appease_roqualian_titan
 		icon = GFX_goal_generic_major_alliance
 		relative_position_id = KUS_operation_unified_freistaat
-		x = -1
+		x = 0
 		y = 1
 		cost = 10
 
@@ -3024,6 +3028,7 @@
 		prerequisite = { focus = KUS_operation_riesieger_down }
 
 		available = {
+			country_exists = ROQ
 			ROQ = {
 				has_war = no
 				NOT = { has_government = fascism }
@@ -3050,7 +3055,7 @@
 		id = KUS_union_of_our_own
 		icon = GFX_goal_generic_major_alliance
 		relative_position_id = KUS_operation_unified_freistaat
-		x = 1
+		x = 2
 		y = 1
 		cost = 10
 
@@ -3121,11 +3126,10 @@
 		id = KUS_joint_technology_board
 		icon = GFX_goal_generic_scientific_exchange
 		relative_position_id = KUS_union_of_our_own
-		x = 7
+		x = 2
 		y = 1
 		cost = 5
 
-		prerequisite = { focus = KUS_roqualian_alliance }
 		prerequisite = { focus = KUS_union_of_our_own }
 
 		ai_will_do = { factor = 1 }

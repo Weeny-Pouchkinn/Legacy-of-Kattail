@@ -360,8 +360,8 @@ country_event = {
 			add_to_faction = ROOT
 			country_event = { id = KUS_event.51 }
 		}
-		ai_will_do = {
-			factor = 50
+		ai_chance = {
+			base = 50
 			# VIX is very likely to join
 			modifier = {
 				factor = 10
@@ -394,8 +394,8 @@ country_event = {
 		KUS = {
 			country_event = { id = KUS_event.52 }
 		}
-		ai_will_do = {
-			factor = 50
+		ai_chance = {
+			base = 50
 			# VIX almost never refuses
 			modifier = {
 				factor = 0.05
@@ -470,8 +470,8 @@ country_event = {
 			country_event = { id = KUS_event.54 }
 		}
 		give_guarantee = KUS
-		ai_will_do = {
-			factor = 100
+		ai_chance = {
+			base = 100
 		}
 	}
 
@@ -481,8 +481,8 @@ country_event = {
 		KUS = {
 			country_event = { id = KUS_event.55 }
 		}
-		ai_will_do = {
-			factor = 0
+		ai_chance = {
+			base = 0
 		}
 	}
 }
@@ -544,8 +544,8 @@ country_event = {
 			}
 			country_event = { id = KUS_event.61 }
 		}
-		ai_will_do = {
-			factor = 100
+		ai_chance = {
+			base = 100
 		}
 	}
 
@@ -556,8 +556,8 @@ country_event = {
 		KUS = {
 			country_event = { id = KUS_event.62 }
 		}
-		ai_will_do = {
-			factor = 0
+		ai_chance = {
+			base = 0
 		}
 	}
 }
@@ -615,21 +615,14 @@ country_event = {
 		KUS = {
 			country_event = { id = KUS_event.71 }
 		}
-		hidden_effect = {
-			every_owned_state = {
-				set_compliance = 30
-				set_state_flag = compliance_50_@KUS
-				add_to_array = { array = KUS.potential_cores_array }
-			}
-		}
 		KUS = {
 			annex_country = {
 				target = ROOT
 				transfer_troops = yes
 			}
 		}
-		ai_will_do = {
-			factor = 100
+		ai_chance = {
+			base = 100
 		}
 	}
 
@@ -639,8 +632,8 @@ country_event = {
 		KUS = {
 			country_event = { id = KUS_event.72 }
 		}
-		ai_will_do = {
-			factor = 0
+		ai_chance = {
+			base = 0
 		}
 	}
 }
@@ -660,6 +653,16 @@ country_event = {
 			annex_country = {
 				target = FROM
 				transfer_troops = yes
+			}
+		}
+		FROM = {
+			every_core_state = {
+				set_compliance = 30
+				custom_effect_tooltip = state_core_threshold_set_40
+				hidden_effect = {
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+				}
 			}
 		}
 	}
