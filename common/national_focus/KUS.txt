@@ -3043,7 +3043,7 @@
 
 		completion_reward = {
 			ROQ = {
-				country_event = { id = KUS_event.53 }
+				country_event = { id = KUS_event.53 days = 3 }
 			}
 		}
 	}
@@ -3080,7 +3080,7 @@
 						is_in_faction = no
 						has_war = no
 					}
-					country_event = { id = KUS_event.50 }
+					country_event = { id = KUS_event.50 days = 3 }
 				}
 			}
 		}
@@ -3102,20 +3102,27 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			every_country = {
-				limit = {
-					NOT = { tag = KUS }
-					is_flusiobalkan = yes
-					NOT = { is_in_faction_with = KUS }
-					NOT = { is_subject_of = KUS }
-				}
-				ROOT = {
-					create_wargoal = {
-						type = topple_government
-						target = PREV
-					}
-				}
-			}
+			custom_effect_tooltip = KUS_secure_dominance_decisions_tt
+		}
+	}
+
+	# ==========================================
+	# Pressure Flusiobalkan Influence
+	# ==========================================
+	focus = {
+		id = KUS_pressure_flusiobalkan_influence
+		icon = GFX_goal_generic_demand_territory
+		relative_position_id = KUS_union_of_our_own
+		x = -4
+		y = 1
+		cost = 10
+
+		prerequisite = { focus = KUS_union_of_our_own }
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			custom_effect_tooltip = KUS_pressure_influence_decisions_tt
 		}
 	}
 

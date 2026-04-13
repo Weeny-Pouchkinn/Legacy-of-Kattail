@@ -1446,7 +1446,7 @@ KUS_flusiobalkans_union_cat = {
 
 		complete_effect = {
 			FROM = {
-				country_event = { id = KUS_event.60 }
+				country_event = { id = KUS_event.60 days = 3 }
 			}
 		}
 
@@ -1504,7 +1504,178 @@ KUS_flusiobalkans_union_cat = {
 
 		complete_effect = {
 			FROM = {
-				country_event = { id = KUS_event.70 }
+				country_event = { id = KUS_event.70 days = 3 }
+			}
+		}
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+}
+
+# ==========================================
+# Secure Flusiobalkans Dominance (war decisions on fascist flusiobalkan nations)
+# ==========================================
+KUS_secure_dominance_cat = {
+
+	KUS_declare_war_fascist_flusiobalkan = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { tag = KUS }
+
+		visible = {
+			has_completed_focus = KUS_secure_flusiobalkans_dominance
+			FROM = {
+				is_flusiobalkan = yes
+				has_government = fascism
+				NOT = { tag = KUS }
+				NOT = { has_war_with = KUS }
+				exists = yes
+			}
+		}
+
+		target_trigger = {
+			FROM = {
+				is_flusiobalkan = yes
+				has_government = fascism
+				NOT = { tag = KUS }
+				NOT = { has_war_with = KUS }
+				exists = yes
+			}
+		}
+
+		targets = { FSR DOM NEK VIX MCF TEN KHA SLR IZW FST }
+		target_root_trigger = {
+			has_completed_focus = KUS_secure_flusiobalkans_dominance
+		}
+
+		available = {
+			has_war = no
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		days_remove = 14
+
+		complete_effect = {
+			FROM = {
+				country_event = { id = LOK_generic.1 days = 3 }
+			}
+		}
+
+		remove_effect = {
+			declare_war_on = {
+				target = FROM
+				type = topple_government
+			}
+		}
+
+		ai_will_do = {
+			base = 5
+		}
+	}
+}
+
+# ==========================================
+# Pressure Flusiobalkan Influence (pressure non-fascist nations into joining faction)
+# ==========================================
+KUS_pressure_influence_cat = {
+
+	KUS_pressure_join_faction = {
+		icon = GFX_decision_generic_form_nation
+
+		allowed = { tag = KUS }
+
+		visible = {
+			has_completed_focus = KUS_pressure_flusiobalkan_influence
+			is_faction_leader = yes
+			FROM = {
+				is_flusiobalkan = yes
+				NOT = { tag = KUS }
+				NOT = { has_government = fascism }
+				NOT = { is_in_faction_with = KUS }
+				NOT = { is_subject_of = KUS }
+				exists = yes
+			}
+		}
+
+		target_trigger = {
+			FROM = {
+				is_flusiobalkan = yes
+				NOT = { tag = KUS }
+				NOT = { has_government = fascism }
+				NOT = { is_in_faction_with = KUS }
+				NOT = { is_subject_of = KUS }
+				exists = yes
+			}
+		}
+
+		targets = { FSR DOM NEK VIX MCF TEN KHA SLR IZW FST }
+		target_root_trigger = {
+			has_completed_focus = KUS_pressure_flusiobalkan_influence
+			is_faction_leader = yes
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = KUS_pressure_2x_industry_tt
+				# KUS faction needs 2x the target's factories (4x if target is in a faction)
+				if = {
+					limit = { FROM = { is_in_faction = yes } }
+					check_variable = { KUS_faction_total_factories > FROM.KUS_pressure_4x_threshold }
+				}
+				else = {
+					check_variable = { KUS_faction_total_factories > FROM.KUS_pressure_2x_threshold }
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 75
+
+		complete_effect = {
+			# Calculate thresholds for AI event response
+			hidden_effect = {
+				# Set flags for the response logic
+				FROM = {
+					set_variable = { KUS_pressure_target_factories = num_of_civilian_factories }
+					add_to_variable = { KUS_pressure_target_factories = num_of_military_factories }
+				}
+				# Check if double threshold met (4x base, 8x if in faction)
+				set_variable = { KUS_pressure_double_threshold = FROM.KUS_pressure_target_factories }
+				if = {
+					limit = { FROM = { is_in_faction = yes } }
+					multiply_variable = { KUS_pressure_double_threshold = 8 }
+				}
+				else = {
+					multiply_variable = { KUS_pressure_double_threshold = 4 }
+				}
+				if = {
+					limit = { check_variable = { KUS_faction_total_factories > KUS_pressure_double_threshold } }
+					FROM = { set_country_flag = KUS_pressure_double_industry }
+				}
+				# Check if KUS has 2x divisions (4x if in faction)
+				if = {
+					limit = {
+						FROM = { is_in_faction = yes }
+						strength_ratio = { tag = FROM ratio > 4.0 }
+					}
+					FROM = { set_country_flag = KUS_pressure_army_bonus }
+				}
+				else_if = {
+					limit = {
+						FROM = { is_in_faction = no }
+						strength_ratio = { tag = FROM ratio > 2.0 }
+					}
+					FROM = { set_country_flag = KUS_pressure_army_bonus }
+				}
+			}
+			FROM = {
+				country_event = { id = KUS_event.80 days = 3 }
 			}
 		}
 
