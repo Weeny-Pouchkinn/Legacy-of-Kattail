@@ -1,4 +1,4 @@
-focus_tree = {
+﻿focus_tree = {
 	id = KUS_TREE
 	country = {
 		factor = 0
@@ -985,9 +985,7 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_plan_colossus_tt
-			hidden_effect = {
-			add_to_variable = { KUS_merevagi_capital_ship_cost = -0.10 }
-			}
+			add_ideas = KUS_plan_colossus_equipment
 		}
 	}
 
@@ -1154,9 +1152,7 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_expand_naval_yards_tt
-			hidden_effect = {
-			add_to_variable = { KUS_merevagi_capital_ship_cost = -0.10 }
-			}
+			add_ideas = KUS_expand_naval_yards_equipment
 		}
 	}
 
@@ -1248,10 +1244,7 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_squadron_flagships_tt
-			hidden_effect = {
-			add_to_variable = { KUS_merevagi_heavy_cruiser_damage = 0.05 }
-			add_to_variable = { KUS_merevagi_heavy_cruiser_cost = -0.10 }
-			}
+			add_ideas = KUS_squadron_flagships_equipment
 		}
 	}
 
@@ -1545,9 +1538,7 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_carrier_research_right_tt
-			hidden_effect = {
-			add_to_variable = { KUS_merevagi_carrier_armor = 0.05 }
-			}
+			add_ideas = KUS_carrier_research_right_equipment
 		}
 	}
 
@@ -1584,6 +1575,7 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_standardization_tt
+			add_ideas = KUS_standardization_equipment
 		}
 	}
 
@@ -1618,7 +1610,8 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_rearline_guard_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavoim_org = 0.10 }
+				add_to_variable = { KUS_maavoim_org = 0.05 }
+				add_to_variable = { KUS_maavoim_defence = 0.05 }
 			}
 		}
 	}
@@ -1636,12 +1629,13 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_halberd_at_tt
+			add_ideas = KUS_halberd_at_equipment
 			add_tech_bonus = {
-			name = KUS_infantry_at_bonus
-			bonus = 1.0
-			ahead_reduction = 2
-			uses = 1
-			category = cat_anti_tank
+				name = KUS_infantry_at_bonus
+				bonus = 1.0
+				ahead_reduction = 2
+				uses = 1
+				category = cat_anti_tank
 			}
 		}
 	}
@@ -2063,9 +2057,20 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_colossus_tt
 			hidden_effect = {
 				add_to_variable = { KUS_merevagi_capital_ship_attack = 0.05 }
+				if = {
+					limit = { has_idea = KUS_plan_colossus_equipment }
+					remove_ideas = KUS_plan_colossus_equipment
+				}
+				if = {
+					limit = { has_idea = KUS_expand_naval_yards_equipment }
+					remove_ideas = KUS_expand_naval_yards_equipment
+				}
+				add_ideas = KUS_fleet_colossus_equipment
 			}
+			custom_effect_tooltip = KUS_merge_equipment_ideas_tt
 			KUS_Karl_Erijk = {
 				add_unit_leader_trait = blue_water_expert
 			}
@@ -2089,9 +2094,7 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = KUS_fleet_nymph_tt
-			hidden_effect = {
-				add_to_variable = { KUS_merevagi_sub_production_cost = -0.15 }
-			}
+			add_ideas = KUS_fleet_nymph_equipment
 			KUS_Karl_Erijk = {
 				add_unit_leader_trait = green_water_expert
 			}
@@ -2114,9 +2117,19 @@ focus_tree = {
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
+			custom_effect_tooltip = KUS_fleet_harpie_tt
 			hidden_effect = {
-				add_to_variable = { KUS_merevagi_sub_production_cost = -0.15 }
+				if = {
+					limit = { has_idea = KUS_squadron_flagships_equipment }
+					remove_ideas = KUS_squadron_flagships_equipment
+				}
+				if = {
+					limit = { has_idea = KUS_carrier_research_right_equipment }
+					remove_ideas = KUS_carrier_research_right_equipment
+				}
+				add_ideas = KUS_fleet_harpie_equipment
 			}
+			custom_effect_tooltip = KUS_merge_equipment_ideas_tt
 			KUS_Karl_Erijk = {
 				add_unit_leader_trait = torpedo_bomber
 			}
@@ -2142,10 +2155,21 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_ghosts_of_flusion_tt
 			hidden_effect = {
-			add_to_variable = { KUS_ohuvagi_air_superiority_efficiency = 0.05 }
-			add_to_variable = { KUS_ohuvagi_interception_efficiency = 0.05 }
-			add_to_variable = { KUS_ohuvagi_air_sup_combat = 0.10 }
+				add_to_variable = { KUS_ohuvagi_air_superiority_efficiency = 0.05 }
+				add_to_variable = { KUS_ohuvagi_interception_efficiency = 0.05 }
+				add_to_variable = { KUS_ohuvagi_air_sup_combat = 0.10 }
+				if = {
+					limit = { has_idea = KUS_standardization_equipment }
+					remove_ideas = KUS_standardization_equipment
+					add_ideas = KUS_ghosts_of_flusion_standardization_equipment
+				}
+				if = {
+					limit = { has_idea = KUS_specialization_equipment }
+					remove_ideas = KUS_specialization_equipment
+					add_ideas = KUS_ghosts_of_flusion_specialization_equipment
+				}
 			}
+			custom_effect_tooltip = KUS_merge_equipment_ideas_tt
 		}
 	}
 
@@ -2203,9 +2227,15 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = KUS_speed_of_light_tt
 			hidden_effect = {
-			add_to_variable = { KUS_maavoim_division_speed = 0.10 }
-			add_to_variable = { KUS_maavoim_breakthrough = 0.05 }
+				add_to_variable = { KUS_maavoim_division_speed = 0.10 }
+				add_to_variable = { KUS_maavoim_breakthrough = 0.05 }
+				if = {
+					limit = { has_idea = KUS_full_mechanization_equipment }
+					remove_ideas = KUS_full_mechanization_equipment
+					add_ideas = KUS_speed_of_light_equipment
+				}
 			}
+			custom_effect_tooltip = KUS_merge_equipment_ideas_tt
 		}
 	}
 
