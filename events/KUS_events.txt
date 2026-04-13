@@ -339,3 +339,346 @@ country_event = {
 		add_stability = -0.10
 	}
 }
+
+###########################
+# KUS Democratic Faction Events
+###########################
+
+# Invitation to join the Flusiobalkan Union (sent to each democratic flusiobalkan nation)
+country_event = {
+	id = KUS_event.50
+	title = KUS_event.50.t
+	desc = KUS_event.50.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - join the faction
+	option = {
+		name = KUS_event.50.a
+		KUS = {
+			add_to_faction = ROOT
+			country_event = { id = KUS_event.51 }
+		}
+		ai_will_do = {
+			factor = 50
+			# VIX is very likely to join
+			modifier = {
+				factor = 10
+				tag = VIX
+			}
+			# Higher opinion = more likely
+			modifier = {
+				factor = 2
+				has_opinion = { target = KUS value > 50 }
+			}
+			modifier = {
+				factor = 1.5
+				has_opinion = { target = KUS value > 25 }
+			}
+			# Weaker nations more likely to join for protection
+			modifier = {
+				factor = 2
+				strength_ratio = { tag = KUS ratio < 0.5 }
+			}
+			modifier = {
+				factor = 1.5
+				strength_ratio = { tag = KUS ratio < 0.75 }
+			}
+		}
+	}
+
+	# Refuse
+	option = {
+		name = KUS_event.50.b
+		KUS = {
+			country_event = { id = KUS_event.52 }
+		}
+		ai_will_do = {
+			factor = 50
+			# VIX almost never refuses
+			modifier = {
+				factor = 0.05
+				tag = VIX
+			}
+			# Low opinion = more likely to refuse
+			modifier = {
+				factor = 2
+				has_opinion = { target = KUS value < -25 }
+			}
+			# Stronger nations less interested
+			modifier = {
+				factor = 2
+				strength_ratio = { tag = KUS ratio > 1.5 }
+			}
+		}
+	}
+}
+
+# Notification: A nation accepted our invitation
+country_event = {
+	id = KUS_event.51
+	title = KUS_event.51.t
+	desc = KUS_event.51.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.51.a
+		effect_tooltip = {
+			add_to_faction = FROM
+		}
+	}
+}
+
+# Notification: A nation refused our invitation
+country_event = {
+	id = KUS_event.52
+	title = KUS_event.52.t
+	desc = KUS_event.52.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.52.a
+		add_political_power = -10
+	}
+}
+
+# Appease the Roqualian Titan - offer to return FSR lands to ROQ
+country_event = {
+	id = KUS_event.53
+	title = KUS_event.53.t
+	desc = KUS_event.53.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - receive the lands
+	option = {
+		name = KUS_event.53.a
+		transfer_state = 730
+		transfer_state = 254
+		transfer_state = 255
+		transfer_state = 236
+		add_opinion_modifier = { target = KUS modifier = KUS_roqualian_land_return }
+		KUS = {
+			add_opinion_modifier = { target = ROQ modifier = KUS_roqualian_land_return }
+			add_ideas = KUS_roqualian_gratitude
+			country_event = { id = KUS_event.54 }
+		}
+		give_guarantee = KUS
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	# Refuse
+	option = {
+		name = KUS_event.53.b
+		KUS = {
+			country_event = { id = KUS_event.55 }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}
+
+# Notification: ROQ accepted our offer
+country_event = {
+	id = KUS_event.54
+	title = KUS_event.54.t
+	desc = KUS_event.54.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.54.a
+		effect_tooltip = {
+			ROQ = {
+				transfer_state = 730
+				transfer_state = 254
+				transfer_state = 255
+				transfer_state = 236
+			}
+			add_ideas = KUS_roqualian_gratitude
+		}
+	}
+}
+
+# Notification: ROQ refused our offer
+country_event = {
+	id = KUS_event.55
+	title = KUS_event.55.t
+	desc = KUS_event.55.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.55.a
+		add_political_power = -25
+	}
+}
+
+# Puppet proposal - sent to faction member (United Flusiobalkans decision)
+country_event = {
+	id = KUS_event.60
+	title = KUS_event.60.t
+	desc = KUS_event.60.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - become a Dominion
+	option = {
+		name = KUS_event.60.a
+		KUS = {
+			set_autonomy = {
+				target = ROOT
+				autonomous_state = autonomy_dominion
+			}
+			country_event = { id = KUS_event.61 }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	# Refuse - leave the faction, KUS gets a wargoal
+	option = {
+		name = KUS_event.60.b
+		leave_faction = yes
+		KUS = {
+			country_event = { id = KUS_event.62 }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}
+
+# Notification: Nation accepted puppet proposal
+country_event = {
+	id = KUS_event.61
+	title = KUS_event.61.t
+	desc = KUS_event.61.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.61.a
+		effect_tooltip = {
+			set_autonomy = {
+				target = FROM
+				autonomous_state = autonomy_dominion
+			}
+		}
+	}
+}
+
+# Notification: Nation refused puppet proposal - leaves faction, wargoal granted
+country_event = {
+	id = KUS_event.62
+	title = KUS_event.62.t
+	desc = KUS_event.62.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.62.a
+		create_wargoal = {
+			type = topple_government
+			target = FROM
+		}
+	}
+}
+
+# Integration proposal - sent to puppet (True Union decision)
+country_event = {
+	id = KUS_event.70
+	title = KUS_event.70.t
+	desc = KUS_event.70.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - get annexed
+	option = {
+		name = KUS_event.70.a
+		KUS = {
+			country_event = { id = KUS_event.71 }
+		}
+		hidden_effect = {
+			every_owned_state = {
+				set_compliance = 30
+				set_state_flag = compliance_50_@KUS
+				add_to_array = { array = KUS.potential_cores_array }
+			}
+		}
+		KUS = {
+			annex_country = {
+				target = ROOT
+				transfer_troops = yes
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	# Refuse - instant war declaration
+	option = {
+		name = KUS_event.70.b
+		KUS = {
+			country_event = { id = KUS_event.72 }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}
+
+# Notification: Nation accepted integration
+country_event = {
+	id = KUS_event.71
+	title = KUS_event.71.t
+	desc = KUS_event.71.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.71.a
+		effect_tooltip = {
+			annex_country = {
+				target = FROM
+				transfer_troops = yes
+			}
+		}
+	}
+}
+
+# Notification: Nation refused integration - instant war
+country_event = {
+	id = KUS_event.72
+	title = KUS_event.72.t
+	desc = KUS_event.72.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.72.a
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+}
