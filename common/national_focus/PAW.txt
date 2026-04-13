@@ -8,7 +8,7 @@ focus_tree = {
 		}
 	}
 
-	continuous_focus_position = { x = 1500 y = 1000 }
+	continuous_focus_position = { x = 3000 y = 1000 }
 
 	# [1] Bring an End to the Anarchy
 	focus = {
@@ -595,73 +595,16 @@ focus_tree = {
 	# LEFT BRANCH ELECTION OUTCOMES
 	# ==========================================
 
-	# Maintain Vaska's Position (Left Branch)
-	focus = {
-		id = PAW_maintain_vaskas_position
-		icon = GFX_goal_generic_propaganda
-		x = -8
-		y = 1
-		relative_position_id = PAW_the_peoples_congress
-		cost = 5
-
-		prerequisite = { focus = PAW_the_peoples_congress }
-
-		completion_reward = {
-			add_timed_idea = {
-				idea = PAW_vaska_ascendent
-				days = 150
-			}
-			create_country_leader = {
-				name = "Mimi Vaska"
-				picture = "GFX_portrait_PAW_generic"
-				expire = "1965.1.1"
-				ideology = kraksism
-				traits = { PAW_political_pragmatist }
-			}
-		}
-	}
-
-	# Promote Leon Clawtsky (Left Branch)
-	focus = {
-		id = PAW_promote_leon_clawtsky
-		icon = GFX_goal_generic_intelligence_exchange
-		x = -6
-		y = 1
-		relative_position_id = PAW_the_peoples_congress
-		cost = 5
-
-		prerequisite = { focus = PAW_the_peoples_congress }
-
-		completion_reward = {
-			create_country_leader = {
-				name = "Leon Clawtsky"
-				picture = "GFX_portrait_PAW_generic"
-				expire = "1965.1.1"
-				ideology = socialism
-				traits = { PAW_militaristic_expansionist }
-			}
-			hidden_effect = {
-				set_variable = { PAW_uls_recruitable_pop = -0.01 }
-			}
-			add_dynamic_modifier = { modifier = PAW_universal_labour_service }
-			custom_effect_tooltip = PAW_promote_leon_clawtsky_uls_tt
-		}
-	}
-
-	# ==========================================
-	# RIGHT BRANCH ELECTION OUTCOMES
-	# ==========================================
-
 	# Valewria Clique Wins Out (Right Branch)
 	focus = {
 		id = PAW_valewria_clique_wins_right
 		icon = GFX_goal_generic_propaganda
 		x = -1
 		y = 1
-		relative_position_id = PAW_the_peoples_congress
+		relative_position_id = PAW_hold_soviet_elections
 		cost = 5
 
-		prerequisite = { focus = PAW_the_peoples_congress }
+		prerequisite = { focus = PAW_hold_soviet_elections }
 		mutually_exclusive = { focus = PAW_orthodoxy_wins_out_right }
 
 		completion_reward = {
@@ -687,14 +630,75 @@ focus_tree = {
 		icon = GFX_goal_generic_intelligence_exchange
 		x = 1
 		y = 1
+		relative_position_id = PAW_hold_soviet_elections
+		cost = 5
+
+		prerequisite = { focus = PAW_hold_soviet_elections }
+		mutually_exclusive = { focus = PAW_valewria_clique_wins_right }
+
+
+		completion_reward = {
+			add_ideas = PAW_empowered_unions
+		}
+	}
+
+	# ==========================================
+	# RIGHT BRANCH ELECTION OUTCOMES
+	# ==========================================
+
+	# Maintain Vaska's Position (Left Branch)
+	focus = {
+		id = PAW_maintain_vaskas_position
+		icon = GFX_goal_generic_propaganda
+		x = 0
+		y = 1
 		relative_position_id = PAW_the_peoples_congress
 		cost = 5
 
 		prerequisite = { focus = PAW_the_peoples_congress }
-		mutually_exclusive = { focus = PAW_valewria_clique_wins_right focus = PAW_promote_nikholai_meowkharin }
+		mutually_exclusive = { focus = PAW_promote_nikholai_meowkharin focus = PAW_promote_leon_clawtsky }
+
 
 		completion_reward = {
-			add_ideas = PAW_empowered_unions
+			add_timed_idea = {
+				idea = PAW_vaska_ascendent
+				days = 150
+			}
+			create_country_leader = {
+				name = "Mimi Vaska"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = kraksism
+				traits = { PAW_political_pragmatist }
+			}
+		}
+	}
+
+	# Promote Leon Clawtsky (Left Branch)
+	focus = {
+		id = PAW_promote_leon_clawtsky
+		icon = GFX_goal_generic_intelligence_exchange
+		x = -2
+		y = 1
+		relative_position_id = PAW_the_peoples_congress
+		cost = 5
+
+		prerequisite = { focus = PAW_the_peoples_congress }
+		mutually_exclusive = { focus = PAW_maintain_vaskas_position focus = PAW_promote_nikholai_meowkharin }
+
+		
+		completion_reward = {
+			create_country_leader = {
+				name = "Leon Clawtsky"
+				picture = "GFX_portrait_PAW_generic"
+				expire = "1965.1.1"
+				ideology = socialism
+				traits = { PAW_militaristic_expansionist }
+			}
+			hidden_effect = {
+				set_variable = { PAW_uls_recruitable_pop = -0.01 }
+			}
+			add_dynamic_modifier = { modifier = PAW_universal_labour_service }
 		}
 	}
 
@@ -702,13 +706,13 @@ focus_tree = {
 	focus = {
 		id = PAW_promote_nikholai_meowkharin
 		icon = GFX_goal_generic_intelligence_exchange
-		x = 3
+		x = 2
 		y = 1
 		relative_position_id = PAW_the_peoples_congress
 		cost = 5
 
-		prerequisite = { focus = PAW_hold_soviet_elections focus = PAW_the_peoples_congress }
-		mutually_exclusive = { focus = PAW_orthodoxy_wins_out_right }
+		prerequisite = { focus = PAW_the_peoples_congress }
+		mutually_exclusive = { focus = PAW_maintain_vaskas_position focus = PAW_promote_leon_clawtsky }
 
 		completion_reward = {
 			create_country_leader = {
@@ -1129,8 +1133,15 @@ focus_tree = {
 				type = annex_everything
 			}
 			TAI = {
-				every_owned_state = {
-					add_core_of = PAW
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					add_claim_by = ROOT
 				}
 			}
 		}
@@ -1230,8 +1241,15 @@ focus_tree = {
 				type = annex_everything
 			}
 			CLE = {
-				every_owned_state = {
-					add_core_of = PAW
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_40
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes	
+						reduce_compliance_coring_threshold_by_10 = yes	
+					}
+					add_claim_by = ROOT
 				}
 			}
 		}
