@@ -2043,6 +2043,23 @@ on_actions = {
 					save_global_event_target_as = katlinin_country
 				}
 			}
+
+			# KUS Flusiobalkan faction factory counting
+			if = {
+				limit = { tag = KUS is_faction_leader = yes }
+				set_variable = { KUS_faction_total_factories = 0 }
+				set_variable = { KUS_faction_total_civs = 0 }
+				set_variable = { KUS_faction_total_mils = 0 }
+				every_country = {
+					limit = { is_in_faction_with = KUS }
+					KUS = {
+						add_to_variable = { KUS_faction_total_factories = PREV.num_of_civilian_factories }
+						add_to_variable = { KUS_faction_total_factories = PREV.num_of_military_factories }
+						add_to_variable = { KUS_faction_total_civs = PREV.num_of_civilian_factories }
+						add_to_variable = { KUS_faction_total_mils = PREV.num_of_military_factories }
+					}
+				}
+			}
 		}
 	}
 
