@@ -1,0 +1,798 @@
+###########################
+# KUS Events
+###########################
+
+add_namespace = KUS_event
+
+# Project Boom - SP Artillery dilemma
+country_event = {
+	id = KUS_event.1
+	title = KUS_event.1.t
+	desc = KUS_event.1.desc
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	# Option 1: Big Gun Good
+	option = {
+		name = KUS_event.1.a
+		custom_effect_tooltip = KUS_project_boom_gun_tt
+		add_ideas = KUS_project_boom_gun_equipment
+		hidden_effect = {
+			set_country_flag = KUS_project_boom_gun
+		}
+	}
+
+	# Option 2: Thick Armor Good
+	option = {
+		name = KUS_event.1.b
+		custom_effect_tooltip = KUS_project_boom_armor_tt
+		add_ideas = KUS_project_boom_armor_equipment
+		hidden_effect = {
+			set_country_flag = KUS_project_boom_armor
+		}
+	}
+}
+
+###########################
+# KUS Political Events
+###########################
+
+# Aligning the Opposition - triggered by Bolster Presidential Power focus
+country_event = {
+	id = KUS_event.10
+	title = KUS_event.10.t
+	desc = KUS_event.10.desc
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.10.a
+		# To Stability!
+		if = {
+			limit = { has_idea = KUS_underground_extremism }
+			remove_ideas = KUS_underground_extremism
+		}
+		add_stability = 0.05
+		add_political_power = 25
+	}
+}
+
+# Public Protests - triggered after losing war
+country_event = {
+	id = KUS_event.20
+	title = KUS_event.20.t
+	desc = KUS_event.20.desc
+	picture = GFX_report_event_generic_riot
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = KUS_lost_war
+		OR = {
+			has_idea = KUS_rampant_extremism
+			has_idea = KUS_suppressed_extremism
+			has_idea = KUS_underground_extremism
+		}
+	}
+
+	option = {
+		name = KUS_event.20.a
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = KUS_event.21 days = 7 }
+		}
+	}
+
+	option = {
+		name = KUS_event.20.b
+		add_stability = -0.10
+		hidden_effect = {
+			country_event = { id = KUS_event.21 days = 7 }
+		}
+	}
+}
+
+# The President is dead
+country_event = {
+	id = KUS_event.21
+	title = KUS_event.21.t
+	desc = KUS_event.21.desc
+	picture = GFX_report_event_generic_funeral
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.21.a
+		add_stability = -0.15
+		add_ideas = KUS_extremism_ascendant
+		retire_country_leader = yes
+		hidden_effect = {
+			set_politics = {
+				ruling_party = democratic
+			}
+			create_country_leader = {
+				name = "Fallen Government"
+				picture = "GFX_portrait_KUS_Fallen_Government"
+				expire = "1965.1.1"
+				ideology = centrism
+			}
+			country_event = { id = KUS_event.22 days = 14 }
+		}
+	}
+}
+
+# Technocrat Propaganda
+country_event = {
+	id = KUS_event.22
+	title = KUS_event.22.t
+	desc = KUS_event.22.desc
+	picture = GFX_report_event_generic_propaganda
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.22.a
+		add_timed_idea = {
+			idea = KUS_technocrat_propaganda
+			days = 120
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.10
+		}
+		hidden_effect = {
+			country_event = { id = KUS_event.23 days = 7 }
+		}
+	}
+}
+
+# Capitolium Bombing
+country_event = {
+	id = KUS_event.23
+	title = KUS_event.23.t
+	desc = KUS_event.23.desc
+	picture = GFX_report_event_generic_destruction
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.23.a
+		add_stability = -0.10
+		add_war_support = -0.05
+		hidden_effect = {
+			country_event = { id = KUS_event.24 days = 7 }
+		}
+	}
+}
+
+# Technocrat Coup
+country_event = {
+	id = KUS_event.24
+	title = KUS_event.24.t
+	desc = KUS_event.24.desc
+	picture = GFX_report_event_generic_military_parade
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.24.a
+		set_politics = {
+			ruling_party = fascism
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.30
+		}
+		if = {
+			limit = { has_idea = KUS_rampant_extremism }
+			remove_ideas = KUS_rampant_extremism
+		}
+		if = {
+			limit = { has_idea = KUS_suppressed_extremism }
+			remove_ideas = KUS_suppressed_extremism
+		}
+		if = {
+			limit = { has_idea = KUS_underground_extremism }
+			remove_ideas = KUS_underground_extremism
+		}
+		if = {
+			limit = { has_idea = KUS_technocrat_propaganda }
+			remove_ideas = KUS_technocrat_propaganda
+		}
+		add_ideas = KUS_extremism_ascendant
+		create_country_leader = {
+			name = "Konstantin Roko"
+			picture = "GFX_portrait_KUS_Konstantin_Roko"
+			expire = "1965.1.1"
+			ideology = fascism_ideology
+			traits = { KUS_mad_scientist }
+		}
+		set_country_flag = KUS_technocratic_coup_complete
+		# Demilitarize all states except Jarvalin
+		hidden_effect = {
+			213 = { set_demilitarized_zone = yes }
+			225 = { set_demilitarized_zone = yes }
+			229 = { set_demilitarized_zone = yes }
+			231 = { set_demilitarized_zone = yes }
+			715 = { set_demilitarized_zone = yes }
+			716 = { set_demilitarized_zone = yes }
+			717 = { set_demilitarized_zone = yes }
+		}
+	}
+}
+
+# Roqualian Alliance - sent to ROQ
+country_event = {
+	id = KUS_event.30
+	title = KUS_event.30.t
+	desc = KUS_event.30.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.30.a
+		add_opinion_modifier = { target = KUS modifier = large_increase }
+		KUS = {
+			add_opinion_modifier = { target = ROOT modifier = large_increase }
+		}
+	}
+
+	option = {
+		name = KUS_event.30.b
+		add_political_power = 25
+	}
+}
+
+# The Awakening - triggered after Final Touches
+country_event = {
+	id = KUS_event.40
+	title = KUS_event.40.t
+	desc = KUS_event.40.desc
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.40.a
+		hidden_effect = {
+			country_event = { id = KUS_event.41 days = 150 }
+		}
+	}
+}
+
+# The Next Step
+country_event = {
+	id = KUS_event.41
+	title = KUS_event.41.t
+	desc = KUS_event.41.desc
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.41.a
+		add_research_slot = 1
+		add_tech_bonus = {
+			name = KUS_basilisk_tech
+			bonus = 2.0
+			uses = 3
+			category = electronics
+		}
+		hidden_effect = {
+			country_event = { id = KUS_event.42 days = 180 }
+		}
+	}
+}
+
+# The Ascension
+country_event = {
+	id = KUS_event.42
+	title = KUS_event.42.t
+	desc = KUS_event.42.desc
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	# Fix safeguards (leads to containment breach)
+	option = {
+		name = KUS_event.42.a
+		hidden_effect = {
+			country_event = { id = KUS_event.43 days = 10 }
+		}
+	}
+
+	# Permanently deactivate
+	option = {
+		name = KUS_event.42.b
+		create_country_leader = {
+			name = "Konstantin Roko"
+			picture = "GFX_portrait_KUS_Konstantin_Roko"
+			expire = "1965.1.1"
+			ideology = fascism_ideology
+			traits = { KUS_mad_scientist }
+		}
+	}
+}
+
+# Containment Breach
+country_event = {
+	id = KUS_event.43
+	title = KUS_event.43.t
+	desc = KUS_event.43.desc
+	picture = GFX_report_event_generic_destruction
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.43.a
+		create_country_leader = {
+			name = "Roko's Basilisk"
+			picture = "GFX_portrait_KUS_Rokos_Basilisk"
+			expire = "1965.1.1"
+			ideology = fascism_ideology
+			traits = { KUS_hypercognition }
+		}
+		add_stability = -0.10
+	}
+}
+
+###########################
+# KUS Democratic Faction Events
+###########################
+
+# Invitation to join the Flusiobalkan Union (sent to each democratic flusiobalkan nation)
+country_event = {
+	id = KUS_event.50
+	title = KUS_event.50.t
+	desc = KUS_event.50.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - join the faction
+	option = {
+		name = KUS_event.50.a
+		KUS = {
+			add_to_faction = ROOT
+			country_event = { id = KUS_event.51 days = 3 }
+		}
+		ai_chance = {
+			base = 50
+			# VIX is very likely to join
+			modifier = {
+				factor = 10
+				tag = VIX
+			}
+			# Higher opinion = more likely
+			modifier = {
+				factor = 2
+				has_opinion = { target = KUS value > 50 }
+			}
+			modifier = {
+				factor = 1.5
+				has_opinion = { target = KUS value > 25 }
+			}
+			# Weaker nations more likely to join for protection
+			modifier = {
+				factor = 2
+				strength_ratio = { tag = KUS ratio < 0.5 }
+			}
+			modifier = {
+				factor = 1.5
+				strength_ratio = { tag = KUS ratio < 0.75 }
+			}
+		}
+	}
+
+	# Refuse
+	option = {
+		name = KUS_event.50.b
+		KUS = {
+			country_event = { id = KUS_event.52 days = 3 }
+		}
+		ai_chance = {
+			base = 50
+			# VIX almost never refuses
+			modifier = {
+				factor = 0.05
+				tag = VIX
+			}
+			# Low opinion = more likely to refuse
+			modifier = {
+				factor = 2
+				has_opinion = { target = KUS value < -25 }
+			}
+			# Stronger nations less interested
+			modifier = {
+				factor = 2
+				strength_ratio = { tag = KUS ratio > 1.5 }
+			}
+		}
+	}
+}
+
+# Notification: A nation accepted our invitation
+country_event = {
+	id = KUS_event.51
+	title = KUS_event.51.t
+	desc = KUS_event.51.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.51.a
+		effect_tooltip = {
+			add_to_faction = FROM
+		}
+	}
+}
+
+# Notification: A nation refused our invitation
+country_event = {
+	id = KUS_event.52
+	title = KUS_event.52.t
+	desc = KUS_event.52.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.52.a
+		add_political_power = -10
+	}
+}
+
+# Appease the Roqualian Titan - offer to return FSR lands to ROQ
+country_event = {
+	id = KUS_event.53
+	title = KUS_event.53.t
+	desc = KUS_event.53.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - receive the lands
+	option = {
+		name = KUS_event.53.a
+		transfer_state = 730
+		transfer_state = 254
+		transfer_state = 255
+		transfer_state = 236
+		add_opinion_modifier = { target = KUS modifier = KUS_roqualian_land_return }
+		KUS = {
+			add_opinion_modifier = { target = ROQ modifier = KUS_roqualian_land_return }
+			add_ideas = KUS_roqualian_gratitude
+			country_event = { id = KUS_event.54 days = 3 }
+		}
+		give_guarantee = KUS
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Refuse
+	option = {
+		name = KUS_event.53.b
+		KUS = {
+			country_event = { id = KUS_event.55 days = 3 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# Notification: ROQ accepted our offer
+country_event = {
+	id = KUS_event.54
+	title = KUS_event.54.t
+	desc = KUS_event.54.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.54.a
+		effect_tooltip = {
+			ROQ = {
+				transfer_state = 730
+				transfer_state = 254
+				transfer_state = 255
+				transfer_state = 236
+			}
+			add_ideas = KUS_roqualian_gratitude
+		}
+	}
+}
+
+# Notification: ROQ refused our offer
+country_event = {
+	id = KUS_event.55
+	title = KUS_event.55.t
+	desc = KUS_event.55.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.55.a
+		add_political_power = -25
+	}
+}
+
+# Puppet proposal - sent to faction member (United Flusiobalkans decision)
+country_event = {
+	id = KUS_event.60
+	title = KUS_event.60.t
+	desc = KUS_event.60.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - become a Dominion
+	option = {
+		name = KUS_event.60.a
+		KUS = {
+			set_autonomy = {
+				target = ROOT
+				autonomous_state = puppet
+			}
+			country_event = { id = KUS_event.61 days = 3 }
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Refuse - leave the faction, KUS gets a wargoal
+	option = {
+		name = KUS_event.60.b
+		leave_faction = yes
+		KUS = {
+			country_event = { id = KUS_event.62 days = 3 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# Notification: Nation accepted puppet proposal
+country_event = {
+	id = KUS_event.61
+	title = KUS_event.61.t
+	desc = KUS_event.61.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.61.a
+		effect_tooltip = {
+			set_autonomy = {
+				target = FROM
+				autonomous_state = autonomy_dominion
+			}
+		}
+	}
+}
+
+# Notification: Nation refused puppet proposal - leaves faction, wargoal granted
+country_event = {
+	id = KUS_event.62
+	title = KUS_event.62.t
+	desc = KUS_event.62.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.62.a
+		create_wargoal = {
+			type = topple_government
+			target = FROM
+		}
+	}
+}
+
+# Integration proposal - sent to puppet (True Union decision)
+country_event = {
+	id = KUS_event.70
+	title = KUS_event.70.t
+	desc = KUS_event.70.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - get annexed
+	option = {
+		name = KUS_event.70.a
+		KUS = {
+			country_event = { id = KUS_event.71 days = 3 }
+		}
+		KUS = {
+			annex_country = {
+				target = ROOT
+				transfer_troops = yes
+			}
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	# Refuse - instant war declaration
+	option = {
+		name = KUS_event.70.b
+		KUS = {
+			country_event = { id = KUS_event.72 days = 3 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# Notification: Nation accepted integration
+country_event = {
+	id = KUS_event.71
+	title = KUS_event.71.t
+	desc = KUS_event.71.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.71.a
+		effect_tooltip = {
+			annex_country = {
+				target = FROM
+				transfer_troops = yes
+			}
+		}
+		FROM = {
+			every_core_state = {
+				set_compliance = 30
+				custom_effect_tooltip = state_core_threshold_set_40
+				hidden_effect = {
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+				}
+			}
+		}
+	}
+}
+
+# Notification: Nation refused integration - instant war
+country_event = {
+	id = KUS_event.72
+	title = KUS_event.72.t
+	desc = KUS_event.72.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.72.a
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+}
+
+###########################
+# KUS Pressure Faction Events
+###########################
+
+# Pressure to join faction - sent to target nation
+country_event = {
+	id = KUS_event.80
+	title = KUS_event.80.t
+	desc = KUS_event.80.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept - join the faction
+	option = {
+		name = KUS_event.80.a
+		KUS = {
+			add_to_faction = ROOT
+			country_event = { id = KUS_event.81 days = 3 }
+		}
+		hidden_effect = {
+			clr_country_flag = KUS_pressure_double_industry
+			clr_country_flag = KUS_pressure_army_bonus
+		}
+		ai_chance = {
+			# Base: 50%
+			base = 50
+			# If double threshold met: boost to 75% (multiply base by 1.5)
+			modifier = {
+				factor = 1.5
+				has_country_flag = KUS_pressure_double_industry
+			}
+			# If KUS has 2x army: multiply by 1.25
+			modifier = {
+				factor = 1.25
+				has_country_flag = KUS_pressure_army_bonus
+			}
+		}
+	}
+
+	# Refuse - KUS gets a wargoal
+	option = {
+		name = KUS_event.80.b
+		KUS = {
+			country_event = { id = KUS_event.82 days = 3 }
+		}
+		hidden_effect = {
+			clr_country_flag = KUS_pressure_double_industry
+			clr_country_flag = KUS_pressure_army_bonus
+		}
+		ai_chance = {
+			base = 50
+			# If double threshold met: less likely to refuse (base goes to ~25%)
+			modifier = {
+				factor = 0.33
+				has_country_flag = KUS_pressure_double_industry
+			}
+			# If KUS has 2x army: even less likely to refuse
+			modifier = {
+				factor = 0.6
+				has_country_flag = KUS_pressure_army_bonus
+			}
+		}
+	}
+}
+
+# Notification: Nation accepted pressure to join
+country_event = {
+	id = KUS_event.81
+	title = KUS_event.81.t
+	desc = KUS_event.81.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.81.a
+		effect_tooltip = {
+			add_to_faction = FROM
+		}
+	}
+}
+
+# Notification: Nation refused pressure - wargoal granted
+country_event = {
+	id = KUS_event.82
+	title = KUS_event.82.t
+	desc = KUS_event.82.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.82.a
+		create_wargoal = {
+			type = topple_government
+			target = FROM
+		}
+		add_stability = 0.10
+		add_war_support = 0.05
+	}
+
+
+	option = {
+		name = KUS_event.82.b
+		ai_chance = {
+			base = 0
+		}
+	}
+}
