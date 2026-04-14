@@ -43,6 +43,44 @@ herzlands_unification_cat = {
 		}
 	}
 
+	move_capital_to_katown = {
+		icon = GFX_decision_herzlands
+
+		allowed = {
+			is_herzlands_warlord = yes
+		}
+
+		available = {
+			controls_state = 509
+		}
+
+		visible = {
+			is_herzlands_warlord = yes
+			NOT = { has_country_flag = moved_capital_to_katown }
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = moved_capital_to_katown
+			set_capital = { state = 509 }
+			add_stability = 0.1
+			add_war_support = 0.1
+			custom_effect_tooltip = reduce_herzland_state_coring_10_tt
+			hidden_effect = {
+				every_state = {
+					limit = { is_in_array = { global.herzlands_states_array = THIS } }
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+			news_event = { id = LOK_news.13 hours = 6 }
+		}
+
+		ai_will_do = {
+			base = 100
+		}
+	}
+
 	fix_collapse_debuff = {
 		icon = generic_form_nation
 		allowed = { is_herzlands_warlord = yes NOT = { tag = AUR } }
