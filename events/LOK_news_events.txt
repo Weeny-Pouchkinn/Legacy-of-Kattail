@@ -287,3 +287,742 @@ news_event = {
 	}
 }
 
+#########################################
+# War Outbreak News Events
+#########################################
+
+# KUS-NEK War
+news_event = {
+	id = LOK_news.10
+	title = "LOK_news.10.t"
+	desc = "LOK_news.10.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_combat
+	major = yes
+
+	option = {
+		name = "LOK_news.10.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.10.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.10.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.10.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.10.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# TAK-ROQ War
+news_event = {
+	id = LOK_news.11
+	title = "LOK_news.11.t"
+	desc = "LOK_news.11.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_combat
+	major = yes
+
+	option = {
+		name = "LOK_news.11.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.11.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.11.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.11.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.11.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# MEW-STR War
+news_event = {
+	id = LOK_news.12
+	title = "LOK_news.12.t"
+	desc = "LOK_news.12.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_combat
+	major = yes
+
+	option = {
+		name = "LOK_news.12.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.12.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.12.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.12.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.12.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+#########################################
+# Battle of Katown (repeatable with ordinal counter)
+# Fires when any of the 5 Katown states (509, 34, 36, 44, 45) change hands
+# 2-month cooldown between triggers
+# ROOT = new controller (attacker), FROM = previous controller (defender), FROM.FROM = state
+#########################################
+news_event = {
+	id = LOK_news.20
+	title = "LOK_news.20.t"
+	desc = "LOK_news.20.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	immediate = {
+		if = {
+			limit = { NOT = { has_global_flag = katown_battle_initialized } }
+			set_global_flag = katown_battle_initialized
+			set_variable = { global.katown_battle_count = 0 }
+		}
+		add_to_variable = { global.katown_battle_count = 1 }
+	}
+
+	option = {
+		name = "LOK_news.20.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.20.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.20.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.20.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.20.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+#########################################
+# City Fall News Events
+# Triggered from on_state_control_changed
+# ROOT = new controller (attacker), FROM = old controller (defender)
+#########################################
+
+# Fall of Inner Katown (The Katown Pyramid) - State 509
+news_event = {
+	id = LOK_news.30
+	title = "LOK_news.30.t"
+	desc = "LOK_news.30.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.30.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.30.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.30.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.30.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.30.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Lutécie - State 320
+news_event = {
+	id = LOK_news.31
+	title = "LOK_news.31.t"
+	desc = "LOK_news.31.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.31.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.31.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.31.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.31.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.31.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Amphisk - State 1043 (Gross-Amphisk, held by Katzens)
+news_event = {
+	id = LOK_news.32
+	title = "LOK_news.32.t"
+	desc = "LOK_news.32.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.32.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.32.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.32.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.32.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.32.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Lionsburg - State 173
+news_event = {
+	id = LOK_news.33
+	title = "LOK_news.33.t"
+	desc = "LOK_news.33.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.33.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.33.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.33.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.33.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.33.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Auralia - State 116 (Nord-Auralien, AUR capital)
+news_event = {
+	id = LOK_news.34
+	title = "LOK_news.34.t"
+	desc = "LOK_news.34.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.34.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.34.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.34.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.34.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.34.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Meownich - State 110
+news_event = {
+	id = LOK_news.35
+	title = "LOK_news.35.t"
+	desc = "LOK_news.35.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.35.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.35.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.35.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.35.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.35.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Clermeowth - State 74
+news_event = {
+	id = LOK_news.36
+	title = "LOK_news.36.t"
+	desc = "LOK_news.36.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.36.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.36.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.36.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.36.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.36.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Catburg - State 168
+news_event = {
+	id = LOK_news.37
+	title = "LOK_news.37.t"
+	desc = "LOK_news.37.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.37.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.37.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.37.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.37.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.37.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Purrlin - State 192
+news_event = {
+	id = LOK_news.38
+	title = "LOK_news.38.t"
+	desc = "LOK_news.38.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.38.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.38.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.38.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.38.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.38.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Neu-Pawsterdam - State 409 (N.Pawsterdam Central)
+news_event = {
+	id = LOK_news.39
+	title = "LOK_news.39.t"
+	desc = "LOK_news.39.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.39.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.39.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.39.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.39.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.39.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Frankfurr - State 477
+news_event = {
+	id = LOK_news.40
+	title = "LOK_news.40.t"
+	desc = "LOK_news.40.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.40.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.40.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.40.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.40.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.40.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Pawris - State 62
+news_event = {
+	id = LOK_news.41
+	title = "LOK_news.41.t"
+	desc = "LOK_news.41.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.41.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.41.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.41.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.41.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.41.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Bunville - State 406 (Greater Bunville)
+news_event = {
+	id = LOK_news.42
+	title = "LOK_news.42.t"
+	desc = "LOK_news.42.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.42.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.42.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.42.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.42.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.42.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Katlantropa Dam - State 1324
+news_event = {
+	id = LOK_news.43
+	title = "LOK_news.43.t"
+	desc = "LOK_news.43.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_dam
+	major = yes
+
+	option = {
+		name = "LOK_news.43.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.43.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.43.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.43.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.43.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Jarvalin - State 218
+news_event = {
+	id = LOK_news.44
+	title = "LOK_news.44.t"
+	desc = "LOK_news.44.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.44.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.44.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.44.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.44.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.44.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Ganymeda - State 271
+news_event = {
+	id = LOK_news.45
+	title = "LOK_news.45.t"
+	desc = "LOK_news.45.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.45.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.45.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.45.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.45.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.45.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Steeloft - State 271 (placeholder - city not found as state, using Ganymeda region)
+# NOTE: Steeloft not found as a state name in the mod. This event is defined but will need
+# the correct state ID once "Steeloft" is added to the mod. Currently triggers on state 271.
+news_event = {
+	id = LOK_news.46
+	title = "LOK_news.46.t"
+	desc = "LOK_news.46.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.46.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.46.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.46.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.46.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.46.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Charles (Takicardie) - State 349
+news_event = {
+	id = LOK_news.47
+	title = "LOK_news.47.t"
+	desc = "LOK_news.47.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.47.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.47.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.47.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.47.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.47.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+# Fall of Hübschestadt (FSR) - State 236
+news_event = {
+	id = LOK_news.48
+	title = "LOK_news.48.t"
+	desc = "LOK_news.48.d"
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = "LOK_news.48.a"
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = "LOK_news.48.b"
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = "LOK_news.48.c"
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = "LOK_news.48.e"
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = "LOK_news.48.f"
+		trigger = { has_government = gestalt }
+	}
+}
+

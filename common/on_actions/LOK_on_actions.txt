@@ -1971,6 +1971,266 @@ on_actions = {
 				ROOT = { apply_wonder_effects = yes }
 				FROM = { apply_wonder_effects = yes }
 			}
+
+			#########################################
+			# News Events - City Falls
+			# ROOT = new controller, FROM = old controller, FROM.FROM = state
+			#########################################
+
+			# Battle of Katown - any of 5 Katown states (509, 34, 36, 44, 45) changing hands while at war
+			if = {
+				limit = {
+					FROM.FROM = {
+						OR = {
+							state = 509
+							state = 34
+							state = 36
+							state = 44
+							state = 45
+						}
+					}
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = katown_battle_cooldown }
+				}
+				set_global_flag = { flag = katown_battle_cooldown days = 60 value = 1 }
+				ROOT = { save_event_target_as = katown_attacker }
+				FROM = { save_event_target_as = katown_defender }
+				news_event = { id = LOK_news.20 hours = 6 }
+			}
+
+			# Fall of Inner Katown (Katown Pyramid) - State 509
+			if = {
+				limit = {
+					FROM.FROM = { state = 509 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = inner_katown_fallen }
+				}
+				set_global_flag = inner_katown_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.30 hours = 6 }
+			}
+
+			# Fall of Lutécie - State 320
+			if = {
+				limit = {
+					FROM.FROM = { state = 320 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = lutecie_fallen }
+				}
+				set_global_flag = lutecie_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.31 hours = 6 }
+			}
+
+			# Fall of Amphisk - State 1043 (Gross-Amphisk, held by Katzens)
+			if = {
+				limit = {
+					FROM.FROM = { state = 1043 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = amphisk_fallen }
+				}
+				set_global_flag = amphisk_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.32 hours = 6 }
+			}
+
+			# Fall of Lionsburg - State 173
+			if = {
+				limit = {
+					FROM.FROM = { state = 173 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = lionsburg_fallen }
+				}
+				set_global_flag = lionsburg_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.33 hours = 6 }
+			}
+
+			# Fall of Auralia - State 116 (Nord-Auralien, AUR capital)
+			if = {
+				limit = {
+					FROM.FROM = { state = 116 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = auralia_fallen }
+				}
+				set_global_flag = auralia_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.34 hours = 6 }
+			}
+
+			# Fall of Meownich - State 110
+			if = {
+				limit = {
+					FROM.FROM = { state = 110 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = meownich_fallen }
+				}
+				set_global_flag = meownich_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.35 hours = 6 }
+			}
+
+			# Fall of Clermeowth - State 74
+			if = {
+				limit = {
+					FROM.FROM = { state = 74 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = clermeowth_fallen }
+				}
+				set_global_flag = clermeowth_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.36 hours = 6 }
+			}
+
+			# Fall of Catburg - State 168
+			if = {
+				limit = {
+					FROM.FROM = { state = 168 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = catburg_fallen }
+				}
+				set_global_flag = catburg_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.37 hours = 6 }
+			}
+
+			# Fall of Purrlin - State 192
+			if = {
+				limit = {
+					FROM.FROM = { state = 192 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = purrlin_fallen }
+				}
+				set_global_flag = purrlin_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.38 hours = 6 }
+			}
+
+			# Fall of Neu-Pawsterdam - State 409 (N.Pawsterdam Central)
+			if = {
+				limit = {
+					FROM.FROM = { state = 409 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = neu_pawsterdam_fallen }
+				}
+				set_global_flag = neu_pawsterdam_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.39 hours = 6 }
+			}
+
+			# Fall of Frankfurr - State 477
+			if = {
+				limit = {
+					FROM.FROM = { state = 477 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = frankfurr_fallen }
+				}
+				set_global_flag = frankfurr_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.40 hours = 6 }
+			}
+
+			# Fall of Pawris - State 62
+			if = {
+				limit = {
+					FROM.FROM = { state = 62 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = pawris_fallen }
+				}
+				set_global_flag = pawris_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.41 hours = 6 }
+			}
+
+			# Fall of Bunville - State 406 (Greater Bunville)
+			if = {
+				limit = {
+					FROM.FROM = { state = 406 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = bunville_fallen }
+				}
+				set_global_flag = bunville_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.42 hours = 6 }
+			}
+
+			# Fall of Katlantropa Dam - State 1324
+			if = {
+				limit = {
+					FROM.FROM = { state = 1324 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = katlantropa_dam_fallen }
+				}
+				set_global_flag = katlantropa_dam_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.43 hours = 6 }
+			}
+
+			# Fall of Jarvalin - State 218
+			if = {
+				limit = {
+					FROM.FROM = { state = 218 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = jarvalin_fallen }
+				}
+				set_global_flag = jarvalin_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.44 hours = 6 }
+			}
+
+			# Fall of Ganymeda - State 271
+			if = {
+				limit = {
+					FROM.FROM = { state = 271 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = ganymeda_fallen }
+				}
+				set_global_flag = ganymeda_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.45 hours = 6 }
+			}
+
+			# Fall of Charles (Takicardie) - State 349
+			if = {
+				limit = {
+					FROM.FROM = { state = 349 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = charles_fallen }
+				}
+				set_global_flag = charles_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.47 hours = 6 }
+			}
+
+			# Fall of Hübschestadt (FSR) - State 236
+			if = {
+				limit = {
+					FROM.FROM = { state = 236 }
+					ROOT = { has_war_with = FROM }
+					NOT = { has_global_flag = hubschestadt_fallen }
+				}
+				set_global_flag = hubschestadt_fallen
+				ROOT = { save_event_target_as = city_attacker }
+				FROM = { save_event_target_as = city_defender }
+				news_event = { id = LOK_news.48 hours = 6 }
+			}
 		}
 	}
 
