@@ -3850,21 +3850,21 @@ lok_journal_entries_cat = {
 		cost = 50
 
 		complete_effect = {
-			SPQ = { country_event = { id = LOK_generic.1 } }
+			CRE = { country_event = { id = LOK_generic.1 } }
 		}
 
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { SPQ = { is_puppet_of = ROQ } }
-					country_exists = SPQ
+					NOT = { CRE = { is_puppet_of = ROQ } }
+					country_exists = CRE
 				}
 				declare_war_on = {
-					target = SPQ
+					target = CRE
 					type = annex_everything
 				}
 			}
-			SPQ = {
+			CRE = {
 				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
 			}
 		}

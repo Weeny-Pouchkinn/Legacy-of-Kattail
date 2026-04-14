@@ -607,7 +607,7 @@ on_actions = {
 			NKC = { remove_ideas = var_species_0 add_ideas = var_species_5 }
 
 			ALK = { remove_ideas = var_species_0 add_ideas = var_species_28 add_ideas = var_species_3 }
-			SPQ = { remove_ideas = var_species_0 add_ideas = var_species_28 }
+			CRE = { remove_ideas = var_species_0 add_ideas = var_species_28 }
 
 			KHA = { remove_ideas = var_species_0 add_ideas = var_species_22 }
 
@@ -880,7 +880,7 @@ on_actions = {
 			ALK = { every_owned_state = { set_variable = { minority = 3 } } }
 
 			#Aurelia
-			SPQ = { every_owned_state = { set_variable = { species = 28 } } }
+			CRE = { every_owned_state = { set_variable = { species = 28 } } }
 
 
 			#Propania
@@ -2791,57 +2791,6 @@ on_actions = {
 		}
 	}
 
-	on_monthly_SPQ = {
-		effect = {
-			if ={
-				limit = {
-					check_variable = {
-						SPQ_consumer_goods_factor_var > SPQ_consumer_goods_base
-					}
-				}
-				add_to_variable = {
-					SPQ_consumer_goods_factor_var = SPQ_consumer_goods_decrease
-				}
-			}
-			else_if = {
-				limit = {
-					check_variable = {
-						SPQ_consumer_goods_factor_var < SPQ_consumer_goods_base
-					}
-				}
-				set_variable = {
-					SPQ_consumer_goods_diff = SPQ_consumer_goods_base
-				}
-				subtract_from_variable = {
-					SPQ_consumer_goods_diff = SPQ_consumer_goods_factor_var
-				}
-				if = {
-					limit = {
-						check_variable = {
-							SPQ_consumer_goods_diff > 0.5
-						}
-					}
-					set_variable = {
-						SPQ_consumer_goods_increase_2 = SPQ_consumer_goods_increase
-					}
-					multiply_variable = {
-						SPQ_consumer_goods_increase_2 = 3
-					}
-					add_to_variable = {
-						SPQ_consumer_goods_factor_var = SPQ_consumer_goods_increase_2
-					}
-					clear_variable = SPQ_consumer_goods_diff
-					clear_variable = SPQ_consumer_goods_increase_2
-				}
-				else = {
-					add_to_variable = {
-						SPQ_consumer_goods_factor_var = SPQ_consumer_goods_increase
-					}
-					clear_variable = SPQ_consumer_goods_diff
-				}
-			}
-		}
-	}
 
 	on_annex = {
 		effect = {
