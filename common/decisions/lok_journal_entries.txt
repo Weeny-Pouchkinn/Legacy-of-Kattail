@@ -2043,6 +2043,9 @@ lok_journal_entries_cat = {
 		available = {
 			NOT = { has_global_flag = ssu_formed }
 			NOT = { has_country_flag = DOM_raiding_neighbor }
+			FROM = {
+				is_ai = yes
+			}
 		}
 
 		target_array = neighbors
@@ -2246,49 +2249,49 @@ lok_journal_entries_cat = {
 		}
 	}
 
-	DOM_blitz_kusnurk = {
-		icon = GFX_decision_generic_confiscation
-		allowed = {
-			tag = DOM
-		}
+	# DOM_blitz_kusnurk = {
+	# 	icon = GFX_decision_generic_confiscation
+	# 	allowed = {
+	# 		tag = DOM
+	# 	}
 		
-		available = {
-			NOT = { is_in_faction_with = MCF }
-			has_country_flag = united_east_solakea_katzens
-			date > "101.6.1"
-		}
+	# 	available = {
+	# 		NOT = { is_in_faction_with = MCF }
+	# 		has_country_flag = united_east_solakea_katzens
+	# 		date > "101.6.1"
+	# 	}
 
-		fire_only_once = yes
+	# 	fire_only_once = yes
 
-		complete_effect = {
-			KUS = { country_event = { id = LOK_generic.1 } }
-		}
+	# 	complete_effect = {
+	# 		KUS = { country_event = { id = LOK_generic.1 } }
+	# 	}
 
-		remove_effect = {
-			declare_war_on = {
-				target = KUS
-				type = annex_everything
-			}
-			KUS = {
-				every_core_state = {
-					limit = { NOT = { check_variable = { minority = 1 } } }
-					custom_effect_tooltip = state_core_threshold_set_40
-					clear_compliance_coring_threshold = yes
-					set_state_flag = compliance_40_@ROOT
-					add_to_array = { array = ROOT.potential_cores_array }
-					add_claim_by = ROOT
-				}
-			}
-		}
+	# 	remove_effect = {
+	# 		declare_war_on = {
+	# 			target = KUS
+	# 			type = annex_everything
+	# 		}
+	# 		KUS = {
+	# 			every_core_state = {
+	# 				limit = { NOT = { check_variable = { minority = 1 } } }
+	# 				custom_effect_tooltip = state_core_threshold_set_40
+	# 				clear_compliance_coring_threshold = yes
+	# 				set_state_flag = compliance_40_@ROOT
+	# 				add_to_array = { array = ROOT.potential_cores_array }
+	# 				add_claim_by = ROOT
+	# 			}
+	# 		}
+	# 	}
 
-		cost = 50
+	# 	cost = 50
 
-		days_remove = 15
+	# 	days_remove = 15
 
-		ai_will_do = {
-			base = 1000
-		}
-	}
+	# 	ai_will_do = {
+	# 		base = 1000
+	# 	}
+	# }
 
 	# DOM_blitz_nekaston = {
 	# 	icon = GFX_decision_generic_arrest

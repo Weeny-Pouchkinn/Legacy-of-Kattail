@@ -2400,7 +2400,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_operation_darkest_hour
-		icon = GFX_goal_generic_secret_weapon
+		icon = GFX_goal_KTZ_nuclear_is_always_an_option
 		x = 1
 		y = 1
 		cost = 5
@@ -2937,7 +2937,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_operation_nekastoni_freedom
-		icon = GFX_goal_generic_occupy_states_ongoing_war
+		icon = GFX_focus_GER_end_european_communism
 		relative_position_id = KUS_proclaim_greater_kusnurk
 		x = 2
 		y = 2
@@ -2952,9 +2952,15 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			create_wargoal = {
-				type = topple_government
-				target = NEK
+			if = {
+				limit = { NEK = { is_puppet_of = KUS } }
+				annex_country = NEK
+			}
+			else = {
+				create_wargoal = {
+					type = topple_government
+					target = NEK
+				}
 			}
 		}
 	}
@@ -2964,7 +2970,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_operation_riesieger_down
-		icon = GFX_goal_generic_occupy_states_ongoing_war
+		icon = GFX_goal_KTZ_riesigerkatzenpanzer
 		relative_position_id = KUS_proclaim_greater_kusnurk
 		x = 0
 		y = 2
@@ -2979,9 +2985,15 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			create_wargoal = {
-				type = topple_government
-				target = DOM
+			if = {
+				limit = { DOM = { is_puppet_of = KUS } }
+				annex_country = DOM
+			}
+			else = {
+				create_wargoal = {
+					type = topple_government
+					target = DOM
+				}
 			}
 		}
 	}
@@ -2991,7 +3003,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_operation_unified_freistaat
-		icon = GFX_goal_generic_occupy_states_ongoing_war
+		icon = GFX_goal_KTZ_every_kat_must_do_their_duty
 		relative_position_id = KUS_proclaim_greater_kusnurk
 		x = -2
 		y = 2
@@ -3006,9 +3018,69 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			create_wargoal = {
-				type = topple_government
-				target = FSR
+			if = {
+				limit = { FSR = { is_puppet_of = KUS } }
+				annex_country = FSR
+			}
+			else = {
+				create_wargoal = {
+					type = topple_government
+					target = FSR
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = KUS_integrating_the_frontier
+		icon = GFX_goal_generic_occupy_states_ongoing_war
+		relative_position_id = KUS_proclaim_greater_kusnurk
+		x = 2
+		y = 3
+		cost = 10
+
+		prerequisite = { focus = KUS_operation_unified_freistaat focus = KUS_operation_riesieger_down focus = KUS_operation_nekastoni_freedom }
+
+		available = {
+			any_owned_state = {
+				NOT = { is_core_of = KUS }
+				OR = {
+					is_core_of = NEK
+					is_core_of = DOM
+					is_core_of = FSR
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+
+		completion_reward = {
+			FSR = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_20
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
+			}
+			DOM = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_20
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
+			}
+			NEK = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_lower_20
+					hidden_effect = {
+						reduce_compliance_coring_threshold_by_10 = yes
+						reduce_compliance_coring_threshold_by_10 = yes
+					}
+				}
 			}
 		}
 	}
@@ -3053,7 +3125,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_union_of_our_own
-		icon = GFX_goal_generic_major_alliance
+		icon = GFX_focus_SWI_dissolve_the_federal_council
 		relative_position_id = KUS_operation_unified_freistaat
 		x = 2
 		y = 1
@@ -3111,7 +3183,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_pressure_flusiobalkan_influence
-		icon = GFX_goal_generic_demand_territory
+		icon = GFX_focus_IRQ_decouple_from_the_pound
 		relative_position_id = KUS_union_of_our_own
 		x = -4
 		y = 1
@@ -3160,7 +3232,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_flusiobalkan_economic_region
-		icon = GFX_goal_generic_consumer_goods
+		icon = GFX_focus_CHL_strengthen_the_central_bank
 		relative_position_id = KUS_union_of_our_own
 		x = 0
 		y = 1
@@ -3193,7 +3265,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_pan_flusiobalkan_bank
-		icon = GFX_goal_generic_consumer_goods
+		icon = GFX_focus_RAJ_special_economic_zones
 		relative_position_id = KUS_flusiobalkan_economic_region
 		x = -1
 		y = 1
@@ -3228,7 +3300,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_flusiobalkan_defence_army
-		icon = GFX_goal_generic_allies_build_infantry
+		icon = GFX_focus_GER_german_army_invincible
 		relative_position_id = KUS_flusiobalkan_economic_region
 		x = 1
 		y = 1
@@ -3261,7 +3333,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_united_flusiobalkans
-		icon = GFX_goal_generic_major_alliance
+		icon = GFX_focus_GER_customs_union
 		relative_position_id = KUS_flusiobalkan_economic_region
 		x = 0
 		y = 2
@@ -3299,7 +3371,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_true_union
-		icon = GFX_goal_generic_major_alliance
+		icon = GFX_focus_FIN_confederated_finno_russian_republics
 		relative_position_id = KUS_united_flusiobalkans
 		x = 0
 		y = 1
@@ -3376,7 +3448,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_crush_rebel_groups
-		icon = GFX_goal_generic_occupy_states_ongoing_war
+		icon = GFX_focus_eng_move_to_secure_the_dominions
 		relative_position_id = KUS_subdue_jarvalin
 		x = -1
 		y = 1
@@ -3398,7 +3470,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_unite_aligned_political_groups
-		icon = GFX_goal_generic_intelligence_exchange
+		icon = GFX_focus_BRA_ethical_internationalism
 		relative_position_id = KUS_subdue_jarvalin
 		x = 1
 		y = 1
@@ -3445,7 +3517,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_new_leap_program
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_goal_generic_construct_civilian
 		relative_position_id = KUS_form_technocratic_council
 		x = -1
 		y = 1
@@ -3478,7 +3550,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_direct_scientific_development
-		icon = GFX_goal_generic_scientific_exchange
+		icon = GFX_focus_NORDIC_dem_selector_research
 		relative_position_id = KUS_form_technocratic_council
 		x = 1
 		y = 1
@@ -3545,7 +3617,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_agromaxx
-		icon = GFX_goal_generic_consumer_goods
+		icon = GFX_focus_generic_agricultural_subsidies
 		relative_position_id = KUS_end_to_starvation
 		x = 1
 		y = 1
@@ -3573,7 +3645,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_encourage_technical_education
-		icon = GFX_goal_generic_scientific_exchange
+		icon = GFX_focus_NORDIC_com_capstone_research
 		relative_position_id = KUS_form_technocratic_council
 		x = 0
 		y = 2
@@ -3609,12 +3681,9 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy_2 }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy_2
-					add_idea = KUS_burgeoning_technocracy_3
-				}
+			swap_ideas = {
+				remove_idea = KUS_burgeoning_technocracy_2
+				add_idea = KUS_burgeoning_technocracy_3
 			}
 		}
 	}
@@ -3664,7 +3733,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_high_tech_factories
-		icon = GFX_goal_generic_construct_mil_factory
+		icon = GFX_goal_KTZ_state_of_research
 		relative_position_id = KUS_economic_insulation
 		x = 0
 		y = 1
@@ -3675,12 +3744,9 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy_3 }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy_3
-					add_idea = KUS_burgeoning_technocracy_4
-				}
+			swap_ideas = {
+				remove_idea = KUS_burgeoning_technocracy_3
+				add_idea = KUS_burgeoning_technocracy_4
 			}
 		}
 	}
@@ -3690,7 +3756,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_third_leap
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_focus_NORDIC_com_civilian
 		relative_position_id = KUS_second_leap
 		x = 0
 		y = 1
@@ -3738,7 +3804,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_the_landing
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_focus_NORDIC_com_selector_civilian
 		relative_position_id = KUS_third_leap
 		x = 0
 		y = 1
@@ -3777,10 +3843,10 @@
 	# ==========================================
 	focus = {
 		id = KUS_cybernetics_program
-		icon = GFX_goal_generic_scientific_exchange
+		icon = AUR_controlled_thought
 		relative_position_id = KUS_the_landing
 		x = 2
-		y = 1
+		y = 0
 		cost = 5
 
 		prerequisite = { focus = KUS_high_tech_factories }
@@ -3789,12 +3855,9 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_burgeoning_technocracy_4 }
-				swap_ideas = {
-					remove_idea = KUS_burgeoning_technocracy_4
-					add_idea = KUS_burgeoning_technocracy_5
-				}
+			swap_ideas = {
+				remove_idea = KUS_burgeoning_technocracy_4
+				add_idea = KUS_burgeoning_technocracy_5
 			}
 		}
 	}
@@ -3804,7 +3867,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_revive_moores_law
-		icon = GFX_goal_generic_scientific_exchange
+		icon = GFX_focus_ARG_universidad_de_buenos_aires
 		relative_position_id = KUS_high_tech_factories
 		x = 0
 		y = 1
@@ -3849,7 +3912,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_project_babuloon
-		icon = GFX_goal_generic_army_artillery2
+		icon = GFX_focus_PER_construct_air_defenses
 		relative_position_id = KUS_amat
 		x = 5
 		y = 1
@@ -3876,7 +3939,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_project_adaptiv
-		icon = GFX_goal_generic_army_doctrines
+		icon = GFX_goal_KTZ_new_recon
 		relative_position_id = KUS_amat
 		x = 3
 		y = 1
@@ -3896,7 +3959,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_project_fooniks
-		icon = GFX_goal_generic_air_fighter2
+		icon = GFX_goal_KTZ_making_landfall
 		relative_position_id = KUS_amat
 		x = 1
 		y = 1
@@ -3916,7 +3979,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_further_beyond
-		icon = GFX_goal_generic_scientific_exchange
+		icon = GFX_focus_NORDIC_com_selector_research
 		relative_position_id = KUS_amat
 		x = -2
 		y = 1
@@ -3944,7 +4007,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_construct_ai_infrastructure
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_goal_KTZ_planning_computer
 		relative_position_id = KUS_further_beyond
 		x = 1
 		y = 1
@@ -3971,7 +4034,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_prepare_defense_installations
-		icon = GFX_goal_generic_fortify_city
+		icon = GFX_goal_KTZ_prepare_weapons
 		relative_position_id = KUS_further_beyond
 		x = -1
 		y = 1
@@ -4006,7 +4069,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_mass_cybernetics_program
-		icon = GFX_goal_generic_scientific_exchange
+		icon = AUR_building_better_imperium
 		relative_position_id = KUS_further_beyond
 		x = 3
 		y = 1
@@ -4027,7 +4090,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_construct_computronium_factories
-		icon = GFX_goal_generic_construct_mil_factory
+		icon = GFX_goal_KTZ_a_curious_proposal
 		relative_position_id = KUS_further_beyond
 		x = 5
 		y = 1
@@ -4099,7 +4162,7 @@
 	# ==========================================
 	focus = {
 		id = KUS_create_milnet
-		icon = GFX_goal_generic_army_doctrines
+		icon = GFX_goal_KTZ_radar_everywhere
 		relative_position_id = KUS_supercomputer_facility
 		x = 4
 		y = 0
