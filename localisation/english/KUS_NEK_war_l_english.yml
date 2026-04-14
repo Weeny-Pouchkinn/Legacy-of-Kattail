@@ -1,15 +1,20 @@
 ﻿l_english:
  # KUS-NEK War Mediation
- KUS_NEK_war_mediation_cat:0 "Kusnurk-Nekaston War Mediation"
- KUS_NEK_war_mediation_cat_desc:0 "The conflict between Kusnurk and Nekaston over Northern Akiba is being mediated by the great powers.\n\n§YKusnurk International Support:§!\n  §GAttack: +[?KUS.KUS_international_support_attack|%0]§!  |  §GDefense: +[?KUS.KUS_international_support_defense|%0]§!\n\n§YNekaston International Support:§!\n  §RAttack: +[?NEK.NEK_international_support_attack|%0]§!  |  §RDefense: +[?NEK.NEK_international_support_defense|%0]§!\n\n§YYour stance:§! [ROOT.GetKUSNEKSupportLevel]"
+ KUS_NEK_war_mediation_cat:0 "The North Akiba War"
+ KUS_NEK_war_mediation_cat_desc:0 "The conflict between Nekaston and Kusnurk over the Akiba oil fields may seem minor, but many communist states see it as the beginning of greater traction for their ideological block in the wake of the Imperium's collapse. Furthermore, given Kusnurk's current political situation, losing the war may have §Rdrastic consequences§! on the nation's stability...\n\nEvery §Y3 months§!, the major powers and communist states of Flusion will send support to either §YNekaston§! or §YKusnurk§! depending on their current stance. Those that are neutral will tend to §Ypush for a ceasefire§!, while those that support Nekaston will want to §Ydelay said ceasefire§!.\n\nEffects of International Support on §Y[KUS.GetNameDef]§!:\nDivision Attack: §G+[?KUS.KUS_international_support_attack|%0]§!\n\nEffects of International Support on §Y[NEK.GetNameDef]§!:\nDivision Attack: §G+[?NEK.NEK_international_support_attack|%0]§!\n\n§YOur Stance:§! [ROOT.GetKUSNEKSupportLevel]"
+
+ KUS_NEK_war_support:0 "Support in the North Akiba War"
+ KUS_NEK_war_leaning:0 "Leaning in the North Akiba War"
+ KUS_NEK_war_oppose:0 "Opposition in the North Akiba War"
+ KUS_NEK_war_hate:0 "Major Opposition in the North Akiba War"
 
  # Support Level Labels
  KUS_NEK_support_level_kus:0 "§GKusnurk (Belligerent)§!"
  KUS_NEK_support_level_nek:0 "§RNekaston (Belligerent)§!"
  KUS_NEK_support_level_2:0 "§GSupport Kusnurk§!"
  KUS_NEK_support_level_1:0 "§YLeaning Kusnurk§!"
- KUS_NEK_support_level_0:0 "§WNeutral§!"
- KUS_NEK_support_level_neg1:0 "§YLeaning Nekaston§!"
+ KUS_NEK_support_level_0:0 "§8Neutral§!"
+ KUS_NEK_support_level_neg1:0 "§OLeaning Nekaston§!"
  KUS_NEK_support_level_neg2:0 "§RSupport Nekaston§!"
 
  # Decision Names and Descriptions
@@ -25,11 +30,11 @@
  KUS_push_for_neutering:0 "Push for the Neutering of Nekaston"
  KUS_push_for_neutering_desc:0 "We believe we can win this war decisively. By signaling our intent to our international supporters, nations that support us will help extend the ceasefire deadline, giving us more time to achieve total victory."
 
- KUS_lobby_for_support:0 "Lobby [FROM.GetName] for Support"
- KUS_lobby_for_support_desc:0 "Spend political capital to lobby [FROM.GetName] for support in our war against Nekaston.\n\n§YCurrent stance:§! [FROM.GetKUSNEKSupportLevel]\n§Y50% chance of shifting support towards Kusnurk.§!"
+ KUS_lobby_for_support:0 "Lobby §Y[FROM.GetName]§!\nTheir stance is [FROM.GetKUSNEKSupportLevel]"
+ KUS_lobby_for_support_desc:0 "Spend political capital to lobby [FROM.GetName] for support in our war against Nekaston.\n\n§WIf they are §YSupporting§! a nation, they will always help said nation. If they are only §YLeaning§!, there is a §Y50%§! chance that they send support, and a §Y50%§! chance that they push for a ceasefire. If they are §YNeutral§!, they will §Yalways§! push for a ceasefire.§!"
 
- NEK_lobby_for_support:0 "Lobby [FROM.GetName] for Suppowt"
- NEK_lobby_for_support_desc:0 "Spend political capital to lobby [FROM.GetName] for suppowt in ouw glowious waw against Kusnurk.\n\n§YCurrent stance:§! [FROM.GetKUSNEKSupportLevel]\n§Y50% chance of shifting suppowt towards Nekaston.§!"
+ NEK_lobby_for_support:0 "Lobby §Y[FROM.GetName]§!\nTheir stance is [FROM.GetKUSNEKSupportLevel]"
+ NEK_lobby_for_support_desc:0 "Spend political capital to lobby [FROM.GetName] for suppowt in ouw glowious waw against Kusnurk.\n\n§WIf they are §YSupporting§! a nation, they will always help said nation. If they are only §YLeaning§!, there is a §Y50%§! chance that they send support, and a §Y50%§! chance that they push for a ceasefire. If they are §YNeutral§!, they will §Yalways§! push for a ceasefire.§!"
 
  KUS_broadcast_nekastonian_decadence:0 "Broadcast Nekastonian Decadence"
  KUS_broadcast_nekastonian_decadence_desc:0 "Now that we control Nekastonian territory, we can broadcast evidence of the failings of their communist regime to the world. All communist nations will shift one tier towards supporting Kusnurk."
@@ -102,24 +107,25 @@
  KUS_NEK_war.25.a:0 "Pwopaganda!"
 
  # Custom Effect Tooltips
- KUS_NEK_war_spawn_divs_nek_tt:0 "§Y2 volunteer divisions (8-width infantry) will be sent to Nekaston§!"
- KUS_NEK_war_spawn_divs_kus_tt:0 "§Y2 volunteer divisions (8-width infantry) will be sent to Kusnurk§!"
- KUS_NEK_war_defense_up_tt:0 "§GKusnurk International Support: +1% Division Defense§!"
- KUS_NEK_war_attack_up_tt:0 "§G+1% Division Attack§!"
- KUS_NEK_war_mission_add_5_tt:0 "§Y+5 days to ceasefire deadline§!"
- KUS_NEK_war_mission_remove_5_tt:0 "§R-5 days from ceasefire deadline§!"
- KUS_NEK_war_ceasefire_tt:0 "§YThe war ends in a white peace. All borders return to their pre-war state.§!"
- KUS_NEK_war_ceasefire_push_tt:0 "§YThe ceasefire deadline has been reduced by 5 days.§!"
- KUS_NEK_war_kus_received_support_tt:0 "§GKusnurk has received international support: +1% Defense§!"
- KUS_NEK_war_nek_received_support_tt:0 "§RNekaston has received international support: +1% Attack, +5 days to ceasefire§!"
+ KUS_NEK_war_spawn_divs_nek_tt:0 "2 §YDivisions§! of §Y8-width infantry§! will be sent to §YNekaston§!"
+ KUS_NEK_war_spawn_divs_kus_tt:0 "2 §YDivisions§! of §Y8-width infantry§! will be sent to §YKusnurk§!"
+ KUS_NEK_war_attack_up_tt:0 "Modify §YInternational Support§! by:\n§G+1%§! Division Attack"
+ KUS_NEK_war_mission_add_5_tt:0 "§Y+5 days§! to §YCeasefire Deadline§!"
+ KUS_NEK_war_mission_remove_5_tt:0 "§Y-5 days§! to §YCeasefire Deadline§!"
+ KUS_NEK_war_ceasefire_tt:0 "The war ends in a §YWhite Peace§!. All borders return to their pre-war state."
+ KUS_NEK_war_ceasefire_push_tt:0 "§Y-5 days§! to §YCeasefire Deadline§!"
+ KUS_NEK_war_kus_received_support_tt:0 "Modify §YInternational Support§! by:\n§G+1%§! Division Attack"
+ KUS_NEK_war_nek_received_support_tt:0 "Modify §YInternational Support§! by:\n§G+1%§! Division Attack\n\n§Y+5 days§! to §YCeasefire Deadline§!"
  KUS_NEK_war_dismantle_buildings_tt:0 "§RAll rocket sites and military factories will be dismantled§!"
- KUS_NEK_war_push_neutering_tt:0 "§YNations that support Kusnurk will now add 5 days to the ceasefire deadline instead of pushing for ceasefire, giving us more time to achieve victory.§!"
- KUS_NEK_war_broadcast_decadence_tt:0 "§YAll communist nations shift one tier towards supporting Kusnurk§!"
- KUS_NEK_war_lobby_success_tt:0 "§GThe lobbying was successful! Support has shifted.§!"
- KUS_NEK_war_lobby_fail_tt:0 "§RThe lobbying failed. No change in support.§!"
+ KUS_NEK_war_push_neutering_tt:0 "Nations that support §YKusnurk§! will now §Yadd 5 days to the ceasefire deadline§! instead of pushing for ceasefire, giving us more time to achieve victory."
+ KUS_NEK_war_broadcast_decadence_tt:0 "All §YCommunist Nations§! shift towards supporting §YKusnurk§!"
+ KUS_NEK_war_lobby_success_tt:0 "support §Gshifting towards us§!"
+ KUS_NEK_war_lobby_fail_tt:0 "support §Rremaining the same§!"
 
  # Dynamic Modifier Names
  KUS_international_support:0 "International Support"
  KUS_international_support_desc:0 "International nations are supporting Kusnurk in the war against Nekaston."
  NEK_international_support:0 "International Support"
  NEK_international_support_desc:0 "International nations are supporting Nekaston in the war against Kusnurk."
+
+ KUS_NEK_war_supported_recently:0 "Supported the Kusnurk-Nekaston Conflict"

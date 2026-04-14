@@ -26,7 +26,6 @@ country_event = {
 
 			# Set up KUS international support modifier
 			set_variable = { KUS_international_support_attack = 0.05 }
-			set_variable = { KUS_international_support_defense = 0.05 }
 			add_dynamic_modifier = { modifier = KUS_international_support }
 		}
 
@@ -43,7 +42,6 @@ country_event = {
 
 			# Set up NEK international support modifier
 			set_variable = { NEK_international_support_attack = 0.05 }
-			set_variable = { NEK_international_support_defense = 0.05 }
 			add_dynamic_modifier = { modifier = NEK_international_support }
 		}
 
@@ -52,8 +50,12 @@ country_event = {
 			limit = {
 				OR = {
 					is_major = yes
-					has_government = communism
+					tag = SOB
+					tag = SLR
 				}
+				NOT = { tag = ZZZ }
+				NOT = { has_government = fascism }
+				NOT = { tag = SIL }
 				NOT = { tag = KUS }
 				NOT = { tag = NEK }
 				exists = yes
@@ -79,6 +81,7 @@ country_event = {
 			else = {
 				set_variable = { KUS_NEK_support_level = 0 }
 			}
+			LOK_NEK_war_update_opinion = yes
 		}
 	}
 }
@@ -142,8 +145,6 @@ country_event = {
 				amount = 1000
 			}
 		}
-
-		set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
 
 		# Fire notification events
 		hidden_effect = {
@@ -269,6 +270,22 @@ country_event = {
 				limit = { has_dynamic_modifier = { modifier = NEK_international_support } }
 				remove_dynamic_modifier = { modifier = NEK_international_support }
 			}
+			every_country = {
+				limit = {
+					is_in_array = {
+						array = global.KUS_NEK_war_supporters
+						value = THIS
+					}
+				}
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+			}
 		}
 
 		KUS = { country_event = LOK_proposal.1 }
@@ -299,15 +316,13 @@ country_event = {
 	option = {
 		name = KUS_NEK_war.10.a
 
-		# Defence always increases when supporting KUS
-		add_to_variable = { KUS_international_support_defense = 0.01 }
-		custom_effect_tooltip = KUS_NEK_war_defense_up_tt
+		# Attack always increases when supporting KUS
+		custom_effect_tooltip = KUS_NEK_war_attack_up_tt
+		add_to_variable = { KUS_international_support_attack = 0.01 }
 
-		# If supporter is democratic, also increase attack and spawn divs
+		# If supporter is democratic, also spawn divs
 		if = {
 			limit = { FROM = { has_government = democratic } }
-			add_to_variable = { KUS_international_support_attack = 0.01 }
-			custom_effect_tooltip = KUS_NEK_war_attack_up_tt
 			capital_scope = {
 				create_unit = {
 					division = "division_template = \"International Volunteer\" start_experience_factor = 0.1 start_equipment_factor = 1"

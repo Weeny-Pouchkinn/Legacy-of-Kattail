@@ -35,6 +35,22 @@ KUS_NEK_war_mediation_cat = {
 			}
 			# Cleanup
 			hidden_effect = {
+				every_country = {
+					limit = {
+						is_in_array = {
+							array = global.KUS_NEK_war_supporters
+							value = THIS
+						}
+					}
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+				}
 				clr_global_flag = KUS_NEK_war_active
 				if = {
 					limit = { has_dynamic_modifier = { modifier = KUS_international_support } }
@@ -187,21 +203,32 @@ KUS_NEK_war_mediation_cat = {
 
 		cost = 25
 
-		complete_effect = {
+		available = {
+			check_variable = { KUS_NEK_support_level < 2 }
+		}
+
+		days_remove = 15
+
+		remove_effect = {
 			random_list = {
 				1 = {
 					# Success - shift towards KUS
-					FROM = {
-						add_to_variable = { KUS_NEK_support_level = 1 }
-						clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
-						country_event = { id = KUS_NEK_war.20 }
+					hidden_effect = {
+						FROM = {
+							add_to_variable = { KUS_NEK_support_level = 1 }
+							clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
+							country_event = { id = KUS_NEK_war.20 }
+							LOK_NEK_war_update_opinion = yes
+						}						
 					}
 					custom_effect_tooltip = KUS_NEK_war_lobby_success_tt
 				}
 				1 = {
 					# Fail
-					FROM = {
-						country_event = { id = KUS_NEK_war.20 }
+					hidden_effect = {
+						FROM = {
+							country_event = { id = KUS_NEK_war.20 }
+						}	
 					}
 					custom_effect_tooltip = KUS_NEK_war_lobby_fail_tt
 				}
@@ -230,23 +257,34 @@ KUS_NEK_war_mediation_cat = {
 			}
 		}
 
+		available = {
+			check_variable = { KUS_NEK_support_level > -2 }
+		}
+
 		cost = 25
 
-		complete_effect = {
+		days_remove = 15
+
+		remove_effect = {
 			random_list = {
 				1 = {
 					# Success - shift towards NEK
-					FROM = {
-						add_to_variable = { KUS_NEK_support_level = -1 }
-						clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
-						country_event = { id = KUS_NEK_war.20 }
+					hidden_effect = {
+						FROM = {
+							add_to_variable = { KUS_NEK_support_level = -1 }
+							clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
+							country_event = { id = KUS_NEK_war.20 }
+							LOK_NEK_war_update_opinion = yes
+						}	
 					}
 					custom_effect_tooltip = KUS_NEK_war_lobby_success_tt
 				}
 				1 = {
 					# Fail
-					FROM = {
-						country_event = { id = KUS_NEK_war.20 }
+					hidden_effect = {
+						FROM = {
+							country_event = { id = KUS_NEK_war.20 }
+						}
 					}
 					custom_effect_tooltip = KUS_NEK_war_lobby_fail_tt
 				}
@@ -279,6 +317,9 @@ KUS_NEK_war_mediation_cat = {
 					is_in_array = { array = global.KUS_NEK_war_supporters value = THIS }
 					has_government = communism
 				}
+				hidden_effect = {
+					LOK_NEK_war_update_opinion = yes
+				}
 				add_to_variable = { KUS_NEK_support_level = 1 }
 				clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
 				country_event = { id = KUS_NEK_war.25 }
@@ -307,6 +348,7 @@ KUS_NEK_war_mediation_cat = {
 		cost = 0
 
 		complete_effect = {
+			set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
 			if = {
 				limit = { is_ai = no }
 				country_event = { id = KUS_NEK_war.4 }
