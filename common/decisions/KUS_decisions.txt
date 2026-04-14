@@ -1587,6 +1587,7 @@ KUS_flusiobalkans_union_cat = {
 				NOT = { has_government = fascism }
 				NOT = { is_in_faction_with = KUS }
 				NOT = { is_subject_of = KUS }
+				NOT = { is_faction_leader = yes }
 				exists = yes
 			}
 		}
@@ -1598,6 +1599,7 @@ KUS_flusiobalkans_union_cat = {
 				NOT = { has_government = fascism }
 				NOT = { is_in_faction_with = KUS }
 				NOT = { is_subject_of = KUS }
+				NOT = { is_faction_leader = yes }
 				exists = yes
 			}
 		}
@@ -1612,18 +1614,17 @@ KUS_flusiobalkans_union_cat = {
 
 		available = {
 			custom_trigger_tooltip = {
-				tooltip = KUS_pressure_2x_industry_tt
-				# KUS faction needs 2x the target's factories (4x if target is in a faction)
-				# Calculate target's total factories * multiplier as temp var
+				tooltip = KUS_pressure_4x_industry_tt
+				# KUS faction needs 4x the target's factories (8x if target is in a faction)
 				hidden_trigger = {
 					set_temp_variable = { KUS_temp_target_fac = FROM.num_of_civilian_factories }
 					add_to_temp_variable = { KUS_temp_target_fac = FROM.num_of_military_factories }
 					if = {
 						limit = { FROM = { is_in_faction = yes } }
-						multiply_temp_variable = { KUS_temp_target_fac = 4 }
+						multiply_temp_variable = { KUS_temp_target_fac = 8 }
 					}
 					else = {
-						multiply_temp_variable = { KUS_temp_target_fac = 2 }
+						multiply_temp_variable = { KUS_temp_target_fac = 4 }
 					}
 					check_variable = { KUS_faction_total_factories > KUS_temp_target_fac }
 				}
@@ -1642,14 +1643,14 @@ KUS_flusiobalkans_union_cat = {
 					set_variable = { KUS_pressure_target_factories = num_of_civilian_factories }
 					add_to_variable = { KUS_pressure_target_factories = num_of_military_factories }
 				}
-				# Check if double threshold met (4x base, 8x if in faction)
+				# Check if double threshold met (8x base, 16x if in faction)
 				set_variable = { KUS_pressure_double_threshold = FROM.KUS_pressure_target_factories }
 				if = {
 					limit = { FROM = { is_in_faction = yes } }
-					multiply_variable = { KUS_pressure_double_threshold = 8 }
+					multiply_variable = { KUS_pressure_double_threshold = 16 }
 				}
 				else = {
-					multiply_variable = { KUS_pressure_double_threshold = 4 }
+					multiply_variable = { KUS_pressure_double_threshold = 8 }
 				}
 				if = {
 					limit = { check_variable = { KUS_faction_total_factories > KUS_pressure_double_threshold } }
