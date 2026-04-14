@@ -50,6 +50,35 @@ KUS_NEK_war_mediation_cat = {
 		}
 	}
 
+	# Quarterly tally mission (KUS only) - fires every 90 days to tally support
+	KUS_NEK_war_quarterly_tally = {
+		icon = GFX_decision_generic_diplomacy
+		allowed = { tag = KUS }
+
+		activation = {
+			has_global_flag = KUS_NEK_war_active
+			has_war_with = NEK
+		}
+
+		available = {
+			always = no
+		}
+
+		cancel_trigger = {
+			NOT = { has_global_flag = KUS_NEK_war_active }
+		}
+
+		is_good = yes
+		selectable_mission = no
+		days_mission_timeout = 90
+
+		timeout_effect = {
+			hidden_effect = {
+				country_event = { id = KUS_NEK_war.32 }
+			}
+		}
+	}
+
 	# NEK pressing victory after taking Akiba (moved from lok_journal_entries)
 	NEK_kusnurk_peace = {
 		icon = GFX_decision_hol_war_on_pacifism
@@ -289,7 +318,7 @@ KUS_NEK_war_mediation_cat = {
 		ai_will_do = { base = 100 }
 	}
 
-	# Supporting nations choose how to intervene (every 3 months)
+	# Supporting nations choose how to intervene (available during 3-month window)
 	KUS_NEK_war_support_decision = {
 		icon = GFX_decision_generic_diplomacy
 

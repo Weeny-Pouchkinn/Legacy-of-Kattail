@@ -47,12 +47,24 @@ country_event = {
 			add_dynamic_modifier = { modifier = NEK_international_support }
 		}
 
-		# Build supporter array
+		# Initialize global support tallies
+		set_variable = { global.KUS_NEK_tally_guns_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_guns_nek = 0 }
+		set_variable = { global.KUS_NEK_tally_divs_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_divs_nek = 0 }
+		set_variable = { global.KUS_NEK_tally_ceasefire_days = 0 }
+		set_variable = { global.KUS_NEK_tally_attack_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_attack_nek = 0 }
+		set_variable = { global.KUS_NEK_tally_defense_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_mission_add = 0 }
+
+		# Build supporter array - only majors + SOB + SLR
 		every_country = {
 			limit = {
 				OR = {
 					is_major = yes
-					has_government = communism
+					tag = SOB
+					tag = SLR
 				}
 				NOT = { tag = KUS }
 				NOT = { tag = NEK }
@@ -115,7 +127,7 @@ country_event = {
 	}
 }
 
-# Event 4: Support Choice for Supporting Nations
+# Event 4: Support Choice for Supporting Nations (fired from decision)
 country_event = {
 	id = KUS_NEK_war.4
 	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.4" }
@@ -128,7 +140,7 @@ country_event = {
 	option = {
 		name = KUS_NEK_war.4.a
 
-		# Supporter costs
+		# Pay costs immediately
 		if = {
 			limit = { has_government = communism }
 			add_manpower = -16000
@@ -143,12 +155,24 @@ country_event = {
 			}
 		}
 
-		set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
-
-		# Fire notification events
+		# Save support choice - will be tallied at end of quarter
 		hidden_effect = {
-			NEK = { country_event = { id = KUS_NEK_war.12 } }
-			KUS = { country_event = { id = KUS_NEK_war.13 } }
+			set_country_flag = KUS_NEK_war_chose_support_nek
+			clr_country_flag = KUS_NEK_war_chose_support_kus
+			clr_country_flag = KUS_NEK_war_chose_ceasefire
+			set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
+
+			# Add to tallies
+			if = {
+				limit = { has_government = communism }
+				add_to_variable = { global.KUS_NEK_tally_divs_nek = 2 }
+			}
+			if = {
+				limit = { NOT = { has_government = communism } }
+				add_to_variable = { global.KUS_NEK_tally_guns_nek = 1000 }
+			}
+			add_to_variable = { global.KUS_NEK_tally_attack_nek = 1 }
+			add_to_variable = { global.KUS_NEK_tally_mission_add = 5 }
 		}
 
 		ai_chance = {
@@ -162,7 +186,7 @@ country_event = {
 	option = {
 		name = KUS_NEK_war.4.b
 
-		# Supporter costs
+		# Pay costs immediately
 		if = {
 			limit = { has_government = democratic }
 			add_manpower = -16000
@@ -177,12 +201,30 @@ country_event = {
 			}
 		}
 
-		set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
-
-		# Fire notification events
+		# Save support choice
 		hidden_effect = {
-			KUS = { country_event = { id = KUS_NEK_war.10 } }
-			NEK = { country_event = { id = KUS_NEK_war.11 } }
+			set_country_flag = KUS_NEK_war_chose_support_kus
+			clr_country_flag = KUS_NEK_war_chose_support_nek
+			clr_country_flag = KUS_NEK_war_chose_ceasefire
+			set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
+
+			# Add to tallies
+			if = {
+				limit = { has_government = democratic }
+				add_to_variable = { global.KUS_NEK_tally_divs_kus = 2 }
+				add_to_variable = { global.KUS_NEK_tally_attack_kus = 1 }
+			}
+			if = {
+				limit = { NOT = { has_government = democratic } }
+				add_to_variable = { global.KUS_NEK_tally_guns_kus = 1000 }
+			}
+			add_to_variable = { global.KUS_NEK_tally_defense_kus = 1 }
+
+			# If push for neutering is active, KUS supporters add 5 days to mission
+			if = {
+				limit = { has_global_flag = KUS_NEK_push_for_neutering }
+				add_to_variable = { global.KUS_NEK_tally_mission_add = 5 }
+			}
 		}
 
 		ai_chance = {
@@ -196,12 +238,15 @@ country_event = {
 	option = {
 		name = KUS_NEK_war.4.c
 
-		set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
-
-		# Fire notification events
+		# Save support choice
 		hidden_effect = {
-			KUS = { country_event = { id = KUS_NEK_war.14 } }
-			NEK = { country_event = { id = KUS_NEK_war.15 } }
+			set_country_flag = KUS_NEK_war_chose_ceasefire
+			clr_country_flag = KUS_NEK_war_chose_support_kus
+			clr_country_flag = KUS_NEK_war_chose_support_nek
+			set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
+
+			# Add to tallies
+			add_to_variable = { global.KUS_NEK_tally_ceasefire_days = 5 }
 		}
 
 		ai_chance = {
@@ -287,151 +332,6 @@ country_event = {
 	}
 }
 
-# Event 10: Support arrives for Kusnurk (KUS notification - applies effects)
-country_event = {
-	id = KUS_NEK_war.10
-	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.10" }
-	title = KUS_NEK_war.10.t
-	desc = KUS_NEK_war.10.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_NEK_war.10.a
-
-		# Defence always increases when supporting KUS
-		add_to_variable = { KUS_international_support_defense = 0.01 }
-		custom_effect_tooltip = KUS_NEK_war_defense_up_tt
-
-		# If supporter is democratic, also increase attack and spawn divs
-		if = {
-			limit = { FROM = { has_government = democratic } }
-			add_to_variable = { KUS_international_support_attack = 0.01 }
-			custom_effect_tooltip = KUS_NEK_war_attack_up_tt
-			capital_scope = {
-				create_unit = {
-					division = "division_template = \"International Volunteer\" start_experience_factor = 0.1 start_equipment_factor = 1"
-					count = 2
-					owner = KUS
-				}
-			}
-		}
-
-		# If push for neutering is active, KUS supporters add 5 days to mission
-		if = {
-			limit = { has_global_flag = KUS_NEK_push_for_neutering }
-			add_days_mission_timeout = {
-				mission = KUS_great_powers_mediate_ceasefire
-				days = 5
-			}
-			custom_effect_tooltip = KUS_NEK_war_mission_add_5_tt
-		}
-	}
-}
-
-# Event 11: Nation supports Kusnurk (NEK notification - informational)
-country_event = {
-	id = KUS_NEK_war.11
-	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.11" }
-	title = KUS_NEK_war.11.t
-	desc = KUS_NEK_war.11.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_NEK_war.11.a
-		custom_effect_tooltip = KUS_NEK_war_kus_received_support_tt
-	}
-}
-
-# Event 12: Support arrives for Nekaston (NEK notification - applies effects)
-country_event = {
-	id = KUS_NEK_war.12
-	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.12" }
-	title = KUS_NEK_war.12.t
-	desc = KUS_NEK_war.12.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_NEK_war.12.a
-
-		# Attack always increases when supporting NEK
-		add_to_variable = { NEK_international_support_attack = 0.01 }
-		custom_effect_tooltip = KUS_NEK_war_attack_up_tt
-
-		# If supporter is communist, spawn divs
-		if = {
-			limit = { FROM = { has_government = communism } }
-			capital_scope = {
-				create_unit = {
-					division = "division_template = \"International Volunteer\" start_experience_factor = 0.1 start_equipment_factor = 1"
-					count = 2
-					owner = NEK
-				}
-			}
-		}
-
-		# Add 5 days to ceasefire mission
-		KUS = {
-			add_days_mission_timeout = {
-				mission = KUS_great_powers_mediate_ceasefire
-				days = 5
-			}
-		}
-		custom_effect_tooltip = KUS_NEK_war_mission_add_5_tt
-	}
-}
-
-# Event 13: Nation supports Nekaston (KUS notification - informational)
-country_event = {
-	id = KUS_NEK_war.13
-	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.13" }
-	title = KUS_NEK_war.13.t
-	desc = KUS_NEK_war.13.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_NEK_war.13.a
-		custom_effect_tooltip = KUS_NEK_war_nek_received_support_tt
-	}
-}
-
-# Event 14: Nation pushes for ceasefire (KUS notification - applies mission reduction)
-country_event = {
-	id = KUS_NEK_war.14
-	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.14" }
-	title = KUS_NEK_war.14.t
-	desc = KUS_NEK_war.14.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_NEK_war.14.a
-		add_days_mission_timeout = {
-			mission = KUS_great_powers_mediate_ceasefire
-			days = -5
-		}
-		custom_effect_tooltip = KUS_NEK_war_mission_remove_5_tt
-	}
-}
-
-# Event 15: Nation pushes for ceasefire (NEK notification - informational)
-country_event = {
-	id = KUS_NEK_war.15
-	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.15" }
-	title = KUS_NEK_war.15.t
-	desc = KUS_NEK_war.15.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = KUS_NEK_war.15.a
-		custom_effect_tooltip = KUS_NEK_war_ceasefire_push_tt
-	}
-}
-
 # Event 20: Lobby Notification (supporting nation gets 25 PP - player only)
 country_event = {
 	id = KUS_NEK_war.20
@@ -463,5 +363,124 @@ country_event = {
 	option = {
 		name = KUS_NEK_war.25.a
 		custom_effect_tooltip = KUS_NEK_war_broadcast_decadence_tt
+	}
+}
+
+# Event 30: Quarterly Support Summary - KUS receives
+# Description is dynamically built showing what KUS and NEK each received
+country_event = {
+	id = KUS_NEK_war.30
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.30" }
+	title = KUS_NEK_war.30.t
+	desc = KUS_NEK_war.30.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.30.a
+
+		# Apply KUS bonuses
+		if = {
+			limit = { check_variable = { global.KUS_NEK_tally_defense_kus > 0 } }
+			set_temp_variable = { temp_def = global.KUS_NEK_tally_defense_kus }
+			multiply_temp_variable = { temp_def = 0.01 }
+			add_to_variable = { KUS_international_support_defense = temp_def }
+		}
+		if = {
+			limit = { check_variable = { global.KUS_NEK_tally_attack_kus > 0 } }
+			set_temp_variable = { temp_atk = global.KUS_NEK_tally_attack_kus }
+			multiply_temp_variable = { temp_atk = 0.01 }
+			add_to_variable = { KUS_international_support_attack = temp_atk }
+		}
+
+		# Spawn volunteer divisions for KUS
+		if = {
+			limit = { check_variable = { global.KUS_NEK_tally_divs_kus > 0 } }
+			capital_scope = {
+				create_unit = {
+					division = "division_template = \"International Volunteer\" start_experience_factor = 0.1 start_equipment_factor = 1"
+					count = global.KUS_NEK_tally_divs_kus
+					owner = KUS
+				}
+			}
+		}
+
+		# Ceasefire mission adjustments
+		if = {
+			limit = { check_variable = { global.KUS_NEK_tally_mission_add > 0 } }
+			add_days_mission_timeout = {
+				mission = KUS_great_powers_mediate_ceasefire
+				days = global.KUS_NEK_tally_mission_add
+			}
+		}
+		if = {
+			limit = { check_variable = { global.KUS_NEK_tally_ceasefire_days > 0 } }
+			set_temp_variable = { neg_days = global.KUS_NEK_tally_ceasefire_days }
+			multiply_temp_variable = { neg_days = -1 }
+			add_days_mission_timeout = {
+				mission = KUS_great_powers_mediate_ceasefire
+				days = neg_days
+			}
+		}
+	}
+}
+
+# Event 31: Quarterly Support Summary - NEK receives
+country_event = {
+	id = KUS_NEK_war.31
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.31" }
+	title = KUS_NEK_war.31.t
+	desc = KUS_NEK_war.31.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.31.a
+
+		# Apply NEK bonuses
+		if = {
+			limit = { check_variable = { global.KUS_NEK_tally_attack_nek > 0 } }
+			set_temp_variable = { temp_atk = global.KUS_NEK_tally_attack_nek }
+			multiply_temp_variable = { temp_atk = 0.01 }
+			add_to_variable = { NEK_international_support_attack = temp_atk }
+		}
+
+		# Spawn volunteer divisions for NEK
+		if = {
+			limit = { check_variable = { global.KUS_NEK_tally_divs_nek > 0 } }
+			capital_scope = {
+				create_unit = {
+					division = "division_template = \"International Volunteer\" start_experience_factor = 0.1 start_equipment_factor = 1"
+					count = global.KUS_NEK_tally_divs_nek
+					owner = NEK
+				}
+			}
+		}
+	}
+}
+
+# Event 32: Hidden quarterly tally event - fires on KUS, resolves support, sends summaries
+country_event = {
+	id = KUS_NEK_war.32
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.32 - Quarterly Support Tally"
+
+		# Send summary events to KUS and NEK
+		country_event = { id = KUS_NEK_war.30 }
+		NEK = { country_event = { id = KUS_NEK_war.31 } }
+
+		# Reset tallies for next quarter
+		set_variable = { global.KUS_NEK_tally_guns_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_guns_nek = 0 }
+		set_variable = { global.KUS_NEK_tally_divs_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_divs_nek = 0 }
+		set_variable = { global.KUS_NEK_tally_ceasefire_days = 0 }
+		set_variable = { global.KUS_NEK_tally_attack_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_attack_nek = 0 }
+		set_variable = { global.KUS_NEK_tally_defense_kus = 0 }
+		set_variable = { global.KUS_NEK_tally_mission_add = 0 }
 	}
 }
