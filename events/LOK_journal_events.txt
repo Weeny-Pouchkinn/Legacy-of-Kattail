@@ -1141,6 +1141,18 @@ country_event = {
 		hidden_effect = {
 			set_country_flag = KUS_lost_war
 			country_event = { id = KUS_event.20 days = 7 }
+			# War cleanup
+			clr_global_flag = KUS_NEK_war_active
+			if = {
+				limit = { has_dynamic_modifier = { modifier = KUS_international_support } }
+				remove_dynamic_modifier = { modifier = KUS_international_support }
+			}
+			NEK = {
+				if = {
+					limit = { has_dynamic_modifier = { modifier = NEK_international_support } }
+					remove_dynamic_modifier = { modifier = NEK_international_support }
+				}
+			}
 		}
 		NEK = { country_event = LOK_proposal.1 }
 

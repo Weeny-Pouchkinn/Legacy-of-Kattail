@@ -2495,6 +2495,9 @@ lok_journal_entries_cat = {
 				target = KUS
 				type = take_claimed_state
 			}
+			hidden_effect = {
+				country_event = { id = KUS_NEK_war.1 days = 1 }
+			}
 		}
 
 		cost = 50
@@ -2510,45 +2513,6 @@ lok_journal_entries_cat = {
 		}
 	}
 
-	NEK_kusnurk_peace = {
-		icon = GFX_decision_hol_war_on_pacifism
-		allowed = {
-			tag = NEK
-		}
-
-		visible = {
-			has_war_with = KUS
-		}
-
-		available = {
-			229 = { is_controlled_by = NEK }
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			effect_tooltip = {
-				white_peace = KUS
-				229 = {
-					transfer_state_to = NEK
-					custom_effect_tooltip = state_core_threshold_set_60
-					set_state_flag = compliance_60_@ROOT
-					add_to_array = { array = ROOT.potential_cores_array }
-					add_compliance = 10
-				}
-				225 = { set_demilitarized_zone = yes }
-				add_stability = 0.10
-				add_war_support = 0.05
-				add_political_power = 150
-			}
-			custom_effect_tooltip = lok_needs_approval
-			KUS = { country_event = { id = LOK_NEK.1 } }
-		}
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
 
 	#ROQUALIA
 	ROQ_conclude_reconstruction = {
