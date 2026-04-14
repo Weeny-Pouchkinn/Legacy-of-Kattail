@@ -17,7 +17,6 @@ herzlands_unification_cat = {
 		fire_only_once = yes
 
 		complete_effect = {
-			set_cosmetic_tag = KTZ_UNITED
 			custom_effect_tooltip = reduce_herzland_state_coring_threshold
 			hidden_effect = {
 				every_state = {
@@ -25,10 +24,17 @@ herzlands_unification_cat = {
 					reduce_compliance_coring_threshold_by_10 = yes
 					reduce_compliance_coring_threshold_by_10 = yes
 				}
-				if = {
-					limit = { tag = AUR }
-					country_event = { id = AUR_event.14 days = 10 }
+			}
+			if = {
+				limit = {
+					tag = TAI
+					has_cosmetic_tag = CAT_KINGDOM_EARLY
 				}
+				set_cosmetic_tag = CAT_KINGDOM_REUNITED
+				country_event = { id = CKG_event.5 }
+			}
+			else = {
+				set_cosmetic_tag = KTZ_UNITED
 			}
 		}
 
@@ -93,6 +99,7 @@ lok_peace_decisions_cat = {
 		days_remove = 0
 
 		visible = {
+			is_non_playable_country = no
 			NOT = { tag = AAA }
 			NOT = { has_country_flag = decided_fate_of_@FROM }
 			FROM = {
@@ -109,12 +116,13 @@ lok_peace_decisions_cat = {
 		}
 
 		remove_effect = {
+			custom_effect_tooltip = decide_fate_of_nation_tt
 			hidden_effect = {
 				set_country_flag = deciding_nation_fate
 				set_country_flag = decided_fate_of_@FROM
 				FROM = { save_event_target_as = peace_puppet_country }
+				country_event = { id = lok_peace.1 }
 			}
-			country_event = { id = lok_peace.1 }
 		}
 
 		ai_will_do = {
@@ -281,6 +289,53 @@ political_actions = {
 			644 = { remove_wonder = yes add_manpower = -25000 }
 			add_political_power = 50
 			add_stability = 0.05
+		}
+	}
+}
+
+economy_decisions = {
+	LOK_build_armored_blimp_carrier = {
+		icon = GFX_decision_armored_blimp_carrier
+
+		visible = {
+			has_completed_focus = AUR_fabricate_weltaufseher
+		}
+
+		available = {
+			has_equipment = {
+				armored_blimp_carrier_equipment > 99
+			}
+		}
+
+		modifier = {
+			civilian_factory_use = 15
+		}
+
+		days_remove = 270
+
+		complete_effect = {
+			add_equipment_to_stockpile = { type = armored_blimp_carrier_equipment amount = -100 }
+			hidden_effect = {
+				set_country_flag = building_blimp_carrier
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = LOK_build_armored_blimp_carrier_tt
+			hidden_effect = {
+				clr_country_flag = building_blimp_carrier
+				if = {
+					limit = { NOT = { has_country_flag = has_armored_blimp_carrier } }
+					set_country_flag = has_armored_blimp_carrier
+				}
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.3 start_equipment_factor = 1"
+						count = 1
+						owner = ROOT
+					}
+				}
+			}
 		}
 	}
 }

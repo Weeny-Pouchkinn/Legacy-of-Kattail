@@ -20,6 +20,9 @@ LOK_food_management_cat = {
 	icon = GFX_decision_wheat
 	priority = 200
 	visible_when_empty = yes
+	visible = {
+		is_debug = yes
+	}
 }
 
 lok_peace_decisions_cat = {
@@ -56,6 +59,15 @@ lok_space_program_cat = {
 	}
 }
 
+lok_katzen_high_command_cat = {
+	icon = GFX_decision_katzen_high_command
+	priority = 2000
+	visible = {
+		has_country_flag = katzen_high_command_decision_active
+	}
+	visible_when_empty = yes
+}
+
 #Skeleton content
 lok_journal_entries_cat = {
 	icon = GFX_decision_book
@@ -89,7 +101,7 @@ AUR_commissars_cat = {
 AUR_chew_slowly_cat = {
 	icon = GFX_decision_katzen_police
 	allowed = { tag = AUR }
-	visible = { has_completed_focus = AUR_chew_slowly }
+	visible = { has_country_flag = AUR_herald_sanity_active }
 	priority = 2500
 	visible_when_empty = yes
 }
@@ -150,5 +162,26 @@ TAK_automata_cat = {
 		has_completed_focus = TAK_automaton_department
 	}
 	priority = 1050
+	visible_when_empty = yes
+}
+
+#Kusnurk
+KUS_vao_extraction_decisions = {
+	icon = GFX_decision_category_generic_industry
+	allowed = { tag = KUS }
+	visible = {
+		has_completed_focus = KUS_expand_vao_extraction
+	}
+	priority = 900
+	visible_when_empty = no
+}
+
+KUS_flusiobalkans_union_cat = {
+	icon = GFX_decision_category_generic_diplomacy
+	allowed = { tag = KUS }
+	visible = {
+		has_completed_focus = KUS_union_of_our_own
+	}
+	priority = 800
 	visible_when_empty = yes
 }

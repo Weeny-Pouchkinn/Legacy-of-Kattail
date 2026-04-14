@@ -195,6 +195,22 @@ country_event = {
 	}
 }
 
+#Unification
+country_event = {
+	id = CKG_event.5
+	title = CKG_event.5.t
+	desc = CKG_event.5.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Sure ig
+	option = {
+		name = CKG_event.5.a
+	}
+}
+
+
 add_namespace = CKG_demands
 #Ask Stronien to join
 country_event = {
@@ -642,5 +658,406 @@ country_event = {
 		ai_chance = {
 			base = 1
 		}
+	}
+}
+
+#Mewtail's Heritage flavor event
+country_event = {
+	id = CKG_event.6
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_event.6"}
+	title = CKG_event.6.t
+	desc = CKG_event.6.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_event.6.a
+	}
+}
+
+#Ask Lionita to join as defenders
+country_event = {
+	id = CKG_demands.7
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.7"}
+	title = CKG_demands.7.t
+	desc = CKG_demands.7.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Accept - become knightly order
+	option = {
+		name = CKG_demands.7.a
+		custom_effect_tooltip = tt_this_will_end_the_game
+		FROM = {
+			country_event = { id = CKG_demands.8 days = 1 }
+			set_country_flag = lio_accepted_integration
+		}
+		ai_chance = {
+			base = 500
+			modifier = {
+				has_opinion = { target = FROM value > 50 }
+				factor = 2
+			}
+			modifier = {
+				strength_ratio = { tag = FROM ratio < 0.5 }
+				factor = 3
+			}
+			modifier = {
+				strength_ratio = { tag = FROM ratio < 0.8 }
+				factor = 1.5
+			}
+			modifier = {
+				is_in_faction_with = PRL
+				factor = 0.1
+			}
+			modifier = {
+				has_war_with = FROM
+				factor = 0
+			}
+		}
+	}
+
+	#Refuse
+	option = {
+		name = CKG_demands.7.b
+		add_political_power = 50
+		FROM = {
+			country_event = { id = CKG_demands.8 }
+			set_country_flag = lio_refused_integration
+		}
+		ai_chance = {
+			base = 500
+		}
+	}
+}
+
+#Lionita response
+country_event = {
+	id = CKG_demands.8
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.8"}
+	title = CKG_demands.8.t
+	desc = {
+		text = CKG_demands.8.d.yes
+		trigger = { has_country_flag = lio_accepted_integration }
+	}
+	desc = {
+		text = CKG_demands.8.d.no
+		trigger = { has_country_flag = lio_refused_integration }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_demands.8.a
+		set_autonomy = {
+			target = LIO
+			autonomy_state = autonomy_puppet
+		}
+		LIO = {
+			set_cosmetic_tag = LIO_KNIGHT
+		}
+		trigger = { has_country_flag = lio_accepted_integration }
+	}
+
+	option = {
+		name = CKG_demands.8.b
+		create_wargoal = {
+			target = LIO
+			type = annex_everything
+		}
+		trigger = { has_country_flag = lio_refused_integration }
+	}
+}
+
+#Ask IMF to reintegrate
+country_event = {
+	id = CKG_demands.9
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.9"}
+	title = CKG_demands.9.t
+	desc = CKG_demands.9.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Accept - reintegrate
+	option = {
+		name = CKG_demands.9.a
+		custom_effect_tooltip = tt_this_will_end_the_game
+		FROM = {
+			country_event = { id = CKG_demands.10 days = 1 }
+			set_country_flag = imf_accepted
+		}
+		ai_chance = {
+			base = 5000
+			modifier = {
+				strength_ratio = { tag = FROM ratio > 1 }
+				factor = 0.5
+			}
+			modifier = {
+				has_opinion = { target = FROM value > 25 }
+				factor = 2
+			}
+			modifier = {
+				has_war_with = FROM
+				factor = 0
+			}
+		}
+	}
+
+	#Refuse
+	option = {
+		name = CKG_demands.9.b
+		add_political_power = 50
+		FROM = {
+			country_event = { id = CKG_demands.10 }
+			set_country_flag = imf_refused
+		}
+		ai_chance = {
+			base = 5
+		}
+	}
+}
+
+#IMF response
+country_event = {
+	id = CKG_demands.10
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.10"}
+	title = CKG_demands.10.t
+	desc = {
+		text = CKG_demands.10.d.yes
+		trigger = { has_country_flag = imf_accepted }
+	}
+	desc = {
+		text = CKG_demands.10.d.no
+		trigger = { has_country_flag = imf_refused }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_demands.10.a
+		set_autonomy = {
+			target = IMF
+			autonomy_state = autonomy_puppet
+		}
+		IMF = {
+			set_cosmetic_tag = IMF_ZUSPRI
+			ZUS = { every_core_state = { add_core_of = IMF } }
+		}
+		trigger = { has_country_flag = imf_accepted }
+	}
+
+	option = {
+		name = CKG_demands.10.b
+		create_wargoal = {
+			target = IMF
+			type = annex_everything
+		}
+		trigger = { has_country_flag = imf_refused }
+	}
+}
+
+#Ask Zuspri for alliance
+country_event = {
+	id = CKG_demands.11
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.11"}
+	title = CKG_demands.11.t
+	desc = CKG_demands.11.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Accept - join Katzen Pact
+	option = {
+		name = CKG_demands.11.a
+		FROM = {
+			country_event = { id = CKG_demands.12 days = 1 }
+			set_country_flag = zus_accepted
+		}
+		ai_chance = {
+			base = 2000
+			modifier = {
+				has_opinion = { target = FROM value > 25 }
+				factor = 2
+			}
+			modifier = {
+				strength_ratio = { tag = FROM ratio > 1 }
+				factor = 0.5
+			}
+		}
+	}
+
+	#Refuse
+	option = {
+		name = CKG_demands.11.b
+		add_political_power = 50
+		FROM = {
+			country_event = { id = CKG_demands.12 }
+			set_country_flag = zus_refused
+		}
+		ai_chance = {
+			base = 500
+			modifier = {
+				has_opinion = { target = FROM value < -25 }
+				factor = 2
+			}
+			modifier = {
+				has_war_with = FROM
+				factor = 0
+			}
+		}
+	}
+}
+
+#Zuspri response
+country_event = {
+	id = CKG_demands.12
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.12"}
+	title = CKG_demands.12.t
+	desc = {
+		text = CKG_demands.12.d.yes
+		trigger = { has_country_flag = zus_accepted }
+	}
+	desc = {
+		text = CKG_demands.12.d.no
+		trigger = { has_country_flag = zus_refused }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_demands.12.a
+		add_to_faction = ZUS
+		if = {
+			limit = { country_exists = IMF }
+			declare_war_on = {
+				target = IMF
+				type = annex_everything
+			}
+			ZUS = {
+				declare_war_on = {
+					target = IMF
+					type = annex_everything
+				}
+			}
+		}
+		if = {
+			limit = { has_completed_focus = CKG_restore_bavawria }
+			every_owned_state = {
+				limit = { is_core_of = PTQ }
+				transfer_state_to = STR
+			}
+		}
+		trigger = { has_country_flag = zus_accepted }
+	}
+
+	option = {
+		name = CKG_demands.12.b
+		if = {
+			limit = { has_completed_focus = CKG_restore_bavawria }
+			every_owned_state = {
+				limit = { is_core_of = PTQ }
+				transfer_state_to = STR
+			}
+		}
+		modifier = {
+			has_war_with = FROM
+			factor = 0
+		}
+		trigger = { has_country_flag = zus_refused }
+	}
+}
+
+#Ask Himezulte to submit
+country_event = {
+	id = CKG_demands.13
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.13"}
+	title = CKG_demands.13.t
+	desc = CKG_demands.13.d
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	#Accept - surrender
+	option = {
+		name = CKG_demands.13.a
+		custom_effect_tooltip = tt_this_will_end_the_game
+		FROM = {
+			country_event = { id = CKG_demands.14 days = 1 }
+			set_country_flag = him_accepted
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				strength_ratio = { tag = FROM ratio < 0.3 }
+				factor = 5
+			}
+			modifier = {
+				has_opinion = { target = FROM value > 50 }
+				factor = 2
+			}
+			modifier = {
+				is_in_faction_with = PRL
+				factor = 0.1
+			}
+			modifier = {
+				has_war_with = FROM
+				factor = 0
+			}
+		}
+	}
+
+	#Refuse
+	option = {
+		name = CKG_demands.13.b
+		add_political_power = 50
+		FROM = {
+			country_event = { id = CKG_demands.14 }
+			set_country_flag = him_refused
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#Himezulte response
+country_event = {
+	id = CKG_demands.14
+	immediate = { log = "[GetDateText]: [Root.GetName]: event CKG_demands.14"}
+	title = CKG_demands.14.t
+	desc = {
+		text = CKG_demands.14.d.yes
+		trigger = { has_country_flag = him_accepted }
+	}
+	desc = {
+		text = CKG_demands.14.d.no
+		trigger = { has_country_flag = him_refused }
+	}
+	picture = GFX_event_aby_af_kattail
+
+	is_triggered_only = yes
+
+	option = {
+		name = CKG_demands.14.a
+		annex_country = {
+			target = HIM
+			transfer_troops = yes
+		}
+		trigger = { has_country_flag = him_accepted }
+	}
+
+	option = {
+		name = CKG_demands.14.b
+		declare_war_on = {
+			target = HIM
+			type = annex_everything
+		}
+		trigger = { has_country_flag = him_refused }
 	}
 }

@@ -129,7 +129,7 @@ news_event = {
 	title = ROQ_event.4.t
 	desc = ROQ_event.4.d
 	picture = GFX_news_event_defeat
-
+	major = yes
 	is_triggered_only = yes
 
 	option = {
@@ -145,5 +145,109 @@ news_event = {
 	option = {
 		name = ROQ_event.4.c
 		trigger = { OR = { has_government = neutrality has_government = fascism has_government = gestalt } }
+	}
+}
+
+#Revolts
+country_event = {
+	id = ROQ_event.5
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_event.5"}
+	title = ROQ_event.5.t
+	desc = ROQ_event.5.d
+	picture = GFX_report_event_dofus
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			random_list = {
+				1 = {}
+				1 = {
+					GLI = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = GLI }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = GLI } } } }
+				}
+				1 = {
+					UCE = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = UCE }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = UCE } } } }
+				}
+				1 = {
+					VEL = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = VEL }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = VEL } } } }
+				}
+				1 = {
+					REC = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = REC }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = REC } } } }
+				}
+				1 = {
+					POI = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = POI }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = POI } } } }
+				}
+				1 = {
+					OBS = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = OBS }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = OBS } } } }
+				}
+				1 = {
+					DEM = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = DEM }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = DEM } } } }
+				}
+				1 = {
+					BRU = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = BRU }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = BRU } } } }
+				}
+				1 = {
+					BOC = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = BOC }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = BOC } } } }
+				}
+				1 = {
+					PER = { save_global_event_target_as = roq_revolt }
+					modifier = { factor = 0 country_exists = PER }
+					modifier = { factor = 0 ROQ = { NOT = { any_controlled_state = { is_core_of = PER } } } }
+				}
+			}
+			ROQ = {
+				random_owned_controlled_state = {
+					limit = { is_core_of = event_target:roq_revolt }
+					transfer_state_to = event_target:roq_revolt
+				}
+				transfer_units_fraction = {
+					target = event_target:roq_revolt
+					stockpile_ratio = 0.05
+					army_ratio = 0.05
+					navy_ratio = 0.05
+					air_ratio = 0.05
+				}
+			}
+			event_target:roq_revolt = {
+				declare_war_on = {
+					target = ROQ
+					type = take_claimed_state
+				}
+			}
+		}
+	}
+
+	option = {
+		name = ROQ_event.5.a
+	}
+
+	option = {
+		name = ROQ_event.5.b
+		every_owned_state = {
+			limit = { is_core_of = event_target:roq_revolt }
+			transfer_state_to = event_target:roq_revolt
+		}
+		white_peace = event_target:roq_revolt
+		trigger = {
+			is_ai = no
+		}
 	}
 }

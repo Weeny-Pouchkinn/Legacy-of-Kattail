@@ -1,0 +1,675 @@
+#Remember to change the tooltips if the effects are changed
+#State scope. Prev is target country.
+PRC_execute_infiltration_effects_for_PREV = {
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 1
+			}
+		}
+		damage_building = {
+			type = infrastructure
+			damage = 2
+		}
+		damage_building = {
+			type = arms_factory
+			damage = 2
+		}
+	}
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 2
+			}
+		}
+		damage_building = {
+			type = infrastructure
+			damage = 4
+		}
+		damage_building = {
+			type = arms_factory
+			damage = 4
+		}
+	}
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 3
+			}
+		}
+		PREV = {
+			set_state_controller = PREV
+			division_template = {
+				name = "Communist Militia"
+				priority = 2
+				division_names_group = PRC_GAR_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+				}
+				support = {
+					
+				}
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_3
+		hidden_effect = {
+			create_unit = {
+				division = "name = \"Communist Militia\" division_template = \"Communist Militia\" start_experience_factor = 0.0" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Militia\" division_template = \"Communist Militia\" start_experience_factor = 0.0" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Militia\" division_template = \"Communist Militia\" start_experience_factor = 0.0" 
+				owner = PREV
+			}
+		}
+	}
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 4
+			}
+		}
+		#We probably don't want to destroy stuff in the state when we gain control and have units there.
+		PREV = {
+			set_state_controller = PREV
+			division_template = {
+				name = "Communist Elite"
+				priority = 2
+				division_names_group = PRC_INF_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+				}
+				support = {
+					
+				}
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_4
+		hidden_effect = {
+			create_unit = {
+				division = "name = \"Communist Elite\" division_template = \"Communist Elite\" start_experience_factor = 0.3" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Elite\" division_template = \"Communist Elite\" start_experience_factor = 0.3" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Elite\" division_template = \"Communist Elite\" start_experience_factor = 0.3" 
+				owner = PREV
+			}
+		}
+	}
+}
+
+#looks for 1 less than what is needed in the effect to match tooltip, since flag is modified after effect is run
+PRC_infiltration_succesful_show_uprising_effect = {
+	custom_effect_tooltip = PRC_infiltration_succesful
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_state_flag = PRC_infiltration_@ROOT }
+				has_state_flag = {
+					flag = PRC_infiltration_@ROOT
+					value = 0
+				}
+			}
+		}		
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_1
+	}
+	else_if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@ROOT
+				value = 1
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_1
+	}
+	else_if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@ROOT
+				value = 2
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_2
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_3
+	}
+	else_if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@ROOT
+				value > 2
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_2
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_4
+	}
+}
+
+
+#Important to put HIGHEST first
+PRC_low_popular_support_level_up = {
+	# level 5 not relevant. Cannot go above.
+	if = {
+		limit = { has_idea = PRC_low_popular_support_4 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_4
+			add_idea = PRC_low_popular_support_5
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_3 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_3
+			add_idea = PRC_low_popular_support_4
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_2 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_2
+			add_idea = PRC_low_popular_support_3
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_1 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_1
+			add_idea = PRC_low_popular_support_2
+		}		
+	}
+	if = {
+		limit = { NOT = { has_idea = PRC_low_popular_support_1 } }
+		add_ideas = PRC_low_popular_support_1
+	}
+}
+
+#Important to put LOWEST first
+PRC_low_popular_support_level_down = {
+	if = {
+		limit = { has_idea = PRC_low_popular_support_1 }
+		#Makes the tooltip clearer if player looks at the effect early in the game
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = PRC_low_popular_support_2
+				add_idea = PRC_low_popular_support_1
+			}
+		}
+		hidden_effect = { remove_ideas = PRC_low_popular_support_1 }
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_2 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_2
+			add_idea = PRC_low_popular_support_1
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_3 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_3
+			add_idea = PRC_low_popular_support_2
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_4 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_4
+			add_idea = PRC_low_popular_support_3
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_5 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_5
+			add_idea = PRC_low_popular_support_4
+		}
+	}
+}
+PRC_transfer_negative_spirits = {
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_the_long_march_1
+			}
+		}
+		add_ideas = PRC_the_long_march_1
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_the_long_march_2
+			}
+		}
+		add_ideas = PRC_the_long_march_2
+	}
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_5
+			}
+		}
+		add_ideas = PRC_low_popular_support_5
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_4
+			}
+		}
+		add_ideas = PRC_low_popular_support_4
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_3
+			}
+		}
+		add_ideas = PRC_low_popular_support_3
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_2
+			}
+		}
+		add_ideas = PRC_low_popular_support_2
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_1
+			}
+		}
+		add_ideas = PRC_low_popular_support_1
+	}
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_power_struggles
+			}
+		}
+		add_ideas = PRC_power_struggles
+	}
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_red_army_weakened
+			}
+		}
+		add_ideas = PRC_red_army_weakened
+	}
+}
+
+
+PRC_check_if_red_army_or_pla = {
+	if = { ## For localisation reasons, if hasn't completed it display "Modify Red Army" when hover over, if has then display "Modify PLA"
+			limit = {
+				has_completed_focus = PRC_peoples_liberation_army_sea
+			}
+			custom_effect_tooltip = PRC_pla_ground_force_modify_tt
+		}
+		else = {
+			custom_effect_tooltip = PRC_the_chinese_red_army_modify_tt 
+	}
+}
+
+ ## ###  ##  
+#   #   #  # 
+ #  ##  #### 
+  # #   #  # 
+##  ### #  # 
+
+PRC_modify_industrial_modifier = {
+	if = {
+		limit = {
+			has_dynamic_modifier = { modifier = PRC_agrarian_society }
+		}
+		custom_effect_tooltip = PRC_agrarian_society_modifiy_tt
+	}
+	else_if = {
+		limit = {
+			has_dynamic_modifier = { modifier = PRC_agrarian_reform }
+		}
+		custom_effect_tooltip = PRC_agrarian_reform_modify_tt
+	}
+	else = {
+		custom_effect_tooltip = PRC_make_agrarian_to_urban_tt
+	}
+}
+
+PRC_increase_mao_BOP_small = {
+	if = {
+		limit = {
+			has_power_balance = {
+				id = PRC_communist_power_struggle
+			}
+		}
+		add_power_balance_value = {
+			id = PRC_communist_power_struggle
+			value = -0.05
+		}
+	}
+}
+
+PRC_increase_bolsheviks_BOP_small = {
+	if = {
+		limit = {
+			has_power_balance = {
+				id = PRC_communist_power_struggle
+			}
+		}
+		add_power_balance_value = {
+			id = PRC_communist_power_struggle
+			value = 0.05
+		}
+	}
+}
+
+PRC_add_mediating_general_secretary_idea = {
+	if = {
+		limit = {
+			power_balance_value = {
+				id = PRC_communist_power_struggle
+				value > -0.25
+			}
+			power_balance_value = {
+				id = PRC_communist_power_struggle
+				value < 0.25
+			}
+		}
+		add_ideas = PRC_mediating_general_secretary_idea
+	}
+	else_if = {
+		limit = {
+			power_balance_value = {
+				id = PRC_communist_power_struggle
+				value < -0.24
+			}
+		}
+		add_ideas = PRC_mediating_general_secretary_idea_drifting_right
+	}
+	else_if = {
+		limit = {
+			power_balance_value = {
+				id = PRC_communist_power_struggle
+				value > 0.24
+			}
+		}
+		add_ideas = PRC_mediating_general_secretary_idea_drifting_left
+	}
+}
+
+PRC_remove_mediating_general_secretary_idea = {
+	custom_effect_tooltip = PRC_mediating_secretary_remove_fake_idea_tt
+	hidden_effect = {
+		if = {
+			limit = {
+				power_balance_value = {
+					id = PRC_communist_power_struggle
+					value > -0.25
+				}
+				power_balance_value = {
+					id = PRC_communist_power_struggle
+					value < 0.25
+				}
+			}
+			remove_ideas = PRC_mediating_general_secretary_idea
+		}
+		else_if = {
+			limit = {
+				power_balance_value = {
+					id = PRC_communist_power_struggle
+					value > 0.24
+				}
+			}
+			remove_ideas = PRC_mediating_general_secretary_idea_drifting_left
+		}
+		else_if = {
+			limit = {
+				power_balance_value = {
+					id = PRC_communist_power_struggle
+					value < -0.24
+				}
+			}
+			remove_ideas = PRC_mediating_general_secretary_idea_drifting_right
+		}
+	}
+}
+
+PRC_this_might_anger_china = {
+	if = {
+		limit = {
+			event_target:WTT_current_china_leader = {
+				NOT = {
+					tag = ROOT
+				}
+			}
+		}
+		custom_effect_tooltip = PRC_this_might_anger_current_china_leader_tt
+	}
+}
+
+PRC_current_china_leader_gets_small_antagonize_strategy = {
+	hidden_effect = {
+		if = {
+			limit = {
+				event_target:WTT_current_china_leader = {
+					NOT = {
+						tag = ROOT
+						is_in_faction_with = ROOT
+					}
+				}
+			}
+			event_target:WTT_current_china_leader = {
+				add_ai_strategy = {
+					type = antagonize
+					id = ROOT
+					value = 10
+				}
+				add_ai_strategy = {
+					type = contain
+					id = ROOT
+					value = 10
+				}
+			}
+		}
+	}
+}
+
+PRC_SOV_lend_lease_strategy = {
+	if = {
+		limit = {
+			SOV = {
+				is_ai = yes
+			}
+		}
+		custom_effect_tooltip = PRC_SOV_more_willing_to_send_lend_lease_tt
+		hidden_effect = {
+			SOV = {
+				add_ai_strategy = {
+					type = send_lend_lease_desire
+					id = ROOT
+					value = 100
+				}
+			}
+		}
+	}
+}
+
+PRC_USA_lend_lease_strategy = {
+	if = {
+		limit = {
+			USA = {
+				is_ai = yes
+			}
+		}
+		custom_effect_tooltip = PRC_USA_more_willing_to_send_lend_lease_tt
+		hidden_effect = {
+			USA = {
+				add_ai_strategy = {
+					type = send_lend_lease_desire
+					id = ROOT
+					value = 100
+				}
+			}
+		}
+	}
+}
+
+PRC_add_the_internal_enemy_idea = {
+	add_ideas = PRC_the_internal_enemy_idea #Fake idea with only tooltip
+	hidden_effect = { #Actual ideas with actual tooltips
+		add_ideas = PRC_the_internal_enemy_CHI
+		add_ideas = PRC_the_internal_enemy_GXC
+		add_ideas = PRC_the_internal_enemy_YUN
+		add_ideas = PRC_the_internal_enemy_SHX
+		add_ideas = PRC_the_internal_enemy_XSM
+		add_ideas = PRC_the_internal_enemy_SIK
+		add_ideas = PRC_the_internal_enemy_GDC
+		add_ideas = PRC_the_internal_enemy_SND
+		add_ideas = PRC_the_internal_enemy_SIC
+		add_ideas = PRC_the_internal_enemy_NXM
+		add_ideas = PRC_the_internal_enemy_GSM
+		add_ideas = PRC_the_internal_enemy_XIC
+		add_ideas = PRC_the_internal_enemy_KHM
+		add_ideas = PRC_the_internal_enemy_KUM
+		add_ideas = PRC_the_internal_enemy_RNG
+		add_ideas = PRC_the_internal_enemy_HBC
+	}
+}
+
+PRC_add_the_internal_enemy_idea_upgrade = {
+	custom_effect_tooltip = PRC_add_the_internal_enemy_idea_upgrade_tt
+	hidden_effect = { #Actual ideas with actual tooltips
+		swap_ideas = { #Fake idea with only tooltip
+			remove_idea = PRC_the_internal_enemy_idea
+			add_idea = PRC_the_internal_enemy_upgraded_idea
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_CHI
+			add_idea = PRC_the_internal_enemy_CHI_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_GXC
+			add_idea = PRC_the_internal_enemy_GXC_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_YUN
+			add_idea = PRC_the_internal_enemy_YUN_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_SHX
+			add_idea = PRC_the_internal_enemy_SHX_upgraded
+		}
+		
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_XSM
+			add_idea = PRC_the_internal_enemy_XSM_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_SIK
+			add_idea = PRC_the_internal_enemy_SIK_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_GDC
+			add_idea = PRC_the_internal_enemy_GDC_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_SND
+			add_idea = PRC_the_internal_enemy_SND_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_SIC
+			add_idea = PRC_the_internal_enemy_SIC_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_NXM
+			add_idea =PRC_the_internal_enemy_NXM_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_GSM
+			add_idea = PRC_the_internal_enemy_GSM_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_XIC
+			add_idea = PRC_the_internal_enemy_XIC_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_KHM
+			add_idea = PRC_the_internal_enemy_KHM_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_KUM
+			add_idea = PRC_the_internal_enemy_KUM_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_RNG
+			add_idea = PRC_the_internal_enemy_RNG_upgraded
+		}
+		swap_ideas = {
+			remove_idea = PRC_the_internal_enemy_HBC
+			add_idea = PRC_the_internal_enemy_HBC_upgraded
+		}
+	}
+}
+
+PRC_increase_asian_democratic_union_modfier_strength = {
+	add_to_variable = { #always add a faction member
+		PRC_asian_democratic_union_num_of_members = 1
+	}
+	if = {
+		limit = {
+			check_variable = { #only add bonuses if you haven't reached the maximum amout yet
+				var = PRC_asian_democratic_union_num_of_members
+				value = 10
+				compare = less_than
+			}	
+		}
+		
+		add_to_variable = { PRC_asian_democratic_union_modifier_research_speed_factor = 0.01 }
+
+		subtract_from_variable = { PRC_asian_democratic_union_modifier_consumer_goods_factor = 0.02 }
+	}
+}
+
+PRC_decrease_asian_democratic_union_modfier_strength = {
+	subtract_from_variable = { #always remove faction members
+		PRC_asian_democratic_union_num_of_members = 1
+	}
+	if = {
+		limit = {
+			check_variable = { #Gotta have at least one ally
+				var = PRC_asian_democratic_union_num_of_members
+				value = 1
+				compare = greater_than
+			}	
+		}
+		subtract_from_variable = { PRC_asian_democratic_union_modifier_research_speed_factor = 0.01 }
+		add_to_variable = { PRC_asian_democratic_union_modifier_consumer_goods_factor = 0.02 }
+	}
+}

@@ -231,7 +231,7 @@ country_event = {
 	option = {
 		name = TAK_event.12.a
 		set_country_flag = TAK_charles_path
-		#load_focus_tree = TAK_CHARLES_TREE
+		load_focus_tree = TAK_CHARLES_TREE
 	}
 }
 
@@ -521,6 +521,63 @@ country_event = {
 
 	option = { #Oh no!
 		name = TAK_event.1005.a
+		if = {
+			limit = {
+				check_variable = { TAK.TAK_roq_states_supported > 0 }
+			}
+			every_possible_country = {
+				limit = {
+					NOT = { country_exists = THIS }
+					has_country_flag = TAK_supported_independence
+				}
+				division_template = {
+					name = "Standard Infantry"
+					is_locked = no
+					regiments = {
+						motorized = { x = 0 y = 0 }
+						motorized = { x = 0 y = 1 }
+						motorized = { x = 0 y = 2 }
+						motorized = { x = 1 y = 0 }
+						motorized = { x = 1 y = 1 }
+						motorized = { x = 1 y = 2 }
+					}
+				}
+				save_global_event_target_as = TAK_supported_independence_country
+				ROQ = {
+					every_controlled_state = {
+						limit = {
+							is_core_of = event_target:TAK_supported_independence_country
+						}
+						if = {
+							limit = {
+								check_variable = {
+									TAK_infiltration_level > 3
+								}
+							}
+							transfer_state_to = event_target:TAK_supported_independence_country
+							create_unit = {
+								division = "division_template = \"Standard Infantry\" start_experience_factor = 0.5 start_equipment_factor = 1"
+								count = 4
+								owner = event_target:TAK_supported_independence_country
+							}
+							create_unit = {
+								division = "division_template = \"Tableaux Infiltrés\" start_experience_factor = 0.5 start_equipment_factor = 1.0"
+								count = 2
+								owner = TAK
+								allow_spawning_on_enemy_provs = yes
+							}
+						}
+						add_claim_by = event_target:TAK_supported_independence_country
+					}
+				}
+				give_military_access = TAK
+				TAK = { give_military_access = PREV }
+				declare_war_on = {
+					target = ROQ
+					type = take_claimed_state
+				}
+			}
+		}
 		every_controlled_state = {
 			limit = { check_variable = { TAK_infiltration_level > 0 } }
 			for_loop_effect = {
@@ -535,4 +592,66 @@ country_event = {
 			set_variable = { TAK_infiltration_level = 0 }
 		}
 	}
+}
+
+### FOCUS FLAVOR EVENTS ###
+
+# Hunt the Mockingbird
+country_event = {
+id = TAK_event.2000
+immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.2000"}
+title = TAK_event.2000.t
+desc = TAK_event.2000.d
+picture = GFX_report_event_generic_diplomacy
+
+is_triggered_only = yes
+
+option = {
+name = TAK_event.2000.a
+}
+}
+
+# Scrap Dofus
+country_event = {
+id = TAK_event.2001
+immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.2001"}
+title = TAK_event.2001.t
+desc = TAK_event.2001.d
+picture = GFX_report_event_generic_diplomacy
+
+is_triggered_only = yes
+
+option = {
+name = TAK_event.2001.a
+}
+}
+
+# Burn Down Aurelia
+country_event = {
+id = TAK_event.2002
+immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.2002"}
+title = TAK_event.2002.t
+desc = TAK_event.2002.d
+picture = GFX_report_event_generic_diplomacy
+
+is_triggered_only = yes
+
+option = {
+name = TAK_event.2002.a
+}
+}
+
+# Redecorate the Great Dam
+country_event = {
+id = TAK_event.2003
+immediate = { log = "[GetDateText]: [Root.GetName]: event TAK_event.2003"}
+title = TAK_event.2003.t
+desc = TAK_event.2003.d
+picture = GFX_report_event_generic_diplomacy
+
+is_triggered_only = yes
+
+option = {
+name = TAK_event.2003.a
+}
 }

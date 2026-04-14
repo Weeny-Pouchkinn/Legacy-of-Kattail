@@ -53,6 +53,60 @@ is_non_playable_country = {
 	}
 }
 
+#roqualian nation
+is_roqualian_state = {
+	OR = {
+		tag = ROQ
+		tag = PER
+		tag = LMB
+		tag = RQA
+		tag = DEM
+		tag = REC
+		tag = OBS
+		tag = BOC
+		tag = GLI
+		tag = BRU
+		tag = UCE
+		tag = VEL
+		tag = POI
+		tag = TAK
+	}
+}
+
+#"substates" of roqualia including those present at game start
+is_roqualian_splinter = {
+	OR = {
+		tag = PER
+		tag = LMB
+		tag = RQA
+		tag = DEM
+		tag = REC
+		tag = OBS
+		tag = BOC
+		tag = GLI
+		tag = BRU
+		tag = UCE
+		tag = VEL
+		tag = POI
+		tag = TAK
+	}
+}
+
+#roqualian substates that dont exist at game start
+is_roqualian_releasable = {
+	OR = {
+		tag = DEM
+		tag = REC
+		tag = OBS
+		tag = BOC
+		tag = GLI
+		tag = BRU
+		tag = UCE
+		tag = VEL
+		tag = POI
+	}
+}
+
 is_herzlands_warlord = { #The main parties of Herzlands unification
 	OR = {
 		tag = PRL
@@ -110,6 +164,22 @@ is_elwin_warlord = { #Warlords that break out from the Elwin region
 	}
 }
 
+is_flusiobalkan = { #Flusiobalkan nations (candidates for Kusnurk's democratic union)
+	OR = {
+		tag = KUS
+		tag = FSR
+		tag = DOM
+		tag = NEK
+		tag = VIX
+		tag = MCF
+		tag = TEN
+		tag = KHA
+		tag = SLR
+		tag = IZW
+		tag = FST
+	}
+}
+
 is_herzlands_neighbor = { #The Herzlanders' unfortunate neighbors
 	OR = {
 		tag = NMI
@@ -141,5 +211,13 @@ is_offmap_state = {
 		state = 966
 		state = 967
 		is_on_continent = offmap
+	}
+}
+
+character_is_not_available = {
+	OR = {
+		has_character_flag = katzen_high_command_member_not_dealt_with
+		has_character_flag = leader_is_retired
+		has_character_flag = leader_is_jailed
 	}
 }

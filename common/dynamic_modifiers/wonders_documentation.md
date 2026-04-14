@@ -147,6 +147,7 @@ Once you've done this, you're sorted! your Wonder should be ready to go!.
 | 29 | Daily Support for Unaligned        | neutrality_drift                          |         2         |          Positive          |
 | 30 | Daily Fascism Support              | fascism_drift                             |         2         |          Positive          |
 | 31 | Resistance Activity Chance         | resistance_activity                       |         1         |          Negative          |
+| 32 | Military Factory Donations         | military_factory_donations                |         1         |          Positive          |
 
 ### Adding New Modifiers
 Adding new modifiers is a somewhat more complicated process but very modular. It is broken down into 3 steps.
@@ -261,6 +262,7 @@ And with that, its all done! your new modifier has been added
 |    12     | Kiffrance Plants             |  644  |            MEC            |
 |    13     | Grüyettburg Pharmaceutics    |  131  |            LIO            |
 |    14     | Unterflusionian Monument     |  602  |            NEU            |
+|    15     | Great City of Charles        |  349  |            TAK            |
 
 ## The Wonder Output Modifier, Adding New/Updating Modifiers Midgame and Adding New Wonders Midgame
 To begin with, any time a wonders modifier is updated by script ingame, its recommended you run the "apply_wonder_effects" scripted effect on the scope of whoever controls the state with the wonder in it. This would look like

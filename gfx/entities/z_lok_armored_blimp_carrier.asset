@@ -1,0 +1,82 @@
+entity = {
+    name = "empty_particle_entity"
+    # No mesh, no states, just empty
+}
+
+entity = {
+	name = "blimp_carrier_entity"
+
+	state = {
+		name = "support_attack" animation = "idle" 
+	}
+
+	state = {
+		name = "attack" animation = "idle" 
+	}
+
+	state = {
+		name = "defend" animation = "idle" 
+	}
+
+	state = { name = "move"	animation = "idle"   animation_blend_time = 0.3 }
+	
+	state = { name = "idle" animation = "idle"
+		#event = { trigger_once = yes sound = { soundeffect = "airplane_idle" } }
+		
+	}
+
+	locator = { name = "ktz_carrier" position = { 0 8 -1 } rotation = { 0 0 0 } }
+	locator = { name = "ktz_blimp" position = { 0 4 -1 } rotation = { 0 0 0 } }
+
+	default_state = "idle"
+	state = { name = "idle" }
+
+	attach = { name = "ktz_carrier" ktz_carrier = "ktz_carrier_entity" }
+	attach = { name = "ktz_blimp" ktz_blimp = "ktz_blimp_entity" }
+
+	scale = 0.5
+}
+
+entity = {
+	name = "ktz_blimp_entity"
+	pdxmesh = "katzen_airship_mesh"
+
+	state = { name = "support_attack" animation = "idle" animation_speed = 0.01 }
+
+	state = { name = "attack" animation = "idle" animation_speed = 0.01 }
+
+	state = { name = "defend" animation = "idle" animation_speed = 0.01 }
+
+	state = { name = "move"	animation = "idle" animation_speed = 0.01 }
+	
+	state = { name = "idle" animation = "idle" animation_speed = 0.01 }
+
+	default_state = "idle"
+
+	scale = 1
+}
+
+
+entity = { 
+    name = "ktz_carrier_entity"
+    pdxmesh = "flying_carrier_mesh"
+
+	state = { name = "support_attack" animation = "idle" animation_speed = 0.01 }
+
+	state = { name = "attack" animation = "idle" animation_speed = 0.01 }
+
+	state = { name = "defend" animation = "idle" animation_speed = 0.01 }
+
+	state = { name = "move"	animation = "idle" animation_speed = 0.01 }
+	
+	state = { name = "idle" animation = "idle" animation_speed = 0.01 }
+
+	default_state = "idle"
+    
+    scale = 3
+}
+
+animation = {
+	name = "flying_carrier_idle_animation"
+	file = "flying_carrier_idle.anim"
+}

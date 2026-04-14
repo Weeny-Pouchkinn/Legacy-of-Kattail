@@ -272,6 +272,9 @@ country_event = {
 
 	option = {
 		name = AUR_event.7.a
+		hidden_effect = {
+			set_country_flag = aur_signed_uneasy_deal
+		}
 		diplomatic_relation = { country = event_target:regency_partner relation = non_aggression_pact }
 		trigger = { event_target:regency_partner = { has_country_flag = signed_regency_pakt } }
 	}
@@ -762,20 +765,22 @@ country_event = {
 
 	option = {
 		name = AUR_event.28.a
-		custom_effect_tooltip = AUR_event.28.a.tooltip
+		add_stability = 0.05
+		add_war_support = -0.20
 		hidden_effect = {
-			add_to_variable = { AUR_the_kaiser_must_return_stability_factor = 0.05 }
-			add_to_variable = { AUR_the_kaiser_must_return_war_support_factor = -0.05 }
+			add_to_variable = { AUR_the_kaiser_must_return_compliance_growth = 0.10 }
 		}
+		custom_effect_tooltip = AUR_event.28.a.tooltip
 	}
 
 	option = {
 		name = AUR_event.28.b
-		custom_effect_tooltip = AUR_event.28.b.tooltip
+		add_stability = -0.05
+		add_war_support = 0.20
 		hidden_effect = {
-			add_to_variable = { AUR_the_kaiser_must_return_stability_factor = -0.05 }
-			add_to_variable = { AUR_the_kaiser_must_return_war_support_factor = 0.05 }
+			add_to_variable = { AUR_the_kaiser_must_return_army_attack_factor = 0.10 }
 		}
+		custom_effect_tooltip = AUR_event.28.b.tooltip
 	}
 }
 
@@ -788,6 +793,12 @@ country_event = {
 	picture = GFX_report_event_herald
 
 	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = AUR_event.291 days = 5 }
+		}
+	}
 	
 	option = {
 		name = AUR_event.29.a
@@ -796,6 +807,33 @@ country_event = {
 	option = {
 		name = AUR_event.29.b
 
+	}
+}
+
+#regent goes mad
+country_event = {
+	id = AUR_event.291
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.291"}
+	title = AUR_event.291.t
+	desc = AUR_event.291.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+	
+	option = {
+		name = AUR_event.291.a
+		custom_effect_tooltip = AUR_event.291.a.tt
+		hidden_effect = {
+			set_country_flag = AUR_killed_roqualians
+		}
+	}
+
+	option = {
+		name = AUR_event.291.b
+		custom_effect_tooltip = AUR_event.291.b.tt
+		hidden_effect = {
+			set_country_flag = AUR_did_not_kill_roqualians
+		}
 	}
 }
 
@@ -920,4 +958,684 @@ country_event = {
 		set_temp_variable = { herald_sanity_change = -5 }
 		AUR_change_herald_sanity = yes
 	}
+}
+
+#Kaiser Returns 1
+country_event = {
+	id = AUR_event.33
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.33"}
+	title = AUR_event.33.t
+	desc = AUR_event.33.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+	
+
+	option = {
+		name = AUR_event.33.a
+		country_event = { id = AUR_event.34 }
+	}
+}
+
+#Kaiser Returns 1
+country_event = {
+	id = AUR_event.34
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.34"}
+	title = AUR_event.34.t
+	desc = AUR_event.34.d
+	picture = GFX_report_event_kattail
+
+	is_triggered_only = yes
+	
+
+	option = {
+		name = AUR_event.34.a
+	}
+
+	option = {
+		name = AUR_event.34.b
+	}
+}
+
+#Katzregions
+country_event = {
+	id = AUR_event.35
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.35"}
+	hidden = yes
+
+	is_triggered_only = yes
+	
+	immediate = {
+		AUR_set_up_katzregions = yes
+	}
+}
+
+#NMI Pakt
+country_event = {
+	id = AUR_event.36
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.36"}
+	title = AUR_event.36.t
+	desc = AUR_event.36.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.6.a
+		add_stability = -0.05
+		custom_effect_tooltip = AUR_event.36.a.tooltip
+		diplomatic_relation = { country = AUR relation = non_aggression_pact }
+		hidden_effect = {
+			set_country_flag = nmi_signed_regency_pakt
+			AUR = { country_event = { id = AUR_event.37 } }
+		}
+		591 = { add_claim_by = ROOT }
+		592 = { add_claim_by = ROOT }
+		206 = { add_claim_by = ROOT }
+		197 = { add_claim_by = ROOT }
+		595 = { add_claim_by = ROOT }
+	}
+
+	option = {
+		name = AUR_event.6.b
+		add_political_power = 50 
+		add_stability = 0.05
+		hidden_effect = { AUR = { country_event = { id = LOK_proposal.2 } } }
+		ai_chance = { base = 0 }
+	}
+}
+
+#pakt accepted
+country_event = {
+	id = AUR_event.37
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.37"}
+	title = AUR_event.37.t
+	desc = AUR_event.37.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.37.a
+		hidden_effect = {
+			set_country_flag = aur_signed_uneasy_deal
+		}
+		diplomatic_relation = { country = NMI relation = non_aggression_pact }
+	}
+}
+
+#Regent strikes south (NMI)
+country_event = {
+	id = AUR_event.38
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.38"}
+	title = AUR_event.38.t
+	desc = AUR_event.38.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.8.a
+		declare_war_on = { target = HIM type = take_claimed_state }
+		declare_war_on = { target = CAT type = take_claimed_state }
+		declare_war_on = { target = MEO type = take_claimed_state }
+	}
+}
+
+#Pawn Expands
+country_event = {
+	id = AUR_event.39
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.39"}
+	title = AUR_event.39.t
+	desc = AUR_event.39.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.39.a
+	}
+}
+
+#Sanity is 0
+country_event = {
+	id = AUR_event.40
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.40"}
+	title = AUR_event.40.t
+	desc = AUR_event.40.d
+	picture = GFX_report_event_herald
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.40.a
+		add_ideas = AUR_utter_failstate
+		load_focus_tree = EMPTY_TREE
+		every_country = {
+			limit = { is_puppet_of = AUR }
+			AUR = { set_autonomy = { target = PREV autonomy_state = autonomy_free } }
+		}
+		every_country = {
+			limit = { is_in_faction_with = AUR }
+			leave_faction = yes
+		}
+		every_country = {
+			limit = { is_herzlands_warlord = yes }
+			AUR = {
+				declare_war_on = {
+					target = PREV
+					type = annex_everything
+				}
+			}
+		}
+		start_civil_war = { ideology = neutrality }
+	}
+}
+
+#Out of Time
+country_event = {
+	id = AUR_event.41
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.41"}
+	title = AUR_event.41.t
+	desc = AUR_event.41.d
+	picture = GFX_report_event_herald
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.41.a
+		add_ideas = AUR_utter_failstate
+		load_focus_tree = EMPTY_TREE
+		kill_country_leader = yes
+		every_country = {
+			limit = { is_puppet_of = AUR }
+			AUR = { set_autonomy = { target = PREV autonomy_state = autonomy_free } }
+		}
+		every_country = {
+			limit = { is_in_faction_with = AUR }
+			leave_faction = yes
+		}
+		start_civil_war = {
+			ideology = fascism
+			size = 0.7
+		}
+		every_neighbor_country = {
+			limit = { NOT = { has_war_with = AUR } OR = { is_herzlands_warlord = yes is_herzlands_neighbor = yes } }
+			country_event = { id = AUR_event.42 days = 5 }
+		}
+	}
+}
+
+#Kill the Herald?
+country_event = {
+	id = AUR_event.42
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.42"}
+	title = AUR_event.42.t
+	desc = AUR_event.42.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.42.a
+		declare_war_on = {
+			target = AUR
+			type = annex_everything
+		}
+	}
+
+	option = {
+		name = AUR_event.42.b
+		add_political_power = 25
+		trigger = {
+			is_ai = no
+		}
+	}
+}
+
+### His Armee Events ###
+
+# His Armee - narrative event
+country_event = {
+	id = AUR_event.50
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.50" }
+	title = AUR_event.50.t
+	desc = AUR_event.50.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.50.a
+	}
+}
+
+# KPK receives the Amends proposal
+country_event = {
+	id = AUR_event.51
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.51" }
+	title = AUR_event.51.t
+	desc = AUR_event.51.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Accept
+	option = {
+		name = AUR_event.51.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				is_in_faction_with = PRL
+			}
+			modifier = {
+				factor = 2
+				has_opinion = {
+					target = AUR
+					value > 50
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_opinion = {
+					target = AUR
+					value < 0
+				}
+			}
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.05
+		}
+		capital_scope = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		AUR = {
+			set_country_flag = AUR_kpk_agreed_autohubs
+			country_event = { id = AUR_event.52 days = 3 }
+		}
+	}
+
+	# Decline
+	option = {
+		name = AUR_event.51.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 100
+				is_in_faction_with = PRL
+			}
+		}
+		AUR = {
+			country_event = { id = AUR_event.53 days = 3 }
+		}
+	}
+}
+
+# KPK agreed to Autohubs cooperation
+country_event = {
+	id = AUR_event.52
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.52" }
+	title = AUR_event.52.t
+	desc = AUR_event.52.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.52.a
+		add_political_power = 15
+	}
+}
+
+# KPK refused Autohubs cooperation
+country_event = {
+	id = AUR_event.53
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.53" }
+	title = AUR_event.53.t
+	desc = AUR_event.53.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.53.a
+	}
+}
+
+### Contact Himezulte Fascists Events ###
+
+# HIM receives request from AUR-aligned fascists
+country_event = {
+	id = AUR_event.60
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.60" }
+	title = AUR_event.60.t
+	desc = AUR_event.60.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	# Let the fascists go - they join AUR
+	option = {
+		name = AUR_event.60.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0.1
+				has_war_with = AUR
+			}
+			modifier = {
+				factor = 1.5
+				has_opinion = {
+					target = AUR
+					value > 25
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_opinion = {
+					target = AUR
+					value < -25
+				}
+			}
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = -0.05
+		}
+		add_stability = 0.03
+		AUR = {
+			country_event = { id = AUR_event.61 days = 3 }
+		}
+	}
+
+	# Appease the Regency instead - deny but offer tech sharing
+	option = {
+		name = AUR_event.60.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 5
+				has_war_with = AUR
+			}
+			modifier = {
+				factor = 2
+				has_opinion = {
+					target = AUR
+					value < -25
+				}
+			}
+		}
+		add_political_power = 25
+		AUR = {
+			country_event = { id = AUR_event.62 days = 3 }
+		}
+	}
+
+	# Outright refuse - AUR gets nothing
+	option = {
+		name = AUR_event.60.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				is_in_faction_with = PRL
+			}
+			modifier = {
+				factor = 1000
+				has_war_with = AUR
+			}
+		}
+		add_political_power = 50
+		add_stability = 0.05
+		AUR = {
+			country_event = { id = AUR_event.63 days = 3 }
+		}
+	}
+}
+
+# AUR receives fascist volunteers from Himezulte
+country_event = {
+	id = AUR_event.61
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.61" }
+	title = AUR_event.61.t
+	desc = AUR_event.61.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.61.a
+		add_equipment_to_stockpile = {
+			type = medium_plane_fighter_airframe
+			amount = 100
+			producer = HIM
+		}
+		air_experience = 25
+		add_manpower = 5000
+	}
+}
+
+# HIM appeases AUR with air tech sharing instead
+country_event = {
+	id = AUR_event.62
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.62" }
+	title = AUR_event.62.t
+	desc = AUR_event.62.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.62.a
+		add_tech_bonus = {
+			name = AUR_himezulte_air_tech
+			bonus = 0.5
+			uses = 2
+			category = air_equipment
+		}
+		air_experience = 75
+	}
+}
+
+# HIM outright refuses - AUR gets nothing
+country_event = {
+	id = AUR_event.63
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.63" }
+	title = AUR_event.63.t
+	desc = AUR_event.63.d
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.63.a
+	}
+}
+### FOCUS FLAVOR EVENTS ###
+
+# Declaration of Intent
+country_event = {
+id = AUR_event.70
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.70" }
+title = AUR_event.70.t
+desc = AUR_event.70.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.70.a
+}
+}
+
+# State of Arms
+country_event = {
+id = AUR_event.71
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.71" }
+title = AUR_event.71.t
+desc = AUR_event.71.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.71.a
+}
+}
+
+# Achieve Regentbots
+country_event = {
+id = AUR_event.72
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.72" }
+title = AUR_event.72.t
+desc = AUR_event.72.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.72.a
+}
+}
+
+# Prototype Imperialrise
+country_event = {
+id = AUR_event.73
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.73" }
+title = AUR_event.73.t
+desc = AUR_event.73.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.73.a
+}
+}
+
+# Fabricate Weltaufseher
+country_event = {
+id = AUR_event.74
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.74" }
+title = AUR_event.74.t
+desc = AUR_event.74.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.74.a
+}
+}
+
+# Recreate Supervessels
+country_event = {
+id = AUR_event.75
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.75" }
+title = AUR_event.75.t
+desc = AUR_event.75.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.75.a
+}
+}
+
+# Continue Mondkanone
+country_event = {
+id = AUR_event.76
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.76" }
+title = AUR_event.76.t
+desc = AUR_event.76.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.76.a
+}
+}
+
+# Restructure the Imperium
+country_event = {
+id = AUR_event.77
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.77" }
+title = AUR_event.77.t
+desc = AUR_event.77.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.77.a
+}
+}
+
+# Raze Meownich
+country_event = {
+id = AUR_event.78
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.78" }
+title = AUR_event.78.t
+desc = AUR_event.78.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.78.a
+}
+}
+
+# Unto the Breach
+country_event = {
+id = AUR_event.79
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.79" }
+title = AUR_event.79.t
+desc = AUR_event.79.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+option = {
+name = AUR_event.79.a
+}
+}
+
+# Encourage War Crimes - choice between lesser and major encouragement
+country_event = {
+id = AUR_event.80
+immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.80" }
+title = AUR_event.80.t
+desc = AUR_event.80.d
+picture = GFX_report_event_herald
+
+is_triggered_only = yes
+
+# Lesser encouragement - keep current effects as-is
+option = {
+name = AUR_event.80.a
+custom_effect_tooltip = AUR_event.80.a.tt
+}
+
+# Major encouragement - double down on war crimes
+option = {
+name = AUR_event.80.b
+custom_effect_tooltip = AUR_event.80.b.tt
+hidden_effect = {
+add_to_variable = { AUR_neu_katzenarmee_army_attack_factor = 0.05 }
+add_to_variable = { AUR_neu_katzenarmee_experience_loss_factor = 0.10 }
+}
+add_stability = -0.05
+}
 }

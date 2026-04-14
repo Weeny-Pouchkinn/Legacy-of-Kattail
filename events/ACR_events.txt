@@ -1,0 +1,290 @@
+add_namespace = ACR_event
+
+#ACR starts to send influence
+country_event = {
+	id = ACR_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_event.1"}
+	title = ACR_event.1.t
+	desc = ACR_event.1.d
+	picture = GFX_report_event_valewria
+	is_triggered_only = yes
+
+	option = { #Embrace
+		name = ACR_event.1.a
+		add_popularity = {
+			ideology = communism
+			popularity = 0.10
+		}
+		effect_tooltip = {
+			add_ideas = ACR_influence_nation_idea
+		}
+	}
+
+	option = { #Resist
+		name = ACR_event.1.b
+		effect_tooltip = {
+			add_ideas = ACR_influence_nation_idea
+		}
+	}
+}
+
+#ACR demands puppet
+country_event = {
+	id = ACR_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_event.2"}
+	title = ACR_event.2.t
+	desc = ACR_event.2.d
+	picture = GFX_report_event_valewria
+	is_triggered_only = yes
+
+	option = { #ok
+		name = ACR_event.2.a
+		remove_ideas = ACR_influence_nation_idea
+		ACR = {
+			set_autonomy = {
+				target = ROOT
+				autonomy_state = autonomy_puppet
+			}
+		}
+		add_popularity = {
+			ideology = communism
+			popularity = 0.25
+		}
+	}
+
+	option = { #Resist
+		name = ACR_event.2.b
+		remove_ideas = ACR_influence_nation_idea
+		ACR = { country_event = { id = ACR_event.4 } }
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0.5
+				communism > 0.4
+			}
+			modifier = {
+				factor = 0.5
+				communism > 0.6
+			}
+			modifier = {
+				factor = 0.5
+				communism > 0.8
+			}
+		}
+	}
+}
+
+#Where to put Katzens?
+country_event = {
+	id = ACR_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_event.3"}
+	title = ACR_event.3.t
+	desc = ACR_event.3.d
+	picture = GFX_report_event_valewria
+	is_triggered_only = yes
+
+	option = { #small katsteyt and put only the worst ones in
+		name = ACR_event.3.a
+		set_country_flag = acr_small_katsteyt
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = { #big katsteyt but put ALL of them in
+		name = ACR_event.3.b
+		set_country_flag = acr_big_katsteyt
+		ai_chance = {
+			base = 3
+		}
+	}
+
+	option = { #genocide.
+		name = ACR_event.3.c
+		set_country_flag = acr_kill_katzens
+		ai_chance = {
+			base = 1
+		}
+	}
+}
+
+country_event = {
+	id = ACR_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_event.4"}
+	title = ACR_event.4.t
+	desc = ACR_event.4.d
+	picture = GFX_report_event_valewria
+	is_triggered_only = yes
+
+	option = { #To war!!
+		name = ACR_event.4.a
+		declare_war_on = {
+			target = FROM
+		}
+	}
+
+	option = { #whatever
+		name = ACR_event.4.b
+		add_stability = -0.10
+	}
+}
+
+add_namespace = ACR_news
+#KFA collapses
+news_event = {
+	id = ACR_news.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_event.1"}
+	title = ACR_news.1.t
+	desc = ACR_news.1.d
+	picture = GFX_news_event_diplomacy
+	is_triggered_only = yes
+	major = yes
+
+	option = {
+		name = "ACR_news.1.a"
+		trigger = { has_government = communism }
+	}
+
+	option = {
+		name = "ACR_news.1.b"
+		trigger = { has_government = fascism }
+	}
+
+	option = {
+		name = "ACR_news.1.c"
+		trigger = { has_government = democratic }
+	}
+
+	option = {
+		name = "ACR_news.1.e"
+		trigger = { has_government = neutrality }
+	}
+
+	option = {
+		name = "ACR_news.1.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+#Dam dismantled
+news_event = {
+	id = ACR_news.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_event.2"}
+	title = ACR_news.2.t
+	desc = ACR_news.2.d
+	picture = GFX_news_event_loris
+	is_triggered_only = yes
+	major = yes
+
+	option = {
+		name = "ACR_news.2.a"
+		trigger = { has_government = communism }
+	}
+
+	option = {
+		name = "ACR_news.2.b"
+		trigger = { has_government = fascism }
+	}
+
+	option = {
+		name = "ACR_news.2.c"
+		trigger = { has_government = democratic }
+	}
+
+	option = {
+		name = "ACR_news.2.e"
+		trigger = { has_government = neutrality }
+	}
+
+	option = {
+		name = "ACR_news.2.f"
+		trigger = { has_government = gestalt }
+	}
+}
+
+add_namespace = ACR_debug
+#Win the war for Amphibia
+country_event = {
+	id = ACR_debug.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_debug.1"}
+	title = ACR_debug.1.t
+	desc = ACR_debug.1.d
+	picture = GFX_report_event_valewria
+	is_triggered_only = yes
+
+	option = { #To war!!
+		name = ACR_event.1.a
+		KKN = { retire_all_characters = yes }
+		FOD = { #Store him in the ZZZ tag
+			KTZ_Loris = { set_nationality = ZZZ }
+		}
+		TEM = { retire_all_characters = yes }
+		ACR = { annex_country = { target = KKN } }
+		ACR = { annex_country = { target = FOD } }
+		ENO = { annex_country = { target = TEM } }
+		if = { #Give back Krokatzian lands
+			limit = {
+				WAC = {
+					NOT = { has_war_with = ACR }
+					has_government = communism
+				}
+			}
+			ACR = {
+				every_owned_state = {
+					limit = { is_claimed_by = WAC }
+					transfer_state_to = WAC
+				}
+			}
+		}
+		ENO = {
+			every_owned_state = {
+				limit = { is_claimed_by = ACR }
+				transfer_state_to = ACR
+			}
+		}
+		#Reconstruction Zone
+		1036 = {
+			add_core_of = KKN
+		}
+		93 = {
+			add_core_of = KKN
+		}
+		ACR = { #Remove faction
+			every_other_country = {
+				limit = { is_in_faction_with = ACR NOT = { is_puppet_of = ACR } }
+				leave_faction = yes
+			}
+			set_faction_name = "Socintern"
+			activate_mission = ACR_complete_reconstruction
+			every_owned_state = {
+				limit = { is_core_of = KKN }
+				transfer_state_to = KKN
+			}
+			ACR = {
+				set_autonomy = {
+					target = KKN
+					autonomy_state = autonomy_puppet
+				}
+			}
+			KKN = {
+				set_cosmetic_tag = ACR_RECONSTRUCTION_ZONE
+			}
+		}
+		news_event = { id = LOK_news.6 days = 2 } 
+	}
+}
+
+#Collapse Amphibia
+country_event = {
+	id = ACR_debug.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ACR_debug.2"}
+	title = ACR_debug.2.t
+	desc = ACR_debug.2.d
+	picture = GFX_report_event_valewria
+	is_triggered_only = yes
+
+	option = { #To war!!
+		name = ACR_event.1.a
+		ACR_dissolve_nation = yes
+	}
+}

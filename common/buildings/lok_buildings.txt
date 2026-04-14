@@ -6,15 +6,15 @@ buildings = {
 		#local_resources_oil = 1 # May use local_resources_ + any resource name
 		local_resources_supertensiles = 1 # May use local_resources_ + any resource name
 		local_resources_chromium = -3 # May use local_resources_ + any resource name
-		local_resources_fissiles = -2 # May use local_resources_ + any resource name
+		local_resources_tungsten = -2 # May use local_resources_ + any resource name
 		#refinery = yes
 		level_cap = {
-			state_max = 20
+			state_max = 3
 			shares_slots = yes
 		}
 		value = 10
 		infrastructure_construction_effect = yes
-		
+		refinery = yes
 		show_modifier = yes
 	}
 	food_silo = {
@@ -40,6 +40,7 @@ buildings = {
 			state_max = 20
 			shares_slots = yes
 		}
+		refinery = yes
 		value = 10
 		infrastructure_construction_effect = yes
 		
@@ -60,17 +61,82 @@ buildings = {
 		
 	# 	show_modifier = yes
 	# }
+	renewable_power_plant = {
+		spawn_point = nuclear_reactor_spawn
+		show_on_map = 1
+		base_cost = 5000
+		per_level_extra_cost = 2500
+		icon_frame = 35
+		value = 10
+		infrastructure_construction_effect = yes
+		local_resources_energy = 5
+		refinery = yes
+
+		level_cap = {
+			state_max = 3
+			shares_slots = yes
+		}
+	}
+
+	fossil_power_plant = {
+		spawn_point = nuclear_reactor_spawn
+		show_on_map = 1
+		base_cost = 10000
+		per_level_extra_cost = 5000
+		icon_frame = 34
+		value = 10
+		infrastructure_construction_effect = yes
+		local_resources_oil = -5
+		local_resources_energy = 10
+		refinery = yes
+
+		state_modifiers = {
+			local_building_slots_factor = 0.05
+			state_production_speed_buildings_factor = 0.05
+		}
+		show_modifier = yes
+		level_cap = {
+			state_max = 3
+			shares_slots = yes
+		}
+	}
+	nuclear_reactor = {
+		spawn_point = nuclear_reactor_spawn
+		show_on_map = 1
+		base_cost = 20000
+		per_level_extra_cost = 10000
+		icon_frame = 31
+		value = 10
+		infrastructure_construction_effect = yes
+		local_resources_fissiles = -3
+		local_resources_energy = 25
+
+		state_modifiers = {
+			local_building_slots_factor = 0.1
+			local_building_slots = 1
+			state_production_speed_buildings_factor = 0.1
+		}
+		
+		refinery = yes
+		show_modifier = yes
+		level_cap = {
+			state_max = 3
+			shares_slots = yes
+		}
+	}
 	fusion_power_plant = {
 		show_on_map = 1
-		base_cost = 100000
+		base_cost = 50000
 		per_level_extra_cost = 50000
 		icon_frame = 30
 		level_cap = {
 			state_max = 3
-			shares_slots = no
+			shares_slots = yes
 		}
 		value = 10
 		infrastructure_construction_effect = yes
+		local_resources_energy = 50
+		refinery = yes
 		state_modifiers = {
 			local_building_slots_factor = 0.25
 			local_building_slots = 2

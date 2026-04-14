@@ -1,6 +1,7 @@
 NDefines.NGame.MAP_SCALE_PIXEL_TO_KM = 8.053
 NDefines.NGame.START_DATE = "100.1.1.12"
 NDefines.NGame.END_DATE = "120.1.1.1"
+NDefines.NGame.ENERGY_RESOURCE = "energy"
 NDefines.NCountry.MIN_STABILITY = -1.0
 NDefines.NCountry.MAX_STABILITY = 1.0
 NDefines.NCountry.MIN_WAR_SUPPORT = -1.0
@@ -9,4 +10,5 @@ NDefines.NCountry.NUCLEAR_BOMB_DROP_WAR_SUPPORT_EFFECT_MAX_INFRA = 0
 NDefines.NCountry.NUCLEAR_BOMB_DROP_WAR_SUPPORT_EFFECT_MAX_VP = 1000
 NDefines.NMilitary.SLOWEST_SPEED = 2
 NDefines.NMilitary.BASE_FEMALE_DIVISIONAL_COMMANDER_CHANCE = 0.5		--Chance to receive a female divisonal commander. This is set to zero in the base game, as we do not have generic female portraits for many graphical culture groups.
-NDefines.NMilitary.NUKE_DELAY_HOURS = 0;
+NDefines.NMilitary.NUKE_DELAY_HOURS = 0
+NDefines.NProduction.RESOURCE_TO_ENERGY_COEFFICIENT = 1.0;

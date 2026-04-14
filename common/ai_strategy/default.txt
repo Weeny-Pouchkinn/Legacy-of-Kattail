@@ -23,7 +23,29 @@ build_up_nuclear_reactors = {
 	ai_strategy = {
 		type = building_target
 		id = nuclear_reactor
-		value = 50
+		value = 25
+	}
+	
+	abort_when_not_enabled  = yes
+
+	abort = { always = no } # To supress error log
+}
+
+build_up_power_plants = {
+	enable = {
+		check_variable = { resource@energy < 5 }
+	}
+
+	ai_strategy = {
+		type = building_target
+		id = fossil_power_plant
+		value = 100
+	}
+
+	ai_strategy = {
+		type = building_target
+		id = renewable_power_plant
+		value = 100
 	}
 
 	abort = { always = no } # To supress error log

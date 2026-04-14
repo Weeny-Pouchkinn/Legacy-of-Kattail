@@ -1,0 +1,105 @@
+add_namespace = DOM_event
+
+#solaria made a nuke?? false flag by DT
+country_event = {
+	id = DOM_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event DOM_event.1"}
+	title = DOM_event.1.t
+	desc = DOM_event.1.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = { #NAO!
+		name = DOM_event.1.a
+		custom_effect_tooltip = DOM_event.1.a.tt
+		SLR = {
+			country_event = { id = DOM_event.2 days = 1 }
+		}
+		ai_chance = {
+			base = 2
+		}
+	}
+
+	option = { #its a lie
+		name = DOM_event.1.b
+		ai_chance = {
+			base = 1
+		}
+	}
+}
+
+country_event = {
+	id = DOM_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event DOM_event.2"}
+	title = DOM_event.2.t
+	desc = DOM_event.2.d
+	picture = GFX_report_event_queen_rose
+
+	is_triggered_only = yes
+
+	option = { #ok...
+		name = DOM_event.2.a
+		add_stability = -0.25
+		add_political_power = -100
+		every_owned_state = {
+			set_building_level = {
+				type = nuclear_reactor
+				level = 0
+			}
+		}
+		ai_chance = {
+			base = 1
+		}
+	}
+
+	option = { #NO
+		name = DOM_event.2.b
+		add_political_power = 150
+		add_war_support = 0.10
+		add_stability = 0.10
+		MCF = {
+			declare_war_on = {
+				target = SLR
+				type = annex_everything
+			}
+		}
+		ai_chance = {
+			base = 2
+		}
+	}
+}
+
+#DT wins border war
+country_event = {
+	id = DOM_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event DOM_event.3"}
+	hidden = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		DOM = {
+			add_equipment_to_stockpile = {
+				type = ultra_heavy_armor_equipment_1
+				amount = 100
+			}
+			clr_country_flag = DOM_raiding_neighbor
+		}
+	}
+}
+
+#blank event
+country_event = {
+	id = DOM_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event DOM_event.4"}
+	hidden = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		DOM = {
+			clr_country_flag = DOM_raiding_neighbor
+		}
+	}
+}
