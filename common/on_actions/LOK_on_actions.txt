@@ -2689,6 +2689,40 @@ on_actions = {
 					}
 				}
 			}
+			# When ROQ surrenders, transfer splinter core states to surviving splinters before peace deal
+			if = {
+				limit = {
+					ROOT = { tag = ROQ }
+				}
+				# For each releasable splinter that exists and is at war with ROQ,
+				# transfer their core states from ROQ and other splinters
+				every_country = {
+					limit = {
+						is_roqualian_releasable = yes
+						exists = yes
+						has_war_with = ROQ
+					}
+					# Transfer ROQ-controlled core states to this splinter
+					ROQ = {
+						every_owned_state = {
+							limit = { is_core_of = PREV.PREV }
+							transfer_state_to = PREV.PREV
+						}
+					}
+					# Transfer core states held by other splinters that are also at war with ROQ
+					every_country = {
+						limit = {
+							is_roqualian_releasable = yes
+							exists = yes
+							NOT = { tag = PREV }
+						}
+						every_owned_state = {
+							limit = { is_core_of = PREV.PREV }
+							transfer_state_to = PREV.PREV
+						}
+					}
+				}
+			}
 		}
 	}
 
