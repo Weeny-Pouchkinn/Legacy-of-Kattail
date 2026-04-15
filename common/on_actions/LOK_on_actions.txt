@@ -1977,6 +1977,17 @@ on_actions = {
 				FROM = { apply_wonder_effects = yes }
 			}
 
+			# KTW early collapse - if 509 is seized during the Katown Struggle
+			if = {
+				limit = {
+					FROM.FROM = { state = 509 }
+					FROM = { tag = KTW has_country_flag = ktw_katown_struggle_active }
+				}
+				FROM = {
+					country_event = { id = KTW_event.6 }
+				}
+			}
+
 			#########################################
 			# News Events - City Falls
 			# ROOT = new controller, FROM = old controller, FROM.FROM = state
@@ -1995,6 +2006,7 @@ on_actions = {
 						}
 					}
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = katown_battle_cooldown }
 				}
 				set_global_flag = { flag = katown_battle_cooldown days = 60 value = 1 }
@@ -2011,6 +2023,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 509 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 				}
 
 				news_event = { id = LOK_cityfall_news.1 hours = 6 }
@@ -2021,6 +2034,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 320 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = lutecie_fallen }
 				}
 				set_global_flag = lutecie_fallen
@@ -2033,6 +2047,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 1043 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = amphisk_fallen }
 				}
 				set_global_flag = amphisk_fallen
@@ -2045,6 +2060,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 173 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = lionsburg_fallen }
 				}
 				set_global_flag = lionsburg_fallen
@@ -2061,6 +2077,7 @@ on_actions = {
 					}
 					FROM = { tag = AUR has_government = fascism }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = auralia_fallen }
 				}
 				set_global_flag = auralia_fallen
@@ -2073,6 +2090,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 110 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = meownich_fallen }
 				}
 				set_global_flag = meownich_fallen
@@ -2085,6 +2103,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 74 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = clermeowth_fallen }
 				}
 				set_global_flag = clermeowth_fallen
@@ -2097,6 +2116,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 168 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = catburg_fallen }
 				}
 				set_global_flag = catburg_fallen
@@ -2109,6 +2129,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 192 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = purrlin_fallen }
 				}
 				set_global_flag = purrlin_fallen
@@ -2121,6 +2142,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 409 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = neu_pawsterdam_fallen }
 				}
 				set_global_flag = neu_pawsterdam_fallen
@@ -2133,6 +2155,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 477 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = frankfurr_fallen }
 				}
 				set_global_flag = frankfurr_fallen
@@ -2145,6 +2168,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 62 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = pawris_fallen }
 				}
 				set_global_flag = pawris_fallen
@@ -2157,6 +2181,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 406 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = bunville_fallen }
 				}
 				set_global_flag = bunville_fallen
@@ -2169,6 +2194,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 1324 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = katlantropa_dam_fallen }
 				}
 				set_global_flag = katlantropa_dam_fallen
@@ -2181,6 +2207,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 218 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = jarvalin_fallen }
 				}
 				set_global_flag = jarvalin_fallen
@@ -2193,6 +2220,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 271 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = ganymeda_fallen }
 				}
 				set_global_flag = ganymeda_fallen
@@ -2205,6 +2233,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 726 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = steeloft_fallen }
 				}
 				set_global_flag = steeloft_fallen
@@ -2217,6 +2246,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 349 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = charles_fallen }
 				}
 				set_global_flag = charles_fallen
@@ -2229,6 +2259,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 236 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = hubschestadt_fallen }
 				}
 				set_global_flag = hubschestadt_fallen
@@ -2241,6 +2272,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 289 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = brekarya_fallen }
 				}
 				set_global_flag = brekarya_fallen
@@ -2253,6 +2285,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 804 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = nouvelle_yorke_fallen }
 				}
 				set_global_flag = nouvelle_yorke_fallen
@@ -2265,6 +2298,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 90 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = elowia_fallen }
 				}
 				set_global_flag = elowia_fallen
@@ -2277,6 +2311,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 438 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = purrhelmshaven_fallen }
 				}
 				set_global_flag = purrhelmshaven_fallen
@@ -2289,6 +2324,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 485 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = pawscow_fallen }
 				}
 				set_global_flag = pawscow_fallen
@@ -2301,6 +2337,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 1197 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = tiir_fallen }
 				}
 				set_global_flag = tiir_fallen
@@ -2313,6 +2350,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 371 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = thamplatin_fallen }
 				}
 				set_global_flag = thamplatin_fallen
@@ -2325,6 +2363,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 361 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = hoxxhagen_fallen }
 				}
 				set_global_flag = hoxxhagen_fallen
@@ -2337,6 +2376,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 791 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = grande_loutteria_fallen }
 				}
 				set_global_flag = grande_loutteria_fallen
@@ -2349,6 +2389,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 309 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = rozzmione_fallen }
 				}
 				set_global_flag = rozzmione_fallen
@@ -2361,6 +2402,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 792 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = filosimpara_fallen }
 				}
 				set_global_flag = filosimpara_fallen
@@ -2373,6 +2415,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 1357 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = novhurst_fallen }
 				}
 				set_global_flag = novhurst_fallen
@@ -2385,6 +2428,7 @@ on_actions = {
 				limit = {
 					FROM.FROM = { state = 262 }
 					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = orient_kapus_fallen }
 				}
 				set_global_flag = orient_kapus_fallen
@@ -2497,6 +2541,20 @@ on_actions = {
 
 	on_daily = {
 		effect = {
+			# KTW Pyramid Guard - teleport to 509 if not there
+			if = {
+				limit = {
+					tag = KTW
+					owns_state = 509
+					NOT = {
+						divisions_in_state = {
+							state = 509
+							size > 0
+						}
+					}
+				}
+				teleport_armies = { to_state = 509 }
+			}
 			if = {
 				limit = { has_country_flag = has_armored_blimp_carrier }
 				every_controlled_state = {
