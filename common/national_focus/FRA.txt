@@ -507,21 +507,133 @@ focus_tree = {
     }
 
     focus = {
-        id = FRA_elwin_A
+        id = FRA_elwin_faction
         icon = GFX_FRA_Hell
         x = 20
         y = 4
         cost = 0
         prerequisite = { focus = FRA_elwin_question }
-        available = {
-            has_army_manpower = {
-                size > 500001
-            }
-        }
         completion_reward = {
             create_faction_from_template = faction_template_kaiserliche_nordkoalition
-            NAV = { country_event = NAV_coalition.1 }
+            NAV = { country_event = { id = NAV_coalition.1 } }
         }
     }
-    
+    focus = {
+        id = FRA_elwin_first_war
+        icon = GFX_FRA_Hell
+        x = 20
+        y = 5
+        cost = 5
+        prerequisite = { focus = FRA_elwin_faction }
+        bypass = {
+            owns_state = 543
+        }
+        completion_reward = {
+            add_state_core = 543
+            create_wargoal = {
+                target = 543.owner
+                type = take_core_state
+            }
+        }
+    }
+    focus = {
+        id = FRA_elwin_second_war
+        icon = GFX_FRA_Hell
+        x = 20
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_elwin_first_war }
+        completion_reward = {
+            add_state_core = 646
+            add_state_core = 474
+            add_state_core = 645
+            add_state_core = 674
+            create_wargoal = {
+                target = 646.owner
+                type = take_core_state
+            }
+        }
+    }
+    focus = {
+        id = FRA_elwin_neukat_war
+        icon = GFX_FRA_Hell
+        x = 22
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_elwin_first_war }
+        completion_reward = {
+            add_state_core = 604
+            create_wargoal = {
+                target = 604.owner
+                type = take_core_state
+            }
+        }
+    }
+    focus = {
+        id = FRA_elwin_nkb_occupation
+        icon = GFX_FRA_Hell
+        x = 18
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_elwin_first_war }
+        completion_reward = {
+            release_puppet = NKB
+            NKB = {
+                set_cosmetic_tag = NKB_reconstruction
+            }
+        }
+    }
+
+    ## Army Tree
+
+    focus = {
+        id = FRA_army_start
+        icon = GFX_FRA_Hell
+        x = 30
+        y = 4
+        cost = 2
+        prerequisite = { focus = FRA_elwin_question }
+        completion_reward = {
+            army_experience = 20
+            navy_experience = 15
+            air_experience = 20
+
+        }
+    }
+    focus = {
+        id = FRA_army_superior
+        icon = GFX_FRA_Hell
+        x = 29
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_army_start }
+        completion_reward = {
+            set_grand_doctrine = superior_firepower
+            add_mastery_bonus = {
+                name = FRA_SUP
+                bonus = 0.1
+                days = 365
+                track = infantry
+            }
+        }
+    }
+    focus = {
+        id = FRA_army_mobile
+        icon = GFX_FRA_Hell
+        x = 31
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_army_start }
+        completion_reward = {
+            set_grand_doctrine = new_mobile_warfare
+            add_mastery_bonus = {
+                name = FRA_MOB
+                bonus = 0.15
+                days = 365
+                track = armor
+            }
+        }
+    }
+            
 }
+
