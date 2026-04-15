@@ -1,0 +1,203 @@
+KTW_katown_struggle = {
+
+	KTW_secure_periphery = {
+		activation = {
+			always = no
+		} # activated by effect
+		available = {
+			controls_state = 30
+			controls_state = 27
+			controls_state = 29
+			controls_state = 42
+			controls_state = 50
+			controls_state = 39
+		}
+		icon = GFX_decision_generic_military
+		is_good = no
+
+		days_mission_timeout = 180
+		selectable_mission = yes
+		complete_effect = {
+			country_event = { id = KTW_event.3 }
+		}
+		timeout_effect = {
+			custom_effect_tooltip = KTW_collapse_tooltip
+			hidden_effect = {
+				country_event = { id = KTW_event.5 }
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+	}
+
+	KTW_ultimatum_state_30 = {
+		icon = GFX_decision_generic_military
+		allowed = { tag = KTW }
+		visible = {
+			has_country_flag = ktw_katown_struggle_active
+			NOT = { controls_state = 30 }
+			NOT = { has_country_flag = ktw_ultimatum_sent_30 }
+		}
+		available = {
+			has_country_flag = ktw_katown_struggle_active
+		}
+		complete_effect = {
+			set_country_flag = ktw_ultimatum_sent_30
+			30 = {
+				var:controller = {
+					country_event = { id = KTW_event.2 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	KTW_ultimatum_state_27 = {
+		icon = GFX_decision_generic_military
+		allowed = { tag = KTW }
+		visible = {
+			has_country_flag = ktw_katown_struggle_active
+			NOT = { controls_state = 27 }
+			NOT = { has_country_flag = ktw_ultimatum_sent_27 }
+		}
+		available = {
+			has_country_flag = ktw_katown_struggle_active
+		}
+		complete_effect = {
+			set_country_flag = ktw_ultimatum_sent_27
+			27 = {
+				var:controller = {
+					country_event = { id = KTW_event.2 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	KTW_ultimatum_state_29 = {
+		icon = GFX_decision_generic_military
+		allowed = { tag = KTW }
+		visible = {
+			has_country_flag = ktw_katown_struggle_active
+			NOT = { controls_state = 29 }
+			NOT = { has_country_flag = ktw_ultimatum_sent_29 }
+		}
+		available = {
+			has_country_flag = ktw_katown_struggle_active
+		}
+		complete_effect = {
+			set_country_flag = ktw_ultimatum_sent_29
+			29 = {
+				var:controller = {
+					country_event = { id = KTW_event.2 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	KTW_ultimatum_state_42 = {
+		icon = GFX_decision_generic_military
+		allowed = { tag = KTW }
+		visible = {
+			has_country_flag = ktw_katown_struggle_active
+			NOT = { controls_state = 42 }
+			NOT = { has_country_flag = ktw_ultimatum_sent_42 }
+		}
+		available = {
+			has_country_flag = ktw_katown_struggle_active
+		}
+		complete_effect = {
+			set_country_flag = ktw_ultimatum_sent_42
+			42 = {
+				var:controller = {
+					country_event = { id = KTW_event.2 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	KTW_ultimatum_state_50 = {
+		icon = GFX_decision_generic_military
+		allowed = { tag = KTW }
+		visible = {
+			has_country_flag = ktw_katown_struggle_active
+			NOT = { controls_state = 50 }
+			NOT = { has_country_flag = ktw_ultimatum_sent_50 }
+		}
+		available = {
+			has_country_flag = ktw_katown_struggle_active
+		}
+		complete_effect = {
+			set_country_flag = ktw_ultimatum_sent_50
+			50 = {
+				var:controller = {
+					country_event = { id = KTW_event.2 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	KTW_ultimatum_state_39 = {
+		icon = GFX_decision_generic_military
+		allowed = { tag = KTW }
+		visible = {
+			has_country_flag = ktw_katown_struggle_active
+			NOT = { controls_state = 39 }
+			NOT = { has_country_flag = ktw_ultimatum_sent_39 }
+		}
+		available = {
+			has_country_flag = ktw_katown_struggle_active
+		}
+		complete_effect = {
+			set_country_flag = ktw_ultimatum_sent_39
+			39 = {
+				var:controller = {
+					country_event = { id = KTW_event.2 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+
+	KTW_assault_pyramid = {
+		icon = GFX_decision_generic_military
+		allowed = {
+			NOT = { tag = KTW }
+		}
+		visible = {
+			KTW = {
+				has_country_flag = ktw_lockdown_active
+				exists = yes
+			}
+			any_neighbor_country = { tag = KTW }
+			NOT = { has_war_with = KTW }
+		}
+		available = {
+			KTW = {
+				has_country_flag = ktw_lockdown_active
+			}
+		}
+		complete_effect = {
+			declare_war_on = { target = KTW type = annex_everything }
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+}

@@ -729,7 +729,30 @@ country_event = {
 			KVK = { declare_war_on = { target = SIL type = annex_everything } }
 			CLE = { declare_war_on = { target = SIL type = annex_everything } }
 			PAW = { declare_war_on = { target = SIL type = annex_everything } }
-			KTW = { declare_war_on = { target = SIL type = annex_everything } }
+			KTW = {
+				declare_war_on = { target = SIL type = annex_everything }
+				country_event = { id = KTW_event.1 days = 1 }
+				# Spawn the Pyramid Guard
+				division_template = {
+					name = "Pyramidenwache"
+					regiments = {
+						power_infantry = { x = 0 y = 0 }
+						power_infantry = { x = 0 y = 1 }
+						power_infantry = { x = 1 y = 0 }
+						power_infantry = { x = 1 y = 1 }
+					}
+					support = {
+						anti_tank = { x = 0 y = 0 }
+						anti_air = { x = 0 y = 1 }
+					}
+				}
+				509 = {
+					create_unit = {
+						division = "name = \"Pyramidenwache\" division_template = \"Pyramidenwache\" start_experience_factor = 1.0 start_equipment_factor = 1.0"
+						owner = KTW
+					}
+				}
+			}
 		}
 	}
 
