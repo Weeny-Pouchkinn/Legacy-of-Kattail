@@ -1097,9 +1097,19 @@ political_actions = {
 		target_array = ROOT.core_states
 
 		remove_effect = {
-			218 = {
+			FROM = {
 				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
+				set_temp_variable = { state_prod_change = 0.10 }
+				increase_state_productivity = yes
+				increase_base_state_productivity = yes
+				custom_effect_tooltip = KUS_rewire_state_tt
+				hidden_effect = {
+					#Undo prod changes from pop
+					subtract_from_variable = { lok_state_productivity_value = state_prod_change_from_pop }
+					set_variable = { state_prod_change_from_pop = 0 }
+
+					update_state_productivity_modifier = yes
+				}
 			}
 		}
 

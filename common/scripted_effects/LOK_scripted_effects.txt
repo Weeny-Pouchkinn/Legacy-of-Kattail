@@ -1,3 +1,14 @@
+increase_state_productivity = {
+	custom_effect_tooltip = increase_state_productivity_tt
+	add_to_variable = { lok_state_productivity_value = state_prod_change }
+	add_to_variable = { state_prod_change_from_misc = state_prod_change }
+}
+
+increase_base_state_productivity = {
+	custom_effect_tooltip = increase_base_state_productivity_tt
+	add_to_variable = { lok_state_productivity_value_base = state_prod_change }
+}
+
 LOK_NEK_war_update_opinion = {
 	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
 	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
@@ -70,21 +81,26 @@ update_state_productivity_modifier = {
 		# Now we must see how much of a % change that is relative to game start pop
 		# So we add 5 points of productivity!
 
-		# Say it was 120 and is now 125, game start pop was 100
-		set_variable = { state_prod_change_from_pop_this_check = state_population_k }
+		if = {
+			limit = {
+				NOT = { has_state_flag = KUS_total_automation }
+			}
+			# Say it was 120 and is now 125, game start pop was 100
+			set_variable = { state_prod_change_from_pop_this_check = state_population_k }
 
-		# 125 - 120 = 5
-		subtract_from_variable = { state_prod_change_from_pop_this_check = population_last_check }
+			# 125 - 120 = 5
+			subtract_from_variable = { state_prod_change_from_pop_this_check = population_last_check }
 
-		# 5 / 100 = 0.05, so 5% change
-		divide_variable = { state_prod_change_from_pop_this_check = population_at_game_start }
+			# 5 / 100 = 0.05, so 5% change
+			divide_variable = { state_prod_change_from_pop_this_check = population_at_game_start }
 
-		add_to_variable = { state_prod_change_from_pop = state_prod_change_from_pop_this_check }
+			add_to_variable = { state_prod_change_from_pop = state_prod_change_from_pop_this_check }
 
-		set_variable = { population_last_check = state_population_k }
+			set_variable = { population_last_check = state_population_k }
 
-		# The value of prod
-		add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop_this_check }
+			# The value of prod
+			add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop_this_check }
+		}
 
 		#Convert the productivity value to its modifier
 		set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }

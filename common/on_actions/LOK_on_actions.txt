@@ -1891,7 +1891,11 @@ on_actions = {
 				round_variable = lok_state_misc_deaths_display
 
 				if = { #State got so depopulated that it just collapses
-					limit = { var:controller = { is_non_playable_country = no } check_variable = { state_population_k < lok_min_manpower_before_collapse } }
+					limit = {
+						var:controller = { is_non_playable_country = no }
+						check_variable = { state_population_k < lok_min_manpower_before_collapse }
+						NOT = { is_infrastructure_state = yes }
+					}
 					collapse_into_anarchy = yes
 					set_variable = { lok_min_manpower_before_collapse = 0 }
 				}

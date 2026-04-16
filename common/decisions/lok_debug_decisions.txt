@@ -143,6 +143,90 @@ debug_decisions = {
 			}
 		}
 	}
+	lok_build_solakean_strait_bridge = {
+		icon = generic_research
+
+		priority = 1000
+		
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+
+		cost = 0
+
+		complete_effect = {
+			1404 = {
+				transfer_state_to = 334.controller
+			}
+			1404.var:controller = {
+				create_entity = {
+					entity = bridge_railway_large_entity
+					id = 9999990
+					var = solakean_strait_bridge_1
+					x = -2
+					y = -2
+					z = 0.5
+					state = 1404
+					province = 5122
+					scale = 2
+					rotation = -0.5
+					min_zoom = 30000.0
+				}
+				create_entity = {
+					entity = bridge_railway_large_entity
+					id = 9999991
+					var = solakean_strait_bridge_2
+					x = 0.95
+					y = 3.35
+					z = 0.5
+					state = 1404
+					province = 5122
+					scale = 2
+					rotation = -0.5
+					min_zoom = 30000.0
+				}
+			}
+		}
+	}
+	lok_destroy_solakean_strait_bridge = {
+		icon = generic_research
+
+		priority = 1000
+		
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+
+		cost = 0
+
+		complete_effect = {
+			1404.var:controller = {
+				destroy_entity = 9999991
+				destroy_entity = 9999990
+			}
+			1404 = {
+				transfer_state_to = WWW
+			}
+		}
+	}
 	lok_spawn_katlantropa_dam = {
 		icon = generic_research
 
