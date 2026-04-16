@@ -1068,6 +1068,8 @@ political_actions = {
 					set_demilitarized_zone = no
 				}
 				clr_state_flag = KUS_has_rebels
+				set_temp_variable = { state_prod_change = 0.5 }
+				increase_state_productivity = yes
 			}
 		}
 		ai_will_do = { base = 100 }
@@ -1085,7 +1087,12 @@ political_actions = {
 
 		visible = {
 			has_completed_focus = KUS_construct_ai_infrastructure
-			FROM = { NOT = { has_state_flag = KUS_total_automation } }
+			FROM = {
+				NOT = {
+					has_state_flag = KUS_total_automation
+					has_state_flag = KUS_has_rebels
+				}
+			}
  		}
 
 		state_target = yes
@@ -1107,8 +1114,6 @@ political_actions = {
 					#Undo prod changes from pop
 					subtract_from_variable = { lok_state_productivity_value = state_prod_change_from_pop }
 					set_variable = { state_prod_change_from_pop = 0 }
-
-					update_state_productivity_modifier = yes
 				}
 			}
 		}
