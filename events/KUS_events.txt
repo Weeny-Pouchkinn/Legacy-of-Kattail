@@ -205,14 +205,11 @@ country_event = {
 		add_ideas = KUS_extremism_ascendant
 		set_country_flag = KUS_technocratic_coup_complete
 		# Demilitarize all states except Jarvalin
-		hidden_effect = {
-			213 = { set_demilitarized_zone = yes }
-			225 = { set_demilitarized_zone = yes }
-			229 = { set_demilitarized_zone = yes }
-			231 = { set_demilitarized_zone = yes }
-			715 = { set_demilitarized_zone = yes }
-			716 = { set_demilitarized_zone = yes }
-			717 = { set_demilitarized_zone = yes }
+		every_owned_state = {
+			limit = { is_capital = no }
+			set_demilitarized_zone = yes
+			set_state_flag = KUS_has_rebels
+			add_to_array = { array = ROOT.KUS_rebels_array }
 		}
 	}
 }

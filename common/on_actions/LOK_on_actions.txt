@@ -34,12 +34,44 @@ on_actions = {
 			#POPULATION SHARE REMAINING
 			every_state = {
 				set_variable = { damaged_infra_level_last_week = 0 }
+				# Initial pop
 				set_variable = { population_at_game_start = state_population_k }
+
+				# Pop "last check" (equal to initial pop since game just started)
+				set_variable = { population_last_check = state_population_k }
+
+				# Share of pop remaining since game start
 				set_variable = { population_relative_to_game_start = 1 }
-				set_variable = { lok_state_productivity_modifier = 0 }
-				add_dynamic_modifier = {
-					modifier = lok_state_productivity_modifier
+
+				# Prod change from
+				set_variable = { state_prod_change_from_pop = 0 }
+				set_variable = { state_prod_change_from_regen = 0 }
+				set_variable = { state_prod_change_from_radiation = 0 }
+
+				# Base value that prod will tend towards
+				set_variable = { lok_state_productivity_value_base = 1 }
+				if = { #Megacities
+					limit = {
+						OR = {
+							state = 34
+							state = 36
+							state = 44
+							state = 45
+							state = 320
+							state = 1043
+							state = 832
+							state = 409
+							state = 833
+						}
+					}
+					set_variable = { lok_state_productivity_value_base = 1.5 }
 				}
+				set_variable = { lok_state_productivity_value = lok_state_productivity_value_base }
+
+				# The actual modifier
+				set_variable = { lok_state_productivity_modifier = 0 }
+				add_dynamic_modifier = { modifier = lok_state_productivity_modifier }
+				update_state_productivity_modifier = yes
 			}
 
 			#COUNTRIES CLAIMING LAND
@@ -1668,6 +1700,11 @@ on_actions = {
 
 	on_weekly = {
 		effect = {
+			#TEMP, MAKE THAT MONTHLY
+			every_controlled_state = {
+				regenerate_state_productivity_modifier = yes
+				update_state_productivity_modifier = yes
+			}
 			#DEBUG for casualties
 			if = {
 				limit = {
@@ -2472,9 +2509,9 @@ on_actions = {
 	on_monthly = {
 		effect = {
 			#Check pop evolution and apply the productivity modifier
-			every_controlled_state = {
-				update_state_productivity_modifier = yes
-			}
+			# every_controlled_state = {
+			# 	update_state_productivity_modifier = yes
+			# }
 			#Recolonize wasteland
 			if = {
 				limit = { is_ai = yes any_controlled_state = { any_neighbor_state = { is_controlled_by = AAA } } }
