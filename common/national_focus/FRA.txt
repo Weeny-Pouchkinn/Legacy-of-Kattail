@@ -583,10 +583,6 @@ focus_tree = {
         prerequisite = { focus = FRA_pe_the_stockpile_guns }
         prerequisite = { focus = FRA_pe_revolutionary_council }
         completion_reward = {
-            add_equipment_to_stockpile = {
-                type = infantry_weapons
-                amount = -5000
-            }
         }
         mutually_exclusive = { focus = FRA_pe_right }
     }
@@ -658,25 +654,213 @@ focus_tree = {
     }
 
     focus = {
+        id = FRA_pe_regime_explodes
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 9
+        cost = 5
+        available = {
+            has_completed_focus = FRA_elwin_purrsian_borders
+            OR = { has_completed_focus = FRA_pe_left has_completed_focus = FRA_pe_right } 
+        }
+        completion_reward = {
+        }
+    }
+
+    ### Leftist Paths
+
+    focus = {
         id = FRA_left_revolution
         icon = GFX_FRA_Hell
-        x = 5
+        x = 7
         y = 10
         cost = 5
-        prerequisite = { focus = FRA_elwin_purrsian_borders }
-        prerequisite = { focus = FRA_pe_left }
+        prerequisite = { focus = FRA_pe_regime_explodes }
         completion_reward = {
         }
     }
 
     focus = {
+        id = FRA_left_righteous_terror
+        icon = GFX_FRA_Hell
+        x = 5
+        y = 11
+        cost = 5
+        prerequisite = { focus = FRA_left_revolution focus = FRA_right_coup }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_council_mandate
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 12
+        cost = 5
+        prerequisite = { focus = FRA_rev_reconcile_radicals focus = FRA_left_righteous_terror }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_soldier_council_reform
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 13
+        cost = 5
+        prerequisite = { focus = FRA_left_council_mandate }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_congress_location
+        icon = GFX_FRA_Hell
+        x = 4
+        y = 12
+        cost = 5
+        prerequisite = { focus = FRA_left_righteous_terror }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_congress
+        icon = GFX_FRA_Hell
+        x = 5
+        y = 14
+        cost = 5
+        prerequisite = { focus = FRA_left_congress_location }
+        prerequisite = { focus = FRA_left_council_mandate }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_internationalists
+        icon = GFX_FRA_Hell
+        x = 4
+        y = 15
+        cost = 5
+        prerequisite = { focus = FRA_left_congress }
+        completion_reward = {
+        }
+        mutually_exclusive = {
+            focus = FRA_left_peasant_nationalists
+        }
+    }
+
+    focus = {
+        id = FRA_left_peasant_nationalists
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 15
+        cost = 5
+        prerequisite = { focus = FRA_left_congress }
+        completion_reward = {
+        }
+        mutually_exclusive = {
+            focus = FRA_left_internationalists
+        }
+    }
+
+    focus = {
+        id = FRA_left_party_form
+        icon = GFX_FRA_Hell
+        x = 3
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_internationalists }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_communization
+        icon = GFX_FRA_Hell
+        x = 0
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_internationalists }
+        completion_reward = {
+            set_country_flag = left_communist_victory
+        }
+    }
+
+    focus = {
+        id = FRA_left_mao_nyadong
+        icon = GFX_FRA_Hell
+        x = 7
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_peasant_nationalists }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_juche
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_peasant_nationalists }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_amewdeo
+        icon = GFX_FRA_Hell
+        x = 44
+        y = 1
+        cost = 5
+        available = {
+            has_country_flag = left_communist_victory
+        }
+        mutually_exclusive = {
+            focus = FRA_left_dameow
+        }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_dameow
+        icon = GFX_FRA_Hell
+        x = 46
+        y = 1
+        cost = 5
+        available = {
+            has_country_flag = left_communist_victory
+        }
+        mutually_exclusive = {
+            focus = FRA_left_amewdeo
+        }
+        completion_reward = {
+        }
+    }
+   
+    focus = {
+        id = FRA_rev_reconcile_radicals
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 11
+        cost = 5
+        prerequisite = { focus = FRA_left_revolution focus = FRA_right_coup }
+        completion_reward = {
+        }
+    }
+
+    ### Right Path
+
+    focus = {
         id = FRA_right_coup
         icon = GFX_FRA_Hell
-        x = 15
+        x = 13
         y = 10
         cost = 5
-        prerequisite = { focus = FRA_elwin_purrsian_borders }
-        prerequisite = { focus = FRA_pe_right }
+        prerequisite = { focus = FRA_pe_regime_explodes }
         completion_reward = {
         }
     }
