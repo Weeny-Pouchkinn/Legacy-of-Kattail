@@ -1644,9 +1644,53 @@ on_actions = {
 		}
 	}
 
+	on_weekly_KUS = {
+		effect = {
+			if = { # basilisk kills ppl
+				limit = { has_country_flag = KUS_basilisk_took_over }
+				if = {
+					limit = { check_variable = { KUS_basilisk_target_kills > KUS_basilisk_current_pop } }
+					every_controlled_state = {
+						KUS = {
+							delete_unit = { 
+								state = PREV 
+								disband = yes
+							}
+						}
+					}
+				}
+				# determine what % of our states we gotta depop
+				set_temp_variable = { KUS_basilisk_pop_kill_perc = KUS_basilisk_target_kills }
+				divide_temp_variable = { KUS_basilisk_pop_kill_perc = KUS_basilisk_current_pop }
+				# remove that % from every state
+				every_controlled_state = {
+					set_temp_variable = { KUS_basilisk_pop_to_kill = state_population_k }
+					# In 1000s
+					multiply_temp_variable = { KUS_basilisk_pop_to_kill = KUS.KUS_basilisk_pop_kill_perc }
+					# Set to 10000s
+					divide_temp_variable = { KUS_basilisk_pop_to_kill = 10 }
+					for_loop_effect = {
+						end = KUS_basilisk_pop_to_kill
+						set_variable = { manpower_change = -10000 }
+						LOK_change_state_manpower = yes
+					}
+				}
+				#Recalc pop
+				set_variable = { KUS_basilisk_current_pop = 0 }
+				every_controlled_state = {
+					set_temp_variable = { KUS_basilisk_current_pop_temp = state_population_k }
+					divide_temp_variable = { KUS_basilisk_current_pop_temp = 1000 }
+					add_to_variable = { KUS.KUS_basilisk_current_pop = KUS_basilisk_current_pop_temp }
+				}
+				multiply_variable = { KUS_basilisk_target_kills = 1.2 }
+			}
+		}
+	}
+
+
 	on_monthly_TAK = {
 		effect = {
-			if = { #add paintbrushes
+			if = { # add paintbrushes
 				limit = { has_completed_focus = TAK_figure_it_out }
 				add_to_variable = { TAK_brush_count = modifier@TAK_paintbrushes_monthly }
 				TAK_update_painting_stats = yes
