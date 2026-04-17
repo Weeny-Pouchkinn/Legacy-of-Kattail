@@ -156,16 +156,22 @@ country_event = {
 				30 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
 				36 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
 			}
+			if = {
+				limit = { country_exists = SIL }
+				39 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+				45 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+			}
 
-			# Transfer remaining owned states to neighbors
-			every_owned_state = {
-				limit = { NOT = { state = 509 } }
-				# Find a neighboring country to give it to
-				random_neighbor_state = {
-					limit = { NOT = { is_owned_by = KTW } }
-					var:owner = {
-						PREV.PREV = { transfer_state_to = PREV }
+
+			for_loop_effect = {
+				end = 5
+				every_owned_state = {
+					limit = { NOT = { state = 509 } }
+					random_neighbor_state = {
+						limit = { NOT = { is_controlled_by = KTW } }
+						var:controller = { save_global_event_target_as = ktw_state_transfer_target }
 					}
+					transfer_state_to = event_target:ktw_state_transfer_target
 				}
 			}
 
@@ -215,16 +221,26 @@ country_event = {
 				30 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
 				36 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
 			}
+			if = {
+				limit = { country_exists = SIL }
+				39 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+				45 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+			}
 
-			every_owned_state = {
-				limit = { NOT = { state = 509 } }
-				random_neighbor_state = {
-					limit = { NOT = { is_owned_by = KTW } }
-					var:owner = {
-						PREV.PREV = { transfer_state_to = PREV }
+
+			for_loop_effect = {
+				end = 5
+				every_owned_state = {
+					limit = { NOT = { state = 509 } }
+					random_neighbor_state = {
+						limit = { NOT = { is_controlled_by = KTW } }
+						var:controller = { save_global_event_target_as = ktw_state_transfer_target }
 					}
+					transfer_state_to = event_target:ktw_state_transfer_target
 				}
 			}
+
+
 
 			# Broadcast collapse news
 			news_event = { id = KTW_event.7 hours = 6 }
