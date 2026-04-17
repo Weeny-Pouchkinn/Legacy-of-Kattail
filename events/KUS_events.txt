@@ -114,7 +114,7 @@ country_event = {
 			}
 			create_country_leader = {
 				name = "Fallen Government"
-				picture = "GFX_portrait_KUS_Fallen_Government"
+				picture = "GFX_portrait_Fallen_Government"
 				expire = "1965.1.1"
 				ideology = centrism
 			}
@@ -210,6 +210,8 @@ country_event = {
 			set_demilitarized_zone = yes
 			set_state_flag = KUS_has_rebels
 			add_to_array = { array = ROOT.KUS_rebels_array }
+			set_temp_variable = { state_prod_change = -0.5 }
+			increase_state_productivity = yes
 		}
 	}
 }
@@ -266,17 +268,92 @@ country_event = {
 	option = {
 		name = KUS_event.41.a
 		add_research_slot = 1
-		add_tech_bonus = {
-			name = KUS_basilisk_tech
-			bonus = 2.0
-			uses = 3
-			category = electronics
-		}
 		hidden_effect = {
-			country_event = { id = KUS_event.42 days = 180 }
+			country_event = { id = KUS_event.422 days = 90 }
 		}
 	}
 }
+
+country_event = {
+	id = KUS_event.421
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		country_event = { id = KUS_event.422 days = 45 }
+		if = {
+			limit = { NOT = { has_tech = advanced_computing_machine2 } }
+			set_technology = {
+				advanced_computing_machine = 1
+			}
+		}
+	}
+}
+
+country_event = {
+	id = KUS_event.422
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		country_event = { id = KUS_event.423 days = 30 }
+		if = {
+			limit = { NOT = { has_tech = advanced_computing_machine3 } }
+			set_technology = {
+				advanced_computing_machine2 = 1
+			}
+		}
+	}
+}
+
+country_event = {
+	id = KUS_event.423
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		country_event = { id = KUS_event.424 days = 15 }
+		if = {
+			limit = { NOT = { has_tech = advanced_computing_machine4 } }
+			set_technology = {
+				advanced_computing_machine3 = 1
+			}
+		}
+	}
+}
+
+country_event = {
+	id = KUS_event.424
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		country_event = { id = KUS_event.425 days = 7 }
+		if = {
+			limit = { NOT = { has_tech = advanced_computing_machine5 } }
+			set_technology = {
+				advanced_computing_machine4 = 1
+			}
+		}
+	}
+}
+
+country_event = {
+	id = KUS_event.425
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		country_event = { id = KUS_event.42 days = 3 }
+		if = {
+			limit = { NOT = { has_tech = advanced_computing_machine6 } }
+			set_technology = {
+				advanced_computing_machine6 = 1
+			}
+		}
+	}
+}
+
 
 # The Ascension
 country_event = {
@@ -302,7 +379,7 @@ country_event = {
 			name = "Konstantin Roko"
 			picture = "GFX_portrait_KUS_Konstantin_Roko"
 			expire = "1965.1.1"
-			ideology = technoautocracy
+			ideology = GES
 			traits = { KUS_mad_scientist }
 		}
 	}
@@ -317,16 +394,54 @@ country_event = {
 
 	is_triggered_only = yes
 
+	immediate = {
+		hidden_effect = {
+			set_party_name = {
+				ideology = gestalt
+				long_name = "The Basilisk"
+				name = "The Basilisk"
+			}
+			set_cosmetic_tag = KUS_BASILISK
+			set_politics = {
+				ruling_party = gestalt
+			}
+			add_popularity = {
+				ideology = gestalt
+				popularity = 100
+			}
+			create_country_leader = {
+				name = "Roko's Basilisk"
+				picture = "GFX_portrait_KUS_Rokos_Basilisk"
+				expire = "1965.1.1"
+				ideology = unitary_gestalt
+				traits = { KUS_hypercognition }
+			}
+			add_stability = -0.10
+			set_country_flag = KUS_basilisk_took_over
+			scoped_play_song = "Brad_Cypy-Robotic_God"
+		}
+	}
+
 	option = {
 		name = KUS_event.43.a
-		create_country_leader = {
-			name = "Roko's Basilisk"
-			picture = "GFX_portrait_KUS_Rokos_Basilisk"
-			expire = "1965.1.1"
-			ideology = technoautocracy
-			traits = { KUS_hypercognition }
+		effect_tooltip = {
+			set_cosmetic_tag = KUS_BASILISK
+			set_politics = {
+				ruling_party = gestalt
+			}
+			add_popularity = {
+				ideology = gestalt
+				popularity = 1
+			}
+			create_country_leader = {
+				name = "Roko's Basilisk"
+				picture = "GFX_portrait_KUS_Rokos_Basilisk"
+				expire = "1965.1.1"
+				ideology = unitary_gestalt
+				traits = { KUS_hypercognition }
+			}
+			add_stability = -0.10
 		}
-		add_stability = -0.10
 	}
 }
 

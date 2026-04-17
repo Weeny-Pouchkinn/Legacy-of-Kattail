@@ -1,12 +1,18 @@
 increase_state_productivity = {
 	custom_effect_tooltip = increase_state_productivity_tt
-	add_to_variable = { lok_state_productivity_value = state_prod_change }
-	add_to_variable = { state_prod_change_from_misc = state_prod_change }
+	hidden_effect = {
+		add_to_variable = { lok_state_productivity_value = state_prod_change }
+		add_to_variable = { state_prod_change_from_misc = state_prod_change }
+		update_state_productivity_modifier = yes
+	}
 }
 
 increase_base_state_productivity = {
 	custom_effect_tooltip = increase_base_state_productivity_tt
-	add_to_variable = { lok_state_productivity_value_base = state_prod_change }
+	hidden_effect = {
+		add_to_variable = { lok_state_productivity_value_base = state_prod_change }
+		update_state_productivity_modifier = yes
+	}
 }
 
 LOK_NEK_war_update_opinion = {
@@ -1755,8 +1761,9 @@ calculate_total_food_consumption = {
 	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
 	if = {
 		limit = {
-			check_variable = { country_food_needs_met_perc < 61 }
+			check_variable = { country_food_needs_met_perc < 50 }
 			check_variable = { country_food_stockpile < 1 }
+			date > "100.1.5"
 		}
 		every_controlled_state = {
 			set_variable = { lok_starvation_death_count = state_population_k }
