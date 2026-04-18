@@ -9,6 +9,12 @@ on_actions = {
 				}
 			}
 
+			#AI Nuclear Research Boost
+			every_country = {
+				limit = { is_ai = yes }
+				add_ideas = LOK_ai_nuclear_research_boost
+			}
+
 			#Food for Arivoejobiden
 			every_country = {
 				limit = {
@@ -532,6 +538,8 @@ on_actions = {
 			BSS = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			POT = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			KKN = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_7 }
+
+			BAS = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_3 }
 
 			SOB = { remove_ideas = var_species_0 add_ideas = var_species_2 }
 			NDB = { remove_ideas = var_species_0 add_ideas = var_species_2 add_ideas = var_species_1 }
@@ -1992,6 +2000,19 @@ on_actions = {
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
 				FROM = { if = { limit = { is_herzlands_warlord = yes } subtract_from_variable = { current_herzlands_state_count = 1 } } }
+			}
+			#AI Katzen nations instantly get +40% compliance when capturing a Herzlands state
+			if = {
+				limit = {
+					ROOT = {
+						is_ai = yes
+						has_idea = var_species_1 #Katzen species
+					}
+					FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } }
+				}
+				FROM.FROM = {
+					add_compliance = 40
+				}
 			}
 			FROM = { 
 				apply_wonder_effects = yes
