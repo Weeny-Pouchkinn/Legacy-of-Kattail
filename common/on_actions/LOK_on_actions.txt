@@ -2006,9 +2006,12 @@ on_actions = {
 				limit = {
 					ROOT = {
 						is_ai = yes
-						has_idea = var_species_1 #Katzen species
+						is_herzlands_warlord = yes
 					}
-					FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } }
+					FROM.FROM = {
+						is_in_array = { array = global.herzlands_states_array value = THIS }
+						NOT = { is_core_of = ROOT }
+					}
 				}
 				FROM.FROM = {
 					add_compliance = 40
@@ -2843,20 +2846,22 @@ on_actions = {
 					}
 					514 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 					512 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 					191 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
+						add_compliance = 20
+					}
+					1401 = {
+						transfer_state_to = ROQ
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 				}
