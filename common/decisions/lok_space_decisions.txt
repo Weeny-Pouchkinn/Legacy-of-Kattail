@@ -54,7 +54,11 @@ lok_space_program_cat = {
 						set_temp_variable = { flusion_exp_gained = 1 }
 						add_to_variable = { space_exp = flusion_exp_gained }
 						custom_effect_tooltip = lok_add_flusion_exp_tooltip
-						add_political_power = 25		
+						add_political_power = 25
+						country_event = { id = LOK_space.5 }
+					}
+					else = {
+						country_event = { id = LOK_space.24 }
 					}
 
 					if = {
@@ -62,8 +66,6 @@ lok_space_program_cat = {
 						custom_effect_tooltip = lok_first_time_we_do_mission_ever
 						add_political_power = 100
 					}
-
-					country_event = { id = LOK_space.5 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -137,7 +139,11 @@ lok_space_program_cat = {
 						set_temp_variable = { flusion_exp_gained = 2 }
 						add_to_variable = { space_exp = flusion_exp_gained }
 						custom_effect_tooltip = lok_add_flusion_exp_tooltip
-						add_political_power = 25	
+						add_political_power = 25
+						country_event = { id = LOK_space.7 }
+					}
+					else = {
+						country_event = { id = LOK_space.25 }
 					}
 
 					if = {
@@ -145,8 +151,6 @@ lok_space_program_cat = {
 						custom_effect_tooltip = lok_first_time_we_do_mission_ever
 						add_political_power = 100
 					}
-
-					country_event = { id = LOK_space.7 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -323,8 +327,6 @@ lok_space_program_cat = {
 					add_to_variable = { muno_exp = muno_exp_gained }
 					custom_effect_tooltip = lok_add_muno_exp_tooltip
 
-					country_event = { id = LOK_space.2 days = 1 }
-					
 					if = {
 						limit = { NOT = { has_country_flag = lok_muno_landing_done } }
 						custom_effect_tooltip = lok_first_time_we_do_mission
@@ -338,7 +340,11 @@ lok_space_program_cat = {
 						add_to_variable = { muno_exp = muno_exp_gained }
 						custom_effect_tooltip = lok_add_muno_exp_tooltip
 
-						add_political_power = 25	
+						add_political_power = 25
+						country_event = { id = LOK_space.2 days = 1 }
+					}
+					else = {
+						country_event = { id = LOK_space.26 days = 1 }
 					}
 
 					if = {
@@ -447,7 +453,14 @@ lok_space_program_cat = {
 					FROM = {
 						set_state_flag = lok_space_state_surveyed_by_@ROOT
 					}
-					country_event = { id = LOK_space.10 }
+					if = {
+						limit = { NOT = { has_country_flag = lok_muno_survey_done } }
+						set_country_flag = lok_muno_survey_done
+						country_event = { id = LOK_space.10 }
+					}
+					else = {
+						country_event = { id = LOK_space.27 }
+					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -546,7 +559,11 @@ lok_space_program_cat = {
 						set_temp_variable = { muno_exp_gained = 5 }
 						add_to_variable = { space_exp = flusion_exp_gained }
 						custom_effect_tooltip = lok_add_muno_exp_tooltip
-						add_political_power = 50	
+						add_political_power = 50
+						country_event = { id = LOK_space.12 }
+					}
+					else = {
+						country_event = { id = LOK_space.28 }
 					}
 
 					if = {
@@ -557,7 +574,6 @@ lok_space_program_cat = {
 
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
-					country_event = { id = LOK_space.12 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -663,7 +679,14 @@ lok_space_program_cat = {
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
 
-					country_event = { id = LOK_space.14 }
+					if = {
+						limit = { NOT = { has_country_flag = lok_muno_buildup_done } }
+						set_country_flag = lok_muno_buildup_done
+						country_event = { id = LOK_space.14 }
+					}
+					else = {
+						country_event = { id = LOK_space.29 }
+					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -765,14 +788,10 @@ lok_space_program_cat = {
 					add_to_variable = { xenon_exp = xenon_exp_gained }
 					custom_effect_tooltip = lok_add_xenon_exp_tooltip
 					
-					country_event = { id = LOK_space.16 }
-
 					if = {
 						limit = { NOT = { has_country_flag = lok_xenon_landing_done } }
 						custom_effect_tooltip = lok_first_time_we_do_mission
 						set_country_flag = lok_xenon_landing_done
-
-						#country_event = { id = LOK_space.2 days = 1 }
 
 						set_temp_variable = { space_exp_gained = 2 }
 						add_to_variable = { space_exp = flusion_exp_gained }
@@ -782,7 +801,11 @@ lok_space_program_cat = {
 						add_to_variable = { xenon_exp = xenon_exp_gained }
 						custom_effect_tooltip = lok_add_xenon_exp_tooltip
 
-						add_political_power = 25	
+						add_political_power = 25
+						country_event = { id = LOK_space.16 }
+					}
+					else = {
+						country_event = { id = LOK_space.30 }
 					}
 
 					if = {
@@ -894,7 +917,14 @@ lok_space_program_cat = {
 					FROM = {
 						set_state_flag = lok_space_state_surveyed_by_@ROOT
 					}
-					country_event = { id = LOK_space.18 }
+					if = {
+						limit = { NOT = { has_country_flag = lok_xenon_survey_done } }
+						set_country_flag = lok_xenon_survey_done
+						country_event = { id = LOK_space.18 }
+					}
+					else = {
+						country_event = { id = LOK_space.31 }
+					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -993,7 +1023,11 @@ lok_space_program_cat = {
 						set_temp_variable = { xenon_exp_gained = 5 }
 						add_to_variable = { space_exp = flusion_exp_gained }
 						custom_effect_tooltip = lok_add_xenon_exp_tooltip
-						add_political_power = 50	
+						add_political_power = 50
+						country_event = { id = LOK_space.20 }
+					}
+					else = {
+						country_event = { id = LOK_space.32 }
 					}
 
 					if = {
@@ -1004,7 +1038,6 @@ lok_space_program_cat = {
 
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
-					country_event = { id = LOK_space.20 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -1111,7 +1144,14 @@ lok_space_program_cat = {
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
 
-					country_event = { id = LOK_space.22 }
+					if = {
+						limit = { NOT = { has_country_flag = lok_xenon_buildup_done } }
+						set_country_flag = lok_xenon_buildup_done
+						country_event = { id = LOK_space.22 }
+					}
+					else = {
+						country_event = { id = LOK_space.33 }
+					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
