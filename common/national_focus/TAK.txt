@@ -1650,8 +1650,44 @@ focus_tree = {
 					type = industrial_complex
 					level = 3
 				}
+				add_manpower = -1500000
 			}
 			country_event = { id = TAK_event.2002 }
+			#Refugee distribution to eligible Solakean nations
+			hidden_effect = {
+				#Build array of eligible nations and count their states
+				set_variable = { global.TAK_corelie_refugee_total_states = 0 }
+				clear_array = global.TAK_corelie_refugee_nations
+				every_country = {
+					limit = {
+						NOT = { tag = TAK }
+						NOT = { tag = PLR }
+						NOT = { tag = HAR }
+						NOT = { tag = KAR }
+						NOT = { has_war_with = TAK }
+						NOT = { has_government = fascism }
+						NOT = { has_idea = closed_economy }
+						capital_scope = { is_on_continent = solakea }
+					}
+					add_to_array = { global.TAK_corelie_refugee_nations = THIS }
+					add_to_variable = { global.TAK_corelie_refugee_total_states = num_owned_states }
+				}
+				#Calculate refugees per state
+				if = {
+					limit = { check_variable = { global.TAK_corelie_refugee_total_states > 0 } }
+					set_variable = { global.TAK_corelie_refugees_per_state = 1500 } #1500k = 1.5 million
+					divide_variable = { global.TAK_corelie_refugees_per_state = global.TAK_corelie_refugee_total_states }
+					multiply_variable = { global.TAK_corelie_refugees_per_state = 1000 } #Convert back from k to raw
+					#Fire events and distribute refugees
+					for_each_scope_loop = {
+						array = global.TAK_corelie_refugee_nations
+						country_event = { id = TAK_event.2004 }
+						every_owned_state = {
+							add_manpower = global.TAK_corelie_refugees_per_state
+						}
+					}
+				}
+			}
 		}
 	}
 
