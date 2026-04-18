@@ -17,25 +17,3 @@ ROQ_reclamation_cleanup = {
 	clear_array = global.ROQ_reclamation_targets
 	clear_array = global.ROQ_reclamation_ssu_supporters
 }
-
-# Set ROOT.ROQ_reclamation_transfer_val to the correct scaled amount.
-# Call this in the ROOT scope of an SSU member before applying effects to targets.
-# Requires: ROOT has ROQ_reclamation_support_level set; base_50 = 0.5x value, base_100 = 1x value,
-#           base_150 = 1.5x value, base_200 = 2x value.
-# Usage: set base values as params before calling, then read ROQ_reclamation_transfer_val.
-ROQ_reclamation_scale_effect = {
-	# Defaults to Supportive (1x) so callers just set the 1x base
-	if = {
-		limit = { check_variable = { ROQ_reclamation_support_level > 2 } }
-		multiply_variable = { ROQ_reclamation_transfer_val = 2 }
-	}
-	else_if = {
-		limit = { check_variable = { ROQ_reclamation_support_level > 1 } }
-		multiply_variable = { ROQ_reclamation_transfer_val = 1.5 }
-	}
-	else_if = {
-		limit = { check_variable = { ROQ_reclamation_support_level < 1 } }
-		multiply_variable = { ROQ_reclamation_transfer_val = 0.5 }
-	}
-	# else: level 1 = 1x, no multiplication needed
-}
