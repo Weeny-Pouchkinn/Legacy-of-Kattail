@@ -2781,6 +2781,7 @@ lok_journal_entries_cat = {
 			}
 			hidden_effect = {
 				news_event = { id = LOK_news.2 days = 2 }
+				country_event = { id = ROQ_reclamation.1 days = 1 }
 			}
 		}
 
@@ -2859,6 +2860,10 @@ lok_journal_entries_cat = {
 			hidden_effect = {
 				event_target:east_solakea_katzen_uniter = {
 					set_country_flag = won_against_reclamation
+				}
+				if = {
+					limit = { has_global_flag = ROQ_reclamation_active }
+					ROQ_reclamation_cleanup = yes
 				}
 			}
 		}

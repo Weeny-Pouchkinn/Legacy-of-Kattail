@@ -1,0 +1,547 @@
+ROQ_reclamation_cat = {
+
+	# ─────────────────────────────────────────────────────────────────────
+	# TIMED MISSION: Cloudstrider Intervention (MCF – has actual timeout effects)
+	# ─────────────────────────────────────────────────────────────────────
+	MCF_reclamation_cloudstrider_intervention = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = { tag = MCF }
+
+		activation = {
+			has_global_flag = ROQ_reclamation_active
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		available = { always = no }
+
+		cancel_trigger = {
+			NOT = { has_global_flag = ROQ_reclamation_active }
+		}
+
+		is_good = yes
+		fire_only_once = yes
+		selectable_mission = no
+		days_mission_timeout = 180
+
+		timeout_effect = {
+			# If ROQ is still fighting anyone in the targets array, add them to MCF's faction
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+					has_war_with = ROQ
+					MCF = { is_faction_leader = yes }
+				}
+				MCF = { add_to_faction = PREV }
+				country_event = { id = ROQ_reclamation.20 }
+			}
+			# Cleanup: clear flag and arrays (modifier stays — it represents permanent training)
+			hidden_effect = { ROQ_reclamation_cleanup = yes }
+		}
+	}
+
+	# ─────────────────────────────────────────────────────────────────────
+	# TIMED MISSION: Cloudstrider Intervention (everyone else – display only)
+	# ─────────────────────────────────────────────────────────────────────
+	ROQ_reclamation_cloudstrider_intervention = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = {
+			OR = {
+				tag = ROQ
+				tag = FSR
+				tag = DOM
+				is_flusiobalkan = yes
+			}
+		}
+
+		activation = {
+			has_global_flag = ROQ_reclamation_active
+			NOT = { tag = MCF }
+			OR = {
+				tag = ROQ
+				is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+				is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+			}
+		}
+
+		available = { always = no }
+
+		cancel_trigger = {
+			NOT = { has_global_flag = ROQ_reclamation_active }
+		}
+
+		is_good = no
+		fire_only_once = yes
+		selectable_mission = no
+		days_mission_timeout = 180
+
+		timeout_effect = { }
+	}
+
+	# ─────────────────────────────────────────────────────────────────────
+	# MCF SUPPORT DECISIONS
+	# ─────────────────────────────────────────────────────────────────────
+
+	MCF_reclamation_air_advisors = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = MCF
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			# base effect 0.05, scale by support level
+			set_variable = { ROQ_reclamation_transfer_val = 0.05 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_air_agility_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.10 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	MCF_reclamation_weather_disruption = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = MCF
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			# base effect 0.05 for attack and defence, scale by support level
+			set_variable = { ROQ_reclamation_transfer_val = 0.05 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_air_attack_mod = PREV.ROQ_reclamation_transfer_val }
+				add_to_variable = { ROQ_reclamation_air_defence_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.11 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	# ─────────────────────────────────────────────────────────────────────
+	# KHA SUPPORT DECISIONS
+	# ─────────────────────────────────────────────────────────────────────
+
+	KHA_reclamation_war_advisors = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = KHA
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			set_variable = { ROQ_reclamation_transfer_val = 0.05 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_army_attack_mod = PREV.ROQ_reclamation_transfer_val }
+				add_to_variable = { ROQ_reclamation_army_defence_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.12 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	KHA_reclamation_recon_raiders = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = KHA
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			set_variable = { ROQ_reclamation_transfer_val = 0.05 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_breakthrough_mod = PREV.ROQ_reclamation_transfer_val }
+				add_to_variable = { ROQ_reclamation_coordination_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.13 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	# ─────────────────────────────────────────────────────────────────────
+	# SLR SUPPORT DECISIONS
+	# ─────────────────────────────────────────────────────────────────────
+
+	SLR_reclamation_logistical_advisors = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = SLR
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			# base = -0.025 (supply reduction); scale_effect multiplies, result stays negative
+			set_variable = { ROQ_reclamation_transfer_val = -0.025 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_supply_consumption_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.14 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	SLR_reclamation_industrial_engineers = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = SLR
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			set_variable = { ROQ_reclamation_transfer_val = 0.025 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_build_speed_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.15 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	# ─────────────────────────────────────────────────────────────────────
+	# TEN SUPPORT DECISIONS
+	# ─────────────────────────────────────────────────────────────────────
+
+	TEN_reclamation_industrial_advisors = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = TEN
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			set_variable = { ROQ_reclamation_transfer_val = 0.05 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_factory_output_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.16 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	TEN_reclamation_fortification_engineers = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			tag = TEN
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			set_variable = { ROQ_reclamation_transfer_val = 0.05 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_fort_build_speed_mod = PREV.ROQ_reclamation_transfer_val }
+				add_to_variable = { ROQ_reclamation_aa_build_speed_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.17 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	# ─────────────────────────────────────────────────────────────────────
+	# GENERIC SSU MEMBER SUPPORT DECISIONS
+	# (for any faction member that is not MCF, KHA, SLR, or TEN)
+	# ─────────────────────────────────────────────────────────────────────
+
+	LOK_reclamation_military_support = {
+		icon = GFX_decision_generic_military
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+			NOT = { tag = MCF }
+			NOT = { tag = KHA }
+			NOT = { tag = SLR }
+			NOT = { tag = TEN }
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			# base = 0.025, scale by support level
+			set_variable = { ROQ_reclamation_transfer_val = 0.025 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_breakthrough_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.18 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	LOK_reclamation_political_support = {
+		icon = GFX_decision_generic_propaganda
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+			NOT = { tag = MCF }
+			NOT = { tag = KHA }
+			NOT = { tag = SLR }
+			NOT = { tag = TEN }
+		}
+
+		available = {
+			NOT = { has_country_flag = ROQ_reclamation_supported_recently }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = ROQ_reclamation_supported_recently days = 30 value = 1 }
+
+			# base = -0.05 (consumer goods reduction), scale by support level
+			set_variable = { ROQ_reclamation_transfer_val = -0.05 }
+			ROQ_reclamation_scale_effect = yes
+
+			every_country = {
+				limit = {
+					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+					country_exists = yes
+				}
+				add_to_variable = { ROQ_reclamation_consumer_goods_mod = PREV.ROQ_reclamation_transfer_val }
+				country_event = { id = ROQ_reclamation.19 }
+			}
+			set_variable = { ROQ_reclamation_transfer_val = 0 }
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	# ─────────────────────────────────────────────────────────────────────
+	# FSR / DOM LOBBY DECISIONS
+	# target_array = global.ROQ_reclamation_ssu_supporters
+	# 50% success if only one of FSR/DOM exists; 33% if both exist.
+	# ─────────────────────────────────────────────────────────────────────
+
+	FSR_DOM_reclamation_lobby = {
+		icon = GFX_decision_generic_diplomacy
+
+		visible = {
+			has_global_flag = ROQ_reclamation_active
+			OR = {
+				is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+			}
+		}
+
+		target_array = global.ROQ_reclamation_ssu_supporters
+
+		target_trigger = {
+			FROM = {
+				exists = yes
+				# Only allow lobbying nations that aren't already Adamant
+				check_variable = { ROQ_reclamation_support_level < 3 }
+			}
+		}
+
+		cost = 50
+		days_remove = 30
+
+		remove_effect = {
+			if = {
+				# Both FSR and DOM are in the targets array → 33% (1 in 3) chance
+				limit = {
+					country_exists = FSR
+					country_exists = DOM
+					FSR = { is_in_array = { array = global.ROQ_reclamation_targets value = FSR } }
+					DOM = { is_in_array = { array = global.ROQ_reclamation_targets value = DOM } }
+				}
+				random_list = {
+					1 = {
+						custom_effect_tooltip = ROQ_reclamation_lobby_success_tt
+						hidden_effect = {
+							FROM = {
+								add_to_variable = { ROQ_reclamation_support_level = 1 }
+								clamp_variable = { var = ROQ_reclamation_support_level min = 0 max = 3 }
+							}
+						}
+					}
+					2 = {
+						custom_effect_tooltip = ROQ_reclamation_lobby_fail_tt
+					}
+				}
+			}
+			else = {
+				# Only one target nation → 50% (1 in 2) chance
+				random_list = {
+					1 = {
+						custom_effect_tooltip = ROQ_reclamation_lobby_success_tt
+						hidden_effect = {
+							FROM = {
+								add_to_variable = { ROQ_reclamation_support_level = 1 }
+								clamp_variable = { var = ROQ_reclamation_support_level min = 0 max = 3 }
+							}
+						}
+					}
+					1 = {
+						custom_effect_tooltip = ROQ_reclamation_lobby_fail_tt
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				FROM = { check_variable = { ROQ_reclamation_support_level > 1 } }
+			}
+		}
+	}
+}
