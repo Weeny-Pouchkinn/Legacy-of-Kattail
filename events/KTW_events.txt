@@ -1,0 +1,280 @@
+add_namespace = KTW_event
+
+###########################
+# KTW - Katown Events
+###########################
+
+# KTW informed of food crisis - must secure surrounding states
+country_event = {
+	id = KTW_event.1
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KTW_event.1" }
+	title = KTW_event.1.t
+	desc = KTW_event.1.d
+	picture = GFX_report_event_burning_city
+
+	is_triggered_only = yes
+
+	option = {
+		name = KTW_event.1.a
+		activate_mission = KTW_secure_periphery
+		hidden_effect = {
+			set_country_flag = ktw_katown_struggle_active
+			# Add cores on required states (they already have them but just in case)
+			30 = { add_core_of = KTW }
+			27 = { add_core_of = KTW }
+			29 = { add_core_of = KTW }
+			42 = { add_core_of = KTW }
+			50 = { add_core_of = KTW }
+			39 = { add_core_of = KTW }
+		}
+	}
+}
+
+# KTW ultimatum sent to a nation
+country_event = {
+	id = KTW_event.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KTW_event.2" }
+	title = KTW_event.2.t
+	desc = KTW_event.2.d
+	picture = GFX_report_event_dofus
+
+	is_triggered_only = yes
+
+	# Accept the ultimatum - give the states
+	option = {
+		name = KTW_event.2.a
+		every_owned_state = {
+			limit = {
+				is_core_of = KTW
+				OR = {
+					state = 30
+					state = 27
+					state = 29
+					state = 42
+					state = 50
+					state = 39
+				}
+			}
+			transfer_state_to = FROM
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+
+	# Refuse the ultimatum
+	option = {
+		name = KTW_event.2.b
+		FROM = {
+			declare_war_on = { target = ROOT type = take_claimed_state }
+		}
+		ai_chance = {
+			base = 75
+		}
+	}
+}
+
+# KTW Katown Struggle Success - KTW secured all needed states
+country_event = {
+	id = KTW_event.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KTW_event.3" }
+	title = KTW_event.3.t
+	desc = KTW_event.3.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		name = KTW_event.3.a
+		hidden_effect = {
+			clr_country_flag = ktw_katown_struggle_active
+			# White peace with anyone we were at war with for these states
+			every_country = {
+				limit = {
+					has_war_with = ROOT
+					NOT = { tag = SIL }
+				}
+				white_peace = ROOT
+				country_event = { id = KTW_event.4 hours = 6 }
+			}
+		}
+	}
+}
+
+# Notification to nations white peace'd by KTW
+country_event = {
+	id = KTW_event.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KTW_event.4" }
+	title = KTW_event.4.t
+	desc = KTW_event.4.d
+	picture = GFX_report_event_dofus
+
+	is_triggered_only = yes
+
+	option = {
+		name = KTW_event.4.a
+	}
+}
+
+# KTW Katown Struggle Failure - KTW collapses and is partitioned
+country_event = {
+	id = KTW_event.5
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KTW_event.5" }
+	title = KTW_event.5.t
+	desc = KTW_event.5.d
+	picture = GFX_report_event_burning_city
+
+	is_triggered_only = yes
+
+	option = {
+		name = KTW_event.5.a
+		hidden_effect = {
+			clr_country_flag = ktw_katown_struggle_active
+			set_country_flag = ktw_lockdown_active
+
+			# White peace everyone
+			every_country = {
+				limit = { has_war_with = ROOT }
+				white_peace = ROOT
+			}
+
+			# Distribute states to specific nations if they exist
+			if = {
+				limit = { country_exists = PAW }
+				42 = { if = { limit = { is_owned_by = KTW } transfer_state_to = PAW } }
+				50 = { if = { limit = { is_owned_by = KTW } transfer_state_to = PAW } }
+				44 = { if = { limit = { is_owned_by = KTW } transfer_state_to = PAW } }
+			}
+			if = {
+				limit = { country_exists = KVK }
+				34 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KVK } }
+				29 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KVK } }
+			}
+			if = {
+				limit = { country_exists = KKH }
+				27 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
+				30 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
+				36 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
+			}
+			if = {
+				limit = { country_exists = SIL }
+				39 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+				45 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+			}
+
+
+			for_loop_effect = {
+				end = 5
+				every_owned_state = {
+					limit = { NOT = { state = 509 } }
+					random_neighbor_state = {
+						limit = { NOT = { is_controlled_by = KTW } }
+						var:controller = { save_global_event_target_as = ktw_state_transfer_target }
+					}
+					transfer_state_to = event_target:ktw_state_transfer_target
+				}
+			}
+
+			# Add lockdown spirit
+			add_ideas = KTW_lockdown_spirit
+
+			# Broadcast collapse news
+			news_event = { id = KTW_event.7 hours = 6 }
+		}
+	}
+}
+
+# KTW early collapse - 509 was seized during initial war
+country_event = {
+	id = KTW_event.6
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KTW_event.6" }
+	title = KTW_event.6.t
+	desc = KTW_event.6.d
+	picture = GFX_report_event_burning_city
+
+	is_triggered_only = yes
+
+	option = {
+		name = KTW_event.6.a
+		hidden_effect = {
+			clr_country_flag = ktw_katown_struggle_active
+			# Complete collapse - give all states to appropriate nations
+			every_country = {
+				limit = { has_war_with = ROOT }
+				white_peace = ROOT
+			}
+
+			if = {
+				limit = { country_exists = PAW }
+				42 = { if = { limit = { is_owned_by = KTW } transfer_state_to = PAW } }
+				50 = { if = { limit = { is_owned_by = KTW } transfer_state_to = PAW } }
+				44 = { if = { limit = { is_owned_by = KTW } transfer_state_to = PAW } }
+			}
+			if = {
+				limit = { country_exists = KVK }
+				34 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KVK } }
+				29 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KVK } }
+			}
+			if = {
+				limit = { country_exists = KKH }
+				27 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
+				30 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
+				36 = { if = { limit = { is_owned_by = KTW } transfer_state_to = KKH } }
+			}
+			if = {
+				limit = { country_exists = SIL }
+				39 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+				45 = { if = { limit = { is_owned_by = KTW } transfer_state_to = SIL } }
+			}
+
+
+			for_loop_effect = {
+				end = 5
+				every_owned_state = {
+					limit = { NOT = { state = 509 } }
+					random_neighbor_state = {
+						limit = { NOT = { is_controlled_by = KTW } }
+						var:controller = { save_global_event_target_as = ktw_state_transfer_target }
+					}
+					transfer_state_to = event_target:ktw_state_transfer_target
+				}
+			}
+
+
+
+			# Broadcast collapse news
+			news_event = { id = KTW_event.7 hours = 6 }
+		}
+	}
+}
+
+# News event: Katown has been partitioned
+news_event = {
+	id = KTW_event.7
+	title = KTW_event.7.t
+	desc = KTW_event.7.d
+	is_triggered_only = yes
+	picture = GFX_news_event_burning_city
+	major = yes
+
+	option = {
+		name = KTW_event.7.a
+		trigger = { has_government = communism }
+	}
+	option = {
+		name = KTW_event.7.b
+		trigger = { has_government = fascism }
+	}
+	option = {
+		name = KTW_event.7.c
+		trigger = { has_government = democratic }
+	}
+	option = {
+		name = KTW_event.7.e
+		trigger = { has_government = neutrality }
+	}
+	option = {
+		name = KTW_event.7.f
+		trigger = { has_government = gestalt }
+	}
+}

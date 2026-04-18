@@ -442,10 +442,6 @@ lok_journal_entries_cat = {
 								navy_ratio = 0.50
 								air_ratio = 0.50
 							}
-		complete_effect = {
-			OST = { country_event = { id = LOK_generic.1 } }
-		}
-
 						}
 						var:new_country = {
 							add_ideas = var_species_1
@@ -497,10 +493,6 @@ lok_journal_entries_cat = {
 							navy_ratio = 0.50
 							air_ratio = 0.50
 						}
-		complete_effect = {
-			OST = { country_event = { id = LOK_generic.1 } }
-		}
-
 					}
 					var:new_country = {
 						add_ideas = var_species_1
@@ -531,6 +523,10 @@ lok_journal_entries_cat = {
 					}
 				}
 			}
+		}
+
+		complete_effect = {
+			OST = { country_event = { id = LOK_generic.1 } }
 		}
 
 		days_remove = 15
@@ -1721,7 +1717,7 @@ lok_journal_entries_cat = {
 			country_exists = WPR
 			WPR = { is_ai = yes }
 			WPR = {
-				surrender_progress > 0.5
+				surrender_progress > 0.3
 			}
 			NOT = { has_war_with = WPR }
 			WPR = { has_war_with = MEW }
@@ -2495,6 +2491,9 @@ lok_journal_entries_cat = {
 				target = KUS
 				type = take_claimed_state
 			}
+			hidden_effect = {
+				country_event = { id = KUS_NEK_war.1 days = 1 }
+			}
 		}
 
 		cost = 50
@@ -2510,45 +2509,6 @@ lok_journal_entries_cat = {
 		}
 	}
 
-	NEK_kusnurk_peace = {
-		icon = GFX_decision_hol_war_on_pacifism
-		allowed = {
-			tag = NEK
-		}
-
-		visible = {
-			has_war_with = KUS
-		}
-
-		available = {
-			229 = { is_controlled_by = NEK }
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			effect_tooltip = {
-				white_peace = KUS
-				229 = {
-					transfer_state_to = NEK
-					custom_effect_tooltip = state_core_threshold_set_60
-					set_state_flag = compliance_60_@ROOT
-					add_to_array = { array = ROOT.potential_cores_array }
-					add_compliance = 10
-				}
-				225 = { set_demilitarized_zone = yes }
-				add_stability = 0.10
-				add_war_support = 0.05
-				add_political_power = 150
-			}
-			custom_effect_tooltip = lok_needs_approval
-			KUS = { country_event = { id = LOK_NEK.1 } }
-		}
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
 
 	#ROQUALIA
 	ROQ_conclude_reconstruction = {
@@ -3871,7 +3831,7 @@ lok_journal_entries_cat = {
 			base = 1000
 		}
 	}
-	ROQ_wardec_aurelia = {
+	ROQ_wardec_corelie = {
 		icon = GFX_decision_generic_protection
 		allowed = {
 			tag = ROQ
@@ -3890,21 +3850,21 @@ lok_journal_entries_cat = {
 		cost = 50
 
 		complete_effect = {
-			SPQ = { country_event = { id = LOK_generic.1 } }
+			CRE = { country_event = { id = LOK_generic.1 } }
 		}
 
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { SPQ = { is_puppet_of = ROQ } }
-					country_exists = SPQ
+					NOT = { CRE = { is_puppet_of = ROQ } }
+					country_exists = CRE
 				}
 				declare_war_on = {
-					target = SPQ
+					target = CRE
 					type = annex_everything
 				}
 			}
-			SPQ = {
+			CRE = {
 				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
 			}
 		}
@@ -4069,20 +4029,6 @@ lok_journal_entries_cat = {
 					SLR = { is_puppet = no has_war = no }
 				}
 				SLR = { country_event = { id = LOK_MCF.1 days = 1 } }
-			}
-			if = {
-				limit = {
-					country_exists = FSR
-					FSR = { is_puppet = no has_war = no }
-				}
-				FSR = { country_event = { id = LOK_MCF.1 days = 1 } }
-			}
-			if = {
-				limit = {
-					country_exists = DOM
-					DOM = { is_puppet = no has_war = no }
-				}
-				DOM = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}
 			news_event = { id = LOK_MCF.2 days = 3 }
 		}

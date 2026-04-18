@@ -1,3 +1,59 @@
+increase_state_productivity = {
+	custom_effect_tooltip = increase_state_productivity_tt
+	hidden_effect = {
+		add_to_variable = { lok_state_productivity_value = state_prod_change }
+		add_to_variable = { state_prod_change_from_misc = state_prod_change }
+		update_state_productivity_modifier = yes
+	}
+}
+
+increase_base_state_productivity = {
+	custom_effect_tooltip = increase_base_state_productivity_tt
+	hidden_effect = {
+		add_to_variable = { lok_state_productivity_value_base = state_prod_change }
+		update_state_productivity_modifier = yes
+	}
+}
+
+LOK_NEK_war_update_opinion = {
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+	if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = -2 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+	}
+	else_if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = -1 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+	}
+	else_if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = 1 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+	}
+	else_if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = 2 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+	}
+}
+
 
 LOK_change_state_manpower = {
 	custom_effect_tooltip = LOK_change_state_manpower_tooltip
@@ -26,19 +82,54 @@ update_state_productivity_modifier = {
 			is_space_state = no
 			var:controller = { is_non_playable_country = no }
 		}
-		set_variable = { population_relative_to_game_start = state_population_k }
-		divide_variable = { population_relative_to_game_start = population_at_game_start }
-		set_variable = { lok_state_productivity_modifier = 1 }
-		#Say population_relative_to_game_start is 0.8 or 1.4
-		#1 - 0.8 = 0.2
-		#1 - 1.4 = -0.4
-		subtract_from_variable = { lok_state_productivity_modifier = population_relative_to_game_start }
-		#0.2 x -1 = -0.2
-		#-0.4 x -1 = 0.4
-		multiply_variable = { lok_state_productivity_modifier = -0.5 }
-		clamp_variable = { var = lok_state_productivity_modifier min = -0.75 max = 0.25 } #ultimately shoving one million people into the factory wont make it more efficient
+		# POPULATION CALCS
+		# We determine the difference in pop between now and the last check
+		# Now we must see how much of a % change that is relative to game start pop
+		# So we add 5 points of productivity!
+
+		if = {
+			limit = {
+				NOT = { has_state_flag = KUS_total_automation }
+			}
+			# Say it was 120 and is now 125, game start pop was 100
+			set_variable = { state_prod_change_from_pop_this_check = state_population_k }
+
+			# 125 - 120 = 5
+			subtract_from_variable = { state_prod_change_from_pop_this_check = population_last_check }
+
+			# 5 / 100 = 0.05, so 5% change
+			divide_variable = { state_prod_change_from_pop_this_check = population_at_game_start }
+
+			add_to_variable = { state_prod_change_from_pop = state_prod_change_from_pop_this_check }
+
+			set_variable = { population_last_check = state_population_k }
+
+			# The value of prod
+			add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop_this_check }
+		}
+
+		#Convert the productivity value to its modifier
+		set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
+		subtract_from_variable = { lok_state_productivity_modifier = 1 }
+
+		# #0.2 x -1 = -0.2
+		# #-0.4 x -1 = 0.4
+		# multiply_variable = { lok_state_productivity_modifier = -0.5 }
+		# clamp_variable = { var = lok_state_productivity_modifier min = -0.75 max = 0.25 } #ultimately shoving one million people into the factory wont make it more efficient
 	}
 	else = { set_variable = { lok_state_productivity_modifier = 0 } }
+}
+
+regenerate_state_productivity_modifier = {
+	if = {
+		limit = { check_variable = { lok_state_productivity_value < lok_state_productivity_value_base } }
+		add_to_variable = { lok_state_productivity_value = 0.001 }
+		add_to_variable = { state_prod_change_from_regen = 0.001 }
+		clamp_variable = { var = lok_state_productivity_value min = 0 max = lok_state_productivity_value_base }
+	}
+	#Convert the productivity value to its modifier
+	set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
+	subtract_from_variable = { lok_state_productivity_modifier = -1 }
 }
 
 clear_nuclear_facility_ideas = {
@@ -213,8 +304,10 @@ nuke_state_fission = {
 			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment amount = -1 }
 			launch_nuke = { state = PREV use_nuke = no }
 		}
-		add_to_variable = { lok_radiation_level = 1 }
+		set_variable = { lok_added_radiation_level = 1 }
+		add_to_variable = { lok_radiation_level = lok_added_radiation_level }
 		calculate_radiation_state_modifiers = yes
+		set_variable = { lok_added_radiation_level = 0 }
 	}
 }
 
@@ -1668,8 +1761,9 @@ calculate_total_food_consumption = {
 	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
 	if = {
 		limit = {
-			check_variable = { country_food_needs_met_perc < 61 }
+			check_variable = { country_food_needs_met_perc < 50 }
 			check_variable = { country_food_stockpile < 1 }
+			date > "100.1.5"
 		}
 		every_controlled_state = {
 			set_variable = { lok_starvation_death_count = state_population_k }
@@ -1889,12 +1983,15 @@ fire_thermonuclear_salvo = {
 					add_to_variable = { global.lok_nuclear_soot_perc_raw = lok_nuclear_soot_perc_raw_from_state } #Add the soot to the global counter
 					multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
 					add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
-					divide_variable = { lok_added_radiation_level = 4 }
 					calculate_radiation_state_modifiers = yes
 					every_neighbor_state = { #It spreads to neighboring states too, how fun!
-						add_to_variable = { lok_radiation_level = PREV.lok_added_radiation_level }
+						set_variable = { lok_added_radiation_level = PREV.lok_added_radiation_level }
+						divide_variable = { lok_added_radiation_level = 4 }
+						add_to_variable = { lok_radiation_level = lok_added_radiation_level }
 						calculate_radiation_state_modifiers = yes
+						set_variable = { lok_added_radiation_level = 0 }
 					}
+					set_variable = { lok_added_radiation_level = 0 }
 					if = {
 						limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
 						set_temp_variable = { lok_nuke_casualties = state_population_k } #Say 10M so that's 10000
@@ -2008,6 +2105,15 @@ calculate_radiation_in_state = {
 
 #applied immediately when radiation is added - debuffs the state
 calculate_radiation_state_modifiers = {
+	if = { #Katown Pyramid protects!
+		limit = { NOT = { check_variable = { wonder = 1 } } }
+		#Prod loss from rads
+		#1 rad = 0.1 prod loss, so divide by 1000
+		set_variable = { state_prod_change_from_radiation_this_check = lok_added_radiation_level }
+		divide_variable = { state_prod_change_from_radiation_this_check = -100 }
+		add_to_variable = { state_prod_change_from_radiation = state_prod_change_from_radiation_this_check }
+		add_to_variable = { lok_state_productivity_value = state_prod_change_from_radiation_this_check }
+	}
 	if = { #Katown Pyramid protects!
 		limit = { check_variable = { wonder = 1 } }
 		set_variable = { lok_radiation_level = 0 }

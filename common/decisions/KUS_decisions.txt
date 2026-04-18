@@ -1045,150 +1045,33 @@ prospect_for_resources = {
 # Crush Rebel Groups Decisions (Technocratic Path)
 # ==========================================
 political_actions = {
-	KUS_crush_solkatzen_rebels = {
+	KUS_crush_rebels = {
 		icon = GFX_decision_generic_ignite_civil_war
 
 		allowed = { tag = KUS }
 
 		visible = {
 			has_completed_focus = KUS_crush_rebel_groups
-			213 = { is_demilitarized_zone = yes }
 		}
+
+		state_target = yes
+		target_array = KUS_rebels_array
 
 		fire_only_once = yes
 		cost = 50
 		days_remove = 35
 
 		remove_effect = {
-			213 = { set_demilitarized_zone = no }
+			FROM = {
+				if = {
+					limit = { is_demilitarized_zone = yes }
+					set_demilitarized_zone = no
+				}
+				clr_state_flag = KUS_has_rebels
+				set_temp_variable = { state_prod_change = 0.5 }
+				increase_state_productivity = yes
+			}
 		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_crush_krrama_rebels = {
-		icon = GFX_decision_generic_ignite_civil_war
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_completed_focus = KUS_crush_rebel_groups
-			225 = { is_demilitarized_zone = yes }
-		}
-
-		fire_only_once = yes
-		cost = 50
-		days_remove = 35
-
-		remove_effect = {
-			225 = { set_demilitarized_zone = no }
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_crush_northern_akiba_rebels = {
-		icon = GFX_decision_generic_ignite_civil_war
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_completed_focus = KUS_crush_rebel_groups
-			229 = { is_demilitarized_zone = yes }
-		}
-
-		fire_only_once = yes
-		cost = 50
-		days_remove = 35
-
-		remove_effect = {
-			229 = { set_demilitarized_zone = no }
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_crush_kikol_rebels = {
-		icon = GFX_decision_generic_ignite_civil_war
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_completed_focus = KUS_crush_rebel_groups
-			231 = { is_demilitarized_zone = yes }
-		}
-
-		fire_only_once = yes
-		cost = 50
-		days_remove = 35
-
-		remove_effect = {
-			231 = { set_demilitarized_zone = no }
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_crush_evla_rebels = {
-		icon = GFX_decision_generic_ignite_civil_war
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_completed_focus = KUS_crush_rebel_groups
-			715 = { is_demilitarized_zone = yes }
-		}
-
-		fire_only_once = yes
-		cost = 50
-		days_remove = 35
-
-		remove_effect = {
-			715 = { set_demilitarized_zone = no }
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_crush_tarva_rebels = {
-		icon = GFX_decision_generic_ignite_civil_war
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_completed_focus = KUS_crush_rebel_groups
-			716 = { is_demilitarized_zone = yes }
-		}
-
-		fire_only_once = yes
-		cost = 50
-		days_remove = 35
-
-		remove_effect = {
-			716 = { set_demilitarized_zone = no }
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_crush_kohla_rebels = {
-		icon = GFX_decision_generic_ignite_civil_war
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_completed_focus = KUS_crush_rebel_groups
-			717 = { is_demilitarized_zone = yes }
-		}
-
-		fire_only_once = yes
-		cost = 50
-		days_remove = 35
-
-		remove_effect = {
-			717 = { set_demilitarized_zone = no }
-		}
-
 		ai_will_do = { base = 100 }
 	}
 }
@@ -1196,197 +1079,104 @@ political_actions = {
 # ==========================================
 # Rewire for Total Automation Decisions (Basilisk)
 # ==========================================
-political_actions = {
-	KUS_rewire_jarvalin = {
+KUS_basilisk_cat = {
+	KUS_rewire_state = {
 		icon = GFX_decision_generic_construction
 
 		allowed = { tag = KUS }
 
 		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			218 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
+			has_country_flag = KUS_basilisk_took_over
+			FROM = {
+				NOT = {
+					has_state_flag = KUS_total_automation
+					has_state_flag = KUS_has_rebels
+				}
+			}
+ 		}
+
+		state_target = yes
+
+		on_map_mode = map_only
 
 		fire_only_once = yes
-		cost = 120
 		days_remove = 60
 
+		target_array = ROOT.controlled_states
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 9
+		}
+
+		cost = 0
+
+		modifier = {
+			civilian_factory_use = 10
+		}
+
 		remove_effect = {
-			218 = {
+			FROM = {
+				add_core_of = ROOT
 				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
+				set_temp_variable = { state_prod_change = 0.10 }
+				increase_state_productivity = yes
+				increase_base_state_productivity = yes
+				custom_effect_tooltip = KUS_rewire_state_tt
+				hidden_effect = {
+					#Undo prod changes from pop
+					subtract_from_variable = { lok_state_productivity_value = state_prod_change_from_pop }
+					set_variable = { state_prod_change_from_pop = 0 }
+				}
 			}
 		}
 
 		ai_will_do = { base = 100 }
 	}
 
-	KUS_rewire_krrama = {
-		icon = GFX_decision_generic_construction
+	KUS_kill_neighbor = {
+		icon = GFX_decision_CHL_carabineros
 
 		allowed = { tag = KUS }
 
 		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			225 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
+			has_country_flag = KUS_basilisk_took_over
+			FROM = {
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+ 		}
 
 		fire_only_once = yes
-		cost = 120
-		days_remove = 60
+		days_remove = 10
+
+		target_array = neighbors
+
+		cost = 0
+
+		complete_effect = {
+			FROM = { country_event = { id = LOK_generic.1 } }
+		}
 
 		remove_effect = {
-			225 = {
-				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
+			FROM = {
+				every_controlled_state = {
+					add_claim_by = KUS
+				}
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
 			}
 		}
 
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_rewire_northern_akiba = {
-		icon = GFX_decision_generic_construction
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			229 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
-
-		fire_only_once = yes
-		cost = 120
-		days_remove = 60
-
-		remove_effect = {
-			229 = {
-				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_war = yes
 			}
 		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_rewire_kikol = {
-		icon = GFX_decision_generic_construction
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			231 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
-
-		fire_only_once = yes
-		cost = 120
-		days_remove = 60
-
-		remove_effect = {
-			231 = {
-				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
-			}
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_rewire_evla = {
-		icon = GFX_decision_generic_construction
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			715 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
-
-		fire_only_once = yes
-		cost = 120
-		days_remove = 60
-
-		remove_effect = {
-			715 = {
-				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
-			}
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_rewire_tarva = {
-		icon = GFX_decision_generic_construction
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			716 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
-
-		fire_only_once = yes
-		cost = 120
-		days_remove = 60
-
-		remove_effect = {
-			716 = {
-				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
-			}
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_rewire_kohla = {
-		icon = GFX_decision_generic_construction
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			717 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
-
-		fire_only_once = yes
-		cost = 120
-		days_remove = 60
-
-		remove_effect = {
-			717 = {
-				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
-			}
-		}
-
-		ai_will_do = { base = 100 }
-	}
-
-	KUS_rewire_solkatzen = {
-		icon = GFX_decision_generic_construction
-
-		allowed = { tag = KUS }
-
-		visible = {
-			has_country_leader = { character = KUS_Rokos_Basilisk }
-			213 = { NOT = { has_state_flag = KUS_total_automation } }
-		}
-
-		fire_only_once = yes
-		cost = 120
-		days_remove = 60
-
-		remove_effect = {
-			213 = {
-				set_state_flag = KUS_total_automation
-				add_dynamic_modifier = { modifier = KUS_total_automation_modifier }
-			}
-		}
-
-		ai_will_do = { base = 100 }
 	}
 }
 
@@ -1587,6 +1377,7 @@ KUS_flusiobalkans_union_cat = {
 				NOT = { has_government = fascism }
 				NOT = { is_in_faction_with = KUS }
 				NOT = { is_subject_of = KUS }
+				NOT = { is_faction_leader = yes }
 				exists = yes
 			}
 		}
@@ -1598,6 +1389,7 @@ KUS_flusiobalkans_union_cat = {
 				NOT = { has_government = fascism }
 				NOT = { is_in_faction_with = KUS }
 				NOT = { is_subject_of = KUS }
+				NOT = { is_faction_leader = yes }
 				exists = yes
 			}
 		}
@@ -1612,18 +1404,17 @@ KUS_flusiobalkans_union_cat = {
 
 		available = {
 			custom_trigger_tooltip = {
-				tooltip = KUS_pressure_2x_industry_tt
-				# KUS faction needs 2x the target's factories (4x if target is in a faction)
-				# Calculate target's total factories * multiplier as temp var
+				tooltip = KUS_pressure_4x_industry_tt
+				# KUS faction needs 4x the target's factories (8x if target is in a faction)
 				hidden_trigger = {
 					set_temp_variable = { KUS_temp_target_fac = FROM.num_of_civilian_factories }
 					add_to_temp_variable = { KUS_temp_target_fac = FROM.num_of_military_factories }
 					if = {
 						limit = { FROM = { is_in_faction = yes } }
-						multiply_temp_variable = { KUS_temp_target_fac = 4 }
+						multiply_temp_variable = { KUS_temp_target_fac = 8 }
 					}
 					else = {
-						multiply_temp_variable = { KUS_temp_target_fac = 2 }
+						multiply_temp_variable = { KUS_temp_target_fac = 4 }
 					}
 					check_variable = { KUS_faction_total_factories > KUS_temp_target_fac }
 				}
@@ -1642,14 +1433,14 @@ KUS_flusiobalkans_union_cat = {
 					set_variable = { KUS_pressure_target_factories = num_of_civilian_factories }
 					add_to_variable = { KUS_pressure_target_factories = num_of_military_factories }
 				}
-				# Check if double threshold met (4x base, 8x if in faction)
+				# Check if double threshold met (8x base, 16x if in faction)
 				set_variable = { KUS_pressure_double_threshold = FROM.KUS_pressure_target_factories }
 				if = {
 					limit = { FROM = { is_in_faction = yes } }
-					multiply_variable = { KUS_pressure_double_threshold = 8 }
+					multiply_variable = { KUS_pressure_double_threshold = 16 }
 				}
 				else = {
-					multiply_variable = { KUS_pressure_double_threshold = 4 }
+					multiply_variable = { KUS_pressure_double_threshold = 8 }
 				}
 				if = {
 					limit = { check_variable = { KUS_faction_total_factories > KUS_pressure_double_threshold } }
