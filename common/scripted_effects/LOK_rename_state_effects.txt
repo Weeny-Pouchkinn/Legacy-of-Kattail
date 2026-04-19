@@ -1,7 +1,20 @@
 # State renaming scripted effects
 # Fire on a state scope to rename the state and its VPs
 
+clear_state_rename_flags = {
+	if = {
+		limit = { has_state_flag = state_name_roqualian }
+		clr_state_flag = state_name_roqualian
+	}
+	else_if = {
+		limit = { has_state_flag = state_name_katzen }
+		clr_state_flag = state_name_katzen
+	}
+}
+
 rename_state_roqualian = {
+	clear_state_rename_flags = yes
+	set_state_flag = state_name_roqualian
 	if = {
 		limit = { state = 4 }
 		set_state_name = STATE_4_ROQ
@@ -5055,6 +5068,8 @@ rename_state_roqualian = {
 }
 
 rename_state_katzen = {
+	clear_state_rename_flags = yes
+	set_state_flag = state_name_katzen
 	if = {
 		limit = { state = 4 }
 		set_state_name = STATE_4_KTZ
@@ -10107,6 +10122,7 @@ rename_state_katzen = {
 	}
 }
 restore_state_name = {
+	clear_state_rename_flags = yes
 	if = {
 		limit = { state = 4 }
 		set_state_name = STATE_4
