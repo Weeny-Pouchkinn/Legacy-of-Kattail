@@ -1,3 +1,81 @@
+
+AUR_change_herald_sanity = {
+	if = {
+		limit = {
+			has_country_flag = AUR_herald_sanity_active
+		}
+		custom_effect_tooltip = change_herald_sanity_tooltip
+		add_to_variable = { herald_sanity = herald_sanity_change }
+		clamp_variable = { var = herald_sanity min = 0 max = 100 }
+		AUR_clear_herald_sanity_ideas = yes
+		hidden_effect = {
+			if = {
+				limit = { check_variable = { herald_sanity > 89 } }
+				add_ideas = AUR_herald_sanity_100_to_90
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 69 } }
+				add_ideas = AUR_herald_sanity_89_to_70
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 49 } }
+				add_ideas = AUR_herald_sanity_69_to_50
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 19 } }
+				add_ideas = AUR_herald_sanity_49_to_20
+			}
+			else_if = {
+				limit = { check_variable = { herald_sanity > 0 } }
+				add_ideas = AUR_herald_sanity_19_to_0
+			}
+			else_if = { #It's over.
+				limit = { check_variable = { herald_sanity = 0 } }
+				country_event = { id = AUR_event.40 days = 5 }
+			}	
+		}
+	}
+}
+
+AUR_clear_herald_sanity_ideas = {
+	if = {
+		limit = { has_idea = AUR_herald_sanity_100_to_90 }
+		remove_ideas = AUR_herald_sanity_100_to_90
+	}
+	if = {
+		limit = { has_idea = AUR_herald_sanity_89_to_70 }
+		remove_ideas = AUR_herald_sanity_89_to_70
+	}
+	if = {
+		limit = { has_idea = AUR_herald_sanity_69_to_50 }
+		remove_ideas = AUR_herald_sanity_69_to_50
+	}
+	if = {
+		limit = { has_idea = AUR_herald_sanity_49_to_20 }
+		remove_ideas = AUR_herald_sanity_49_to_20
+	}
+	if = {
+		limit = { has_idea = AUR_herald_sanity_19_to_0 }
+		remove_ideas = AUR_herald_sanity_19_to_0
+	}
+}
+
+AUR_add_1_commissar = {
+	custom_effect_tooltip = AUR_add_1_commissar_tt
+	add_to_variable = { AUR_available_commissars = 1 }
+}
+
+AUR_add_2_commissar = {
+	custom_effect_tooltip = AUR_add_2_commissar_tt
+	add_to_variable = { AUR_available_commissars = 2 }
+}
+
+AUR_add_3_commissar = {
+	custom_effect_tooltip = AUR_add_3_commissar_tt
+	add_to_variable = { AUR_available_commissars = 3 }
+}
+
+
 AUR_set_up_katzregions = { #this code sucks
 	hidden_effect = {
 		#Southern Herzlands Katzregion
@@ -267,7 +345,7 @@ AUR_set_up_katzregions = { #this code sucks
 				is_in_array = { array = AUR.east_herzlands_1_region value = THIS }
 			}
 			if = {
-				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 				transfer_state_to = event_target:aur_east_herz_1_root_country
 			}
 			add_core_of = event_target:aur_east_herz_1_root_country
@@ -280,7 +358,7 @@ AUR_set_up_katzregions = { #this code sucks
 			every_state = {
 				limit = { is_in_array = { array = AUR.east_herzlands_1_region value = THIS } }
 				if = {
-					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 					transfer_state_to = var:new_country
 				}
 				add_core_of = var:new_country
@@ -331,7 +409,7 @@ AUR_set_up_katzregions = { #this code sucks
 				is_in_array = { array = AUR.east_herzlands_2_region value = THIS }
 			}
 			if = {
-				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 				transfer_state_to = event_target:aur_east_herz_2_root_country
 			}
 			add_core_of = event_target:aur_east_herz_2_root_country
@@ -344,7 +422,7 @@ AUR_set_up_katzregions = { #this code sucks
 			every_state = {
 				limit = { is_in_array = { array = AUR.east_herzlands_2_region value = THIS } }
 				if = {
-					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 					transfer_state_to = var:new_country
 				}
 				add_core_of = var:new_country
@@ -417,7 +495,7 @@ AUR_set_up_katzregions = { #this code sucks
 				is_in_array = { array = AUR.north_herzlands_1_region value = THIS }
 			}
 			if = {
-				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 				transfer_state_to = event_target:aur_north_herz_1_root_country
 			}
 			add_core_of = event_target:aur_north_herz_1_root_country
@@ -430,7 +508,7 @@ AUR_set_up_katzregions = { #this code sucks
 			every_state = {
 				limit = { is_in_array = { array = AUR.north_herzlands_1_region value = THIS } }
 				if = {
-					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 					transfer_state_to = var:new_country
 				}
 				add_core_of = var:new_country
@@ -563,7 +641,7 @@ AUR_set_up_katzregions = { #this code sucks
 				is_in_array = { array = AUR.central_herzlands_1_region value = THIS }
 			}
 			if = {
-				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+				limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 				transfer_state_to = event_target:aur_central_herz_1_root_country
 			}
 			add_core_of = event_target:aur_central_herz_1_root_country
@@ -576,7 +654,7 @@ AUR_set_up_katzregions = { #this code sucks
 			every_state = {
 				limit = { is_in_array = { array = AUR.central_herzlands_1_region value = THIS } }
 				if = {
-					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR NOT = { has_country_flag = become_aur_katzregion } } } }
+					limit = { var:owner = { OR = { tag = AUR is_puppet_of = AUR } } }
 					transfer_state_to = var:new_country
 				}
 				add_core_of = var:new_country

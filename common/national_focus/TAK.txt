@@ -58,7 +58,7 @@ focus_tree = {
 	focus = { #roi reluctanctly invests in the countryside
 		id = TAK_develop_the_peripherie
 		icon = GFX_SOV_development_aid_for_eastern_allies_ccp_2d_sov_compatibility
-		x = -1
+		x = -2
 		y = 1
 		cost = 5
 		relative_position_id = TAK_a_necessary_evil
@@ -109,12 +109,13 @@ focus_tree = {
 		icon = TAK_petites_charles
 		x = 0
 		y = 2
-		cost = 5
+		cost = 10
 		relative_position_id = TAK_develop_the_peripherie
 		prerequisite = { focus = TAK_agricultural_programs }
 		prerequisite = { focus = TAK_routes_du_roi }
 		completion_reward = {
 			347 = {
+				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
 				increase_state_category = yes
 				add_manpower = 50000
 				add_victory_points = {
@@ -127,6 +128,7 @@ focus_tree = {
 				}
 			}
 			340 = {
+				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
 				increase_state_category = yes
 				add_manpower = 50000
 				add_victory_points = {
@@ -139,7 +141,7 @@ focus_tree = {
 	focus = { #roi makes dockyards in tak
 		id = TAK_develop_tak
 		icon = GFX_focus_generic_refit_civilian_ships
-		x = -1
+		x = -3
 		y = 2
 		cost = 5
 		relative_position_id = TAK_petites_charles
@@ -247,10 +249,9 @@ focus_tree = {
 				equipment = {
 					type = SH_battleship_1
 					creator = "TAK" 
-					version_name = "Super-Charles Class"
 				}
-				requested_factories = 1
-				progress = 0.60
+				requested_factories = 10
+				progress = 0.95
 				amount = 1
 			}
 			navy_experience = 50
@@ -259,7 +260,7 @@ focus_tree = {
 	focus = { #roi makes mils in ikar
 		id = TAK_develop_ikar
 		icon = GFX_focus_generic_military_industry
-		x = 0
+		x = -2
 		y = 1
 		cost = 5
 		relative_position_id = TAK_petites_charles
@@ -282,7 +283,7 @@ focus_tree = {
 	focus = { #roi makes civs in die
 		id = TAK_develop_die
 		icon = GFX_focus_NORDIC_com_capstone_civilian
-		x = 1
+		x = -1
 		y = 2
 		cost = 5
 		relative_position_id = TAK_petites_charles
@@ -450,6 +451,7 @@ focus_tree = {
 		}
 	}
 
+
 	focus = { #roi tries to find out what exactly makes the portraits come to life
 		id = TAK_figure_it_out
 		icon = GFX_focus_ARG_defense_and_democracy
@@ -462,8 +464,8 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = TAK_figure_it_out_tt
-			set_variable = { TAK_stability_weekly_per_painting_power = 0.00001 }
-			set_variable = { TAK_war_support_weekly_per_painting_power = 0.00001 }
+			set_variable = { TAK_stability_weekly_per_painting_power = 0.00005 }
+			set_variable = { TAK_war_support_weekly_per_painting_power = 0.00005 }
 			set_variable = { TAK_military_factory_donations_per_painting_power = 0.1 }
 			set_variable = { TAK_weekly_manpower_per_painting_power = 10 }
 			set_variable = { TAK_brush_count = 3 }
@@ -576,15 +578,15 @@ focus_tree = {
 		icon = GFX_SOV_depoliticize_the_military_ccp_2d_sov_compatibility
 		x = 2
 		y = 1
-		cost = 5
+		cost = 10
 		relative_position_id = TAK_learn_about_it_all
 		prerequisite = { focus = TAK_learn_about_it_all }
 		completion_reward = {
-			army_experience = 50
+			army_experience = 100
 			add_doctrine_cost_reduction = {
 				name = LOK_doctrine_bonus
 				cost_reduction = 0.5
-				uses = 1
+				uses = 3
 				category = land_doctrine
 			}
 		}
@@ -882,7 +884,7 @@ focus_tree = {
 	focus = { #lets you dispatch charleslings to states to pacify them
 		id = TAK_charlesling_vanguard
 		icon = GFX_goal_generic_intelligence_exchange
-		x = 0
+		x = 2
 		y = 1
 		cost = 10
 		relative_position_id = TAK_conceive_the_charlesling
@@ -911,6 +913,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = TAK_perfect_imitation_tt
 			division_template = {
+				is_locked = yes
 				name = "Tableaux Infiltrés"
 				regiments = {
 					militia = { x = 0 y = 0 }
@@ -936,7 +939,7 @@ focus_tree = {
 	focus = { #roi prepares for war
 		id = TAK_war_economy
 		icon = GFX_focus_RAJ_war_taxes
-		x = 0
+		x = 4
 		y = 1
 		cost = 10
 		relative_position_id = TAK_perfect_imitation
@@ -954,9 +957,6 @@ focus_tree = {
 			}
 			hidden_effect = { #define cores for pupppets
 				#Quepler
-				804 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
-				396 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
-				364 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
 				358 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
 				806 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
 				421 = { add_to_array = { array = TAK.TAK_quepler_puppet_cores } }
@@ -1027,10 +1027,7 @@ focus_tree = {
 				245 = { add_to_array = { array = TAK.TAK_roqual_frontier_puppet_cores } }
 
 				#Bocerie
-				723 = { add_to_array = { array = TAK.TAK_bocerie_puppet_cores } }
-				739 = { add_to_array = { array = TAK.TAK_bocerie_puppet_cores } }
 				743 = { add_to_array = { array = TAK.TAK_bocerie_puppet_cores } }
-				307 = { add_to_array = { array = TAK.TAK_bocerie_puppet_cores } }
 				297 = { add_to_array = { array = TAK.TAK_bocerie_puppet_cores } }
 				281 = { add_to_array = { array = TAK.TAK_bocerie_puppet_cores } }
 				278 = { add_to_array = { array = TAK.TAK_bocerie_puppet_cores } }
@@ -1060,6 +1057,49 @@ focus_tree = {
 				510 = { add_to_array = { array = TAK.TAK_katzen_puppet_cores } }
 				213 = { add_to_array = { array = TAK.TAK_katzen_puppet_cores } }
 				192 = { add_to_array = { array = TAK.TAK_katzen_puppet_cores } }
+
+				every_state = {
+					if = {
+						limit = {
+							OR = {
+								state = 320
+								is_in_array = {
+									array = TAK.TAK_katzen_puppet_cores
+									value = THIS
+								}
+								is_in_array = {
+									array = TAK.TAK_bocerie_puppet_cores
+									value = THIS
+								}
+								is_in_array = {
+									array = TAK.TAK_roqual_frontier_puppet_cores
+									value = THIS
+								}
+								is_in_array = {
+									array = TAK.TAK_midi_puppet_cores
+									value = THIS
+								}
+								is_in_array = {
+									array = TAK.TAK_north_solaria_puppet_cores
+									value = THIS
+								}
+								is_in_array = {
+									array = TAK.TAK_south_solaria_puppet_cores
+									value = THIS
+								}
+								is_in_array = {
+									array = TAK.TAK_salt_puppet_cores
+									value = THIS
+								}
+								is_in_array = {
+									array = TAK.TAK_quepler_puppet_cores
+									value = THIS
+								}
+							}
+						}
+						set_state_flag = TAK_puppet_core
+					}
+				}
 			}
 		}
 	}
@@ -1090,23 +1130,23 @@ focus_tree = {
 		}
 	}
 
-	focus = { #prepare to fight aurelia
-		id = TAK_aurelia_wargoal
-		icon = TAK_aurelia_wargoal
+	focus = { #prepare to fight corelie
+		id = TAK_corelie_wargoal
+		icon = TAK_corelie_wargoal
 		x = 1
 		y = 1
 		cost = 5
 		relative_position_id = TAK_war_economy
 		prerequisite = { focus = TAK_war_economy }
 		bypass = {
-			NOT = { country_exists = SPQ }
+			NOT = { country_exists = CRE }
 		}
-		will_lead_to_war_with = SPQ
+		will_lead_to_war_with = CRE
 		completion_reward = {
-			custom_effect_tooltip = TAK_aurelia_wargoal_effect
-			SPQ = { every_controlled_state = { add_claim_by = TAK } }
+			custom_effect_tooltip = TAK_corelie_wargoal_effect
+			CRE = { every_controlled_state = { add_claim_by = TAK } }
 			hidden_effect = {
-				SPQ = {
+				CRE = {
 					add_to_array = { array = TAK.TAK_possible_wardec_targets }
 					every_core_state = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
@@ -1123,7 +1163,7 @@ focus_tree = {
 		y = 2
 		cost = 5
 		relative_position_id = TAK_war_economy
-		prerequisite = { focus = TAK_aurelia_wargoal focus = TAK_alkroa_wargoal }
+		prerequisite = { focus = TAK_corelie_wargoal focus = TAK_alkroa_wargoal }
 		bypass = {
 			NOT = { country_exists = KEP }
 		}
@@ -1131,12 +1171,16 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = TAK_quepler_wargoal_effect
 			KEP = { every_controlled_state = { add_claim_by = TAK } }
+			PLA = { every_controlled_state = { add_claim_by = TAK } }
 			hidden_effect = {
 				KEP = {
 					add_to_array = { array = TAK.TAK_possible_wardec_targets }
 					every_core_state = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
 					}
+				}
+				PLA = {
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
 				}
 			}
 		}
@@ -1149,7 +1193,7 @@ focus_tree = {
 		y = 2
 		cost = 5
 		relative_position_id = TAK_war_economy
-		prerequisite = { focus = TAK_aurelia_wargoal focus = TAK_alkroa_wargoal }
+		prerequisite = { focus = TAK_corelie_wargoal focus = TAK_alkroa_wargoal }
 		bypass = {
 			NOT = { country_exists = SLR }
 		}
@@ -1171,7 +1215,7 @@ focus_tree = {
 	focus = { #prepare to fight roqualia
 		id = TAK_roqualia_wargoal
 		icon = TAK_roqualia_wargoal
-		x = -1
+		x = 3
 		y = 5
 		cost = 5
 		relative_position_id = TAK_perfect_imitation
@@ -1186,15 +1230,42 @@ focus_tree = {
 						add_to_array = { array = TAK.TAK_possible_infiltration_states }
 					}
 				}
+				every_possible_country = {
+					limit = {
+						is_roqualian_splinter = yes
+						NOT = { tag = TAK }
+					}
+					add_to_array = { array = TAK.TAK_possible_independence_supports }
+					add_to_array = { array = TAK.TAK_possible_wardec_targets }
+				}
 			}
 		}
 	}
 
+	focus = { #prepare to fight roqualia
+		id = TAK_break_roqualia
+		icon = GFX_focus_SWI_dissolve_the_federal_council
+		x = -2
+		y = 1
+		cost = 5
+		relative_position_id = TAK_roqualia_wargoal
+		prerequisite = { focus = TAK_roqualia_wargoal }
+		available = {
+			NOT = {
+				has_war_with = ROQ
+			}
+			country_exists = ROQ
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_break_roqualia_tt
+		}
+	}
+	
 	focus = { #fill charles with clones of charles
 		id = TAK_the_new_charles
 		icon = TAK_the_new_charles
 		x = -1
-		y = 2
+		y = 1
 		cost = 5
 		relative_position_id = TAK_conceive_the_charlesling
 		prerequisite = { focus = TAK_conceive_the_charlesling }
@@ -1244,7 +1315,7 @@ focus_tree = {
 	focus = { #puppets led by charles
 		id = TAK_charles_puppets
 		icon = TAK_address_the_people
-		x = 0
+		x = 4
 		y = 4
 		cost = 5
 		relative_position_id = TAK_conceive_the_charlesling
@@ -1261,12 +1332,20 @@ focus_tree = {
 
 	focus = { #brain drain
 		id = TAK_brain_drain
-		icon = TAK_civi
+		icon = GFX_goal_tfv_generic_tech_sharing
 		x = 2
 		y = 0
 		cost = 5
 		relative_position_id = TAK_roqualia_wargoal
 		prerequisite = { focus = TAK_charles_puppets focus = TAK_native_puppets }
+		available = {
+			336 = { is_controlled_by_ROOT_or_subject = yes }
+			OR = {
+				820 = { is_controlled_by_ROOT_or_subject = yes }
+				825 = { is_controlled_by_ROOT_or_subject = yes }
+				804 = { is_controlled_by_ROOT_or_subject = yes }
+			}
+		}
 		completion_reward = {
 			add_research_slot = 1
 		}
@@ -1274,7 +1353,7 @@ focus_tree = {
 
 	focus = { #brain drain
 		id = TAK_a_united_realm
-		icon = TAK_civi
+		icon = GFX_goal_generic_national_unity
 		x = -2
 		y = 0
 		cost = 5
@@ -1310,6 +1389,9 @@ focus_tree = {
 			set_cosmetic_tag = TAK_BIG
 			custom_effect_tooltip = TAK_greater_takicardie_completion_tt
 			734 = { set_state_flag = TAK_potential_cores_in_roqualia }
+			307 = { set_state_flag = TAK_potential_cores_in_roqualia }
+			739 = { set_state_flag = TAK_potential_cores_in_roqualia }
+			723 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			321 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			733 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			731 = { set_state_flag = TAK_potential_cores_in_roqualia }
@@ -1332,11 +1414,6 @@ focus_tree = {
 			296 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			319 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			735 = { set_state_flag = TAK_potential_cores_in_roqualia }
-			840 = { set_state_flag = TAK_potential_cores_in_roqualia }
-			336 = { set_state_flag = TAK_potential_cores_in_roqualia }
-			721 = { set_state_flag = TAK_potential_cores_in_roqualia }
-			841 = { set_state_flag = TAK_potential_cores_in_roqualia }
-			720 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			402 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			1033 = { set_state_flag = TAK_potential_cores_in_roqualia }
 			1034 = { set_state_flag = TAK_potential_cores_in_roqualia }
@@ -1344,10 +1421,10 @@ focus_tree = {
 				limit = { 
 					has_state_flag = TAK_potential_cores_in_roqualia
 				}
-				set_state_flag = compliance_40_@ROOT
+				set_state_flag = compliance_60_@ROOT
 				add_to_array = { array = TAK.potential_cores_array }
 				add_claim_by = TAK
-				custom_effect_tooltip = state_core_threshold_set_40
+				custom_effect_tooltip = state_core_threshold_set_60
 				clr_state_flag = TAK_potential_cores_in_roqualia
 			}
 		}
@@ -1355,19 +1432,30 @@ focus_tree = {
 
 	focus = { #scrap dofus & co
 		id = TAK_scrap_dofus
-		icon = TAK_civi
+		icon = TAK_scrap_dofus
 		x = 0
 		y = 2
 		cost = 5
 		relative_position_id = TAK_greater_takicardie
 		prerequisite = { focus = TAK_greater_takicardie }
+		available = {
+			has_war = no
+			320 = { is_controlled_by_ROOT_or_subject = yes }
+		}
 		completion_reward = {
+			ROQ = {
+				ROQ_Dofus = { retire = yes }
+				ROQ_Saxeton = { retire = yes }
+				ROQ_sonya = { retire = yes }
+			}
+			TAK_gain_10_brush = yes
+			country_event = { id = TAK_event.2001 }
 		}
 	}
 
 	focus = { #decentralized
 		id = TAK_many_many_charles
-		icon = TAK_civi
+		icon = GFX_focus_SWE_urbanization
 		x = -1
 		y = 1
 		cost = 5
@@ -1393,6 +1481,9 @@ focus_tree = {
 			focus = TAK_many_many_charles
 		}
 		completion_reward = {
+			349 = {
+				set_state_category = megalopolis
+			}
 		}
 	}
 
@@ -1405,9 +1496,15 @@ focus_tree = {
 		relative_position_id = TAK_greater_takicardie
 		prerequisite = { focus = TAK_many_many_charles focus = TAK_everything_on_charles }
 		bypass = {
-			NOT = { country_exists = ALK }
+			NOT = { country_exists = DOM }
+			NOT = { country_exists = NEK }
+			NOT = { country_exists = KUS }
+			NOT = { country_exists = FSR }
 		}
-		will_lead_to_war_with = ALK
+		will_lead_to_war_with = DOM
+		will_lead_to_war_with = NEK
+		will_lead_to_war_with = KUS
+		will_lead_to_war_with = FSR
 		completion_reward = {
 			custom_effect_tooltip = TAK_katzen_wargoal_effect
 			DOM = { every_controlled_state = { add_claim_by = DOM } }
@@ -1474,13 +1571,674 @@ focus_tree = {
 			}
 		}
 	}
+
+
+	#Develop conquered lands
+
+	focus = {
+		id = TAK_overseas_department
+		icon = GFX_focus_SWE_privately_managed_vacation
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_bulk_housing
+		prerequisite = { focus = TAK_bulk_housing }
+		available = {
+			any_owned_state = {
+				NOT = { is_core_of = TAK }
+			}
+		}
+		completion_reward = {
+			add_ideas = TAK_overseas_department_idea
+		}
+	}
+
+	#Alkroa
+	focus = {
+		id = TAK_hunt_the_mockingbird
+		icon = GFX_focus_hol_war_on_pacifism
+		x = -2
+		y = 1
+		cost = 10
+		relative_position_id = TAK_alkroa_wargoal
+		prerequisite = { focus = TAK_alkroa_wargoal }
+		prerequisite = { focus = TAK_burn_down_corelie }
+		available = {
+			336 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			add_stability = 0.10
+			country_event = { id = TAK_event.2000 }
+		}
+	}
+
+	focus = {
+		id = TAK_burn_down_corelie
+		icon = GFX_focus_CHL_avenge_the_pacification_of_araucania
+		x = 7
+		y = 1
+		cost = 10
+		relative_position_id = TAK_overseas_department
+		prerequisite = { focus = TAK_overseas_department }
+		prerequisite = { focus = TAK_charlesling_vanguard }
+		available = {
+			825 = { is_controlled_by_ROOT_or_subject = yes }
+			826 = { is_controlled_by_ROOT_or_subject = yes }
+			827 = { is_controlled_by_ROOT_or_subject = yes }
+			829 = { is_controlled_by_ROOT_or_subject = yes }
+			828 = { is_controlled_by_ROOT_or_subject = yes }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_25000_painting_charles
+				check_variable = { TAK_painting_charles_count > 24999 }
+			}
+		}
+		completion_reward = {
+			CRE = {
+				every_core_state = {
+					remove_building = {
+						type = infrastructure
+						level = 2
+					}
+				}
+			}
+			825 = {
+				remove_building = {
+					type = arms_factory
+					level = 3
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 3
+				}
+				add_manpower = -1500000
+			}
+			country_event = { id = TAK_event.2002 }
+			#Refugee distribution to eligible Solakean nations
+			hidden_effect = {
+				#Build array of eligible nations and count their states
+				set_variable = { global.TAK_corelie_refugee_total_states = 0 }
+				clear_array = global.TAK_corelie_refugee_nations
+				every_country = {
+					limit = {
+						NOT = { tag = TAK }
+						NOT = { tag = PLR }
+						NOT = { tag = HAR }
+						NOT = { tag = KAR }
+						NOT = { has_war_with = TAK }
+						NOT = { has_government = fascism }
+						NOT = { has_idea = closed_economy }
+						capital_scope = { is_on_continent = solakea }
+					}
+					add_to_array = { global.TAK_corelie_refugee_nations = THIS }
+					add_to_variable = { global.TAK_corelie_refugee_total_states = num_owned_states }
+				}
+				#Calculate refugees per state
+				if = {
+					limit = { check_variable = { global.TAK_corelie_refugee_total_states > 0 } }
+					set_variable = { global.TAK_corelie_refugees_per_state = 1500 } #1500 (in thousands) = 1.5 million total refugees to distribute
+					divide_variable = { global.TAK_corelie_refugees_per_state = global.TAK_corelie_refugee_total_states }
+					multiply_variable = { global.TAK_corelie_refugees_per_state = 1000 } #Convert from thousands to raw manpower
+					#Fire events and distribute refugees
+					for_each_scope_loop = {
+						array = global.TAK_corelie_refugee_nations
+						country_event = { id = TAK_event.2004 days = 2 }
+						every_owned_state = {
+							add_manpower = global.TAK_corelie_refugees_per_state
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	focus = {
+		id = TAK_a_new_charles_in_alkroa
+		icon = TAK_the_new_charles
+		x = -1
+		y = 1
+		cost = 10
+		relative_position_id = TAK_charlesling_vanguard
+		prerequisite = { focus = TAK_the_new_charles }
+		prerequisite = { focus = TAK_overseas_department }
+		available = {
+			720 = { is_controlled_by_ROOT_or_subject = yes }
+			841 = { is_controlled_by_ROOT_or_subject = yes }
+			336 = { is_controlled_by_ROOT_or_subject = yes }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_25000_painting_charles
+				check_variable = { TAK_painting_charles_count > 24999 }
+			}
+		}
+		completion_reward = {
+			720 = {
+				every_neighbor_state = {
+					add_manpower = -50000
+				}
+				add_victory_points = {
+					province = 2678
+					value = 10
+				}
+				add_manpower = 150000
+				custom_effect_tooltip = TAK_a_new_charles_in_alkroa_tt
+				hidden_effect = {
+					set_province_name = {
+						id = 2678
+						name = "Charleskroa"
+					}
+				}
+				build_railway = {
+					level = 2
+					path = { 2678 2553 7680 }
+				}
+				add_building_construction = {
+					type = naval_base
+					level = 2
+					instant_build = yes
+					province = 11253
+				}
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_the_bird_march
+		icon = GFX_focus_GER_expand_pacific_holdings
+		x = 1
+		y = 2
+		cost = 10
+		relative_position_id = TAK_a_new_charles_in_alkroa
+		prerequisite = { focus = TAK_a_new_charles_in_alkroa }
+		prerequisite = { focus = TAK_hunt_the_mockingbird }
+		available = {
+			720 = { is_controlled_by_ROOT_or_subject = yes }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_25000_painting_charles
+				check_variable = { TAK_painting_charles_count > 24999 }
+			}
+		}
+		completion_reward = {
+			ALK = {
+				every_core_state = {
+					limit = { NOT = { has_state_flag = compliance_40_@ROOT } }
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = TAK.potential_cores_array }
+					add_claim_by = TAK
+					custom_effect_tooltip = state_core_threshold_set_40
+				}
+			}
+			CRE = {
+				every_core_state = {
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = TAK.potential_cores_array }
+					add_claim_by = TAK
+					custom_effect_tooltip = state_core_threshold_set_40
+				}
+			}
+		}
+	}
+
+	#Great Royal Rail
+	focus = {
+		id = TAK_bridge_solakean_gap
+		icon = GFX_focus_generic_railroad
+		x = 0
+		y = 2
+		cost = 10
+		relative_position_id = TAK_overseas_department
+		prerequisite = { focus = TAK_quepler_ports }
+		prerequisite = { focus = TAK_solaria_ports }
+		available = {
+			363 = { is_controlled_by_ROOT_or_subject = yes }
+			1013 = { is_controlled_by_ROOT_or_subject = yes }
+			356 = { is_controlled_by_ROOT_or_subject = yes }
+			364 = { is_controlled_by_ROOT_or_subject = yes }
+			1017 = { is_controlled_by_ROOT_or_subject = yes }
+			805 = { is_controlled_by_ROOT_or_subject = yes }
+			1018 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			build_railway = {
+				level = 4
+				build_only_on_allied = yes
+				fallback = yes
+				start_province = 6245
+				target_province = 7824
+			}
+			363 = {
+				add_building_construction = { type = infrastructure level = 1}
+			}
+			1013 = {
+				add_building_construction = { type = infrastructure level = 1}
+			}
+			356 = {
+				add_building_construction = { type = infrastructure level = 1}
+			}
+			364 = {
+				add_building_construction = { type = infrastructure level = 1}
+			}
+			1017 = {
+				add_building_construction = { type = infrastructure level = 1}
+			}
+			805 = {
+				add_building_construction = { type = infrastructure level = 1}
+			}
+			1018 = {
+				add_building_construction = { type = infrastructure level = 1}
+			}
+		}
+	}
+
+	#Quepler
+	focus = {
+		id = TAK_quepler_ports
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_overseas_department
+		prerequisite = { focus = TAK_overseas_department }
+		available = {
+			804 = { is_controlled_by_ROOT_or_subject = yes }
+			364 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			804 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+			1017 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_a_new_charles_in_quepler
+		icon = GFX_focus_SOV_rebuild_the_savior_cathedral
+		x = 3
+		y = 1
+		cost = 10
+		relative_position_id = TAK_overseas_department
+		prerequisite = { focus = TAK_the_new_charles }
+		prerequisite = { focus = TAK_overseas_department }
+		available = {
+			804 = { is_controlled_by_ROOT_or_subject = yes }
+			396 = { is_controlled_by_ROOT_or_subject = yes }
+			806 = { is_controlled_by_ROOT_or_subject = yes }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_25000_painting_charles
+				check_variable = { TAK_painting_charles_count > 24999 }
+			}
+		}
+		completion_reward = {
+			804 = {
+				add_victory_points = {
+					province = 11253
+					value = 20
+				}
+				every_neighbor_state = {
+					add_manpower = -50000
+				}
+				add_manpower = 100000
+				custom_effect_tooltip = TAK_a_new_charles_in_quepler_tt
+				hidden_effect = {
+					set_province_name = {
+						id = 11253
+						name = "Charlesorke"
+					}
+				}
+				build_railway = {
+					level = 2
+					path = { 11253 583 7380 }
+				}
+				add_building_construction = {
+					type = naval_base
+					level = 2
+					instant_build = yes
+					province = 11253
+				}
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
+			402 = {
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
+		}
+	}
+
+
+	focus = {
+		id = TAK_remodel_the_dam
+		icon = GFX_focus_BEL_dam_the_consequences
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_a_new_charles_in_quepler
+		prerequisite = { focus = TAK_a_new_charles_in_quepler }
+		bypass = {
+			has_global_flag = great_lake_dam_destroyed
+		}
+		available = {
+			805 = { is_controlled_by_ROOT_or_subject = yes }
+			1018 = { is_controlled_by_ROOT_or_subject = yes }
+			NOT = { has_global_flag = great_lake_dam_destroyed }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_15000_painting_charles
+				check_variable = { TAK_painting_charles_count > 14999 }
+			}
+		}
+		completion_reward = {
+			805 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+				add_manpower = 50000
+			}
+			1018 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+				add_manpower = 50000
+			}
+			country_event = { id = TAK_event.2003 }
+		}
+	}
+
+	focus = {
+		id = TAK_a_second_charles_on_quepler_crown
+		icon = GFX_focus_RAJ_the_crown_and_the_world
+		x = 1
+		y = 2
+		cost = 10
+		relative_position_id = TAK_remodel_the_dam
+		prerequisite = { focus = TAK_remodel_the_dam }
+		available = {
+			364 = { is_controlled_by_ROOT_or_subject = yes }
+			1017 = { is_controlled_by_ROOT_or_subject = yes }
+			358 = { is_controlled_by_ROOT_or_subject = yes }
+			396 = { is_controlled_by_ROOT_or_subject = yes }
+			custom_trigger_tooltip = {
+				tooltip = TAK_need_25000_painting_charles
+				check_variable = { TAK_painting_charles_count > 24999 }
+			}
+		}
+		completion_reward = {
+			364 = {
+				every_neighbor_state = {
+					add_manpower = -50000
+				}
+				add_manpower = 100000
+				add_victory_points = {
+					province = 6245
+					value = 15
+				}
+				add_manpower = 50000
+				set_province_name = {
+					id = 6245
+					name = "Charleslylone"
+				}
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
+			396 = {
+				set_state_flag = compliance_40_@ROOT
+				add_to_array = { array = TAK.potential_cores_array }
+				add_claim_by = TAK
+				custom_effect_tooltip = state_core_threshold_set_40
+			}
+		}
+	}
+
+	#SOLARIA
+	focus = {
+		id = TAK_solaria_ports
+		icon = GFX_focus_POL_develop_polish_shipbuilding
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_overseas_department
+		prerequisite = { focus = TAK_overseas_department }
+		available = {
+			821 = { is_controlled_by_ROOT_or_subject = yes }
+			356 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			821 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+			356 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes  
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+		}
+	}
+
+
+
+	focus = {
+		id = TAK_hire_solarian_city_planners
+		icon = GFX_focus_SOV_merge_plants
+		x = 2
+		y = 2
+		cost = 5
+		relative_position_id = TAK_overseas_department
+		prerequisite = { focus = TAK_overseas_department }
+		available = {
+			OR = {
+				NOT = { country_exists = SLR }
+				SLR = { is_puppet_of = TAK }
+			}
+			SLR = {
+				any_core_state = {
+					is_controlled_by_ROOT_or_subject = yes
+				}
+			}
+		}
+		completion_reward = {
+			TAK_recruit_painter_5 = yes
+			TAK_recruit_painter_10 = yes
+			TAK_recruit_painter_10 = yes
+		}
+	}
+
+	focus = {
+		id = TAK_remodel_solarian_cities
+		icon = TAK_perfect_imitation
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_hire_solarian_city_planners
+		prerequisite = { focus = TAK_hire_solarian_city_planners }
+		available = {
+			273 = { is_controlled_by_ROOT_or_subject = yes }
+			356 = { is_controlled_by_ROOT_or_subject = yes }
+			328 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			356 = {
+				add_building_construction = { type = arms_factory level = 1 }
+				add_extra_state_shared_building_slots = 1
+			}
+			328 = {
+				add_building_construction = { type = arms_factory level = 1 }
+				add_extra_state_shared_building_slots = 1
+			}
+			273 = {
+				add_building_construction = { type = arms_factory level = 1 }
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_the_great_nuclear_paintbrush_foundry
+		icon = GFX_goal_KTZ_atomic_power
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_hire_solarian_city_planners
+		prerequisite = { focus = TAK_hire_solarian_city_planners }
+		available = {
+			has_tech = nuclear_power_plant_tech
+			820 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			820 = {
+				add_building_construction = { type = industrial_complex level = 2 }
+				add_building_construction = {
+					type = nuclear_reactor
+					level = 1
+				}
+				add_extra_state_shared_building_slots = 3
+			}
+			add_ideas = TAK_solarian_paintbrush_foundry
+		}
+	}
+
+
+	focus = {
+		id = TAK_scrounge_for_roqualium_in_solaria
+		icon = TAK_scrounge_for_roqualium
+		x = 0
+		y = 2
+		cost = 5
+		relative_position_id = TAK_hire_solarian_city_planners
+		prerequisite = { focus = TAK_remodel_solarian_cities focus = TAK_the_great_nuclear_paintbrush_foundry }
+		available = {
+			1013 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		completion_reward = {
+			TAK_gain_4_brush = yes
+			add_stability = -0.05
+			1013 = {
+				remove_building = {
+					type = infrastructure
+					level = 1
+				}
+			}
+			271 = {
+				remove_building = {
+					type = infrastructure
+					level = 1
+				}
+			}
+			821 = {
+				remove_building = {
+					type = infrastructure
+					level = 1
+				}
+			}
+		}
+	}
 }
 
 focus_tree = {
-	id = TAK_BIRD_TREE
-	continuous_focus_position = { x = 2700 y = 300 }
+    id = TAK_PRETREE
 	country = {
 		factor = 0
+		# modifier = {
+		# 	add = 10
+		# 	tag = TAK
+		# }
 	}
+    continuous_focus_position = { x = 2700 y = 300 }
 
+    focus = {
+        id = TAK_all_is_well
+        icon = TAK_address_the_people
+		x = 10
+		y = 1
+		cost = 5
+        ai_will_do = {
+            factor = 1
+        }
+        available = {
+			always = no
+		}
+		completion_reward = {
+			custom_effect_tooltip = TAK_all_is_well_tt
+		}
+    }
 }

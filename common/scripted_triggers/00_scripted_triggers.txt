@@ -70,7 +70,7 @@ check_has_focus_tree_to_switch_to_communism = {
 is_controlled_by_ROOT_or_subject = {
 	custom_trigger_tooltip = {
 		tooltip = is_controlled_by_ROOT_or_subject
-		CONTROLLER = {
+		var:CONTROLLER = {
 			OR = {
 				tag = ROOT
 				is_subject_of = ROOT
@@ -101,172 +101,10 @@ is_controlled_by_ROOT_or_ally = {
 	}
 }
 
-ai_air_doctrine_tier_1_trigger = {
-	OR = {
-		has_tech = naval_strike_tactics
-		has_tech = direct_ground_support
-		has_tech = low_echelon_support
-	}
-}
-
-ai_air_doctrine_tier_2_trigger = {
-	OR = {
-		has_tech = multialtitude_flying
-		has_tech = hunt_and_destroy
-		has_tech = operational_destruction
-	}
-}
-ai_air_doctrine_tier_3_trigger = {
-	OR = {
-		has_tech = flying_fortress
-		has_tech = naval_strike_torpedo_tactics
-		has_tech = infiltration_bombing
-	}
-}
-
-ai_land_doctrine_tier_1_trigger = {
-	OR = {
-		has_tech = elastic_defence
-		has_tech = mobile_defence
-		has_tech = grand_assault
-		has_tech = defence_in_depth
-	}
-}
-
-ai_land_doctrine_tier_2_trigger = {
-	OR = {
-		has_tech = kampfgruppe
-		has_tech = mechanised_offensive
-		has_tech = branch_interoperation
-		has_tech = infiltration_assault
-		has_tech = vast_offensives
-		has_tech = large_front_offensive
-	}
-}
-
-# anti_submarine_strategy_required_trigger = {
-# 	always = NO #CHANGE LATER
-# 	#OR = {
-# 	#	AND = {
-# 	#		tag = ENG
-# 	#		not = { is_in_faction_with = GER }
-# 	#		GER = {
-# 	#			has_navy_size = {
-# 	#				type = submarine
-# 	#				size > 30
-# 	#			}
-# 	#		}
-# 	#	}
-# 	#	AND = {
-# 	#		tag = USA
-# 	#		not = { is_in_faction_with = GER }
-# 	#		GER = {
-# 	#			has_navy_size = {
-# 	#				type = submarine
-# 	#				size > 30
-# 	#			}
-# 	#		}
-# 	#	}
-# 	#	AND = {
-# 	#		tag = JAP
-# 	#		not = { is_in_faction_with = USA }
-# 	#	}
-# 	#	AND = {
-# 	#		has_war = yes
-# 	#		any_enemy_country = {
-# 	#			has_navy_size = {
-# 	#				type = submarine
-# 	#				size > 30
-# 	#			}
-# 	#		}
-# 	#	}
-# 	#	convoy_threat > 0.3
-# 	#}
-# }
-
 enemy_has_equal_or_better_radar_tech_trigger = {
 	custom_trigger_tooltip = {
 		tooltip = enemy_has_equal_or_better_radar_tech_trigger_tt
-		if = {
-			limit = {
-				ROOT = {
-					has_tech = radio_detection
-					NOT = {
-						has_tech = decimetric_radar
-					}
-				}
-			}
-			FROM = {
-				OR = {
-					has_tech = radio_detection
-					has_tech = decimetric_radar
-				}
-			}
-		}
-		else_if = {
-			limit = {
-				ROOT = {
-					has_tech = decimetric_radar
-					NOT = {
-						has_tech = improved_decimetric_radar
-					}
-				}
-			}
-			FROM = {
-				OR = {
-					has_tech = decimetric_radar
-					has_tech = improved_decimetric_radar
-				}
-			}
-		}
-		else_if = {
-			limit = {
-				ROOT = {
-					has_tech = improved_decimetric_radar
-					NOT = {
-						has_tech = centimetric_radar
-					}
-				}
-			}
-			FROM = {
-				OR = {
-					has_tech = improved_decimetric_radar
-					has_tech = centimetric_radar
-				}
-			}
-		}
-		else_if = {
-			limit = {
-				ROOT = {
-					has_tech = centimetric_radar
-					NOT = {
-						has_tech = improved_centimetric_radar
-					}
-				}
-			}
-			FROM = {
-				OR = {
-					has_tech = centimetric_radar
-					has_tech = improved_centimetric_radar
-				}
-			}
-		}
-		else_if = {
-			limit = {
-				ROOT = {
-					has_tech = improved_centimetric_radar
-					NOT = {
-						has_tech = advanced_centimetric_radar
-					}
-				}
-			}
-			FROM = {
-				OR = {
-					has_tech = improved_centimetric_radar
-					has_tech = advanced_centimetric_radar
-				}
-			}
-		}
+		always = no
 		#no more steps needed because end of research tree is reached
 	}
 }
@@ -523,22 +361,6 @@ has_aat = {
 	has_dlc = "Arms Against Tyranny"
 }
 
-has_any_tank_tech = {
-	# if = {
-	# 	limit = {
-	# 		has_dlc = "No Step Back"
-	# 	}
-	# 	OR = {
-	# 		has_tech = basic_light_tank_chassis
-	# 		has_tech = basic_medium_tank_chassis
-	# 		has_tech = basic_heavy_tank_chassis
-	# 	}
-	# }
-	# else = {
-		has_tech = gwtank
-	# }
-}
-
 has_any_tanks = {
 	if = {
 		limit = {
@@ -638,43 +460,6 @@ FROM_is_twice_as_weak = {
 	strength_ratio = {
 		tag = FROM 
 		ratio > 2
-	}
-}
-
-ai_has_completed_army_doctrine = {
-	is_ai = yes
-	OR = {
-		has_tech = werwolf_guerillas
-		has_tech = modern_blitzkrieg
-		has_tech = air_land_battle
-		has_tech = shock_and_awe
-		has_tech = c3i_theory
-		has_tech = infiltration_in_depth
-		has_tech = continuous_offensive
-		has_tech = guerilla_warfare
-	}
-}
-
-ai_has_completed_air_doctrine = {
-	is_ai = yes
-	OR = {
-		has_tech = offensive_formations
-		has_tech = mass_destruction
-		has_tech = forward_interception
-		has_tech = high_level_bombing
-	}
-}
-
-ai_has_completed_naval_doctrine = {
-	is_ai = yes
-	OR = {
-		has_tech = grand_battlefleet
-		has_tech = submarine_offensive
-		has_tech = floating_airfield
-		has_tech = combined_operations_raiding
-		has_tech = integrated_convoy_defence
-		has_tech = submarine_offensive_bs
-		has_tech = carrier_battlegroups
 	}
 }
 

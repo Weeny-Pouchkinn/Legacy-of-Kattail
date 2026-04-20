@@ -1,7 +1,300 @@
-AUR_change_herald_sanity = {
-	custom_effect_tooltip = change_herald_sanity_tooltip
-	add_to_variable = { herald_sanity = herald_sanity_change }
-	clamp_variable = { var = herald_sanity min = 0 max = 100 }
+increase_state_productivity = {
+	custom_effect_tooltip = increase_state_productivity_tt
+	hidden_effect = {
+		add_to_variable = { lok_state_productivity_value = state_prod_change }
+		add_to_variable = { state_prod_change_from_misc = state_prod_change }
+		update_state_productivity_modifier = yes
+	}
+}
+
+increase_base_state_productivity = {
+	custom_effect_tooltip = increase_base_state_productivity_tt
+	hidden_effect = {
+		add_to_variable = { lok_state_productivity_value_base = state_prod_change }
+		update_state_productivity_modifier = yes
+	}
+}
+
+LOK_NEK_war_update_opinion = {
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+	remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+	remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+	if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = -2 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+	}
+	else_if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = -1 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+	}
+	else_if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = 1 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+	}
+	else_if = {
+		limit = {
+			check_variable = { KUS_NEK_support_level = 2 }
+		}
+		add_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+		add_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+	}
+}
+
+
+LOK_change_state_manpower = {
+	custom_effect_tooltip = LOK_change_state_manpower_tooltip
+	add_manpower = manpower_change
+	hidden_effect = {
+		update_state_productivity_modifier = yes
+		if = {
+			limit = { check_variable = { manpower_change < 0 } }
+			divide_variable = { manpower_change = -1000 }
+			add_to_variable = { lok_state_misc_deaths = manpower_change }
+			add_to_variable = { lok_state_deaths = manpower_change }
+			add_to_variable = { lok_state_misc_deaths_display = manpower_change }
+			var:controller = {
+				add_to_variable = { lok_country_misc_deaths = PREV.manpower_change }
+				add_to_variable = { lok_country_deaths = PREV.manpower_change }
+				add_to_variable = { global.lok_global_misc_deaths = PREV.manpower_change }
+				add_to_variable = { global.lok_global_deaths = PREV.manpower_change }
+			}
+		}
+	}
+}
+
+update_state_productivity_modifier = {
+	if = {
+		limit = { 
+			is_space_state = no
+			var:controller = { is_non_playable_country = no }
+		}
+		# POPULATION CALCS
+		# We determine the difference in pop between now and the last check
+		# Now we must see how much of a % change that is relative to game start pop
+		# So we add 5 points of productivity!
+
+		if = {
+			limit = {
+				NOT = { has_state_flag = KUS_total_automation }
+			}
+			# Say it was 120 and is now 125, game start pop was 100
+			set_variable = { state_prod_change_from_pop_this_check = state_population_k }
+
+			# 125 - 120 = 5
+			subtract_from_variable = { state_prod_change_from_pop_this_check = population_last_check }
+
+			# 5 / 100 = 0.05, so 5% change
+			divide_variable = { state_prod_change_from_pop_this_check = population_at_game_start }
+
+			add_to_variable = { state_prod_change_from_pop = state_prod_change_from_pop_this_check }
+
+			set_variable = { population_last_check = state_population_k }
+
+			# The value of prod
+			add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop_this_check }
+		}
+
+		#Convert the productivity value to its modifier
+		set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
+		subtract_from_variable = { lok_state_productivity_modifier = 1 }
+
+		# #0.2 x -1 = -0.2
+		# #-0.4 x -1 = 0.4
+		# multiply_variable = { lok_state_productivity_modifier = -0.5 }
+		# clamp_variable = { var = lok_state_productivity_modifier min = -0.75 max = 0.25 } #ultimately shoving one million people into the factory wont make it more efficient
+	}
+	else = { set_variable = { lok_state_productivity_modifier = 0 } }
+}
+
+regenerate_state_productivity_modifier = {
+	if = {
+		limit = { check_variable = { lok_state_productivity_value < lok_state_productivity_value_base } }
+		add_to_variable = { lok_state_productivity_value = 0.001 }
+		add_to_variable = { state_prod_change_from_regen = 0.001 }
+		clamp_variable = { var = lok_state_productivity_value min = 0 max = lok_state_productivity_value_base }
+	}
+	#Convert the productivity value to its modifier
+	set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
+	subtract_from_variable = { lok_state_productivity_modifier = -1 }
+}
+
+clear_nuclear_facility_ideas = {
+	if = {
+		limit = { has_idea = LOK_nuclear_facility_1 }
+		remove_ideas = LOK_nuclear_facility_1
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_2 }
+		remove_ideas = LOK_nuclear_facility_2
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_3 }
+		remove_ideas = LOK_nuclear_facility_3
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_4 }
+		remove_ideas = LOK_nuclear_facility_4
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_5 }
+		remove_ideas = LOK_nuclear_facility_5
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_6 }
+		remove_ideas = LOK_nuclear_facility_6
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_7 }
+		remove_ideas = LOK_nuclear_facility_7
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_8 }
+		remove_ideas = LOK_nuclear_facility_8
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_9 }
+		remove_ideas = LOK_nuclear_facility_9
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_10 }
+		remove_ideas = LOK_nuclear_facility_10
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_11 }
+		remove_ideas = LOK_nuclear_facility_11
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_12 }
+		remove_ideas = LOK_nuclear_facility_12
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_13 }
+		remove_ideas = LOK_nuclear_facility_13
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_14 }
+		remove_ideas = LOK_nuclear_facility_14
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_15 }
+		remove_ideas = LOK_nuclear_facility_15
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_16 }
+		remove_ideas = LOK_nuclear_facility_16
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_17 }
+		remove_ideas = LOK_nuclear_facility_17
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_18 }
+		remove_ideas = LOK_nuclear_facility_18
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_19 }
+		remove_ideas = LOK_nuclear_facility_19
+	}
+	else_if = {
+		limit = { has_idea = LOK_nuclear_facility_20 }
+		remove_ideas = LOK_nuclear_facility_20
+	}
+}
+
+ACR_dissolve_nation = {
+	every_owned_state = {
+		limit = { is_core_of = NKR }
+		transfer_state_to = NKR
+	}
+	transfer_units_fraction = {
+		target = NKR
+		air_ratio = 0.30
+		army_ratio = 0.30
+		navy_ratio = 0.30
+		stockpile_ratio = 0.30
+	}
+	every_owned_state = {
+		limit = { is_core_of = KTS }
+		transfer_state_to = KTS
+	}
+	transfer_units_fraction = {
+		target = KTS
+		air_ratio = 0.05
+		army_ratio = 0.05
+		navy_ratio = 0.05
+		stockpile_ratio = 0.05
+	}
+	every_owned_state = {
+		limit = { is_core_of = KRO }
+		transfer_state_to = KRO
+	}
+	transfer_units_fraction = {
+		target = KRO
+		air_ratio = 0.30
+		army_ratio = 0.30
+		navy_ratio = 0.30
+		stockpile_ratio = 0.30
+	}
+	every_owned_state = {
+		limit = { is_core_of = YIN }
+		transfer_state_to = YIN
+	}
+	transfer_units_fraction = {
+		target = YIN
+		air_ratio = 0.30
+		army_ratio = 0.30
+		navy_ratio = 0.30
+		stockpile_ratio = 0.30
+	}
+	every_country = {
+		limit = { is_puppet_of = ACR }
+		ACR = {
+			set_autonomy = {
+				target = PREV
+				autonomy_state = autonomy_free
+			}
+		}
+	}
+	release_on_controlled = BAZ
+	release_on_controlled = DAW
+	release_on_controlled = EUL
+	release_on_controlled = MSN
+	release_on_controlled = ENO
+	every_country = {
+		limit = { is_in_faction_with = ACR }
+		leave_faction = yes
+	}
+	every_neighbor_country = {
+		limit = { is_non_playable_country = no }
+		declare_war_on = {
+			target = ACR
+			type = annex_everything
+		}
+	}
+	every_character = {
+		set_nationality = KRO
+	}
+	KRO = {
+		news_event = { id = ACR_news.1 days = 3 }
+	}
+	every_state = {
+		limit = { is_core_of = ACR }
+		remove_core_of = ACR
+	}
 }
 
 nuke_state_fission = {
@@ -11,24 +304,11 @@ nuke_state_fission = {
 			add_equipment_to_stockpile = { type = lok_fission_nuke_equipment amount = -1 }
 			launch_nuke = { state = PREV use_nuke = no }
 		}
-		add_to_variable = { lok_radiation_level = 1 }
+		set_variable = { lok_added_radiation_level = 1 }
+		add_to_variable = { lok_radiation_level = lok_added_radiation_level }
 		calculate_radiation_state_modifiers = yes
+		set_variable = { lok_added_radiation_level = 0 }
 	}
-}
-
-AUR_add_1_commissar = {
-	custom_effect_tooltip = AUR_add_1_commissar_tt
-	add_to_variable = { AUR_available_commissars = 1 }
-}
-
-AUR_add_2_commissar = {
-	custom_effect_tooltip = AUR_add_2_commissar_tt
-	add_to_variable = { AUR_available_commissars = 2 }
-}
-
-AUR_add_3_commissar = {
-	custom_effect_tooltip = AUR_add_3_commissar_tt
-	add_to_variable = { AUR_available_commissars = 3 }
 }
 
 generate_warlord_state = {
@@ -70,6 +350,7 @@ generate_warlord_state = {
 					}
 				}
 				random_owned_controlled_state = {
+					set_demilitarized_zone = no
 					create_unit = {
 						division = "division_template = \"Wasteland Militias\" start_experience_factor = 0.2 start_equipment_factor = 1.0"
 						count = 3
@@ -167,7 +448,7 @@ SIL_collapse_elwin = {
 			set_nationality = KTV
 			add_country_leader_role = {
 				country_leader = {
-					ideology = collectivism
+					ideology = councilism
 					expire = "1965.1.1.1"
 				}
 				promote_leader = yes
@@ -264,6 +545,7 @@ change_state_majority_species = {
 	hidden_effect = {
 		set_variable = { species = species_temp }
 		apply_state_species_modifier = yes
+		update_matching_species_modifiers = yes
 	}
 }
 
@@ -271,6 +553,34 @@ change_state_minority_species = {
 	custom_effect_tooltip = change_state_minority_species_tooltip
 	hidden_effect = {
 		set_variable = { minority = species_temp }
+		update_matching_species_modifiers = yes
+	}
+}
+
+update_matching_species_modifiers = {
+	#Clear and apply species match modifiers
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
+		remove_dynamic_modifier = { modifier = lok_matching_species }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_matching_minority } }
+		remove_dynamic_modifier = { modifier = lok_matching_minority }
+	}
+	#Matching species = compliance buff
+	meta_effect = {
+		text = {
+			if = {
+				limit = { var:controller = { has_idea = var_species_[SPECIES_ID] } }
+				add_dynamic_modifier = { modifier = lok_matching_species }
+			}
+			else_if = {
+				limit = { var:controller = { has_idea = var_species_[MINORITY_ID] } }
+				add_dynamic_modifier = { modifier = lok_matching_minority }
+			}
+		}
+		SPECIES_ID = "[?species]"
+		MINORITY_ID = "[?minority]"
 	}
 }
 
@@ -432,6 +742,7 @@ calculate_orbital_logistics_capacity = {
 	set_variable = { orbital_logistics_from_lok_reusable_light_chemical_rocket = 0 }
 	
 	add_to_variable = { orbital_logistics_demand = lok_muno_colonies_upkeep } #Say 100.
+	add_to_variable = { orbital_logistics_demand = lok_xenon_colonies_upkeep } #Say 100.
 	add_to_variable = { orbital_logistics_demand = modifier@lok_orbital_logistics_extra }
 
 	set_variable = { remaining_orbital_logistics_demand = orbital_logistics_demand } #How many we need now.
@@ -604,28 +915,31 @@ calculate_orbital_logistics_capacity = {
 
 	if = {
 		limit = { has_equipment = { lok_nerva_heavy_rocket > 0 } }
+		set_temp_variable = { temp_nerva_max = num_equipment@lok_nerva_heavy_rocket }
 		clamp_variable = {
 			var = lok_nerva_heavy_rocket_for_orbital_logistics
 			min = 0
-			max = num_equipment@lok_nerva_heavy_rocket
+			max = temp_nerva_max
 		}
 	}
 
 	if = {
 		limit = { has_equipment = { lok_reusable_heavy_chemical_rocket > 0 } }
+		set_temp_variable = { temp_heavy_chem_max = num_equipment@lok_reusable_heavy_chemical_rocket }
 		clamp_variable = {
 			var = lok_reusable_heavy_chemical_rocket_for_orbital_logistics
 			min = 0
-			max = num_equipment@lok_reusable_heavy_chemical_rocket
+			max = temp_heavy_chem_max
 		}
 	}
 
 	if = {
 		limit = { has_equipment = { lok_reusable_light_chemical_rocket > 0 } }
+		set_temp_variable = { temp_light_chem_max = num_equipment@lok_reusable_light_chemical_rocket }
 		clamp_variable = {
 			var = lok_reusable_light_chemical_rocket_for_orbital_logistics
 			min = 0
-			max = num_equipment@lok_reusable_light_chemical_rocket
+			max = temp_light_chem_max
 		}
 	}
 }
@@ -645,6 +959,10 @@ damage_muno_colonies = {
 			add_manpower = -1000000
 			remove_core_of = ROOT
 			transfer_state_to = MUN
+			set_building_level = {
+				type = infrastructure
+				level = 0
+			}
 		}
 	}
 	calculate_muno_colonies_stats = yes
@@ -665,6 +983,10 @@ damage_xenon_colonies = {
 			add_manpower = -1000000
 			remove_core_of = ROOT
 			transfer_state_to = XEN
+			set_building_level = {
+				type = infrastructure
+				level = 0
+			}
 		}
 	}
 	calculate_xenon_colonies_stats = yes
@@ -969,6 +1291,10 @@ calculate_ai_nuke_production = {
 				add_equipment_to_stockpile = { type = lok_cobalt_nuke_equipment_0 amount = 1 }
 				modifier = { add = 1 has_tech = dirty_nuke }
 			}
+			0 = {
+				add_equipment_to_stockpile = { type = lok_sturmer_nuke_equipment amount = 1 }
+				modifier = { add = 1 has_tech = ultra_heavy_armor_tech }
+			}
 		}
 	}
 	multiply_variable = { factories_for_nukes = -1 }
@@ -980,18 +1306,24 @@ count_nukes_in_stockpile = {
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fission_nuke_equipment }
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_fusion_nuke_equipment }
 	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_cobalt_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_mondkanone_nuke_equipment }
+	add_to_variable = { lok_total_nuke_stockpile = num_equipment@lok_sturmer_nuke_equipment }
 }
 
 calculate_salvo_capacity = {
 	set_temp_variable = { lok_salvo_capacity_added_last_week = lok_total_salvo_capacity } #Say 100
 	set_variable = { lok_total_salvo_capacity = 0 }
 			
-	every_controlled_state = { add_to_variable = { ROOT.lok_total_salvo_capacity = non_damaged_building_level@rocket_site } }
+	every_controlled_state = { add_to_variable = { PREV.lok_total_salvo_capacity = non_damaged_building_level@rocket_site } }
 	multiply_variable = { lok_total_salvo_capacity = 10 } #10 nukes per silo
-	set_temp_variable = { salvo_capacity_from_subs = num_ships_with_type@ballistic_submarine }
 
+	set_temp_variable = { salvo_capacity_from_subs = num_ships_with_type@ballistic_submarine }
 	multiply_temp_variable = { salvo_capacity_from_subs = 20 } #10 nukes per ballistic sub
 	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_subs }
+
+	set_temp_variable = { salvo_capacity_from_riesigers = num_battalions_with_type@ultra_heavy_armor }
+	multiply_temp_variable = { salvo_capacity_from_riesigers = 50 } #50 nukes per Riesiger
+	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_riesigers }
 
 	if = {
 		limit = { is_ai = yes }
@@ -1006,34 +1338,32 @@ calculate_salvo_capacity = {
 	clamp_variable = { var = lok_current_salvo_capacity max = lok_total_salvo_capacity }
 }
 
+#Nuke type codes: 1=Fission (score 1), 2=Fusion (score 3), 3=Cobalt (score 3), 4=Mondkanone (score 2), 5=Sturmer (ignored)
 ai_fire_nuke = {
 	set_variable = { nuke_launch_count = 1 }
-	#Pick a nuke type.
-	random_list = {
-		0 = {
-			set_variable = { current_nuke_type = 1 }
-			modifier = { add = 1 has_tech = nukes }
-			modifier = { factor = 0 has_equipment = { lok_fission_nuke_equipment < 1 } }
-		}
-		0 = {
-			set_variable = { current_nuke_type = 2 }
-			modifier = { add = 1 has_tech = fusion_nuke }
-			modifier = { factor = 0 has_equipment = { lok_fusion_nuke_equipment < 1 } }
-		}
-		0 = {
-			set_variable = { current_nuke_type = 3 }
-			modifier = { add = 1 has_tech = dirty_nuke }
-			modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
-		}
-	}
-	#AI will fire half of their salvo capacity
-	set_temp_variable = { ai_nukes_being_fired = lok_current_salvo_capacity }
-	divide_temp_variable = { ai_nukes_being_fired = 2 }
-	round_temp_variable = ai_nukes_being_fired
-	clamp_temp_variable = { var = ai_nukes_being_fired min = 0 max = lok_total_nuke_stockpile }
+	count_nukes_in_stockpile = yes
+
+	#Count individual nuke types available
+	set_temp_variable = { ai_fusion_available = num_equipment@lok_fusion_nuke_equipment }
+	set_temp_variable = { ai_cobalt_available = num_equipment@lok_cobalt_nuke_equipment }
+	set_temp_variable = { ai_mondkanone_available = num_equipment@lok_mondkanone_nuke_equipment }
+	set_temp_variable = { ai_fission_available = num_equipment@lok_fission_nuke_equipment }
+
+	#Track remaining score to spend this salvo
+	set_temp_variable = { ai_remaining_score = lok_nuke_retaliation_score }
+
+	### FUSION NUKES (score 3 each) - highest priority ###
+	set_temp_variable = { fusion_to_fire = ai_remaining_score }
+	divide_temp_variable = { fusion_to_fire = 3 }
+	subtract_from_temp_variable = { fusion_to_fire = 0.499 } #Floor division
+	round_temp_variable = fusion_to_fire
+	clamp_temp_variable = { var = fusion_to_fire min = 0 max = ai_fusion_available }
+	clamp_temp_variable = { var = fusion_to_fire min = 0 max = lok_current_salvo_capacity }
+
+	set_variable = { current_nuke_type = 2 }
 	for_loop_effect = {
-		end = ai_nukes_being_fired
-		random_enemy_country = { #PICK A TARGET!!! We pick a country that nuked us beforehand.
+		end = fusion_to_fire
+		random_enemy_country = {
 			limit = {
 				OR = {
 					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
@@ -1044,32 +1374,112 @@ ai_fire_nuke = {
 				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
 				save_global_event_target_as = lok_thermonuclear_salvo_state
 				ROOT = {
-					fire_thermonuclear_salvo = yes #FIRE!!!!
-					if = {
-						limit = { check_variable = { current_nuke_type = 1 } }
-						add_equipment_to_stockpile = {
-							type = lok_fission_nuke_equipment
-							amount = -1
-						}
-					}
-					else_if = {
-						limit = { check_variable = { current_nuke_type = 2 } }
-						add_equipment_to_stockpile = {
-							type = lok_fusion_nuke_equipment
-							amount = -1
-						}
-					}
-					else_if = {
-						limit = { check_variable = { current_nuke_type = 3 } }
-						add_equipment_to_stockpile = {
-							type = lok_cobalt_nuke_equipment
-							amount = -1
-						}
-					}
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_fusion_nuke_equipment amount = -1 }
 				}
 			}
 		}
 	}
+	#Update remaining score (fire_thermonuclear_salvo already decremented lok_current_salvo_capacity)
+	set_temp_variable = { fusion_score_spent = fusion_to_fire }
+	multiply_temp_variable = { fusion_score_spent = 3 }
+	subtract_from_temp_variable = { ai_remaining_score = fusion_score_spent }
+
+	### COBALT NUKES (score 3 each) ###
+	set_temp_variable = { cobalt_to_fire = ai_remaining_score }
+	divide_temp_variable = { cobalt_to_fire = 3 }
+	subtract_from_temp_variable = { cobalt_to_fire = 0.499 }
+	round_temp_variable = cobalt_to_fire
+	clamp_temp_variable = { var = cobalt_to_fire min = 0 max = ai_cobalt_available }
+	clamp_temp_variable = { var = cobalt_to_fire min = 0 max = lok_current_salvo_capacity }
+
+	set_variable = { current_nuke_type = 3 }
+	for_loop_effect = {
+		end = cobalt_to_fire
+		random_enemy_country = {
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
+			}
+			random_controlled_state = {
+				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_cobalt_nuke_equipment amount = -1 }
+				}
+			}
+		}
+	}
+	set_temp_variable = { cobalt_score_spent = cobalt_to_fire }
+	multiply_temp_variable = { cobalt_score_spent = 3 }
+	subtract_from_temp_variable = { ai_remaining_score = cobalt_score_spent }
+
+	### MONDKANONE NUKES (score 2 each) - does NOT use salvo capacity ###
+	set_temp_variable = { mondkanone_to_fire = ai_remaining_score }
+	divide_temp_variable = { mondkanone_to_fire = 2 }
+	subtract_from_temp_variable = { mondkanone_to_fire = 0.499 }
+	round_temp_variable = mondkanone_to_fire
+	clamp_temp_variable = { var = mondkanone_to_fire min = 0 max = ai_mondkanone_available }
+	#Mondkanone does not consume salvo capacity (see fire_thermonuclear_salvo), so no salvo clamp
+
+	set_variable = { current_nuke_type = 4 }
+	for_loop_effect = {
+		end = mondkanone_to_fire
+		random_enemy_country = {
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
+			}
+			random_controlled_state = {
+				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_mondkanone_nuke_equipment amount = -1 }
+				}
+			}
+		}
+	}
+	set_temp_variable = { mondkanone_score_spent = mondkanone_to_fire }
+	multiply_temp_variable = { mondkanone_score_spent = 2 }
+	subtract_from_temp_variable = { ai_remaining_score = mondkanone_score_spent }
+
+	### FISSION NUKES (score 1 each) - lowest priority ###
+	set_temp_variable = { fission_to_fire = ai_remaining_score }
+	round_temp_variable = fission_to_fire
+	clamp_temp_variable = { var = fission_to_fire min = 0 max = ai_fission_available }
+	clamp_temp_variable = { var = fission_to_fire min = 0 max = lok_current_salvo_capacity }
+
+	set_variable = { current_nuke_type = 1 }
+	for_loop_effect = {
+		end = fission_to_fire
+		random_enemy_country = {
+			limit = {
+				OR = {
+					any_allied_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
+					ROOT = { has_country_flag = nuked_by_@PREV }
+				}
+			}
+			random_controlled_state = {
+				limit = { NOT = { is_core_of = ROOT } is_space_state = no }
+				save_global_event_target_as = lok_thermonuclear_salvo_state
+				ROOT = {
+					fire_thermonuclear_salvo = yes
+					add_equipment_to_stockpile = { type = lok_fission_nuke_equipment amount = -1 }
+				}
+			}
+		}
+	}
+	subtract_from_temp_variable = { ai_remaining_score = fission_to_fire }
+
+	#Save remaining score for next month (if salvo capacity or stockpile ran out)
+	clamp_temp_variable = { var = ai_remaining_score min = 0 }
+	set_variable = { lok_nuke_retaliation_score = ai_remaining_score }
 }
 
 reduce_compliance_coring_threshold_by_10 = {
@@ -1205,27 +1615,22 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 	divide_variable = { state_food_consumption = 100 }
 	if = { #Katzens and Sobakis are mostly carnivorous and thus eat 15% more
 		limit = {
-			OR = {
-				check_variable = { species = 1 }
-				check_variable = { species = 2 }
-			}
+			has_mostly_carnivorous_trait = yes
 		}
 		multiply_variable = { state_food_consumption = 1.15 }
 	}
-	if = { #Lithoids do not eat food at all
+	if = { #Lithoids and robots do not eat food at all
 		limit = {
 			OR = {
-				check_variable = { species = 5 }
-				check_variable = { species = 8 }
+				has_mechanical_trait = yes
+				has_lithoid_trait = yes
 			}
 		}
 		multiply_variable = { state_food_consumption = 0 }
 	}
 	if = { #Estalai eat a lot
 		limit = {
-			OR = {
-				check_variable = { species = 12 }
-			}
+			has_carnivorous_trait = yes
 		}
 		multiply_variable = { state_food_consumption = 1.25 }
 	}
@@ -1247,12 +1652,22 @@ calculate_food_production_in_state = {
 calculate_total_food_consumption = {
 	set_variable = { country_food_stockpile_max = 0 } #reset food stockpile capacity
 	set_variable = { country_food_consumption = 0 } #Food that is being eaten
-	set_variable = { country_food_balance = resource_produced@food } #Total food balance
-	set_variable = { country_food_imports = resource_imported@food } #Imports
-	add_to_variable = { country_food_balance = country_food_imports } #Total food balance (with imports)
+	set_variable = { country_food_balance = 0 }
+
+	# 1. Fetch current Net Balance from the engine (This still has LAST week's consumption subtracted)
+	set_variable = { country_food_balance = resource_produced@food } 
+	set_variable = { country_food_imports = resource_imported@food } 
+	add_to_variable = { country_food_balance = country_food_imports } 
+
+	# 2. Calculate TRUE Gross Production by adding back LAST week's consumption modifier
+	# We do this before overwriting the modifier so the math perfectly zeroes out the engine delay
+	set_variable = { country_food_production = country_food_balance }
+	add_to_variable = { country_food_production = country_food_consumption_modifier }
+
+	# 3. Calculate NEW consumption from current territory
 	every_controlled_state = { #Fetch how much food each state eats.
 		calculate_food_consumption_in_state = yes
-		ROOT = {
+		PREV = {
 			add_to_variable = { country_food_consumption = PREV.state_food_consumption }
 
 			set_variable = { country_food_stockpile_from_infra = PREV.non_damaged_building_level@infrastructure }
@@ -1264,14 +1679,15 @@ calculate_total_food_consumption = {
 			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_silos }
 		}
 	}
+
+	# 4. Update the modifier for the engine to use on the next tick
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
-	#multiply_variable = { country_food_consumption_modifier = -1 }
-	# set_temp_variable = { negate_exacavation_tech_food = modifier@local_resources_factor } #This is to undo the effects of excavation techs.
-	# add_to_temp_variable = { negate_exacavation_tech_food = 1 } #The resource modifier is gonna be something like 0.2 (if you have +20%) so I add 1 to get a proper percentage.
-	# divide_variable = { country_food_consumption_modifier = negate_exacavation_tech_food }
+	# (Your commented-out excavation tech logic can safely stay here if you re-enable it later)
 	round_variable = country_food_consumption_modifier
-	set_variable = { country_food_production = country_food_balance } #The food that we're actually producing
-	add_to_variable = { country_food_production = country_food_consumption } #We add our consumption to the balance to get production, yippe!
+
+	# 5. Calculate the CORRECT New Balance for the rest of this script to use
+	set_variable = { country_food_balance = country_food_production }
+	subtract_from_variable = { country_food_balance = country_food_consumption }
 
 	#FOOD STOCKPILING
 
@@ -1287,6 +1703,7 @@ calculate_total_food_consumption = {
 		limit = { check_variable = { country_food_balance < 0 } check_variable = { country_food_stockpile > 0 } }
 		add_to_variable = { country_food_stockpile = country_food_balance }
 		clamp_variable = {  var = country_food_stockpile min = 0 max = 1000000 } #Cant go below 0
+		round_variable = country_food_stockpile
 	}
 
 	#CALCULATE % THAT IS MET - This is what determines the actual effects of food deficit
@@ -1317,7 +1734,7 @@ calculate_total_food_consumption = {
 
 	#Apply the modifiers
 	if = {
-		limit = { check_variable = { country_food_needs_met_perc < 61 } check_variable = { country_food_stockpile < 1 } }
+		limit = { check_variable = { country_food_needs_met_perc < 50 } check_variable = { country_food_stockpile < 1 } }
 		add_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
 		if = {
 			limit = { has_dynamic_modifier = { modifier = lok_food_deficit_modifier } }
@@ -1367,8 +1784,9 @@ calculate_total_food_consumption = {
 	#IF % MET IS BELOW 61% AND STOCKPILES ARE EMPTY... PEOPLE DIE! 3% of the population will die every week until food goes back above 60%
 	if = {
 		limit = {
-			check_variable = { country_food_needs_met_perc < 61 }
+			check_variable = { country_food_needs_met_perc < 50 }
 			check_variable = { country_food_stockpile < 1 }
+			date > "100.1.5"
 		}
 		every_controlled_state = {
 			set_variable = { lok_starvation_death_count = state_population_k }
@@ -1493,9 +1911,12 @@ fire_thermonuclear_salvo = {
 			set_temp_variable = { anti_wmd_level_negative = anti_wmd_level }
 			multiply_temp_variable = { anti_wmd_level_negative = -1 }
 		}
-		subtract_from_variable = { lok_current_salvo_capacity = 1 }
-		clamp_variable = { var = lok_current_salvo_capacity min = 0 max = 100000 }
-		country_event = { id = LOK_nuke.1 days = 7 } #Refill salvo capacity in a bit
+		if = { #use salvo capacity IF it is not mondkanone
+			limit = { NOT = { check_variable = { current_nuke_type = 4 } } }
+			subtract_from_variable = { lok_current_salvo_capacity = 1 }
+			clamp_variable = { var = lok_current_salvo_capacity min = 0 max = 100000 }
+			country_event = { id = LOK_nuke.1 days = 7 } #Refill salvo capacity in a bit
+		}
 		random_list = {
 			100 = {
 				launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
@@ -1539,6 +1960,32 @@ fire_thermonuclear_salvo = {
 							army = yes
 						}
 					}
+					else_if = { #Mondkanone
+						limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
+						set_variable = { lok_added_radiation_level = 0 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.01 }
+						damage_units = { #Damage troops
+							state = THIS
+							limit = { always = yes }
+							org_damage = 0.1
+							str_damage = 0.1
+							ratio = yes
+							army = yes
+						}
+					}
+					else_if = { #Sturmer
+						limit = { ROOT = { check_variable = { current_nuke_type = 5 } } }
+						set_variable = { lok_added_radiation_level = 0.75 }
+						set_temp_variable = { lok_nuclear_soot_perc_raw_from_state = 0.02 }
+						damage_units = { #Damage troops
+							state = THIS
+							limit = { always = yes }
+							org_damage = 0.15
+							str_damage = 0.15
+							ratio = yes
+							army = yes
+						}
+					}
 					#FIRESTORMS!!! Cities multiply soot
 					if = {
 						limit = { OR = { has_state_category = large_town has_state_category = city } }
@@ -1559,12 +2006,15 @@ fire_thermonuclear_salvo = {
 					add_to_variable = { global.lok_nuclear_soot_perc_raw = lok_nuclear_soot_perc_raw_from_state } #Add the soot to the global counter
 					multiply_variable = { lok_added_radiation_level = ROOT.modifier@lok_nuke_radiation_factor } #take the modifier into account
 					add_to_variable = { lok_radiation_level = lok_added_radiation_level } #Radiation level
-					divide_variable = { lok_added_radiation_level = 4 }
 					calculate_radiation_state_modifiers = yes
 					every_neighbor_state = { #It spreads to neighboring states too, how fun!
-						add_to_variable = { lok_radiation_level = PREV.lok_added_radiation_level }
+						set_variable = { lok_added_radiation_level = PREV.lok_added_radiation_level }
+						divide_variable = { lok_added_radiation_level = 4 }
+						add_to_variable = { lok_radiation_level = lok_added_radiation_level }
 						calculate_radiation_state_modifiers = yes
+						set_variable = { lok_added_radiation_level = 0 }
 					}
+					set_variable = { lok_added_radiation_level = 0 }
 					if = {
 						limit = { state_population_k > 10 } #There'll always at least be like 10k bozos left
 						set_temp_variable = { lok_nuke_casualties = state_population_k } #Say 10M so that's 10000
@@ -1580,6 +2030,14 @@ fire_thermonuclear_salvo = {
 						else_if = { #Cobalt - 2.5% death (but the rads!)
 							limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
 							multiply_temp_variable = { lok_nuke_casualties = 0.5 }
+						}
+						else_if = { #Mondkanone - 1% death (it targets armies)
+							limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 1 }
+						}
+						else_if = { #Sturmer - 10% death
+							limit = { ROOT = { check_variable = { current_nuke_type = 5 } } }
+							multiply_temp_variable = { lok_nuke_casualties = 2 }
 						}
 						if = { #Katown Pyramid protects!
 							limit = { check_variable = { wonder = 1 } }
@@ -1610,6 +2068,17 @@ fire_thermonuclear_salvo = {
 				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level_negative }
 			}
 			0 = {
+				modifier = { #Mondkanone cannot be intercepted
+					factor = 0
+					check_variable = { current_nuke_type = 4 }
+				}
+				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level }
+			}
+			0 = {
+				modifier = { #Sturmer is hard to intercept
+					factor = 0.25
+					check_variable = { current_nuke_type = 5 }
+				}
 				modifier = { add = event_target:lok_thermonuclear_salvo_state.anti_wmd_level }
 			}
 		}
@@ -1660,6 +2129,15 @@ calculate_radiation_in_state = {
 #applied immediately when radiation is added - debuffs the state
 calculate_radiation_state_modifiers = {
 	if = { #Katown Pyramid protects!
+		limit = { NOT = { check_variable = { wonder = 1 } } }
+		#Prod loss from rads
+		#1 rad = 0.1 prod loss, so divide by 1000
+		set_variable = { state_prod_change_from_radiation_this_check = lok_added_radiation_level }
+		divide_variable = { state_prod_change_from_radiation_this_check = -100 }
+		add_to_variable = { state_prod_change_from_radiation = state_prod_change_from_radiation_this_check }
+		add_to_variable = { lok_state_productivity_value = state_prod_change_from_radiation_this_check }
+	}
+	if = { #Katown Pyramid protects!
 		limit = { check_variable = { wonder = 1 } }
 		set_variable = { lok_radiation_level = 0 }
 	}
@@ -1671,17 +2149,20 @@ calculate_radiation_state_modifiers = {
 	set_variable = { lok_radiation_army_modifier = lok_radiation_modifier } #For armies, not affected by species
 	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
 	if = {
-		limit = { check_variable = { species = 1 } } #-30% for Katzens
+		limit = { has_rad_resistant_trait = yes } #-30% for Katzens
 		multiply_variable = { lok_radiation_modifier = 0.7 }
 	}
 	if = {
 		limit = { #-75% for Lithoids
-			OR = {
-				check_variable = { species = 5 }
-				check_variable = { species = 8 }		
-			}
+			has_lithoid_trait = yes
 		} 
 		multiply_variable = { lok_radiation_modifier = 0.25 }
+	}
+	if = {
+		limit = { #-90% for Machines
+			has_mechanical_trait = yes
+		} 
+		multiply_variable = { lok_radiation_modifier = 0.10 }
 	}
 	clamp_variable = { var = lok_radiation_army_attrition_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
 	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and -0.9
@@ -1693,10 +2174,22 @@ apply_radiation_effects = {
 	if = { #Kill people in the state
 		limit = { #THIS IS THE "BASE RADIATION RESISTANCE TRAIT"
 			NOT = {
-				AND = { check_variable = { species = 1 } check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
+				AND = { has_rad_resistant_trait = yes check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
 				AND = {
-					OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+					has_subterranean_trait = yes
+					check_variable = { lok_radiation_level < 1.5 }
+				}
+				AND = {
+					has_cyborg_trait = yes
+					check_variable = { lok_radiation_level < 2.5 }
+				}
+				AND = {
+					has_lithoid_trait = yes
 					check_variable = { lok_radiation_level < 5 } #NMI + Nekeox don't die below 5
+				}
+				AND = {
+					has_mechanical_trait = yes
+					check_variable = { lok_radiation_level < 10 } #Robots don't die below 10
 				}
 			}
 		}
@@ -1707,15 +2200,32 @@ apply_radiation_effects = {
 
 		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
 		if = {
-			limit = { check_variable = { species = 1 } } #Only half the deaths for Katzen states
+			limit = { #-25% for Cyborgs
+				has_cyborg_trait = yes
+			} 
+			multiply_variable = { lok_radiation_death_percent = 0.75 }
+		}
+
+		if = {
+			limit = { has_rad_resistant_trait = yes } #Only half the deaths for Katzen states
 			multiply_variable = { lok_radiation_death_percent = 0.5 }
 		}
 
 		if = {
-			limit = { #-75% for Lithoids
-				OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+			limit = { #-75% for Lithoids and subterranean
+				OR = {
+					has_lithoid_trait = yes
+					has_subterranean_trait = yes
+				}
 			} 
 			multiply_variable = { lok_radiation_death_percent = 0.25 }
+		}
+
+		if = {
+			limit = { #-90% for Robots
+				has_mechanical_trait = yes
+			} 
+			multiply_variable = { lok_radiation_death_percent = 0.90 }
 		}
 
 		set_variable = { lok_radiation_death_count = state_population_k }
@@ -1738,26 +2248,60 @@ apply_radiation_effects = {
 	}
 }
 
-apply_state_species_modifier = {
+clear_all_state_species_modifier = {
 	if = {
-		limit = { has_dynamic_modifier = { modifier = lok_species_katzen_majority } }
-		remove_dynamic_modifier = { modifier = lok_species_katzen_majority }
+		limit = { has_dynamic_modifier = { modifier = lok_species_resilient_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_resilient_trait_modifier }
 	}
 	if = {
-		limit = { has_dynamic_modifier = { modifier = lok_species_sobaki_majority } }
-		remove_dynamic_modifier = { modifier = lok_species_sobaki_majority }
+		limit = { has_dynamic_modifier = { modifier = lok_species_seafaring_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_seafaring_trait_modifier }
 	}
 	if = {
-		limit = { check_variable = { species = 1 } }
-		add_dynamic_modifier = { modifier = lok_species_katzen_majority }
+		limit = { has_dynamic_modifier = { modifier = lok_species_natural_excavator_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_natural_excavator_trait_modifier }
 	}
 	if = {
-		limit = { check_variable = { species = 2 } }
-		add_dynamic_modifier = { modifier = lok_species_sobaki_majority }
+		limit = { has_dynamic_modifier = { modifier = lok_species_subterranean_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_subterranean_trait_modifier }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_cyborg_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_cyborg_trait_modifier }
+		set_temp_variable = { state_prod_change = -0.10 }
+		increase_state_productivity = yes
+		increase_base_state_productivity = yes
 	}
 }
 
-@wonder_modifier_count = 32
+apply_state_species_modifier = {
+	clear_all_state_species_modifier = yes
+	if = {
+		limit = { has_resilient_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_resilient_trait_modifier }
+	}
+	if = {
+		limit = { has_seafaring_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_seafaring_trait_modifier }
+	}
+	if = {
+		limit = { has_natural_excavator_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_natural_excavator_trait_modifier }
+	}
+	if = {
+		limit = { has_subterranean_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_subterranean_trait_modifier }
+	}
+	if = {
+		limit = { has_cyborg_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_cyborg_trait_modifier }
+		set_temp_variable = { state_prod_change = 0.10 }
+		increase_state_productivity = yes
+		increase_base_state_productivity = yes
+	}
+}
+
+@wonder_modifier_count = 33
 
 setup_wonder_array = {
 	resize_array = { #Array containing BASE modifiers, modify this in script!
@@ -1904,4 +2448,104 @@ retire_all_characters = {
 
 change_herald_sanity = {
 	add_to_variable = { herald_sanity = $VALUE$ }
+}
+
+clear_character_status_flags = {
+	if = {
+		limit = { has_character_flag = leader_is_retired }
+		clr_character_flag = leader_is_retired
+	}
+	if = {
+		limit = { has_character_flag = leader_is_jailed }
+		clr_character_flag = leader_is_jailed
+	}
+}
+
+dismantle_katlantropa_dam = {
+	custom_effect_tooltip = dismantle_katlantropa_dam_tooltip
+	hidden_effect = {
+		FOD = {
+			destroy_entity = 9999998
+		}
+		1324 = {
+			transfer_state_to = WWW
+			set_victory_points = {
+				province = 10165
+				value = 0
+			}
+			set_building_level = {
+				type = bunker
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = {
+				type = coastal_bunker
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = {
+				type = supply_node
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = {
+				type = naval_base
+				level = 0
+				province = {
+					all_provinces = yes
+				}
+			}
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1320 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1322 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1323 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1319 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		1321 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		183 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+		201 = {
+			transfer_state_to = WWW
+			set_building_level = { type = arms_factory level = 0 }
+			set_building_level = { type = dockyard level = 0 }
+			set_building_level = { type = industrial_complex level = 0 }
+		}
+	}
 }

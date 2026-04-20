@@ -107,11 +107,16 @@ technologies = {
 		}
 		
 		ai_will_do = {
-			factor = 1
+			base = 2
 
 			modifier = {
-				factor = 10
+				is_major = yes
+				factor = 2
+			}
+
+			modifier = {
 				date > "100.1.3"
+				factor = 10
 			}
 		}
 	}	
@@ -154,11 +159,21 @@ technologies = {
 		}
 		
 		ai_will_do = {
-			factor = 2
+			base = 2
 
 			modifier = {
+				is_major = yes
+				factor = 2
+			}
+
+			modifier = {
+				date > "102.1.1"
 				factor = 5
+			}
+
+			modifier = {
 				date > "103.1.1"
+				factor = 5
 			}
 		}
 	}
@@ -191,26 +206,21 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 3
-						
+
 			modifier = {
-				factor = 10
-				date > "103.1.1"
+				is_major = yes
+				factor = 2
 			}
+
+			modifier = {
+				date > "104.1.1"
+				factor = 10
+			}
+
 			modifier = {
 				num_of_military_factories < 50
 				factor = 0.5
 			}
-			#modifier = {
-			#	factor = 0
-			#	tag = SOV
-			#	OR = {
-			#		date < "108.1.1" # stock up on lots of rifles, we got the manpower
-			#		AND = {
-			#			date > "107.1.1"
-			#			surrender_progress < 0.1 # if we arent losing badly its ok
-			#		}
-			#	}
-			#}
 		}
 	}
 	improved_infantry_weapons_2 = {
@@ -251,105 +261,115 @@ technologies = {
 		}
 		
 		ai_will_do = {
-			factor = 1
-			
+			factor = 2
+
 			modifier = {
-				factor = 2
-				date > "104.1.6"
-			}
-			
-			modifier = {
-				factor = 2
-				date > "105.1.1"
-			}
-			
-			modifier = {
-				factor = 5
 				date > "106.1.1"
-			}
-		}
-	}
-	
-	infantry_at = {
-
-		category_all_infantry = {
-			hard_attack = 0.25
-			ap_attack = 1
-		}
-		
-		path = {
-			leads_to_tech = infantry_at2
-			research_cost_coeff = 1
-		}
-
-		research_cost = 1.5
-		start_year = 100
-		folder = {
-			name = infantry_folder
-			position = { x = -4 y = @1936 }
-		}
-		
-		categories = {
-			infantry_weapons
-		}
-		
-		ai_will_do = {
-			factor = 1
-			
-			modifier = {
 				factor = 2
-				date > "106.1.6"
 			}
-			
+
 			modifier = {
-				factor = 2
 				date > "107.1.1"
-			}
-			
-			modifier = {
 				factor = 2
+			}
+
+			modifier = {
 				date > "108.1.1"
+				factor = 5
 			}
 		}
 	}
 	
-	infantry_at2 = {
+	# infantry_at = {
 
-		category_all_infantry = {
-			hard_attack = 0.25
-			ap_attack = 1
-		}
+	# 	category_all_infantry = {
+	# 		hard_attack = 0.25
+	# 		ap_attack = 1
+	# 	}
 		
-		research_cost = 1.5
-		start_year = 107
-		folder = {
-			name = infantry_folder
-			position = { x = 2 y = @1943 }
-		}
+	# 	path = {
+	# 		leads_to_tech = infantry_at2
+	# 		research_cost_coeff = 1
+	# 	}
+
+	# 	research_cost = 1.5
+	# 	start_year = 100
+	# 	folder = {
+	# 		name = infantry_folder
+	# 		position = { x = -40 y = @1936 }
+	# 	}
 		
-		categories = {
-			infantry_weapons
-		}
+	# 	categories = {
+	# 		infantry_weapons
+	# 	}
 		
-		ai_will_do = {
-			factor = 1
-			
-			modifier = {
-				factor = 2
-				date > "107.1.6"
-			}
-			
-			modifier = {
-				factor = 2
-				date > "108.1.1"
-			}
-			
-			modifier = {
-				factor = 2
-				date > "109.1.1"
-			}
-		}
-	}
+	# 	ai_will_do = {
+	# 		base = 1
+
+	# 		modifier = {
+	# 			is_herzlands_warlord = yes
+	# 			factor = 2.5
+	# 		}
+
+	# 		modifier = {
+	# 			date > "100.1.1"
+	# 			factor = 2
+	# 		}
+
+	# 		modifier = {
+	# 			date > "102.1.1"
+	# 			factor = 2
+	# 		}
+
+	# 		modifier = {
+	# 			num_of_military_factories > 150
+	# 			factor = 2.5
+	# 		}
+
+	# 		modifier = {
+	# 			num_of_military_factories < 50
+	# 			factor = 0.5
+	# 		}
+	# 	}
+	# }
+	
+	# infantry_at2 = {
+
+	# 	category_all_infantry = {
+	# 		hard_attack = 0.25
+	# 		ap_attack = 1
+	# 	}
+		
+	# 	research_cost = 1.5
+	# 	start_year = 107
+	# 	folder = {
+	# 		name = infantry_folder
+	# 		position = { x = 2 y = @1943 }
+	# 	}
+		
+	# 	categories = {
+	# 		infantry_weapons
+	# 	}
+		
+	# 	ai_will_do = {
+	# 		factor = 1
+
+	# 		modifier = {
+	# 			date > "107.1.6"
+	# 			factor = 2
+	# 		}
+
+	# 		modifier = {
+	# 			date > "108.1.1"
+	# 			factor = 2
+	# 		}
+
+	# 		modifier = {
+	# 			date > "109.1.1"
+	# 			factor = 2
+	# 		}
+	# 	}
+	# }
 	
 	advanced_infantry_weapons = {
 
@@ -374,13 +394,28 @@ technologies = {
 		}
 		
 		ai_will_do = {
-			factor = 0.8
+			base = 1
+
+			modifier = {
+				is_herzlands_warlord = yes
+				factor = 2.5
+			}
+
+			modifier = {
+				date > "108.1.1"
+				factor = 2
+			}
+
+			modifier = {
+				date > "110.1.1"
+				factor = 2
+			}
 
 			modifier = {
 				num_of_military_factories > 150
 				factor = 2.5
 			}
-			
+
 			modifier = {
 				num_of_military_factories < 50
 				factor = 0.5
@@ -425,20 +460,20 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
+				date > "110.1.6"
 				factor = 2
-				date > "108.1.6"
 			}
-			
+
 			modifier = {
+				date > "111.1.1"
 				factor = 2
-				date > "109.1.1"
 			}
-			
+
 			modifier = {
+				date > "112.1.1"
 				factor = 2
-				date > "110.1.1"
 			}
 		}
 	}
@@ -466,16 +501,21 @@ technologies = {
 		}
 		
 		ai_will_do = {
-			factor = 0.8
+			factor = 1
 
 			modifier = {
-				num_of_military_factories > 150
-				factor = 2.5
+				date > "112.1.6"
+				factor = 2
 			}
-			
+
 			modifier = {
-				num_of_military_factories < 50
-				factor = 0.5
+				date > "113.1.1"
+				factor = 2
+			}
+
+			modifier = {
+				date > "114.1.1"
+				factor = 2
 			}
 		}
 	}
@@ -517,20 +557,20 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
+				date > "110.1.6"
 				factor = 2
-				date > "108.1.6"
 			}
-			
+
 			modifier = {
+				date > "111.1.1"
 				factor = 2
-				date > "109.1.1"
 			}
-			
+
 			modifier = {
+				date > "112.1.1"
 				factor = 2
-				date > "110.1.1"
 			}
 		}
 	}
@@ -561,16 +601,21 @@ technologies = {
 		}
 		
 		ai_will_do = {
-			factor = 0.8
+			factor = 1
 
 			modifier = {
-				num_of_military_factories > 150
-				factor = 2.5
+				date > "116.1.6"
+				factor = 2
 			}
-			
+
 			modifier = {
-				num_of_military_factories < 50
-				factor = 0.5
+				date > "117.1.1"
+				factor = 2
+			}
+
+			modifier = {
+				date > "118.1.1"
+				factor = 2
 			}
 		}
 	}
@@ -1504,20 +1549,20 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 4
-			
+
 			modifier = {
+				date > "112.1.9"
 				factor = 2
-				date > "109.1.9"
 			}
-			
+
 			modifier = {
+				date > "113.1.1"
 				factor = 2
-				date > "110.1.1"
 			}
-			
+
 			modifier = {
+				date > "113.1.6"
 				factor = 5
-				date > "110.1.6"
 			}
 		}
 	}
@@ -1579,20 +1624,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
+
 			modifier = {
-				factor = 2
 				date > "101.1.1"
-			}
-			
-			modifier = {
 				factor = 2
+			}
+
+			modifier = {
 				date > "102.1.1"
-			}
-			
-			modifier = {
 				factor = 2
-				date > "103.1.1"
 			}
+
+			modifier = {
+				date > "103.1.1"
+				factor = 2
+			}
+
 			modifier = {
 				has_war = yes
 				factor = 2
@@ -1657,25 +1704,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
+
 			modifier = {
-				factor = 2
-				date > "102.1.6"
-			}
-			
-			modifier = {
-				factor = 2
 				date > "103.1.1"
-			}
-			
-			modifier = {
 				factor = 2
+			}
+
+			modifier = {
 				date > "104.1.1"
-			}
-			
-			modifier = {
 				factor = 2
-				date > "105.1.1"
 			}
+
+			modifier = {
+				date > "105.1.1"
+				factor = 2
+			}
+
 			modifier = {
 				has_war = yes
 				factor = 2
@@ -1740,26 +1784,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
-				factor = 2
-				date > "104.1.6"
-			}
-			
-			modifier = {
-				factor = 2
 				date > "105.1.1"
-			}
-			
-			modifier = {
 				factor = 2
+			}
+
+			modifier = {
 				date > "106.1.1"
-			}
-			
-			modifier = {
 				factor = 2
-				date > "107.1.1"
 			}
+
+			modifier = {
+				date > "107.1.1"
+				factor = 2
+			}
+
 			modifier = {
 				has_war = yes
 				factor = 2
@@ -1824,26 +1864,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
-				factor = 2
-				date > "106.1.6"
-			}
-			
-			modifier = {
-				factor = 2
 				date > "107.1.1"
-			}
-			
-			modifier = {
 				factor = 2
+			}
+
+			modifier = {
 				date > "108.1.1"
-			}
-			
-			modifier = {
 				factor = 2
-				date > "109.1.1"
 			}
+
+			modifier = {
+				date > "109.1.1"
+				factor = 2
+			}
+
 			modifier = {
 				has_war = yes
 				factor = 2
@@ -1908,26 +1944,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
-				factor = 2
-				date > "106.1.6"
-			}
-			
-			modifier = {
-				factor = 2
-				date > "107.1.1"
-			}
-			
-			modifier = {
-				factor = 2
-				date > "108.1.1"
-			}
-			
-			modifier = {
-				factor = 2
 				date > "109.1.1"
+				factor = 2
 			}
+
+			modifier = {
+				date > "110.1.1"
+				factor = 2
+			}
+
+			modifier = {
+				date > "111.1.1"
+				factor = 2
+			}
+
 			modifier = {
 				has_war = yes
 				factor = 2
@@ -1988,26 +2020,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
+				date > "111.1.1"
 				factor = 2
-				date > "106.1.6"
 			}
-			
+
 			modifier = {
+				date > "112.1.1"
 				factor = 2
-				date > "107.1.1"
 			}
-			
+
 			modifier = {
+				date > "113.1.1"
 				factor = 2
-				date > "108.1.1"
 			}
-			
-			modifier = {
-				factor = 2
-				date > "109.1.1"
-			}
+
 			modifier = {
 				has_war = yes
 				factor = 2
@@ -2180,21 +2208,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
+				date > "105.1.1"
 				factor = 2
-				date > "101.1.1"
 			}
-			
+
 			modifier = {
+				date > "106.1.1"
 				factor = 2
-				date > "102.1.1"
 			}
-			
+
 			modifier = {
+				date > "107.1.1"
 				factor = 2
-				date > "103.1.1"
 			}
+
 			modifier = {
 				is_major = no
 				factor = 0.75
@@ -2226,21 +2255,22 @@ technologies = {
 		
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
+				date > "109.1.1"
 				factor = 2
-				date > "101.1.1"
 			}
-			
+
 			modifier = {
+				date > "110.1.1"
 				factor = 2
-				date > "102.1.1"
 			}
-			
+
 			modifier = {
+				date > "111.1.1"
 				factor = 2
-				date > "103.1.1"
 			}
+
 			modifier = {
 				is_major = no
 				factor = 0.75
@@ -2442,21 +2472,22 @@ technologies = {
 
 		ai_will_do = {
 			factor = 1
-			
+
 			modifier = {
+				date > "111.1.1"
 				factor = 2
-				date > "106.1.1"
 			}
-			
+
 			modifier = {
+				date > "112.1.1"
 				factor = 2
-				date > "107.1.1"
 			}
-			
+
 			modifier = {
+				date > "113.1.1"
 				factor = 2
-				date > "108.1.1"
 			}
+
 			modifier = {
 				is_major = no
 				factor = 0.5

@@ -1,0 +1,365 @@
+KUS_NEK_war_mediation_cat = {
+
+	# Timed Mission: Great Powers Mediate Ceasefire (KUS only)
+	KUS_great_powers_mediate_ceasefire = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = { tag = KUS }
+
+		activation = {
+			has_global_flag = KUS_NEK_war_active
+			has_war_with = NEK
+		}
+
+		available = {
+			always = no
+		}
+
+		cancel_trigger = {
+			NOT = { has_global_flag = KUS_NEK_war_active }
+		}
+
+		is_good = no
+		fire_only_once = yes
+		selectable_mission = no
+		days_mission_timeout = 365
+
+		timeout_effect = {
+			if = {
+				limit = {
+					has_war_with = NEK
+					has_global_flag = KUS_NEK_war_active
+				}
+				white_peace = NEK
+				country_event = { id = KUS_NEK_war.2 }
+				NEK = { country_event = { id = KUS_NEK_war.3 } }
+				news_event = { id = LOK_news.23 days = 1 }
+			}
+			# Cleanup
+			hidden_effect = {
+				every_country = {
+					limit = {
+						is_in_array = {
+							array = global.KUS_NEK_war_supporters
+							value = THIS
+						}
+					}
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+					remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+					remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+				}
+				clr_global_flag = KUS_NEK_war_active
+				if = {
+					limit = { has_dynamic_modifier = { modifier = KUS_international_support } }
+					remove_dynamic_modifier = { modifier = KUS_international_support }
+				}
+				NEK = {
+					if = {
+						limit = { has_dynamic_modifier = { modifier = NEK_international_support } }
+						remove_dynamic_modifier = { modifier = NEK_international_support }
+					}
+				}
+			}
+		}
+	}
+
+	# NEK pressing victory after taking Akiba (moved from lok_journal_entries)
+	NEK_kusnurk_peace = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = {
+			tag = NEK
+		}
+
+		visible = {
+			has_war_with = KUS
+		}
+
+		available = {
+			229 = { is_controlled_by = NEK }
+		}
+
+		fire_only_once = yes
+
+		remove_effect = {
+			effect_tooltip = {
+				white_peace = KUS
+				229 = {
+					transfer_state_to = NEK
+					custom_effect_tooltip = state_core_threshold_set_60
+					set_state_flag = compliance_60_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_compliance = 10
+				}
+				225 = { set_demilitarized_zone = yes }
+				add_stability = 0.10
+				add_war_support = 0.05
+				add_political_power = 150
+			}
+			custom_effect_tooltip = lok_needs_approval
+			KUS = { country_event = { id = LOK_NEK.1 } }
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	# KUS victory: Neuter Nekaston
+	KUS_neuter_nekaston = {
+		icon = GFX_decision_generic_military
+		allowed = { tag = KUS }
+
+		visible = {
+			has_war_with = NEK
+			has_global_flag = KUS_NEK_war_active
+		}
+
+		available = {
+			241 = { is_controlled_by = KUS }
+			233 = { is_controlled_by = KUS }
+		}
+
+		fire_only_once = yes
+		cost = 0
+
+		complete_effect = {
+			effect_tooltip = {
+				white_peace = NEK
+				241 = { transfer_state_to = KUS }
+				233 = { transfer_state_to = KUS }
+				248 = {
+					set_demilitarized_zone = yes
+					custom_effect_tooltip = KUS_NEK_war_dismantle_buildings_tt
+				}
+				746 = {
+					set_demilitarized_zone = yes
+					custom_effect_tooltip = KUS_NEK_war_dismantle_buildings_tt
+				}
+				240 = {
+					set_demilitarized_zone = yes
+					custom_effect_tooltip = KUS_NEK_war_dismantle_buildings_tt
+				}
+				287 = {
+					set_demilitarized_zone = yes
+					custom_effect_tooltip = KUS_NEK_war_dismantle_buildings_tt
+				}
+			}
+			custom_effect_tooltip = lok_needs_approval
+			NEK = { country_event = { id = KUS_NEK_war.5 } }
+		}
+
+		ai_will_do = { base = 1000 }
+	}
+
+	# KUS wants to drag the war out to beat NEK
+	KUS_push_for_neutering = {
+		icon = GFX_decision_generic_propaganda
+		allowed = { tag = KUS }
+
+		visible = {
+			has_global_flag = KUS_NEK_war_active
+			has_war_with = NEK
+			NOT = { has_global_flag = KUS_NEK_push_for_neutering }
+		}
+
+		fire_only_once = yes
+		cost = 50
+
+		complete_effect = {
+			set_global_flag = KUS_NEK_push_for_neutering
+			custom_effect_tooltip = KUS_NEK_war_push_neutering_tt
+		}
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 10
+				241 = { is_controlled_by = KUS }
+			}
+		}
+	}
+
+	# KUS Lobby for Support (targeted at supporters)
+	KUS_lobby_for_support = {
+		icon = GFX_decision_generic_propaganda
+		allowed = { tag = KUS }
+
+		visible = {
+			has_global_flag = KUS_NEK_war_active
+			has_war_with = NEK
+		}
+
+		target_array = global.KUS_NEK_war_supporters
+
+		target_trigger = {
+			FROM = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 25
+
+		available = {
+			check_variable = { KUS_NEK_support_level < 2 }
+		}
+
+		days_remove = 15
+
+		remove_effect = {
+			random_list = {
+				1 = {
+					# Success - shift towards KUS
+					hidden_effect = {
+						FROM = {
+							add_to_variable = { KUS_NEK_support_level = 1 }
+							clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
+							country_event = { id = KUS_NEK_war.20 }
+							LOK_NEK_war_update_opinion = yes
+						}						
+					}
+					custom_effect_tooltip = KUS_NEK_war_lobby_success_tt
+				}
+				1 = {
+					# Fail
+					hidden_effect = {
+						FROM = {
+							country_event = { id = KUS_NEK_war.20 }
+						}	
+					}
+					custom_effect_tooltip = KUS_NEK_war_lobby_fail_tt
+				}
+			}
+		}
+
+		ai_will_do = { base = 50 }
+	}
+
+	# NEK Lobby for Support (targeted at supporters)
+	NEK_lobby_for_support = {
+		icon = GFX_decision_generic_propaganda
+		allowed = { tag = NEK }
+
+		visible = {
+			has_global_flag = KUS_NEK_war_active
+			has_war_with = KUS
+		}
+
+		target_array = global.KUS_NEK_war_supporters
+
+		target_trigger = {
+			FROM = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		available = {
+			check_variable = { KUS_NEK_support_level > -2 }
+		}
+
+		cost = 25
+
+		days_remove = 15
+
+		remove_effect = {
+			random_list = {
+				1 = {
+					# Success - shift towards NEK
+					hidden_effect = {
+						FROM = {
+							add_to_variable = { KUS_NEK_support_level = -1 }
+							clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
+							country_event = { id = KUS_NEK_war.20 }
+							LOK_NEK_war_update_opinion = yes
+						}	
+					}
+					custom_effect_tooltip = KUS_NEK_war_lobby_success_tt
+				}
+				1 = {
+					# Fail
+					hidden_effect = {
+						FROM = {
+							country_event = { id = KUS_NEK_war.20 }
+						}
+					}
+					custom_effect_tooltip = KUS_NEK_war_lobby_fail_tt
+				}
+			}
+		}
+
+		ai_will_do = { base = 50 }
+	}
+
+	# KUS Broadcast Nekastonian Decadence
+	KUS_broadcast_nekastonian_decadence = {
+		icon = GFX_decision_generic_propaganda
+		allowed = { tag = KUS }
+
+		visible = {
+			has_global_flag = KUS_NEK_war_active
+			has_war_with = NEK
+		}
+
+		available = {
+			any_controlled_state = { is_core_of = NEK }
+		}
+
+		fire_only_once = yes
+		cost = 25
+
+		complete_effect = {
+			every_country = {
+				limit = {
+					is_in_array = { array = global.KUS_NEK_war_supporters value = THIS }
+					has_government = communism
+				}
+				hidden_effect = {
+					LOK_NEK_war_update_opinion = yes
+				}
+				add_to_variable = { KUS_NEK_support_level = 1 }
+				clamp_variable = { var = KUS_NEK_support_level min = -2 max = 2 }
+				country_event = { id = KUS_NEK_war.25 }
+			}
+			custom_effect_tooltip = KUS_NEK_war_broadcast_decadence_tt
+		}
+
+		ai_will_do = { base = 100 }
+	}
+
+	# Supporting nations choose how to intervene (every 3 months)
+	KUS_NEK_war_support_decision = {
+		icon = GFX_decision_generic_diplomacy
+
+		visible = {
+			has_global_flag = KUS_NEK_war_active
+			is_in_array = { array = global.KUS_NEK_war_supporters value = THIS }
+			NOT = { tag = KUS }
+			NOT = { tag = NEK }
+		}
+
+		available = {
+			NOT = { has_country_flag = KUS_NEK_war_supported_recently }
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
+			if = {
+				limit = { is_ai = no }
+				country_event = { id = KUS_NEK_war.4 }
+			}
+			if = {
+				limit = { is_ai = yes }
+				country_event = { id = KUS_NEK_war.4 days = 1 random_days = 30 }
+			}
+		}
+
+		ai_will_do = { base = 100 }
+	}
+}

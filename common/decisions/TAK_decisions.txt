@@ -1,4 +1,101 @@
 TAK_painting_cat = {
+	TAK_support_roq_state_independence = {
+		icon = GFX_decision_infiltrate_state
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = TAK_possible_independence_supports
+
+		target_non_existing = yes
+
+
+		highlight_states = {
+			highlight_states_trigger = {
+				is_core_of = FROM
+			}
+		}
+
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			NOT = { country_exists = FROM }
+		}
+
+		visible = {
+			tag = TAK
+			country_exists = ROQ
+			NOT = { has_war_with = ROQ }
+			has_completed_focus = TAK_break_roqualia
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = TAK_support_roq_state_independence_prereq
+				hidden_trigger = {
+					FROM = {
+						any_core_state = {
+							check_variable = { TAK_infiltration_level > 3 }
+						}
+					}
+					NOT = { #no more than 4
+						check_variable = { TAK_roq_states_supported > 3 }
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		days_remove = 30
+
+		cost = 10
+
+		modifier = {
+			TAK_painting_power_usage = 100
+		}
+
+		complete_effect = {
+			add_to_variable = { TAK_painting_power_usage = 100 }
+			TAK_update_painting_stats = yes
+			FROM = {
+				set_country_flag = TAK_supported_independence
+			}
+			hidden_effect = {
+				add_to_variable = { TAK_roq_states_supported = 1 }
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = TAK_support_roq_state_independence_tt
+			subtract_from_variable = { TAK_painting_power_usage = 100 }
+			TAK_update_painting_stats = yes
+			FROM = {
+				set_country_flag = TAK_supported_independence
+			}
+		}
+
+		cancel_effect = {
+			subtract_from_variable = { TAK_painting_power_usage = 100 }
+			TAK_update_painting_stats = yes
+			hidden_effect = {
+				subtract_from_variable = { TAK_roq_states_supported = 1 }
+			}			
+		}
+
+		cancel_trigger = {
+			OR = {
+				country_exists = FROM
+				has_war_with = ROQ
+				has_war_with = FROM
+			}
+		}
+	}
+
 	#the roi can recruit painters
 	#each painter gives a painting power
 	#painters are listed in an array
@@ -75,7 +172,7 @@ TAK_painting_cat = {
 
 		visible = {
 			tag = TAK
-			has_completed_focus = TAK_recruit_painters
+			has_completed_focus = TAK_figure_it_out
 		}
 
 		available = {
@@ -106,7 +203,7 @@ TAK_painting_cat = {
 
 		visible = {
 			tag = TAK
-			has_completed_focus = TAK_recruit_painters
+			has_completed_focus = TAK_figure_it_out
 		}
 
 		available = {
@@ -268,17 +365,35 @@ TAK_painting_cat = {
 
 		cost = 50
 
+		days_remove = 30
+
 		remove_effect = {
 			random_list = {
 				40 = {
 					TAK_recruit_painter_1 = yes
 					modifier = { factor = 2 FROM = { tak_is_non_artistic_species_country = yes } }
 					modifier = { factor = 0.5 FROM = { tak_is_artistic_species_country = yes } }
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 50 } }
+					}
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 90 } }
+					}
 				}
 				40 = { 
 					TAK_recruit_painter_3 = yes
 					modifier = { factor = 2 FROM = { tak_is_non_artistic_species_country = yes } }
 					modifier = { factor = 0.5 FROM = { tak_is_artistic_species_country = yes } }
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 50 } }
+					}
+					modifier = {
+						factor = 0.5
+						FROM = { has_opinion = { target = TAK value > 90 } }
+					}
 				}
 				20 = {
 					TAK_recruit_painter_5 = yes
@@ -294,6 +409,14 @@ TAK_painting_cat = {
 					TAK_recruit_painter_20 = yes
 					modifier = { factor = 0.5 FROM = { tak_is_non_artistic_species_country = yes } }
 					modifier = { factor = 2 FROM = { tak_is_artistic_species_country = yes } }
+					modifier = {
+						factor = 1.5
+						FROM = { has_opinion = { target = TAK value > 50 } }
+					}
+					modifier = {
+						factor = 1.5
+						FROM = { has_opinion = { target = TAK value > 90 } }
+					}
 				}
 			}
 		}
@@ -408,6 +531,7 @@ TAK_painting_cat = {
 
 		cancel_effect = {
 			subtract_from_variable = { TAK_painting_power_usage = 25 }
+			TAK_update_painting_stats = yes
 		}
 	}
 
@@ -442,6 +566,7 @@ TAK_painting_cat = {
 		cost = 10
 
 		complete_effect = {
+			FROM = { country_event = { id = LOK_generic.1 } }
 			TAK_update_painting_stats = yes
 		}
 
@@ -450,10 +575,204 @@ TAK_painting_cat = {
 				target = FROM
 				type = annex_everything
 			}
+			# Fire TAK-ROQ war news event if target is ROQ
+			if = {
+				limit = { FROM = { tag = ROQ } }
+				news_event = { id = LOK_news.11 hours = 6 }
+			}
 		}
 
 		cancel_trigger = {
 			has_war_with = FROM
+		}
+	}
+
+	#Build Lesser Charles
+	TAK_build_petite_charles = {
+		icon = GFX_decision_charles
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = TAK.potential_cores_array
+		state_target = yes
+
+		on_map_mode = map_only
+
+		target_trigger = {
+			NOT = {
+				FROM = {
+					is_in_array = {
+						array = TAK.original_cores_array
+						value = THIS
+					}
+					state = 720
+					state = 804
+					state = 364
+				}
+			}
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 14
+		}
+
+		visible = {
+			tag = TAK
+			FROM = {
+				is_owned_by = TAK
+			}
+			has_completed_focus = TAK_many_many_charles
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		days_remove = 30
+
+		cost = 10
+
+		modifier = {
+			civilian_factory_use = 15
+		}
+
+		remove_effect = {
+			FROM = {
+				create_petite_charles = yes
+				increase_state_category = yes
+				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
+				add_compliance = 10
+				custom_effect_tooltip = state_core_threshold_lower_20
+				hidden_effect = {
+					reduce_compliance_coring_threshold_by_10 = yes
+					reduce_compliance_coring_threshold_by_10 = yes
+				}
+			}
+		}
+	}
+
+	TAK_move_to_charles_proper = {
+		icon = GFX_decision_charles
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = TAK.potential_cores_array
+		state_target = yes
+
+		on_map_mode = map_only
+
+		target_trigger = {
+			NOT = {
+				FROM = {
+					is_in_array = {
+						array = TAK.original_cores_array
+						value = THIS
+					}
+				}
+			}
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 14
+		}
+
+		visible = {
+			tag = TAK
+			FROM = {
+				is_owned_by = TAK
+			}
+			has_completed_focus = TAK_everything_on_charles
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		days_remove = 30
+
+		cost = 10
+
+		modifier = {
+			civilian_factory_use = 15
+		}
+
+		remove_effect = {
+			FROM = {
+				custom_effect_tooltip = TAK_move_to_charles_proper_tt
+				add_extra_state_shared_building_slots = -2
+				add_compliance = -10
+				if = {
+					limit = { check_variable = { building_level@industrial_complex > 1 } }
+					remove_building = { type = industrial_complex level = 1 }
+					349 = {
+						add_to_variable = { wonder_modifiers_values^25 = 1 }
+					}
+				}
+				if = {
+					limit = { check_variable = { building_level@arms_factory > 1 } }
+					remove_building = { type = arms_factory level = 1 }
+					349 = {
+						add_to_variable = { wonder_modifiers_values^32 = 1 }
+					}
+				}
+				hidden_effect = {
+					set_variable = { TAK.pop_to_move_to_tak = state_population_k }
+					divide_variable = { TAK.pop_to_move_to_tak = 4 } #25% of the pop goes to takicardie. Out of that, 1/4th goes to Tak and Ikar each, half goes to Charles.
+					divide_variable = { TAK.pop_to_move_to_tak = 10 } #done in chunks of 10k, if it was 1M then this becomes just 1000 then 10.
+					set_variable = { TAK.pop_to_move_to_outer_charles = TAK.pop_to_move_to_tak }
+					divide_variable = { TAK.pop_to_move_to_outer_charles = 4 }
+					set_variable = { TAK.pop_to_move_to_inner_charles = TAK.pop_to_move_to_tak }
+					divide_variable = { TAK.pop_to_move_to_inner_charles = 2 }	
+					for_loop_effect = {
+						end = TAK.pop_to_move_to_tak
+						add_manpower = -10000
+					}
+					349 = {
+						for_loop_effect = {
+							end = TAK.pop_to_move_to_inner_charles
+							add_manpower = 10000
+						}
+					}
+					347 = {
+						for_loop_effect = {
+							end = TAK.pop_to_move_to_inner_charles
+							add_manpower = 10000
+						}
+					}
+					340 = {
+						for_loop_effect = {
+							end = TAK.pop_to_move_to_inner_charles
+							add_manpower = 10000
+						}
+					}					
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						340 = { NOT = { has_state_category = megalopolis } }
+						347 = { NOT = { has_state_category = megalopolis } }
+					}
+				}
+				random_owned_state = {
+					limit = {
+						NOT = { has_state_category = megalopolis }
+						OR = { state = 340 state = 347 }
+					}
+					increase_state_category = yes
+				}
+			}
+			hidden_effect = {
+				apply_wonder_effects = yes
+			}
 		}
 	}
 }
@@ -476,9 +795,6 @@ lok_peace_decisions_cat = {
 
 		highlight_states = {
 			highlight_state_targets = {
-				state = 804
-				state = 396
-				state = 364
 				state = 1016
 				state = 1017
 				state = 358
@@ -521,6 +837,10 @@ lok_peace_decisions_cat = {
 				create_dynamic_country = {
 					original_tag = KEP
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_quepler_puppet_cores
 						add_core_of = var:new_country
@@ -535,6 +855,7 @@ lok_peace_decisions_cat = {
 						set_popularities = {
 							fascism = 100
 						}
+						save_global_event_target_as = tak_quepler_puppet
 						if = {
 							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
 							add_ideas = TAK_charlesling_domain
@@ -630,6 +951,10 @@ lok_peace_decisions_cat = {
 				create_dynamic_country = {
 					original_tag = KEP
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_salt_puppet_cores
 						add_core_of = var:new_country
@@ -644,6 +969,7 @@ lok_peace_decisions_cat = {
 						set_popularities = {
 							fascism = 100
 						}
+						save_global_event_target_as = tak_salt_puppet
 						if = {
 							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
 							add_ideas = TAK_charlesling_domain
@@ -736,6 +1062,10 @@ lok_peace_decisions_cat = {
 				create_dynamic_country = {
 					original_tag = SLR
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_south_solaria_puppet_cores
 						add_core_of = var:new_country
@@ -750,6 +1080,7 @@ lok_peace_decisions_cat = {
 						set_popularities = {
 							fascism = 100
 						}
+						save_global_event_target_as = tak_south_solaria_puppet
 						if = {
 							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
 							add_ideas = TAK_charlesling_domain
@@ -844,6 +1175,10 @@ lok_peace_decisions_cat = {
 				create_dynamic_country = {
 					original_tag = SLR
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_north_solaria_puppet_cores
 						add_core_of = var:new_country
@@ -858,6 +1193,7 @@ lok_peace_decisions_cat = {
 						set_popularities = {
 							fascism = 100
 						}
+						save_global_event_target_as = tak_north_solaria_puppet
 						if = {
 							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
 							add_ideas = TAK_charlesling_domain
@@ -942,8 +1278,12 @@ lok_peace_decisions_cat = {
 			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
-					original_tag = ROQ
+					original_tag = UCE
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_midi_puppet_cores
 						add_core_of = var:new_country
@@ -958,6 +1298,7 @@ lok_peace_decisions_cat = {
 						set_popularities = {
 							fascism = 100
 						}
+						save_global_event_target_as = tak_midi_puppet
 						if = {
 							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
 							add_ideas = TAK_charlesling_domain
@@ -1049,6 +1390,10 @@ lok_peace_decisions_cat = {
 				create_dynamic_country = {
 					original_tag = LMB
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_roqual_frontier_puppet_cores
 						add_core_of = var:new_country
@@ -1063,6 +1408,7 @@ lok_peace_decisions_cat = {
 						set_popularities = {
 							fascism = 100
 						}
+						save_global_event_target_as = tak_roqual_frontier_puppet
 						if = {
 							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
 							add_ideas = TAK_charlesling_domain
@@ -1139,6 +1485,10 @@ lok_peace_decisions_cat = {
 				create_dynamic_country = {
 					original_tag = ROQ
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					320 = { transfer_state_to = var:new_country add_core_of = var:new_country }
 
 					TAK = {
@@ -1152,6 +1502,7 @@ lok_peace_decisions_cat = {
 						set_popularities = {
 							fascism = 100
 						}
+						save_global_event_target_as = tak_lutecie_puppet
 						if = {
 							limit = { TAK = { has_completed_focus = TAK_charles_puppets } }
 							add_ideas = TAK_charlesling_domain
@@ -1203,10 +1554,7 @@ lok_peace_decisions_cat = {
 
 		highlight_states = {
 			highlight_state_targets = {
-				state = 723
-				state = 739
 				state = 743
-				state = 307
 				state = 297
 				state = 281
 				state = 278
@@ -1242,8 +1590,12 @@ lok_peace_decisions_cat = {
 			custom_effect_tooltip = TAK_painting_charles_change_tooltip
 			hidden_effect = {
 				create_dynamic_country = {
-					original_tag = LMB
+					original_tag = VEL
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_bocerie_puppet_cores
 						add_core_of = var:new_country
@@ -1254,6 +1606,7 @@ lok_peace_decisions_cat = {
 					}
 					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
 					var:new_country = {
+						save_global_event_target_as = tak_bocerie_puppet
 						set_cosmetic_tag = TAK_BOCERIE_PUPPET
 						set_popularities = {
 							fascism = 100
@@ -1361,6 +1714,10 @@ lok_peace_decisions_cat = {
 				create_dynamic_country = {
 					original_tag = FSR
 					set_temp_variable = { new_country = this }
+					every_state = {
+						limit = { is_core_of = var:new_country }
+						remove_core_of = var:new_country
+					}
 					for_each_scope_loop = {
 						array = TAK.TAK_katzen_puppet_cores
 						add_core_of = var:new_country
@@ -1371,6 +1728,7 @@ lok_peace_decisions_cat = {
 					}
 					TAK = { set_autonomy = { target = var:new_country autonomy_state = autonomy_integrated_puppet } }
 					var:new_country = {
+						save_global_event_target_as = tak_katzen_puppet
 						set_cosmetic_tag = TAK_KATZEN_PUPPET
 						set_popularities = {
 							fascism = 100
@@ -1409,6 +1767,55 @@ lok_peace_decisions_cat = {
 			factor = 200
 		}
 	}
+
+	TAK_return_puppet_land = {
+
+		icon = GFX_decision_infiltrate_state
+
+		days_remove = 0
+
+		visible = {
+			tag = TAK
+			any_owned_state = {
+				has_state_flag = TAK_puppet_core
+			}
+		}
+		
+
+		complete_effect = {
+			every_owned_state = {
+				limit = {
+					has_state_flag = TAK_puppet_core
+				}
+				
+				# 1. We are in a STATE scope. Save this state so we can reference it later.
+				save_event_target_as = tak_state_to_transfer
+				
+				# 2. Scope to countries to find the rightful owner
+				random_country = {
+					limit = {
+						is_puppet_of = TAK
+						
+						# 3. Scope TO the saved state. 
+						# Inside this block, PREV refers to the country we are checking in 'random_country'
+						event_target:tak_state_to_transfer = {
+							is_core_of = PREV
+						}
+					}
+					# 4. We found the country. Save it as our target.
+					save_event_target_as = tak_country_receiver
+				}
+				
+				# 5. We are back in the STATE scope. Transfer it to the saved country.
+				transfer_state_to = event_target:tak_country_receiver
+			}
+		}
+
+
+		ai_will_do = {
+			factor = 200
+		}
+	}
 }
 
 TAK_automata_cat = {
@@ -1421,6 +1828,7 @@ TAK_automata_cat = {
 			original_tag = TAK
 		}
 		available = {
+			check_variable = { num_battalions_with_type@super_heavy_mech > 0 }
 			NOT = {
 				has_country_flag = TAK_improving_automata
 			}
@@ -1461,6 +1869,7 @@ TAK_automata_cat = {
 			original_tag = TAK
 		}
 		available = {
+			check_variable = { num_battalions_with_type@super_heavy_mech > 0 }
 			NOT = {
 				has_country_flag = TAK_improving_automata
 			}
@@ -1501,6 +1910,7 @@ TAK_automata_cat = {
 			original_tag = TAK
 		}
 		available = {
+			check_variable = { num_battalions_with_type@super_heavy_mech > 0 }
 			NOT = {
 				has_country_flag = TAK_improving_automata
 			}
@@ -1542,6 +1952,7 @@ TAK_automata_cat = {
 			original_tag = TAK
 		}
 		available = {
+			check_variable = { num_battalions_with_type@super_heavy_mech > 0 }
 			NOT = {
 				has_country_flag = TAK_improving_automata
 			}
@@ -1583,6 +1994,7 @@ TAK_automata_cat = {
 			original_tag = TAK
 		}
 		available = {
+			check_variable = { num_battalions_with_type@super_heavy_mech > 0 }
 			NOT = {
 				has_country_flag = TAK_improving_automata
 			}
@@ -1624,6 +2036,7 @@ TAK_automata_cat = {
 			original_tag = TAK
 		}
 		available = {
+			check_variable = { num_battalions_with_type@super_heavy_mech > 0 }
 			NOT = {
 				has_country_flag = TAK_improving_automata
 			}
@@ -1653,6 +2066,46 @@ TAK_automata_cat = {
 				has_war = yes
 				factor = 2
 			}
+		}
+	}
+
+	TAK_rebuild_automata = {
+		icon = GFX_decision_generic_industry
+		cost = 25
+		days_remove = 120
+		fire_only_once = yes
+		allowed = {
+			original_tag = TAK
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = TAK_rebuild_automata_trigger
+				check_variable = { num_battalions_with_type@super_heavy_mech = 0 }
+			}
+			has_equipment = {
+				super_heavy_mech_chassis > 99
+			}
+			num_of_civilian_factories_available_for_projects > 14
+		}
+		modifier = {
+			research_speed_factor = -0.20
+			industrial_factory_donations = 15
+		}
+		remove_effect = {
+			custom_effect_tooltip = TAK_rebuild_automata_tt
+			hidden_effect = {
+				349 = {
+					create_unit = {
+						division = "division_template = \"Automate du Roi\" start_experience_factor = 0.2 start_equipment_factor = 1"
+						count = 1
+						owner = TAK
+					}
+				}			
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
 		}
 	}
 }

@@ -1,564 +1,1093 @@
 focus_tree = {
-	id = FRA_TREE
-	continuous_focus_position = { x = 1000 y = 3000 }
-	country = {
-		factor = 0
-		modifier = {
-			add = 100
-			tag = FRA
-		}
-	}
-	focus = {
-		id = FRA_sitrep
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 8
-		y = 0
-		completion_reward = {
-			FRA = { country_event = FRA_report.1 }
-		}
-	}
-	focus = {
-		id = FRA_questioning
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 8
-		y = 1
-		prerequisite = {
-			focus = FRA_sitrep
-		}
-		completion_reward = {
-			FRA = { country_event = FRA_report.2 }
-		}
-	}
-	focus = {
-		id = FRA_firstmeeting
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 8
-		y = 2
-		prerequisite = {
-			focus = FRA_questioning
-		}
-		completion_reward = {
-			FRA = { country_event = FRA_diet.1 }
-		}
-	}
-	focus = {
-		id = FRA_econquestion
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 6
-		y = 3
-		prerequisite = {
-			focus = FRA_firstmeeting
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = industrial_bonus
-				bonus = 0.75
-				category = industry
-				uses = 2
-			}
-			add_political_power = 35
-		}
-	}
-	focus = {
-		id = FRA_polquestion
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 10
-		y = 3
-		prerequisite = {
-			focus = FRA_firstmeeting
-		}
-		completion_reward = {
-			add_political_power = 100
-		}
-	}
-	############################ AGRICULTURE ###########################
-	focus = {
-		id = FRA_agricomp
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 7
-		y = 4
-		prerequisite = {
-			focus = FRA_econquestion
-		}
-		completion_reward = {
-			FRA = { country_event = FRA_industry.1 }
-		}
-	}
-	focus = {
-		id = FRA_agrieng
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 8
-		y = 5
-		prerequisite = {
-			focus = FRA_agricomp
-		}
-		mutually_exclusive = { focus = FRA_agridoc }
-		completion_reward = {
-		}
-	}
-	focus = {
-		id = FRA_agridoc
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 6
-		y = 5
-		prerequisite = {
-			focus = FRA_agricomp
-		}
-		mutually_exclusive = { focus = FRA_agrieng }
-		completion_reward = {
-			activate_advisor = FRA_Meowl
-		}
-	}
-	focus = {
-		id = FRA_agridocmore
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 6
-		y = 6
-		prerequisite = {
-			focus = FRA_agridoc
-		}
-		completion_reward = {
-			add_timed_idea = {
-				idea = FRA_idea_overfarmed_soil
-				days = 365
-			}
-			add_timed_idea = {
-				idea = FRA_idea_overworked_farmers
-				days = 60
-			}
-			add_resource = {
-				type = food
-				amount = 23
-				state = 587
-			}
-			add_resource = {
-				type = food
-				amount = 21
-				state = 585
-			}
-			add_resource = {
-				type = food
-				amount = 34
-				state = 477
-			}
-		}
-	}
-	focus = {
-		id = FRA_agriengmore
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 8
-		y = 6
-		prerequisite = {
-			focus = FRA_agrieng
-		}
-		completion_reward = {
-			585 = {
-				add_resource = {
-					type = food
-					amount = 23
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-				}
-				add_building_construction = {
-					type = hydroponics_farm
-					level = 2
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			add_equipment_to_stockpile = {
-				type = motorized_equipment
-				amount = -100
-			}
-			add_equipment_to_stockpile = {
-				type = mechanized_equipment
-				amount = -10
-			}
-		}	
-	}
-	focus = {
-		id = FRA_agriengmost
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 8
-		y = 7
-		prerequisite = {
-			focus = FRA_agriengmore
-		}
-		completion_reward = {
-			add_ideas = {
-				FRA_idea_hydroponics_effort
-			}
-		}
-	}
-	############################ INDUSTRY ###########################
-	focus = {
-		id = FRA_inducomp
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 3
-		y = 4
-		prerequisite = {
-			focus = FRA_econquestion
-		}
-		completion_reward = {
-			add_timed_idea = {
-				idea = FRA_idea_charter
-				days = 365
-			}
-		}	
-	}
-	focus = {
-		id = FRA_indusolA
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 1
-		y = 5
-		prerequisite = {
-			focus = FRA_inducomp
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = synthetic_refinery
-				bonus = 0.35
-				category = cat_synth_oil
-				category = excavation_tech
-				uses = 3
-			}
-			588 = {
-				add_resource = {
-					type = oil
-					amount = 9
-				}
-				add_resource = {
-					type = rubber
-					amount = 2
-				}
-				add_building_construction = {
-					type = synthetic_refinery
-					level = 3
-				}
-				add_extra_state_shared_building_slots = 3
-			}
-		}	
-	}
-	focus = {
-		id = FRA_indusolB
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 3
-		y = 5
-		prerequisite = {
-			focus = FRA_inducomp
-		}
-		completion_reward = {
-			590 = { 
-				add_building_construction = {
-					type = industrial_complex
-					level = -2
-				}
-				add_extra_state_shared_building_slots = 3
-			}
-			477 = { 
-				add_building_construction = {
-					type = industrial_complex
-					level = 5
-				}
-				add_extra_state_shared_building_slots = 5
-			}	
-		}	
-	}
-	focus = {
-		id = FRA_induuniA
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 4
-		y = 6
-		prerequisite = {
-			focus = FRA_inducomp
-		}
-		completion_reward = {
-			add_timed_idea = {
-				idea = FRA_idea_brigade
-				days = 270
-			}
-		}
-	}
-	focus = {
-		id = FRA_induuniB
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 2
-		y = 6
-		prerequisite = {
-			focus = FRA_indusolA
-			focus = FRA_indusolB
-		}
-		completion_reward = {
-			586 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-				}
-				add_extra_state_shared_building_slots = 2
-				add_resource = {
-					type = steel
-					amount = 12
-				} 
-			}
-			477 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
-				add_extra_state_shared_building_slots = 1
-				add_resource = {
-					type = steel
-					amount = 4
-				}
-			}
-		}	
-	}
-	focus = {
-		id = FRA_indufin
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 3
-		y = 7
-		prerequisite = {
-			focus = FRA_induuniA
-			focus = FRA_induuniB
-		}
-		completion_reward = {
-			add_political_power = 50
-			477 = {
-				add_manpower = 350000
-				set_building_level = {
-					type = infrastructure
-					level = 5
-				}
-			}
-			add_timed_idea = {
-				idea = FRA_idea_administration
-				days = 720
-			}
-		}	
-	}
-	focus = {
-		id = FRA_econfin
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 5
-		y = 8
-		prerequisite = {
-			focus = FRA_indufin
-		}
-		prerequisite = {
-			focus = FRA_agriengmost
-			focus = FRA_agridocmore
-		}
-		completion_reward = {
-			add_research_slot = 1
-		}	
-	}
-######################## POLITICS ###########################
-	focus = {
-		id = FRA_partisanquestion
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 10
-		y = 4
-		prerequisite = {
-			focus = FRA_polquestion
-		}
-		completion_reward = {
-			
-		}	
-	}
-	focus = {
-		id = FRA_kskreform
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 10
-		y = 5
-		prerequisite = {
-			focus = FRA_partisanquestion
-		}
-		completion_reward = {
-			swap_ideas = { 
-				remove_idea = FRA_idea_start_strikes
-				add_idea = FRA_idea_end_strikes
-			}
-			custom_effect_tooltip = FRA_kskopinion1
-			add_to_variable = { ksk_opinion = 1 }
-			calculate_ipf_ksk_resistance = yes
-		}
-	}
-	focus = {
-		id = FRA_ipfreform
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 12
-		y = 5
-		prerequisite = {
-			focus = FRA_partisanquestion
-		}
-		completion_reward = {
-			add_stability = -0.02
-			add_political_power = 15
-			custom_effect_tooltip = FRA_ipfopinion1
-			add_to_variable = { ipf_opinion = 1 }
-			calculate_ipf_ksk_resistance = yes
-		}	
-	}
-	focus = {
-		id = FRA_factorysecurity
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 11
-		y = 6
-		prerequisite = {
-			focus = FRA_partisanquestion
-		}
-		completion_reward = {
-			add_ideas = FRA_idea_factory_security
-		}	
-	}
-	focus = {
-		id = FRA_agitation_solved
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 12
-		y = 7
-		prerequisite = {
-			focus = FRA_kskreform
-		}
-		prerequisite = {
-			focus = FRA_ipfreform
-		}
-		prerequisite = {
-			focus = FRA_democracy
-			focus = FRA_center_holds
-		}
-		completion_reward = {
-			add_ideas = FRA_idea_factory_security
-		}	
-	}
-	focus = {
-		id = FRA_to_democracy_or_not_to_democracy
-		icon = GFX_goal_generic_propaganda
-		cost = 0
-		available = {
-			always = no
-		}
-		x = 14
-		y = 4
-		prerequisite = {
-			focus = FRA_polquestion
-		}
-		completion_reward = {
-			custom_effect_tooltip = FRA_elc_tip
-		}	
-	}
-	focus = {
-		id = FRA_democracy
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 13
-		y = 6
-		mutually_exclusive = { focus = FRA_center_holds }
-		prerequisite = {
-			focus = FRA_ipfreform
-		}
-		prerequisite = {
-			focus = FRA_to_democracy_or_not_to_democracy
-		}
-		completion_reward = {
-			set_politics = {
-				ruling_party = democratic
-				elections_allowed = yes
-				long_name = FRA_democratic_party_techno_long
-				name = FRA_democratic_party_techno
-			}
-			add_country_leader_role = {
-				character = FRA_Hell
-				promote_leader = yes
-				country_leader = {
-					ideology = census_democracy
-					expire = "1965.1.1.1"
-				}
-			}
-			add_popularity = {
-				ideology = democratic
-				popularity = 0.3
-			}
-			activate_advisor = FRA_Pawlbert
-			deactivate_advisor = FRA_Pawllas
-			set_cosmetic_tag = FRA_LIB
-			custom_effect_tooltip = FRA_ipfopinion2
-			add_to_variable = { ipf_opinion = 2 }
-			calculate_ipf_ksk_resistance = yes
-		}	
-	}
-	focus = {
-		id = FRA_center_holds
-		icon = GFX_goal_generic_propaganda
-		cost = 2
-		x = 15
-		y = 6
-		mutually_exclusive = { focus = FRA_democracy }
-		prerequisite = {
-			focus = FRA_to_democracy_or_not_to_democracy
-		}
-		completion_reward = {
-			add_political_power = 75
-			add_popularity = {
-				ideology = neutrality
-				popularity = 0.1
-			}
-		}	
-	}
-	focus = {
-		id = FRA_elwin_question
-		icon = GFX_goal_generic_propaganda
-		cost = 0
-		x = 20
-		y = 3
-		prerequisite = {
-			focus = FRA_firstmeeting
-		}
-		available = {
-			always = no
-		}
-		completion_reward = {
-			}
-		}
-	focus = {
-		id = FRA_elwin_A
-		icon = GFX_goal_generic_propaganda
-		cost = 0
-		x = 18
-		y = 4
-		prerequisite = {
-			focus = FRA_elwin_question
-		}
-		available = {
-			has_army_manpower = {
-				size > 500001
-			}
-		}
-		completion_reward = {
-			}
-		}	
+    id = FRA_TREE
+    country = {
+        factor = 0
+        modifier = {
+            add = 100
+            tag = FRA
+        }
+    }
+    continuous_focus_position = { x = 1000 y = 3000 }
+
+    focus = {
+        id = FRA_sitrep
+        icon = GFX_FRA_Hell
+        x = 8
+        y = 0
+        cost = 2
+        completion_reward = {
+            FRA = { country_event = FRA_report.1 }
+        }
+    }
+
+    focus = {
+        id = FRA_questioning
+        icon = GFX_FRA_Hell
+        x = 8
+        y = 1
+        cost = 2
+        prerequisite = { focus = FRA_sitrep }
+        completion_reward = {
+            FRA = { country_event = FRA_report.2 }
+        }
+    }
+
+    focus = {
+        id = FRA_firstmeeting
+        icon = GFX_FRA_Hell
+        x = 8
+        y = 2
+        cost = 2
+        prerequisite = { focus = FRA_questioning }
+        completion_reward = {
+            FRA = { country_event = FRA_diet.1 }
+        }
+    }
+
+    focus = {
+        id = FRA_econquestion
+        icon = GFX_FRA_Science
+        x = 6
+        y = 3
+        cost = 2
+        prerequisite = { focus = FRA_firstmeeting }
+        completion_reward = {
+            add_tech_bonus = {
+                name = industrial_bonus
+                bonus = 0.75
+                category = industry
+                uses = 2
+            }
+            add_political_power = 35
+        }
+    }
+
+    focus = {
+        id = FRA_polquestion
+        icon = GFX_FRA_Spring
+        x = 10
+        y = 3
+        cost = 2
+        prerequisite = { focus = FRA_firstmeeting }
+        completion_reward = {
+            add_political_power = 100
+        }
+    }
+
+    focus = {
+        id = FRA_agricomp
+        icon = GFX_FRA_Hell
+        x = 7
+        y = 4
+        cost = 2
+        prerequisite = { focus = FRA_econquestion }
+        completion_reward = {
+            FRA = { country_event = FRA_industry.1 }
+        }
+    }
+
+    focus = {
+        id = FRA_agrieng
+        icon = GFX_FRA_Hell
+        x = 8
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_agricomp }
+        mutually_exclusive = { focus = FRA_agridoc }
+        completion_reward = {
+            log = "[GetDateText]: [Root.GetName]: Focus FRA_agrieng completed"
+        }
+    }
+
+    focus = {
+        id = FRA_agridoc
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_agricomp }
+        mutually_exclusive = { focus = FRA_agrieng }
+        completion_reward = {
+            activate_advisor = FRA_Meowl
+        }
+    }
+
+    focus = {
+        id = FRA_agridocmore
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 6
+        cost = 2
+        prerequisite = { focus = FRA_agridoc }
+        completion_reward = {
+            add_timed_idea = {
+                idea = FRA_idea_overfarmed_soil
+                days = 365
+            }
+            add_timed_idea = {
+                idea = FRA_idea_overworked_farmers
+                days = 60
+            }
+            add_resource = {
+                type = food
+                amount = 23
+                state = 587
+            }
+            add_resource = {
+                type = food
+                amount = 21
+                state = 585
+            }
+            add_resource = {
+                type = food
+                amount = 34
+                state = 477
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_agriengmore
+        icon = GFX_FRA_Hell
+        x = 8
+        y = 6
+        cost = 2
+        prerequisite = { focus = FRA_agrieng }
+        completion_reward = {
+            585 = {
+                add_resource = {
+                    type = food
+                    amount = 23
+                }
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                }
+                add_building_construction = {
+                    type = hydroponics_farm
+                    level = 2
+                }
+                add_extra_state_shared_building_slots = 2
+            }
+            add_equipment_to_stockpile = {
+                type = motorized_equipment
+                amount = -100
+            }
+            add_equipment_to_stockpile = {
+                type = mechanized_equipment
+                amount = -10
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_agriengmost
+        icon = GFX_FRA_Hell
+        x = 8
+        y = 7
+        cost = 2
+        prerequisite = { focus = FRA_agriengmore }
+        completion_reward = {
+            add_ideas = {
+                FRA_idea_hydroponics_effort
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_inducomp
+        icon = GFX_FRA_Hell
+        x = 3
+        y = 4
+        cost = 2
+        prerequisite = { focus = FRA_econquestion }
+        completion_reward = {
+            add_timed_idea = {
+                idea = FRA_idea_charter
+                days = 365
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_indusolA
+        icon = GFX_FRA_Hell
+        x = 1
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_inducomp }
+        completion_reward = {
+            add_tech_bonus = {
+                name = synthetic_refinery
+                bonus = 0.35
+                category = cat_synth_oil
+                category = excavation_tech
+                uses = 3
+            }
+            588 = {
+                add_resource = {
+                    type = oil
+                    amount = 9
+                }
+                add_resource = {
+                    type = rubber
+                    amount = 2
+                }
+                add_building_construction = {
+                    type = synthetic_refinery
+                    level = 3
+                }
+                add_extra_state_shared_building_slots = 3
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_indusolB
+        icon = GFX_FRA_Hell
+        x = 3
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_inducomp }
+        completion_reward = {
+            590 = {
+                add_building_construction = {
+                    type = industrial_complex
+                    level = -2
+                }
+                add_extra_state_shared_building_slots = 3
+            }
+            477 = {
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 5
+                }
+                add_extra_state_shared_building_slots = 5
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_induuniA
+        icon = GFX_FRA_Hell
+        x = 4
+        y = 6
+        cost = 2
+        prerequisite = { focus = FRA_inducomp }
+        completion_reward = {
+            add_timed_idea = {
+                idea = FRA_idea_brigade
+                days = 270
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_induuniB
+        icon = GFX_FRA_Hell
+        x = 2
+        y = 6
+        cost = 2
+        prerequisite = { focus = FRA_indusolA focus = FRA_indusolB }
+        completion_reward = {
+            586 = {
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 2
+                }
+                add_extra_state_shared_building_slots = 2
+                add_resource = {
+                    type = steel
+                    amount = 12
+                }
+            }
+            477 = {
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 1
+                }
+                add_extra_state_shared_building_slots = 1
+                add_resource = {
+                    type = steel
+                    amount = 4
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_indufin
+        icon = GFX_FRA_Hell
+        x = 3
+        y = 7
+        cost = 2
+        prerequisite = { focus = FRA_induuniA focus = FRA_induuniB }
+        completion_reward = {
+            add_political_power = 50
+            477 = {
+                add_manpower = 350000
+                set_building_level = {
+                    type = infrastructure
+                    level = 5
+                }
+            }
+            add_timed_idea = {
+                idea = FRA_idea_administration
+                days = 720
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_econfin
+        icon = GFX_FRA_Hell
+        x = 5
+        y = 8
+        cost = 2
+        prerequisite = { focus = FRA_indufin }
+        prerequisite = { focus = FRA_agriengmost focus = FRA_agridocmore }
+        completion_reward = {
+            add_research_slot = 1
+        }
+    }
+
+    focus = {
+        id = FRA_partisanquestion
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 4
+        cost = 2
+        prerequisite = { focus = FRA_polquestion }
+        completion_reward = {
+            log = "[GetDateText]: [Root.GetName]: Focus FRA_partisanquestion completed"
+        }
+    }
+
+    focus = {
+        id = FRA_kskreform
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_partisanquestion }
+        completion_reward = {
+            swap_ideas = {
+                remove_idea = FRA_idea_start_strikes
+                add_idea = FRA_idea_end_strikes
+            }
+            custom_effect_tooltip = FRA_kskopinion1
+            add_to_variable = { ksk_opinion = 1 }
+            calculate_ipf_ksk_resistance = yes
+        }
+    }
+
+    focus = {
+        id = FRA_ipfreform
+        icon = GFX_FRA_Hell
+        x = 12
+        y = 5
+        cost = 2
+        prerequisite = { focus = FRA_partisanquestion }
+        completion_reward = {
+            add_stability = -0.02
+            add_political_power = 15
+            custom_effect_tooltip = FRA_ipfopinion1
+            add_to_variable = { ipf_opinion = 1 }
+            calculate_ipf_ksk_resistance = yes
+        }
+    }
+
+    focus = {
+        id = FRA_factorysecurity
+        icon = GFX_FRA_Hell
+        x = 11
+        y = 6
+        cost = 2
+        prerequisite = { focus = FRA_partisanquestion }
+        completion_reward = {
+            add_ideas = FRA_idea_factory_security
+        }
+    }
+
+    focus = {
+        id = FRA_agitation_solved
+        icon = GFX_FRA_Hell
+        x = 12
+        y = 7
+        cost = 2
+        prerequisite = { focus = FRA_kskreform }
+        prerequisite = { focus = FRA_ipfreform }
+        prerequisite = { focus = FRA_democracy focus = FRA_center_holds }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_to_democracy_or_not_to_democracy
+        icon = GFX_FRA_Hell
+        x = 14
+        y = 4
+        cost = 0
+        prerequisite = { focus = FRA_polquestion }
+        available = {
+            always = no
+        }
+        completion_reward = {
+            custom_effect_tooltip = FRA_elc_tip
+        }
+    }
+
+    focus = {
+        id = FRA_democracy
+        icon = GFX_FRA_Hell
+        x = 13
+        y = 6
+        cost = 2
+        prerequisite = { focus = FRA_ipfreform }
+        prerequisite = { focus = FRA_to_democracy_or_not_to_democracy }
+        mutually_exclusive = { focus = FRA_center_holds }
+        completion_reward = {
+            set_politics = {
+                ruling_party = democratic
+                elections_allowed = yes
+                long_name = FRA_democratic_party_techno_long
+                name = FRA_democratic_party_techno
+            }
+            add_country_leader_role = {
+                character = FRA_Hell
+                promote_leader = yes
+                country_leader = {
+                    ideology = census_democracy
+                    expire = "1965.1.1.1"
+                }
+            }
+            add_popularity = {
+                ideology = democratic
+                popularity = 0.3
+            }
+            activate_advisor = FRA_Pawlbert
+            deactivate_advisor = FRA_Pawllas
+            set_cosmetic_tag = FRA_LIB
+            custom_effect_tooltip = FRA_ipfopinion2
+            add_to_variable = { ipf_opinion = 2 }
+            calculate_ipf_ksk_resistance = yes
+        }
+    }
+
+    focus = {
+        id = FRA_center_holds
+        icon = GFX_FRA_Hell
+        x = 15
+        y = 6
+        cost = 2
+        prerequisite = { focus = FRA_to_democracy_or_not_to_democracy }
+        mutually_exclusive = { focus = FRA_democracy }
+        completion_reward = {
+            add_political_power = 75
+            add_popularity = {
+                ideology = neutrality
+                popularity = 0.1
+            }
+        }
+    }
+
+    ### Post-Elwin
+
+    focus = {
+        id = FRA_elwin_question
+        icon = GFX_FRA_Hell
+        x = 20
+        y = 3
+        cost = 0
+        prerequisite = { focus = FRA_firstmeeting }
+        available = {
+            always = no
+        }
+        completion_reward = {
+        }
+    }
+
+    ### Post-Elwin Politics
+
+    focus = {
+        id = FRA_radicals
+        icon = GFX_FRA_Hell
+        x = 29
+        y = 4
+        cost = 5
+        prerequisite = { focus = FRA_elwin_question }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_pe_reform
+        icon = GFX_FRA_Hell
+        x = 28
+        y = 5
+        cost = 5
+        prerequisite = { focus = FRA_radicals }
+        completion_reward = {
+        }
+        mutually_exclusive = { focus = FRA_pe_regime_holds }
+    }
+
+    focus = {
+        id = FRA_pe_the_provisional_idea
+        icon = GFX_FRA_Hell
+        x = 28
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_radicals }
+        completion_reward = {
+            add_ideas = FRA_provisional
+        }
+    }
+
+    focus = {
+        id = FRA_pe_the_stockpile_guns
+        icon = GFX_FRA_Hell
+        x = 28
+        y = 7
+        cost = 5
+        prerequisite = { focus = FRA_pe_the_provisional_idea }
+        completion_reward = {
+            add_equipment_to_stockpile = {
+                type = infantry_equipment
+                amount = -5000
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_pe_revolutionary_council
+        icon = GFX_FRA_Hell
+        x = 30
+        y = 7
+        cost = 5
+        prerequisite = { focus = FRA_pe_the_provisional_idea }
+        completion_reward = {
+            add_equipment_to_stockpile = {
+                type = infantry_equipment
+                amount = -5000
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_pe_left
+        icon = GFX_FRA_Hell
+        x = 27
+        y = 8
+        cost = 5
+        prerequisite = { focus = FRA_pe_the_stockpile_guns }
+        prerequisite = { focus = FRA_pe_revolutionary_council }
+        completion_reward = {
+        }
+        mutually_exclusive = { focus = FRA_pe_right }
+    }
+
+    focus = {
+        id = FRA_pe_right
+        icon = GFX_FRA_Hell
+        x = 31
+        y = 8
+        cost = 5
+        prerequisite = { focus = FRA_pe_revolutionary_council }
+        completion_reward = {
+            add_equipment_to_stockpile = {
+                type = infantry_equipment
+                amount = -5000
+            }
+        }
+        mutually_exclusive = { focus = FRA_pe_left }
+    }    
+
+    focus = {
+        id = FRA_pe_regime_holds
+        icon = GFX_FRA_Hell
+        x = 35
+        y = 5
+        cost = 5
+        prerequisite = { focus = FRA_radicals }
+        completion_reward = {
+        }
+        mutually_exclusive = { focus = FRA_pe_reform }
+    }
+
+    focus = {
+        id = FRA_pe_regime_moderates
+        icon = GFX_FRA_Hell
+        x = 34
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_pe_regime_holds }
+        completion_reward = {
+        }
+        mutually_exclusive = { focus = FRA_pe_regime_radicalizes }
+    }
+
+    focus = {
+        id = FRA_pe_regime_radicalizes
+        icon = GFX_FRA_Hell
+        x = 36
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_pe_regime_holds }
+        available = {
+            NOT = { has_completed_focus = FRA_democracy }
+        }
+        completion_reward = {
+        }
+        mutually_exclusive = { focus = FRA_pe_regime_moderates }
+    }
+
+    focus = {
+        id = FRA_pe_regime_continues
+        icon = GFX_FRA_Hell
+        x = 35
+        y = 8
+        cost = 5
+        prerequisite = { focus = FRA_pe_regime_moderates focus = FRA_pe_regime_radicalizes }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_pe_regime_explodes
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 9
+        cost = 5
+        available = {
+            has_completed_focus = FRA_elwin_purrsian_borders
+            OR = { has_completed_focus = FRA_pe_left has_completed_focus = FRA_pe_right } 
+        }
+        completion_reward = {
+        }
+    }
+
+    ### Leftist Paths
+
+    focus = {
+        id = FRA_left_revolution
+        icon = GFX_FRA_Hell
+        x = 7
+        y = 10
+        cost = 5
+        prerequisite = { focus = FRA_pe_regime_explodes }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_righteous_terror
+        icon = GFX_FRA_Hell
+        x = 5
+        y = 11
+        cost = 5
+        prerequisite = { focus = FRA_left_revolution focus = FRA_right_coup }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_council_mandate
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 12
+        cost = 5
+        prerequisite = { focus = FRA_rev_reconcile_radicals focus = FRA_left_righteous_terror }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_soldier_council_reform
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 13
+        cost = 5
+        prerequisite = { focus = FRA_left_council_mandate }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_congress_location
+        icon = GFX_FRA_Hell
+        x = 4
+        y = 12
+        cost = 5
+        prerequisite = { focus = FRA_left_righteous_terror }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_congress
+        icon = GFX_FRA_Hell
+        x = 5
+        y = 14
+        cost = 5
+        prerequisite = { focus = FRA_left_congress_location }
+        prerequisite = { focus = FRA_left_council_mandate }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_internationalists
+        icon = GFX_FRA_Hell
+        x = 4
+        y = 15
+        cost = 5
+        prerequisite = { focus = FRA_left_congress }
+        completion_reward = {
+        }
+        mutually_exclusive = {
+            focus = FRA_left_peasant_nationalists
+        }
+    }
+
+    focus = {
+        id = FRA_left_peasant_nationalists
+        icon = GFX_FRA_Hell
+        x = 6
+        y = 15
+        cost = 5
+        prerequisite = { focus = FRA_left_congress }
+        completion_reward = {
+        }
+        mutually_exclusive = {
+            focus = FRA_left_internationalists
+        }
+    }
+
+    focus = {
+        id = FRA_left_party_form
+        icon = GFX_FRA_Hell
+        x = 3
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_internationalists }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_communization
+        icon = GFX_FRA_Hell
+        x = 0
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_internationalists }
+        completion_reward = {
+            set_country_flag = left_communist_victory
+        }
+    }
+
+    focus = {
+        id = FRA_left_mao_nyadong
+        icon = GFX_FRA_Hell
+        x = 7
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_peasant_nationalists }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_juche
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 16
+        cost = 5
+        prerequisite = { focus = FRA_left_peasant_nationalists }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_amewdeo
+        icon = GFX_FRA_Hell
+        x = 44
+        y = 1
+        cost = 5
+        available = {
+            has_country_flag = left_communist_victory
+        }
+        mutually_exclusive = {
+            focus = FRA_left_dameow
+        }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_left_dameow
+        icon = GFX_FRA_Hell
+        x = 46
+        y = 1
+        cost = 5
+        available = {
+            has_country_flag = left_communist_victory
+        }
+        mutually_exclusive = {
+            focus = FRA_left_amewdeo
+        }
+        completion_reward = {
+        }
+    }
+   
+    focus = {
+        id = FRA_rev_reconcile_radicals
+        icon = GFX_FRA_Hell
+        x = 10
+        y = 11
+        cost = 5
+        prerequisite = { focus = FRA_left_revolution focus = FRA_right_coup }
+        completion_reward = {
+        }
+    }
+
+    ### Right Path
+
+    focus = {
+        id = FRA_right_coup
+        icon = GFX_FRA_Hell
+        x = 13
+        y = 10
+        cost = 5
+        prerequisite = { focus = FRA_pe_regime_explodes }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_moderate_regime
+        icon = GFX_FRA_Hell
+        x = 25
+        y = 10
+        cost = 5
+        prerequisite = { focus = FRA_elwin_purrsian_borders }
+        prerequisite = { focus = FRA_pe_regime_continues }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_radical_regime
+        icon = GFX_FRA_Hell
+        x = 35
+        y = 10
+        cost = 5
+        prerequisite = { focus = FRA_elwin_purrsian_borders }
+        prerequisite = { focus = FRA_pe_regime_continues }
+        completion_reward = {
+        }
+    }
+
+    ### Diplomacy
+
+    focus = {
+        id = FRA_elwin_faction
+        icon = GFX_FRA_Hell
+        x = 20
+        y = 4
+        cost = 2
+        prerequisite = { focus = FRA_elwin_question }
+        completion_reward = {
+            create_faction_from_template = faction_template_kaiserliche_nordkoalition
+            NAV = { country_event = { id = NAV_coalition.1 } }
+        }
+    }
+
+    focus = {
+        id = FRA_ally_integration
+        icon = GFX_FRA_Hell
+        x = 24
+        y = 5
+        cost = 5
+        prerequisite = { focus = FRA_elwin_faction }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_ally_integrationer
+        icon = GFX_FRA_Hell
+        x = 24
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_ally_integration }
+        prerequisite = { focus = FRA_elwin_first_war }
+        completion_reward = {
+        }
+    }
+
+    focus = {
+        id = FRA_ally_integrationest
+        icon = GFX_FRA_Hell
+        x = 24
+        y = 7
+        cost = 5
+        available = {
+            NAV = { is_in_faction = yes }
+        }
+        prerequisite = { focus = FRA_ally_integrationer }
+        prerequisite = { focus = FRA_elwin_second_war focus = FRA_elwin_neukat_war }
+        completion_reward = {
+            annex_country = { target = NAV transfer_troops = yes }
+        }
+    }
+
+    focus = {
+        id = FRA_elwin_first_war
+        icon = GFX_FRA_Hell
+        x = 20
+        y = 5
+        cost = 5
+        prerequisite = { focus = FRA_elwin_faction }
+        bypass = {
+            owns_state = 543
+        }
+        completion_reward = {
+            add_state_core = 543
+            create_wargoal = {
+                target = 543.owner
+                type = take_core_state
+            }
+        }
+    }
+    focus = {
+        id = FRA_elwin_second_war
+        icon = GFX_FRA_Hell
+        x = 20
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_elwin_first_war }
+        completion_reward = {
+            add_state_core = 646
+            add_state_core = 474
+            add_state_core = 645
+            add_state_core = 648
+            add_state_core = 647
+            add_state_core = 43
+            create_wargoal = {
+                target = 646.owner
+                type = take_core_state
+            }
+        }
+    }
+    focus = {
+        id = FRA_elwin_neukat_war
+        icon = GFX_FRA_Hell
+        x = 22
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_elwin_first_war }
+        completion_reward = {
+            add_state_core = 604
+            create_wargoal = {
+                target = 604.owner
+                type = take_core_state
+            }
+        }
+    }
+    focus = {
+        id = FRA_elwin_purrsian_borders
+        icon = GFX_FRA_Hell
+        x = 21
+        y = 8
+        cost = 5
+        prerequisite = { focus = FRA_elwin_second_war focus = FRA_elwin_neukat_war }
+        available = {
+            owns_state = 543
+            owns_state = 645
+            owns_state = 648
+            owns_state = 646
+            owns_state = 604
+            owns_state = 474
+            owns_state = 43
+            owns_state = 647
+        }
+        completion_reward = {
+            add_stability = 0.1
+        }
+    }
+    focus = {
+        id = FRA_elwin_nkb_occupation
+        icon = GFX_FRA_Hell
+        x = 18
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_elwin_first_war }
+        available = {
+            NOT = { country_exists = NKB }
+        }
+        completion_reward = {
+            NKB = {
+                set_cosmetic_tag = NKB_reconstruction
+                remove_state_core = 543
+            }
+            release_puppet = NKB
+        }
+    }
+
+    ## Army Tree
+
+    focus = {
+        id = FRA_army_start
+        icon = GFX_FRA_Hell
+        x = 24
+        y = 0
+        cost = 2
+        available = {
+            has_completed_focus = FRA_elwin_question
+        }
+        completion_reward = {
+            army_experience = 20
+            navy_experience = 15
+            air_experience = 20
+
+        }
+    }
+    focus = {
+        id = FRA_army_superior
+        icon = GFX_FRA_Hell
+        x = 23
+        y = 1
+        cost = 2
+        prerequisite = { focus = FRA_army_start }
+        completion_reward = {
+            set_grand_doctrine = superior_firepower
+            add_mastery_bonus = {
+                name = FRA_SUP
+                bonus = 0.1
+                days = 365
+                track = infantry
+            }
+        }
+    }
+    focus = {
+        id = FRA_army_mobile
+        icon = GFX_FRA_Hell
+        x = 25
+        y = 1
+        cost = 2
+        prerequisite = { focus = FRA_army_start }
+        completion_reward = {
+            set_grand_doctrine = new_mobile_warfare
+            add_mastery_bonus = {
+                name = FRA_MOB
+                bonus = 0.15
+                days = 365
+                track = armor
+            }
+        }
+    }
+            
 }
+

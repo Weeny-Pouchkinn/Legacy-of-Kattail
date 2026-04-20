@@ -24,30 +24,54 @@ guiTypes = {
 	containerWindowType = {
 		name = "countrystateview"
 		position = { x=-416 y=-549}
-		show_position = { x=-6 y =-549 }
+		show_position = { x=-6 y =-590 }
 		show_animation_type = decelerated
 		hide_animation_type = accelerated
 		animation_time = 300
 		orientation = lower_left
-		size = { width=436 height=496 }
+		size = { width=436 height=1000 }
 		
 		containerWindowType = {
 			name = "state_info_window"
 			position = { x = 0 y = 0 }
 			size = { width=780 height=496 }
-			
-			
+
 			background = {
 				name = "Background"
 				quadTextureSprite = "GFX_stateview_bg"
 				position = { x = 5 y = 5 }
 			}
+
+			background = {
+				name = "Background_extra"
+				quadTextureSprite = "GFX_stateview_extra_bg"
+				position = { x = 5 y = 536 }
+			}
+			
+			
+			iconType = {
+				name = "building_modifiers_icon"
+				position = { x = 353 y= 148 }
+				spriteType = "GFX_buildings_strip"
+				Orientation = "UPPER_LEFT"
+				frame = 21
+				scale = 0.43
+				hide = no
+			}
+
+			gridBoxType = {
+				name = "strategic_locations_grid"
+				position = { x = 0 y = 0 }
+				size = { width = 0 height = 0 }
+				slotsize = { width = 0 height = 0 }
+				format = "UPPER_LEFT"
+			}
 						
 			instantTextboxType = {
 				name = "state_name"
-				position = { x = 80 y = 5 }
+				position = { x = 80 y = 10 }
 				textureFile = ""
-				font = "hoi_36header"
+				font = "hoi_30header"
 				text = "STATE_NAME_TEST"
 				maxWidth = 330
 				maxHeight = 30
@@ -56,11 +80,11 @@ guiTypes = {
 			
 			gridBoxType = {
 				name = "state_building_entries"
-				position = { x = 155 y = 45 }
+				position = { x = 150 y = 45 }
 				size = { width = 480 height = 105 }
 				format = "UPPER_LEFT"
 				slotsize = { width = 45 height = 50 }
-				max_slots_horizontal = 4
+				max_slots_horizontal = 5
 			}
 			
 			instantTextboxType = {
@@ -73,6 +97,31 @@ guiTypes = {
 				maxHeight = 30
 				format = center
 				fixedsize = yes
+			}
+
+			iconType ={
+				name ="energy_consumption_bg"
+				spriteType = "GFX_victorypoint_stateview_bg"
+				position = { x = 398 y = 145 }
+				scale = 0.95
+			}
+			
+			iconType = {
+				name = "energy_icon"
+				spriteType = "GFX_energy_icon"
+				position = { x = 417 y = 146 }
+				scale = 0.75
+			}
+			
+			instantTextboxType = {
+				name = "energy_text"
+				position = { x = 393 y = 148 }
+				textureFile = ""
+				font = "hoi_16mbs"
+				text = ""
+				maxWidth = 30
+				maxHeight = 30
+				format = center
 			}
 			
 			gridBoxType = {
@@ -312,16 +361,6 @@ guiTypes = {
 				spriteType = "GFX_required_rule"
 				Orientation = "UPPER_LEFT"
 			}	
-
-			iconType = {
-				name = "building_modifiers_icon"
-				position = { x = 318 y= -357 }
-				spriteType = "GFX_buildings_strip"
-				Orientation = "UPPER_LEFT"
-				frame = 21
-				scale = 0.8
-				hide = yes
-			}
 			
 			### Positioning of these are controlled by the positionType "countrystateview_weathericons_position" and "countrystateview_weathericons_offset" above
 			iconType = {
@@ -364,7 +403,7 @@ guiTypes = {
 			
 			gridBoxType = {
 				name = "dynamic_modifiers_grid"
-				position = { x = -5 y = -32 }
+				position = { x = 5 y = 143 }
 				size = { width = 0 height = 0 }
 				format = "LOWER_LEFT"
 				slotsize = { width = 33 height = 33 }

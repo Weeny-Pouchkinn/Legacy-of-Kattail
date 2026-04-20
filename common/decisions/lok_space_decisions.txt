@@ -54,7 +54,11 @@ lok_space_program_cat = {
 						set_temp_variable = { flusion_exp_gained = 1 }
 						add_to_variable = { space_exp = flusion_exp_gained }
 						custom_effect_tooltip = lok_add_flusion_exp_tooltip
-						add_political_power = 25		
+						add_political_power = 25
+						country_event = { id = LOK_space.5 }
+					}
+					else = {
+						country_event = { id = LOK_space.24 }
 					}
 
 					if = {
@@ -62,8 +66,6 @@ lok_space_program_cat = {
 						custom_effect_tooltip = lok_first_time_we_do_mission_ever
 						add_political_power = 100
 					}
-
-					country_event = { id = LOK_space.4 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -74,7 +76,7 @@ lok_space_program_cat = {
 					add_to_variable = { space_exp = space_exp_gained }
 					custom_effect_tooltip = lok_add_space_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.6 }
 				}
 			}
 			calculate_orbital_logistics_capacity = yes
@@ -137,7 +139,11 @@ lok_space_program_cat = {
 						set_temp_variable = { flusion_exp_gained = 2 }
 						add_to_variable = { space_exp = flusion_exp_gained }
 						custom_effect_tooltip = lok_add_flusion_exp_tooltip
-						add_political_power = 25	
+						add_political_power = 25
+						country_event = { id = LOK_space.7 }
+					}
+					else = {
+						country_event = { id = LOK_space.25 }
 					}
 
 					if = {
@@ -145,8 +151,6 @@ lok_space_program_cat = {
 						custom_effect_tooltip = lok_first_time_we_do_mission_ever
 						add_political_power = 100
 					}
-
-					country_event = { id = LOK_space.4 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -157,7 +161,7 @@ lok_space_program_cat = {
 					add_to_variable = { space_exp = space_exp_gained }
 					custom_effect_tooltip = lok_add_space_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.8 }
 				}
 			}
 			calculate_orbital_logistics_capacity = yes
@@ -322,23 +326,25 @@ lok_space_program_cat = {
 					set_temp_variable = { muno_exp_gained = 2 }
 					add_to_variable = { muno_exp = muno_exp_gained }
 					custom_effect_tooltip = lok_add_muno_exp_tooltip
-					
+
 					if = {
 						limit = { NOT = { has_country_flag = lok_muno_landing_done } }
 						custom_effect_tooltip = lok_first_time_we_do_mission
 						set_country_flag = lok_muno_landing_done
 
-						country_event = { id = LOK_space.2 days = 1 }
-
 						set_temp_variable = { space_exp_gained = 2 }
-						add_to_variable = { space_exp = flusion_exp_gained }
+						add_to_variable = { space_exp = space_exp_gained }
 						custom_effect_tooltip = lok_add_space_exp_tooltip
 
 						set_temp_variable = { muno_exp_gained = 3 }
 						add_to_variable = { muno_exp = muno_exp_gained }
 						custom_effect_tooltip = lok_add_muno_exp_tooltip
 
-						add_political_power = 25	
+						add_political_power = 25
+						country_event = { id = LOK_space.2 days = 1 }
+					}
+					else = {
+						country_event = { id = LOK_space.26 days = 1 }
 					}
 
 					if = {
@@ -369,7 +375,7 @@ lok_space_program_cat = {
 					add_to_variable = { muno_exp = muno_exp_gained }
 					custom_effect_tooltip = lok_add_muno_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.9 }
 				}
 			}
 			calculate_orbital_logistics_capacity = yes
@@ -383,8 +389,6 @@ lok_space_program_cat = {
 	lok_survey_state_on_muno = {
 		icon = GFX_decision_generic_survey
 
-		state_target = muno
-		
 		days_remove = 30
 
 		visible = {
@@ -394,7 +398,7 @@ lok_space_program_cat = {
 				NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT }
 			}
 		}
-
+		target_array = global.muno_states_array
 		on_map_mode = map_only
 
 		available = {
@@ -449,7 +453,14 @@ lok_space_program_cat = {
 					FROM = {
 						set_state_flag = lok_space_state_surveyed_by_@ROOT
 					}
-					country_event = { id = LOK_space.4 }
+					if = {
+						limit = { NOT = { has_country_flag = lok_muno_survey_done } }
+						set_country_flag = lok_muno_survey_done
+						country_event = { id = LOK_space.10 }
+					}
+					else = {
+						country_event = { id = LOK_space.27 }
+					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -464,7 +475,7 @@ lok_space_program_cat = {
 					add_to_variable = { muno_exp = muno_exp_gained }
 					custom_effect_tooltip = lok_add_muno_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.11 }
 				}
 			}
 		}
@@ -477,10 +488,10 @@ lok_space_program_cat = {
 	lok_colonize_state_on_muno = {
 		icon = GFX_decision_generic_space_base
 
-		state_target = muno
+		state_target = yes
 		
 		days_remove = 120
-
+		target_array = global.muno_states_array
 		visible = {
 			FROM = {
 				impassable = no
@@ -535,6 +546,7 @@ lok_space_program_cat = {
 						add_core_of = ROOT
 						add_manpower = 1000
 						add_extra_state_shared_building_slots = 1
+						add_building_construction = { type = infrastructure level = 1 }
 						hidden_effect = {
 							set_variable = { space_colony_level = 1 }
 						}
@@ -545,9 +557,13 @@ lok_space_program_cat = {
 						set_country_flag = lok_muno_base_done
 						custom_effect_tooltip = lok_first_time_we_do_mission
 						set_temp_variable = { muno_exp_gained = 5 }
-						add_to_variable = { space_exp = flusion_exp_gained }
+						add_to_variable = { space_exp = muno_exp_gained }
 						custom_effect_tooltip = lok_add_muno_exp_tooltip
-						add_political_power = 50	
+						add_political_power = 50
+						country_event = { id = LOK_space.12 }
+					}
+					else = {
+						country_event = { id = LOK_space.28 }
 					}
 
 					if = {
@@ -558,7 +574,6 @@ lok_space_program_cat = {
 
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
-					country_event = { id = LOK_space.4 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -573,7 +588,7 @@ lok_space_program_cat = {
 					add_to_variable = { muno_exp = muno_exp_gained }
 					custom_effect_tooltip = lok_add_muno_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.13 }
 				}
 			}
 			hidden_effect = {
@@ -589,7 +604,7 @@ lok_space_program_cat = {
 	lok_build_up_muno_colony = {
 		icon = GFX_decision_generic_expand_space_base
 
-		state_target = muno
+		state_target = yes
 		
 		days_remove = 120
 
@@ -611,7 +626,7 @@ lok_space_program_cat = {
 			}
 			num_of_civilian_factories_available_for_projects > 10
 		}
-
+		target_array = global.muno_states_array
 		modifier = {
 			civilian_factory_use = 10
 			lok_orbital_logistics_extra = 50
@@ -664,6 +679,15 @@ lok_space_program_cat = {
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
 
+					if = {
+						limit = { NOT = { has_country_flag = lok_muno_buildup_done } }
+						set_country_flag = lok_muno_buildup_done
+						country_event = { id = LOK_space.14 }
+					}
+					else = {
+						country_event = { id = LOK_space.29 }
+					}
+
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
 				mission_failure_odds = {
@@ -671,7 +695,7 @@ lok_space_program_cat = {
 
 					add_political_power = -25
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.15 }
 				}
 			}
 			hidden_effect = {
@@ -769,17 +793,19 @@ lok_space_program_cat = {
 						custom_effect_tooltip = lok_first_time_we_do_mission
 						set_country_flag = lok_xenon_landing_done
 
-						#country_event = { id = LOK_space.2 days = 1 }
-
 						set_temp_variable = { space_exp_gained = 2 }
-						add_to_variable = { space_exp = flusion_exp_gained }
+						add_to_variable = { space_exp = space_exp_gained }
 						custom_effect_tooltip = lok_add_space_exp_tooltip
 
 						set_temp_variable = { xenon_exp_gained = 3 }
 						add_to_variable = { xenon_exp = xenon_exp_gained }
 						custom_effect_tooltip = lok_add_xenon_exp_tooltip
 
-						add_political_power = 25	
+						add_political_power = 25
+						country_event = { id = LOK_space.16 }
+					}
+					else = {
+						country_event = { id = LOK_space.30 }
 					}
 
 					if = {
@@ -798,6 +824,7 @@ lok_space_program_cat = {
 					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
+
 				}
 				mission_failure_odds = {
 					custom_effect_tooltip = lok_space_mission_failure
@@ -810,7 +837,7 @@ lok_space_program_cat = {
 					add_to_variable = { xenon_exp = xenon_exp_gained }
 					custom_effect_tooltip = lok_add_xenon_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.17 }
 				}
 			}
 			calculate_orbital_logistics_capacity = yes
@@ -824,7 +851,7 @@ lok_space_program_cat = {
 	lok_survey_state_on_xenon = {
 		icon = GFX_decision_generic_survey
 
-		state_target = xenon
+		state_target = yes
 		
 		days_remove = 30
 
@@ -835,7 +862,7 @@ lok_space_program_cat = {
 				NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT }
 			}
 		}
-
+		target_array = global.xenon_states_array
 		on_map_mode = map_only
 
 		available = {
@@ -890,7 +917,14 @@ lok_space_program_cat = {
 					FROM = {
 						set_state_flag = lok_space_state_surveyed_by_@ROOT
 					}
-					country_event = { id = LOK_space.4 }
+					if = {
+						limit = { NOT = { has_country_flag = lok_xenon_survey_done } }
+						set_country_flag = lok_xenon_survey_done
+						country_event = { id = LOK_space.18 }
+					}
+					else = {
+						country_event = { id = LOK_space.31 }
+					}
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -905,7 +939,7 @@ lok_space_program_cat = {
 					add_to_variable = { xenon_exp = xenon_exp_gained }
 					custom_effect_tooltip = lok_add_xenon_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.19 }
 				}
 			}
 		}
@@ -918,7 +952,7 @@ lok_space_program_cat = {
 	lok_colonize_state_on_xenon = {
 		icon = GFX_decision_generic_space_base
 
-		state_target = xenon
+		state_target = yes
 		
 		days_remove = 120
 
@@ -929,7 +963,7 @@ lok_space_program_cat = {
 				has_state_flag = lok_space_state_surveyed_by_@ROOT
 			}
 		}
-
+		target_array = global.xenon_states_array
 		on_map_mode = map_only
 
 		available = {
@@ -976,6 +1010,7 @@ lok_space_program_cat = {
 						add_core_of = ROOT
 						add_manpower = 1000
 						add_extra_state_shared_building_slots = 1
+						add_building_construction = { type = infrastructure level = 1 }
 						hidden_effect = {
 							set_variable = { space_colony_level = 1 }
 						}
@@ -986,9 +1021,13 @@ lok_space_program_cat = {
 						set_country_flag = lok_xenon_base_done
 						custom_effect_tooltip = lok_first_time_we_do_mission
 						set_temp_variable = { xenon_exp_gained = 5 }
-						add_to_variable = { space_exp = flusion_exp_gained }
+						add_to_variable = { space_exp = xenon_exp_gained }
 						custom_effect_tooltip = lok_add_xenon_exp_tooltip
-						add_political_power = 50	
+						add_political_power = 50
+						country_event = { id = LOK_space.20 }
+					}
+					else = {
+						country_event = { id = LOK_space.32 }
 					}
 
 					if = {
@@ -999,7 +1038,6 @@ lok_space_program_cat = {
 
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
-					country_event = { id = LOK_space.4 }
 
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
@@ -1014,7 +1052,7 @@ lok_space_program_cat = {
 					add_to_variable = { xenon_exp = xenon_exp_gained }
 					custom_effect_tooltip = lok_add_xenon_exp_tooltip
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.21 }
 				}
 			}
 			hidden_effect = {
@@ -1030,7 +1068,7 @@ lok_space_program_cat = {
 	lok_build_up_xenon_colony = {
 		icon = GFX_decision_generic_expand_space_base
 
-		state_target = xenon
+		state_target = yes
 		
 		days_remove = 120
 
@@ -1044,7 +1082,7 @@ lok_space_program_cat = {
 		}
 
 		on_map_mode = map_only
-
+		target_array = global.xenon_states_array
 		available = {
 			custom_trigger_tooltip = {
 				tooltip = lok_has_50_orbital_logistics
@@ -1091,6 +1129,7 @@ lok_space_program_cat = {
 						hidden_effect = {
 							add_to_variable = { space_colony_level = 1 }
 						}
+						
 						if = {
 							limit = { check_variable = { space_colony_level = 3 } }
 							every_neighbor_state = {
@@ -1105,6 +1144,15 @@ lok_space_program_cat = {
 					set_temp_variable = { extra_logistics_capacity = 50 }
 					custom_effect_tooltip = lok_extra_logistics_capacity_tt
 
+					if = {
+						limit = { NOT = { has_country_flag = lok_xenon_buildup_done } }
+						set_country_flag = lok_xenon_buildup_done
+						country_event = { id = LOK_space.22 }
+					}
+					else = {
+						country_event = { id = LOK_space.33 }
+					}
+
 					custom_effect_tooltip = lok_space_mission_spacer
 				}
 				mission_failure_odds = {
@@ -1112,7 +1160,7 @@ lok_space_program_cat = {
 
 					add_political_power = -25
 
-					country_event = { id = LOK_space.1 }
+					country_event = { id = LOK_space.23 }
 				}
 			}
 			hidden_effect = {
@@ -1122,6 +1170,161 @@ lok_space_program_cat = {
 
 		ai_will_do = {
 			factor = 200
+		}
+	}
+
+	#ARMIES
+	#Space Motorized = 10 OL per Batallion
+	lok_move_units_from_space_to_capital = {
+		icon = GFX_decision_infiltrate_state
+
+		state_target = yes
+
+		target_array = global.space_states_array
+		
+		visible = {
+			is_ai = no
+			has_country_flag = showing_space_troop_movement_decisions
+			FROM = {
+				OR = {
+					is_on_continent = muno
+					is_on_continent = xenon
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		on_map_mode = map_only
+
+		days_remove = 30
+
+		remove_effect = {
+			custom_effect_tooltip = lok_move_units_from_space_to_capital_tt
+			FROM = {
+				teleport_armies = { to_state = root.capital_scope }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	lok_move_units_from_capital_to_space = {
+		icon = GFX_decision_generic_tank
+
+		state_target = yes
+		visible = {
+			is_ai = no
+			has_country_flag = showing_space_troop_movement_decisions
+			FROM = {
+				OR = {
+					is_on_continent = muno
+					is_on_continent = xenon
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		target_array = global.space_states_array
+		on_map_mode = map_only
+
+		days_remove = 30
+
+		remove_effect = {
+			custom_effect_tooltip = lok_move_units_from_capital_to_space_tt
+			root.capital_scope = {
+				teleport_armies = { to_state = ROOT.FROM }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	lok_show_space_troop_movement_decisions = {
+		icon = GFX_decision_infiltrate_state
+
+		visible = {
+			NOT = { has_country_flag = showing_space_troop_movement_decisions }
+		}
+
+		complete_effect = {
+			set_country_flag = showing_space_troop_movement_decisions
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	lok_hide_space_troop_movement_decisions = {
+		icon = GFX_decision_infiltrate_state
+		
+		visible = {
+			has_country_flag = showing_space_troop_movement_decisions
+		}
+
+		complete_effect = {
+			clr_country_flag = showing_space_troop_movement_decisions
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	lok_seize_the_mondkanone = {
+		icon = GFX_decision_generic_assassination
+
+		visible = {
+			is_ai = no
+			country_exists = MON
+		}
+
+		available = {
+			OR = {
+				controls_state = 702
+				controls_state = 712
+				controls_state = 711
+				controls_state = 714
+				controls_state = 705
+				controls_state = 704
+				controls_state = 706
+				controls_state = 701
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 707
+				state = 708
+				state = 709
+				state = 710
+			}
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			MON = { country_event = { id = LOK_generic.1 } }
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = lok_seize_the_mondkanone_tt
+			declare_war_on = {
+				target = MON
+				type = annex_everything
+			}
+			every_other_country = {
+				limit = { NOT = { is_in_faction_with = ROOT } }
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = seized_mondkanone
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
 		}
 	}
 }

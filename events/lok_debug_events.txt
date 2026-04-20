@@ -101,7 +101,7 @@ country_event = { #Collapse Elwin
 				set_nationality = KTV
 				add_country_leader_role = {
 					country_leader = {
-						ideology = collectivism
+						ideology = councilism
 						expire = "1965.1.1.1"
 					}
 					promote_leader = yes
@@ -214,10 +214,6 @@ country_event = { #Unresearch techs test
 			#cv_early_fighter = 0
 			#cv_naval_bomber0 = 0
 			early_bomber = 0
-			#tactical_bomber0 = 0
-			#CAS0 = 0
-			trench_warfare = 0
-			fleet_in_being = 0
 			fuel_silos = 0
 			fuel_refining = 0
 			basic_train = 0
@@ -319,6 +315,11 @@ country_event = {
 				modifier = { add = 1 has_tech = dirty_nuke }
 				modifier = { factor = 0 has_equipment = { lok_cobalt_nuke_equipment < 1 } }
 			}
+			0 = {
+				set_variable = { current_nuke_type = 5 }
+				modifier = { add = 1 has_tech = ultra_heavy_armor_tech }
+				modifier = { factor = 0 has_equipment = { lok_sturmer_nuke_equipment < 1 } }
+			}
 		}
 		random_country = { #PICK A TARGET!!!
 			limit = {
@@ -348,6 +349,13 @@ country_event = {
 						limit = { check_variable = { current_nuke_type = 3 } }
 						add_equipment_to_stockpile = {
 							type = lok_cobalt_nuke_equipment
+							amount = -1
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 5 } }
+						add_equipment_to_stockpile = {
+							type = lok_sturmer_nuke_equipment
 							amount = -1
 						}
 					}
@@ -390,5 +398,178 @@ country_event = { #species
 		add_ideas = var_species_3
 		add_ideas = var_species_4
 		add_ideas = var_species_5
+	}
+}
+
+country_event = {
+	id = lok_debug.11
+	title = ""
+	desc = "[?ROOT.nuclear_facility_count]"
+	is_triggered_only = yes
+
+	immediate = {
+		clear_nuclear_facility_ideas = yes
+		set_variable = { nuclear_facility_count = 0 }
+		every_controlled_state = {
+			limit = { check_variable = { non_damaged_building_level@nuclear_facility > 0 } }
+			if = {
+				limit = { is_core_of = ROOT }
+				add_to_variable = { ROOT.nuclear_facility_count = 2 }
+			}
+			else = {
+				add_to_variable = { ROOT.nuclear_facility_count = 1 }
+			}
+		}
+		if = {
+			limit = { check_variable = { nuclear_facility_count > 0 } }
+			if = {
+				limit = { check_variable = { nuclear_facility_count > 20 } }
+				set_variable = { nuclear_facility_count = 20 }
+			}
+			meta_effect = {
+				text = { add_ideas = LOK_nuclear_facility_[NUCLEAR_FACILITY_COUNT] }
+				NUCLEAR_FACILITY_COUNT = "[?ROOT.nuclear_facility_count]"
+			}
+		}
+	}
+
+	option = {
+		name = "aaah"
+	}
+}
+
+country_event = { #species
+	id = lok_debug.12
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
+	is_triggered_only = yes
+	title = ""
+	desc = "[?TAK.TAK_roq_states_supported]"
+	
+	option = {
+		name = "[?TAI.lok_nuke_retaliation_score@NKB]"
+	}
+}
+
+country_event = { #species
+	id = lok_debug.13
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.13"}
+	is_triggered_only = yes
+	title = ""
+	desc = "blomp"
+	
+	option = {
+		name = "wowzers"
+		set_technology = {
+			armored_blimp_carrier1 = 1
+		}
+		set_country_flag = has_armored_blimp_carrier
+		if = {
+			limit = { NOT = { has_template = "Armored Blimp Carrier" } }
+			division_template = {
+				name = "Armored Blimp Carrier"
+				is_locked = yes
+				regiments = {
+					armored_blimp_carrier = { x = 0 y = 0 }
+				}
+			}
+		}
+		capital_scope = {
+			create_unit = {
+				division = "division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.3 start_equipment_factor = 1"
+				count = 1
+				owner = PREV
+			}
+		}
+	}
+}
+
+country_event = { #dynmod
+	id = lok_debug.14
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
+	is_triggered_only = yes
+	title = ""
+	desc = "[?TAK.TAK_roq_states_supported]"
+	
+	option = {
+		name = "hi"
+		116 = {
+			add_dynamic_modifier = { modifier = semi_autonomous_state }
+		}
+	}
+}
+
+# Apply Katzen names to every state
+country_event = {
+	id = lok_debug.15
+	hidden = yes
+	title = "Apply KTZ State Names"
+	desc = "Renames all states to their Katzen-style names (rename_state_katzen)."
+	is_triggered_only = yes
+
+	immediate = {
+		every_state = {
+			rename_state_katzen = yes
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+
+# Apply Roqualian names to every state
+country_event = {
+	id = lok_debug.16
+	hidden = yes
+	title = "Apply ROQ State Names"
+	desc = "Renames all states to their Roqualian-style names (rename_state_roqualian)."
+	is_triggered_only = yes
+
+	immediate = {
+		every_state = {
+			rename_state_roqualian = yes
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+
+# Apply Machine names to every state
+country_event = {
+	id = lok_debug.17
+	hidden = yes
+	title = "Apply MACHINE State Names"
+	desc = "Renames all states to their Machine-style sector designations (rename_state_machine)."
+	is_triggered_only = yes
+
+	immediate = {
+		every_state = {
+			rename_state_basilisk = yes
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+
+# Restore all state names to vanilla
+country_event = {
+	id = lok_debug.18
+	hidden = yes
+	title = "Restore All State Names"
+	desc = "Resets all state and VP names back to their original vanilla values (restore_state_name)."
+	is_triggered_only = yes
+
+	immediate = {
+		every_state = {
+			restore_state_name = yes
+		}
+	}
+
+	option = {
+		name = "Done"
 	}
 }

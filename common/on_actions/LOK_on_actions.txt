@@ -1,6 +1,85 @@
 on_actions = {
 	on_startup = {
 		effect = {
+			#Tutorial & Welcome
+			every_country = {
+				if = {
+					limit = { is_ai = no }
+					country_event = { id = LOK_tutorial.1 }
+				}
+			}
+
+			#AI Nuclear Research Boost
+			every_country = {
+				limit = { is_ai = yes }
+				add_ideas = LOK_ai_nuclear_research_boost
+			}
+
+			#Food for Arivoejobiden
+			every_country = {
+				limit = {
+					OR = {
+						tag = KTN
+						tag = SMP
+						tag = MUL
+						tag = PRC
+						tag = KAP
+						tag = LTR
+					}
+				}
+				every_owned_state = {
+					set_temp_variable = { new_food_spawn = state_population_k }
+					divide_temp_variable = { new_food_spawn = 200 }
+					add_resource = {
+						type = food
+						amount = new_food_spawn
+					}
+				}
+			}
+
+			#POPULATION SHARE REMAINING
+			every_state = {
+				set_variable = { damaged_infra_level_last_week = 0 }
+				# Initial pop
+				set_variable = { population_at_game_start = state_population_k }
+
+				# Pop "last check" (equal to initial pop since game just started)
+				set_variable = { population_last_check = state_population_k }
+
+				# Share of pop remaining since game start
+				set_variable = { population_relative_to_game_start = 1 }
+
+				# Prod change from
+				set_variable = { state_prod_change_from_pop = 0 }
+				set_variable = { state_prod_change_from_regen = 0 }
+				set_variable = { state_prod_change_from_radiation = 0 }
+
+				# Base value that prod will tend towards
+				set_variable = { lok_state_productivity_value_base = 1 }
+				if = { #Megacities
+					limit = {
+						OR = {
+							state = 34
+							state = 36
+							state = 44
+							state = 45
+							state = 320
+							state = 1043
+							state = 832
+							state = 409
+							state = 833
+						}
+					}
+					set_variable = { lok_state_productivity_value_base = 1.5 }
+				}
+				set_variable = { lok_state_productivity_value = lok_state_productivity_value_base }
+
+				# The actual modifier
+				set_variable = { lok_state_productivity_modifier = 0 }
+				add_dynamic_modifier = { modifier = lok_state_productivity_modifier }
+				update_state_productivity_modifier = yes
+			}
+
 			#COUNTRIES CLAIMING LAND
 			#Nordkrabben and Krokatzia claim each other
 			123 = { add_claim_by = WAC }
@@ -33,6 +112,14 @@ on_actions = {
 			#Saru claims the FMT
 			FMT = { every_owned_state = { add_claim_by = SAR } }
 
+			#Roqualia claims lost provinces
+			FSR = { every_owned_state = { add_claim_by = ROQ } }
+			DOM = { every_owned_state = { add_claim_by = ROQ } }
+
+			#MCF claims DOM
+			DOM = { every_owned_state = { add_claim_by = MCF } }
+
+
 			random_list = { #just pick a random southerner for USSF
 				1 = { CAT = { set_country_flag = will_form_ussf } }
 				1 = { LIO = { set_country_flag = will_form_ussf } }
@@ -55,6 +142,7 @@ on_actions = {
 				add_ideas = LOK_base_modifier_definitions
 				set_variable = { nuke_launch_count = 0 } #how many nukes are launched at once
 				set_variable = { current_nuke_type = 0 } #the current selected type of nuke
+				set_variable = { lok_nuke_retaliation_score = 0 } #AI retaliation score for nukes received
 				set_variable = { lok_wonder_output_mult = 1 }
 
 				every_core_state = {
@@ -62,12 +150,32 @@ on_actions = {
 				}
 			}
 
+			every_state = {
+				limit = { is_on_continent = muno }
+				add_to_array = { global.muno_states_array = THIS }
+			}
+
+			every_state = {
+				limit = { is_on_continent = xenon }
+				add_to_array = { global.xenon_states_array = THIS }
+			}
+
+			every_state = {
+				limit = { is_space_state = yes }
+				add_to_array = { global.space_states_array = THIS }
+			}
+
+
 			WSF = {
 				activate_mission = WSF_civil_war_timer
 			}
 
 			SIL = {
-				activate_mission = SIL_collapse_timer
+				country_event = { id = LOK_SIL.1 days = 365 }
+				news_event = { id = LOK_SIL.8 days = 340 }
+				news_event = { id = LOK_SIL.9 days = 350 }
+				news_event = { id = LOK_SIL.10 days = 360 }
+				#activate_mission = SIL_collapse_timer
 			}
 
 			#Katlantropa Dam
@@ -87,17 +195,32 @@ on_actions = {
 				}
 			}
 
+			#ACR Sphere of Influence
+			every_country = {
+				limit = {
+					OR = {
+						tag = DAW
+						tag = BAZ
+						tag = ENO
+						tag = EUL
+						tag = MSN
+					}
+				}
+				add_to_array = { ACR.sphere_of_influence_array = THIS }
+			}
+
 			#Nuclear Winter
 			set_variable = { global.lok_nuclear_soot_perc_raw = 0 } #Percentage of sunlight blocked by soot (in raw percentage)
 			set_variable = { global.lok_nuclear_soot_perc_negative = 1 } #The actual food debuff, divided by 100
 
 			#Casualty counters
-			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL combat-deaths for ALL countries
+			set_variable = { global.lok_global_deaths = 0 } #Sum of ALL deaths for ALL countries
 
 			set_variable = { global.lok_global_combat_deaths = 0 } #Sum of ALL combatt deaths for ALL countries
 			set_variable = { global.lok_global_bombing_deaths = 0 } #Sum of ALL bombing deaths for ALL countries
 			set_variable = { global.lok_global_starvation_deaths = 0 } #Sum of ALL starvation deaths for ALL countries
 			set_variable = { global.lok_global_radiation_deaths = 0 } #Sum of ALL radiation deaths for ALL countries
+			set_variable = { global.lok_global_misc_deaths = 0 } #Sum of ALL misc deaths for ALL countries
 
 			set_variable = { global.lok_global_deaths_display = 0 }
 
@@ -108,6 +231,7 @@ on_actions = {
 				set_variable = { lok_country_bombing_deaths = 0 } #Nuke/bomb deaths
 				set_variable = { lok_country_starvation_deaths = 0 } #Starvation deaths
 				set_variable = { lok_country_radiation_deaths = 0 } #Radiation deaths
+				set_variable = { lok_country_misc_deaths = 0 } #misc deaths
 
 				set_variable = { lok_country_deaths_display = 0 }
 			}
@@ -119,6 +243,7 @@ on_actions = {
 				set_variable = { lok_state_starvation_deaths = 0 }
 				set_variable = { lok_state_radiation_deaths = 0 }
 				set_variable = { lok_state_combat_deaths = 0 }
+				set_variable = { lok_state_misc_deaths = 0 }
 
 				set_variable = { lok_state_deaths_display = 0 }
 
@@ -134,6 +259,10 @@ on_actions = {
 					limit = { is_space_state = no }
 					add_dynamic_modifier = { modifier = lok_soot_state_modifier }
 				}
+				if = {
+					limit = { is_space_state = yes }
+					add_dynamic_modifier = { modifier = space_colony_supply_modifier }
+				}
 			}
 
 			set_variable = { global.lok_nuclear_soot_perc_weekly_decay = 0.1 } #Weekly decay of soot, in raw percentage
@@ -142,7 +271,9 @@ on_actions = {
 			set_variable = { global.total_herzlands_state_count = 0 }
 			every_country = {
 				limit = { is_herzlands_warlord = yes }
-				every_owned_state = { add_to_array = { global.herzlands_states_array = THIS } }
+				every_owned_state = {
+					add_to_array = { global.herzlands_states_array = THIS }
+				}
 			}
 
 			#The treshold before unification is reached
@@ -288,6 +419,16 @@ on_actions = {
 				controller = { apply_wonder_effects = yes }
 			}
 
+			349 = { #Charles
+				set_variable = { wonder = 15 }
+				setup_wonder_array = yes
+				#We Set variable wonder_modifiers_values^x relating to the wonder_modifier_x found in LOK_wonder_modifier
+				set_variable = { wonder_modifiers_values^23 = 0.05 } #PP gain
+				set_variable = { wonder_modifiers_values^25 = 1 } #civs
+				set_variable = { wonder_modifiers_values^32 = 1 } #mils
+				controller = { apply_wonder_effects = yes }
+			}
+
 			#Greater Katown
 			44 = { add_to_array = { array = global.greater_katown_states_array } }
 			45 = { add_to_array = { array = global.greater_katown_states_array } }
@@ -348,6 +489,7 @@ on_actions = {
 						tag = PER
 						tag = LMB
 						tag = RQA
+						is_roqualian_releasable = yes
 					}
 				}
 				add_ideas = specialty_computing
@@ -360,6 +502,21 @@ on_actions = {
 				}
 			}
 
+			TAK = {
+				add_ideas = specialty_lacking_tech
+			}
+
+			every_possible_country = {
+				limit = {
+					NOT = {
+						has_idea = specialty_lacking_tech
+						has_idea = specialty_nuclear
+						has_idea = specialty_computing
+					}
+				}
+				add_ideas = specialty_nothing
+			}
+
 			#Setup COUNTRY species
 			every_possible_country = {
 				add_ideas = var_species_0
@@ -367,6 +524,11 @@ on_actions = {
 					limit = { is_herzlands_warlord = yes }
 					remove_ideas = var_species_0
 					add_ideas = var_species_1
+				}
+				if = {
+					limit = { is_roqualian_splinter = yes }
+					remove_ideas = var_species_0
+					add_ideas = var_species_3
 				}
 			}
 			#Katzens
@@ -376,6 +538,8 @@ on_actions = {
 			BSS = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			POT = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			KKN = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_7 }
+
+			BAS = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_3 }
 
 			SOB = { remove_ideas = var_species_0 add_ideas = var_species_2 }
 			NDB = { remove_ideas = var_species_0 add_ideas = var_species_2 add_ideas = var_species_1 }
@@ -416,8 +580,11 @@ on_actions = {
 			FOD = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_7 add_ideas = var_species_24 }
 			KKN = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			EUL = { remove_ideas = var_species_0 add_ideas = var_species_7 }
+			KRO = { remove_ideas = var_species_0 add_ideas = var_species_7 }
+			NKR = { remove_ideas = var_species_0 add_ideas = var_species_7 add_ideas = var_species_24 }
 			DAW = { remove_ideas = var_species_0 add_ideas = var_species_24 }
 			BAZ = { remove_ideas = var_species_0 add_ideas = var_species_24 }
+			YIN = { remove_ideas = var_species_0 add_ideas = var_species_24 }
 
 			ACR = { remove_ideas = var_species_0 add_ideas = var_species_7 add_ideas = var_species_24 }
 
@@ -480,12 +647,17 @@ on_actions = {
 			NKC = { remove_ideas = var_species_0 add_ideas = var_species_5 }
 
 			ALK = { remove_ideas = var_species_0 add_ideas = var_species_28 add_ideas = var_species_3 }
-			
+			CRE = { remove_ideas = var_species_0 add_ideas = var_species_28 }
+
 			KHA = { remove_ideas = var_species_0 add_ideas = var_species_22 }
 
 			FST = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 
 			NMI = { remove_ideas = var_species_0 add_ideas = var_species_8 add_ideas = var_species_1 }
+
+			SLC = { remove_ideas = var_species_0 add_ideas = var_species_49 }
+			DUR = { remove_ideas = var_species_0 add_ideas = var_species_50 }
+
 
 			#Setup STATE species
 			every_state = { set_variable = { species = 0 } }
@@ -523,6 +695,15 @@ on_actions = {
 			507 = { set_variable = { minority = 1 } }
 
 			FMT = { every_owned_state = { set_variable = { species = 9 } } }
+
+			#Freeports
+			1056 = { set_variable = { species = 25 } set_variable = { minority = 1 } }
+			252 = { set_variable = { species = 25 } set_variable = { minority = 3 } }
+			894 = { set_variable = { species = 1 } set_variable = { minority = 3 } }
+			896 = { set_variable = { species = 3 } set_variable = { minority = 1 } }
+			895 = { set_variable = { species = 1 } set_variable = { minority = 3 } }
+			897 = { set_variable = { species = 3 } set_variable = { minority = 1 } }
+
 
 			#Roqualia
 			ROQ = { every_owned_state = { set_variable = { species = 3 } } }
@@ -623,6 +804,8 @@ on_actions = {
 
 			#Loris
 			FOD = { every_owned_state = { set_variable = { species = 7 } } }
+			1052 = { set_variable = { species = 7 } set_variable = { minority = 1} }
+			1053 = { set_variable = { species = 7 } set_variable = { minority = 24 } }
 			1038 = { set_variable = { species = 24 } }
 			96 = { set_variable = { species = 24 } }
 			1039 = { set_variable = { species = 24 } }
@@ -644,7 +827,7 @@ on_actions = {
 			1036 = { set_variable = { species = 24 } }
 			152 = { set_variable = { species = 24 } }
 			1324 = { set_variable = { species = 1 } set_variable = { minority = 7 } }
-			202 = { set_variable = { species = 1 } set_variable = { minority = 7 } }
+			202 = { set_variable = { species = 7 } set_variable = { minority = 1 } }
 			1313 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
 			201 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
 			1321 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
@@ -691,21 +874,21 @@ on_actions = {
 			FRO = { every_owned_state = { set_variable = { species = 26 } } }
 			ITZ = { every_owned_state = { set_variable = { species = 26 } } }
 			VAR = { every_owned_state = { set_variable = { species = 26 } } }
-			942 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			214 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			941 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			947 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			946 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			928 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			929 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			932 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			155 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			950 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			259 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
-			951 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			949 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			180 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
-			940 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 942 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 214 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 941 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 947 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 946 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 928 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 929 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 932 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 155 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 950 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 259 = { set_variable = { species = 26 } set_variable = { minority = 3 } }
+			# 951 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 949 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 180 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
+			# 940 = { set_variable = { species = 3 } set_variable = { minority = 26 } }
 
 			#More Roquals
 			KOT = { every_owned_state = { set_variable = { species = 3 } } }
@@ -736,6 +919,10 @@ on_actions = {
 			ALK = { every_owned_state = { set_variable = { species = 28 } } }
 			ALK = { every_owned_state = { set_variable = { minority = 3 } } }
 
+			#Corelie
+			CRE = { every_owned_state = { set_variable = { species = 28 } } }
+
+
 			#Propania
 			PRO = { every_owned_state = { set_variable = { species = 3 } } }
 
@@ -755,9 +942,13 @@ on_actions = {
 
 			#Eulysses
 			EUL = { every_owned_state = { set_variable = { species = 7 } } }
+			
+			#Novokronkhiya
+			MSN = { every_owned_state = { set_variable = { species = 7 } set_variable = { minority = 1 } } }
 
 			#Svitanok
 			DAW = { every_owned_state = { set_variable = { species = 24 } } }
+			BAZ = { every_owned_state = { set_variable = { species = 24 } } }
 
 			#Katown
 			every_country = {
@@ -895,6 +1086,10 @@ on_actions = {
             800 = { set_variable = { minority = 9 } }
             796 = { set_variable = { minority = 19 } }
 
+			#Sillycrons and Poltros
+			SLC = { every_owned_state = { set_variable = { species = 49 } } }
+			DUR = { every_owned_state = { set_variable = { species = 50 } } }
+			
 			#Strait
 			334 = { set_variable = { species = 3 } }
 			343 = { set_variable = { species = 15 } set_variable = { minority = 3 } }
@@ -919,7 +1114,25 @@ on_actions = {
 				}
 			}
 
+			#People hate the Regent
+			every_possible_country = {
+				limit = {
+					OR = {
+						has_government = communism
+						has_government = democratic
+					}
+				}
+				send_embargo = AUR
+			}
 
+			every_possible_country = {
+				limit = { NOT = { has_government = fascism } }
+				add_opinion_modifier = {
+					target = AUR
+					modifier = AUR_crazy_kaiserists
+				}
+			}
+			
 			#Polar Projection
 			BSS = { every_owned_state = { add_dynamic_modifier = { modifier = lok_polar_projection } } }
 			NGE = { every_owned_state = { add_dynamic_modifier = { modifier = lok_polar_projection } } }
@@ -928,6 +1141,7 @@ on_actions = {
 				add_dynamic_modifier = { modifier = lok_wonder_modifier }
 				if = {
 					limit = { is_herzlands_warlord = yes }
+					country_event = { id = lok_herzlands.1 days = 1825 }
 					add_dynamic_modifier = { modifier = LOK_KSK_IPF_activity }
 					#Initialize KSK/IPF
 					if = {
@@ -960,9 +1174,9 @@ on_actions = {
 					}
 					AUR = {
 						set_variable = { ipf_opinion = -5 }
-						set_variable = { ipf_strength = 6 }
+						set_variable = { ipf_strength = 3 }
 						set_variable = { ksk_opinion = -5 }
-						set_variable = { ksk_strength = 6 }
+						set_variable = { ksk_strength = 3 }
 					}
 					SIL = {
 						set_variable = { ipf_opinion = -4 }
@@ -1065,10 +1279,10 @@ on_actions = {
 			NEU = { set_country_flag = herzlands_warlord_hegemon }
 			FRA = { set_country_flag = herzlands_warlord_regionalist }
 			NKB = { set_country_flag = herzlands_warlord_independentist }
-			OST = { set_country_flag = herzlands_warlord_uniter }
+			OST = { set_country_flag = herzlands_warlord_independentist }
 			TAI = { set_country_flag = herzlands_warlord_independentist }
 			WPR = { set_country_flag = herzlands_warlord_independentist }
-			MEW = { set_country_flag = herzlands_warlord_hegemon }
+			MEW = { set_country_flag = herzlands_warlord_uniter }
 			STR = { set_country_flag = herzlands_warlord_independentist }
 			LIO = { set_country_flag = herzlands_warlord_regionalist }
 			CAT = { set_country_flag = herzlands_warlord_independentist }
@@ -1090,9 +1304,52 @@ on_actions = {
 
 			# TKW = { set_country_flag = herzlands_warlord_uniter }
 
+			# Setup space colonies
+			every_state = {
+				limit = {
+					is_space_state = yes
+					var:owner = { is_non_playable_country = no }
+				}
+				set_state_flag = lok_space_state_surveyed_by_@var:owner
+				set_variable = { space_colony_level = 3 }
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = { type = infrastructure level = 1 }
+				add_building_construction = { type = industrial_complex level = 1 }
+				add_building_construction = { type = arms_factory level = 1 }
+				add_manpower = 7500
+				var:owner = {
+					if = {
+						limit = { NOT = { has_country_flag = space_tech_set } }
+						set_country_flag = space_tech_set
+						set_country_flag = lok_muno_landing_done
+						add_to_variable = { space_exp = 200 }
+						add_to_variable = { muno_exp = 200 }
+						set_technology = {
+							experimental_rockets = 1
+							rocket_engines = 1
+							light_chemical_rocket = 1
+							heavy_chemical_rocket = 1
+							improved_rocket_engines = 1
+							reusable_light_chemical_rocket = 1
+							reusable_heavy_chemical_rocket = 1
+							popup = no
+						}
+					}
+					add_equipment_to_stockpile = {
+						type = lok_reusable_heavy_chemical_rocket_0
+						amount = 300
+					}
+				}
+			}
 
-			count_nukes_in_stockpile = yes
-			calculate_salvo_capacity = yes
+			every_possible_country = {
+				count_nukes_in_stockpile = yes
+				calculate_salvo_capacity = yes
+				calculate_xenon_colonies_stats = yes
+				calculate_muno_colonies_stats = yes
+				calculate_orbital_logistics_capacity = yes
+			}
+
 			set_variable = { lok_current_salvo_capacity = 0 }
 
 			#Mewtail
@@ -1118,22 +1375,125 @@ on_actions = {
 				}
 			}
 
+			set_variable = { global.katzen_high_command_member_count_total = 11 }
+
+			#The High Command
+			every_possible_country = {
+				set_variable = { katzen_high_command_member_count = 0 }
+				if = {
+					limit = {
+						OR = {
+							is_herzlands_warlord = yes
+							tag = FST
+							tag = FSR
+							tag = DOM
+						}
+					}
+					set_country_flag = katzen_high_command_decision_active
+				}
+			}
+
+			#Pawtton is in Auralia
+			AUR = {
+				set_variable = { katzen_high_command_member_count = 2 }
+				AUR_Pawtton = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = AUR_Pawtton
+				}
+				AUR_Meorwin = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = AUR_Meorwin
+				}
+			}
+
+			NAV = {
+				set_variable = { katzen_high_command_member_count = 2 }
+				NAV_Koko_Von_Beumien = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = NAV_Koko_Von_Beumien					
+				}
+				NAV_Kimitz = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = NAV_Kimitz					
+				}
+			}
+
+			CLE = {
+				set_variable = { katzen_high_command_member_count = 1 }
+				CLE_Itch = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = CLE_Itch
+				}
+			}
+
+			FRA = {
+				set_variable = { katzen_high_command_member_count = 1 }
+				FRA_Hell = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = FRA_Hell
+				}
+			}
+
+			CAT = {
+				set_variable = { katzen_high_command_member_count = 1 }
+				CAT_Rex = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = CAT_Rex
+				}
+			}
+
+			FSR = {
+				set_variable = { katzen_high_command_member_count = 1 }
+				FSR_Stefan_Katzauffe = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = FSR_Stefan_Katzauffe
+				}
+			}
+
+			OST = {
+				set_variable = { katzen_high_command_member_count = 1 }
+				OST_Katzhaum = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = OST_Katzhaum
+				}
+			}
+
+			KTW = {
+				set_variable = { katzen_high_command_member_count = 1 }
+				KTW_Douclaw = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = KTW_Douclaw
+				}
+			}
+
+			FOD = {
+				set_variable = { katzen_high_command_member_count = 1 }
+				KTZ_Loris = {
+					set_character_flag = katzen_high_command_member
+					save_global_event_target_as = KTZ_Loris
+				}
+			}
+
 			#Spawn units for countries that lack them
 			every_country = {
 				if = {
-					limit = { check_variable = { num_battalions < 1 } }
+					limit = {
+						is_non_playable_country = no
+						NOT = { tag = KAR }
+						check_variable = { num_battalions < 1 }
+					}
 					division_template = {
-						name = "Basic Infantry"
+						name = "Standard Infantry"
 						is_locked = no
 						regiments = {
-							infantry = { x = 0 y = 0 }
-							infantry = { x = 0 y = 1 }
-							infantry = { x = 0 y = 2 }
-							infantry = { x = 0 y = 3 }
-							infantry = { x = 1 y = 0 }
-							infantry = { x = 1 y = 1 }
-							infantry = { x = 1 y = 2 }
-							infantry = { x = 1 y = 3 }
+							motorized = { x = 0 y = 0 }
+							motorized = { x = 0 y = 1 }
+							motorized = { x = 0 y = 2 }
+							motorized = { x = 0 y = 3 }
+							motorized = { x = 1 y = 0 }
+							motorized = { x = 1 y = 1 }
+							motorized = { x = 1 y = 2 }
+							motorized = { x = 1 y = 3 }
 						}
 						support = {
 							artillery = { x = 0 y = 0 }
@@ -1141,10 +1501,87 @@ on_actions = {
 						}
 					}
 					every_controlled_state = {
+						limit = { is_space_state = no impassable = no }
 						create_unit = {
-							division = "division_template = \"Basic Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
-							count = 1
+							division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
+							count = 2
 							owner = PREV
+						}
+					}
+					if = {
+						limit = { tag = ACR }
+						every_controlled_state = {
+							limit = { is_space_state = no impassable = no }
+							create_unit = {
+								division = "division_template = \"Standard Infantry\" start_experience_factor = 0.1 start_equipment_factor = 1"
+								count = 2
+								owner = PREV
+							}
+						}
+					}
+				}
+				if = { #airplanes
+					limit = {
+						is_herzlands_warlord = no
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = early_fighter
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = small_plane_airframe
+								amount = 100
+							}
+						}
+					}
+				}
+				if = { #cas
+					limit = {
+						is_herzlands_warlord = no
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = CAS1
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = small_plane_cas_airframe
+								amount = 30
+							}
+						}
+					}
+				}
+				#katzens get bigger planes
+				if = { #airplanes
+					limit = {
+						is_herzlands_warlord = yes
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = early_bomber
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = medium_plane_fighter_airframe
+								amount = 70
+							}
+						}
+					}
+				}
+				if = { #cas
+					limit = {
+						is_herzlands_warlord = yes
+						NOT = { tag = MCF }
+						is_non_playable_country = no
+						has_tech = early_bomber
+					}
+					every_controlled_state = {
+						PREV = {
+							add_equipment_to_stockpile = {
+								type = medium_plane_airframe
+								amount = 20
+							}
 						}
 					}
 				}
@@ -1155,7 +1592,7 @@ on_actions = {
 			#Bridges
 			set_global_flag = EZIKATZEN_CANAL_DISABLED
 			set_global_flag = FISHY_PASS_CANAL_DISABLED
-			set_global_flag = SOLKATZIA_SOLAKEA_EAST_BRIDGE
+			#set_global_flag = SOLKATZIA_SOLAKEA_EAST_BRIDGE
 			set_global_flag = NORWEGEN_BRIDGE_DISABLED
 			set_global_flag = KOTIJGRAD_BRIDGE_DISABLED
 			ROQ = { activate_advisor = ROQ_Saxeton }
@@ -1192,6 +1629,13 @@ on_actions = {
                 limit = { is_debug = yes }
                 set_global_flag = show_debug_decisions_flag
             }
+			every_possible_country = {
+				if = {
+					limit = { NOT = { tag = ZZZ tag = MUN tag = XEN tag = MRI } }
+					country_event = { id = LOK_food.1 }
+					country_event = { id = LOK_food.1 days = 1 }
+				}
+			}
         }
 	}
 
@@ -1208,9 +1652,53 @@ on_actions = {
 		}
 	}
 
+	on_weekly_KUS = {
+		effect = {
+			if = { # basilisk kills ppl
+				limit = { has_country_flag = KUS_basilisk_took_over }
+				if = {
+					limit = { check_variable = { KUS_basilisk_target_kills > KUS_basilisk_current_pop } }
+					every_controlled_state = {
+						KUS = {
+							delete_unit = { 
+								state = PREV 
+								disband = yes
+							}
+						}
+					}
+				}
+				# determine what % of our states we gotta depop
+				set_temp_variable = { KUS_basilisk_pop_kill_perc = KUS_basilisk_target_kills }
+				divide_temp_variable = { KUS_basilisk_pop_kill_perc = KUS_basilisk_current_pop }
+				# remove that % from every state
+				every_controlled_state = {
+					set_temp_variable = { KUS_basilisk_pop_to_kill = state_population_k }
+					# In 1000s
+					multiply_temp_variable = { KUS_basilisk_pop_to_kill = KUS.KUS_basilisk_pop_kill_perc }
+					# Set to 10000s
+					divide_temp_variable = { KUS_basilisk_pop_to_kill = 10 }
+					for_loop_effect = {
+						end = KUS_basilisk_pop_to_kill
+						set_variable = { manpower_change = -10000 }
+						LOK_change_state_manpower = yes
+					}
+				}
+				#Recalc pop
+				set_variable = { KUS_basilisk_current_pop = 0 }
+				every_controlled_state = {
+					set_temp_variable = { KUS_basilisk_current_pop_temp = state_population_k }
+					divide_temp_variable = { KUS_basilisk_current_pop_temp = 1000 }
+					add_to_variable = { KUS.KUS_basilisk_current_pop = KUS_basilisk_current_pop_temp }
+				}
+				multiply_variable = { KUS_basilisk_target_kills = 1.2 }
+			}
+		}
+	}
+
+
 	on_monthly_TAK = {
 		effect = {
-			if = { #add paintbrushes
+			if = { # add paintbrushes
 				limit = { has_completed_focus = TAK_figure_it_out }
 				add_to_variable = { TAK_brush_count = modifier@TAK_paintbrushes_monthly }
 				TAK_update_painting_stats = yes
@@ -1236,14 +1724,24 @@ on_actions = {
 		}
 	}
 	
-	# on_weekly_ROQ = {
-	# 	effect = {
-	# 		if = {
-	# 			limit = { has_completed_focus = ROQ_the_votation_is_on }
-	# 			roq_count_votation_results = yes
-	# 		}
-	# 	}
-	# }
+	on_weekly_ROQ = {
+		effect = {
+			# if = {
+			# 	limit = { has_completed_focus = ROQ_the_votation_is_on }
+			# 	roq_count_votation_results = yes
+			# }
+			if = {
+				limit = {
+					surrender_progress > 0.50
+					is_subject = no
+				}
+				random = {
+					chance = 50
+					country_event = { id = ROQ_event.5 }
+				}
+			}
+		}
+	}
 
 	on_weekly_ZZZ = { #for weekly effects that are only needed ONCE
 		effect = {
@@ -1254,6 +1752,73 @@ on_actions = {
 
 	on_weekly = {
 		effect = {
+			# KTW Katown Struggle - auto wardec nations controlling katown states, auto-peace when they stop
+			if = {
+				limit = { tag = KTW has_country_flag = ktw_katown_struggle_active }
+				every_country = {
+					limit = {
+						NOT = { tag = KTW }
+						NOT = { has_war_with = KTW }
+						OR = {
+							controls_state = 30
+							controls_state = 27
+							controls_state = 29
+							controls_state = 42
+							controls_state = 50
+							controls_state = 39
+						}
+					}
+					KTW = { declare_war_on = { target = PREV type = take_claimed_state } }
+				}
+				every_country = {
+					limit = {
+						has_war_with = KTW
+						NOT = { tag = KTW }
+						NOT = {
+							controls_state = 30
+							controls_state = 27
+							controls_state = 29
+							controls_state = 42
+							controls_state = 50
+							controls_state = 39
+						}
+					}
+					every_owned_state = {
+						limit = { is_in_array = { array = global.greater_katown_states_array value = THIS } }
+						transfer_state_to = KTW
+					}
+					white_peace = KTW
+				}
+			}
+			#TEMP, MAKE THAT MONTHLY
+			every_controlled_state = {
+				regenerate_state_productivity_modifier = yes
+				update_state_productivity_modifier = yes
+			}
+			#DEBUG for casualties
+			if = {
+				limit = {
+					has_war = yes
+				}
+				every_controlled_state = {
+					if = {
+						limit = {
+							check_variable = { damaged_building_level@infrastructure > damaged_infra_level_last_week }
+						}
+						set_temp_variable = { lok_combat_deaths_to_be_removed_for_state = state_population_k } #state pop in thousands
+						divide_temp_variable = { lok_combat_deaths_to_be_removed_for_state = 1000 } #0.1%
+						round_temp_variable = lok_combat_deaths_to_be_removed_for_state
+
+						multiply_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1000 } #x1000 for straight amount
+						add_manpower = lok_combat_deaths_to_be_removed_for_state
+
+						divide_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1000 }
+						add_to_variable = { lok_state_combat_deaths = lok_combat_deaths_to_be_removed_for_state }
+						add_to_variable = { lok_state_deaths = lok_combat_deaths_to_be_removed_for_state }
+					}
+					set_variable = { damaged_infra_level_last_week = damaged_building_level@infrastructure }
+				}
+			}
 			apply_wonder_effects = yes #for if capitals or cores change
 			every_controlled_state = { #Soot! Soot! Soot!
 				limit = { is_space_state = no }
@@ -1275,6 +1840,30 @@ on_actions = {
 
 			if = {
 				limit = { is_non_playable_country = no }
+				#Nuclear Facility Buffs
+				clear_nuclear_facility_ideas = yes
+				set_variable = { nuclear_facility_count = 0 }
+				every_controlled_state = {
+					limit = { check_variable = { non_damaged_building_level@nuclear_facility > 0 } }
+					if = {
+						limit = { is_core_of = ROOT }
+						add_to_variable = { ROOT.nuclear_facility_count = 2 }
+					}
+					else = {
+						add_to_variable = { ROOT.nuclear_facility_count = 1 }
+					}
+				}
+				if = {
+					limit = { check_variable = { nuclear_facility_count > 0 } }
+					if = {
+						limit = { check_variable = { nuclear_facility_count > 20 } }
+						set_variable = { nuclear_facility_count = 20 }
+					}
+					meta_effect = {
+						text = { add_ideas = LOK_nuclear_facility_[NUCLEAR_FACILITY_COUNT] }
+						NUCLEAR_FACILITY_COUNT = "[?ROOT.nuclear_facility_count]"
+					}
+				}
 
 				#Various calculations
 				calculate_combat_casualties = yes #Casualties in states
@@ -1284,10 +1873,10 @@ on_actions = {
 
 				#Space Stuff
 				attrition_space_rockets = yes
-				calculate_orbital_logistics_capacity = yes
 				calculate_xenon_colonies_stats = yes
 				calculate_muno_colonies_stats = yes
-
+				calculate_orbital_logistics_capacity = yes
+				
 				if = {
 					limit = {
 						check_variable = { orbital_logistics_damage_odds > 0 }
@@ -1357,6 +1946,7 @@ on_actions = {
 						has_war = yes
 						has_tech = nukes
 						check_variable = { lok_total_nuke_stockpile > 0 }
+						check_variable = { lok_nuke_retaliation_score > 0 }
 						any_enemy_country = { ROOT = { has_country_flag = nuked_by_@PREV } }
 					}
 					ai_fire_nuke = yes
@@ -1387,8 +1977,15 @@ on_actions = {
 				set_variable = { lok_state_starvation_deaths_display = lok_state_starvation_deaths }
 				round_variable = lok_state_starvation_deaths_display
 
+				set_variable = { lok_state_misc_deaths_display = lok_state_misc_deaths }
+				round_variable = lok_state_misc_deaths_display
+
 				if = { #State got so depopulated that it just collapses
-					limit = { var:controller = { is_non_playable_country = no } check_variable = { state_population_k < lok_min_manpower_before_collapse } }
+					limit = {
+						var:controller = { is_non_playable_country = no }
+						check_variable = { state_population_k < lok_min_manpower_before_collapse }
+						NOT = { is_infrastructure_state = yes }
+					}
 					collapse_into_anarchy = yes
 					set_variable = { lok_min_manpower_before_collapse = 0 }
 				}
@@ -1410,6 +2007,8 @@ on_actions = {
 			set_variable = { global.lok_global_starvation_deaths_display = global.lok_global_starvation_deaths }
 			divide_variable = { global.lok_global_starvation_deaths_display = 1000 } #Turn to millions
 
+			set_variable = { global.lok_global_misc_deaths_display = global.lok_global_misc_deaths }
+			divide_variable = { global.lok_global_misc_deaths_display = 1000 } #Turn to millions
 
 			force_update_map_mode = { mapmode = LOK_radiation_map_mode }
 			#force_update_map_mode = { mapmode = LOK_food_map_mode }
@@ -1433,10 +2032,28 @@ on_actions = {
 
 	on_state_control_changed = {
 		effect = {
+			ROOT = { save_event_target_as = new_controller }
+			FROM = { save_event_target_as = old_controller }
 			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
 				FROM = { if = { limit = { is_herzlands_warlord = yes } subtract_from_variable = { current_herzlands_state_count = 1 } } }
+			}
+			#AI Katzen nations instantly get +40% compliance when capturing a Herzlands state
+			if = {
+				limit = {
+					ROOT = {
+						is_ai = yes
+						is_herzlands_warlord = yes
+					}
+					FROM.FROM = {
+						is_in_array = { array = global.herzlands_states_array value = THIS }
+						NOT = { is_core_of = ROOT }
+					}
+				}
+				FROM.FROM = {
+					add_compliance = 40
+				}
 			}
 			FROM = { 
 				apply_wonder_effects = yes
@@ -1448,35 +2065,506 @@ on_actions = {
 				calculate_salvo_capacity = yes
 				calculate_strategic_resource_modifiers = yes
 			}
-			FROM.FROM = { #Clear and apply species match modifiers
-				if = {
-					limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
-					remove_dynamic_modifier = { modifier = lok_matching_species }
+			if = { #Mondkanone!
+				limit = {
+					FROM.FROM = { state = 708 }
+					ROOT = { NOT = { has_tech = mondkanone_nuke_tech } }
 				}
-				if = {
-					limit = { has_dynamic_modifier = { modifier = lok_matching_minority } }
-					remove_dynamic_modifier = { modifier = lok_matching_minority }
-				}
-				#Matching species = compliance buff
-				meta_effect = {
-					text = {
-						if = {
-							limit = { ROOT = { has_idea = var_species_[SPECIES_ID] } }
-							add_dynamic_modifier = { modifier = lok_matching_species }
-						}
-						else_if = {
-							limit = { ROOT = { has_idea = var_species_[MINORITY_ID] } }
-							add_dynamic_modifier = { modifier = lok_matching_minority }
-						}
+				ROOT = {
+					set_technology = {
+						mondkanone_nuke_tech = 1
+						popup = yes
 					}
-					SPECIES_ID = "[?species]"
-					MINORITY_ID = "[?minority]"
 				}
+			}
+			if = {
+				limit = { FROM.FROM = { check_variable = { building_level@nuclear_facility > 0 } } }
+				FROM.FROM = { save_event_target_as = nuclear_facility_state }
+				ROOT = { country_event = { id = lok_notification.1 } }
+				FROM = { country_event = { id = lok_notification.2 } }
+			}
+			FROM.FROM = {
+				if = {
+					limit = { has_state_flag = KUS_has_rebels }
+					clr_state_flag = KUS_has_rebels
+					set_temp_variable = { state_prod_change = 0.5 }
+					increase_state_productivity = yes	
+				}
+				#Remove ABC effects
+				if = {
+					limit = {
+						has_state_flag = has_armored_blimp_carrier_state
+					}
+					clr_state_flag = has_armored_blimp_carrier_state
+					remove_building = { type = air_base level = 2 }
+					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
+				}
+				#Clear and apply species match modifiers
+				update_matching_species_modifiers = yes
 			}
 			if = {
 				limit = { FROM.FROM = { check_variable = { wonder > 0 } } }
 				ROOT = { apply_wonder_effects = yes }
 				FROM = { apply_wonder_effects = yes }
+			}
+
+			# KTW early collapse - if 509 is seized during the Katown Struggle
+			if = {
+				limit = {
+					FROM.FROM = { state = 509 }
+					FROM = { tag = KTW has_country_flag = ktw_katown_struggle_active }
+				}
+				FROM = {
+					country_event = { id = KTW_event.6 }
+				}
+			}
+
+			#########################################
+			# News Events - City Falls
+			# ROOT = new controller, FROM = old controller, FROM.FROM = state
+			#########################################
+
+			# Battle of Katown - any of 5 Katown states (509, 34, 36, 44, 45) changing hands while at war
+			if = {
+				limit = {
+					FROM.FROM = {
+						OR = {
+							state = 509
+							state = 34
+							state = 36
+							state = 44
+							state = 45
+						}
+					}
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = katown_battle_cooldown }
+				}
+				set_global_flag = { flag = katown_battle_cooldown days = 60 value = 1 }
+				news_event = { id = LOK_news.20 hours = 6 }
+			}
+
+			#########################################
+			# News Events - City Falls
+			# ROOT = new controller, FROM = old controller, FROM.FROM = state
+			#########################################
+
+			# Fall of Inner Katown (The Katown Pyramid) - State 509
+			if = {
+				limit = {
+					FROM.FROM = { state = 509 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+				}
+
+				news_event = { id = LOK_cityfall_news.1 hours = 6 }
+			}
+
+			# Fall of Lutécie - State 320
+			if = {
+				limit = {
+					FROM.FROM = { state = 320 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = lutecie_fallen }
+				}
+				set_global_flag = lutecie_fallen
+
+				news_event = { id = LOK_cityfall_news.2 hours = 6 }
+			}
+
+			# Fall of Amphisk (held by Katzens) - State 1043
+			if = {
+				limit = {
+					FROM.FROM = { state = 1043 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = amphisk_fallen }
+				}
+				set_global_flag = amphisk_fallen
+
+				news_event = { id = LOK_cityfall_news.3 hours = 6 }
+			}
+
+			# Fall of Lionsburg - State 173
+			if = {
+				limit = {
+					FROM.FROM = { state = 173 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = lionsburg_fallen }
+				}
+				set_global_flag = lionsburg_fallen
+
+				news_event = { id = LOK_cityfall_news.4 hours = 6 }
+			}
+
+			# Fall of Auralia (AUR capital) - State 116
+			if = {
+				limit = {
+					FROM.FROM = {
+						state = 116
+						is_capital = yes
+					}
+					FROM = { tag = AUR has_government = fascism }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = auralia_fallen }
+				}
+				set_global_flag = auralia_fallen
+
+				news_event = { id = LOK_cityfall_news.5 hours = 6 }
+			}
+
+			# Fall of Meownich - State 110
+			if = {
+				limit = {
+					FROM.FROM = { state = 110 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = meownich_fallen }
+				}
+				set_global_flag = meownich_fallen
+
+				news_event = { id = LOK_cityfall_news.6 hours = 6 }
+			}
+
+			# Fall of Clermeowth - State 74
+			if = {
+				limit = {
+					FROM.FROM = { state = 74 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = clermeowth_fallen }
+				}
+				set_global_flag = clermeowth_fallen
+
+				news_event = { id = LOK_cityfall_news.7 hours = 6 }
+			}
+
+			# Fall of Catburg - State 168
+			if = {
+				limit = {
+					FROM.FROM = { state = 168 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = catburg_fallen }
+				}
+				set_global_flag = catburg_fallen
+
+				news_event = { id = LOK_cityfall_news.8 hours = 6 }
+			}
+
+			# Fall of Purrlin - State 192
+			if = {
+				limit = {
+					FROM.FROM = { state = 192 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = purrlin_fallen }
+				}
+				set_global_flag = purrlin_fallen
+
+				news_event = { id = LOK_cityfall_news.9 hours = 6 }
+			}
+
+			# Fall of Neu-Pawsterdam (KTN capital) - State 409
+			if = {
+				limit = {
+					FROM.FROM = { state = 409 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = neu_pawsterdam_fallen }
+				}
+				set_global_flag = neu_pawsterdam_fallen
+
+				news_event = { id = LOK_cityfall_news.10 hours = 6 }
+			}
+
+			# Fall of Frankfurr - State 477
+			if = {
+				limit = {
+					FROM.FROM = { state = 477 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = frankfurr_fallen }
+				}
+				set_global_flag = frankfurr_fallen
+
+				news_event = { id = LOK_cityfall_news.11 hours = 6 }
+			}
+
+			# Fall of Pawris - State 62
+			if = {
+				limit = {
+					FROM.FROM = { state = 62 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = pawris_fallen }
+				}
+				set_global_flag = pawris_fallen
+
+				news_event = { id = LOK_cityfall_news.12 hours = 6 }
+			}
+
+			# Fall of Bunville - State 406
+			if = {
+				limit = {
+					FROM.FROM = { state = 406 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = bunville_fallen }
+				}
+				set_global_flag = bunville_fallen
+
+				news_event = { id = LOK_cityfall_news.13 hours = 6 }
+			}
+
+			# Fall of Katlantropa Dam - State 1324
+			if = {
+				limit = {
+					FROM.FROM = { state = 1324 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = katlantropa_dam_fallen }
+				}
+				set_global_flag = katlantropa_dam_fallen
+
+				news_event = { id = LOK_cityfall_news.14 hours = 6 }
+			}
+
+			# Fall of Jarvalin (KUS capital) - State 218
+			if = {
+				limit = {
+					FROM.FROM = { state = 218 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = jarvalin_fallen }
+				}
+				set_global_flag = jarvalin_fallen
+
+				news_event = { id = LOK_cityfall_news.15 hours = 6 }
+			}
+
+			# Fall of Ganymeda - State 271
+			if = {
+				limit = {
+					FROM.FROM = { state = 271 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = ganymeda_fallen }
+				}
+				set_global_flag = ganymeda_fallen
+
+				news_event = { id = LOK_cityfall_news.16 hours = 6 }
+			}
+
+			# Fall of Steeloft (MCF capital) - State 726
+			if = {
+				limit = {
+					FROM.FROM = { state = 726 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = steeloft_fallen }
+				}
+				set_global_flag = steeloft_fallen
+
+				news_event = { id = LOK_cityfall_news.17 hours = 6 }
+			}
+
+			# Fall of Charles (Takicardie) - State 349
+			if = {
+				limit = {
+					FROM.FROM = { state = 349 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = charles_fallen }
+				}
+				set_global_flag = charles_fallen
+
+				news_event = { id = LOK_cityfall_news.18 hours = 6 }
+			}
+
+			# Fall of Hübschestadt (FSR) - State 236
+			if = {
+				limit = {
+					FROM.FROM = { state = 236 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = hubschestadt_fallen }
+				}
+				set_global_flag = hubschestadt_fallen
+
+				news_event = { id = LOK_cityfall_news.19 hours = 6 }
+			}
+
+			# Fall of Brekarya (Vixenoid capital) - State 289
+			if = {
+				limit = {
+					FROM.FROM = { state = 289 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = brekarya_fallen }
+				}
+				set_global_flag = brekarya_fallen
+
+				news_event = { id = LOK_cityfall_news.20 hours = 6 }
+			}
+
+			# Fall of Nouvelle Yorke (Quépler/KEP capital) - State 804
+			if = {
+				limit = {
+					FROM.FROM = { state = 804 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = nouvelle_yorke_fallen }
+				}
+				set_global_flag = nouvelle_yorke_fallen
+
+				news_event = { id = LOK_cityfall_news.21 hours = 6 }
+			}
+
+			# Fall of Elowia (ELO capital) - State 90
+			if = {
+				limit = {
+					FROM.FROM = { state = 90 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = elowia_fallen }
+				}
+				set_global_flag = elowia_fallen
+
+				news_event = { id = LOK_cityfall_news.22 hours = 6 }
+			}
+
+			# Fall of Purrhelmshaven (Festung Kaiserstein capital) - State 438
+			if = {
+				limit = {
+					FROM.FROM = { state = 438 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = purrhelmshaven_fallen }
+				}
+				set_global_flag = purrhelmshaven_fallen
+
+				news_event = { id = LOK_cityfall_news.23 hours = 6 }
+			}
+
+			# Fall of Pawscow (Sobakiland capital) - State 485
+			if = {
+				limit = {
+					FROM.FROM = { state = 485 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = pawscow_fallen }
+				}
+				set_global_flag = pawscow_fallen
+
+				news_event = { id = LOK_cityfall_news.24 hours = 6 }
+			}
+
+			# Fall of Tiir (United Military Republic capital) - State 1197
+			if = {
+				limit = {
+					FROM.FROM = { state = 1197 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = tiir_fallen }
+				}
+				set_global_flag = tiir_fallen
+
+				news_event = { id = LOK_cityfall_news.25 hours = 6 }
+			}
+
+			# Fall of Thamplatin (Swamplands capital) - State 371
+			if = {
+				limit = {
+					FROM.FROM = { state = 371 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = thamplatin_fallen }
+				}
+				set_global_flag = thamplatin_fallen
+
+				news_event = { id = LOK_cityfall_news.26 hours = 6 }
+			}
+
+			# Fall of Hoxxhagen (Muldvarpe capital) - State 361
+			if = {
+				limit = {
+					FROM.FROM = { state = 361 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = hoxxhagen_fallen }
+				}
+				set_global_flag = hoxxhagen_fallen
+
+				news_event = { id = LOK_cityfall_news.27 hours = 6 }
+			}
+
+			# Fall of Grande Loutteria (Loutrien capital) - State 791
+			if = {
+				limit = {
+					FROM.FROM = { state = 791 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = grande_loutteria_fallen }
+				}
+				set_global_flag = grande_loutteria_fallen
+
+				news_event = { id = LOK_cityfall_news.28 hours = 6 }
+			}
+
+			# Fall of Rozzmione (Procione capital) - State 309
+			if = {
+				limit = {
+					FROM.FROM = { state = 309 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = rozzmione_fallen }
+				}
+				set_global_flag = rozzmione_fallen
+
+				news_event = { id = LOK_cityfall_news.29 hours = 6 }
+			}
+
+			# Fall of Filosimpàra (Kapybara capital) - State 792
+			if = {
+				limit = {
+					FROM.FROM = { state = 792 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = filosimpara_fallen }
+				}
+				set_global_flag = filosimpara_fallen
+
+				news_event = { id = LOK_cityfall_news.30 hours = 6 }
+			}
+
+			# Fall of Novhurst (Novian Free State capital) - State 1357
+			if = {
+				limit = {
+					FROM.FROM = { state = 1357 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = novhurst_fallen }
+				}
+				set_global_flag = novhurst_fallen
+
+				news_event = { id = LOK_cityfall_news.31 hours = 6 }
+			}
+
+			# Fall of Orient Kapus (Kapilan capital) - State 262
+			if = {
+				limit = {
+					FROM.FROM = { state = 262 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = orient_kapus_fallen }
+				}
+				set_global_flag = orient_kapus_fallen
+
+				news_event = { id = LOK_cityfall_news.32 hours = 6 }
 			}
 		}
 	}
@@ -1491,8 +2579,33 @@ on_actions = {
 		}
 	}
 
+	on_weekly_KUS = {
+		effect = {
+			# KUS Flusiobalkan faction factory counting
+			if = {
+				limit = { is_faction_leader = yes has_completed_focus = KUS_union_of_our_own }
+				set_variable = { KUS_faction_total_factories = 0 }
+				set_variable = { KUS_faction_total_civs = 0 }
+				set_variable = { KUS_faction_total_mils = 0 }
+				every_country = {
+					limit = { is_in_faction_with = KUS }
+					KUS = {
+						add_to_variable = { KUS_faction_total_factories = PREV.num_of_civilian_factories }
+						add_to_variable = { KUS_faction_total_factories = PREV.num_of_military_factories }
+						add_to_variable = { KUS_faction_total_civs = PREV.num_of_civilian_factories }
+						add_to_variable = { KUS_faction_total_mils = PREV.num_of_military_factories }
+					}
+				}
+			}
+		}
+	}
+
 	on_monthly = {
 		effect = {
+			#Check pop evolution and apply the productivity modifier
+			# every_controlled_state = {
+			# 	update_state_productivity_modifier = yes
+			# }
 			#Recolonize wasteland
 			if = {
 				limit = { is_ai = yes any_controlled_state = { any_neighbor_state = { is_controlled_by = AAA } } }
@@ -1559,6 +2672,46 @@ on_actions = {
 
 	on_daily = {
 		effect = {
+			# KTW Pyramid Guard - teleport to 509 if not there
+			if = {
+				limit = {
+					tag = KTW
+					owns_state = 509
+					NOT = {
+						divisions_in_state = {
+							state = 509
+							size > 0
+						}
+					}
+				}
+				teleport_armies = { to_state = 509 }
+			}
+			if = {
+				limit = { has_country_flag = has_armored_blimp_carrier }
+				every_controlled_state = {
+					limit = { has_state_flag = has_armored_blimp_carrier_state }
+					clr_state_flag = has_armored_blimp_carrier_state
+					remove_building = { type = air_base level = 2 }
+					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
+				}
+				every_controlled_state = {
+					limit = {
+						ROOT = {
+							divisions_in_state = {
+								unit = armored_blimp_carrier
+								size > 0
+								state = PREV
+							}
+						}
+					}
+					add_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
+					set_state_flag = has_armored_blimp_carrier_state
+					if = {
+						limit = { check_variable = { building_level@air_base > 0 } }
+						add_building_construction = { type = air_base level = 2 }
+					}
+				}
+			}
 			if = {
 				limit = { NOT = { has_government = gestalt } }
 				add_popularity = {
@@ -1641,6 +2794,26 @@ on_actions = {
 						limit = { NOT = { has_country_flag = nuked_by_@ROOT } }
 						set_country_flag = nuked_by_@ROOT
 					}
+					#Add to AI retaliation score based on nuke type
+					if = {
+						limit = { is_ai = yes }
+						if = { #Fission = 1 point
+							limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
+							add_to_variable = { lok_nuke_retaliation_score = 1 }
+						}
+						else_if = { #Fusion = 3 points
+							limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
+							add_to_variable = { lok_nuke_retaliation_score = 3 }
+						}
+						else_if = { #Cobalt = 3 points
+							limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
+							add_to_variable = { lok_nuke_retaliation_score = 3 }
+						}
+						else_if = { #Mondkanone = 2 points
+							limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
+							add_to_variable = { lok_nuke_retaliation_score = 2 }
+						}
+					}
 				}
 			}
 			#Radiation mapmode
@@ -1689,23 +2862,75 @@ on_actions = {
 					}
 					514 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 					512 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 					191 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
+						add_compliance = 20
+					}
+					1401 = {
+						transfer_state_to = ROQ
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 				}
+			}
+			# When ROQ surrenders, transfer splinter core states to surviving splinters before peace deal
+			if = {
+				limit = {
+					ROOT = { tag = ROQ }
+				}
+				# For each releasable splinter that exists and is at war with ROQ,
+				# transfer their core states from ROQ and other splinters
+				every_country = {
+					limit = {
+						is_roqualian_releasable = yes
+						exists = yes
+						has_war_with = ROQ
+					}
+					# Transfer ROQ-controlled core states to this splinter
+					ROQ = {
+						every_owned_state = {
+							limit = { is_core_of = PREV.PREV }
+							transfer_state_to = PREV.PREV
+						}
+					}
+					# Transfer core states held by other splinters that are also at war with ROQ
+					every_country = {
+						limit = {
+							is_roqualian_releasable = yes
+							exists = yes
+							NOT = { tag = PREV }
+						}
+						every_owned_state = {
+							limit = { is_core_of = PREV.PREV }
+							transfer_state_to = PREV.PREV
+						}
+					}
+				}
+			}
+			# AUR forces PRL to capitulate
+			if = {
+				limit = {
+					ROOT = { tag = PRL }
+					country_exists = AUR
+				}
+				news_event = { id = LOK_news.17 }
+			}
+			# PRL forces AUR to capitulate
+			if = {
+				limit = {
+					ROOT = { tag = AUR }
+					country_exists = PRL
+				}
+				news_event = { id = LOK_news.18 }
 			}
 		}
 	}
@@ -1777,53 +3002,44 @@ on_actions = {
 		}
 	}
 
-	on_monthly_SPQ = {
+
+	on_annex = {
 		effect = {
-			if ={
-				limit = {
-					check_variable = {
-						SPQ_consumer_goods_factor_var > SPQ_consumer_goods_base
-					}
+			FROM = {
+				if = {
+					limit = { check_variable = { katzen_high_command_member_count > 0 } }
+					set_variable = { katzen_high_command_member_count = 0 }
 				}
-				add_to_variable = {
-					SPQ_consumer_goods_factor_var = SPQ_consumer_goods_decrease
+				if = { #Loris flees if defeated
+					limit = {
+						tag = FOD
+						any_character = { is_character = KTZ_Loris }
+					}
+					KTZ_Loris = { set_nationality = ZZZ }
+				}
+				if = { #Deal with Katzen High Command members
+					limit = { any_character = { has_character_flag = katzen_high_command_member } }
+					every_character = {
+						limit = { has_character_flag = katzen_high_command_member }
+						set_character_flag = katzen_high_command_member_not_dealt_with
+						set_variable = { katzen_high_command_member_prev_country = owner }
+						set_nationality = ROOT
+						ROOT = { add_to_variable = { katzen_high_command_member_count = 1 } }
+					}
 				}
 			}
-			else_if = {
-				limit = {
-					check_variable = {
-						SPQ_consumer_goods_factor_var < SPQ_consumer_goods_base
-					}
-				}
-				set_variable = {
-					SPQ_consumer_goods_diff = SPQ_consumer_goods_base
-				}
-				subtract_from_variable = {
-					SPQ_consumer_goods_diff = SPQ_consumer_goods_factor_var
-				}
+			ROOT = {
 				if = {
 					limit = {
-						check_variable = {
-							SPQ_consumer_goods_diff > 0.5
-						}
+						NOT = { has_country_flag = dealing_with_katzen_high_command_member }
+						any_character = { has_character_flag = katzen_high_command_member_not_dealt_with }
 					}
-					set_variable = {
-						SPQ_consumer_goods_increase_2 = SPQ_consumer_goods_increase
+					random_character = {
+						limit = { has_character_flag = katzen_high_command_member_not_dealt_with }
+						save_global_event_target_as = lok_hc_member_being_dealt_with
 					}
-					multiply_variable = {
-						SPQ_consumer_goods_increase_2 = 3
-					}
-					add_to_variable = {
-						SPQ_consumer_goods_factor_var = SPQ_consumer_goods_increase_2
-					}
-					clear_variable = SPQ_consumer_goods_diff
-					clear_variable = SPQ_consumer_goods_increase_2
-				}
-				else = {
-					add_to_variable = {
-						SPQ_consumer_goods_factor_var = SPQ_consumer_goods_increase
-					}
-					clear_variable = SPQ_consumer_goods_diff
+					set_country_flag = dealing_with_katzen_high_command_member
+					country_event = { id = LOK_high_command.1 days = 1 }
 				}
 			}
 		}
@@ -1831,6 +3047,31 @@ on_actions = {
 
 	on_before_peace_conference_start = {
 		effect = {
+			if = {
+				limit = {
+					ROOT = { tag = MER }
+					FROM = { OR = { tag = SLC tag = DUR } }
+				}
+				FROM = { every_core_state = { remove_core_of = FROM } }
+				MER = { annex_country = { target = FROM } }
+				if = {
+					limit = {
+						NOT = {
+							AND = {
+								country_exists = SLC
+								country_exists = DUR
+							}
+						}
+					}
+					MER = {
+						remove_ideas = MER_besieged_above_and_below
+						remove_ideas = MER_shield_of_the_world
+						add_political_power = 100
+						add_stability = 0.20
+						add_war_support = -0.20
+					}
+				}
+			}
 			if = {
 				limit = { #Amphibia loses
 					ROOT = { tag = FOD }
@@ -1856,7 +3097,9 @@ on_actions = {
 					FROM = { tag = FOD }
 				}
 				KKN = { retire_all_characters = yes }
-				FOD = { retire_all_characters = yes }
+				FOD = { #Store him in the ZZZ tag
+					KTZ_Loris = { set_nationality = ZZZ }
+				}
 				TEM = { retire_all_characters = yes }
 				ACR = { annex_country = { target = KKN } }
 				ACR = { annex_country = { target = FOD } }
@@ -1879,6 +3122,34 @@ on_actions = {
 					every_owned_state = {
 						limit = { is_claimed_by = ACR }
 						transfer_state_to = ACR
+					}
+				}
+				#Reconstruction Zone
+				1036 = {
+					add_core_of = KKN
+				}
+				93 = {
+					add_core_of = KKN
+				}
+				ACR = { #Remove faction
+					every_other_country = {
+						limit = { is_in_faction_with = ACR NOT = { is_puppet_of = ACR } }
+						leave_faction = yes
+					}
+					set_faction_name = "Socintern"
+					activate_mission = ACR_complete_reconstruction
+					every_owned_state = {
+						limit = { is_core_of = KKN }
+						transfer_state_to = KKN
+					}
+					ACR = {
+						set_autonomy = {
+							target = KKN
+							autonomy_state = autonomy_puppet
+						}
+					}
+					KKN = {
+						set_cosmetic_tag = ACR_RECONSTRUCTION_ZONE
 					}
 				}
 				news_event = { id = LOK_news.6 days = 2 } 

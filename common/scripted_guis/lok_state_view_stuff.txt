@@ -1,4 +1,14 @@
 scripted_gui = {
+	lok_state_productivity = {
+		context_type = selected_state_context
+		window_name = "lok_state_productivity_window"
+		parent_window_token = selected_state_view
+		visible = {
+			is_space_state = no
+			var:controller = { is_non_playable_country = no }
+		}
+	}
+
 	lok_state_coring_threshold = {
 		context_type = selected_state_context
 		window_name = "lok_state_coring_threshold_window"
@@ -163,7 +173,7 @@ scripted_gui = {
 				ROOT = {
 					add_to_variable = { current_nuke_type = 1 }
 					if = {
-						limit = { check_variable = { current_nuke_type = 4 } }
+						limit = { check_variable = { current_nuke_type = 6 } }
 						set_variable = { current_nuke_type = 0 }
 					}
 				}
@@ -174,7 +184,7 @@ scripted_gui = {
 					subtract_from_variable = { current_nuke_type = 1 }
 					if = {
 						limit = { check_variable = { current_nuke_type = -1 } }
-						set_variable = { current_nuke_type = 3 }
+						set_variable = { current_nuke_type = 5 }
 					}
 				}
 			}
@@ -247,6 +257,20 @@ scripted_gui = {
 							amount = lok_nukes_spent
 						}
 					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 4 } }
+						add_equipment_to_stockpile = {
+							type = lok_mondkanone_nuke_equipment
+							amount = lok_nukes_spent
+						}
+					}
+					else_if = {
+						limit = { check_variable = { current_nuke_type = 5 } }
+						add_equipment_to_stockpile = {
+							type = lok_sturmer_nuke_equipment
+							amount = lok_nukes_spent
+						}
+					}
 				}
 			}
 		}
@@ -258,6 +282,7 @@ scripted_gui = {
 					hidden_trigger = {
 						ROOT = {
 							OR = {
+								check_variable = { current_nuke_type = 4 } #Mondkanone uses up no salvo capacity
 								check_variable = { nuke_launch_count < lok_current_salvo_capacity }
 								check_variable = { nuke_launch_count = lok_current_salvo_capacity }
 							}
@@ -303,6 +328,30 @@ scripted_gui = {
 										OR = {
 											check_variable = { num_equipment@lok_cobalt_nuke_equipment > nuke_launch_count }
 											check_variable = { num_equipment@lok_cobalt_nuke_equipment = nuke_launch_count }
+										}
+									}
+								}
+								AND = {
+									check_variable = { current_nuke_type = 4 }
+									AND = {
+										has_tech = mondkanone_nuke_tech
+										controls_state = 707 #Mondkanone
+										controls_state = 708 #Mondkanone
+										controls_state = 709 #Mondkanone
+										controls_state = 710 #Mondkanone
+										OR = {
+											check_variable = { num_equipment@lok_mondkanone_nuke_equipment > nuke_launch_count }
+											check_variable = { num_equipment@lok_mondkanone_nuke_equipment = nuke_launch_count }
+										}
+									}
+								}
+								AND = {
+									check_variable = { current_nuke_type = 5 }
+									AND = {
+										has_tech = ultra_heavy_armor_tech
+										OR = {
+											check_variable = { num_equipment@lok_sturmer_nuke_equipment > nuke_launch_count }
+											check_variable = { num_equipment@lok_sturmer_nuke_equipment = nuke_launch_count }
 										}
 									}
 								}

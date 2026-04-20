@@ -1,4 +1,212 @@
 defined_text = { # Country
+	name = GetNationIntroDesc
+	text = {
+		trigger = {
+			tag = AUR
+		}
+		localization_key = "LOK_country_intro_AUR"
+	}
+	text = {
+		trigger = {
+			tag = TAK
+		}
+		localization_key = "LOK_country_intro_TAK"
+	}
+	text = {
+		trigger = {
+			tag = TAI
+		}
+		localization_key = "LOK_country_intro_TAI"
+	}
+	text = {
+		trigger = {
+			OR = {
+				tag = SIL
+				tag = ROQ
+				tag = DOM
+				tag = MEW
+				tag = ACR
+				tag = FOD
+				tag = CLE
+				tag = NEU
+				tag = PRL
+			}
+		}
+		localization_key = "LOK_country_intro_mild_content"
+	}
+	text = {
+		trigger = {
+			NOT = {
+				tag = AUR
+				tag = TAK
+				tag = TAI
+				tag = SIL
+				tag = ROQ
+				tag = DOM
+				tag = MEW
+				tag = ACR
+				tag = FOD
+				tag = CLE
+				tag = NEU
+				tag = PRL
+			}
+		}
+		localization_key = "LOK_country_intro_no_content"
+	}
+}
+
+defined_text = { # Country
+	name = GetGeographicalDataTitle
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = solakea }
+		}
+		localization_key = "Solakea"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = felinea }
+		}
+		localization_key = "The Katzen Herzlands"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = sun_sea }
+		}
+		localization_key = "Sun Sea"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = central_flusionea }
+		}
+		localization_key = "Flusionea"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = arivoejo }
+		}
+		localization_key = "Arivoejo"
+	}
+}
+
+defined_text = { # Country
+	name = GetGeographicalDataDesc
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = solakea }
+		}
+		localization_key = "LOK_country_intro_SOLAKEA"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = felinea }
+		}
+		localization_key = "LOK_country_intro_FELINEA"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = sun_sea }
+		}
+		localization_key = "LOK_country_intro_SUNSEA"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = central_flusionea }
+		}
+		localization_key = "LOK_country_intro_FLUSIONEA"
+	}
+	text = {
+		trigger = {
+			capital_scope = { is_on_continent = arivoejo }
+		}
+		localization_key = "LOK_country_intro_ARIVOEJO"
+	}
+}
+
+defined_text = { # Country
+	name = GetStateProductivityValueColor
+	text = {
+		trigger = {
+			OR = {
+				check_variable = { population_relative_to_game_start > 1.4 }
+				check_variable = { population_relative_to_game_start = 1.4 }
+			}
+		}
+		localization_key = "lok_blue"
+	}
+	text = {
+		trigger = {
+			check_variable = { population_relative_to_game_start < 1.4 }
+			OR = {
+				check_variable = { population_relative_to_game_start > 1.4 }
+				check_variable = { population_relative_to_game_start = 1.1 }
+			}
+		}
+		localization_key = "lok_lillac"
+	}
+	text = {
+		trigger = {
+			check_variable = { population_relative_to_game_start < 1.1 }
+			OR = {
+				check_variable = { population_relative_to_game_start > 0.95 }
+				check_variable = { population_relative_to_game_start = 0.95 }
+			}
+		}
+		localization_key = "lok_green"
+	}
+	text = {
+		trigger = {
+			check_variable = { population_relative_to_game_start < 0.95 }
+			OR = {
+				check_variable = { population_relative_to_game_start > 0.70 }
+				check_variable = { population_relative_to_game_start = 0.70 }
+			}
+		}
+		localization_key = "lok_yellow"
+	}
+	text = {
+		trigger = {
+			check_variable = { population_relative_to_game_start < 0.70 }
+			OR = {
+				check_variable = { population_relative_to_game_start > 0.50 }
+				check_variable = { population_relative_to_game_start = 0.50 }
+			}
+		}
+		localization_key = "lok_orange"
+	}
+	text = {
+		trigger = {
+			check_variable = { population_relative_to_game_start < 0.50 }
+		}
+		localization_key = "lok_red"
+	}
+}
+
+defined_text = { # Country
+	name = GetLeaderStatus
+	text = {
+		trigger = {
+			NOT = { has_character_flag = leader_is_dead }
+			NOT = { has_character_flag = leader_is_retired }
+			NOT = { has_character_flag = leader_is_jailed }
+		}
+		localization_key = "leader_is_free"
+	}
+	text = {
+		trigger = { has_character_flag = leader_is_jailed }
+		localization_key = "leader_is_jailed"
+	}
+	text = {
+		trigger = { has_character_flag = leader_is_retired }
+		localization_key = "leader_is_retired"
+	}
+	text = {
+		trigger = { has_character_flag = leader_is_dead }
+		localization_key = "leader_is_dead"
+	}
+}
+
+defined_text = { # Country
 	name = GetRegentSanityBlurb
 	text = {
 		trigger = {
@@ -138,7 +346,7 @@ defined_text = { # Country
 defined_text = { # Country
 	name = GetCatKingdomDecisionSecondPart
 	text = {
-		trigger = { has_completed_focus = KTZ_the_legitimate_heir NOT = { has_focus_tree = CAT_KINGDOM_TREE } }
+		trigger = { has_completed_focus = TAI_the_legitimate_heir NOT = { has_focus_tree = CAT_KINGDOM_TREE } }
 		localization_key = "CKG_politics_cat_desc_2"
 	}
 }
@@ -420,6 +628,18 @@ defined_text = {
 		}
 		localization_key = "lok_cobalt_nuke"
 	}
+	text = {
+		trigger = {
+			check_variable = { current_nuke_type = 4 }
+		}
+		localization_key = "lok_mondkanone_nuke"
+	}
+	text = {
+		trigger = {
+			check_variable = { current_nuke_type = 5 }
+		}
+		localization_key = "lok_sturmer_nuke"
+	}
 }
 
 
@@ -448,6 +668,18 @@ defined_text = {
 			check_variable = { current_nuke_type = 3 }
 		}
 		localization_key = "lok_cobalt_nuke_desc"
+	}
+	text = {
+		trigger = {
+			check_variable = { current_nuke_type = 4 }
+		}
+		localization_key = "lok_mondkanone_nuke_desc"
+	}
+	text = {
+		trigger = {
+			check_variable = { current_nuke_type = 5 }
+		}
+		localization_key = "lok_sturmer_nuke_desc"
 	}
 }
 

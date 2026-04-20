@@ -1,0 +1,401 @@
+	
+
+# To tie Philippine ideoloy with Japan's ideology
+
+PHI_check_japanese_ideology_and_adapt = {
+	
+	set_variable = { PHI_japan_aligned_ideology_fascism = 0 } # Needs to reset all here so we can set the current value to 10 instead when improved ideology focus
+	set_variable = { PHI_japan_aligned_ideology_communism = 0 } 
+	set_variable = { PHI_japan_aligned_ideology_neutrality = 0 } 
+	set_variable = { PHI_japan_aligned_ideology_democratic = 0 } 
+
+	if = { ## If doesn't have the modifier, then add modifier
+		limit = { 
+			NOT = {
+				has_dynamic_modifier = { modifier = PHI_japan_aligned_ideology }
+			}
+		}
+		add_dynamic_modifier = { modifier = PHI_japan_aligned_ideology }
+	}
+	else_if = {
+		limit = {
+			has_variable = PHI_jap_alignment_value_change
+		}
+		effect_tooltip = {
+			custom_effect_tooltip = PHI_japan_aligned_ideology_improved_tt	
+			if = {
+				limit = { JAP = { has_government = democratic } }
+				add_to_variable = {
+					PHI_japan_aligned_ideology_democratic = PHI_jap_alignment_value_change
+					tooltip = democratic_drift_tt 
+				}
+			}
+			else_if = {
+				limit = { JAP = { has_government = neutrality } }
+				PHI = { 
+					add_to_variable = {
+						PHI_japan_aligned_ideology_neutrality = PHI_jap_alignment_value_change
+						tooltip = neutrality_drift_tt 
+					}		
+				}		
+			}
+			else_if = {
+				limit = { JAP = { has_government = communism } }
+				PHI = {
+					add_to_variable = {
+						PHI_japan_aligned_ideology_communism = PHI_jap_alignment_value_change
+						tooltip = communism_drift_tt 
+					}
+				}
+			}
+			else_if = {
+				limit = { JAP = { has_government = fascism } }
+				add_to_variable = {
+					PHI_japan_aligned_ideology_fascism = PHI_jap_alignment_value_change
+					tooltip = fascism_drift_tt 
+				}
+			}
+		}
+	}
+	hidden_effect = {
+		if = {
+			limit = {
+				has_variable = PHI_jap_alignment_value_change
+			}
+			add_to_variable = {
+				PHI_jap_alignment_value = PHI_jap_alignment_value_change
+			}
+		}
+		if = {
+			limit = {
+				JAP = {
+					has_government = democratic
+				}
+			}
+			set_variable = { PHI_japan_aligned_ideology_democratic = PHI_jap_alignment_value }
+		}
+		else_if = {
+			limit = {
+				JAP = {
+					has_government = fascism
+				}
+			}
+			set_variable = { PHI_japan_aligned_ideology_fascism = PHI_jap_alignment_value }
+		}
+		else_if = {
+			limit = {
+				JAP = {
+					has_government = communism
+				}
+			}
+			set_variable = { PHI_japan_aligned_ideology_communism = PHI_jap_alignment_value }
+		}
+		else_if = {
+			limit = {
+				JAP = {
+					has_government = neutrality
+				}
+			}
+			set_variable = { PHI_japan_aligned_ideology_neutrality = PHI_jap_alignment_value }
+		}
+	}
+}
+
+## Check how many focuses done
+
+PHI_central_focuses_done_T1 = {
+	add_to_variable = { PHI_amount_of_focuses_done_T1 = 1 }
+}
+
+PHI_central_focuses_done_T2 = {
+	add_to_variable = { PHI_amount_of_focuses_done_T2 = 1 }
+}
+
+PHI_central_focuses_done_T3 = {
+	add_to_variable = { PHI_amount_of_focuses_done_T3 = 1 }
+}
+
+PHI_usa_focus_done = {
+	add_to_variable = { PHI_amount_of_usa_focus_done = 1 }	
+}
+
+## American Intervention System
+
+PHI_american_intervention_change_value = {
+	
+	set_variable = { PHI_american_intervention_temp_sum_value = PHI_american_intervention_icon_value } ## Because can't do expressions, have to add new sum
+	add_to_variable = { 
+		PHI_american_intervention_temp_sum_value = PHI_american_intervention_value_to_add
+	}
+
+	## if existing value + new value => 100, then effect is completed. 
+	## Else if existing value + new value <= 0, then effect is failed
+	## Else add value 
+
+	if = { ## If the new value reaches 100
+		limit = {
+			check_variable = {
+				var = PHI_american_intervention_temp_sum_value
+				value = 100
+				compare = greater_than_or_equals
+			}
+		}
+		### It is over 100
+		## Remove decision category + mission, Send event to US about communists in Philippines have ignored them too much - declare war or not option. Then if do, send event to PHI about US doing it
+		PHI_american_intervention_max_value_reached = yes
+	}
+	else_if = {
+		limit = {
+			check_variable = {
+				var = PHI_american_intervention_temp_sum_value
+				value = 0
+				compare = less_than_or_equals
+			}
+		}
+		### Is is less than 0
+		## Remove decision category + send event to player US leaves PHI interior politics alone
+		PHI_american_intervention_min_value_reached = yes
+	}
+	#else removed because the decision cat stays visible for a brief moment
+	add_to_variable = {
+		PHI_american_intervention_icon_value = PHI_american_intervention_value_to_add
+	}
+	clamp_variable = {
+		var = PHI_american_intervention_icon_value
+		min = 0
+		max = 100
+	}
+}
+
+## When value reaches 100 - Remove decision category + mission, Send event to US about communists in Philippines have ignored them too much - declare war or not option. Then if do, send event to PHI about US doing it
+PHI_american_intervention_max_value_reached = {
+	set_country_flag = PHI_american_intervention_is_over ## Removes decision category
+
+	## We check if the US exists in decision category, so probably not needed here
+	hidden_effect = {
+		USA = {
+			country_event = {
+				id = SEA_PHI_political_events.13
+			}
+		}
+	}
+
+}
+
+
+## When value reaches 0 - Remove decision category + send event to player US leaves PHI interior politics alone
+
+PHI_american_intervention_min_value_reached = {
+	set_country_flag = PHI_american_intervention_is_over ## Removes decision category
+	
+	hidden_effect = { 
+		PHI = { 
+			country_event = {
+				id = SEA_PHI_political_events.12
+			}
+		}
+	}
+
+}
+
+PHI_add_or_modify_defense_strategy = {
+	IF = {
+		limit = {
+			NOT = { has_dynamic_modifier = { modifier = PHI_defense_strategy_dynamic_modifier } }
+		}
+		custom_effect_tooltip = PHI_add_defense_strategy_dynamic_modifier_tt
+		hidden_effect = { add_dynamic_modifier = { modifier = PHI_defense_strategy_dynamic_modifier } }
+	}
+	ELSE = {
+		custom_effect_tooltip = PHI_modify_defense_strategy_dynamic_modifier_tt
+	}
+}
+
+PHI_recall_macarthur_for_leadership = {	#Return McArthur for US - This is for CSA/elections, who can get him back even if he leads PHI
+	PHI = {
+		if = {
+			limit = {
+				has_character = USA_douglas_macarthur
+			}
+			if = {
+				limit = {
+					has_country_leader = {
+						character = USA_douglas_macarthur
+						ruling_only = yes
+					}
+				}
+				USA_dwight_d_eisenhower = {
+					add_country_leader_role = {
+						promote_leader = yes
+						country_leader = {
+							ideology = conservatism
+							expire = "1965.1.1.1"
+							traits = { PHI_supreme_commissioner } 
+						}
+					}
+				}
+			}
+			country_event = SEA_PHI_political_events.51
+		}
+	}
+}
+
+PHI_set_pre_investment_variables = {
+	hidden_effect = {
+		set_variable = { PHI_dockyards_pre_investment = num_of_naval_factories }
+		every_owned_state = {
+			set_variable = { PHI_infrastructure_pre_investment = building_level@infrastructure }
+			if = {
+				limit = {
+					any_neighbor_state = {
+						ROOT = {
+							has_railway_connection = {
+								start_state = PREV
+								target_state = PREV.PREV
+							}
+						}
+					}
+				}
+				set_state_flag = PHI_railway_present
+			}
+		}
+	}
+}
+
+PHI_update_war_flag = {
+	hidden_effect = {
+		if = {
+			limit = {
+				has_war = yes
+			}
+			if = {
+				limit = {
+					OR = {			#all PHI cosmetic tags without war version must be defined here
+						has_cosmetic_tag = PHI_maphilindo_tag
+						has_cosmetic_tag = PHI_asean_tag
+
+						#Just in case something goes wrong - if the war tag is in use, the normal variant for the if-blocks below wont be in use
+						has_cosmetic_tag = PHI_manila_tag_war
+						has_cosmetic_tag = PHI_second_republic_tag_war
+						has_cosmetic_tag = PHI_polynesia_tag_war
+						has_cosmetic_tag = PHI_hispanic_empire_tag_war
+						has_cosmetic_tag = PHI_reino_de_filipinas_tag_war
+					}
+				}
+				# Nothing
+			}
+			else_if = {
+				limit = {
+					has_cosmetic_tag = PHI_manila_tag
+				}
+				set_cosmetic_tag = PHI_manila_tag_war
+			}
+			else_if = {
+				limit = {
+					has_cosmetic_tag = PHI_second_republic_tag
+				}
+				set_cosmetic_tag = PHI_second_republic_tag_war
+			}
+			else_if = {
+				limit = {
+					has_cosmetic_tag = PHI_polynesia_tag
+				}
+				set_cosmetic_tag = PHI_polynesia_tag_war
+			}
+			else_if = {
+				limit = {
+					has_cosmetic_tag = PHI_hispanic_empire_tag
+				}
+				set_cosmetic_tag = PHI_hispanic_empire_tag_war
+			}
+			else_if = {
+				limit = {
+					has_cosmetic_tag = PHI_reino_de_filipinas_tag
+				}
+				set_cosmetic_tag = PHI_reino_de_filipinas_tag_war
+			}
+			else = {
+				set_cosmetic_tag = PHI_war
+			}
+		}
+		else_if = {
+			limit = {
+				has_cosmetic_tag = PHI_war
+			}
+			drop_cosmetic_tag = yes
+		}
+		else_if = {
+			limit = {
+				has_cosmetic_tag = PHI_manila_tag_war
+			}
+			set_cosmetic_tag = PHI_manila_tag
+		}
+		else_if = {
+			limit = {
+				has_cosmetic_tag = PHI_second_republic_tag_war
+			}
+			set_cosmetic_tag = PHI_second_republic_tag
+		}
+		else_if = {
+			limit = {
+				has_cosmetic_tag = PHI_polynesia_tag_war
+			}
+			set_cosmetic_tag = PHI_polynesia_tag
+		}
+		else_if = {
+			limit = {
+				has_cosmetic_tag = PHI_hispanic_empire_tag_war
+			}
+			set_cosmetic_tag = PHI_hispanic_empire_tag
+		}
+		else_if = {
+			limit = {
+				has_cosmetic_tag = PHI_reino_de_filipinas_tag_war
+			}
+			set_cosmetic_tag = PHI_reino_de_filipinas_tag
+		}
+	}
+}
+
+PHI_refresh_ruling_ideology_drift = {
+	set_variable = { PHI_ruling_ideology_ideology_drift_fascism = 0 }
+	set_variable = { PHI_ruling_ideology_ideology_drift_communism = 0 }
+	set_variable = { PHI_ruling_ideology_ideology_drift_neutrality = 0 }
+	set_variable = { PHI_ruling_ideology_ideology_drift_democratic = 0 }
+	if = {
+		limit = {
+			has_government = fascism
+		}
+		set_variable = { PHI_ruling_ideology_ideology_drift_fascism = PHI_ruling_ideology_ideology_drift }
+	}
+	else_if = {
+		limit = {
+			has_government = communism
+		}
+		set_variable = { PHI_ruling_ideology_ideology_drift_communism = PHI_ruling_ideology_ideology_drift }
+	}
+	else_if = {
+		limit = {
+			has_government = democratic
+		}
+		set_variable = { PHI_ruling_ideology_ideology_drift_democratic = PHI_ruling_ideology_ideology_drift }
+	}
+	else_if = {
+		limit = {
+			has_government = neutrality
+		}
+		set_variable = { PHI_ruling_ideology_ideology_drift_neutrality = PHI_ruling_ideology_ideology_drift }
+	}
+	force_update_dynamic_modifier = yes
+}
+
+PHI_cobalt_sea_achievement = {
+	if = {
+		limit = {
+			has_dlc = "No Compromise, No Surrender"
+			is_ironman = yes #This only applies if you can get achievements
+			tag = PHI
+		}
+		set_global_flag = achievement_PHI_cobalt_sea_flag
+	}
+}

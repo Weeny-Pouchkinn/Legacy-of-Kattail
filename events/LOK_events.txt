@@ -1,3 +1,390 @@
+add_namespace = LOK_tutorial
+#Welcome!
+country_event = {
+	id = LOK_tutorial.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_tutorial.1"}
+	title = "LOK_tutorial.1.t"
+	desc = "LOK_tutorial.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_kattail
+
+	option = { #Play
+		name = "LOK_tutorial.1.a"
+		country_event = { id = LOK_country_intro.1 }
+	}
+
+	option = { #Tutorial
+		name = "LOK_tutorial.1.b"
+		country_event = { id = LOK_tutorial.2 }
+	}
+
+	option = { #Credits
+		name = "LOK_tutorial.1.c"
+		country_event = { id = LOK_tutorial.10 }
+	}
+}
+
+country_event = { #Credits
+	id = LOK_tutorial.10
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_tutorial.10"}
+	title = "LOK_tutorial.10.t"
+	desc = "LOK_tutorial.10.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_kattail
+
+	option = { #Play
+		name = "LOK_tutorial.10.a"
+		country_event = { id = LOK_country_intro.1 }
+	}
+
+	option = { #Tutorial
+		name = "LOK_tutorial.10.b"
+		country_event = { id = LOK_tutorial.2 }
+	}
+	
+	option = { #Menu
+		name = "LOK_tutorial.10.c"
+		country_event = { id = LOK_tutorial.1 }
+	}
+}
+
+#Tutorial
+country_event = {
+	id = LOK_tutorial.2
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_tutorial.2"}
+	title = "LOK_tutorial.2.t"
+	desc = "LOK_tutorial.2.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_kattail
+
+	option = { #Food
+		name = "LOK_tutorial.2.a"
+		country_event = { id = LOK_tutorial.3 }
+	}
+	
+	option = { #Go to Nuclear War
+		name = "LOK_tutorial.3.a"
+		country_event = { id = LOK_tutorial.4 }
+	}
+
+	option = { #Go to Space
+		name = "LOK_tutorial.4.a"
+		country_event = { id = LOK_tutorial.5 }
+	}
+
+	option = { #Welcome screen
+		name = "LOK_tutorial.2.b"
+		country_event = { id = LOK_tutorial.1 }
+	}
+}
+
+#Food & Power Tutorial
+country_event = {
+	id = LOK_tutorial.3
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_tutorial.3"}
+	title = "LOK_tutorial.3.t"
+	desc = "LOK_tutorial.3.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_nuclear_plant
+
+	# option = { #Food
+	# 	name = "LOK_tutorial.2.a"
+	# 	country_event = { id = LOK_tutorial.3 }
+	# }
+	
+	option = { #Go to Nuclear War
+		name = "LOK_tutorial.3.a"
+		country_event = { id = LOK_tutorial.4 }
+	}
+
+	option = { #Go to Space
+		name = "LOK_tutorial.4.a"
+		country_event = { id = LOK_tutorial.5 }
+	}
+
+	option = { #Back to summary
+		name = "LOK_tutorial.3.b"
+		country_event = { id = LOK_tutorial.2 }
+	}
+}
+
+#Nuclear War Tutorial
+country_event = {
+	id = LOK_tutorial.4
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_tutorial.4"}
+	title = "LOK_tutorial.4.t"
+	desc = "LOK_tutorial.4.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = { #Food
+		name = "LOK_tutorial.2.a"
+		country_event = { id = LOK_tutorial.3 }
+	}
+	
+	# option = { #Go to Nuclear War
+	# 	name = "LOK_tutorial.3.a"
+	# 	country_event = { id = LOK_tutorial.4 }
+	# }
+
+	option = { #Go to Space
+		name = "LOK_tutorial.4.a"
+		country_event = { id = LOK_tutorial.5 }
+	}
+
+	option = { #Back to summary
+		name = "LOK_tutorial.3.b"
+		country_event = { id = LOK_tutorial.2 }
+	}
+}
+
+#Space
+country_event = {
+	id = LOK_tutorial.5
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_tutorial.5"}
+	title = "LOK_tutorial.5.t"
+	desc = "LOK_tutorial.5.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = { #Food
+		name = "LOK_tutorial.2.a"
+		country_event = { id = LOK_tutorial.3 }
+	}
+	
+	option = { #Go to Nuclear War
+		name = "LOK_tutorial.3.a"
+		country_event = { id = LOK_tutorial.4 }
+	}
+
+	# option = { #Go to Space
+	# 	name = "LOK_tutorial.4.a"
+	# 	country_event = { id = LOK_tutorial.5 }
+	# }
+
+	option = { #Back to summary
+		name = "LOK_tutorial.3.b"
+		country_event = { id = LOK_tutorial.2 }
+	}
+}
+
+
+add_namespace = LOK_country_intro
+country_event = { #
+	id = LOK_country_intro.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_country_intro.1"}
+	title = "LOK_country_intro.1.t"
+	desc = "LOK_country_intro.1.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_kattail
+
+	option = { #Play
+		name = "LOK_country_intro.1.a"
+	}
+
+	option = { #Tell me about my region...
+		name = "LOK_country_intro.1.b"
+		country_event = { id = LOK_country_intro.2 }
+		trigger = {
+			capital_scope = {
+				OR = {
+					is_on_continent = felinea
+					is_on_continent = solakea
+				}
+			}
+		}
+	}
+
+	option = { #welcome screen
+		name = "LOK_country_intro.1.c"
+		country_event = { id = LOK_tutorial.1 }
+	}
+}
+
+country_event = { #Geographie
+	id = LOK_country_intro.2
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_country_intro.2"}
+	title = "LOK_country_intro.2.t"
+	desc = "LOK_country_intro.2.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_kattail
+
+	option = { #Play
+		name = "LOK_country_intro.2.a"
+	}
+
+	option = { #Back to nation
+		name = "LOK_country_intro.2.b"
+		country_event = { id = LOK_country_intro.1 }
+	}
+
+	option = { #welcome screen
+		name = "LOK_country_intro.1.c"
+		country_event = { id = LOK_tutorial.1 }
+	}
+}
+
+
+add_namespace = LOK_high_command
+#Leader Found and they want to work
+country_event = {
+	id = LOK_high_command.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_high_command.1"}
+	title = "LOK_high_command.1.t"
+	desc = "LOK_high_command.1.d"
+	is_triggered_only = yes
+
+	after = {
+		hidden_effect = {
+			clr_country_flag = dealing_with_katzen_high_command_member
+			event_target:lok_hc_member_being_dealt_with = { clr_character_flag = katzen_high_command_member_not_dealt_with }
+			if = {
+				limit = { any_character = { has_character_flag = katzen_high_command_member_not_dealt_with } }
+				random_character = {
+					limit = { has_character_flag = katzen_high_command_member_not_dealt_with }
+					save_global_event_target_as = lok_hc_member_being_dealt_with
+				}
+				set_country_flag = dealing_with_katzen_high_command_member
+				country_event = { id = LOK_high_command.1 days = 1 }
+			}
+		}
+	}
+
+	option = { #Recruit!
+		name = "LOK_high_command.1.a"
+		custom_effect_tooltip = LOK_high_command.1.a.tt
+		add_war_support = 0.05
+		add_stability = -0.05
+		if = {
+			limit = { tag = AUR has_completed_focus = AUR_reform_the_high_command }
+			set_temp_variable = { herald_sanity_change = 3 }
+			AUR_change_herald_sanity = yes
+			add_political_power = 50
+		}
+		event_target:lok_hc_member_being_dealt_with = {
+			set_nationality = ROOT
+			clear_character_status_flags = yes
+		}
+		trigger = {
+			NOT = {
+				AND = {
+					tag = AUR
+					NOT = { has_completed_focus = AUR_reform_the_high_command }
+				}
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = fascism
+			}
+		}
+	}
+
+	option = { #Let go!
+		name = "LOK_high_command.1.b"
+		custom_effect_tooltip = LOK_high_command.1.b.tt
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_retired
+		}
+		trigger = {
+			NOT = {
+				tag = AUR
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = neutrality
+			}
+		}
+	}
+
+	option = { #Jail!
+		name = "LOK_high_command.1.c"
+		custom_effect_tooltip = LOK_high_command.1.c.tt
+		add_stability = 0.05
+		add_war_support = -0.05
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_jailed
+		}
+		trigger = {
+			NOT = {
+				tag = AUR
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = democratic
+			}
+		}
+	}
+
+	option = { #Kill!
+		name = "LOK_high_command.1.e"
+		custom_effect_tooltip = LOK_high_command.1.e.tt
+		add_political_power = 50
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_dead
+			hidden_effect = { retire = yes }
+		}
+		if = {
+			limit = { tag = AUR has_completed_focus = AUR_chew_slowly }
+			set_temp_variable = { herald_sanity_change = -5 }
+			AUR_change_herald_sanity = yes
+		}
+		hidden_effect = {
+			subtract_from_variable = { katzen_high_command_member_count = 1 }
+			subtract_from_variable = { global.katzen_high_command_member_count_total = 1 }
+		}
+		trigger = {
+			NOT = {
+				tag = AUR
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 1000
+				is_herzlands_warlord = no
+				has_government = communism
+			}
+		}
+	}
+
+
+	option = { #Kill! (REGENT)
+		name = "LOK_high_command.1.f"
+		add_political_power = 150
+		custom_effect_tooltip = LOK_high_command.1.e.tt
+		event_target:lok_hc_member_being_dealt_with = {
+			clear_character_status_flags = yes
+			set_character_flag = leader_is_dead
+			hidden_effect = { retire = yes }
+		}
+		hidden_effect = {
+			subtract_from_variable = { katzen_high_command_member_count = 1 }
+			subtract_from_variable = { global.katzen_high_command_member_count_total = 1 }
+		}
+		trigger = {
+			tag = AUR
+			NOT = { has_completed_focus = AUR_reform_the_high_command }
+		}
+	}
+}
+
+
+
 add_namespace = LOK_state_actions
 
 state_event = { #recolonisation
@@ -140,6 +527,417 @@ news_event = {
 	}
 }
 
+# ===== INDIVIDUAL SPACE MISSION EVENTS =====
+
+# Flusion Suborbital Flight - Success
+country_event = {
+	id = LOK_space.5
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.5"}
+	title = "LOK_space.5.t"
+	desc = "LOK_space.5.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.5.a"
+	}
+}
+
+# Flusion Suborbital Flight - Failure
+country_event = {
+	id = LOK_space.6
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.6"}
+	title = "LOK_space.6.t"
+	desc = "LOK_space.6.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.6.a"
+	}
+}
+
+# Flusion Orbital Flight - Success
+country_event = {
+	id = LOK_space.7
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.7"}
+	title = "LOK_space.7.t"
+	desc = "LOK_space.7.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.7.a"
+	}
+}
+
+# Flusion Orbital Flight - Failure
+country_event = {
+	id = LOK_space.8
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.8"}
+	title = "LOK_space.8.t"
+	desc = "LOK_space.8.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.8.a"
+	}
+}
+
+# Muno Landing - Success (already LOK_space.2)
+# Muno Landing - Failure
+country_event = {
+	id = LOK_space.9
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.9"}
+	title = "LOK_space.9.t"
+	desc = "LOK_space.9.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.9.a"
+	}
+}
+
+# Survey State on Muno - Success
+country_event = {
+	id = LOK_space.10
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.10"}
+	title = "LOK_space.10.t"
+	desc = "LOK_space.10.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.10.a"
+	}
+}
+
+# Survey State on Muno - Failure
+country_event = {
+	id = LOK_space.11
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.11"}
+	title = "LOK_space.11.t"
+	desc = "LOK_space.11.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.11.a"
+	}
+}
+
+# Colonize State on Muno - Success
+country_event = {
+	id = LOK_space.12
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.12"}
+	title = "LOK_space.12.t"
+	desc = "LOK_space.12.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.12.a"
+	}
+}
+
+# Colonize State on Muno - Failure
+country_event = {
+	id = LOK_space.13
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.13"}
+	title = "LOK_space.13.t"
+	desc = "LOK_space.13.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.13.a"
+	}
+}
+
+# Build Up Muno Colony - Success
+country_event = {
+	id = LOK_space.14
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.14"}
+	title = "LOK_space.14.t"
+	desc = "LOK_space.14.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.14.a"
+	}
+}
+
+# Build Up Muno Colony - Failure
+country_event = {
+	id = LOK_space.15
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.15"}
+	title = "LOK_space.15.t"
+	desc = "LOK_space.15.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.15.a"
+	}
+}
+
+# Xenon Landing - Success
+country_event = {
+	id = LOK_space.16
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.16"}
+	title = "LOK_space.16.t"
+	desc = "LOK_space.16.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.16.a"
+	}
+}
+
+# Xenon Landing - Failure
+country_event = {
+	id = LOK_space.17
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.17"}
+	title = "LOK_space.17.t"
+	desc = "LOK_space.17.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.17.a"
+	}
+}
+
+# Survey State on Xenon - Success
+country_event = {
+	id = LOK_space.18
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.18"}
+	title = "LOK_space.18.t"
+	desc = "LOK_space.18.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.18.a"
+	}
+}
+
+# Survey State on Xenon - Failure
+country_event = {
+	id = LOK_space.19
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.19"}
+	title = "LOK_space.19.t"
+	desc = "LOK_space.19.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.19.a"
+	}
+}
+
+# Colonize State on Xenon - Success
+country_event = {
+	id = LOK_space.20
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.20"}
+	title = "LOK_space.20.t"
+	desc = "LOK_space.20.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.20.a"
+	}
+}
+
+# Colonize State on Xenon - Failure
+country_event = {
+	id = LOK_space.21
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.21"}
+	title = "LOK_space.21.t"
+	desc = "LOK_space.21.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.21.a"
+	}
+}
+
+# Build Up Xenon Colony - Success
+country_event = {
+	id = LOK_space.22
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.22"}
+	title = "LOK_space.22.t"
+	desc = "LOK_space.22.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.22.a"
+	}
+}
+
+# Build Up Xenon Colony - Failure
+country_event = {
+	id = LOK_space.23
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.23"}
+	title = "LOK_space.23.t"
+	desc = "LOK_space.23.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_rocket_explosion
+
+	option = {
+		name = "LOK_space.23.a"
+	}
+}
+
+# ===== ROUTINE SUCCESS EVENTS (repeated missions) =====
+
+# Flusion Suborbital Flight - Routine Success
+country_event = {
+	id = LOK_space.24
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.24"}
+	title = "LOK_space.24.t"
+	desc = "LOK_space.24.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.24.a"
+	}
+}
+
+# Flusion Orbital Flight - Routine Success
+country_event = {
+	id = LOK_space.25
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.25"}
+	title = "LOK_space.25.t"
+	desc = "LOK_space.25.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.25.a"
+	}
+}
+
+# Muno Landing - Routine Success
+country_event = {
+	id = LOK_space.26
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.26"}
+	title = "LOK_space.26.t"
+	desc = "LOK_space.26.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.26.a"
+	}
+}
+
+# Survey State on Muno - Routine Success
+country_event = {
+	id = LOK_space.27
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.27"}
+	title = "LOK_space.27.t"
+	desc = "LOK_space.27.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.27.a"
+	}
+}
+
+# Colonize State on Muno - Routine Success
+country_event = {
+	id = LOK_space.28
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.28"}
+	title = "LOK_space.28.t"
+	desc = "LOK_space.28.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.28.a"
+	}
+}
+
+# Build Up Muno Colony - Routine Success
+country_event = {
+	id = LOK_space.29
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.29"}
+	title = "LOK_space.29.t"
+	desc = "LOK_space.29.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.29.a"
+	}
+}
+
+# Xenon Landing - Routine Success
+country_event = {
+	id = LOK_space.30
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.30"}
+	title = "LOK_space.30.t"
+	desc = "LOK_space.30.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.30.a"
+	}
+}
+
+# Survey State on Xenon - Routine Success
+country_event = {
+	id = LOK_space.31
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.31"}
+	title = "LOK_space.31.t"
+	desc = "LOK_space.31.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.31.a"
+	}
+}
+
+# Colonize State on Xenon - Routine Success
+country_event = {
+	id = LOK_space.32
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.32"}
+	title = "LOK_space.32.t"
+	desc = "LOK_space.32.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.32.a"
+	}
+}
+
+# Build Up Xenon Colony - Routine Success
+country_event = {
+	id = LOK_space.33
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_space.33"}
+	title = "LOK_space.33.t"
+	desc = "LOK_space.33.d"
+	is_triggered_only = yes
+	picture = GFX_report_event_space_exploration
+
+	option = {
+		name = "LOK_space.33.a"
+	}
+}
+
 
 add_namespace = LOK_nuke
 
@@ -161,7 +959,25 @@ country_event = {
 }
 
 add_namespace = LOK_food
+country_event = {
+	id = LOK_food.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_nuke.1"}
+	hidden = yes
+	is_triggered_only = yes
 
+	immediate = {
+		if = { #Make sure to apply the food modifier if it's not there for some reason
+			limit = { NOT = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } } }
+			add_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+		}
+		calculate_total_food_consumption = yes #Food effects
+		if = {
+			limit = { NOT = { has_country_flag = game_start_food_stockpile_refill_done } }
+			set_variable = { country_food_stockpile = country_food_stockpile_max }
+			set_country_flag = game_start_food_stockpile_refill_done
+		}
+	}
+}
 
 
 #Events regarding post-war peacedeals with decisions
@@ -360,6 +1176,90 @@ country_event = {
 		}
 		hidden_effect = {
 			clr_country_flag = deciding_nation_fate
+		}
+	}
+}
+
+#Misc notification events
+add_namespace = lok_notification
+country_event = { #nuclear facility taken
+	id = lok_notification.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_notification.1"}
+	is_triggered_only = yes
+	title = lok_notification.1.t
+	desc = lok_notification.1.d
+	picture = GFX_report_event_nuclear_plant
+
+	option = {
+		name = lok_notification.1.a
+		add_political_power = 20
+	}
+}
+
+country_event = { #nuclear facility lost
+	id = lok_notification.2
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_notification.2"}
+	is_triggered_only = yes
+	title = lok_notification.2.t
+	desc = lok_notification.2.d
+	picture = GFX_report_event_nuclear_plant
+
+	option = {
+		name = lok_notification.2.a
+		add_political_power = -20
+	}
+}
+
+#global herz events
+add_namespace = lok_herzlands
+#herzland warlords mobilize
+country_event = {
+	id = lok_herzlands.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_herzlands.1"}
+	is_triggered_only = yes
+	title = lok_herzlands.1.t
+	desc = lok_herzlands.1.d
+	picture = GFX_report_event_kattail
+
+	option = {
+		name = lok_herzlands.1.a
+		custom_effect_tooltip = lok_herzlands.1.a.tt
+		if = { #Uniters and Hegemon claim it all
+			limit = {
+				NOT = { tag = AUR }
+				OR = {
+					has_country_flag = herzlands_warlord_uniter
+					has_country_flag = herzlands_warlord_hegemon
+				}
+			}
+			every_state = {
+				limit = {
+					is_in_array = { global.herzlands_states_array = THIS }
+					NOT = { is_core_of = ROOT }
+					NOT = { is_claimed_by = ROOT }
+					NOT = { is_owned_by = ROOT }
+				}
+				add_claim_by = ROOT
+				reduce_compliance_coring_threshold_by_10 = yes
+				reduce_compliance_coring_threshold_by_10 = yes
+			}
+		}
+		else_if = { #Regionalists claim their neighbors
+			limit = {
+				has_country_flag = herzlands_warlord_regionalist
+			}
+			every_state = {
+				limit = {
+					var:owner = { is_neighbor_of = ROOT }
+					is_in_array = { global.herzlands_states_array = THIS }
+					NOT = { is_core_of = ROOT }
+					NOT = { is_claimed_by = ROOT }
+					NOT = { is_owned_by = ROOT }
+				}
+				add_claim_by = ROOT
+				reduce_compliance_coring_threshold_by_10 = yes
+				reduce_compliance_coring_threshold_by_10 = yes
+			}
 		}
 	}
 }

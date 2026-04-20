@@ -1,0 +1,486 @@
+add_namespace = KUS_NEK_war
+
+# Event 1: War Initialization (hidden, triggered from NEK_seize_akiba)
+country_event = {
+	id = KUS_NEK_war.1
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.1 - KUS-NEK War Initialization"
+
+		# Set global war flag
+		set_global_flag = KUS_NEK_war_active
+
+		# Create volunteer division templates for both sides
+		KUS = {
+			division_template = {
+				name = "International Volunteer"
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 0 y = 3 }
+				}
+			}
+
+			# Set up KUS international support modifier
+			set_variable = { KUS_international_support_attack = 0.05 }
+			add_dynamic_modifier = { modifier = KUS_international_support }
+		}
+
+		NEK = {
+			division_template = {
+				name = "International Volunteer"
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 0 y = 3 }
+				}
+			}
+
+			# Set up NEK international support modifier
+			set_variable = { NEK_international_support_attack = 0.05 }
+			add_dynamic_modifier = { modifier = NEK_international_support }
+		}
+
+		# Build supporter array
+		every_country = {
+			limit = {
+				OR = {
+					is_major = yes
+					tag = SOB
+					tag = SLR
+				}
+				NOT = { tag = ZZZ }
+				NOT = { has_government = fascism }
+				NOT = { tag = SIL }
+				NOT = { tag = KUS }
+				NOT = { tag = NEK }
+				exists = yes
+			}
+			add_to_array = { global.KUS_NEK_war_supporters = THIS }
+
+			# Set initial support levels
+			if = {
+				limit = { tag = ROQ }
+				set_variable = { KUS_NEK_support_level = 2 }
+			}
+			else_if = {
+				limit = { has_government = communism }
+				set_variable = { KUS_NEK_support_level = -2 }
+			}
+			else_if = {
+				limit = {
+					has_government = democratic
+					is_major = yes
+				}
+				set_variable = { KUS_NEK_support_level = 2 }
+			}
+			else = {
+				set_variable = { KUS_NEK_support_level = 0 }
+			}
+			LOK_NEK_war_update_opinion = yes
+		}
+
+		# Fire war outbreak news event
+		news_event = { id = LOK_news.10 hours = 6 }
+	}
+}
+
+# Event 2: Ceasefire Forced - KUS Event
+country_event = {
+	id = KUS_NEK_war.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.2" }
+	title = KUS_NEK_war.2.t
+	desc = KUS_NEK_war.2.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.2.a
+		add_stability = 0.05
+		add_war_support = -0.10
+	}
+}
+
+# Event 3: Ceasefire Forced - NEK Event
+country_event = {
+	id = KUS_NEK_war.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.3" }
+	title = KUS_NEK_war.3.t
+	desc = KUS_NEK_war.3.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.3.a
+		add_stability = 0.05
+		add_war_support = -0.10
+	}
+}
+
+# Event 4: Support Choice for Supporting Nations
+country_event = {
+	id = KUS_NEK_war.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.4" }
+	title = KUS_NEK_war.4.t
+	desc = KUS_NEK_war.4.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	# Option A: Support Nekaston
+	option = {
+		name = KUS_NEK_war.4.a
+
+		# Supporter costs
+		if = {
+			limit = { has_government = communism }
+			add_manpower = -16000
+			custom_effect_tooltip = KUS_NEK_war_spawn_divs_nek_tt
+		}
+		if = {
+			limit = { NOT = { has_government = communism } }
+			send_equipment = {
+				target = NEK
+				type = infantry_equipment
+				amount = 1000
+			}
+		}
+
+		# Fire notification events
+		hidden_effect = {
+			NEK = { country_event = { id = KUS_NEK_war.12 } }
+			KUS = { country_event = { id = KUS_NEK_war.13 } }
+		}
+
+		ai_chance = {
+			base = 0
+			modifier = { add = 50 check_variable = { KUS_NEK_support_level = -1 } }
+			modifier = { add = 100 check_variable = { KUS_NEK_support_level = -2 } }
+		}
+	}
+
+	# Option B: Support Kusnurk
+	option = {
+		name = KUS_NEK_war.4.b
+
+		# Supporter costs
+		if = {
+			limit = { has_government = democratic }
+			add_manpower = -16000
+			custom_effect_tooltip = KUS_NEK_war_spawn_divs_kus_tt
+		}
+		if = {
+			limit = { NOT = { has_government = democratic } }
+			send_equipment = {
+				target = KUS
+				type = infantry_equipment
+				amount = 1000
+			}
+		}
+
+		set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
+
+		# Fire notification events
+		hidden_effect = {
+			KUS = { country_event = { id = KUS_NEK_war.10 } }
+			NEK = { country_event = { id = KUS_NEK_war.11 } }
+		}
+
+		ai_chance = {
+			base = 0
+			modifier = { add = 50 check_variable = { KUS_NEK_support_level = 1 } }
+			modifier = { add = 100 check_variable = { KUS_NEK_support_level = 2 } }
+		}
+	}
+
+	# Option C: Push for Ceasefire
+	option = {
+		name = KUS_NEK_war.4.c
+
+		set_country_flag = { flag = KUS_NEK_war_supported_recently days = 90 value = 1 }
+
+		# Fire notification events
+		hidden_effect = {
+			KUS = { country_event = { id = KUS_NEK_war.14 } }
+			NEK = { country_event = { id = KUS_NEK_war.15 } }
+		}
+
+		ai_chance = {
+			base = 0
+			modifier = { add = 50 check_variable = { KUS_NEK_support_level = -1 } }
+			modifier = { add = 50 check_variable = { KUS_NEK_support_level = 1 } }
+			modifier = { add = 100 check_variable = { KUS_NEK_support_level = 0 } }
+		}
+	}
+}
+
+# Event 5: Neuter Nekaston Peace Proposal (sent to NEK from KUS)
+country_event = {
+	id = KUS_NEK_war.5
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.5" }
+	title = KUS_NEK_war.5.t
+	desc = KUS_NEK_war.5.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	# Accept
+	option = {
+		name = KUS_NEK_war.5.a
+
+		white_peace = KUS
+
+		241 = { transfer_state_to = KUS }
+		233 = { transfer_state_to = KUS }
+
+		# DMZ states - dismantle rocket sites and military factories
+		248 = {
+			set_demilitarized_zone = yes
+			remove_building = { type = rocket_site level = 20 }
+			remove_building = { type = arms_factory level = 20 }
+		}
+		746 = {
+			set_demilitarized_zone = yes
+			remove_building = { type = rocket_site level = 20 }
+			remove_building = { type = arms_factory level = 20 }
+		}
+		240 = {
+			set_demilitarized_zone = yes
+			remove_building = { type = rocket_site level = 20 }
+			remove_building = { type = arms_factory level = 20 }
+		}
+		287 = {
+			set_demilitarized_zone = yes
+			remove_building = { type = rocket_site level = 20 }
+			remove_building = { type = arms_factory level = 20 }
+		}
+
+		add_stability = -0.20
+		add_war_support = -0.30
+
+		# War cleanup
+		hidden_effect = {
+			clr_global_flag = KUS_NEK_war_active
+			KUS = {
+				if = {
+					limit = { has_dynamic_modifier = { modifier = KUS_international_support } }
+					remove_dynamic_modifier = { modifier = KUS_international_support }
+				}
+			}
+			if = {
+				limit = { has_dynamic_modifier = { modifier = NEK_international_support } }
+				remove_dynamic_modifier = { modifier = NEK_international_support }
+			}
+			every_country = {
+				limit = {
+					is_in_array = {
+						array = global.KUS_NEK_war_supporters
+						value = THIS
+					}
+				}
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_hate }
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_oppose }
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_leaning }
+				remove_opinion_modifier = { target = KUS modifier = KUS_NEK_war_support }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_hate }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_oppose }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_leaning }
+				remove_opinion_modifier = { target = NEK modifier = KUS_NEK_war_support }
+			}
+		}
+
+		KUS = { country_event = LOK_proposal.1 }
+		news_event = { id = LOK_news.21 days = 1 }
+
+		ai_chance = { base = 1000 }
+	}
+
+	# Reject (player only)
+	option = {
+		name = KUS_NEK_war.5.b
+		add_stability = -0.05
+		add_war_support = 0.10
+		KUS = { country_event = LOK_proposal.2 }
+
+		ai_chance = { base = 0 }
+	}
+}
+
+# Event 10: Support arrives for Kusnurk (KUS notification - applies effects)
+country_event = {
+	id = KUS_NEK_war.10
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.10" }
+	title = KUS_NEK_war.10.t
+	desc = KUS_NEK_war.10.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.10.a
+
+		# Attack always increases when supporting KUS
+		custom_effect_tooltip = KUS_NEK_war_attack_up_tt
+		add_to_variable = { KUS_international_support_attack = 0.01 }
+
+		# If supporter is democratic, also spawn divs
+		if = {
+			limit = { FROM = { has_government = democratic } }
+			capital_scope = {
+				create_unit = {
+					division = "division_template = \"International Volunteer\" start_experience_factor = 0.1 start_equipment_factor = 1"
+					count = 2
+					owner = KUS
+				}
+			}
+		}
+
+		# If push for neutering is active, KUS supporters add 5 days to mission
+		if = {
+			limit = { has_global_flag = KUS_NEK_push_for_neutering }
+			add_days_mission_timeout = {
+				mission = KUS_great_powers_mediate_ceasefire
+				days = 5
+			}
+			custom_effect_tooltip = KUS_NEK_war_mission_add_5_tt
+		}
+	}
+}
+
+# Event 11: Nation supports Kusnurk (NEK notification - informational)
+country_event = {
+	id = KUS_NEK_war.11
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.11" }
+	title = KUS_NEK_war.11.t
+	desc = KUS_NEK_war.11.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.11.a
+		custom_effect_tooltip = KUS_NEK_war_kus_received_support_tt
+	}
+}
+
+# Event 12: Support arrives for Nekaston (NEK notification - applies effects)
+country_event = {
+	id = KUS_NEK_war.12
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.12" }
+	title = KUS_NEK_war.12.t
+	desc = KUS_NEK_war.12.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.12.a
+
+		# Attack always increases when supporting NEK
+		add_to_variable = { NEK_international_support_attack = 0.01 }
+		custom_effect_tooltip = KUS_NEK_war_attack_up_tt
+
+		# If supporter is communist, spawn divs
+		if = {
+			limit = { FROM = { has_government = communism } }
+			capital_scope = {
+				create_unit = {
+					division = "division_template = \"International Volunteer\" start_experience_factor = 0.1 start_equipment_factor = 1"
+					count = 2
+					owner = NEK
+				}
+			}
+		}
+
+		# Add 5 days to ceasefire mission
+		KUS = {
+			add_days_mission_timeout = {
+				mission = KUS_great_powers_mediate_ceasefire
+				days = 5
+			}
+		}
+		custom_effect_tooltip = KUS_NEK_war_mission_add_5_tt
+	}
+}
+
+# Event 13: Nation supports Nekaston (KUS notification - informational)
+country_event = {
+	id = KUS_NEK_war.13
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.13" }
+	title = KUS_NEK_war.13.t
+	desc = KUS_NEK_war.13.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.13.a
+		custom_effect_tooltip = KUS_NEK_war_nek_received_support_tt
+	}
+}
+
+# Event 14: Nation pushes for ceasefire (KUS notification - applies mission reduction)
+country_event = {
+	id = KUS_NEK_war.14
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.14" }
+	title = KUS_NEK_war.14.t
+	desc = KUS_NEK_war.14.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.14.a
+		add_days_mission_timeout = {
+			mission = KUS_great_powers_mediate_ceasefire
+			days = -5
+		}
+		custom_effect_tooltip = KUS_NEK_war_mission_remove_5_tt
+	}
+}
+
+# Event 15: Nation pushes for ceasefire (NEK notification - informational)
+country_event = {
+	id = KUS_NEK_war.15
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.15" }
+	title = KUS_NEK_war.15.t
+	desc = KUS_NEK_war.15.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.15.a
+		custom_effect_tooltip = KUS_NEK_war_ceasefire_push_tt
+	}
+}
+
+# Event 20: Lobby Notification (supporting nation gets 25 PP - player only)
+country_event = {
+	id = KUS_NEK_war.20
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.20" }
+	title = KUS_NEK_war.20.t
+	desc = KUS_NEK_war.20.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	trigger = {
+		is_ai = no
+	}
+
+	option = {
+		name = KUS_NEK_war.20.a
+		add_political_power = 25
+	}
+}
+
+# Event 25: Broadcast Nekastonian Decadence notification
+country_event = {
+	id = KUS_NEK_war.25
+	immediate = { log = "[GetDateText]: [Root.GetName]: event KUS_NEK_war.25" }
+	title = KUS_NEK_war.25.t
+	desc = KUS_NEK_war.25.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_NEK_war.25.a
+		custom_effect_tooltip = KUS_NEK_war_broadcast_decadence_tt
+	}
+}

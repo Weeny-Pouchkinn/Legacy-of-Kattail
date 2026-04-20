@@ -185,6 +185,7 @@ focus_tree = {
 					}
 				}
 			}
+			country_event = { id = CKG_event.6 }
 		}
 	}
 	focus = {
@@ -1260,11 +1261,10 @@ focus_tree = {
 		}
 		will_lead_to_war_with = HIM
 		completion_reward = {
-			if = {
-				limit = { country_exists = HIM }
-				declare_war_on = {
-					target = HIM
-					type = annex_everything
+			HIM = {
+				if = {
+					limit = { country_exists = THIS }
+					country_event = { id = CKG_demands.13 days = 1 }
 				}
 			}
 		}
@@ -1436,34 +1436,11 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			random_list = {
-				60 = {
-					if = {
-						limit = { country_exists = LIO }
-						declare_war_on = {
-							target = LIO
-							type = annex_everything
-						}
-					}
-				}
-				30 = {
-					LIO = {
-						set_autonomy = {
-							target = ROOT
-							autonomy_state = autonomy_puppet
-						}
-						set_cosmetic_tag = LIO_KNIGHT
-					}
-				}
-				10 = {
-					annex_country = {
-						target = LIO
-						transfer_troops = yes
-					}
-					modifier = {
-						factor = 0
-						is_in_faction = yes
-					}
+			LIO = {
+				if = {
+					limit = { country_exists = THIS }
+					custom_effect_tooltip = tt_more_likely_to_accept_if_stronger
+					country_event = { id = CKG_demands.7 days = 1 }
 				}
 			}
 		}
@@ -1951,26 +1928,8 @@ focus_tree = {
 					add_core_of = ZUS
 				}
 			}
-			if = {
-				limit = { country_exists = IMF }
-				declare_war_on = {
-					target = IMF
-					type = annex_everything
-				}
-				ZUS = {
-					declare_war_on = {
-						target = IMF
-						type = annex_everything
-					}
-				}
-			}
-			add_to_faction = ZUS
-			if = {
-				limit = { has_completed_focus = CKG_restore_bavawria }
-				every_owned_state = {
-					limit = { is_core_of = PTQ }
-					transfer_state_to = STR
-				}
+			ZUS = {
+				country_event = { id = CKG_demands.11 days = 1 }
 			}
 		}
 	}
@@ -2023,7 +1982,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			32 = {
-				add_compliance = 20
+				add_core_of = ROOT
 				add_building_construction = {
 					type = naval_base
 					level = 10
@@ -2113,21 +2072,10 @@ focus_tree = {
 		will_lead_to_war_with = IMF
 		completion_reward = {
 			if = {
-				limit = { country_exists = IMF IMF = { is_ai = yes } }
-				set_autonomy = {
-					target = IMF
-					autonomy_state = autonomy_puppet
-				}
+				limit = { country_exists = IMF }
 				IMF = {
-					set_cosmetic_tag = IMF_ZUSPRI
-					ZUS = { every_core_state = { add_core_of = IMF } }
-				}
-			}
-			else_if = {
-				limit = { country_exists = IMF IMF = { is_ai = no } }
-				declare_war_on = {
-					target = IMF
-					type = annex_everything
+					custom_effect_tooltip = tt_more_likely_to_accept_if_stronger
+					country_event = { id = CKG_demands.9 days = 1 }
 				}
 			}
 			else = {
@@ -2140,7 +2088,7 @@ focus_tree = {
 					target = IMF
 					autonomy_state = autonomy_integrated_puppet
 					freedom_level = 0.5
-				}	
+				}
 			}
 		}
 		ai_will_do = {
@@ -2454,6 +2402,19 @@ focus_tree = {
 		}
 		completion_reward = {
 			486 = { add_core_of = ROOT }
+			custom_effect_tooltip = AUR_the_new_superhighway_tt
+			add_timed_idea = {
+				idea = cg_payment_20
+				days = 120
+			}
+			486 = {
+				multiply_variable = { wonder_modifiers_values^19 = 2 }
+				multiply_variable = { wonder_modifiers_values^20 = 2 }
+				multiply_variable = { wonder_modifiers_values^21 = 2 }
+			}
+			hidden_effect = {
+				apply_wonder_effects = yes
+			}
 		}
 	}
 	focus = {
@@ -2469,6 +2430,7 @@ focus_tree = {
 			add_political_power = 150
 			add_stability = 0.05
 			87 = {
+				add_core_of = ROOT
 				add_compliance = 20
 				add_building_construction = {
 					type = naval_base
