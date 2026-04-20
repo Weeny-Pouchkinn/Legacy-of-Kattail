@@ -101,6 +101,10 @@ country_event = {
 			# White peace everyone
 			every_country = {
 				limit = { has_war_with = ROOT }
+				every_controlled_state = {
+					limit = { is_in_array = { array = global.greater_katown_states_array value = THIS } }
+					transfer_state_to = PREV
+				}
 				white_peace = ROOT
 			}
 
@@ -167,6 +171,10 @@ country_event = {
 			# Complete collapse - give all states to appropriate nations
 			every_country = {
 				limit = { has_war_with = ROOT }
+				every_controlled_state = {
+					limit = { is_in_array = { array = global.greater_katown_states_array value = THIS } }
+					transfer_state_to = PREV
+				}
 				white_peace = ROOT
 			}
 
