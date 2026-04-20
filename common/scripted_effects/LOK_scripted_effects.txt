@@ -545,6 +545,7 @@ change_state_majority_species = {
 	hidden_effect = {
 		set_variable = { species = species_temp }
 		apply_state_species_modifier = yes
+		update_matching_species_modifiers = yes
 	}
 }
 
@@ -552,6 +553,34 @@ change_state_minority_species = {
 	custom_effect_tooltip = change_state_minority_species_tooltip
 	hidden_effect = {
 		set_variable = { minority = species_temp }
+		update_matching_species_modifiers = yes
+	}
+}
+
+update_matching_species_modifiers = {
+	#Clear and apply species match modifiers
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
+		remove_dynamic_modifier = { modifier = lok_matching_species }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_matching_minority } }
+		remove_dynamic_modifier = { modifier = lok_matching_minority }
+	}
+	#Matching species = compliance buff
+	meta_effect = {
+		text = {
+			if = {
+				limit = { var:controller = { has_idea = var_species_[SPECIES_ID] } }
+				add_dynamic_modifier = { modifier = lok_matching_species }
+			}
+			else_if = {
+				limit = { var:controller = { has_idea = var_species_[MINORITY_ID] } }
+				add_dynamic_modifier = { modifier = lok_matching_minority }
+			}
+		}
+		SPECIES_ID = "[?species]"
+		MINORITY_ID = "[?minority]"
 	}
 }
 

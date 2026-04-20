@@ -2100,29 +2100,7 @@ on_actions = {
 					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
 				}
 				#Clear and apply species match modifiers
-				if = {
-					limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
-					remove_dynamic_modifier = { modifier = lok_matching_species }
-				}
-				if = {
-					limit = { has_dynamic_modifier = { modifier = lok_matching_minority } }
-					remove_dynamic_modifier = { modifier = lok_matching_minority }
-				}
-				#Matching species = compliance buff
-				meta_effect = {
-					text = {
-						if = {
-							limit = { ROOT = { has_idea = var_species_[SPECIES_ID] } }
-							add_dynamic_modifier = { modifier = lok_matching_species }
-						}
-						else_if = {
-							limit = { ROOT = { has_idea = var_species_[MINORITY_ID] } }
-							add_dynamic_modifier = { modifier = lok_matching_minority }
-						}
-					}
-					SPECIES_ID = "[?species]"
-					MINORITY_ID = "[?minority]"
-				}
+				update_matching_species_modifiers = yes
 			}
 			if = {
 				limit = { FROM.FROM = { check_variable = { wonder > 0 } } }
