@@ -553,7 +553,7 @@ focus_tree = {
         prerequisite = { focus = FRA_pe_the_provisional_idea }
         completion_reward = {
             add_equipment_to_stockpile = {
-                type = infantry_weapons
+                type = infantry_equipment
                 amount = -5000
             }
         }
@@ -568,7 +568,7 @@ focus_tree = {
         prerequisite = { focus = FRA_pe_the_provisional_idea }
         completion_reward = {
             add_equipment_to_stockpile = {
-                type = infantry_weapons
+                type = infantry_equipment
                 amount = -5000
             }
         }
@@ -596,7 +596,7 @@ focus_tree = {
         prerequisite = { focus = FRA_pe_revolutionary_council }
         completion_reward = {
             add_equipment_to_stockpile = {
-                type = infantry_weapons
+                type = infantry_equipment
                 amount = -5000
             }
         }
@@ -934,12 +934,12 @@ focus_tree = {
         y = 7
         cost = 5
         available = {
-            NAV = is_in_faction
+            NAV = { is_in_faction = yes }
         }
         prerequisite = { focus = FRA_ally_integrationer }
         prerequisite = { focus = FRA_elwin_second_war focus = FRA_elwin_neukat_war }
         completion_reward = {
-            annex_country = { target = NAV transfer_troops = TRUE }
+            annex_country = { target = NAV transfer_troops = yes }
         }
     }
 
@@ -1025,7 +1025,7 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_elwin_first_war }
         available = {
-            NKB { NOT exists }
+            NOT = { country_exists = NKB }
         }
         completion_reward = {
             NKB = {
