@@ -1,0 +1,490 @@
+add_namespace = ROQ_reclamation
+
+# Event 1: Hidden initialization - fires 1 day after ROQ_begin_the_reclamation completes.
+# Builds the SSU supporters array, the targets array, initialises modifier variables
+# and dynamic modifiers for FSR/DOM, and fires the global flag.
+country_event = {
+	id = ROQ_reclamation.1
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.1 - Reclamation initialization"
+
+		set_global_flag = ROQ_reclamation_active
+
+		# Build the targets array (FSR/DOM who are actually at war with ROQ)
+		every_country = {
+			limit = {
+				OR = { tag = FSR tag = DOM }
+				country_exists = THIS
+				has_war_with = ROQ
+			}
+			add_to_array = { global.ROQ_reclamation_targets = THIS }
+			add_dynamic_modifier = { modifier = ROQ_reclamation_support }
+		}
+
+		# Build the SSU supporters array: MCF + all nations in faction with MCF
+		if = {
+			limit = { country_exists = MCF }
+			MCF = {
+				add_to_array = { global.ROQ_reclamation_ssu_supporters = MCF }
+				every_country = {
+					limit = {
+						is_in_faction_with = MCF
+						NOT = { tag = MCF }
+						country_exists = THIS
+					}
+					add_to_array = { global.ROQ_reclamation_ssu_supporters = THIS }
+				}
+			}
+		}
+
+		# Initialise support level for each SSU member (0 = Disinterested)
+		every_country = {
+			limit = {
+				is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+				country_exists = THIS
+			}
+			country_event = { id = ROQ_reclamation.2 days = 5 }
+			if = {
+				limit = { tag = KHA }
+				set_variable = { ROQ_reclamation_support_level = 2 }
+			}
+			else_if = {
+				limit = { tag = MCF }
+				set_variable = { ROQ_reclamation_support_level = 3 }
+			}
+			else = {
+				set_variable = { ROQ_reclamation_support_level = 1 }
+			}
+		}
+
+		# Fire Flusiobalkan reaction event for every Flusiobalkan except FSR, DOM and MCF faction members
+		every_country = {
+			limit = {
+				is_flusiobalkan = yes
+				NOT = { tag = FSR }
+				NOT = { tag = DOM }
+				NOT = { is_in_faction_with = MCF }
+				country_exists = THIS
+			}
+			country_event = { id = ROQ_reclamation.30 days = 3 }
+		}
+	}
+}
+
+
+# Regular support demand
+country_event = {
+	id = ROQ_reclamation.2
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.2" }
+	title = ROQ_reclamation.2.t
+	desc = ROQ_reclamation.2.desc
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { is_in_faction_with = DOM }
+		NOT = { is_in_faction_with = FSR }
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_variable = { ROQ_reclamation_buff_2 = 0.02 }
+			set_variable = { ROQ_reclamation_buff_minus_2 = -0.02 }
+			multiply_variable = { ROQ_reclamation_buff_2 = ROQ_reclamation_support_level }
+			multiply_variable = { ROQ_reclamation_buff_minus_2 = ROQ_reclamation_support_level }
+			country_event = { id = ROQ_reclamation.2 days = 30 }
+		}
+	}
+
+	option = { #send air advisors (MCF)
+		name = ROQ_reclamation.2.a
+		trigger = { tag = MCF }
+		custom_effect_tooltip = ROQ_reclamation_air_agility_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_air_agility_factor = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.10 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #weather (MCF)
+		name = ROQ_reclamation.2.b
+		trigger = { tag = MCF }
+		custom_effect_tooltip = ROQ_reclamation_air_weather_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_air_attack_factor = ROOT.ROQ_reclamation_buff_2 }
+				add_to_variable = { ROQ_reclamation_air_defence_factor = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.11 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #war advisors (KHA)
+		name = ROQ_reclamation.2.c
+		trigger = { tag = KHA }
+		custom_effect_tooltip = ROQ_reclamation_war_advisors_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_army_attack_factor = ROOT.ROQ_reclamation_buff_2 }
+				add_to_variable = { ROQ_reclamation_army_defence_factor = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.12 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+
+	option = { #recon riders (KHA)
+		name = ROQ_reclamation.2.d
+		trigger = { tag = KHA }
+		custom_effect_tooltip = ROQ_reclamation_recon_raiders_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_breakthrough_factor = ROOT.ROQ_reclamation_buff_2 }
+				add_to_variable = { ROQ_reclamation_coordination_bonus = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.13 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #logi advisors (SLR)
+		name = ROQ_reclamation.2.e
+		trigger = { tag = SLR }
+		custom_effect_tooltip = ROQ_reclamation_logistical_advisors_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_supply_consumption_factor = ROOT.ROQ_reclamation_buff_minus_2 }
+				country_event = { id = ROQ_reclamation.14 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #construction engineers (SLR)
+		name = ROQ_reclamation.2.f
+		trigger = { tag = SLR }
+		custom_effect_tooltip = ROQ_reclamation_industrial_engineers_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_build_speed_factor = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.15 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #industry advisors (TEN)
+		name = ROQ_reclamation.2.g
+		trigger = { tag = TEN }
+		custom_effect_tooltip = ROQ_reclamation_industrial_advisors_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_industrial_capacity_factory = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.16 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #fortifications engineers (TEN)
+		name = ROQ_reclamation.2.h
+		trigger = { tag = TEN }
+		custom_effect_tooltip = ROQ_reclamation_fortification_engineers_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_production_speed_bunker_factor = ROOT.ROQ_reclamation_buff_2 }
+				add_to_variable = { ROQ_reclamation_production_speed_anti_air_building_factor = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.17 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #industry support
+		name = ROQ_reclamation.2.i
+		trigger = { tag = TEN }
+		custom_effect_tooltip = ROQ_reclamation_political_support_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_consumer_goods_factor = ROOT.ROQ_reclamation_buff_minus_2 }
+				country_event = { id = ROQ_reclamation.18 days = 1 random_days = 2 }
+			}
+		}
+	}
+
+	option = { #army support
+		name = ROQ_reclamation.2.j
+		trigger = { tag = TEN }
+		custom_effect_tooltip = ROQ_reclamation_military_support_received_tt
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
+						tag = ROQ
+					}
+				}
+				add_to_variable = { ROQ_reclamation_breakthrough_factor = ROOT.ROQ_reclamation_buff_2 }
+				country_event = { id = ROQ_reclamation.19 days = 1 random_days = 2 }
+			}
+		}
+	}
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Support notification events (fired at FSR/DOM by the supporting SSU nation)
+# ROOT = FSR or DOM (receiver)   FROM = the SSU member (sender)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Event 10: Air Advisors received (MCF: +air agility)
+country_event = {
+	id = ROQ_reclamation.10
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.10" }
+	title = ROQ_reclamation.10.t
+	desc = ROQ_reclamation.10.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.10.a
+		custom_effect_tooltip = ROQ_reclamation_air_agility_received_tt
+	}
+}
+
+# Event 11: Weather Disruption received (MCF: +air attack & defence)
+country_event = {
+	id = ROQ_reclamation.11
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.11" }
+	title = ROQ_reclamation.11.t
+	desc = ROQ_reclamation.11.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.11.a
+		custom_effect_tooltip = ROQ_reclamation_air_weather_received_tt
+	}
+}
+
+# Event 12: War Advisors received (KHA: +army attack & defence)
+country_event = {
+	id = ROQ_reclamation.12
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.12" }
+	title = ROQ_reclamation.12.t
+	desc = ROQ_reclamation.12.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.12.a
+		custom_effect_tooltip = ROQ_reclamation_war_advisors_received_tt
+	}
+}
+
+# Event 13: Recon Raiders received (KHA: +breakthrough & coordination)
+country_event = {
+	id = ROQ_reclamation.13
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.13" }
+	title = ROQ_reclamation.13.t
+	desc = ROQ_reclamation.13.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.13.a
+		custom_effect_tooltip = ROQ_reclamation_recon_raiders_received_tt
+	}
+}
+
+# Event 14: Logistical Advisors received (SLR: -supply use)
+country_event = {
+	id = ROQ_reclamation.14
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.14" }
+	title = ROQ_reclamation.14.t
+	desc = ROQ_reclamation.14.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.14.a
+		custom_effect_tooltip = ROQ_reclamation_logistical_advisors_received_tt
+	}
+}
+
+# Event 15: Industrial Engineers received (SLR: +build speed)
+country_event = {
+	id = ROQ_reclamation.15
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.15" }
+	title = ROQ_reclamation.15.t
+	desc = ROQ_reclamation.15.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.15.a
+		custom_effect_tooltip = ROQ_reclamation_industrial_engineers_received_tt
+	}
+}
+
+# Event 16: Industrial Advisors received (TEN: +factory output)
+country_event = {
+	id = ROQ_reclamation.16
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.16" }
+	title = ROQ_reclamation.16.t
+	desc = ROQ_reclamation.16.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.16.a
+		custom_effect_tooltip = ROQ_reclamation_industrial_advisors_received_tt
+	}
+}
+
+# Event 17: Fortification Engineers received (TEN: +fort & AA build speed)
+country_event = {
+	id = ROQ_reclamation.17
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.17" }
+	title = ROQ_reclamation.17.t
+	desc = ROQ_reclamation.17.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.17.a
+		custom_effect_tooltip = ROQ_reclamation_fortification_engineers_received_tt
+	}
+}
+
+# Event 18: Military Support received (generic SSU member: +breakthrough)
+country_event = {
+	id = ROQ_reclamation.18
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.18" }
+	title = ROQ_reclamation.18.t
+	desc = ROQ_reclamation.18.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.18.a
+		custom_effect_tooltip = ROQ_reclamation_military_support_received_tt
+	}
+}
+
+# Event 19: Political Support received (generic SSU member: -consumer goods)
+country_event = {
+	id = ROQ_reclamation.19
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.19" }
+	title = ROQ_reclamation.19.t
+	desc = ROQ_reclamation.19.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.19.a
+		custom_effect_tooltip = ROQ_reclamation_political_support_received_tt
+	}
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Event 20: FSR/DOM joins MCF faction notification (fired at FSR/DOM from MCF on mission timeout)
+# ─────────────────────────────────────────────────────────────────────────────
+country_event = {
+	id = ROQ_reclamation.20
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.20" }
+	title = ROQ_reclamation.20.t
+	desc = ROQ_reclamation.20.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.20.a
+	}
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Event 30: Flusiobalkan reaction to the Reclamation
+# Fires for every Flusiobalkan nation except FSR, DOM, and those in faction with MCF
+# ─────────────────────────────────────────────────────────────────────────────
+country_event = {
+	id = ROQ_reclamation.30
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.30" }
+	title = ROQ_reclamation.30.t
+	desc = ROQ_reclamation.30.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.30.a
+		add_political_power = 100
+		add_stability = 0.05
+	}
+
+	option = {
+		name = ROQ_reclamation.30.b
+		add_stability = -0.05
+		add_war_support = 0.05
+		add_timed_idea = {
+			idea = ROQ_reclamation_flusiobalkan_volunteers
+			days = 180
+		}
+		trigger = {
+			is_ai = no
+		}
+	}
+}

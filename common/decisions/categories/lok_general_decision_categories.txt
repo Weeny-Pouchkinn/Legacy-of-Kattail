@@ -186,6 +186,21 @@ KUS_flusiobalkans_union_cat = {
 	visible_when_empty = yes
 }
 
+ROQ_reclamation_cat = {
+	icon = GFX_decision_category_generic_diplomacy
+	priority = 1500
+	visible_when_empty = yes
+	visible = {
+		has_global_flag = ROQ_reclamation_active
+		OR = {
+			tag = ROQ
+			tag = FSR
+			tag = DOM
+			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
+		}
+	}
+}
+
 KUS_NEK_war_mediation_cat = {
 	icon = GFX_decision_category_generic_diplomacy
 	priority = 1500
@@ -216,8 +231,8 @@ KTW_katown_struggle  = {
 	icon = GFX_decision_category_generic_industry
 	allowed = { tag = KTW }
 	visible = {
-		has_global_flag = elwin_collapse_occured
+		has_country_flag = ktw_katown_struggle_active
 	}
 	priority = 900
-	visible_when_empty = yes
+	visible_when_empty = no
 }

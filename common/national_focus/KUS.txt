@@ -4137,8 +4137,21 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			add_manpower = 50000
-			add_war_support = 0.10
+			add_war_support = 0.05
+			swap_ideas = {
+				remove_idea = var_species_12
+				add_idea = var_species_51
+			}
+			every_core_state = {
+				limit = { check_variable = { species = 12 } }
+				set_temp_variable = { species_temp = 51 }
+				change_state_majority_species = yes
+			}
+			hidden_effect = {
+				every_controlled_state = {
+					update_matching_species_modifiers = yes
+				}
+			}
 		}
 	}
 

@@ -1717,7 +1717,7 @@ lok_journal_entries_cat = {
 			country_exists = WPR
 			WPR = { is_ai = yes }
 			WPR = {
-				surrender_progress > 0.3
+				surrender_progress > 0.1
 			}
 			NOT = { has_war_with = WPR }
 			WPR = { has_war_with = MEW }
@@ -2781,6 +2781,7 @@ lok_journal_entries_cat = {
 			}
 			hidden_effect = {
 				news_event = { id = LOK_news.2 days = 2 }
+				country_event = { id = ROQ_reclamation.1 days = 1 }
 			}
 		}
 
@@ -2860,6 +2861,10 @@ lok_journal_entries_cat = {
 				event_target:east_solakea_katzen_uniter = {
 					set_country_flag = won_against_reclamation
 				}
+				if = {
+					limit = { has_global_flag = ROQ_reclamation_active }
+					ROQ_reclamation_cleanup = yes
+				}
 			}
 		}
 
@@ -2903,6 +2908,7 @@ lok_journal_entries_cat = {
 			set_politics = {
 				ruling_party = fascism
 			}
+			news_event = { id = LOK_news.14 days = 1 }
 		}
 
 		days_remove = 15
@@ -4006,27 +4012,27 @@ lok_journal_entries_cat = {
 			create_faction = "Steel Steppes Union"
 			set_global_flag = ssu_formed
 			every_country = {
-				limit = { is_puppet_of = MCR }
+				limit = { is_subject_of = MCR }
 				add_to_faction = ROOT
 			}
 			if = {
 				limit = {
 					country_exists = TEN
-					TEN = { is_puppet = no has_war = no }
+					TEN = { is_subject = no has_war = no }
 				}
 				TEN = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}
 			if = {
 				limit = {
 					country_exists = KHA
-					KHA = { is_puppet = no has_war = no }
+					KHA = { is_subject = no has_war = no }
 				}
 				KHA = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}
 			if = {
 				limit = {
 					country_exists = SLR
-					SLR = { is_puppet = no has_war = no }
+					SLR = { is_subject = no has_war = no }
 				}
 				SLR = { country_event = { id = LOK_MCF.1 days = 1 } }
 			}

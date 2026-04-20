@@ -1,0 +1,46 @@
+# ROQ Reclamation scripted localisation
+
+# Returns a coloured label for THIS country's current support level
+defined_text = {
+	name = GetROQReclamationSupportLevel
+	text = {
+		trigger = { check_variable = { ROQ_reclamation_support_level > 3 } }
+		localization_key = ROQ_reclamation_support_level_adamant
+	}
+	text = {
+		trigger = { check_variable = { ROQ_reclamation_support_level > 2 } }
+		localization_key = ROQ_reclamation_support_level_protective
+	}
+	text = {
+		trigger = { check_variable = { ROQ_reclamation_support_level > 1 } }
+		localization_key = ROQ_reclamation_support_level_supportive
+	}
+	text = {
+		localization_key = ROQ_reclamation_support_level_disinterested
+	}
+}
+
+# Returns a one-line description of what THIS country can do as an SSU supporter.
+# Used in FSR/DOM's lobby decision description so players know what each ally offers.
+defined_text = {
+	name = GetROQReclamationWhatTheyCanDo
+	text = {
+		trigger = { tag = MCF }
+		localization_key = ROQ_reclamation_what_mcf_can_do
+	}
+	text = {
+		trigger = { tag = KHA }
+		localization_key = ROQ_reclamation_what_kha_can_do
+	}
+	text = {
+		trigger = { tag = SLR }
+		localization_key = ROQ_reclamation_what_slr_can_do
+	}
+	text = {
+		trigger = { tag = TEN }
+		localization_key = ROQ_reclamation_what_ten_can_do
+	}
+	text = {
+		localization_key = ROQ_reclamation_what_generic_can_do
+	}
+}

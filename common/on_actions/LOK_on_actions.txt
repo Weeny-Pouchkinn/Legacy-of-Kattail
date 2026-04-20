@@ -9,6 +9,12 @@ on_actions = {
 				}
 			}
 
+			#AI Nuclear Research Boost
+			every_country = {
+				limit = { is_ai = yes }
+				add_ideas = LOK_ai_nuclear_research_boost
+			}
+
 			#Food for Arivoejobiden
 			every_country = {
 				limit = {
@@ -532,6 +538,8 @@ on_actions = {
 			BSS = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			POT = { remove_ideas = var_species_0 add_ideas = var_species_1 }
 			KKN = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_7 }
+
+			BAS = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_3 }
 
 			SOB = { remove_ideas = var_species_0 add_ideas = var_species_2 }
 			NDB = { remove_ideas = var_species_0 add_ideas = var_species_2 add_ideas = var_species_1 }
@@ -1744,6 +1752,44 @@ on_actions = {
 
 	on_weekly = {
 		effect = {
+			# KTW Katown Struggle - auto wardec nations controlling katown states, auto-peace when they stop
+			if = {
+				limit = { tag = KTW has_country_flag = ktw_katown_struggle_active }
+				every_country = {
+					limit = {
+						NOT = { tag = KTW }
+						NOT = { has_war_with = KTW }
+						OR = {
+							controls_state = 30
+							controls_state = 27
+							controls_state = 29
+							controls_state = 42
+							controls_state = 50
+							controls_state = 39
+						}
+					}
+					KTW = { declare_war_on = { target = PREV type = take_claimed_state } }
+				}
+				every_country = {
+					limit = {
+						has_war_with = KTW
+						NOT = { tag = KTW }
+						NOT = {
+							controls_state = 30
+							controls_state = 27
+							controls_state = 29
+							controls_state = 42
+							controls_state = 50
+							controls_state = 39
+						}
+					}
+					every_owned_state = {
+						limit = { is_in_array = { array = global.greater_katown_states_array value = THIS } }
+						transfer_state_to = KTW
+					}
+					white_peace = KTW
+				}
+			}
 			#TEMP, MAKE THAT MONTHLY
 			every_controlled_state = {
 				regenerate_state_productivity_modifier = yes
@@ -1993,6 +2039,22 @@ on_actions = {
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
 				FROM = { if = { limit = { is_herzlands_warlord = yes } subtract_from_variable = { current_herzlands_state_count = 1 } } }
 			}
+			#AI Katzen nations instantly get +40% compliance when capturing a Herzlands state
+			if = {
+				limit = {
+					ROOT = {
+						is_ai = yes
+						is_herzlands_warlord = yes
+					}
+					FROM.FROM = {
+						is_in_array = { array = global.herzlands_states_array value = THIS }
+						NOT = { is_core_of = ROOT }
+					}
+				}
+				FROM.FROM = {
+					add_compliance = 40
+				}
+			}
 			FROM = { 
 				apply_wonder_effects = yes
 				calculate_salvo_capacity = yes
@@ -2038,29 +2100,7 @@ on_actions = {
 					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
 				}
 				#Clear and apply species match modifiers
-				if = {
-					limit = { has_dynamic_modifier = { modifier = lok_matching_species } }
-					remove_dynamic_modifier = { modifier = lok_matching_species }
-				}
-				if = {
-					limit = { has_dynamic_modifier = { modifier = lok_matching_minority } }
-					remove_dynamic_modifier = { modifier = lok_matching_minority }
-				}
-				#Matching species = compliance buff
-				meta_effect = {
-					text = {
-						if = {
-							limit = { ROOT = { has_idea = var_species_[SPECIES_ID] } }
-							add_dynamic_modifier = { modifier = lok_matching_species }
-						}
-						else_if = {
-							limit = { ROOT = { has_idea = var_species_[MINORITY_ID] } }
-							add_dynamic_modifier = { modifier = lok_matching_minority }
-						}
-					}
-					SPECIES_ID = "[?species]"
-					MINORITY_ID = "[?minority]"
-				}
+				update_matching_species_modifiers = yes
 			}
 			if = {
 				limit = { FROM.FROM = { check_variable = { wonder > 0 } } }
@@ -2822,20 +2862,22 @@ on_actions = {
 					}
 					514 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 					512 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 					191 = {
 						transfer_state_to = ROQ
-						set_state_flag = compliance_40_ROQ
-						add_to_array = { array = ROQ.potential_cores_array }
+						remove_claim_by = ROQ
+						add_compliance = 20
+					}
+					1401 = {
+						transfer_state_to = ROQ
+						remove_claim_by = ROQ
 						add_compliance = 20
 					}
 				}
@@ -2873,6 +2915,22 @@ on_actions = {
 						}
 					}
 				}
+			}
+			# AUR forces PRL to capitulate
+			if = {
+				limit = {
+					ROOT = { tag = PRL }
+					country_exists = AUR
+				}
+				news_event = { id = LOK_news.17 }
+			}
+			# PRL forces AUR to capitulate
+			if = {
+				limit = {
+					ROOT = { tag = AUR }
+					country_exists = PRL
+				}
+				news_event = { id = LOK_news.18 }
 			}
 		}
 	}
