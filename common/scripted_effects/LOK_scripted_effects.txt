@@ -2120,21 +2120,18 @@ calculate_radiation_state_modifiers = {
 	set_variable = { lok_radiation_army_modifier = lok_radiation_modifier } #For armies, not affected by species
 	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
 	if = {
-		limit = { check_variable = { species = 1 } } #-30% for Katzens
+		limit = { has_rad_resistant_trait = yes } #-30% for Katzens
 		multiply_variable = { lok_radiation_modifier = 0.7 }
 	}
 	if = {
 		limit = { #-75% for Lithoids
-			OR = {
-				check_variable = { species = 5 }
-				check_variable = { species = 8 }		
-			}
+			has_lithoid_trait = yes
 		} 
 		multiply_variable = { lok_radiation_modifier = 0.25 }
 	}
 	if = {
 		limit = { #-90% for Machines
-			check_variable = { species = 49 }
+			has_mechanical_trait = yes
 		} 
 		multiply_variable = { lok_radiation_modifier = 0.10 }
 	}
