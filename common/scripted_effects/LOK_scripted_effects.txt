@@ -1586,28 +1586,22 @@ calculate_food_consumption_in_state = { #By default 100k people eat one food per
 	divide_variable = { state_food_consumption = 100 }
 	if = { #Katzens and Sobakis are mostly carnivorous and thus eat 15% more
 		limit = {
-			OR = {
-				check_variable = { species = 1 }
-				check_variable = { species = 2 }
-			}
+			has_mostly_carnivorous_trait = yes
 		}
 		multiply_variable = { state_food_consumption = 1.15 }
 	}
 	if = { #Lithoids and robots do not eat food at all
 		limit = {
 			OR = {
-				check_variable = { species = 5 }
-				check_variable = { species = 8 }
-				check_variable = { species = 49 }
+				has_mechanical_trait = yes
+				has_lithoid_trait = yes
 			}
 		}
 		multiply_variable = { state_food_consumption = 0 }
 	}
 	if = { #Estalai eat a lot
 		limit = {
-			OR = {
-				check_variable = { species = 12 }
-			}
+			has_carnivorous_trait = yes
 		}
 		multiply_variable = { state_food_consumption = 1.25 }
 	}
@@ -2154,13 +2148,21 @@ apply_radiation_effects = {
 	if = { #Kill people in the state
 		limit = { #THIS IS THE "BASE RADIATION RESISTANCE TRAIT"
 			NOT = {
-				AND = { check_variable = { species = 1 } check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
+				AND = { has_rad_resistant_trait = yes check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
 				AND = {
-					OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+					has_subterranean_trait = yes
+					check_variable = { lok_radiation_level < 1.5 }
+				}
+				AND = {
+					has_cyborg_trait = yes
+					check_variable = { lok_radiation_level < 2.5 }
+				}
+				AND = {
+					has_lithoid_trait = yes
 					check_variable = { lok_radiation_level < 5 } #NMI + Nekeox don't die below 5
 				}
 				AND = {
-					check_variable = { species = 49 }
+					has_mechanical_trait = yes
 					check_variable = { lok_radiation_level < 10 } #Robots don't die below 10
 				}
 			}
@@ -2172,20 +2174,30 @@ apply_radiation_effects = {
 
 		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
 		if = {
-			limit = { check_variable = { species = 1 } } #Only half the deaths for Katzen states
+			limit = { #-25% for Cyborgs
+				has_cyborg_trait = yes
+			} 
+			multiply_variable = { lok_radiation_death_percent = 0.75 }
+		}
+
+		if = {
+			limit = { has_rad_resistant_trait = yes } #Only half the deaths for Katzen states
 			multiply_variable = { lok_radiation_death_percent = 0.5 }
 		}
 
 		if = {
-			limit = { #-75% for Lithoids
-				OR = { check_variable = { species = 5 } check_variable = { species = 8 } }
+			limit = { #-75% for Lithoids and subterranean
+				OR = {
+					has_lithoid_trait = yes
+					has_subterranean_trait = yes
+				}
 			} 
 			multiply_variable = { lok_radiation_death_percent = 0.25 }
 		}
 
 		if = {
 			limit = { #-90% for Robots
-				check_variable = { species = 49 }
+				has_mechanical_trait = yes
 			} 
 			multiply_variable = { lok_radiation_death_percent = 0.90 }
 		}
@@ -2210,22 +2222,56 @@ apply_radiation_effects = {
 	}
 }
 
+clear_all_state_species_modifier = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_resilient_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_resilient_trait_modifier }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_seafaring_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_seafaring_trait_modifier }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_natural_excavator_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_natural_excavator_trait_modifier }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_subterranean_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_subterranean_trait_modifier }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_cyborg_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_cyborg_trait_modifier }
+		set_temp_variable = { state_prod_change = -0.10 }
+		increase_state_productivity = yes
+		increase_base_state_productivity = yes
+	}
+}
+
 apply_state_species_modifier = {
+	clear_all_state_species_modifier = yes
 	if = {
-		limit = { has_dynamic_modifier = { modifier = lok_species_katzen_majority } }
-		remove_dynamic_modifier = { modifier = lok_species_katzen_majority }
+		limit = { has_resilient_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_resilient_trait_modifier }
 	}
 	if = {
-		limit = { has_dynamic_modifier = { modifier = lok_species_sobaki_majority } }
-		remove_dynamic_modifier = { modifier = lok_species_sobaki_majority }
+		limit = { has_seafaring_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_seafaring_trait_modifier }
 	}
 	if = {
-		limit = { check_variable = { species = 1 } }
-		add_dynamic_modifier = { modifier = lok_species_katzen_majority }
+		limit = { has_natural_excavator_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_natural_excavator_trait_modifier }
 	}
 	if = {
-		limit = { check_variable = { species = 2 } }
-		add_dynamic_modifier = { modifier = lok_species_sobaki_majority }
+		limit = { has_subterranean_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_subterranean_trait_modifier }
+	}
+	if = {
+		limit = { has_cyborg_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_cyborg_trait_modifier }
+		set_temp_variable = { state_prod_change = 0.10 }
+		increase_state_productivity = yes
+		increase_base_state_productivity = yes
 	}
 }
 
