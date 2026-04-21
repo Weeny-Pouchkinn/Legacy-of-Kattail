@@ -2583,6 +2583,28 @@ on_actions = {
 
 				news_event = { id = LOK_cityfall_news.32 hours = 6 }
 			}
+
+			# Fall of Himezulte Airbase - State 220
+			if = {
+				limit = {
+					FROM.FROM = { state = 220 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = himezulte_fallen }
+				}
+				set_global_flag = himezulte_fallen
+
+				news_event = { id = LOK_cityfall_news.33 hours = 6 }
+				if = {
+					limit = {
+						ROOT = {
+							is_herzlands_warlord = yes
+							has_government = fascism
+						}
+					}
+					ROOT = { country_event = { id = LOK_cityfall_news.34 } }
+				}
+			}
 		}
 	}
 
