@@ -1077,6 +1077,67 @@ political_actions = {
 }
 
 # ==========================================
+# Mass Cybernetics Decisions
+# ==========================================
+KUS_cybernetics_cat = {
+	KUS_integrate_loxian_cybernetics = {
+		icon = GFX_decision_generic_factory
+
+		allowed = { tag = KUS }
+
+		visible = {
+			has_completed_focus = KUS_mass_cybernetics_program
+			FROM = {
+				is_core_of = ROOT
+				check_variable = { species = 12 }
+			}
+		}
+
+		state_target = yes
+		target_array = ROOT.controlled_states
+
+		available = {
+			FROM = {
+				is_core_of = ROOT
+				check_variable = { species = 12 }
+			}
+		}
+
+		cost = 50
+		days_remove = 30
+
+		remove_effect = {
+			FROM = {
+				set_temp_variable = { species_temp = 51 }
+				change_state_majority_species = yes
+				update_matching_species_modifiers = yes
+			}
+			hidden_effect = {
+				every_controlled_state = {
+					update_matching_species_modifiers = yes
+				}
+				if = {
+					limit = {
+						has_idea = var_species_12
+						NOT = {
+							any_core_state = {
+								check_variable = { species = 12 }
+							}
+						}
+					}
+					swap_ideas = {
+						remove_idea = var_species_12
+						add_idea = var_species_51
+					}
+				}
+			}
+		}
+
+		ai_will_do = { base = 100 }
+	}
+}
+
+# ==========================================
 # Rewire for Total Automation Decisions (Basilisk)
 # ==========================================
 KUS_basilisk_cat = {

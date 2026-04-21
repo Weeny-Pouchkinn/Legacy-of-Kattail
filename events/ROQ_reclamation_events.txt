@@ -488,3 +488,57 @@ country_event = {
 		}
 	}
 }
+
+# Event 40: DOM/FSR withdraw from faction after Reclamation peace
+country_event = {
+	id = ROQ_reclamation.40
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.40" }
+	title = ROQ_reclamation.40.t
+	desc = ROQ_reclamation.40.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.40.a
+		hidden_effect = {
+			if = {
+				limit = {
+					is_in_faction = yes
+					NOT = { is_faction_leader = yes }
+				}
+				faction_leader = {
+					country_event = { id = ROQ_reclamation.41 }
+				}
+				leave_faction = yes
+				news_event = { id = ROQ_reclamation.42 days = 3 }
+			}
+		}
+	}
+}
+
+# Event 41: Faction leader notified that DOM/FSR left
+country_event = {
+	id = ROQ_reclamation.41
+	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.41" }
+	title = ROQ_reclamation.41.t
+	desc = ROQ_reclamation.41.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.41.a
+	}
+}
+
+# Event 42: Global news about DOM/FSR leaving their faction
+news_event = {
+	id = ROQ_reclamation.42
+	title = ROQ_reclamation.42.t
+	desc = ROQ_reclamation.42.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = ROQ_reclamation.42.a
+	}
+}
