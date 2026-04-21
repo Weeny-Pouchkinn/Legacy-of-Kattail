@@ -15,6 +15,7 @@ BASIC INSTRUCTIONS:
 - Focus trees need to be "tight" with as little space between focuses as possible, without overlap.
 - The "modding_documentation" contains syntax patterns and modding help. The "wiki_doc" subfolder contains modding documentation, and the "vanilla_folders" subfolder contains the vanill common, events and interface folders for reference.
 - Refer to the HOI4 modding wiki. https://hoi4.paradoxwikis.com/Modding
+- When generating GFX files and interface stuff, always create "placeholder" image files in the proper folder by copying an existing image file.
 
 GUIDE TO ADDING WONDERS:
 Wonders are state-bound "features" that provide a buff to the nation controlling them, alongside a little bit of lore. Their effects are doubled if the state is the owner's capital, and halved if it is not a core.
