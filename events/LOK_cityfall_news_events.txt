@@ -1009,14 +1009,52 @@ news_event = {
 
 	option = {
 		name = LOK_cityfall_news.33.a
+		trigger = {
+			NOT = {
+				OR = {
+					has_war_with = event_target:new_controller
+					has_opinion = { target = event_target:new_controller value < 0 }
+					AND = {
+						OR = {
+							has_government = fascism
+							is_in_faction_with = event_target:new_controller
+							has_opinion = { target = event_target:new_controller value > 49 }
+						}
+						NOT = {
+							OR = {
+								has_war_with = event_target:new_controller
+								has_opinion = { target = event_target:new_controller value < 0 }
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	option = {
 		name = LOK_cityfall_news.33.b
-		trigger = { has_government = fascism }
+		trigger = {
+			OR = {
+				has_government = fascism
+				is_in_faction_with = event_target:new_controller
+				has_opinion = { target = event_target:new_controller value > 49 }
+			}
+			NOT = {
+				OR = {
+					has_war_with = event_target:new_controller
+					has_opinion = { target = event_target:new_controller value < 0 }
+				}
+			}
+		}
 	}
 	option = {
 		name = LOK_cityfall_news.33.c
-		trigger = { OR = { has_government = communism has_government = democratic has_government = gestalt } }
+		trigger = {
+			OR = {
+				has_war_with = event_target:new_controller
+				has_opinion = { target = event_target:new_controller value < 0 }
+			}
+		}
 	}
 }
 
