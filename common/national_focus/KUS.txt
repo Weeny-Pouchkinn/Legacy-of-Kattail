@@ -4067,14 +4067,16 @@
 					level = 3
 					instant_build = yes
 				}
+				add_extra_state_shared_building_slots = 3
+			}
+			every_owned_state = {
+				limit = { is_core_of = ROOT }
 				add_resource = {
 					type = food
-					amount = -35
+					amount = -5
 				}
-				add_extra_state_shared_building_slots = 3
 				set_temp_variable = { state_prod_change = 0.05 }
 				increase_state_productivity = yes
-				increase_base_state_productivity = yes
 			}
 		}
 	}
@@ -4138,20 +4140,6 @@
 
 		completion_reward = {
 			add_war_support = 0.05
-			swap_ideas = {
-				remove_idea = var_species_12
-				add_idea = var_species_51
-			}
-			every_core_state = {
-				limit = { check_variable = { species = 12 } }
-				set_temp_variable = { species_temp = 51 }
-				change_state_majority_species = yes
-			}
-			hidden_effect = {
-				every_controlled_state = {
-					update_matching_species_modifiers = yes
-				}
-			}
 		}
 	}
 
@@ -4222,6 +4210,10 @@
 					instant_build = yes
 				}
 				add_extra_state_shared_building_slots = 4
+				set_variable = { wonder = 16 }
+				setup_wonder_array = yes
+				set_variable = { wonder_modifiers_values^12 = 0.10 }
+				controller = { apply_wonder_effects = yes }
 			}
 			add_research_slot = 1
 		}
