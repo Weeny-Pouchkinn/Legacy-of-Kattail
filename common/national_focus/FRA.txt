@@ -853,6 +853,35 @@ focus_tree = {
             }
         }
     }
+    
+    focus = {
+        id = FRA_left_the_internationalist_charter
+        icon = GFX_FRA_Hell
+        x = 45
+        y = 3
+        cost = 5
+        prerequisite = { focus = FRA_left_amewdeo focus = FRA_left_dameow }
+        completion_reward = {
+            if = {
+                limit = {
+                    has_completed_focus = FRA_left_amewdeo
+                }
+                clr_country_flag = herzlands_warlord_regionalist
+                set_country_flag = herzlands_warlord_hegemon
+            }
+            else_if = {
+                limit = {
+                    has_completed_focus = FRA_left_dameow
+                }
+                add_stability = 0.1
+                clr_country_flag = herzlands_warlord_regionalist
+                set_country_flag = herzlands_warlord_uniter
+            }
+            else = {
+                custom_effect_tooltip = FRA_left_warlord_tooltip
+            }
+        }
+    }
    
     focus = {
         id = FRA_rev_reconcile_radicals
@@ -914,6 +943,7 @@ focus_tree = {
         completion_reward = {
             create_faction_from_template = faction_template_kaiserliche_nordkoalition
             NAV = { country_event = { id = NAV_coalition.1 } }
+            set_variable = { var:FRA_alliance_influence = 0 }
         }
     }
 

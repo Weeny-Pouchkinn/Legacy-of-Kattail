@@ -1,0 +1,37 @@
+FRA_remnant_alliance = {
+    
+    FRA_xp_for_influence = {
+        visible = {
+            OR = { 
+                tag = FRA 
+                tag = NAV
+            }
+        }
+        days_remove = 30
+        days_re_enable = 45
+        custom_cost_trigger = {
+            has_army_experience > 14
+        }
+        custom_cost_text = decision_cost_exp_15
+        complete_effect = {
+            hidden_effect = {
+                army_experience = -15
+            }
+            add_timed_idea = {
+                idea = FRA_idea_struggle_debuff
+                days = 30
+            }
+        }
+        remove_effect = {
+            add_to_variable = { 
+                var = var:FRA_alliance_influence
+                value = 10
+            }
+            custom_effect_tooltip = FRA_remnant_alliance_tt1
+        }
+        
+    }
+    FRA_frags_for_salaries = {
+    }
+
+}
