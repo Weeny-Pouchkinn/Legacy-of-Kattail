@@ -8,7 +8,6 @@ FRA_remnant_alliance = {
             }
         }
         days_remove = 30
-        days_re_enable = 45
         custom_cost_trigger = {
             has_army_experience > 14
         }
@@ -23,15 +22,109 @@ FRA_remnant_alliance = {
             }
         }
         remove_effect = {
-            add_to_variable = { 
-                var = var:FRA_alliance_influence
-                value = 10
+            IF = {
+                limit = {
+                    tag = FRA
+                }
+                add_to_variable = { 
+                    var = var:FRA_alliance_influence
+                    value = 10
+                }
+            }
+            ELSE = {
+                add_to_variable = {
+                    var = var:NAV_alliance_influence
+                    value = 10
+                }
             }
             custom_effect_tooltip = FRA_remnant_alliance_tt1
         }
         
     }
     FRA_frags_for_salaries = {
+        visible = {
+            OR = { 
+                tag = FRA 
+                tag = NAV
+            }
+        }
+        cost = 50
+        days_remove = 70
+        remove_effect = { 
+            IF = {
+                limit = {
+                    tag = FRA
+                }
+                add_to_variable = { 
+                    var = var:FRA_alliance_influence
+                    value = 15
+                }
+            }
+            ELSE = {
+                add_to_variable = {
+                    var = var:NAV_alliance_influence
+                    value = 15
+                }
+            }
+            custom_effect_tooltip = FRA_remnant_alliance_tt2
+        }
     }
-
+    FRA_free_org = {
+        fire_only_once = yes
+        visible = {
+            tag = FRA
+        }
+        custom_cost_trigger = {
+            command_power > 19
+        }
+        custom_cost_text = decision_cost_cp_20
+        complete_effect = {
+            hidden_effect = {
+                add_command_power = -20
+            }
+            add_timed_idea = {
+                idea = FRA_idea_alliance_free_org
+                days = 270
+            }
+            add_to_variable = {
+                var = var:NAV_alliance_influence
+                value = 10
+            }
+            custom_effect_tooltip = FRA_remnant_alliance_tt3
+        }
+    }
+    FRA_bully_nav = {
+        visible = {
+            tag = FRA
+        }
+        cost = 70
+        complete_effect = {
+            add_to_variable = {
+                var = var:NAV_alliance_influence
+                value = -25
+            }
+            custom_effect_tooltip = FRA_remnant_alliance_tt5
+        }
+    }
+    FRA_move_command_center = {
+        fire_only_once = yes
+        visible = {
+            tag = FRA
+        }
+        available = {
+            owns_state = 646
+        }
+        cost = 35
+        complete_effect = {
+            add_to_variable = {
+                var = var:NAV_alliance_influence
+                value = -15
+            }
+            add_to_variable = {
+                var = var:FRA_alliance_influence
+                value = 5
+            }
+            custom_effect_tooltip = FRA_remnant_alliance_tt4
+        }
+    }
 }
