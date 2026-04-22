@@ -38,7 +38,7 @@ technologies = {
 		start_year = 100
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = @98 }
+			position = { x = 1 y = @98 }
 		}
 		
 		ai_will_do = {
@@ -765,7 +765,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 2 }
+			position = { x = 1 y = 2 }
 		}
 		
 		ai_will_do = {
@@ -804,7 +804,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 4 }
+			position = { x = 1 y = 4 }
 		}
 		
 		ai_will_do = {
@@ -860,7 +860,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 6 }
+			position = { x = 1 y = 6 }
 		}
 		
 		ai_will_do = {
@@ -909,7 +909,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 8 }
+			position = { x = 1 y = 8 }
 		}
 		
 		ai_will_do = {
@@ -949,7 +949,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 10 }
+			position = { x = 1 y = 10 }
 		}
 		
 		ai_will_do = {
@@ -990,7 +990,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 12 }
+			position = { x = 1 y = 12 }
 		}
 		
 		ai_will_do = {
@@ -1031,7 +1031,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 14 }
+			position = { x = 1 y = 14 }
 		}
 		
 		ai_will_do = {
@@ -1068,7 +1068,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 16 }
+			position = { x = 1 y = 16 }
 		}
 
 		path = {
@@ -1109,7 +1109,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 18 }
+			position = { x = 1 y = 18 }
 		}
 		
 		ai_will_do = {
@@ -1325,7 +1325,7 @@ technologies = {
 	
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = @108 }
+			position = { x = 3 y = @108 }
 		}
 		
 		start_year = 108
@@ -1599,6 +1599,206 @@ technologies = {
 		force_use_small_tech_layout = yes
 	}
 
+	solar_power_generation_tech = {
+		start_year = 98
+		research_cost = 5
+		folder = {
+			name = electronics_folder
+			position = { x = 1 y = @98 }
+		}
+		path = {
+			leads_to_tech = solar_power_generation_tech_2
+			research_cost_coeff = 1
+		}
+		enable_building = {
+			building = renewable_power_plant
+			level = 1
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
+	solar_power_generation_tech_2 = {
+		start_year = 100
+		research_cost = 5
+		folder = {
+			name = electronics_folder
+			position = { x = 1 y = @100 }
+		}
+		path = {
+			leads_to_tech = solar_power_generation_tech_3
+			research_cost_coeff = 1
+		}
+		enable_building = {
+			building = renewable_power_plant
+			level = 2
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
+	solar_power_generation_tech_3 = {
+		start_year = 105
+		research_cost = 5
+		folder = {
+			name = electronics_folder
+			position = { x = 1 y = @105 }
+		}
+		path = {
+			leads_to_tech = solar_power_generation_tech_4
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = solar_power_generation_construction_tech_1
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = solar_power_generation_output_tech_1
+			research_cost_coeff = 1
+		}
+		enable_building = {
+			building = renewable_power_plant
+			level = 3
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
+	solar_power_generation_construction_tech_1 = {
+		start_year = 107
+		research_cost = 5
+		xor = {
+			solar_power_generation_output_tech_1
+		}
+		folder = {
+			name = electronics_folder
+			position = { x = 0 y = @107 }
+		}
+		production_speed_renewable_power_plant_factor = 0.15
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
+	solar_power_generation_output_tech_1 = {
+		start_year = 107
+		research_cost = 5
+		xor = {
+			solar_power_generation_construction_tech_1
+		}
+		folder = {
+			name = electronics_folder
+			position = { x = 2 y = @107 }
+		}
+		on_research_complete = {
+			modify_building_resources = {
+				building = renewable_power_plant
+				resource = energy
+				amount = 1
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
+	solar_power_generation_tech_4 = {
+		start_year = 110
+		research_cost = 5
+		folder = {
+			name = electronics_folder
+			position = { x = 1 y = @110 }
+		}
+		path = {
+			leads_to_tech = solar_power_generation_construction_tech_2
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = solar_power_generation_output_tech_2
+			research_cost_coeff = 1
+		}
+		enable_building = {
+			building = renewable_power_plant
+			level = 4
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
+	solar_power_generation_construction_tech_2 = {
+		start_year = 102
+		research_cost = 5
+		xor = {
+			solar_power_generation_output_tech_2
+		}
+		folder = {
+			name = electronics_folder
+			position = { x = 0 y = @112 }
+		}
+		production_speed_renewable_power_plant_factor = 0.15
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
+	solar_power_generation_output_tech_2 = {
+		start_year = 102
+		research_cost = 5
+		xor = {
+			solar_power_generation_construction_tech_2
+		}
+		folder = {
+			name = electronics_folder
+			position = { x = 2 y = @112 }
+		}
+		on_research_complete = {
+			modify_building_resources = {
+				building = renewable_power_plant
+				resource = energy
+				amount = 1
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		categories = {
+			electronics
+			nuclear_civilian
+		}
+	}
+
 	nuclear_power_plant_tech = {
 	
 		start_year = 100
@@ -1676,6 +1876,14 @@ technologies = {
 
 		path = {
 			leads_to_tech = nuclear_power_plant_tech_3 
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = nuclear_power_plant_tech_2_fissile_optimization
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = nuclear_power_plant_tech_2_output_optimization
 			research_cost_coeff = 1
 		}
 
@@ -1773,6 +1981,14 @@ technologies = {
 			leads_to_tech = nuclear_power_plant_tech_4 
 			research_cost_coeff = 1
 		}
+		path = {
+			leads_to_tech = nuclear_power_plant_tech_3_fissile_optimization
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = nuclear_power_plant_tech_3_output_optimization
+			research_cost_coeff = 1
+		}
 
 		categories = {
 			nuclear
@@ -1863,6 +2079,14 @@ technologies = {
 		enable_building = {
 			building = nuclear_reactor
 			level = 4
+		}
+		path = {
+			leads_to_tech = nuclear_power_plant_tech_4_fissile_optimization
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = nuclear_power_plant_tech_4_output_optimization
+			research_cost_coeff = 1
 		}
 
 		categories = {
@@ -2141,7 +2365,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = @100 }
+			position = { x = 3 y = @100 }
 		}
 
 		force_use_small_tech_layout = yes
@@ -2181,7 +2405,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = @110 }
+			position = { x = 3 y = @110 }
 		}
 
 		path = {
@@ -2223,7 +2447,7 @@ technologies = {
 		
 		folder = {
 			name = electronics_folder
-			position = { x = 2 y = 18 }
+			position = { x = 3 y = 18 }
 		}
 
 		production_speed_nuclear_reactor_factor = 0.10
