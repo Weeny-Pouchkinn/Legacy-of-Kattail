@@ -2143,9 +2143,11 @@ on_actions = {
 			#Productivity Drop
 			if = {
 				limit = { FROM = { has_war_with = ROOT } }
-				subtract_from_variable = { lok_state_productivity_value = 0.001 }
-				add_to_variable = { state_prod_change_from_devastation = 0.001 }
-				clamp_variable = { var = lok_state_productivity_value min = 0 max = 999 }
+				FROM.FROM = {
+					subtract_from_variable = { lok_state_productivity_value = 0.01 }
+					add_to_variable = { state_prod_change_from_devastation = 0.01 }
+					clamp_variable = { var = lok_state_productivity_value min = 0 max = 999 }
+				}
 			}
 
 			#########################################

@@ -2116,6 +2116,7 @@ calculate_radiation_state_modifiers = {
 	set_variable = { lok_radiation_army_modifier = lok_radiation_modifier } #For armies, not affected by species
 	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
 	multiply_variable = { lok_radiation_modifier = modifier@lok_species_radiation_effect_factor }
+	multiply_variable = { lok_radiation_death_percent = var:CONTROLLER.modifier@lok_country_radiation_effect_factor }
 	clamp_variable = { var = lok_radiation_army_attrition_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
 	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and -0.9
 	clamp_variable = { var = lok_radiation_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
@@ -2123,9 +2124,11 @@ calculate_radiation_state_modifiers = {
 
 #applied weekly, kill people due to radiation
 apply_radiation_effects = {
+	set_variable = { lok_radiation_threshold = modifier@lok_species_radiation_threshold_value }
+	add_to_variable = { lok_radiation_threshold = var:CONTROLLER.modifier@lok_country_radiation_threshold_value }
 	if = { #Kill people in the state
 		limit = { #THIS IS THE "BASE RADIATION RESISTANCE TRAIT"
-			check_variable = { lok_radiation_level > modifier@lok_species_radiation_threshold_value }
+			check_variable = { lok_radiation_level > lok_radiation_threshold }
 		}
 		#Kill people in the state (RIP Bozo)
 		set_variable = { lok_radiation_death_percent = lok_radiation_level }
@@ -2134,6 +2137,7 @@ apply_radiation_effects = {
 
 		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
 		multiply_variable = { lok_radiation_death_percent = modifier@lok_species_radiation_casualties_factor }
+		multiply_variable = { lok_radiation_death_percent = var:CONTROLLER.modifier@lok_country_radiation_casualties_factor }
 
 		set_variable = { lok_radiation_death_count = state_population_k }
 		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }
