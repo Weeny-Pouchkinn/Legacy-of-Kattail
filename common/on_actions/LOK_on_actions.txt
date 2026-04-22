@@ -661,6 +661,10 @@ on_actions = {
 
 			SLC = { remove_ideas = var_species_0 add_ideas = var_species_49 }
 			DUR = { remove_ideas = var_species_0 add_ideas = var_species_50 }
+			UMR = { remove_ideas = var_species_0 add_ideas = var_species_57 }
+			KOL = { remove_ideas = var_species_0 add_ideas = var_species_58 }
+			IZW = { remove_ideas = var_species_0 add_ideas = var_species_59 }
+			PAN = { remove_ideas = var_species_0 add_ideas = var_species_60 }
 
 
 			#Setup STATE species
@@ -670,6 +674,10 @@ on_actions = {
 			#Nekaston
 			NEK = { every_owned_state = { set_variable = { species = 14 } } }
 			IOS = { every_owned_state = { set_variable = { species = 14 } } } #thats right
+			UMR = { every_owned_state = { set_variable = { species = 57 } } }
+			KOL = { every_owned_state = { set_variable = { species = 58 } } }
+			IZW = { every_owned_state = { set_variable = { species = 59 } } }
+			PAN = { every_owned_state = { set_variable = { species = 60 } } }
 
 			#Big Bnuuy
 			PLR = { every_owned_state = { set_variable = { species = 15 } } }
@@ -2574,6 +2582,28 @@ on_actions = {
 				set_global_flag = orient_kapus_fallen
 
 				news_event = { id = LOK_cityfall_news.32 hours = 6 }
+			}
+
+			# Fall of Himezulte Airbase - State 220
+			if = {
+				limit = {
+					FROM.FROM = { state = 220 }
+					ROOT = { has_war_with = FROM }
+					FROM = { NOT = { original_tag = ROOT } }
+					NOT = { has_global_flag = himezulte_fallen }
+				}
+				set_global_flag = himezulte_fallen
+
+				news_event = { id = LOK_cityfall_news.33 hours = 6 }
+				if = {
+					limit = {
+						ROOT = {
+							is_herzlands_warlord = yes
+							has_government = fascism
+						}
+					}
+					ROOT = { country_event = { id = LOK_cityfall_news.34 days = 2 } }
+				}
 			}
 		}
 	}
