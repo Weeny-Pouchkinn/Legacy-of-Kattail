@@ -149,6 +149,10 @@ on_actions = {
 					ROOT = { add_to_array = { cores_at_game_start = PREV } }
 				}
 			}
+			
+			every_state = {
+				add_dynamic_modifier = { modifier = LOK_base_modifier_definitions_state }
+			}
 
 			every_state = {
 				limit = { is_on_continent = muno }
@@ -2134,6 +2138,14 @@ on_actions = {
 				FROM = {
 					country_event = { id = KTW_event.6 }
 				}
+			}
+
+			#Productivity Drop
+			if = {
+				limit = { FROM = { has_war_with = ROOT } }
+				subtract_from_variable = { lok_state_productivity_value = 0.001 }
+				add_to_variable = { state_prod_change_from_devastation = 0.001 }
+				clamp_variable = { var = lok_state_productivity_value min = 0 max = 999 }
 			}
 
 			#########################################

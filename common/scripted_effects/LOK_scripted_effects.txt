@@ -1613,35 +1613,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 calculate_food_consumption_in_state = { #By default 100k people eat one food per month. Can be modified by some species (eg Paluush).
 	set_variable = { state_food_consumption = state_population_k }
 	divide_variable = { state_food_consumption = 100 }
-	if = { #Katzens and Sobakis are mostly carnivorous and thus eat 15% more
-		limit = {
-			has_mostly_carnivorous_trait = yes
-		}
-		multiply_variable = { state_food_consumption = 1.15 }
-	}
-	if = { #Lithoids and robots do not eat food at all
-		limit = {
-			OR = {
-				has_mechanical_trait = yes
-				has_lithoid_trait = yes
-			}
-		}
-		multiply_variable = { state_food_consumption = 0 }
-	}
-	if = { #Estalai eat a lot
-		limit = {
-			has_carnivorous_trait = yes
-		}
-		multiply_variable = { state_food_consumption = 1.25 }
-	}
-	if = { #Paluush........
-		limit = {
-			OR = {
-				check_variable = { species = 15 }
-			}
-		}
-		multiply_variable = { state_food_consumption = 50 }
-	}
+	multiply_variable = { state_food_consumption = modifier@lok_species_food_consumption_factor }
 	round_variable = state_food_consumption
 }
 
@@ -1650,7 +1622,7 @@ calculate_food_production_in_state = {
 }
 
 calculate_total_food_consumption = {
-	set_variable = { country_food_stockpile_max = 0 } #reset food stockpile capacity
+	set_variable = { country_food_stockpile_max = modifier@lok_food_stockpile_capacity } #reset food stockpile capacity
 	set_variable = { country_food_consumption = 0 } #Food that is being eaten
 	set_variable = { country_food_balance = 0 }
 
@@ -1669,16 +1641,11 @@ calculate_total_food_consumption = {
 		calculate_food_consumption_in_state = yes
 		PREV = {
 			add_to_variable = { country_food_consumption = PREV.state_food_consumption }
-
-			set_variable = { country_food_stockpile_from_infra = PREV.non_damaged_building_level@infrastructure }
-			multiply_variable = { country_food_stockpile_from_infra = 10 } #1 infra = 10 food or 10M people for 1 month
-			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_infra }
-
-			set_variable = { country_food_stockpile_from_silos = PREV.non_damaged_building_level@food_silo }
-			multiply_variable = { country_food_stockpile_from_silos = 50 } #1 silo = 50 food or 50M people for 1 month
-			add_to_variable = { country_food_stockpile_max = country_food_stockpile_from_silos }
 		}
 	}
+
+	# The country modifier
+	multiply_variable = { country_food_consumption = modifier@lok_country_food_consumption_factor }
 
 	# 4. Update the modifier for the engine to use on the next tick
 	set_variable = { country_food_consumption_modifier = country_food_consumption }
@@ -2148,22 +2115,7 @@ calculate_radiation_state_modifiers = {
 	multiply_variable = { lok_radiation_modifier = -1 } #Make negative
 	set_variable = { lok_radiation_army_modifier = lok_radiation_modifier } #For armies, not affected by species
 	#Species Effects THIS IS THE "EFFECTS FROM RADIATION" TRAIT
-	if = {
-		limit = { has_rad_resistant_trait = yes } #-30% for Katzens
-		multiply_variable = { lok_radiation_modifier = 0.7 }
-	}
-	if = {
-		limit = { #-75% for Lithoids
-			has_lithoid_trait = yes
-		} 
-		multiply_variable = { lok_radiation_modifier = 0.25 }
-	}
-	if = {
-		limit = { #-90% for Machines
-			has_mechanical_trait = yes
-		} 
-		multiply_variable = { lok_radiation_modifier = 0.10 }
-	}
+	multiply_variable = { lok_radiation_modifier = modifier@lok_species_radiation_effect_factor }
 	clamp_variable = { var = lok_radiation_army_attrition_modifier min = 0 max = 0.9 } #Clamp between 0 and 0.9
 	clamp_variable = { var = lok_radiation_army_modifier min = -0.9 max = 0 } #Clamp between 0 and -0.9
 	clamp_variable = { var = lok_radiation_modifier min = -0.9 max = 0 } #Clamp between 0 and 0.9
@@ -2173,25 +2125,7 @@ calculate_radiation_state_modifiers = {
 apply_radiation_effects = {
 	if = { #Kill people in the state
 		limit = { #THIS IS THE "BASE RADIATION RESISTANCE TRAIT"
-			NOT = {
-				AND = { has_rad_resistant_trait = yes check_variable = { lok_radiation_level < 0.8 } } #Katzens don't die below 0.8 radiation
-				AND = {
-					has_subterranean_trait = yes
-					check_variable = { lok_radiation_level < 1.5 }
-				}
-				AND = {
-					has_cyborg_trait = yes
-					check_variable = { lok_radiation_level < 2.5 }
-				}
-				AND = {
-					has_lithoid_trait = yes
-					check_variable = { lok_radiation_level < 5 } #NMI + Nekeox don't die below 5
-				}
-				AND = {
-					has_mechanical_trait = yes
-					check_variable = { lok_radiation_level < 10 } #Robots don't die below 10
-				}
-			}
+			check_variable = { lok_radiation_level > modifier@lok_species_radiation_threshold_value }
 		}
 		#Kill people in the state (RIP Bozo)
 		set_variable = { lok_radiation_death_percent = lok_radiation_level }
@@ -2199,34 +2133,7 @@ apply_radiation_effects = {
 		divide_variable = { lok_radiation_death_percent = 100 }
 
 		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
-		if = {
-			limit = { #-25% for Cyborgs
-				has_cyborg_trait = yes
-			} 
-			multiply_variable = { lok_radiation_death_percent = 0.75 }
-		}
-
-		if = {
-			limit = { has_rad_resistant_trait = yes } #Only half the deaths for Katzen states
-			multiply_variable = { lok_radiation_death_percent = 0.5 }
-		}
-
-		if = {
-			limit = { #-75% for Lithoids and subterranean
-				OR = {
-					has_lithoid_trait = yes
-					has_subterranean_trait = yes
-				}
-			} 
-			multiply_variable = { lok_radiation_death_percent = 0.25 }
-		}
-
-		if = {
-			limit = { #-90% for Robots
-				has_mechanical_trait = yes
-			} 
-			multiply_variable = { lok_radiation_death_percent = 0.90 }
-		}
+		multiply_variable = { lok_radiation_death_percent = modifier@lok_species_radiation_casualties_factor }
 
 		set_variable = { lok_radiation_death_count = state_population_k }
 		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }
