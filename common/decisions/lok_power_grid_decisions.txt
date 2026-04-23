@@ -1,0 +1,346 @@
+lok_power_grid_management_cat = {
+
+	####################################
+	### SHOW / HIDE TOGGLE DECISIONS ###
+	####################################
+
+	lok_show_solar_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			NOT = { has_country_flag = lok_show_solar_decommission }
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = lok_show_solar_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_hide_solar_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			has_country_flag = lok_show_solar_decommission
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			clr_country_flag = lok_show_solar_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_show_fossil_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			NOT = { has_country_flag = lok_show_fossil_decommission }
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = lok_show_fossil_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_hide_fossil_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			has_country_flag = lok_show_fossil_decommission
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			clr_country_flag = lok_show_fossil_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_show_nuclear_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			NOT = { has_country_flag = lok_show_nuclear_decommission }
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = lok_show_nuclear_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_hide_nuclear_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			has_country_flag = lok_show_nuclear_decommission
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			clr_country_flag = lok_show_nuclear_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_show_fusion_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			NOT = { has_country_flag = lok_show_fusion_decommission }
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			set_country_flag = lok_show_fusion_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_hide_fusion_decommission = {
+		icon = GFX_decision_generic_industry
+
+		visible = {
+			has_country_flag = lok_show_fusion_decommission
+		}
+
+		available = {
+			always = yes
+		}
+
+		cost = 0
+
+		complete_effect = {
+			clr_country_flag = lok_show_fusion_decommission
+		}
+
+		ai_will_do = { base = 0 }
+	}
+
+	###############################
+	### DECOMMISSION DECISIONS  ###
+	###############################
+
+	lok_decommission_solar = {
+		icon = GFX_decision_generic_industry
+
+		state_target = yes
+		on_map_mode = map_only
+
+		visible = {
+			has_country_flag = lok_show_solar_decommission
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@renewable_power_plant > 0 }
+			}
+		}
+
+		available = {
+			NOT = { has_country_flag = lok_decommissioning_solar }
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@renewable_power_plant > 0 }
+			}
+		}
+
+		complete_effect = {
+			set_country_flag = lok_decommissioning_solar
+			FROM = {
+				set_temp_variable = { lok_new_level = building_level@renewable_power_plant }
+				subtract_from_variable = { lok_new_level = 1 }
+				set_building_level = {
+					type = renewable_power_plant
+					level = lok_new_level
+					instant_build = yes
+				}
+			}
+		}
+
+		remove_effect = {
+			clr_country_flag = lok_decommissioning_solar
+		}
+
+		days_remove = 180
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_decommission_fossil = {
+		icon = GFX_decision_generic_industry
+
+		state_target = yes
+		on_map_mode = map_only
+
+		visible = {
+			has_country_flag = lok_show_fossil_decommission
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@fossil_power_plant > 0 }
+			}
+		}
+
+		available = {
+			NOT = { has_country_flag = lok_decommissioning_fossil }
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@fossil_power_plant > 0 }
+			}
+		}
+
+		complete_effect = {
+			set_country_flag = lok_decommissioning_fossil
+			FROM = {
+				set_temp_variable = { lok_new_level = building_level@fossil_power_plant }
+				subtract_from_variable = { lok_new_level = 1 }
+				set_building_level = {
+					type = fossil_power_plant
+					level = lok_new_level
+					instant_build = yes
+				}
+			}
+		}
+
+		remove_effect = {
+			clr_country_flag = lok_decommissioning_fossil
+		}
+
+		days_remove = 180
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_decommission_nuclear = {
+		icon = GFX_decision_generic_industry
+
+		state_target = yes
+		on_map_mode = map_only
+
+		visible = {
+			has_country_flag = lok_show_nuclear_decommission
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@nuclear_reactor > 0 }
+			}
+		}
+
+		available = {
+			NOT = { has_country_flag = lok_decommissioning_nuclear }
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@nuclear_reactor > 0 }
+			}
+		}
+
+		complete_effect = {
+			set_country_flag = lok_decommissioning_nuclear
+			FROM = {
+				set_temp_variable = { lok_new_level = building_level@nuclear_reactor }
+				subtract_from_variable = { lok_new_level = 1 }
+				set_building_level = {
+					type = nuclear_reactor
+					level = lok_new_level
+					instant_build = yes
+				}
+			}
+		}
+
+		remove_effect = {
+			clr_country_flag = lok_decommissioning_nuclear
+		}
+
+		days_remove = 180
+
+		ai_will_do = { base = 0 }
+	}
+
+	lok_decommission_fusion = {
+		icon = GFX_decision_generic_industry
+
+		state_target = yes
+		on_map_mode = map_only
+
+		visible = {
+			has_country_flag = lok_show_fusion_decommission
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@fusion_power_plant > 0 }
+			}
+		}
+
+		available = {
+			NOT = { has_country_flag = lok_decommissioning_fusion }
+			FROM = {
+				is_fully_controlled_by = ROOT
+				check_variable = { building_level@fusion_power_plant > 0 }
+			}
+		}
+
+		complete_effect = {
+			set_country_flag = lok_decommissioning_fusion
+			FROM = {
+				set_temp_variable = { lok_new_level = building_level@fusion_power_plant }
+				subtract_from_variable = { lok_new_level = 1 }
+				set_building_level = {
+					type = fusion_power_plant
+					level = lok_new_level
+					instant_build = yes
+				}
+			}
+		}
+
+		remove_effect = {
+			clr_country_flag = lok_decommissioning_fusion
+		}
+
+		days_remove = 180
+
+		ai_will_do = { base = 0 }
+	}
+}
