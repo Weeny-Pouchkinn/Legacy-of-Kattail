@@ -3579,11 +3579,12 @@ technologies = {
 	}
 
 
-	#############################################
-	### FOOD TECH CHAIN
-	### Positioned to the right of synthetic oil
-	### Root: lok_food_storage_research
-	#############################################
+	######################################################################
+	### FOOD TECH CHAINS
+	### Two branches right of synthetic oil, both from lok_food_storage_research
+	### Left branch (x=0,1,2): Hydroponics farms
+	### Right branch (x=4,5,6): Food production / food silos
+	######################################################################
 
 	lok_food_storage_research = {
 
@@ -3597,12 +3598,17 @@ technologies = {
 			research_cost_coeff = 1
 		}
 
+		path = {
+			leads_to_tech = lok_food_production_1
+			research_cost_coeff = 1
+		}
+
 		research_cost = 1
 		start_year = 98
 
 		folder = {
 			name = industry_folder
-			position = { x = 1 y = @98 }
+			position = { x = 2 y = @98 }
 		}
 
 		categories = {
@@ -3615,6 +3621,10 @@ technologies = {
 		}
 	}
 
+	##########################
+	### HYDROPONICS BRANCH ###
+	##########################
+
 	lok_hydroponics_lab = {
 
 		enable_building = {
@@ -3623,7 +3633,7 @@ technologies = {
 		}
 
 		path = {
-			leads_to_tech = lok_food_production_1
+			leads_to_tech = lok_hydroponics_expansion_1
 			research_cost_coeff = 1
 		}
 
@@ -3645,12 +3655,12 @@ technologies = {
 		}
 	}
 
-	lok_food_production_1 = {
+	lok_hydroponics_expansion_1 = {
 
-		lok_food_resources_factor = 0.10
+		production_speed_hydroponics_farm_factor = 0.15
 
 		path = {
-			leads_to_tech = lok_food_production_2
+			leads_to_tech = lok_hydroponics_expansion_2
 			research_cost_coeff = 1
 		}
 
@@ -3660,7 +3670,7 @@ technologies = {
 		}
 
 		path = {
-			leads_to_tech = lok_hydroponics_efficiency_1
+			leads_to_tech = lok_hydroponics_bioreactor_1
 			research_cost_coeff = 1
 		}
 
@@ -3698,7 +3708,7 @@ technologies = {
 		}
 
 		xor = {
-			lok_hydroponics_efficiency_1
+			lok_hydroponics_bioreactor_1
 		}
 
 		research_cost = 1.5
@@ -3719,9 +3729,20 @@ technologies = {
 		}
 	}
 
-	lok_hydroponics_efficiency_1 = {
+	lok_hydroponics_bioreactor_1 = {
 
-		production_speed_hydroponics_farm_factor = 0.15
+		on_research_complete = {
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = food
+				amount = -1
+			}
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = energy
+				amount = 2
+			}
+		}
 
 		xor = {
 			lok_hydroponics_yield_1
@@ -3745,12 +3766,12 @@ technologies = {
 		}
 	}
 
-	lok_food_production_2 = {
+	lok_hydroponics_expansion_2 = {
 
-		lok_food_resources_factor = 0.10
+		production_speed_hydroponics_farm_factor = 0.15
 
 		path = {
-			leads_to_tech = lok_food_production_3
+			leads_to_tech = lok_hydroponics_expansion_3
 			research_cost_coeff = 1
 		}
 
@@ -3760,7 +3781,7 @@ technologies = {
 		}
 
 		path = {
-			leads_to_tech = lok_hydroponics_efficiency_2
+			leads_to_tech = lok_hydroponics_bioreactor_2
 			research_cost_coeff = 1
 		}
 
@@ -3798,7 +3819,7 @@ technologies = {
 		}
 
 		xor = {
-			lok_hydroponics_efficiency_2
+			lok_hydroponics_bioreactor_2
 		}
 
 		research_cost = 1.5
@@ -3819,9 +3840,20 @@ technologies = {
 		}
 	}
 
-	lok_hydroponics_efficiency_2 = {
+	lok_hydroponics_bioreactor_2 = {
 
-		production_speed_hydroponics_farm_factor = 0.15
+		on_research_complete = {
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = food
+				amount = -1
+			}
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = energy
+				amount = 2
+			}
+		}
 
 		xor = {
 			lok_hydroponics_yield_2
@@ -3845,9 +3877,9 @@ technologies = {
 		}
 	}
 
-	lok_food_production_3 = {
+	lok_hydroponics_expansion_3 = {
 
-		lok_food_resources_factor = 0.10
+		production_speed_hydroponics_farm_factor = 0.15
 
 		path = {
 			leads_to_tech = lok_hydroponics_yield_3
@@ -3855,7 +3887,7 @@ technologies = {
 		}
 
 		path = {
-			leads_to_tech = lok_hydroponics_efficiency_3
+			leads_to_tech = lok_hydroponics_bioreactor_3
 			research_cost_coeff = 1
 		}
 
@@ -3893,7 +3925,7 @@ technologies = {
 		}
 
 		xor = {
-			lok_hydroponics_efficiency_3
+			lok_hydroponics_bioreactor_3
 		}
 
 		research_cost = 1.5
@@ -3914,9 +3946,20 @@ technologies = {
 		}
 	}
 
-	lok_hydroponics_efficiency_3 = {
+	lok_hydroponics_bioreactor_3 = {
 
-		production_speed_hydroponics_farm_factor = 0.15
+		on_research_complete = {
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = food
+				amount = -1
+			}
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = energy
+				amount = 2
+			}
+		}
 
 		xor = {
 			lok_hydroponics_yield_3
@@ -3928,6 +3971,381 @@ technologies = {
 		folder = {
 			name = industry_folder
 			position = { x = 0 y = @114 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	##############################
+	### FOOD PRODUCTION BRANCH ###
+	##############################
+
+	lok_food_production_1 = {
+
+		lok_food_resources_factor = 0.10
+
+		path = {
+			leads_to_tech = lok_food_production_2
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = lok_food_silo_upgrade_1
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = lok_food_stockpile_1
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 102
+
+		folder = {
+			name = industry_folder
+			position = { x = 5 y = @102 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 3
+
+			modifier = {
+				factor = 2
+				date > "102.1.1"
+			}
+		}
+	}
+
+	lok_food_silo_upgrade_1 = {
+
+		production_speed_food_silo_factor = 0.25
+
+		xor = {
+			lok_food_stockpile_1
+		}
+
+		research_cost = 1.5
+		start_year = 104
+
+		folder = {
+			name = industry_folder
+			position = { x = 4 y = @104 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	lok_food_stockpile_1 = {
+
+		lok_food_stockpile_factor = 0.05
+
+		xor = {
+			lok_food_silo_upgrade_1
+		}
+
+		research_cost = 1.5
+		start_year = 104
+
+		folder = {
+			name = industry_folder
+			position = { x = 6 y = @104 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	lok_food_production_2 = {
+
+		lok_food_resources_factor = 0.10
+
+		path = {
+			leads_to_tech = lok_food_production_3
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = lok_food_silo_upgrade_2
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = lok_food_stockpile_2
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 106
+
+		folder = {
+			name = industry_folder
+			position = { x = 5 y = @106 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 3
+
+			modifier = {
+				factor = 2
+				date > "106.1.1"
+			}
+		}
+	}
+
+	lok_food_silo_upgrade_2 = {
+
+		production_speed_food_silo_factor = 0.25
+
+		xor = {
+			lok_food_stockpile_2
+		}
+
+		research_cost = 1.5
+		start_year = 108
+
+		folder = {
+			name = industry_folder
+			position = { x = 4 y = @108 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	lok_food_stockpile_2 = {
+
+		lok_food_stockpile_factor = 0.05
+
+		xor = {
+			lok_food_silo_upgrade_2
+		}
+
+		research_cost = 1.5
+		start_year = 108
+
+		folder = {
+			name = industry_folder
+			position = { x = 6 y = @108 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	lok_food_production_3 = {
+
+		lok_food_resources_factor = 0.10
+
+		path = {
+			leads_to_tech = lok_food_production_4
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = lok_food_silo_upgrade_3
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = lok_food_stockpile_3
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 110
+
+		folder = {
+			name = industry_folder
+			position = { x = 5 y = @110 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 3
+
+			modifier = {
+				factor = 2
+				date > "110.1.1"
+			}
+		}
+	}
+
+	lok_food_silo_upgrade_3 = {
+
+		production_speed_food_silo_factor = 0.25
+
+		xor = {
+			lok_food_stockpile_3
+		}
+
+		research_cost = 1.5
+		start_year = 112
+
+		folder = {
+			name = industry_folder
+			position = { x = 4 y = @112 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	lok_food_stockpile_3 = {
+
+		lok_food_stockpile_factor = 0.05
+
+		xor = {
+			lok_food_silo_upgrade_3
+		}
+
+		research_cost = 1.5
+		start_year = 112
+
+		folder = {
+			name = industry_folder
+			position = { x = 6 y = @112 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	lok_food_production_4 = {
+
+		lok_food_resources_factor = 0.10
+
+		path = {
+			leads_to_tech = lok_food_silo_upgrade_4
+			research_cost_coeff = 1
+		}
+
+		path = {
+			leads_to_tech = lok_food_stockpile_4
+			research_cost_coeff = 1
+		}
+
+		research_cost = 2
+		start_year = 114
+
+		folder = {
+			name = industry_folder
+			position = { x = 5 y = @114 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 3
+
+			modifier = {
+				factor = 2
+				date > "114.1.1"
+			}
+		}
+	}
+
+	lok_food_silo_upgrade_4 = {
+
+		production_speed_food_silo_factor = 0.25
+
+		xor = {
+			lok_food_stockpile_4
+		}
+
+		research_cost = 1.5
+		start_year = 116
+
+		folder = {
+			name = industry_folder
+			position = { x = 4 y = @116 }
+		}
+
+		categories = {
+			industry
+			synth_resources
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+	lok_food_stockpile_4 = {
+
+		lok_food_stockpile_factor = 0.05
+
+		xor = {
+			lok_food_silo_upgrade_4
+		}
+
+		research_cost = 1.5
+		start_year = 116
+
+		folder = {
+			name = industry_folder
+			position = { x = 6 y = @116 }
 		}
 
 		categories = {
