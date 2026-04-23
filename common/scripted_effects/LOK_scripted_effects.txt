@@ -1581,19 +1581,25 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 	clamp_variable = { var = lok_total_extra_rubber min = 0 max = 1000000 }
 
 	#Calculate total bonuses for food
-	set_temp_variable = { lok_total_extra_food_factor = 1 } #set to 1
-	add_to_temp_variable = { lok_total_extra_food_factor = modifier@lok_food_resources_factor } #minerals
+	set_variable = { lok_total_extra_food_factor = 1 } #set to 1
+	set_variable = { lok_total_extra_food_factor = 1 } #set to 1
+	add_to_variable = { lok_total_extra_food_factor = modifier@lok_food_resources_factor }
 	#multiply_variable = { lok_total_extra_food_factor = global.lok_nuclear_soot_perc_negative } #Applied AFTER buffs, subtract nuclear soot
-	#Calculate total extra food
-	set_variable = { lok_total_extra_food = resource_produced@food } #Say 100
+	#For food we need to calc every state because otherwise it'll take into account negative food from consumption and multiply that
+	every_controlled_state = {
+		set_variable = { state_food_production = resource@food }
+		clamp_variable = { var = state_food_production min = 0 max = 9999 }
+		add_to_variable = { PREV.lok_total_extra_food = state_food_production }
+	}
+	set_variable = { lok_total_food_prod = lok_total_extra_food } #minerals
 	multiply_variable = { lok_total_extra_food = lok_total_extra_food_factor } #we get the factor, if its 1.5 then 150. If it's 0.5 then 50.
-	subtract_from_variable = { lok_total_extra_food = resource_produced@food } #Remove current production to get the extra we need to add. Now 50. If it was 50, then -50.
+	subtract_from_variable = { lok_total_extra_food = lok_total_food_prod } #Remove current production to get the extra we need to add. Now 50. If it was 50, then -50.
 	clamp_variable = { var = lok_total_extra_food min = -100000 max = 1000000 }
 
 	#Calculate total bonuses for fissiles
 	set_temp_variable = { lok_total_extra_fissiles_factor = 1 } #set to 1
 	add_to_temp_variable = { lok_total_extra_fissiles_factor = modifier@lok_mineral_resources_factor } #minerals
-	add_to_temp_variable = { lok_total_extra_oil_factor = modifier@lok_fissiles_resources_factor }
+	add_to_temp_variable = { lok_total_extra_fissiles_factor = modifier@lok_fissiles_resources_factor }
 	#Calculate total extra fissiles
 	set_variable = { lok_total_extra_fissiles = resource_produced@fissiles } #Say 100
 	multiply_variable = { lok_total_extra_fissiles = lok_total_extra_fissiles_factor } #we get the factor, if its 1.5 then 150
@@ -1623,6 +1629,7 @@ calculate_food_production_in_state = {
 
 calculate_total_food_consumption = {
 	set_variable = { country_food_stockpile_max = modifier@lok_food_stockpile_capacity } #reset food stockpile capacity
+	multiply_variable = { country_food_stockpile_max = modifier@lok_food_stockpile_factor } #Apply modifiers to stockpile capacity
 	set_variable = { country_food_consumption = 0 } #Food that is being eaten
 	set_variable = { country_food_balance = 0 }
 
