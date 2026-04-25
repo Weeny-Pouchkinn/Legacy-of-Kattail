@@ -517,6 +517,21 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_elwin_question }
         completion_reward = {
+            IF = {
+                limit = {
+                    has_government = communism
+                }
+                add_popularity = {
+                    ideology = communism
+                    popularity = 0.3
+                }
+            }
+            ELSE = {
+                add_popularity = {
+                    ideology = fascism
+                    popularity = 0.3
+                }
+            }
         }
     }
 
@@ -963,6 +978,7 @@ focus_tree = {
         prerequisite = { focus = FRA_left_abandon_the_bureaucrat_collectivism focus = FRA_left_compromise_with_the_bureaucrats }
         prerequisite = { focus = FRA_left_the_internationalist_charter }
         completion_reward = {
+            add_research_slot = 1
         }
     }   
 
@@ -1038,8 +1054,24 @@ focus_tree = {
         icon = GFX_FRA_Hell
         x = 45
         y = 7
-        cost = 20
+        cost = 15
         prerequisite = { focus = FRA_left_destroy_the_popular_front focus = FRA_left_crusade_against_barbarism }
+        cancelable = NO
+        select_effect = {
+            country_event = {
+                id = FRA_north_consolidation.1
+                days = 30
+            }
+            country_event = {
+                id = FRA_north_consolidation.2
+                days = 60
+            }
+            country_event = {
+                id = FRA_north_consolidation.3
+                days = 90
+            }
+
+        }
         completion_reward = {
             every_possible_country = {
                 limit = {
@@ -1071,10 +1103,131 @@ focus_tree = {
     }
 
     focus = {
-        id = FRA_left_northherzlands_government
+        id = FRA_left_induct_the_sobakis
+        icon = GFX_FRA_Hell
+        x = 47
+        y = 8
+        cost = 0
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_left_reject_the_sobakis
+                has_completed_focus = FRA_left_induct_the_sobakis
+            }
+        }
+        prerequisite = { focus = FRA_left_crusade_against_barbarism }
+        completion_reward = {
+            create_faction_from_template = faction_template_faction_leftcom
+            SOB = {
+                country_event = {
+                    id = SOB_coalition.1
+                }
+            }
+            mark_focus_tree_layout_dirty = yes
+        }
+    }
+
+    focus = {
+        id = FRA_left_reject_the_sobakis
         icon = GFX_FRA_Hell
         x = 43
         y = 8
+        cost = 0
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_left_reject_the_sobakis
+                has_completed_focus = FRA_left_induct_the_sobakis
+            }
+        }
+        prerequisite = { focus = FRA_left_destroy_the_popular_front }
+        mutually_exclusive = { focus = FRA_left_induct_the_sobakis }
+        completion_reward = {
+            mark_focus_tree_layout_dirty = yes
+        }
+    }
+
+    focus = {
+        id = FRA_left_tank_school
+        icon = GFX_FRA_Hell
+        x = 43
+        y = 9
+        cost = 0
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_left_tank_school
+                has_completed_focus = FRA_left_arty_school
+            }
+        }
+        prerequisite = { focus = FRA_left_induct_the_sobakis focus = FRA_left_reject_the_sobakis }
+        mutually_exclusive = { focus = FRA_left_arty_school }
+        completion_reward = {
+            mark_focus_tree_layout_dirty = yes
+        }
+    }
+
+    focus = {
+        id = FRA_left_arty_school
+        icon = GFX_FRA_Hell
+        x = 47
+        y = 9
+        cost = 0
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_left_tank_school
+                has_completed_focus = FRA_left_arty_school
+            }
+        }
+        prerequisite = { focus = FRA_left_induct_the_sobakis focus = FRA_left_reject_the_sobakis }
+        mutually_exclusive = { focus = FRA_left_tank_school }
+        completion_reward = {
+            mark_focus_tree_layout_dirty = yes
+        }
+    }
+
+    focus = {
+        id = FRA_left_long_war
+        icon = GFX_FRA_Hell
+        x = 43
+        y = 10
+        cost = 0
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_left_long_war
+                has_completed_focus = FRA_left_on_attack
+            }
+        }
+        prerequisite = { focus = FRA_left_tank_school focus = FRA_left_arty_school }
+        mutually_exclusive = { focus = FRA_left_on_attack }
+        completion_reward = {
+            add_ideas = FRA_idea_the_long_night
+            mark_focus_tree_layout_dirty = yes
+        }
+    }
+
+    focus = {
+        id = FRA_left_on_attack
+        icon = GFX_FRA_Hell
+        x = 43
+        y = 10
+        cost = 0
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_left_long_war
+                has_completed_focus = FRA_left_on_attack
+            }
+        }
+        prerequisite = { focus = FRA_left_tank_school focus = FRA_left_arty_school }
+        mutually_exclusive = { focus = FRA_left_long_war }
+        completion_reward = {
+            add_ideas = FRA_idea_peoples_blitz
+            mark_focus_tree_layout_dirty = yes
+        }
+    }
+
+    focus = {
+        id = FRA_left_northherzlands_government
+        icon = GFX_FRA_Hell
+        x = 45
+        y = 11
         cost = 5
         available = {
             509 = {
