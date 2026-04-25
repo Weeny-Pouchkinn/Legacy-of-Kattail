@@ -181,6 +181,10 @@ on_actions = {
 					ROOT = { add_to_array = { cores_at_game_start = PREV } }
 				}
 			}
+			
+			every_state = {
+				add_dynamic_modifier = { modifier = LOK_base_modifier_definitions_state }
+			}
 
 			every_state = {
 				limit = { is_on_continent = muno }
@@ -1801,46 +1805,12 @@ on_actions = {
 
 	on_weekly = {
 		effect = {
-			# KTW Katown Struggle - auto wardec nations controlling katown states, auto-peace when they stop
-			if = {
-				limit = { tag = KTW has_country_flag = ktw_katown_struggle_active }
-				every_country = {
-					limit = {
-						NOT = { tag = KTW }
-						NOT = { has_war_with = KTW }
-						OR = {
-							controls_state = 30
-							controls_state = 27
-							controls_state = 29
-							controls_state = 42
-							controls_state = 50
-							controls_state = 39
-						}
-					}
-					KTW = { declare_war_on = { target = PREV type = take_claimed_state } }
-				}
-				every_country = {
-					limit = {
-						has_war_with = KTW
-						NOT = { tag = KTW }
-						NOT = {
-							controls_state = 30
-							controls_state = 27
-							controls_state = 29
-							controls_state = 42
-							controls_state = 50
-							controls_state = 39
-						}
-					}
-					every_owned_state = {
-						limit = { is_in_array = { array = global.greater_katown_states_array value = THIS } }
-						transfer_state_to = KTW
-					}
-					white_peace = KTW
-				}
-			}
+			calculate_bonus_resources_from_modifiers = yes
 			#TEMP, MAKE THAT MONTHLY
 			every_controlled_state = {
+				add_to_variable = { lok_state_productivity_value_base = modifier@lok_weekly_base_productivity_change }
+				add_to_variable = { lok_state_productivity_value = modifier@lok_weekly_base_productivity_change }
+				add_to_variable = { state_prod_change_from_pollution = modifier@lok_weekly_base_productivity_change }
 				regenerate_state_productivity_modifier = yes
 				update_state_productivity_modifier = yes
 			}
@@ -2165,6 +2135,16 @@ on_actions = {
 				}
 				FROM = {
 					country_event = { id = KTW_event.6 }
+				}
+			}
+
+			#Productivity Drop
+			if = {
+				limit = { FROM = { has_war_with = ROOT } }
+				FROM.FROM = {
+					subtract_from_variable = { lok_state_productivity_value = 0.01 }
+					add_to_variable = { state_prod_change_from_devastation = 0.01 }
+					clamp_variable = { var = lok_state_productivity_value min = 0 max = 999 }
 				}
 			}
 
@@ -2650,6 +2630,49 @@ on_actions = {
 		}
 	}
 
+	on_weekly_KTW = {
+		effect = {
+			# KTW Katown Struggle - auto wardec nations controlling katown states, auto-peace when they stop
+			if = {
+				limit = { has_country_flag = ktw_katown_struggle_active }
+				every_country = {
+					limit = {
+						NOT = { tag = KTW }
+						NOT = { has_war_with = KTW }
+						OR = {
+							controls_state = 30
+							controls_state = 27
+							controls_state = 29
+							controls_state = 42
+							controls_state = 50
+							controls_state = 39
+						}
+					}
+					KTW = { declare_war_on = { target = PREV type = take_claimed_state } }
+				}
+				every_country = {
+					limit = {
+						has_war_with = KTW
+						NOT = { tag = KTW }
+						NOT = {
+							controls_state = 30
+							controls_state = 27
+							controls_state = 29
+							controls_state = 42
+							controls_state = 50
+							controls_state = 39
+						}
+					}
+					every_owned_state = {
+						limit = { is_in_array = { array = global.greater_katown_states_array value = THIS } }
+						transfer_state_to = KTW
+					}
+					white_peace = KTW
+				}
+			}
+		}
+	}
+
 	on_weekly_KUS = {
 		effect = {
 			# KUS Flusiobalkan faction factory counting
@@ -2790,7 +2813,6 @@ on_actions = {
 					popularity = -100
 				}
 			}
-			calculate_bonus_resources_from_modifiers = yes
 			count_nukes_in_stockpile = yes
 
 			if = { #DEBUG NUCLEAR WAR MODE - NATIONS WILL RANDOMLY FIRE NUKES AT THE STATES OF THEIR ENEMIES!

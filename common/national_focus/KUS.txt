@@ -2867,12 +2867,9 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_uhkus }
-				swap_ideas = {
-					remove_idea = KUS_uhkus
-					add_idea = KUS_uhkus_greater
-				}
+			swap_ideas = {
+				remove_idea = KUS_uhkus
+				add_idea = KUS_uhkus_greater
 			}
 			FSR = {
 				every_core_state = {
@@ -2947,12 +2944,9 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_uhkus_greater }
-				swap_ideas = {
-					remove_idea = KUS_uhkus_greater
-					add_idea = KUS_uhkus_anti_katzen
-				}
+			swap_ideas = {
+				remove_idea = KUS_uhkus_greater
+				add_idea = KUS_uhkus_anti_katzen
 			}
 			every_country = {
 				limit = {
@@ -3672,6 +3666,11 @@
 
 		completion_reward = {
 			add_ideas = KUS_agromaxx
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = food
+				amount = 5
+			}
 			218 = {
 				add_building_construction = {
 					type = hydroponics_farm
@@ -3923,7 +3922,7 @@
 		completion_reward = {
 			add_tech_bonus = {
 				name = KUS_electronics_research
-				bonus = 0.10
+				bonus = 1
 				uses = 3
 				category = electronics
 			}
