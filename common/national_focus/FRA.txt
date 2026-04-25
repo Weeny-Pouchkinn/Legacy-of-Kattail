@@ -703,9 +703,6 @@ focus_tree = {
                 }
                 army_ratio = 0.2
                 navy_ratio = 0
-                effects = {
-                    set_cosmetic_tag = FRA_counter_rev
-                }
             }
             FRA_trans_com = { 
                 promote_character = yes
@@ -998,17 +995,119 @@ focus_tree = {
     }
 
     focus = {
-        id = FRA_her_computers
+        id = FRA_left_crusade_against_barbarism
         icon = GFX_FRA_Hell
-        x = 45
-        y = 5
+        x = 47
+        y = 6
         cost = 5
-        prerequisite = { focus = FRA_left_abandon_the_bureaucrat_collectivism focus = FRA_left_compromise_with_the_bureaucrats }
-        prerequisite = { focus = FRA_left_the_internationalist_charter }
+        prerequisite = { focus = FRA_her_computers }
+        prerequisite = { focus = FRA_left_ready_for_export }
+        completion_reward = {
+            every_possible_country = {
+                limit = {
+                    has_government = fascism
+                    any_state = {
+                        OR = { 
+                        is_on_continent = felinea
+                    }
+                }
+            }
+                    add_timed_idea = {
+                        idea = FRA_idea_left_crusade
+                        days = 365
+                    }
+                }
+            }
+        }
+    
+
+    focus = {
+        id = FRA_left_destroy_the_popular_front
+        icon = GFX_FRA_Hell
+        x = 43
+        y = 6
+        cost = 5
+        prerequisite = { focus = FRA_left_the_analog_part }
+        prerequisite = { focus = FRA_her_computers }
         completion_reward = {
         }
-    }  
-   
+    }
+
+    focus = {
+        id = FRA_left_consolidate_the_north
+        icon = GFX_FRA_Hell
+        x = 45
+        y = 7
+        cost = 20
+        prerequisite = { focus = FRA_left_destroy_the_popular_front focus = FRA_left_crusade_against_barbarism }
+        completion_reward = {
+            every_possible_country = {
+                limit = {
+                    country_exists = THIS
+                    OR = {
+                        tag = SIL
+						is_elwin_warlord = yes
+						tag = CLE
+						tag = PAW
+						tag = NEU
+						tag = HYP
+                        tag = TAI
+                        tag = POT
+                        original_tag = OST
+                    }
+                    NOT = {
+                        is_in_faction_with = FRA
+                        is_subject_of = FRA
+                    }
+                }
+                FRA = {
+                    declare_war_on = {
+                    target = PREV
+                    type = annex_everything
+                    }
+                }
+            }
+        }
+    }
+
+    focus = {
+        id = FRA_left_northherzlands_government
+        icon = GFX_FRA_Hell
+        x = 43
+        y = 8
+        cost = 5
+        available = {
+            509 = {
+                is_controlled_by = FRA
+            }
+            84 = {
+                is_controlled_by = FRA
+            }
+            62 = {
+                is_controlled_by = FRA
+            }
+        }
+        prerequisite = { focus = FRA_left_consolidate_the_north }
+        completion_reward = {
+            set_cosmetic_tag = FRA_north_herzlands
+            add_timed_idea = {
+                idea = FRA_idea_legitimate_government
+                days = 365
+            }
+            every_state = {
+                IF = {
+                    limit = {
+                        is_in_array = { 
+                            array = global.North-Herzlands
+                            value = THIS
+                        }
+                    }
+                    add_core_of = FRA
+                }
+            }
+        }
+    }
+
     focus = {
         id = FRA_rev_reconcile_radicals
         icon = GFX_FRA_Hell
