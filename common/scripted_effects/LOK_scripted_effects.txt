@@ -111,6 +111,7 @@ update_state_productivity_modifier = {
 		#Convert the productivity value to its modifier
 		set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
 		subtract_from_variable = { lok_state_productivity_modifier = 1 }
+		clamp_variable = { var = lok_state_productivity_modifier min = -1 max = 1 }
 
 		# #0.2 x -1 = -0.2
 		# #-0.4 x -1 = 0.4
@@ -122,14 +123,18 @@ update_state_productivity_modifier = {
 
 regenerate_state_productivity_modifier = {
 	if = {
-		limit = { check_variable = { lok_state_productivity_value < lok_state_productivity_value_base } }
-		add_to_variable = { lok_state_productivity_value = 0.001 }
-		add_to_variable = { state_prod_change_from_regen = 0.001 }
-		clamp_variable = { var = lok_state_productivity_value min = 0 max = lok_state_productivity_value_base }
+		limit = {
+			NOT = { check_variable = { damaged_infra_level_this_week > 0 } }
+			check_variable = { lok_state_productivity_value < lok_state_productivity_value_base }
+		}
+		add_to_variable = { lok_state_productivity_value = 0.0005 }
+		add_to_variable = { state_prod_change_from_regen = 0.0005 }
+		clamp_variable = { var = lok_state_productivity_modifier min = 0 max = 2 }
 	}
 	#Convert the productivity value to its modifier
 	set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
-	subtract_from_variable = { lok_state_productivity_modifier = -1 }
+	subtract_from_variable = { lok_state_productivity_modifier = 1 }
+	clamp_variable = { var = lok_state_productivity_modifier min = -1 max = 1 }
 }
 
 clear_nuclear_facility_ideas = {
