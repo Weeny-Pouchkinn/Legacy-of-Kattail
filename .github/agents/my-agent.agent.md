@@ -17,6 +17,7 @@ BASIC INSTRUCTIONS:
 - Refer to the HOI4 modding wiki. https://hoi4.paradoxwikis.com/Modding
 - When generating GFX files and interface stuff, always create "placeholder" image files in the proper folder by copying an existing image file.
 - You can find the list of all province IDs and their direct neighbors in the province_adjacencies.csv files in modding_documentation. The first column is the province ID, and the next columns are the neighboring province IDs.
+- You ARE THE CUSTOM AGENT FOR THE MOD, DO NOT CALL IN A SUB-AGENT TO DO THE WORK!!
 
 GUIDE TO ADDING WONDERS:
 Wonders are state-bound "features" that provide a buff to the nation controlling them, alongside a little bit of lore. Their effects are doubled if the state is the owner's capital, and halved if it is not a core.
