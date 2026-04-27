@@ -1,3 +1,65 @@
+#update the base state pop to a given value
+update_base_state_population = {
+	custom_effect_tooltip = update_base_state_population_tt
+	hidden_effect = {
+		set_variable = { population_at_game_start = new_base_population_k }
+		set_variable = { population_last_check = state_population_k }
+		update_state_productivity_modifier = yes
+		set_variable = { lok_min_manpower_before_collapse = state_population_k } #Determine the population before the state collapses into anarchy
+		divide_variable = { lok_min_manpower_before_collapse = 20 } #If 50k people are left out of 1M then stuff collapses.
+		multiply_variable = { state_prod_change_from_pop = -1 }
+		add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop }
+		set_variable = { state_prod_change_from_pop = 0 }
+	}
+}
+
+#update base state pop to the current pop value
+reset_base_state_population = {
+	custom_effect_tooltip = reset_base_state_population_tt
+	hidden_effect = {
+		set_variable = { population_at_game_start = state_population_k }
+		set_variable = { population_last_check = state_population_k }
+		update_state_productivity_modifier = yes
+		set_variable = { lok_min_manpower_before_collapse = state_population_k } #Determine the population before the state collapses into anarchy
+		divide_variable = { lok_min_manpower_before_collapse = 20 } #If 50k people are left out of 1M then stuff collapses.
+		multiply_variable = { state_prod_change_from_pop = -1 }
+		add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop }
+		set_variable = { state_prod_change_from_pop = 0 }
+	}
+}
+
+#remove all pop and add it to death count
+kill_all_state_population = {
+	custom_effect_tooltip = kill_all_state_population_tt
+	hidden_effect = {
+		add_to_variable = { lok_state_misc_deaths = state_population_k }
+		add_to_variable = { lok_state_deaths = state_population_k }
+		add_to_variable = { lok_state_misc_deaths_display = state_population_k }
+		var:controller = {
+			add_to_variable = { lok_country_misc_deaths = PREV.state_population_k }
+			add_to_variable = { lok_country_deaths = PREV.state_population_k }
+			add_to_variable = { global.lok_global_misc_deaths = PREV.state_population_k }
+			add_to_variable = { global.lok_global_deaths = PREV.state_population_k }
+		}
+		while_loop_effect = {
+			limit = { check_variable = { state_population_k > 0 } }
+			add_manpower = -1000000
+		}
+	}
+}
+
+#remove all pop but don't add it to death count
+remove_all_state_population = {
+	custom_effect_tooltip = remove_all_state_population_tt
+	hidden_effect = {
+		while_loop_effect = {
+			limit = { check_variable = { state_population_k > 0 } }
+			add_manpower = -1000000
+		}
+	}
+}
+
+
 increase_state_productivity = {
 	custom_effect_tooltip = increase_state_productivity_tt
 	hidden_effect = {

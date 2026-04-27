@@ -4100,13 +4100,16 @@ lok_journal_entries_cat = {
 			FROM = {
 				if = { limit = { is_core_of = SLC } remove_core_of = SLC }
 				if = { limit = { is_core_of = DUR } remove_core_of = DUR }
-				add_manpower = -9999999
-				add_manpower = -9999999
-				add_manpower = 15000
+				kill_all_state_population = yes
+				add_manpower = 150000
+				reset_base_state_population = yes
+
 				set_temp_variable = { species_temp = 29 }
 				change_state_majority_species = yes
-				set_temp_variable = { species_temp = 1000 }
-				change_state_minority_species = yes
+				hidden_effect = {
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes
+				}
 				add_core_of = MER
 			}
 		}
@@ -4153,11 +4156,12 @@ lok_journal_entries_cat = {
 
 		remove_effect = {
 			FROM = {
+				if = { limit = { is_core_of = MER } remove_core_of = MER }
+				if = { limit = { is_core_of = SLC } remove_core_of = SLC }
 				add_core_of = DUR
 				add_manpower = 2000000
-				add_manpower = 2000000
-				add_manpower = 1000000
-
+				set_temp_variable = { new_base_population_k = state_population_k }
+				reset_base_state_population = yes
 				if = {
 					limit = { check_variable = { species = 49 } } # Sillicron majority
 					set_temp_variable = { species_temp = 50 }
@@ -4171,19 +4175,21 @@ lok_journal_entries_cat = {
 					set_temp_variable = { species_temp = 50 }
 					change_state_majority_species = yes
 
-					if = {
-						limit = {
-							OR = {
-								is_core_of = SLC
-								check_variable = { minority = 49 } # Sillicron minority
+					hidden_effect = {
+						if = {
+							limit = {
+								OR = {
+									is_core_of = SLC
+									check_variable = { minority = 49 } # Sillicron minority
+								}
 							}
+							set_temp_variable = { species_temp = 1000 }
+							change_state_minority_species = yes
 						}
-						set_temp_variable = { species_temp = 1000 }
-						change_state_minority_species = yes
-					}
-					else = {
-						set_temp_variable = { species_temp = old_species }
-						change_state_minority_species = yes
+						else = {
+							set_temp_variable = { species_temp = old_species }
+							change_state_minority_species = yes
+						}	
 					}
 				}
 
@@ -4238,11 +4244,10 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			FROM = {
 				add_core_of = SLC
-
+				if = { limit = { is_core_of = DUR } remove_core_of = DUR }
 				if = {
 					limit = { is_core_of = DUR }
-					add_manpower = -9999999
-					add_manpower = -9999999
+					kill_all_state_population = yes
 					add_manpower = 100000
 					set_temp_variable = { species_temp = 49 }
 					change_state_majority_species = yes
@@ -4251,8 +4256,9 @@ lok_journal_entries_cat = {
 				else = {
 					add_manpower = 100000
 					set_temp_variable = { species_temp = 49 }
-					change_state_minority_species = yes
+					change_state_minority_species = yes	
 				}
+				reset_base_state_population = yes
 
 				create_unit = {
 					division = "name = \"Assimilator Cohort\" division_template = \"Assimilator Cohort\" start_experience_factor = 0.3"
