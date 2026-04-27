@@ -91,7 +91,7 @@ focus_tree = {
 		relative_position_id = AUR_reopen_auralian_docks
 		completion_reward = {
 			custom_effect_tooltip = AUR_a_grand_fleet_effect
-			116 = { add_manpower = -20000 }
+			116 = { var:controller = { save_current_manpower = yes } add_manpower = -20000 var:controller = { restore_previous_manpower = yes } }
 			add_timed_idea = {
 				idea = AUR_exhausted_dockyards
 				days = 180
@@ -1688,27 +1688,37 @@ focus_tree = {
 			115 = {
 				add_resistance = -20
 				add_compliance = 10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -100000
+				var:controller = { restore_previous_manpower = yes }
 			}
 			511 = {
 				add_resistance = -20
 				add_compliance = 10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -100000
+				var:controller = { restore_previous_manpower = yes }
 			}
 			517 = {
 				add_resistance = -20
 				add_compliance = 10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -100000
+				var:controller = { restore_previous_manpower = yes }
 			}
 			140 = {
 				add_resistance = -20
 				add_compliance = 10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -100000
+				var:controller = { restore_previous_manpower = yes }
 			}
 			138 = {
 				add_resistance = -20
 				add_compliance = 10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -100000
+				var:controller = { restore_previous_manpower = yes }
 			}
 		}
 	}
@@ -1770,7 +1780,9 @@ focus_tree = {
 					add_resistance = 30
 					set_temp_variable = { species_temp = 1000 }
 					custom_effect_tooltip = remove_roqual_state_minority_species
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -200000
+					var:controller = { restore_previous_manpower = yes }
 					hidden_effect = { change_state_minority_species = yes }
 				}
 			}
@@ -1780,7 +1792,9 @@ focus_tree = {
 					add_resistance = 30
 					set_temp_variable = { species_temp = 1000 }
 					custom_effect_tooltip = remove_roqual_state_minority_species
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -200000
+					var:controller = { restore_previous_manpower = yes }
 					hidden_effect = { change_state_minority_species = yes }
 				}
 			}
@@ -1790,7 +1804,9 @@ focus_tree = {
 					add_resistance = 30
 					set_temp_variable = { species_temp = 1000 }
 					custom_effect_tooltip = remove_roqual_state_minority_species
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -200000
+					var:controller = { restore_previous_manpower = yes }
 					hidden_effect = { change_state_minority_species = yes }
 				}
 			}
@@ -1833,7 +1849,9 @@ focus_tree = {
 			country_event = { id = AUR_event.13 days = 5 }
 			add_political_power = 100
 			173 = {
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -5000
+				var:controller = { restore_previous_manpower = yes }
 				add_compliance = 20
 				add_resistance = 20
 				custom_effect_tooltip = state_core_threshold_lower_40
@@ -1849,7 +1867,9 @@ focus_tree = {
 					controls_state = 192
 				}
 				192 = {
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -5000
+					var:controller = { restore_previous_manpower = yes }
 					add_compliance = 20
 					add_resistance = 20
 					custom_effect_tooltip = state_core_threshold_lower_40
@@ -2710,6 +2730,7 @@ focus_tree = {
 			custom_effect_tooltip = AUR_blood_sweat_and_blood_tt
 			add_stability = -0.10
 			add_political_power = -100
+			save_current_manpower = yes
 			every_owned_state = {
 				limit = { NOT = { is_core_of = ROOT } NOT = { state = 173 } NOT = { state = 192 } }
 				add_resistance = 20
@@ -2723,6 +2744,7 @@ focus_tree = {
 					reduce_compliance_coring_threshold_by_10 = yes
 				}
 			}
+			restore_previous_manpower = yes
 			hidden_effect = {
 				add_to_variable = { AUR_the_kaiser_must_return_resistance_growth = 0.50 }
 				add_to_variable = { AUR_the_kaiser_must_return_resistance_target = 0.50 }
@@ -2900,7 +2922,9 @@ focus_tree = {
 				custom_effect_tooltip = AUR_slaves_for_minerals_tt
 				84 = {
 					add_resource = { type = steel amount = 25 }
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -10000
+					var:controller = { restore_previous_manpower = yes }
 					add_compliance = 5
 					add_resistance = 5
 				}
@@ -2915,19 +2939,25 @@ focus_tree = {
 			}
 			78 = {
 				add_resource = { type = aluminium amount = 25 }
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -10000
+				var:controller = { restore_previous_manpower = yes }
 				add_compliance = 5
 				add_resistance = 5
 			}
 			535 = {
 				add_resource = { type = tungsten amount = 25 }
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -10000
+				var:controller = { restore_previous_manpower = yes }
 				add_compliance = 5
 				add_resistance = 5
 			}
 			69 = {
 				add_resource = { type = fissiles amount = 25 }
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -10000
+				var:controller = { restore_previous_manpower = yes }
 				add_compliance = 5
 				add_resistance = 5
 			}
@@ -3099,7 +3129,9 @@ focus_tree = {
 				nuke_state_fission = yes
 				add_resistance = -10
 				add_compliance = -10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -15000
+				var:controller = { restore_previous_manpower = yes }
 				custom_effect_tooltip = state_core_threshold_lower_20
 				hidden_effect = {
 					reduce_compliance_coring_threshold_by_10 = yes
@@ -3110,7 +3142,9 @@ focus_tree = {
 				nuke_state_fission = yes
 				add_resistance = -10
 				add_compliance = -10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -15000
+				var:controller = { restore_previous_manpower = yes }
 				custom_effect_tooltip = state_core_threshold_lower_20
 				hidden_effect = {
 					reduce_compliance_coring_threshold_by_10 = yes
@@ -3121,7 +3155,9 @@ focus_tree = {
 				nuke_state_fission = yes
 				add_resistance = -10
 				add_compliance = -10
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -15000
+				var:controller = { restore_previous_manpower = yes }
 				custom_effect_tooltip = state_core_threshold_lower_20
 				AUR = { launch_nuke = { state = PREV use_nuke = no } }
 				hidden_effect = {
@@ -3270,12 +3306,14 @@ focus_tree = {
 		relative_position_id = AUR_storm_the_pyramid
 		completion_reward = {
 			AUR_add_3_commissar = yes
+			save_current_manpower = yes
 			every_owned_state = {
 				limit = { is_core_of = SIL }
 				add_resistance = -10
 				add_compliance = 10
 				add_manpower = -15000
 			}
+			restore_previous_manpower = yes
 		}
 	}
 
@@ -3288,6 +3326,7 @@ focus_tree = {
 		prerequisite = { focus = AUR_storm_the_pyramid }
 		relative_position_id = AUR_storm_the_pyramid
 		completion_reward = {
+			save_current_manpower = yes
 			every_owned_state = {
 				add_manpower = -500
 				add_building_construction = {
@@ -3295,6 +3334,7 @@ focus_tree = {
 					level = 1
 				}
 			}
+			restore_previous_manpower = yes
 			add_timed_idea = {
 				idea = AUR_repair_effort
 				days = 90
@@ -3444,7 +3484,9 @@ focus_tree = {
 				set_building_level = { type = dockyard level = 0 }
 				add_extra_state_shared_building_slots = -5
 				add_resistance = 50
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -2000000
+				var:controller = { restore_previous_manpower = yes }
 				set_victory_points = { province = 10353 value = 0 }
 			}
 		}

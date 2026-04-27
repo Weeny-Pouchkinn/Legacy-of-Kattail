@@ -151,6 +151,8 @@ lok_peace_decisions_cat = {
 						is_claimed_by = ROOT
 					}
 				}
+				NOT = { tag = DUR }
+				NOT = { tag = SLC }
 			}
 		}
 
@@ -209,7 +211,9 @@ lok_peace_decisions_cat = {
 					set_state_flag = nmi_driven_away
 					set_temp_variable = { population_to_drive_away = state_population_k } #Say 1M so 1000
 					multiply_temp_variable = { population_to_drive_away = 0.08 } #Now 80
+					var:controller = { save_current_manpower = yes }
 					for_loop_effect = { end = population_to_drive_away add_manpower = -10000 }
+					var:controller = { restore_previous_manpower = yes }
 					set_variable = { species = 1 }
 					set_variable = { minority = 1000 }
 					apply_state_species_modifier = yes
@@ -325,7 +329,7 @@ political_actions = {
 		}
 
 		remove_effect = {
-			644 = { remove_wonder = yes add_manpower = -25000 }
+			644 = { remove_wonder = yes var:controller = { save_current_manpower = yes } add_manpower = -25000 var:controller = { restore_previous_manpower = yes } }
 			add_political_power = 50
 			add_stability = 0.05
 		}
