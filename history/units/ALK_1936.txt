@@ -1,22 +1,25 @@
 ﻿##### Division Templates #####
-division_template = { #Good infantry
-	name = "Alkroan Infantry"		
+division_template = {
+	name = "Border Guard"
 	regiments = {
-		motorized = { x = 0 y = 0 }
-		motorized = { x = 0 y = 1 }
-		motorized = { x = 0 y = 2 }
-		motorized = { x = 1 y = 0 }
-		motorized = { x = 1 y = 1 }
-		motorized = { x = 1 y = 2 }
+		infantry = { x = 0 y = 0 }
+		infantry = { x = 0 y = 1 }
+		infantry = { x = 0 y = 2 }
+		infantry = { x = 1 y = 0 }
+		infantry = { x = 1 y = 1 }
+		infantry = { x = 1 y = 2 }
+		infantry = { x = 2 y = 0 }
+		infantry = { x = 2 y = 1 }
+		infantry = { x = 2 y = 2 }
 	}
 	support = {
 		artillery = { x = 0 y = 0 }
-		anti_tank = { x = 0 y = 2 }
+		mot_recon = { x = 0 y = 1 }
 	}
 }
 
-division_template = { #Fodder
-	name = "Coast Guard"		
+division_template = {
+	name = "Coastal Garrison"
 	regiments = {
 		infantry = { x = 0 y = 0 }
 		infantry = { x = 0 y = 1 }
@@ -30,20 +33,60 @@ division_template = { #Fodder
 	}
 }
 
+division_template = {
+	name = "Feathered Armor"
+	regiments = {
+		motorized = { x = 0 y = 0 }
+		motorized = { x = 0 y = 1 }
+		motorized = { x = 0 y = 2 }
+		motorized = { x = 0 y = 3 }
+		light_armor = { x = 1 y = 0 }
+		light_armor = { x = 1 y = 1 }
+		light_armor = { x = 1 y = 2 }
+		light_armor = { x = 1 y = 3 }
+	}
+	support = {
+		artillery = { x = 0 y = 0 }
+		engineer = { x = 0 y = 1 }
+	}
+}
+
 units = {
-	division = { location = 9391 division_template = "Alkroan Infantry" start_experience_factor = 0.3 }
-	division = { location = 6113 division_template = "Alkroan Infantry" start_experience_factor = 0.3 }
-	division = { location = 9391 division_template = "Alkroan Infantry" start_experience_factor = 0.3 }
-	division = { location = 7680 division_template = "Alkroan Infantry" start_experience_factor = 0.3 }
-	division = { location = 6113 division_template = "Alkroan Infantry" start_experience_factor = 0.3 }
-	division = { location = 7680 division_template = "Coast Guard" start_experience_factor = 0.3 }
-	division = { location = 10479 division_template = "Coast Guard" start_experience_factor = 0.3 }
-	division = { location = 6113 division_template = "Coast Guard" start_experience_factor = 0.3 }
-	division = { location = 8534 division_template = "Coast Guard" start_experience_factor = 0.3 }
-	division = { location = 18498 division_template = "Coast Guard" start_experience_factor = 0.3 }
-	division = { location = 7680 division_template = "Coast Guard" start_experience_factor = 0.3 }
-	division = { location = 5585 division_template = "Coast Guard" start_experience_factor = 0.3 }
-	division = { location = 9391 division_template = "Coast Guard" start_experience_factor = 0.3 }
+	# Border Guard — 10 divisions on border with ROQ (state 840 Bocerie du Sud)
+	division = { name = "1st Bocerie du Sud Border Guard" location = 1981 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "2nd Bocerie du Sud Border Guard" location = 3410 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "3rd Bocerie du Sud Border Guard" location = 4246 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "4th Bocerie du Sud Border Guard" location = 5836 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "5th Bocerie du Sud Border Guard" location = 6193 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "6th Bocerie du Sud Border Guard" location = 9391 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "7th Bocerie du Sud Border Guard" location = 9449 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "8th Bocerie du Sud Border Guard" location = 18296 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "9th Bocerie du Sud Border Guard" location = 18384 division_template = "Border Guard" start_experience_factor = 0.3 }
+	division = { name = "10th Bocerie du Sud Border Guard" location = 18431 division_template = "Border Guard" start_experience_factor = 0.3 }
+
+	# Coastal Garrison — 12 divisions on ports (3 per port state)
+	# State 336
+	division = { name = "1st 336 Coastal Garrison" location = 8534 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "2nd 336 Coastal Garrison" location = 8534 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "3rd 336 Coastal Garrison" location = 8534 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	# Xuhre (state 720)
+	division = { name = "1st Xuhre Coastal Garrison" location = 6304 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "2nd Xuhre Coastal Garrison" location = 6304 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "3rd Xuhre Coastal Garrison" location = 6304 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	# Ailesainque (state 721)
+	division = { name = "1st Ailesainque Coastal Garrison" location = 5585 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "2nd Ailesainque Coastal Garrison" location = 5585 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "3rd Ailesainque Coastal Garrison" location = 5585 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	# Garyxia (state 841)
+	division = { name = "1st Garyxia Coastal Garrison" location = 6113 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "2nd Garyxia Coastal Garrison" location = 6113 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+	division = { name = "3rd Garyxia Coastal Garrison" location = 6113 division_template = "Coastal Garrison" start_experience_factor = 0.3 }
+
+	# Feathered Armor — 4 divisions on VP cities
+	division = { name = "1st 336 Feathered Armor" location = 8534 division_template = "Feathered Armor" start_experience_factor = 0.3 }
+	division = { name = "1st Xuhre Feathered Armor" location = 6304 division_template = "Feathered Armor" start_experience_factor = 0.3 }
+	division = { name = "1st Ailesainque Feathered Armor" location = 5585 division_template = "Feathered Armor" start_experience_factor = 0.3 }
+	division = { name = "1st Garyxia Feathered Armor" location = 6113 division_template = "Feathered Armor" start_experience_factor = 0.3 }
 }
 
 instant_effect = {
