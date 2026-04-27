@@ -706,7 +706,7 @@ SIL_politics_cat = {
 				set_temp_variable = { sil_loyalty_change = -0.2 }
 				SIL_change_monarchist_loyalty = yes
 			}
-			FROM = { remove_core_of = KVK add_manpower = -25000 }
+			FROM = { remove_core_of = KVK var:controller = { save_current_manpower = yes } add_manpower = -25000 var:controller = { restore_previous_manpower = yes } }
 		}
 
 		days_remove = 30
@@ -752,7 +752,7 @@ SIL_politics_cat = {
 		}
 
 		remove_effect = {
-			FROM = { add_core_of = SIL remove_core_of = KTW add_manpower = -100000 set_demilitarized_zone = no }
+			FROM = { add_core_of = SIL remove_core_of = KTW var:controller = { save_current_manpower = yes } add_manpower = -100000 var:controller = { restore_previous_manpower = yes } set_demilitarized_zone = no }
 		}
 
 		days_remove = 30
@@ -803,7 +803,7 @@ SIL_politics_cat = {
 				set_temp_variable = { sil_loyalty_change = -0.2 }
 				SIL_change_frankat_loyalty = yes
 			}
-			FROM = { remove_core_of = PAW add_manpower = -25000 }
+			FROM = { remove_core_of = PAW var:controller = { save_current_manpower = yes } add_manpower = -25000 var:controller = { restore_previous_manpower = yes } }
 		}
 
 		days_remove = 30

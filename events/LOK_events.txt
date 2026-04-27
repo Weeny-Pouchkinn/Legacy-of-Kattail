@@ -460,12 +460,16 @@ state_event = { #regent repression
 					set_variable = { state_actions_AUR_repression_button_status = 1 }
 					add_resistance = -20
 					add_resistance_target = -20
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -10000
+					var:controller = { restore_previous_manpower = yes }
 					every_neighbor_state = {
 						limit = { is_controlled_by = AUR NOT = { is_core_of = AUR } }
 						add_resistance = -10
 						add_resistance_target = -10
+						var:controller = { save_current_manpower = yes }
 						add_manpower = -5000
+						var:controller = { restore_previous_manpower = yes }
 					}
 				}
 				else = {
