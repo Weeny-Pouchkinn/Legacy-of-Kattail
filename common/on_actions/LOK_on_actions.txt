@@ -1573,71 +1573,71 @@ on_actions = {
 						}
 					}
 				}
-				if = { #airplanes
-					limit = {
-						is_herzlands_warlord = no
-						NOT = { tag = MCF }
-						is_non_playable_country = no
-						has_tech = early_fighter
-					}
-					every_controlled_state = {
-						PREV = {
-							add_equipment_to_stockpile = {
-								type = small_plane_airframe
-								amount = 100
-							}
-						}
-					}
-				}
-				if = { #cas
-					limit = {
-						is_herzlands_warlord = no
-						NOT = { tag = MCF }
-						is_non_playable_country = no
-						has_tech = CAS1
-					}
-					every_controlled_state = {
-						PREV = {
-							add_equipment_to_stockpile = {
-								type = small_plane_cas_airframe
-								amount = 30
-							}
-						}
-					}
-				}
-				#katzens get bigger planes
-				if = { #airplanes
-					limit = {
-						is_herzlands_warlord = yes
-						NOT = { tag = MCF }
-						is_non_playable_country = no
-						has_tech = early_bomber
-					}
-					every_controlled_state = {
-						PREV = {
-							add_equipment_to_stockpile = {
-								type = medium_plane_fighter_airframe
-								amount = 70
-							}
-						}
-					}
-				}
-				if = { #cas
-					limit = {
-						is_herzlands_warlord = yes
-						NOT = { tag = MCF }
-						is_non_playable_country = no
-						has_tech = early_bomber
-					}
-					every_controlled_state = {
-						PREV = {
-							add_equipment_to_stockpile = {
-								type = medium_plane_airframe
-								amount = 20
-							}
-						}
-					}
-				}
+				# if = { #airplanes
+				# 	limit = {
+				# 		is_herzlands_warlord = no
+				# 		NOT = { tag = MCF }
+				# 		is_non_playable_country = no
+				# 		has_tech = early_fighter
+				# 	}
+				# 	every_controlled_state = {
+				# 		PREV = {
+				# 			add_equipment_to_stockpile = {
+				# 				type = small_plane_airframe
+				# 				amount = 100
+				# 			}
+				# 		}
+				# 	}
+				# }
+				# if = { #cas
+				# 	limit = {
+				# 		is_herzlands_warlord = no
+				# 		NOT = { tag = MCF }
+				# 		is_non_playable_country = no
+				# 		has_tech = CAS1
+				# 	}
+				# 	every_controlled_state = {
+				# 		PREV = {
+				# 			add_equipment_to_stockpile = {
+				# 				type = small_plane_cas_airframe
+				# 				amount = 30
+				# 			}
+				# 		}
+				# 	}
+				# }
+				# #katzens get bigger planes
+				# if = { #airplanes
+				# 	limit = {
+				# 		is_herzlands_warlord = yes
+				# 		NOT = { tag = MCF }
+				# 		is_non_playable_country = no
+				# 		has_tech = early_bomber
+				# 	}
+				# 	every_controlled_state = {
+				# 		PREV = {
+				# 			add_equipment_to_stockpile = {
+				# 				type = medium_plane_fighter_airframe
+				# 				amount = 70
+				# 			}
+				# 		}
+				# 	}
+				# }
+				# if = { #cas
+				# 	limit = {
+				# 		is_herzlands_warlord = yes
+				# 		NOT = { tag = MCF }
+				# 		is_non_playable_country = no
+				# 		has_tech = early_bomber
+				# 	}
+				# 	every_controlled_state = {
+				# 		PREV = {
+				# 			add_equipment_to_stockpile = {
+				# 				type = medium_plane_airframe
+				# 				amount = 20
+				# 			}
+				# 		}
+				# 	}
+				# }
 			}
 
 			#Advisor
@@ -1822,20 +1822,13 @@ on_actions = {
 				every_controlled_state = {
 					if = {
 						limit = {
-							check_variable = { damaged_building_level@infrastructure > damaged_infra_level_last_week }
+							check_variable = { damaged_infra_level_this_week > 0 }
 						}
-						set_temp_variable = { lok_combat_deaths_to_be_removed_for_state = state_population_k } #state pop in thousands
-						divide_temp_variable = { lok_combat_deaths_to_be_removed_for_state = 1000 } #0.1%
-						round_temp_variable = lok_combat_deaths_to_be_removed_for_state
-
-						multiply_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1000 } #x1000 for straight amount
-						add_manpower = lok_combat_deaths_to_be_removed_for_state
-
-						divide_temp_variable = { lok_combat_deaths_to_be_removed_for_state = -1000 }
-						add_to_variable = { lok_state_combat_deaths = lok_combat_deaths_to_be_removed_for_state }
-						add_to_variable = { lok_state_deaths = lok_combat_deaths_to_be_removed_for_state }
+						divide_variable = { damaged_infra_level_this_week = 100 } #0.1% per level of damaged infra
+						subtract_from_variable = { lok_state_productivity_value = damaged_infra_level_this_week }
+						subtract_from_variable = { state_prod_change_from_devastation = damaged_infra_level_this_week }
+						set_variable = { damaged_infra_level_this_week = 0 }
 					}
-					set_variable = { damaged_infra_level_last_week = damaged_building_level@infrastructure }
 				}
 			}
 			apply_wonder_effects = yes #for if capitals or cores change
@@ -2143,7 +2136,7 @@ on_actions = {
 				limit = { FROM = { has_war_with = ROOT } }
 				FROM.FROM = {
 					subtract_from_variable = { lok_state_productivity_value = 0.01 }
-					add_to_variable = { state_prod_change_from_devastation = 0.01 }
+					subtract_from_variable = { state_prod_change_from_devastation = 0.01 }
 					clamp_variable = { var = lok_state_productivity_value min = 0 max = 999 }
 				}
 			}
@@ -2622,7 +2615,6 @@ on_actions = {
 
 	on_monthly_AAA = {
 		effect = {
-			generate_warlord_state = yes
 			every_owned_state = {
 				set_resistance = 40
 				set_compliance = 0
@@ -2766,6 +2758,18 @@ on_actions = {
 
 	on_daily = {
 		effect = {
+			if = {
+				limit = { has_war = yes }
+				every_controlled_state = {
+					set_variable = { damaged_infra_level_today = damaged_building_level@infrastructure }
+					subtract_from_variable = { damaged_infra_level_today = damaged_infra_level_yesterday }
+					if = { #damage has increased since yesterday
+						limit = { check_variable = { damaged_infra_level_today > 0 } }
+						add_to_variable = { damaged_infra_level_this_week = damaged_infra_level_today }
+					}
+					set_variable = { damaged_infra_level_yesterday = damaged_building_level@infrastructure }
+				}
+			}
 			# KTW Pyramid Guard - teleport to 509 if not there
 			if = {
 				limit = {

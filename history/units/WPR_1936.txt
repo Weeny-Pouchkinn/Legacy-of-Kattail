@@ -1,55 +1,150 @@
-﻿##### Division Templates #####
+##### Division Templates #####
 division_template = {
-	name = "Katzeninfanterie-Division"		
+	name = "Mountaineer Regulars"
 	regiments = {
 		infantry = { x = 0 y = 0 }
 		infantry = { x = 0 y = 1 }
 		infantry = { x = 0 y = 2 }
-		infantry = { x = 0 y = 3 }
 		infantry = { x = 1 y = 0 }
 		infantry = { x = 1 y = 1 }
 		infantry = { x = 1 y = 2 }
-		infantry = { x = 1 y = 3 }
-		artillery_brigade = { x = 2 y = 0 }
+		infantry = { x = 2 y = 0 }
+		infantry = { x = 2 y = 1 }
+		infantry = { x = 2 y = 2 }
 	}
 	support = {
-		artillery = { x = 0 y = 0 }
-		mot_recon = { x = 0 y = 2 }
+		engineer = { x = 0 y = 0 }
 	}
 }
 
 division_template = {
-	name = "Bergsteigertruppen"		
+	name = "Mountaineer Garrison"
 	regiments = {
-		mountaineers = { x = 0 y = 0 }
-		mountaineers = { x = 0 y = 1 }
-		mountaineers = { x = 0 y = 2 }
-		mountaineers = { x = 1 y = 0 }
-		mountaineers = { x = 1 y = 1 }
-		mountaineers = { x = 1 y = 2 }
+		infantry = { x = 0 y = 0 }
+		infantry = { x = 0 y = 1 }
+		infantry = { x = 0 y = 2 }
+		infantry = { x = 1 y = 0 }
+		infantry = { x = 1 y = 1 }
+		infantry = { x = 1 y = 2 }
+	}
+}
+
+division_template = {
+	name = "Mountaineer Mobile Troops"
+	regiments = {
+		motorized = { x = 0 y = 0 }
+		motorized = { x = 0 y = 1 }
+		motorized = { x = 0 y = 2 }
+		motorized = { x = 1 y = 0 }
+		motorized = { x = 1 y = 1 }
+		motorized = { x = 1 y = 2 }
+		mot_artillery_brigade = { x = 2 y = 0 }
 	}
 	support = {
-		engineer = { x = 0 y = 0 }
-		recon = { x = 0 y = 0 }
+		artillery = { x = 0 y = 0 }
+		mot_recon = { x = 0 y = 1 }
 	}
 }
 
-
-units = {
-	division = { location = 7098 division_template = "Katzeninfanterie-Division" start_experience_factor = 0.3 }
-	division = { location = 14500 division_template = "Katzeninfanterie-Division" start_experience_factor = 0.3 }
-	division = { location = 3497 division_template = "Katzeninfanterie-Division" start_experience_factor = 0.3 }
-	division = { location = 3349 division_template = "Katzeninfanterie-Division" start_experience_factor = 0.3 }
-	division = { location = 14005 division_template = "Katzeninfanterie-Division" start_experience_factor = 0.3 }
-	division = { location = 14509 division_template = "Katzeninfanterie-Division" start_experience_factor = 0.3 }
-
-	division = { location = 7098 division_template = "Bergsteigertruppen" start_experience_factor = 0.3 }
-	division = { location = 14500 division_template = "Bergsteigertruppen" start_experience_factor = 0.3 }
-	division = { location = 3497 division_template = "Bergsteigertruppen" start_experience_factor = 0.3 }
-	division = { location = 3349 division_template = "Bergsteigertruppen" start_experience_factor = 0.3 }
-	division = { location = 14005 division_template = "Bergsteigertruppen" start_experience_factor = 0.3 }
-	division = { location = 14509 division_template = "Bergsteigertruppen" start_experience_factor = 0.3 }
-
+division_template = {
+	name = "Mountaineer Armored Force"
+	regiments = {
+		mechanized = { x = 0 y = 0 }
+		mechanized = { x = 0 y = 1 }
+		mechanized = { x = 0 y = 2 }
+		light_armor = { x = 1 y = 0 }
+		light_armor = { x = 1 y = 1 }
+		light_armor = { x = 1 y = 2 }
+	}
+	support = {
+		light_tank_recon = { x = 0 y = 0 }
+		engineer = { x = 0 y = 1 }
+		artillery = { x = 0 y = 2 }
+	}
 }
 
-instant_effect = {}
+units = {
+	division = { name = "1st Meterhills Regulars" location = 1573 division_template = "Mountaineer Regulars" start_experience_factor = 0.3 }
+	division = { name = "1st Solagnaw Regulars" location = 10282 division_template = "Mountaineer Regulars" start_experience_factor = 0.3 }
+	division = { name = "1st North Katzil Regulars" location = 13867 division_template = "Mountaineer Regulars" start_experience_factor = 0.3 }
+	division = { name = "1st Western Grand Hills Regulars" location = 14385 division_template = "Mountaineer Regulars" start_experience_factor = 0.3 }
+	division = { name = "1st Southeastern Grand Hills Garrison" location = 7332 division_template = "Mountaineer Garrison" start_experience_factor = 0.3 }
+	division = { name = "1st Cuddlezone Garrison" location = 14509 division_template = "Mountaineer Garrison" start_experience_factor = 0.3 }
+	division = { name = "1st Meterhills Mobile" location = 1573 division_template = "Mountaineer Mobile Troops" start_experience_factor = 0.3 }
+	division = { name = "1st Meterhills Armored" location = 1573 division_template = "Mountaineer Armored Force" start_experience_factor = 0.4 }
+}
+
+instant_effect = {
+	add_equipment_production = {
+		equipment = {
+			type = infantry_equipment_1
+			creator = "WPR"
+		}
+		requested_factories = 3
+		progress = 0.4
+		efficiency = 50
+	}
+	add_equipment_production = {
+		equipment = {
+			type = artillery_equipment_1
+			creator = "WPR"
+		}
+		requested_factories = 1
+		progress = 0.4
+		efficiency = 50
+	}
+	add_equipment_production = {
+		equipment = {
+			type = support_equipment_1
+			creator = "WPR"
+		}
+		requested_factories = 1
+		progress = 0.4
+		efficiency = 50
+	}
+	add_equipment_production = {
+		equipment = {
+			type = motorized_equipment_1
+			creator = "WPR"
+		}
+		requested_factories = 1
+		progress = 0.4
+		efficiency = 50
+	}
+	add_equipment_production = {
+		equipment = {
+			type = train_equipment_wartime_1
+			creator = "WPR"
+		}
+		requested_factories = 1
+		progress = 0.4
+		efficiency = 50
+	}
+	add_equipment_production = {
+		equipment = {
+			type = light_tank_equipment_1
+			creator = "WPR"
+		}
+		requested_factories = 1
+		progress = 0.4
+		efficiency = 50
+	}
+	add_equipment_production = {
+		equipment = {
+			type = fighter_equipment_1
+			creator = "WPR"
+		}
+		requested_factories = 1
+		progress = 0.4
+		efficiency = 50
+	}
+	add_equipment_production = {
+		equipment = {
+			type = mechanized_equipment_1
+			creator = "WPR"
+		}
+		requested_factories = 1
+		progress = 0.4
+		efficiency = 50
+	}
+}
