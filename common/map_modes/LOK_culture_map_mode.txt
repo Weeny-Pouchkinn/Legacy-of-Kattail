@@ -1,0 +1,117 @@
+scripted_map_modes = {
+	LOK_culture_map_mode = {
+		top = {
+			type = none
+		}
+		bottom = {
+			type = state
+			color = {
+				set_temp_variable = { alpha = 1 }
+				set_temp_variable = { num_cultures = 1 }
+				set_temp_variable = { red = 0.50 }
+				set_temp_variable = { green = 0.50 }
+				set_temp_variable = { blue = 0.50 }
+				# Math is
+				# Take current color values
+				# Divide by (no of culture being added - 1)/(no of culture being added) --> so 1/2, then 2/3, then 3/4, then 4/5
+				# Add (new culture's colors)/(no of culture being added)
+				if = { #Diverse
+					limit = { FROM = { is_in_array = { array = global.culture_1_array value = THIS } } }
+					add_to_temp_variable = { num_cultures = 1 }
+
+					# Define the culture's colors
+					add_to_temp_variable = { culture_1_red = 0.00 }
+					add_to_temp_variable = { culture_1_green = 0.29 }
+					add_to_temp_variable = { culture_1_blue = 0.50 }
+
+					# Divide by the current amount of cultures
+					divide_temp_variable = { culture_1_red = num_cultures }
+					divide_temp_variable = { culture_1_green = num_cultures }
+					divide_temp_variable = { culture_1_blue = num_cultures}
+
+					if = {
+						limit = { check_variable = { num_cultures > 1 } }
+						set_temp_variable = { culture_color_factor = num_cultures } #say 3
+						subtract_from_temp_variable = { culture_color_factor = 1 } #now 2
+						divide_temp_variable = { culture_color_factor = num_cultures } #2/3
+
+						# Divide existing colors by this
+						multiply_temp_variable = { red = culture_color_factor }
+						multiply_temp_variable = { green = culture_color_factor }
+						multiply_temp_variable = { blue = culture_color_factor }
+					}
+
+					# Add to the existing color
+					add_to_temp_variable = { red = culture_1_red }
+					add_to_temp_variable = { green = culture_1_green }
+					add_to_temp_variable = { blue = culture_1_blue }
+				}
+				if = { #Diverse
+					limit = { FROM = { is_in_array = { array = global.culture_2_array value = THIS } } }
+					add_to_temp_variable = { num_cultures = 1 }
+
+					# Define the culture's colors
+					add_to_temp_variable = { culture_2_red = 0.80 }
+					add_to_temp_variable = { culture_2_green = 0.57 }
+					add_to_temp_variable = { culture_2_blue = 0.92 }
+
+					# Divide by the current amount of cultures
+					divide_temp_variable = { culture_2_red = num_cultures }
+					divide_temp_variable = { culture_2_green = num_cultures }
+					divide_temp_variable = { culture_2_blue = num_cultures}
+
+					if = {
+						limit = { check_variable = { num_cultures > 1 } }
+						set_temp_variable = { culture_color_factor = num_cultures } #say 3
+						subtract_from_temp_variable = { culture_color_factor = 1 } #now 2
+						divide_temp_variable = { culture_color_factor = num_cultures } #2/3
+
+						# Divide existing colors by this
+						multiply_temp_variable = { red = culture_color_factor }
+						multiply_temp_variable = { green = culture_color_factor }
+						multiply_temp_variable = { blue = culture_color_factor }
+					}
+
+					# Add to the existing color
+					add_to_temp_variable = { red = culture_2_red }
+					add_to_temp_variable = { green = culture_2_green }
+					add_to_temp_variable = { blue = culture_2_blue }
+				}
+				if = { #Diverse
+					limit = { FROM = { is_in_array = { array = global.culture_3_array value = THIS } } }
+					add_to_temp_variable = { num_cultures = 1 }
+
+					# Define the culture's colors
+					add_to_temp_variable = { culture_3_red = 0.8 }
+					add_to_temp_variable = { culture_3_green = 0.16 }
+					add_to_temp_variable = { culture_3_blue = 0.24 }
+
+					# Divide by the current amount of cultures
+					divide_temp_variable = { culture_3_red = num_cultures }
+					divide_temp_variable = { culture_3_green = num_cultures }
+					divide_temp_variable = { culture_3_blue = num_cultures}
+
+					if = {
+						limit = { check_variable = { num_cultures > 1 } }
+						set_temp_variable = { culture_color_factor = num_cultures } #say 3
+						subtract_from_temp_variable = { culture_color_factor = 1 } #now 2
+						divide_temp_variable = { culture_color_factor = num_cultures } #2/3
+
+						# Divide existing colors by this
+						multiply_temp_variable = { red = culture_color_factor }
+						multiply_temp_variable = { green = culture_color_factor }
+						multiply_temp_variable = { blue = culture_color_factor }
+					}
+
+					# Add to the existing color
+					add_to_temp_variable = { red = culture_3_red }
+					add_to_temp_variable = { green = culture_3_green }
+					add_to_temp_variable = { blue = culture_3_blue }
+				}
+			}
+		}
+		far_text = none
+		near_text = state
+		update_daily = no
+	}
+}
