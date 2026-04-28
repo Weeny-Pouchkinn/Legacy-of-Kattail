@@ -1,93 +1,8 @@
 defined_text = {
-    name = GetCulture1
-    text = {
-        trigger = {
-            is_in_array = { array = global.culture_1_array value = THIS }
-        }
-        localization_key = culture_1_name
-    }
-    # Fallback if not in the array
-    text = {
-        localization_key = empty_string
-    }
-}
-
-defined_text = {
-    name = GetCulture2
-    text = {
-        trigger = {
-            is_in_array = { array = global.culture_2_array value = THIS }
-        }
-        localization_key = culture_2_name
-    }
-    # Fallback if not in the array
-    text = {
-        localization_key = empty_string
-    }
-}
-
-defined_text = {
-    name = GetCulture3
-    text = {
-        trigger = {
-            is_in_array = { array = global.culture_3_array value = THIS }
-        }
-        localization_key = culture_3_name
-    }
-    # Fallback if not in the array
-    text = {
-        localization_key = empty_string
-    }
-}
-
-defined_text = {
-    name = GetCulture1Syllable
-    text = {
-        trigger = {
-            is_in_array = { array = global.culture_1_array value = THIS }
-        }
-        localization_key = culture_1_syllable
-    }
-    # Fallback if not in the array
-    text = {
-        localization_key = empty_string
-    }
-}
-
-defined_text = {
-    name = GetCulture2Syllable
-    text = {
-        trigger = {
-            is_in_array = { array = global.culture_2_array value = THIS }
-        }
-        localization_key = culture_2_syllable
-    }
-    # Fallback if not in the array
-    text = {
-        localization_key = empty_string
-    }
-}
-
-defined_text = {
-    name = GetCulture3Syllable
-    text = {
-        trigger = {
-            is_in_array = { array = global.culture_3_array value = THIS }
-        }
-        localization_key = culture_3_syllable
-    }
-    # Fallback if not in the array
-    text = {
-        localization_key = empty_string
-    }
-}
-
-
-defined_text = {
     name = GetMonoOrHybridCulture
     text = {
         trigger = {
-            check_variable = { state_culture_count = 1 }
+            check_variable = { state_cultures^num = 1 }
         }
         localization_key = mono_culture
     }
@@ -109,5 +24,215 @@ defined_text = {
     # Fallback if not in the array
     text = {
         localization_key = empty_string
+    }
+}
+
+defined_text = {
+    name = GetAllStatesCultures
+    text = {
+        # Checks if the array has 4 elements
+        trigger = { check_variable = { state_cultures^num = 4 } }
+        localization_key = Get4Cultures
+    }
+    text = {
+        # Checks if the array has 3 elements
+        trigger = { check_variable = { state_cultures^num = 3 } }
+        localization_key = Get3Cultures
+    }
+    text = {
+        # Checks if the array has 2 elements
+        trigger = { check_variable = { state_cultures^num = 2 } }
+        localization_key = Get2Cultures
+    }
+    text = {
+        # Checks if the array has 1 element
+        trigger = { check_variable = { state_cultures^num = 1 } }
+        localization_key = Get1Cultures
+    }
+    text = {
+        # Fallback if the array is empty
+        localization_key = print_array_0
+    }
+}
+
+defined_text = {
+    name = GetCulture1
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^0 = 1 } }
+        localization_key = culture_1_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^0 = 35 } }
+        localization_key = culture_35_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^0 = 36 } }
+        localization_key = culture_36_name
+    }
+}
+
+defined_text = {
+    name = GetCulture2
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^1 = 1 } }
+        localization_key = culture_1_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^1 = 35 } }
+        localization_key = culture_35_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^1 = 36 } }
+        localization_key = culture_36_name
+    }
+}
+
+defined_text = {
+    name = GetCulture3
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^2 = 1 } }
+        localization_key = culture_1_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^2 = 35 } }
+        localization_key = culture_35_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^2 = 36 } }
+        localization_key = culture_36_name
+    }
+}
+
+defined_text = {
+    name = GetCulture4
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^3 = 1 } }
+        localization_key = culture_1_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^3 = 35 } }
+        localization_key = culture_35_name
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^3 = 36 } }
+        localization_key = culture_36_name
+    }
+}
+
+#Descs
+defined_text = {
+    name = GetAllStatesCulturesDesc
+    text = {
+        # Checks if the array has 4 elements
+        trigger = { check_variable = { state_cultures^num = 4 } }
+        localization_key = Get4CulturesDesc
+    }
+    text = {
+        # Checks if the array has 3 elements
+        trigger = { check_variable = { state_cultures^num = 3 } }
+        localization_key = Get3CulturesDesc
+    }
+    text = {
+        # Checks if the array has 2 elements
+        trigger = { check_variable = { state_cultures^num = 2 } }
+        localization_key = Get2CulturesDesc
+    }
+    text = {
+        # Checks if the array has 1 element
+        trigger = { check_variable = { state_cultures^num = 1 } }
+        localization_key = Get1CulturesDesc
+    }
+    text = {
+        # Fallback if the array is empty
+        localization_key = print_array_0
+    }
+}
+
+#Descs
+defined_text = {
+    name = GetCulture1Desc
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^0 = 1 } }
+        localization_key = culture_1_full
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^0 = 35 } }
+        localization_key = culture_35_desc
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^0 = 36 } }
+        localization_key = culture_36_desc
+    }
+}
+
+defined_text = {
+    name = GetCulture2Desc
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^1 = 1 } }
+        localization_key = culture_1_desc
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^1 = 35 } }
+        localization_key = culture_35_desc
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^1 = 36 } }
+        localization_key = culture_36_desc
+    }
+}
+
+defined_text = {
+    name = GetCulture3Desc
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^2 = 1 } }
+        localization_key = culture_1_desc
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^2 = 35 } }
+        localization_key = culture_35_desc
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^2 = 36 } }
+        localization_key = culture_36_desc
+    }
+}
+
+defined_text = {
+    name = GetCulture4Desc
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^3 = 1 } }
+        localization_key = culture_1_desc
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^3 = 35 } }
+        localization_key = culture_35_desc
+    }
+    text = {
+        # If the integer at index 0 is 1
+        trigger = { check_variable = { state_cultures^3 = 36 } }
+        localization_key = culture_36_desc
     }
 }

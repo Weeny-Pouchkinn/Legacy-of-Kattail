@@ -16,7 +16,13 @@ scripted_map_modes = {
 				# Divide by (no of culture being added - 1)/(no of culture being added) --> so 1/2, then 2/3, then 3/4, then 4/5
 				# Add (new culture's colors)/(no of culture being added)
 				if = { #Diverse
-					limit = { FROM = { is_in_array = { array = global.culture_1_array value = THIS } } }
+					limit = {
+						any_of = {
+							array = FROM.state_cultures
+							value = v
+							check_variable = { v = 35 } 
+						}
+					}
 					add_to_temp_variable = { num_cultures = 1 }
 
 					# Define the culture's colors
@@ -47,7 +53,13 @@ scripted_map_modes = {
 					add_to_temp_variable = { blue = culture_1_blue }
 				}
 				if = { #Diverse
-					limit = { FROM = { is_in_array = { array = global.culture_2_array value = THIS } } }
+					limit = {
+						any_of = {
+							array = FROM.state_cultures
+							value = v
+							check_variable = { v = 36 } 
+						}
+					}
 					add_to_temp_variable = { num_cultures = 1 }
 
 					# Define the culture's colors
@@ -78,7 +90,13 @@ scripted_map_modes = {
 					add_to_temp_variable = { blue = culture_2_blue }
 				}
 				if = { #Diverse
-					limit = { FROM = { is_in_array = { array = global.culture_3_array value = THIS } } }
+					limit = {
+						any_of = {
+							array = FROM.state_cultures
+							value = v
+							check_variable = { v = 1 } 
+						}
+					}
 					add_to_temp_variable = { num_cultures = 1 }
 
 					# Define the culture's colors
