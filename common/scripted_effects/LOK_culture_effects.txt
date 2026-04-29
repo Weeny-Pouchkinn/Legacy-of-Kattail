@@ -152,3 +152,49 @@ culture_is_culture_group_14 = {
 		any_of = { array = FROM.state_cultures value = v check_variable = { v = 88 } }
 	}
 }
+
+remove_all_state_cultures = {
+	custom_effect_tooltip = remove_all_state_cultures_tt
+	hidden_effect = {
+		clear_array = state_cultures
+	}
+}
+
+add_state_culture = {
+	custom_effect_tooltip = add_state_culture_tt
+	hidden_effect = {
+		if = {
+			limit = {
+				NOT = {
+					any_of = {
+						array = state_cultures
+						value = v
+						check_variable = { v = culture_temp } 
+					}
+				}
+			}
+			add_to_array = {
+				array = state_cultures
+				value = culture_temp
+			}
+			if = { #no more than 3
+				limit = { check_variable = { state_cultures^num > 3 } }
+				remove_from_array = {
+					array = state_cultures
+					index = 0
+				}
+			}
+		}	
+	}
+}
+
+set_state_culture = {
+	custom_effect_tooltip = set_state_culture_tt
+	hidden_effect = {
+		clear_array = state_cultures
+		add_to_array = {
+			array = state_cultures
+			value = culture_temp
+		}		
+	}
+}
