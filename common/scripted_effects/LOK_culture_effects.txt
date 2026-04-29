@@ -1,19 +1,233 @@
-#Nordherzlanders
-culture_is_culture_group_1 = {
-	OR = {
-		any_of = { array = FROM.state_cultures value = v check_variable = { v = 1 } }
-		any_of = { array = FROM.state_cultures value = v check_variable = { v = 2 } }
-		any_of = { array = FROM.state_cultures value = v check_variable = { v = 3 } }
-		any_of = { array = FROM.state_cultures value = v check_variable = { v = 4 } }
-		any_of = { array = FROM.state_cultures value = v check_variable = { v = 5 } }
-		any_of = { array = FROM.state_cultures value = v check_variable = { v = 6 } }
-		any_of = { array = FROM.state_cultures value = v check_variable = { v = 15 } }
+﻿remove_all_state_cultures = {
+	custom_effect_tooltip = remove_all_state_cultures_tt
+	hidden_effect = {
+		clear_array = state_cultures
 	}
 }
 
-#Katzens
-culture_is_super_culture_1 = {
-	OR = {
-		state_is_culture_group_1 = yes
+add_state_culture = {
+	custom_effect_tooltip = add_state_culture_tt
+	hidden_effect = {
+		if = {
+			limit = {
+				NOT = {
+					any_of = {
+						array = state_cultures
+						value = v
+						check_variable = { v = culture_temp } 
+					}
+				}
+			}
+			add_to_array = {
+				array = state_cultures
+				value = culture_temp
+			}
+			if = { #no more than 3
+				limit = { check_variable = { state_cultures^num > 3 } }
+				remove_from_array = {
+					array = state_cultures
+					index = 0
+				}
+			}
+		}	
+	}
+}
+
+set_state_culture = {
+	custom_effect_tooltip = set_state_culture_tt
+	hidden_effect = {
+		clear_array = state_cultures
+		add_to_array = {
+			array = state_cultures
+			value = culture_temp
+		}		
+	}
+}
+
+
+remove_state_culture = {
+	custom_effect_tooltip = remove_state_culture_tt
+	hidden_effect = {
+		if = {
+			limit = {
+				any_of = {
+					array = state_cultures
+					value = v
+					check_variable = { v = culture_temp } 
+				}
+			}
+			remove_from_array = {
+				array = state_cultures
+				value = culture_temp
+			}
+		}	
+	}
+}
+
+remove_culture_group_1 = {
+	custom_effect_tooltip = remove_culture_group_1_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_1_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_2 = {
+	custom_effect_tooltip = remove_culture_group_2_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_2_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_3 = {
+	custom_effect_tooltip = remove_culture_group_3_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_3_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_4 = {
+	custom_effect_tooltip = remove_culture_group_4_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_4_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_5 = {
+	custom_effect_tooltip = remove_culture_group_5_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_5_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_6 = {
+	custom_effect_tooltip = remove_culture_group_6_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_6_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_7 = {
+	custom_effect_tooltip = remove_culture_group_7_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_7_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_8 = {
+	custom_effect_tooltip = remove_culture_group_8_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_8_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_9 = {
+	custom_effect_tooltip = remove_culture_group_9_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_9_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_10 = {
+	custom_effect_tooltip = remove_culture_group_10_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_10_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_11 = {
+	custom_effect_tooltip = remove_culture_group_11_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_11_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_12 = {
+	custom_effect_tooltip = remove_culture_group_12_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_12_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_13 = {
+	custom_effect_tooltip = remove_culture_group_13_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_13_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+remove_culture_group_14 = {
+	custom_effect_tooltip = remove_culture_group_14_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_14_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
 	}
 }

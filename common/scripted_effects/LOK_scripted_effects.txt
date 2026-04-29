@@ -1508,6 +1508,26 @@ calculate_salvo_capacity = {
 	multiply_temp_variable = { salvo_capacity_from_riesigers = 50 } #50 nukes per Riesiger
 	add_to_variable = { lok_total_salvo_capacity = salvo_capacity_from_riesigers }
 
+	#Great Missile Array wonder bonus
+	if = {
+		limit = {
+			controls_state = 275
+			275 = { check_variable = { wonder = 23 } }
+		}
+		if = {
+			limit = { 275 = { is_core_of = PREV } }
+			add_to_variable = { lok_total_salvo_capacity = 50 }
+		}
+		else_if = {
+			limit = { 275 = { is_capital = yes } }
+			add_to_variable = { lok_total_salvo_capacity = 100 }
+		}
+		else = {
+			add_to_variable = { lok_total_salvo_capacity = 25 }
+		}
+	}
+
+
 	if = {
 		limit = { is_ai = yes }
 		set_variable = { lok_total_salvo_capacity = 100 }
@@ -2490,7 +2510,7 @@ apply_state_species_modifier = {
 	}
 }
 
-@wonder_modifier_count = 33
+@wonder_modifier_count = 44
 
 setup_wonder_array = {
 	resize_array = { #Array containing BASE modifiers, modify this in script!
@@ -2657,6 +2677,7 @@ dismantle_katlantropa_dam = {
 			destroy_entity = 9999998
 		}
 		1324 = {
+			remove_wonder = yes
 			transfer_state_to = WWW
 			set_victory_points = {
 				province = 10165
