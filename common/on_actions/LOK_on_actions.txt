@@ -459,9 +459,7 @@ on_actions = {
 			41 = { add_to_array = { array = state_cultures value = 39 } }
 
 			# Culture 40 - Pawrisian (PAW cores + 656, 655, 43)
-			42 = { add_to_array = { array = state_cultures value = 40 } }
 			43 = { add_to_array = { array = state_cultures value = 40 } }
-			50 = { add_to_array = { array = state_cultures value = 40 } }
 			62 = { add_to_array = { array = state_cultures value = 40 } }
 			474 = { add_to_array = { array = state_cultures value = 40 } }
 			479 = { add_to_array = { array = state_cultures value = 40 } }
@@ -3556,6 +3554,22 @@ on_actions = {
 					else_if = {
 						limit = { NOT = { is_core_of = ROOT } has_state_flag = compliance_0_@ROOT }
 						if = { limit = { check_variable = { compliance > 0 } } add_core_of = ROOT }
+					}
+					#Is it a core now? Let's add culture!
+					if = {
+						limit = {
+							is_core_of = ROOT
+							ROOT = { tag = TAK }
+							NOT = {
+								any_of = {
+									array = state_cultures
+									value = v
+									check_variable = { v = 36 } 
+								}
+							}
+						}
+						set_temp_variable = { culture_temp = 36 }
+						add_state_culture = yes
 					}
 				}
 
