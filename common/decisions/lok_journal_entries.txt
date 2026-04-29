@@ -1157,6 +1157,7 @@ lok_journal_entries_cat = {
 					ideology = fascism
 					popularity = 0.30
 				}
+				save_current_manpower = yes
 				every_owned_state = {
 					limit = { check_variable = { minority = 7 } check_variable = { species = 1 } }
 					set_temp_variable = { species_temp = 7 }
@@ -1181,6 +1182,7 @@ lok_journal_entries_cat = {
 					change_state_minority_species = yes
 					add_manpower = -500000
 				}
+				restore_previous_manpower = yes
 			}
 		}
 
@@ -4048,6 +4050,225 @@ lok_journal_entries_cat = {
 		}
 
 		days_remove = 30
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	#MER - Cleanse Invaders
+	MER_cleanse_invaders = {
+		icon = GFX_decision_generic_tank #AI-Generated Placeholder, change later!
+
+		allowed = {
+			tag = MER
+		}
+
+		state_target = yes
+		on_map_mode = map_only
+		target_array = controlled_states
+
+		target_trigger = {
+			FROM = {
+				OR = {
+					is_core_of = SLC
+					is_core_of = DUR
+				}
+			}
+		}
+
+		visible = {
+			tag = MER
+			FROM = {
+				OR = {
+					is_core_of = SLC
+					is_core_of = DUR
+				}
+			}
+		}
+
+		available = {
+			FROM = { is_controlled_by = MER }
+		}
+
+		cancel_trigger = {
+			FROM = { NOT = { is_controlled_by = MER } }
+		}
+
+		cost = 30
+		days_remove = 120
+
+		remove_effect = {
+			FROM = {
+				if = { limit = { is_core_of = SLC } remove_core_of = SLC }
+				if = { limit = { is_core_of = DUR } remove_core_of = DUR }
+				kill_all_state_population = yes
+				add_manpower = 150000
+				reset_base_state_population = yes
+
+				set_temp_variable = { species_temp = 29 }
+				change_state_majority_species = yes
+				hidden_effect = {
+					set_temp_variable = { species_temp = 1000 }
+					change_state_minority_species = yes
+				}
+				add_core_of = MER
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	#DUR - Spread the Mycelium
+	DUR_spread_the_mycelium = {
+		icon = GFX_decision_generic_tank #AI-Generated Placeholder, change later!
+
+		allowed = {
+			tag = DUR
+		}
+
+		state_target = yes
+		on_map_mode = map_only
+		target_array = controlled_states
+
+		target_trigger = {
+			FROM = {
+				NOT = { is_core_of = DUR }
+				is_controlled_by = DUR
+			}
+		}
+
+		visible = {
+			tag = DUR
+			FROM = { NOT = { is_core_of = DUR } }
+		}
+
+		available = {
+			FROM = { is_controlled_by = DUR }
+		}
+
+		cancel_trigger = {
+			FROM = { NOT = { is_controlled_by = DUR } }
+		}
+
+		cost = 30
+		days_remove = 120
+
+		remove_effect = {
+			FROM = {
+				if = { limit = { is_core_of = MER } remove_core_of = MER }
+				if = { limit = { is_core_of = SLC } remove_core_of = SLC }
+				add_core_of = DUR
+				add_manpower = 2000000
+				set_temp_variable = { new_base_population_k = state_population_k }
+				reset_base_state_population = yes
+				if = {
+					limit = { check_variable = { species = 49 } } # Sillicron majority
+					set_temp_variable = { species_temp = 50 }
+					change_state_majority_species = yes
+					# Keep minority as-is
+				}
+				else = {
+					# Save old majority species before changing it
+					set_temp_variable = { old_species = species }
+
+					set_temp_variable = { species_temp = 50 }
+					change_state_majority_species = yes
+
+					hidden_effect = {
+						if = {
+							limit = {
+								OR = {
+									is_core_of = SLC
+									check_variable = { minority = 49 } # Sillicron minority
+								}
+							}
+							set_temp_variable = { species_temp = 1000 }
+							change_state_minority_species = yes
+						}
+						else = {
+							set_temp_variable = { species_temp = old_species }
+							change_state_minority_species = yes
+						}	
+					}
+				}
+
+				create_unit = {
+					division = "name = \"Fungal Hordes\" division_template = \"Fungal Hordes\" start_experience_factor = 0.3"
+					owner = ROOT
+					count = 12
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	#SLC - Assimilate State
+	SLC_assimilate_state = {
+		icon = GFX_decision_generic_tank #AI-Generated Placeholder, change later!
+
+		allowed = {
+			tag = SLC
+		}
+
+		state_target = yes
+		on_map_mode = map_only
+		target_array = controlled_states
+
+		target_trigger = {
+			FROM = {
+				NOT = { is_core_of = SLC }
+				is_controlled_by = SLC
+			}
+		}
+
+		visible = {
+			tag = SLC
+			FROM = { NOT = { is_core_of = SLC } }
+		}
+
+		available = {
+			FROM = { is_controlled_by = SLC }
+		}
+
+		cancel_trigger = {
+			FROM = { NOT = { is_controlled_by = SLC } }
+		}
+
+		cost = 30
+		days_remove = 120
+
+		remove_effect = {
+			FROM = {
+				add_core_of = SLC
+				if = { limit = { is_core_of = DUR } remove_core_of = DUR }
+				if = {
+					limit = { is_core_of = DUR }
+					kill_all_state_population = yes
+					add_manpower = 100000
+					set_temp_variable = { species_temp = 49 }
+					change_state_majority_species = yes
+					# Keep existing minority unchanged
+				}
+				else = {
+					add_manpower = 100000
+					set_temp_variable = { species_temp = 49 }
+					change_state_minority_species = yes	
+				}
+				reset_base_state_population = yes
+
+				create_unit = {
+					division = "name = \"Assimilator Cohort\" division_template = \"Assimilator Cohort\" start_experience_factor = 0.3"
+					owner = ROOT
+					count = 1
+				}
+			}
+		}
 
 		ai_will_do = {
 			base = 1000

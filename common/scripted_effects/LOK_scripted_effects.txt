@@ -1,3 +1,69 @@
+#update the base state pop to a given value
+update_base_state_population = {
+	custom_effect_tooltip = update_base_state_population_tt
+	hidden_effect = {
+		set_variable = { population_at_game_start = new_base_population_k }
+		set_variable = { population_last_check = state_population_k }
+		update_state_productivity_modifier = yes
+		set_variable = { lok_min_manpower_before_collapse = state_population_k } #Determine the population before the state collapses into anarchy
+		divide_variable = { lok_min_manpower_before_collapse = 20 } #If 50k people are left out of 1M then stuff collapses.
+		multiply_variable = { state_prod_change_from_pop = -1 }
+		add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop }
+		set_variable = { state_prod_change_from_pop = 0 }
+	}
+}
+
+#update base state pop to the current pop value
+reset_base_state_population = {
+	custom_effect_tooltip = reset_base_state_population_tt
+	hidden_effect = {
+		set_variable = { population_at_game_start = state_population_k }
+		set_variable = { population_last_check = state_population_k }
+		update_state_productivity_modifier = yes
+		set_variable = { lok_min_manpower_before_collapse = state_population_k } #Determine the population before the state collapses into anarchy
+		divide_variable = { lok_min_manpower_before_collapse = 20 } #If 50k people are left out of 1M then stuff collapses.
+		multiply_variable = { state_prod_change_from_pop = -1 }
+		add_to_variable = { lok_state_productivity_value = state_prod_change_from_pop }
+		set_variable = { state_prod_change_from_pop = 0 }
+	}
+}
+
+#remove all pop and add it to death count
+kill_all_state_population = {
+	custom_effect_tooltip = kill_all_state_population_tt
+	hidden_effect = {
+		add_to_variable = { lok_state_misc_deaths = state_population_k }
+		add_to_variable = { lok_state_deaths = state_population_k }
+		add_to_variable = { lok_state_misc_deaths_display = state_population_k }
+		var:controller = {
+			add_to_variable = { lok_country_misc_deaths = PREV.state_population_k }
+			add_to_variable = { lok_country_deaths = PREV.state_population_k }
+			add_to_variable = { global.lok_global_misc_deaths = PREV.state_population_k }
+			add_to_variable = { global.lok_global_deaths = PREV.state_population_k }
+		}
+		var:controller = { save_current_manpower = yes }
+		while_loop_effect = {
+			limit = { check_variable = { state_population_k > 0 } }
+			add_manpower = -1000000
+		}
+		var:controller = { restore_previous_manpower = yes }
+	}
+}
+
+#remove all pop but don't add it to death count
+remove_all_state_population = {
+	custom_effect_tooltip = remove_all_state_population_tt
+	hidden_effect = {
+		var:controller = { save_current_manpower = yes }
+		while_loop_effect = {
+			limit = { check_variable = { state_population_k > 0 } }
+			add_manpower = -1000000
+		}
+		var:controller = { restore_previous_manpower = yes }
+	}
+}
+
+
 increase_state_productivity = {
 	custom_effect_tooltip = increase_state_productivity_tt
 	hidden_effect = {
@@ -57,7 +123,9 @@ LOK_NEK_war_update_opinion = {
 
 LOK_change_state_manpower = {
 	custom_effect_tooltip = LOK_change_state_manpower_tooltip
+	if = { limit = { check_variable = { manpower_change < 0 } } var:controller = { save_current_manpower = yes } }
 	add_manpower = manpower_change
+	if = { limit = { check_variable = { manpower_change < 0 } } var:controller = { restore_previous_manpower = yes } }
 	hidden_effect = {
 		update_state_productivity_modifier = yes
 		if = {
@@ -111,6 +179,7 @@ update_state_productivity_modifier = {
 		#Convert the productivity value to its modifier
 		set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
 		subtract_from_variable = { lok_state_productivity_modifier = 1 }
+		clamp_variable = { var = lok_state_productivity_modifier min = -1 max = 1 }
 
 		# #0.2 x -1 = -0.2
 		# #-0.4 x -1 = 0.4
@@ -122,14 +191,18 @@ update_state_productivity_modifier = {
 
 regenerate_state_productivity_modifier = {
 	if = {
-		limit = { check_variable = { lok_state_productivity_value < lok_state_productivity_value_base } }
-		add_to_variable = { lok_state_productivity_value = 0.001 }
-		add_to_variable = { state_prod_change_from_regen = 0.001 }
-		clamp_variable = { var = lok_state_productivity_value min = 0 max = lok_state_productivity_value_base }
+		limit = {
+			NOT = { check_variable = { damaged_infra_level_this_week > 0 } }
+			check_variable = { lok_state_productivity_value < lok_state_productivity_value_base }
+		}
+		add_to_variable = { lok_state_productivity_value = 0.0005 }
+		add_to_variable = { state_prod_change_from_regen = 0.0005 }
+		clamp_variable = { var = lok_state_productivity_modifier min = 0 max = 2 }
 	}
 	#Convert the productivity value to its modifier
 	set_variable = { lok_state_productivity_modifier = lok_state_productivity_value }
-	subtract_from_variable = { lok_state_productivity_modifier = -1 }
+	subtract_from_variable = { lok_state_productivity_modifier = 1 }
+	clamp_variable = { var = lok_state_productivity_modifier min = -1 max = 1 }
 }
 
 clear_nuclear_facility_ideas = {
@@ -311,56 +384,56 @@ nuke_state_fission = {
 	}
 }
 
-generate_warlord_state = {
-	random_controlled_state = {
-		limit = { NOT = { check_variable = { state_actions_recolonize_button_status = 2 } } }
-		save_global_event_target_as = new_warlord_state
-		random_scope_in_array = {
-			array = global.countries
-			limit = { PREV = { is_core_of = PREV } }
-			set_temp_variable = { global.country_to_initiate = THIS }
-		}
-		create_dynamic_country = {
-			original_tag = global.country_to_initiate
+# generate_warlord_state = {
+# 	random_controlled_state = {
+# 		limit = { NOT = { check_variable = { state_actions_recolonize_button_status = 2 } } }
+# 		save_global_event_target_as = new_warlord_state
+# 		random_scope_in_array = {
+# 			array = global.countries
+# 			limit = { PREV = { is_core_of = PREV } }
+# 			set_temp_variable = { global.country_to_initiate = THIS }
+# 		}
+# 		create_dynamic_country = {
+# 			original_tag = global.country_to_initiate
 
-			set_temp_variable = { new_country = this }
-			event_target:new_warlord_state = { transfer_state_to = var:new_country }
+# 			set_temp_variable = { new_country = this }
+# 			event_target:new_warlord_state = { transfer_state_to = var:new_country }
 			
-			meta_effect = {
-				debug = yes
-				text = { var:new_country = { set_cosmetic_tag = WARLORD_TAG_STATE_[STATE_ID] } }
-				STATE_ID = "[?event_target:new_warlord_state.GetStateID]"
-			}
+# 			meta_effect = {
+# 				debug = yes
+# 				text = { var:new_country = { set_cosmetic_tag = WARLORD_TAG_STATE_[STATE_ID] } }
+# 				STATE_ID = "[?event_target:new_warlord_state.GetStateID]"
+# 			}
 
-			var:new_country = {
-				set_country_flag = lok_anarchy_warlord_country
-				random_list = {
-					1 = { set_politics = { ruling_party = fascism } add_popularity = { ideology = fascism popularity = 1 } }
-					1 = { set_politics = { ruling_party = neutrality } add_popularity = { ideology = neutrality popularity = 1 } }
-					1 = { set_politics = { ruling_party = communism } add_popularity = { ideology = communism popularity = 1 } }
-				}
-				division_template = {
-					name = "Wasteland Militias"
+# 			var:new_country = {
+# 				set_country_flag = lok_anarchy_warlord_country
+# 				random_list = {
+# 					1 = { set_politics = { ruling_party = fascism } add_popularity = { ideology = fascism popularity = 1 } }
+# 					1 = { set_politics = { ruling_party = neutrality } add_popularity = { ideology = neutrality popularity = 1 } }
+# 					1 = { set_politics = { ruling_party = communism } add_popularity = { ideology = communism popularity = 1 } }
+# 				}
+# 				division_template = {
+# 					name = "Wasteland Militias"
 	
-					regiments = {
-						infantry = { x = 0 y = 0 }
-						infantry = { x = 0 y = 1 }
-						infantry = { x = 1 y = 0 }
-						infantry = { x = 1 y = 1 }
-					}
-				}
-				random_owned_controlled_state = {
-					set_demilitarized_zone = no
-					create_unit = {
-						division = "division_template = \"Wasteland Militias\" start_experience_factor = 0.2 start_equipment_factor = 1.0"
-						count = 3
-						owner = PREV
-					}
-				}
-			}
-		}
-	}
-}
+# 					regiments = {
+# 						infantry = { x = 0 y = 0 }
+# 						infantry = { x = 0 y = 1 }
+# 						infantry = { x = 1 y = 0 }
+# 						infantry = { x = 1 y = 1 }
+# 					}
+# 				}
+# 				random_owned_controlled_state = {
+# 					set_demilitarized_zone = no
+# 					create_unit = {
+# 						division = "division_template = \"Wasteland Militias\" start_experience_factor = 0.2 start_equipment_factor = 1.0"
+# 						count = 3
+# 						owner = PREV
+# 					}
+# 				}
+# 			}
+# 		}
+# 	}
+# }
 
 SIL_collapse_elwin = {
 	SIL = {
@@ -945,6 +1018,7 @@ calculate_orbital_logistics_capacity = {
 }
 
 damage_muno_colonies = {
+	save_current_manpower = yes
 	every_controlled_state = {
 		limit = { is_on_continent = muno }
 		random = {
@@ -965,10 +1039,12 @@ damage_muno_colonies = {
 			}
 		}
 	}
+	restore_previous_manpower = yes
 	calculate_muno_colonies_stats = yes
 }
 
 damage_xenon_colonies = {
+	save_current_manpower = yes
 	every_controlled_state = {
 		limit = { is_on_continent = xenon }
 		random = {
@@ -989,6 +1065,7 @@ damage_xenon_colonies = {
 			}
 		}
 	}
+	restore_previous_manpower = yes
 	calculate_xenon_colonies_stats = yes
 }
 
@@ -1762,6 +1839,7 @@ calculate_total_food_consumption = {
 			check_variable = { country_food_stockpile < 1 }
 			date > "100.1.5"
 		}
+		save_current_manpower = yes
 		every_controlled_state = {
 			set_variable = { lok_starvation_death_count = state_population_k }
 			multiply_variable = { lok_starvation_death_count = 0.03 } #3% of the pop perishes
@@ -1785,6 +1863,7 @@ calculate_total_food_consumption = {
 				add_to_variable = { global.lok_global_deaths = PREV.lok_starvation_death_count }
 			}
 		}
+		restore_previous_manpower = yes
 	}
 }
 
@@ -1845,6 +1924,7 @@ calculate_combat_casualties = {
 			# 	PREV = { add_to_temp_variable = { lok_num_core_states = 1 } }
 			# }
 			# divide_temp_variable = { lok_core_combat_deaths = lok_num_core_states } #The amount of deaths in each state more or less
+			save_current_manpower = yes
 			every_controlled_state = {
 				set_temp_variable = { lok_combat_deaths_percent_for_state = state_population_k }
 				divide_temp_variable = { lok_combat_deaths_percent_for_state = ROOT.max_manpower_k }
@@ -1863,6 +1943,7 @@ calculate_combat_casualties = {
 				add_to_variable = { lok_state_combat_deaths = lok_combat_deaths_to_be_removed_for_state }
 				add_to_variable = { lok_state_deaths = lok_combat_deaths_to_be_removed_for_state }
 			}
+			restore_previous_manpower = yes
 		}
 	}
 }
@@ -2020,10 +2101,12 @@ fire_thermonuclear_salvo = {
 						set_variable = { lok_recent_nuke_casualties = lok_nuke_casualties }
 						round_temp_variable = lok_nuke_casualties
 						clamp_temp_variable = { var = lok_nuke_casualties min = 1 } #At least 10k people gotta die sowwy
+						var:controller = { save_current_manpower = yes }
 						for_loop_effect = { #50 times 10000 = 500000, 0.5M, 5%
 							end = lok_nuke_casualties
 							add_manpower = -10000
 						}
+						var:controller = { restore_previous_manpower = yes }
 						multiply_variable = { lok_recent_nuke_casualties = 10 } #Turn to thousands (if that's even possible) #Now 500 so it represents 500k
 						#Add to the state counters
 						add_to_variable = { lok_state_bombing_deaths = lok_recent_nuke_casualties }
@@ -2150,7 +2233,9 @@ apply_radiation_effects = {
 		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }
 		clamp_variable = { var = lok_radiation_death_count min = 0 max = 2000 } #Avoid overflow
 		multiply_variable = { lok_radiation_death_count = -1000 } #Turn to raw manpower
+		var:controller = { save_current_manpower = yes }
 		add_manpower = lok_radiation_death_count #Remove the people
+		var:controller = { restore_previous_manpower = yes }
 		divide_variable = { lok_radiation_death_count = -1000 } #Turn back to positive and divide by 1000 for tracking
 
 		#Add to the trackers
@@ -2544,6 +2629,51 @@ dismantle_katlantropa_dam = {
 			set_building_level = { type = arms_factory level = 0 }
 			set_building_level = { type = dockyard level = 0 }
 			set_building_level = { type = industrial_complex level = 0 }
+		}
+	}
+}
+
+
+
+#FROM EQUESTRIA AT WAR, USED WITH PERMISSION!!
+save_current_manpower = {
+	hidden_effect = {
+		set_variable = { previous_country_manpower_se = manpower_k }
+	}
+}
+
+#THIS is country, controller of the state
+restore_previous_manpower = {
+	hidden_effect = {
+		#yes we gotta call it 3 times, don't ask why
+		country_event = LOK_utility.1
+		country_event = LOK_utility.1
+		country_event = LOK_utility.1
+	}
+}
+
+restore_previous_manpower_function = {
+	hidden_effect = {
+		if = {
+			limit = { has_variable = previous_country_manpower_se }
+			set_variable = { current_country_manpower_se = manpower_k }
+			#log = "previous_country_manpower_se: [?previous_country_manpower_se] current_country_manpower_se: [?current_country_manpower_se]"
+			subtract_from_variable = { current_country_manpower_se = previous_country_manpower_se }
+			#log = "difference: [?current_country_manpower_se]"
+			while_loop_effect = {
+				limit = { check_variable = { current_country_manpower_se > 99 } }
+				subtract_from_variable = { current_country_manpower_se = 100 }
+				add_manpower = -100000
+				#log = "add -100000 manpower"
+			}
+			multiply_variable = { current_country_manpower_se = 1000 }
+			round_variable = current_country_manpower_se
+			multiply_variable = { current_country_manpower_se = -1 }
+			#log = "add [?current_country_manpower_se] manpower"
+			add_manpower = current_country_manpower_se
+			#log = "current manpower [?manpower_k]"
+			clear_variable = current_country_manpower_se
+			#clear_variable = previous_country_manpower_se
 		}
 	}
 }
