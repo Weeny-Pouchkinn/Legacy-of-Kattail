@@ -198,3 +198,23 @@ set_state_culture = {
 		}		
 	}
 }
+
+
+remove_state_culture = {
+	custom_effect_tooltip = remove_state_culture_tt
+	hidden_effect = {
+		if = {
+			limit = {
+				any_of = {
+					array = state_cultures
+					value = v
+					check_variable = { v = culture_temp } 
+				}
+			}
+			remove_from_array = {
+				array = state_cultures
+				value = culture_temp
+			}
+		}	
+	}
+}
