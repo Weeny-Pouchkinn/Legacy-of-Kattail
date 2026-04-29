@@ -41,12 +41,17 @@ focus_tree = {
         prerequisite = { focus = FRA_questioning }
         completion_reward = {
             FRA = { country_event = FRA_diet.1 }
+            mark_focus_tree_layout_dirty = yes
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
         }
     }
 
     focus = {
         id = FRA_econquestion
         icon = GFX_FRA_Science
+        allow_branch = {
+            has_completed_focus = FRA_firstmeeting
+        }
         x = 6
         y = 3
         cost = 2
@@ -69,6 +74,9 @@ focus_tree = {
         y = 3
         cost = 2
         prerequisite = { focus = FRA_firstmeeting }
+        allow_branch = {
+            has_completed_focus = FRA_firstmeeting
+        }
         completion_reward = {
             add_political_power = 100
         }
@@ -496,14 +504,15 @@ focus_tree = {
     focus = {
         id = FRA_elwin_question
         icon = GFX_FRA_Hell
-        x = 20
+        x = 25
         y = 3
         cost = 0
-        prerequisite = { focus = FRA_firstmeeting }
         available = {
             always = no
         }
         completion_reward = {
+            mark_focus_tree_layout_dirty = yes
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
         }
     }
 
@@ -512,9 +521,12 @@ focus_tree = {
     focus = {
         id = FRA_radicals
         icon = GFX_FRA_Hell
-        x = 29
+        x = 31
         y = 4
         cost = 5
+        allow_branch = {
+            has_completed_focus = FRA_elwin_question
+        }
         prerequisite = { focus = FRA_elwin_question }
         completion_reward = {
             IF = {
@@ -538,7 +550,7 @@ focus_tree = {
     focus = {
         id = FRA_pe_reform
         icon = GFX_FRA_Hell
-        x = 28
+        x = 29
         y = 5
         cost = 5
         prerequisite = { focus = FRA_radicals }
@@ -550,19 +562,19 @@ focus_tree = {
     focus = {
         id = FRA_pe_the_provisional_idea
         icon = GFX_FRA_Hell
-        x = 28
+        x = 29
         y = 6
         cost = 5
-        prerequisite = { focus = FRA_radicals }
+        prerequisite = { focus = FRA_pe_reform }
         completion_reward = {
-            add_ideas = FRA_provisional
+            add_ideas = FRA_idea_provisional
         }
     }
 
     focus = {
         id = FRA_pe_the_stockpile_guns
         icon = GFX_FRA_Hell
-        x = 28
+        x = 27
         y = 7
         cost = 5
         prerequisite = { focus = FRA_pe_the_provisional_idea }
@@ -598,6 +610,8 @@ focus_tree = {
         prerequisite = { focus = FRA_pe_the_stockpile_guns }
         prerequisite = { focus = FRA_pe_revolutionary_council }
         completion_reward = {
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
+            mark_focus_tree_layout_dirty = yes
         }
         mutually_exclusive = { focus = FRA_pe_right }
     }
@@ -610,10 +624,8 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_pe_revolutionary_council }
         completion_reward = {
-            add_equipment_to_stockpile = {
-                type = infantry_equipment
-                amount = -5000
-            }
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
+            mark_focus_tree_layout_dirty = yes
         }
         mutually_exclusive = { focus = FRA_pe_left }
     }    
@@ -621,7 +633,7 @@ focus_tree = {
     focus = {
         id = FRA_pe_regime_holds
         icon = GFX_FRA_Hell
-        x = 35
+        x = 34
         y = 5
         cost = 5
         prerequisite = { focus = FRA_radicals }
@@ -634,10 +646,11 @@ focus_tree = {
         id = FRA_pe_regime_moderates
         icon = GFX_FRA_Hell
         x = 34
-        y = 6
+        y = 8
         cost = 5
         prerequisite = { focus = FRA_pe_regime_holds }
         completion_reward = {
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
         }
         mutually_exclusive = { focus = FRA_pe_regime_radicalizes }
     }
@@ -646,13 +659,14 @@ focus_tree = {
         id = FRA_pe_regime_radicalizes
         icon = GFX_FRA_Hell
         x = 36
-        y = 6
+        y = 8
         cost = 5
         prerequisite = { focus = FRA_pe_regime_holds }
         available = {
             NOT = { has_completed_focus = FRA_democracy }
         }
         completion_reward = {
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
         }
         mutually_exclusive = { focus = FRA_pe_regime_moderates }
     }
@@ -663,11 +677,17 @@ focus_tree = {
         x = 24
         y = 9
         cost = 5
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_pe_regime_continues
+            }
+        }
         available = {
             OR = { has_completed_focus = FRA_pe_regime_moderates has_completed_focus = FRA_pe_regime_radicalizes } 
             has_completed_focus = FRA_elwin_purrsian_borders
         }
         completion_reward = {
+            mark_focus_tree_layout_dirty = yes
         }
     }
 
@@ -677,11 +697,28 @@ focus_tree = {
         x = 10
         y = 9
         cost = 5
+        allow_branch = {
+            OR = {
+                has_completed_focus = FRA_pe_left
+                has_completed_focus = FRA_pe_right
+            }
+        }
         available = {
             has_completed_focus = FRA_elwin_purrsian_borders
             OR = { has_completed_focus = FRA_pe_left has_completed_focus = FRA_pe_right } 
         }
         completion_reward = {
+            IF = { 
+                limit = {
+                    has_completed_focus = FRA_pe_left
+                }
+               	set_variable = { var:peasant_points = 0 }
+                set_variable = { var:internationalist_points = 0 }
+                country_event = FRA_collapse_leftist.1
+            }
+            ELSE = {
+                country_event = FRA_collapse_rightist.1
+            }
         }
     }
 
@@ -718,6 +755,9 @@ focus_tree = {
                 }
                 army_ratio = 0.2
                 navy_ratio = 0
+                hidden_effect = {
+                    set_cosmetic_tag = FRA_counter_rev
+                }
             }
             FRA_trans_com = { 
                 promote_character = yes
@@ -734,6 +774,7 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_revolution focus = FRA_right_coup }
         completion_reward = {
+            country_event = FRA_collapse_leftist.3
         }
     }
 
@@ -745,6 +786,10 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_rev_reconcile_radicals focus = FRA_left_righteous_terror }
         completion_reward = {
+            swap_ideas = {
+                remove_idea = FRA_idea_end_strikes
+                add_idea = FRA_idea_council_mandate
+            }
         }
     }
 
@@ -756,6 +801,9 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_council_mandate }
         completion_reward = {
+            add_ideas = {
+                FRA_idea_soldier_council
+            }
         }
     }
 
@@ -767,6 +815,7 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_righteous_terror }
         completion_reward = {
+            country_event = FRA_collapse_leftist.2
         }
     }
 
@@ -779,6 +828,7 @@ focus_tree = {
         prerequisite = { focus = FRA_left_congress_location }
         prerequisite = { focus = FRA_left_council_mandate }
         completion_reward = {
+            country_event = FRA_collapse_leftist.4
         }
     }
 
@@ -790,6 +840,9 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_congress }
         completion_reward = {
+            set_cosmetic_tag = FRA_leftcom
+            mark_focus_tree_layout_dirty = yes
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
         }
         mutually_exclusive = {
             focus = FRA_left_peasant_nationalists
@@ -804,56 +857,13 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_congress }
         completion_reward = {
+            custom_effect_tooltip = FRA_tooltip_extra_focuses
         }
         mutually_exclusive = {
             focus = FRA_left_internationalists
         }
     }
 
-    focus = {
-        id = FRA_left_party_form
-        icon = GFX_FRA_Hell
-        x = 3
-        y = 16
-        cost = 5
-        prerequisite = { focus = FRA_left_internationalists }
-        completion_reward = {
-        }
-    }
-
-    focus = {
-        id = FRA_left_communization
-        icon = GFX_FRA_Hell
-        x = 0
-        y = 16
-        cost = 5
-        prerequisite = { focus = FRA_left_internationalists }
-        completion_reward = {
-            set_country_flag = left_communist_victory
-        }
-    }
-
-    focus = {
-        id = FRA_left_mao_nyadong
-        icon = GFX_FRA_Hell
-        x = 7
-        y = 16
-        cost = 5
-        prerequisite = { focus = FRA_left_peasant_nationalists }
-        completion_reward = {
-        }
-    }
-
-    focus = {
-        id = FRA_left_juche
-        icon = GFX_FRA_Hell
-        x = 10
-        y = 16
-        cost = 5
-        prerequisite = { focus = FRA_left_peasant_nationalists }
-        completion_reward = {
-        }
-    }
 
     focus = {
         id = FRA_left_amewdeo
@@ -861,13 +871,17 @@ focus_tree = {
         x = 44
         y = 1
         cost = 5
+        allow_branch = {
+            has_completed_focus = FRA_left_internationalists
+        }
         available = {
-            has_country_flag = left_communist_victory
+            has_completed_focus = FRA_left_internationalists
         }
         mutually_exclusive = {
             focus = FRA_left_dameow
         }
         completion_reward = {
+            mark_focus_tree_layout_dirty = yes
         }
     }
 
@@ -877,8 +891,11 @@ focus_tree = {
         x = 46
         y = 1
         cost = 5
+        allow_branch = {
+            has_completed_focus = FRA_left_internationalists
+        }
         available = {
-            has_country_flag = left_communist_victory
+            has_completed_focus = FRA_left_internationalists
         }
         mutually_exclusive = {
             focus = FRA_left_amewdeo
@@ -887,6 +904,7 @@ focus_tree = {
             FRA_Onyarato_Dameow = {
                 promote_character = yes
             }
+            mark_focus_tree_layout_dirty = yes
         }
     }
     
@@ -952,7 +970,7 @@ focus_tree = {
         x = 47
         y = 3
         cost = 5
-        prerequisite = { focus = FRA_left_dameow }
+        prerequisite = { focus = FRA_left_compromise_with_the_bureaucrats }
         completion_reward = {
         }
     }
@@ -963,7 +981,7 @@ focus_tree = {
         x = 47
         y = 4
         cost = 5
-        prerequisite = { focus = FRA_left_dameow }
+        prerequisite = { focus = FRA_left_mobilize }
         prerequisite = { focus = FRA_left_the_internationalist_charter }
         completion_reward = {
         }
@@ -1269,6 +1287,21 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_revolution focus = FRA_right_coup }
         completion_reward = {
+            IF = {
+                limit = {
+                    has_completed_focus = FRA_pe_left
+                }
+                add_popularity = {
+                    ideology = communism
+                    popularity = 0.35
+                    add_stability = -0.1
+                }
+            }
+            ELSE = {
+                add_popularity = fascism
+                add_popularity = 0.25
+                add_war_support = 0.1
+            }
         }
     }
 
@@ -1318,9 +1351,12 @@ focus_tree = {
     focus = {
         id = FRA_elwin_faction
         icon = GFX_FRA_Hell
-        x = 20
+        x = 22
         y = 4
         cost = 2
+        allow_branch = {
+            has_completed_focus = FRA_elwin_question
+        }
         prerequisite = { focus = FRA_elwin_question }
         completion_reward = {
             create_faction_from_template = faction_template_kaiserliche_nordkoalition
@@ -1491,24 +1527,24 @@ focus_tree = {
             add_stability = 0.1
         }
     }
-    focus = {
-        id = FRA_elwin_nkb_occupation
-        icon = GFX_FRA_Hell
-        x = 18
-        y = 6
-        cost = 5
-        prerequisite = { focus = FRA_elwin_first_war }
-        available = {
-            NOT = { country_exists = NKB }
-        }
-        completion_reward = {
-            NKB = {
-                set_cosmetic_tag = NKB_reconstruction
-                remove_state_core = 543
-            }
-            release_puppet = NKB
-        }
-    }
+    # focus = {
+    #     id = FRA_elwin_nkb_occupation
+    #     icon = GFX_FRA_Hell
+    #     x = 18
+    #     y = 6
+    #     cost = 5
+    #     prerequisite = { focus = FRA_elwin_first_war }
+    #     available = {
+    #         NOT = { country_exists = NKB }
+    #     }
+    #     completion_reward = {
+    #         NKB = {
+    #             set_cosmetic_tag = NKB_reconstruction
+    #             remove_state_core = 543
+    #         }
+    #         release_puppet = NKB
+    #     }
+    # }
 
     ## Army Tree
 
@@ -1518,7 +1554,7 @@ focus_tree = {
         x = 24
         y = 0
         cost = 2
-        available = {
+        allow_branch = {
             has_completed_focus = FRA_elwin_question
         }
         completion_reward = {
@@ -1561,7 +1597,6 @@ focus_tree = {
                 track = armor
             }
         }
-    }
-            
+    }           
 }
 
