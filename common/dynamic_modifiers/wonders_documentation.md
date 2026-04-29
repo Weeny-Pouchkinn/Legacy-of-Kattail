@@ -153,6 +153,12 @@ Once you've done this, you're sorted! your Wonder should be ready to go!.
 | 35 | Air Attack                         | air_attack_factor                         |         2         |          Positive          |
 | 36 | Air Defence                        | air_defence_factor                        |         2         |          Positive          |
 | 37 | Airbase Construction Speed         | production_speed_air_base_factor          |         2         |          Positive          |
+| 38 | Energy                             | country_resource_energy                   |         0         |          Positive          |
+| 39 | Factory Output                     | industrial_capacity_factory               |         2         |          Positive          |
+| 40 | Production Efficiency Retention    | line_change_production_efficiency_factor   |         2         |          Positive          |
+| 41 | Supertensiles                      | country_resource_supertensiles            |         0         |          Positive          |
+| 42 | Food Production                    | lok_food_resources_factor                 |         2         |          Positive          |
+| 43 | Strategic Bomber Bombing           | air_strategic_bomber_bombing_factor       |         2         |          Positive          |
 
 ### Adding New Modifiers
 Adding new modifiers is a somewhat more complicated process but very modular. It is broken down into 3 steps.
@@ -271,6 +277,11 @@ And with that, its all done! your new modifier has been added
 |    16     | Rakvir Supercomputer         |  —    |            KUS            |
 |    17     | Lutécie Tower                |  320  |            ROQ            |
 |    18     | The Great Gantry             |  726  |            MCF              |
+|    19     | Katlantropa Dam              | 1324  |            —              |
+|    20     | Great Lake Dam               | 1018  |            —              |
+|    21     | Harelyne Spire               |  418  |            —              |
+|    22     | Bunville Palace              |  406  |            —              |
+|    23     | Great Missile Array          |  275  |            —              |
 
 ## The Wonder Output Modifier, Adding New/Updating Modifiers Midgame and Adding New Wonders Midgame
 To begin with, any time a wonders modifier is updated by script ingame, its recommended you run the "apply_wonder_effects" scripted effect on the scope of whoever controls the state with the wonder in it. This would look like
