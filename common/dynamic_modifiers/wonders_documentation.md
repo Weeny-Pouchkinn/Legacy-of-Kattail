@@ -148,6 +148,11 @@ Once you've done this, you're sorted! your Wonder should be ready to go!.
 | 30 | Daily Fascism Support              | fascism_drift                             |         2         |          Positive          |
 | 31 | Resistance Activity Chance         | resistance_activity                       |         1         |          Negative          |
 | 32 | Military Factory Donations         | military_factory_donations                |         1         |          Positive          |
+| 33 | Coordination                       | coordination_bonus                        |         2         |          Positive          |
+| 34 | Air Agility                        | air_agility_factor                        |         2         |          Positive          |
+| 35 | Air Attack                         | air_attack_factor                         |         2         |          Positive          |
+| 36 | Air Defence                        | air_defence_factor                        |         2         |          Positive          |
+| 37 | Airbase Construction Speed         | production_speed_air_base_factor          |         2         |          Positive          |
 
 ### Adding New Modifiers
 Adding new modifiers is a somewhat more complicated process but very modular. It is broken down into 3 steps.
@@ -263,6 +268,9 @@ And with that, its all done! your new modifier has been added
 |    13     | Grüyettburg Pharmaceutics    |  131  |            LIO            |
 |    14     | Unterflusionian Monument     |  602  |            NEU            |
 |    15     | Great City of Charles        |  349  |            TAK            |
+|    16     | Rakvir Supercomputer         |  —    |            KUS            |
+|    17     | Lutécie Tower                |  320  |            ROQ            |
+|    18     | The Great Gantry             |  726  |            MCF              |
 
 ## The Wonder Output Modifier, Adding New/Updating Modifiers Midgame and Adding New Wonders Midgame
 To begin with, any time a wonders modifier is updated by script ingame, its recommended you run the "apply_wonder_effects" scripted effect on the scope of whoever controls the state with the wonder in it. This would look like
