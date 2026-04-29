@@ -3419,6 +3419,43 @@ scripted_map_modes = {
 					add_to_temp_variable = { green = culture_92_green }
 					add_to_temp_variable = { blue = culture_92_blue }
 				}
+				if = { #Culture 93
+					limit = {
+						any_of = {
+							array = FROM.state_cultures
+							value = v
+							check_variable = { v = 93 } 
+						}
+					}
+					add_to_temp_variable = { num_cultures = 1 }
+
+					# Define the culture's colors
+					add_to_temp_variable = { culture_93_red = 0.78 }
+					add_to_temp_variable = { culture_93_green = 0.10 }
+					add_to_temp_variable = { culture_93_blue = 0.08 }
+
+					# Divide by the current amount of cultures
+					divide_temp_variable = { culture_93_red = num_cultures }
+					divide_temp_variable = { culture_93_green = num_cultures }
+					divide_temp_variable = { culture_93_blue = num_cultures}
+
+					if = {
+						limit = { check_variable = { num_cultures > 1 } }
+						set_temp_variable = { culture_color_factor = num_cultures }
+						subtract_from_temp_variable = { culture_color_factor = 1 }
+						divide_temp_variable = { culture_color_factor = num_cultures }
+
+						# Divide existing colors by this
+						multiply_temp_variable = { red = culture_color_factor }
+						multiply_temp_variable = { green = culture_color_factor }
+						multiply_temp_variable = { blue = culture_color_factor }
+					}
+
+					# Add to the existing color
+					add_to_temp_variable = { red = culture_93_red }
+					add_to_temp_variable = { green = culture_93_green }
+					add_to_temp_variable = { blue = culture_93_blue }
+				}
 			}
 		}
 		far_text = none
