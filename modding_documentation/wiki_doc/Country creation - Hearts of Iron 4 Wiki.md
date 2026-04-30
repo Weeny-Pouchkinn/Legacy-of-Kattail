@@ -418,7 +418,7 @@ characters = {
             }
         }
         country_leader = {
-            ideology = socialism
+            ideology = reformist_socialism
             traits = { scary_clown }
         }
     }

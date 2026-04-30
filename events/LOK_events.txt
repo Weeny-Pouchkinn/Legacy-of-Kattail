@@ -444,6 +444,34 @@ state_event = { #stimulus
 	}
 }
 
+state_event = { #integration protocols
+	id = LOK_state_actions.4
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		save_event_target_as = state_target
+		event_target:state_target = {
+			set_variable = { state_actions_integration_button_status = 1 }
+			remove_dynamic_modifier = { modifier = lok_state_actions_integration_modifier }
+		}
+	}
+}
+
+state_event = { #reconstruction funds
+	id = LOK_state_actions.5
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		save_event_target_as = state_target
+		event_target:state_target = {
+			set_variable = { state_actions_reconstruction_button_status = 1 }
+			remove_dynamic_modifier = { modifier = lok_state_actions_reconstruction_modifier }
+		}
+	}
+}
+
 state_event = { #regent repression
 	id = LOK_state_actions.3
 	is_triggered_only = yes
@@ -1116,20 +1144,20 @@ country_event = {
 				tag = event_target:ussf_leader
 				NOT = { has_country_flag = usf_formed }
 			}
-			modifier = { #If we CAN annex more stuff then do it
-				factor = 0
-				NOT = {
-					tag = ROQ
-					has_government = fascism
-				}
-				event_target:peace_puppet_country = {
-					OR = {
-						any_neighbor_state = { is_core_of = ROOT }
-						any_neighbor_state = { is_claimed_by = ROOT } 
-						any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
-					}
-				}
-			}
+			# modifier = { #If we CAN annex more stuff then do it
+			# 	factor = 0
+			# 	NOT = {
+			# 		tag = ROQ
+			# 		has_government = fascism
+			# 	}
+			# 	event_target:peace_puppet_country = {
+			# 		OR = {
+			# 			any_neighbor_state = { is_core_of = ROOT }
+			# 			any_neighbor_state = { is_claimed_by = ROOT } 
+			# 			any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
+			# 		}
+			# 	}
+			# }
 		}
 		hidden_effect = {
 			clr_country_flag = deciding_nation_fate
