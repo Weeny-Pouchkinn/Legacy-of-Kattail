@@ -1,0 +1,185 @@
+political_actions = {
+
+	MCF_move_steelloft = {
+		icon = GFX_decision_armored_blimp_carrier
+
+		allowed = {
+			original_tag = MCF
+		}
+
+		state_target = yes
+		on_map_mode = map_only
+		target_array = MCF.original_cores_array
+
+		target_trigger = {
+			FROM = {
+				is_fully_controlled_by = ROOT
+				NOT = { has_state_flag = steelloft_location }
+				any_neighbor_state = {
+					has_state_flag = steelloft_location
+				}
+			}
+		}
+
+		visible = {
+			capital_scope = { #this not being met means steelloft is captured
+				has_state_flag = steelloft_location
+				is_controlled_by = ROOT
+			}
+			tag = MCF
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = MCF_steelloft_not_already_moving_tt
+				NOT = { has_country_flag = steelloft_moving }
+			}
+		}
+
+		fire_only_once = no
+
+		days_remove = 15
+
+		cost = 0
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				add = 100
+				capital_scope = {
+					has_state_flag = steelloft_location
+					NOT = { is_fully_controlled_by = ROOT }
+				}
+			}
+		}
+
+		complete_effect = {
+			set_country_flag = { flag = steelloft_moving days = 15 }
+		}
+
+		cancel_effect = {
+			ROOT = { clr_country_flag = steelloft_moving }
+		}
+
+		cancel_trigger = {
+			event_target:steelloft_location = { #this not being met means steelloft is captured
+				NOT = { is_controlled_by = ROOT }
+			}
+			FROM = {
+				NOT = { is_fully_controlled_by = ROOT }
+			}
+		}
+
+		remove_effect = {
+			clr_country_flag = steelloft_moving
+			custom_effect_tooltip = MCF_move_steelloft_tt
+
+			hidden_effect = {
+				event_target:steelloft_location = {
+					#Remove wonder from old state
+					remove_wonder = yes
+					#Remove 20VP from the Steelloft province in the old state
+					if = {
+						limit = { state = 265 }
+						set_victory_points = { province = 7320 value = 0 }
+					}
+					else_if = {
+						limit = { state = 269 }
+						set_victory_points = { province = 1836 value = 0 }
+					}
+					else_if = {
+						limit = { state = 294 }
+						set_victory_points = { province = 2018 value = 0 }
+					}
+					else_if = {
+						limit = { state = 313 }
+						set_victory_points = { province = 1483 value = 0 }
+					}
+					else_if = {
+						limit = { state = 725 }
+						set_victory_points = { province = 3402 value = 0 }
+					}
+					else_if = {
+						limit = { state = 726 }
+						set_victory_points = { province = 10793 value = 0 }
+					}
+					else_if = {
+						limit = { state = 727 }
+						set_victory_points = { province = 243 value = 0 }
+					}
+					else_if = {
+						limit = { state = 728 }
+						set_victory_points = { province = 2371 value = 0 }
+					}
+					else_if = {
+						limit = { state = 729 }
+						set_victory_points = { province = 3234 value = 0 }
+					}
+				}
+
+				#Place Steelloft in new state (FROM = targeted state)
+				FROM = {
+					save_global_event_target_as = steelloft_location
+
+					#Setup wonder
+					set_variable = { wonder = 18 }
+					setup_wonder_array = yes
+					set_variable = { wonder_modifiers_values^25 = 2 } #Offmap Civilian Factories
+					set_variable = { wonder_modifiers_values^32 = 2 } #Offmap Military Factories
+					controller = { apply_wonder_effects = yes }
+
+					#Add 20VP to the designated Steelloft province and name it
+					if = {
+						limit = { state = 265 }
+						set_victory_points = { province = 7320 value = 30 }
+						ROOT = { set_province_name = { id = 7320 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 269 }
+						set_victory_points = { province = 1836 value = 30 }
+						ROOT = { set_province_name = { id = 1836 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 294 }
+						set_victory_points = { province = 2018 value = 30 }
+						ROOT = { set_province_name = { id = 2018 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 313 }
+						set_victory_points = { province = 1483 value = 30 }
+						ROOT = { set_province_name = { id = 1483 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 725 }
+						set_victory_points = { province = 3402 value = 30 }
+						ROOT = { set_province_name = { id = 3402 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 726 }
+						set_victory_points = { province = 10793 value = 30 }
+						ROOT = { set_province_name = { id = 10793 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 727 }
+						set_victory_points = { province = 243 value = 30 }
+						ROOT = { set_province_name = { id = 243 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 728 }
+						set_victory_points = { province = 2371 value = 30 }
+						ROOT = { set_province_name = { id = 2371 name = "Steelloft" } }
+					}
+					else_if = {
+						limit = { state = 729 }
+						set_victory_points = { province = 3234 value = 30 }
+						ROOT = { set_province_name = { id = 3234 name = "Steelloft" } }
+					}
+				}
+			}
+			#Remove Steelloft from its current location
+
+			#Set capital to the new state
+			set_capital = { state = FROM }
+		}
+	}
+}
