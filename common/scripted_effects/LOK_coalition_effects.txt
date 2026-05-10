@@ -1,0 +1,60 @@
+add_ideology_to_coalition = {
+	if = {
+		limit = { check_variable = { pol_party_array^ideology_temp = 3 } }
+		custom_effect_tooltip = add_ideology_to_coalition_from_hostile_effect
+	}
+	else = {
+		custom_effect_tooltip = add_ideology_to_coalition_effect
+	}
+	hidden_effect = {
+		add_to_variable = { lok_pol_party_indicator = 1 }
+		set_variable = { pol_party_array^ideology_temp = 2 }
+	}
+}
+
+make_ideology_neutral = {
+	if = {
+		limit = { check_variable = { pol_party_array^ideology_temp = 2 } }
+		custom_effect_tooltip = make_ideology_neutral_from_coalition_effect
+	}
+	else_if = {
+		limit = { check_variable = { pol_party_array^ideology_temp = 3 } }
+		custom_effect_tooltip = make_ideology_neutral_from_hostile_effect
+	}
+	else = {
+		custom_effect_tooltip = make_ideology_neutral_effect
+	}
+	hidden_effect = {
+		add_to_variable = { lok_pol_party_indicator = 1 }
+		set_variable = { pol_party_array^ideology_temp = 1 }
+	}
+}
+
+make_ideology_hostile = {
+	if = {
+		limit = { check_variable = { pol_party_array^ideology_temp = 2 } }
+		custom_effect_tooltip = make_ideology_hostile_from_coalition_effect
+	}
+	else = {
+		custom_effect_tooltip = make_ideology_hostile_effect
+	}
+	hidden_effect = {
+		add_to_variable = { lok_pol_party_indicator = 1 }
+		set_variable = { pol_party_array^ideology_temp = 3 }
+	}
+}
+
+make_all_parties_neutral = {
+	hidden_effect = {
+		add_to_variable = { lok_pol_party_indicator = 1 }
+		set_variable = { pol_party_array^0 = 1 }
+		set_variable = { pol_party_array^1 = 1 }
+		set_variable = { pol_party_array^2 = 1 }
+		set_variable = { pol_party_array^3 = 1 }
+		set_variable = { pol_party_array^4 = 1 }
+		set_variable = { pol_party_array^5 = 1 }
+		set_variable = { pol_party_array^6 = 1 }
+		set_variable = { pol_party_array^7 = 1 }
+		set_variable = { pol_party_array^8 = 1 }
+	}
+}
