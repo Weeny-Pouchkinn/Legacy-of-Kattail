@@ -1,3 +1,45 @@
+calculate_private_sector_modifiers = {
+	set_variable = { consumer_goods_perc = modifier@consumer_goods_factor }
+	add_to_variable = { consumer_goods_perc = 1 }
+	multiply_variable = { consumer_goods_perc = modifier@consumer_goods_expected_value }
+	
+	set_variable = { ps_modifiers = 0 }
+
+	add_to_variable = { ps_modifiers = consumer_goods_perc }
+	multiply_variable = { ps_modifiers = 0.5 }
+
+	multiply_variable = { ps_modifiers = modifier@lok_ps_productivity_factor }
+
+	set_variable = { lok_ps_production_speed_buildings_factor = ps_modifiers }
+	set_variable = { lok_ps_industrial_capacity_factory = ps_modifiers }
+	set_variable = { lok_ps_production_factory_max_efficiency_factor = ps_modifiers }
+
+	multiply_variable = { lok_ps_production_speed_buildings_factor = modifier@lok_ps_production_speed_buildings_factor }
+	multiply_variable = { lok_ps_industrial_capacity_factory = modifier@lok_ps_industrial_capacity_factory_factor }
+	multiply_variable = { lok_ps_production_factory_max_efficiency_factor = modifier@lok_ps_production_factory_max_efficiency_factor_factor }
+
+	set_variable = { lok_ps_infra_growth_odds_true = modifier@lok_ps_infra_growth_odds }
+	multiply_variable = { lok_ps_infra_growth_odds_true = consumer_goods_perc }
+	multiply_variable = { lok_ps_infra_growth_odds_true = modifier@lok_ps_productivity_factor }
+	multiply_variable = { lok_ps_infra_growth_odds_true = 100 }
+	clamp_variable = { var = lok_ps_infra_growth_odds_true min = 0 max = 100 }
+
+	set_variable = { lok_ps_growth_target_true = modifier@lok_ps_growth_target }
+	multiply_variable = { lok_ps_growth_target_true = modifier@lok_ps_productivity_factor }
+	set_variable = { lok_ps_factory_growth_goal = num_of_military_factories }
+	add_to_variable = { lok_ps_factory_growth_goal = num_of_civilian_factories }
+	multiply_variable = { lok_ps_factory_growth_goal = consumer_goods_perc }
+	multiply_variable = { lok_ps_factory_growth_goal = lok_ps_growth_target_true }
+	round_variable = lok_ps_factory_growth_goal
+	clamp_variable = { var = lok_ps_factory_growth_goal min = 0 max = 999 }
+	clamp_variable = { var = lok_ps_growth_target_true min = 0 max = 999 }
+
+	if = {
+		limit = { NOT = { has_dynamic_modifier = { modifier = LOK_private_sector_modifiers } } }
+		add_dynamic_modifier = { modifier = LOK_private_sector_modifiers }
+	}
+}
+
 count_state_cultures = {
 	set_temp_variable = { state_culture_count = 0 }
 
