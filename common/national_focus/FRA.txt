@@ -529,21 +529,7 @@ focus_tree = {
         }
         prerequisite = { focus = FRA_elwin_question }
         completion_reward = {
-            IF = {
-                limit = {
-                    has_government = communism
-                }
-                add_popularity = {
-                    ideology = communism
-                    popularity = 0.3
-                }
-            }
-            ELSE = {
-                add_popularity = {
-                    ideology = fascism
-                    popularity = 0.3
-                }
-            }
+            country_event = FRA_radicals.1
         }
     }
 
@@ -567,7 +553,10 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_pe_reform }
         completion_reward = {
-            add_ideas = FRA_idea_provisional
+            add_timed_idea = {
+                idea = FRA_idea_provisional
+                days = 105 
+            }
         }
     }
 
@@ -1270,17 +1259,7 @@ focus_tree = {
                 idea = FRA_idea_legitimate_government
                 days = 365
             }
-            every_state = {
-                if = {
-                    limit = {
-                        is_in_array = { 
-                            array = global.greater_north_herzlands_superregion_states
-                            value = THIS
-                        }
-                    }
-                    add_core_of = FRA
-                }
-            }
+            add_political_power = 50
         }
     }
 
