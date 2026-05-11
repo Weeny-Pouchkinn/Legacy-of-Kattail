@@ -18,21 +18,51 @@ calculate_private_sector_modifiers = {
 	multiply_variable = { lok_ps_industrial_capacity_factory = modifier@lok_ps_industrial_capacity_factory_factor }
 	multiply_variable = { lok_ps_production_factory_max_efficiency_factor = modifier@lok_ps_production_factory_max_efficiency_factor_factor }
 
+	#the odds of each state gettting new infra
 	set_variable = { lok_ps_infra_growth_odds_true = modifier@lok_ps_infra_growth_odds }
 	multiply_variable = { lok_ps_infra_growth_odds_true = consumer_goods_perc }
 	multiply_variable = { lok_ps_infra_growth_odds_true = modifier@lok_ps_productivity_factor }
 	multiply_variable = { lok_ps_infra_growth_odds_true = 100 }
-	clamp_variable = { var = lok_ps_infra_growth_odds_true min = 0 max = 100 }
 
+	#the percentage of growth to attain
 	set_variable = { lok_ps_growth_target_true = modifier@lok_ps_growth_target }
 	multiply_variable = { lok_ps_growth_target_true = modifier@lok_ps_productivity_factor }
+
+	#the absolute amount of factories to make each year
 	set_variable = { lok_ps_factory_growth_goal = num_of_military_factories }
 	add_to_variable = { lok_ps_factory_growth_goal = num_of_civilian_factories }
 	multiply_variable = { lok_ps_factory_growth_goal = consumer_goods_perc }
 	multiply_variable = { lok_ps_factory_growth_goal = lok_ps_growth_target_true }
 	round_variable = lok_ps_factory_growth_goal
-	clamp_variable = { var = lok_ps_factory_growth_goal min = 0 max = 999 }
-	clamp_variable = { var = lok_ps_growth_target_true min = 0 max = 999 }
+
+	clamp_variable = { var = ps_modifiers min = 0 max = 999 }
+
+	if = {
+		limit = { check_variable = { modifier@lok_ps_no_effects = 1 } }
+		set_variable = { lok_ps_production_speed_buildings_factor = 0 }
+		set_variable = { lok_ps_industrial_capacity_factory = 0 }
+		set_variable = { lok_ps_production_factory_max_efficiency_factor = 0 }
+		set_variable = { lok_ps_infra_growth_odds_true = 0 }
+		set_variable = { lok_ps_factory_growth_goal = 0 }
+		set_variable = { lok_ps_growth_target_true = 0 }
+	}
+	else_if = {
+		limit = { check_variable = { modifier@lok_ps_bad_effects = 1 } }
+		multiply_variable = { lok_ps_production_speed_buildings_factor = -1 }
+		multiply_variable = { lok_ps_industrial_capacity_factory = -1 }
+		multiply_variable = { lok_ps_production_factory_max_efficiency_factor = -1 }
+		set_variable = { lok_ps_infra_growth_odds_true = 0 }
+		set_variable = { lok_ps_factory_growth_goal = 0 }
+		set_variable = { lok_ps_growth_target_true = 0 }
+	}
+	else = {
+		clamp_variable = { var = lok_ps_production_speed_buildings_factor min = 0 max = 999 }
+		clamp_variable = { var = lok_ps_industrial_capacity_factory min = 0 max = 999 }
+		clamp_variable = { var = lok_ps_production_factory_max_efficiency_factor min = 0 max = 999 }
+		clamp_variable = { var = lok_ps_infra_growth_odds_true min = 0 max = 999 }
+		clamp_variable = { var = lok_ps_factory_growth_goal min = 0 max = 999 }
+		clamp_variable = { var = lok_ps_growth_target_true min = 0 max = 999 }
+	}
 
 	if = {
 		limit = { NOT = { has_dynamic_modifier = { modifier = LOK_private_sector_modifiers } } }
