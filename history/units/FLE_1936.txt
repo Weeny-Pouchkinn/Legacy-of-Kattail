@@ -8,6 +8,61 @@ division_template = { # Tribal Warband
         irregular_infantry = { x = 1 y = 1 }
     }
 }
+division_template = { # Tribal Warband but from occupied land, more experience and larger
+    name = "Exile Warband"
+    regiments = {
+        irregular_infantry = { x = 0 y = 0 }
+        irregular_infantry = { x = 0 y = 1 }
+        irregular_infantry = { x = 0 y = 2 }
+        irregular_infantry = { x = 1 y = 0 }
+        irregular_infantry = { x = 1 y = 1 }
+        irregular_infantry = { x = 1 y = 2 }
+    }
+}
 division_template = {
-    name = 
+    name = "Federal Conscript"
+    regiments = {
+        militia = { x = 0 y = 0 }
+        militia = { x = 0 y = 1 }
+        militia = { x = 0 y = 2 }
+        militia = { x = 1 y = 0 }
+        militia = { x = 1 y = 2 }
+        militia = { x = 1 y = 1 }
+    }
+}
+division_template = {
+    name = "Mountain Highguard"
+    regiments = {
+        mountaineers = { x = 0 y = 0 }
+        mountaineers = { x = 0 y = 1 }
+        mountaineers = { x = 0 y = 2 }
+        mountaineers = { x = 1 y = 0 }
+        mountaineers = { x = 1 y = 1 }
+        mountaineers = { x = 1 y = 2 }
+    }
+}
+
+units = {
+    division = { location = 11512   division_template = "Mountain Highguard"    name = "Fleatherpeak Highguard"     start_equipment_factor = 1.0 start_experience_factor = 0.6 start_manpower_factor = 1.0  }
+    division = { location = 13405   division_template = "Exile Warband"         name = "Southtalon Tribe Exiles"    start_equipment_factor = 0.8 start_experience_factor = 0.5 start_manpower_factor = 0.8  }
+    division = { location = 4028    division_template = "Exile Warband"         name = "Northtalon Tribe Exiles"    start_equipment_factor = 0.8 start_experience_factor = 0.5 start_manpower_factor = 0.8  }
+    division = { location = 10565   division_template = "Exile Warband"         name = "Southclaw Tribe Exiles"     start_equipment_factor = 0.8 start_experience_factor = 0.5 start_manpower_factor = 0.8  }
+    division = { location = 13332   division_template = "Exile Warband"         name = "Northclaw Tribe Exiles"     start_equipment_factor = 0.8 start_experience_factor = 0.5 start_manpower_factor = 0.8  }
+    division = { location = 13360   division_template = "Tribal Warband"        name = "Fleatherbeak Tribe Warband" start_equipment_factor = 0.7 start_experience_factor = 0.2 start_manpower_factor = 0.9  }
+    division = { location = 4389    division_template = "Tribal Warband"        name = "Pawcific Tribe Warband"     start_equipment_factor = 0.7 start_experience_factor = 0.2 start_manpower_factor = 0.9  }
+    division = { location = 8381    division_template = "Federal Conscript"     name = "1st Conscript Regiment"     start_equipment_factor = 0.8 start_experience_factor = 0.2 start_manpower_factor = 0.9  }
+    division = { location = 11512   division_template = "Federal Conscript"     name = "2nd Conscript Regiment"     start_equipment_factor = 0.8 start_experience_factor = 0.2 start_manpower_factor = 0.9  }
+    #division = { location = 889     division_template = "Federal Conscript"     name = "3rd Conscript Regiment"     start_equipment_factor = 0.8 start_experience_factor = 0.2 start_manpower_factor = 0.9  }
+}
+
+instant_effect = {
+    add_equipment_production = {
+        equipment = {
+            type = infantry_equipment_0
+            creator = "FLE"
+        }
+        requested_factories = 1
+        progress = 0.3
+        efficiency = 50
+    }
 }

@@ -1,10 +1,10 @@
 capital = 1307
 
-oob = "KTZ_1936"
+oob = "FLS_1936"
 
-set_research_slots = 3
-set_stability = 0.5
-set_war_support = 0.5
+set_research_slots = 1
+set_stability = 0.75
+set_war_support = 0.75
 
 # Starting tech
 set_technology = {
@@ -12,40 +12,40 @@ set_technology = {
     infantry_weapons1 = 1
     night_vision = 1
     interwar_antitank = 1
-    mechanised_infantry = 1
+    #mechanised_infantry = 1
     tech_trucks = 1
     marines = 1
-    paratroopers = 1
+    #paratroopers = 1
     tech_engineers = 1
-    rocket_artillery = 1
+    #rocket_artillery = 1
     gw_artillery = 1
     basic_medium_tank = 1
     tech_support = 1
     tech_recon = 1
-    tech_mountaineers = 1
-    motorised_infantry = 1
+    #tech_mountaineers = 1
+    #motorised_infantry = 1
     interwar_antiair = 1
     gwtank = 1
-    basic_light_tank = 1
-    early_fighter = 1
-    early_bomber = 1
-    tactical_bomber1 = 1
+    #basic_light_tank = 1
+    #early_fighter = 1
+    #early_bomber = 1
+    #tactical_bomber1 = 1
     electronic_mechanical_engineering = 1
     radio = 1
-    atomic_research = 1
+    #atomic_research = 1
 
-    nukes = 1
-    nuclear_power_plant_tech = 1
-    naval_nuclear_power = 1
-    heavy_fighter1 = 1
-    strategic_bomber1 = 1
+    #nukes = 1
+    #nuclear_power_plant_tech = 1
+    #naval_nuclear_power = 1
+    #heavy_fighter1 = 1
+    #strategic_bomber1 = 1
     synth_oil_experiments = 1
     fuel_silos = 1
     fuel_refining = 1
     basic_train = 1
     wartime_train = 1
-    fighter1 = 1
-    amphibious_mechanized_infantry = 1
+    #fighter1 = 1
+    #amphibious_mechanized_infantry = 1
 
     early_submarine = 1
     early_destroyer = 1
@@ -58,9 +58,45 @@ set_technology = {
 
 
 }
+
+# We're Imperialists Lul
 declare_war_on = {
     target = FLE
     type = annex_everything
+}
+
+# Support From Home
+add_manpower = 50000
+add_equipment_to_stockpile = {
+    type = infantry_equipment_1
+    amount = 4000
+    producer = SOB
+}
+add_equipment_to_stockpile = {
+    type = artillery_equipment_1
+    amount = 150
+    producer = SOB
+}
+add_equipment_to_stockpile = {
+    type = support_equipment
+    amount = 300
+    producer = SOB
+}
+
+SOB = {
+    #give_guarantee = FLS # Oops, Sobakiland gets called in
+    give_market_access = FLS
+    diplomatic_relation = {
+        country = FLS
+        relation = non_aggression_pact
+        active = yes
+    }
+}
+
+create_import = {
+    resource = food
+    factories = 1
+    exporter = SOB
 }
 
 set_convoys = 300

@@ -623,7 +623,7 @@ on_actions = {
 			VIX = { remove_ideas = var_species_0 add_ideas = var_species_12 }
 
 			MCF = { remove_ideas = var_species_0 add_ideas = var_species_13 }
-			
+
 			NEK = { remove_ideas = var_species_0 add_ideas = var_species_14 }
 			IOS = { remove_ideas = var_species_0 add_ideas = var_species_14 }
 
@@ -1141,7 +1141,15 @@ on_actions = {
 					modifier = AUR_crazy_kaiserists
 				}
 			}
-			
+
+			# Fleather Hates Invaders
+			FLE = {
+				add_opinion_modifier = { target = FLS modifier = FLE_Imperialist_Invaders }
+				add_opinion_modifier = { target = FLM modifier = FLE_Imperialist_Invaders }
+				add_opinion_modifier = { target = MER modifier = FLE_Imperialist_Invaders }
+				add_opinion_modifier = { target = SOB modifier = FLE_Imperialist_Invaders }
+			}
+
 			#Polar Projection
 			BSS = { every_owned_state = { add_dynamic_modifier = { modifier = lok_polar_projection } } }
 			NGE = { every_owned_state = { add_dynamic_modifier = { modifier = lok_polar_projection } } }
@@ -1532,7 +1540,12 @@ on_actions = {
 				if = { #airplanes
 					limit = {
 						is_herzlands_warlord = no
-						NOT = { tag = MCF }
+						NOT = {
+							tag = MCF
+							tag = FLE
+							tag = FLS
+							tag = FLM
+						}
 						is_non_playable_country = no
 						has_tech = early_fighter
 					}
@@ -1548,7 +1561,12 @@ on_actions = {
 				if = { #cas
 					limit = {
 						is_herzlands_warlord = no
-						NOT = { tag = MCF }
+						NOT = {
+							tag = MCF
+							tag = FLE
+							tag = FLS
+							tag = FLM
+						}
 						is_non_playable_country = no
 						has_tech = CAS1
 					}
@@ -2940,6 +2958,80 @@ on_actions = {
 					country_exists = PRL
 				}
 				news_event = { id = LOK_news.18 }
+			}
+			### Fleather War
+
+			if = { # FLS Loss
+				limit = { ROOT = { tag = FLS } }
+				if = { # Transfer Player to SOB
+					limit = { ROOT = { is_ai = no } }
+					SOB = { change_tag_from = ROOT }
+				}
+				every_owned_state = { transfer_state_to = FROM } # Annexes FLS to whoever capitulated it.
+				if = { # FLS Loss to FLE
+					limit = { FROM = { tag = FLE } }
+					FROM = { country_event = FLE_war.1 }
+					SOB = { country_event = FLE_war.11 }
+				}
+				if = { # FLS Loss to FLM
+					limit = { FROM = { tag = FLM } }
+					if = { limit = { country_exists = FLE } FROM = { country_event = FLE_war.9 } }
+					# FLE Doesnt Exist (FLM Total Victory with FLS last conquer flavour text)
+					else = { FROM = { set_country_flag = FLM_total_victory_FLS_last country_event = FLE_war.10 } }
+				}
+			}
+			if = { # FLM Loss
+				limit = { ROOT = { tag = FLM } }
+				if = { # Transfer Player to MER
+					limit = { ROOT = { is_ai = no } }
+					MER = { change_tag_from = ROOT }
+				}
+				every_owned_state = { transfer_state_to = FROM } # Annexes FLM to whoever capitulated it.
+				if = { # FLM Loss to FLE
+					limit = { FROM = { tag = FLE } }
+					FROM = { country_event = FLE_war.2 }
+					MER = { country_event = FLE_war.21 }
+				}
+				if = { # FLM Loss to FLS
+					limit = { FROM = { tag = FLS } }
+					if = { limit = { country_exists = FLE } FROM = { country_event = FLE_war.6 } }
+					# FLE Doesn't Exist (FLS Total Victory with FLM last conquest flavour text)
+					else = { FROM = { set_country_flag = FLS_total_victory_FLM_last country_event = FLE_war.7 } }
+				}
+			}
+			if = { # FLE Loss
+				limit = { ROOT = { tag = FLE } }
+				every_owned_state = { transfer_state_to = FROM } # Annexes FLE to whoever capitulated it.
+				if = { # FLE Loss to FLS
+					limit = { FROM = { tag = FLS } }
+					# FLM Still Exists
+					if = { limit = { country_exists = FLM } FROM = { country_event = FLE_war.5 } }
+					# FLM Doesn't Exist (FLS Total Victory with FLE last conquest flavour text)
+					else = { FROM = { set_country_flag = FLS_total_victory_FLE_last country_event = FLE_war.7 } }
+				}
+				if = { # FLE Loss to FLM
+					limit = { FROM = { tag = FLM } }
+					# FLS Still Exists
+					if = { limit = { country_exists = FLS } FROM = { country_event = FLE_war.8 } }
+					# FLS Doesnt Exist (FLM Total Victory with FLE last conquer flavour text)
+					else = { FROM = { set_country_flag = FLM_total_victory_FLE_last } country_event = FLE_war.10 }
+				}
+			}
+			if = { # FLE total Victory
+				limit = {
+					OR = {
+						AND = {
+							ROOT = { tag = FLS }
+							NOT = { country_exists = FLM }
+						}
+						AND = {
+							ROOT = { tag = FLM }
+							NOT = { country_exists = FLS }
+						}
+					}
+					FROM = { tag = FLE }
+				}
+				FLE = { country_event = FLE_war.3 }
 			}
 		}
 	}

@@ -1,0 +1,566 @@
+add_namespace = FLE_war
+
+# INDEX
+# FLE_war.1  = FLE wins against FLS                                     | DONE
+# FLE_war.11 = FLE wins against FLS (SOB SIDE)                          | DONE
+# FLE_war.2  = FLE wins against FLM                                     | DONE
+# FLE_war.21 = FLE wins against FLM (MER SIDE)                          | DONE
+# FLE_war.3  = FLE Total Victory                                        | DONE
+# FLE_war.4  = FLE Total Victory (news)                                 | DONE
+# FLE_war.5  = FLS wins against FLE                                     | DONE
+# FLE_war.51 = FLS wins against FLE (SOB SIDE)                          | DONE
+# FLE_war.6  = FLS wins against FLM                                     | DONE
+# FLE_war.61 = FLS wins against FLM (SOB SIDE)                          | DONE
+# FLE_war.62 = FLS wins against FLM (MER SIDE)                          | DONE
+# FLE_war.7  = FLS Total Victory                                        | DONE
+# FLE_war.71 = FLS Total Victory (SOB SIDE, Puppet Setup)               | DONE
+# FLE_war.72 = FLS Total Victory (MER SIDE, if FLM were last to fall)   | DONE
+# FLE_war.8  = FLM wins against FLE                                     | DONE
+# FLE_war.81 = FLM wins against FLE (MER SIDE)                          | DONE
+# FLE_war.9  = FLM wins against FLS                                     | DONE
+# FLE_war.91 = FLM wins against FLS (MER SIDE)                          | DONE
+# FLE_war.92 = FLM wins against FLS (SOB SIDE)                          | DONE
+# FLE_war.10  = FLM Total Victory                                       | DONE
+# FLE_war.101 = FLM Total Victory (MER SIDE, Puppet Setup)              | DONE
+# FLE_war.102 = FLM Total Victory (SOB SIDE, if FLS were last to fall)  | DONE
+
+# FLE Events
+
+country_event = {# FLE Wins against FLS
+    id = FLE_war.1
+    title = FLE_war.1.t
+    desc = FLE_war.1.desc
+    immediate = { log = "[GetDateText]: [Root.GetName]: event FLE_war.1" }
+    is_triggered_only = yes
+    picture = GFX_report_event_victory
+
+    option = {
+        trigger = { country_exists = FLM }
+        name = FLE_war.1.a
+        add_war_support = 0.25
+        add_stability = 0.1
+    }
+    option = {
+        trigger = { NOT = { country_exists = FLM } }
+        name = FLE_war.1.b
+        add_war_support = 0.25
+        add_stability = 0.1
+    }
+}
+country_event = {# FLE Wins against FLS, SOB Side
+    id = FLE_war.11
+    title = FLE_war.11.t
+    desc = FLE_war.11.desc
+    immediate = { log = "[GetDateText]: [Root.GetName]: event FLE_war.11" }
+    is_triggered_only = yes
+    picture = GFX_report_event_achkosov
+
+    option = { # Recruit Achkosov
+        name = FLE_war.11.a
+        add_stability = -0.025
+        add_war_support = -0.025
+        load_oob = FLS_DEFEAT
+        army_experience = 25
+        FLS = {
+            random_character = {
+                limit = { is_character = FLE_Alebarksy_Achkosov }
+                set_nationality = SOB
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = { # Dont Recruit Achkosov
+        name = FLE_war.11.b
+        add_war_support = -0.05
+        load_oob = FLS_DEFEAT
+        army_experience = 15
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+country_event = {# FLE Wins against FLM
+    id = FLE_war.2
+    title = FLE_war.2.t
+    desc = FLE_war.2.desc
+    immediate = { log = "[GetDateText]: [Root.GetName]: event FLE_war.2" }
+    is_triggered_only = yes
+    picture = GFX_report_event_victory
+
+    option = {
+        trigger = { country_exists = FLS }
+        name = FLE_war.2.a
+        add_war_support = 0.25
+        add_stability = 0.1
+    }
+    option = {
+        trigger = { NOT = { country_exists = FLS } }
+        name = FLE_war.2.b
+        add_war_support = 0.25
+        add_stability = 0.1
+    }
+}
+country_event = { # FLE Wins against FLM, MER Side
+    id = FLE_war.21
+    title = FLE_war.21.t
+    desc = FLE_war.21.desc
+    immediate = { log = "[GetDateText]: [Root.GetName]: event FLE_war.21"}
+    is_triggered_only = yes
+    picture = GFX_report_event_tulia
+
+    option = { # Recruit Tulia
+        name = FLE_war.11.a
+        add_war_support = -0.025
+        load_oob = FLM_DEFEAT
+        army_experience = 25
+        FLM = {
+            random_character = {
+                limit = { is_character = FLE_Tulia_Korzyn }
+                set_nationality = MER
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = { # Dont Recruit Tulia
+        name = FLE_war.11.b
+        add_war_support = -0.05
+        load_oob = FLM_DEFEAT
+        army_experience = 15
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+country_event = {# FLE Total Win
+    id = FLE_war.3
+    title = FLE_war.3.t
+    desc = FLE_war.3.desc
+    immediate = { log = "[GetDateText]: [Root.GetName]: event FLE_war.3"}
+    is_triggered_only = yes
+    picture = GFX_report_event_celebration
+
+    option = {
+        name = FLE_war.3.a
+        add_ideas = volunteer_only
+        add_ideas = civilian_economy
+        hidden_effect = { set_temp_variable = { which = state_prod_change value = 0.1 } }
+        every_owned_state = {
+            increase_state_productivity = yes
+        }
+        news_event = { id = FLE_war.4 hours = 6 }
+    }
+}
+news_event = { # News Event for FLE total win
+    id = FLE_war.4
+    title = FLE_war.4.t
+    desc = FLE_war.4.desc
+    picture = GFX_news_event_victory
+    is_triggered_only = yes
+
+    option = { # SOB/MER response
+        name = FLE_war.4.a
+        trigger = {
+            OR = {
+                tag = SOB
+                tag = MER
+            }
+        }
+    }
+    option = { # Normal Response
+        name = FLE_war.4.b
+        trigger = {
+            NOT = {
+               tag = SOB
+               tag = MER
+            }
+        }
+    }
+    option = { # Kaiserist Response (seething)
+        name = FLE_war.4.c
+        trigger = {
+            is_kaiserist_ideology = yes
+        }
+    }
+}
+
+# FLS Events
+
+country_event = { # FLS defeats FLE, FLS side (FLM Still Exists)
+    id = FLE_war.5
+    title = FLE_war.5.t
+    desc = FLE_war.5.desc
+    picture = GFX_report_event_achkosov
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.5.a
+        add_war_support = 0.05
+        SOB = { country_event = FLE_war.51 }
+        set_capital = { state = 82 remember_old_capital = yes }
+    }
+}
+country_event = { # FLS defeats FLE, SOB Side (FLM Still Exists)
+    id = FLE_war.51
+    title = FLE_war.51.t
+    desc = FLE_war.51.desc
+    picture = GFX_report_event_achkosov
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.51.a
+        add_war_support = 0.05
+    }
+}
+country_event = { # FLS defeats FLM, FLS Side (FLE still exists) ((what the fuck are you doing))
+    id = FLE_war.6
+    title = FLE_war.6.t
+    desc = FLE_war.6.desc
+    picture = GFX_report_event_achkosov
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.6.a
+        SOB = { country_event = FLE_war.61 }
+        MER = { country_event = FLE_war.62 }
+        add_war_support = 0.05
+    }
+}
+country_event = { # FLS defeats FLM, SOB Side (FLE Still Exists) ((what the fuck are you doing))
+    id = FLE_war.61
+    title = FLE_war.61.t
+    desc = FLE_war.61.desc
+    picture = GFX_report_event_achkosov
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.61.a
+        add_war_support = 0.05
+    }
+}
+country_event = { # FLS defeats FLM, MER Side (FLE Still Exists) ((what the fuck are you doing))
+    id = FLE_war.62
+    title = FLE_war.62.t
+    desc = FLE_war.62.desc
+    picture = GFX_report_event_tulia
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.62.a
+        add_war_support = -0.025
+        hidden_effect = { load_oob = FLM_DEFEAT }
+        army_experience = 25
+        FLM = {
+            random_character = {
+                limit = { is_character = FLE_Tulia_Korzyn }
+                set_nationality = MER
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = {
+        name = FLE_war.62.b
+        add_war_support = -0.05
+        hidden_effect = { load_oob = FLM_DEFEAT }
+        army_experience = 15
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+country_event = { # FLS Total Victory
+    id = FLE_war.7
+    title = FLE_war.7.t
+    desc = {
+        trigger = { has_country_flag = FLS_total_victory_FLE_last }
+        text = FLE_war.7.desc.fle
+    }
+    desc = {
+        trigger = { has_country_flag = FLS_total_victory_FLM_last }
+        text = FLE_war.7.desc.flm
+    }
+    picture = GFX_report_event_victory
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.7.a
+        if = { limit = { is_ai = no } SOB = { change_tag_from = FLS } }
+        SOB = {
+            annex_country = { target = FLS transfer_troops = no }
+            country_event = FLE_war.71
+            hidden_effect = { load_oob = FLS_VICTORY }
+        }
+        if = { limit = { has_country_flag = FLS_total_victory_FLM_last } MER = { country_event = FLE_war.72 } }
+    }
+}
+country_event = { # FLS Total Victory, SOB Side
+    id = FLE_war.71
+    title = FLE_war.71.t
+    desc = FLE_war.71.desc
+    picture = GFX_report_event_victory
+    is_triggered_only = yes
+
+    option = { # Establish Sister Republic
+        name = FLE_war.71.sister_republic
+        release_puppet = FLE
+        FLE = { set_cosmetic_tag = FLE_SOB_SISTER }
+        FLS = {
+            random_character = {
+                limit = { is_character = FLE_Alebarksy_Achkosov }
+                set_nationality = SOB
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = { # Establish navy Puppet
+        name = FLE_war.71.navy_puppet
+        release_autonomy = {
+            target = FLE
+            autonomy_state = autonomy_integrated_puppet
+            freedom_level = 0
+        }
+        FLE = {
+            set_cosmetic_tag = FLE_SOB_NAVY
+            FLS = {
+                random_character = {
+                    limit = { is_character = FLE_Alebarksy_Achkosov }
+                    set_nationality = FLE
+                }
+            }
+            hidden_effect = { retire_character = FLE_Greatbeak_The_Third }
+            promote_character = FLE_Alebarksy_Achkosov
+            set_country_leader_description = { desc = FLE_Alebarksy_Achkosov_Desc_Victorious_Leader }
+            add_ideas = var_species_2
+        }
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+country_event = { # FLS Total Victory (MER SIDE, FLM last to fall)
+    id = FLE_war.72
+    title = FLE_war.72.t
+    desc = FLE_war.72.desc
+    picture = GFX_report_event_tulia
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.72.a
+        add_war_support = -0.025
+        hidden_effect = { load_oob = FLM_DEFEAT }
+        army_experience = 25
+        FLM = {
+            random_character = {
+                limit = { is_character = FLE_Tulia_Korzyn }
+                set_nationality = MER
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = {
+        name = FLE_war.72.b
+        add_war_support = -0.05
+        hidden_effect = { load_oob = FLM_DEFEAT }
+        army_experience = 15
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+# FLM Events
+country_event = { # FLM Victory against FLE
+    id = FLE_war.8
+    title = FLE_war.8.t
+    desc = FLE_war.8.desc
+    picture = GFX_report_event_tulia
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.8.a
+        add_war_support = 0.05
+        MER = { country_event = FLE_war.81 }
+        set_capital = { state = 82 remember_old_capital = yes }
+    }
+}
+country_event = { # FLM Victory against FLE (MER SIDE)
+    id = FLE_war.81
+    title = FLE_war.81.t
+    desc = FLE_war.81.desc
+    picture = GFX_report_event_achkosov
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.81.a
+        add_war_support = 0.05
+    }
+}
+country_event = { # FLM Victory against FLS (FLE Still Exists) ((What the Fuck are you doing)
+    id = FLE_war.9
+    title = FLE_war.9.t
+    desc = FLE_war.9.desc
+    picture = GFX_report_event_tulia
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.9.a
+        MER = { country_event = FLE_war.91 }
+        SOB = { country_event = FLE_war.92 }
+        add_war_support = 0.05
+    }
+}
+country_event = { # FLM Victory against FLS, MER Side (FLE Still Exists) ((What the fuck are you doing))
+    id = FLE_war.91
+    title = FLE_war.91.t
+    desc = FLE_war.91.desc
+    picture = GFX_report_event_tulia
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.91.a
+        add_war_support = 0.05
+    }
+}
+country_event = { # FLM Victory Aganst FLS, SOB Side (FLE Still Exists) ((what the fuck are you doing))
+    id = FLE_war.92
+    title = FLE_war.92.t
+    desc = FLE_war.92.desc
+    picture = GFX_report_event_tulia
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.92.a
+        add_war_support = -0.025
+        hidden_effect = { load_oob = FLS_DEFEAT }
+        army_experience = 25
+        FLS = {
+            random_character = {
+                limit = { is_character = FLE_Alebarksy_Achkosov }
+                set_nationality = SOB
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = {
+        name = FLE_war.92.b
+        add_war_support = -0.05
+        hidden_effect = { load_oob = FLS_DEFEAT }
+        army_experience = 15
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+country_event = { # FLM Total Victory
+    id = FLE_war.10
+    title = FLE_war.10.t
+    desc = {
+        trigger = { has_country_flag = FLM_total_victory_FLE_last }
+        text = FLE_war.10.desc.fle
+    }
+    desc = {
+        trigger = { has_country_flag = FLM_total_victory_FLS_last }
+        text = FLE_war.10.desc.fls
+    }
+    picture = GFX_report_event_victory
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.10.a
+        if = { limit = { is_ai = no } MER = { change_tag_from = FLM } }
+        MER = {
+            annex_country = { target = FLM transfer_troops = no }
+            country_event = FLE_war.101
+            hidden_effect = { load_oob = FLM_VICTORY }
+        }
+        if = { limit = { has_country_flag = FLM_total_victory_FLS_last } SOB = { country_event = FLE_war.102 } }
+    }
+}
+country_event = { # FLM Total Victory, MER Side
+    id = FLE_war.101
+    title = FLE_war.101.t
+    desc = FLE_war.101.desc
+    picture = GFX_report_event_victory
+    is_triggered_only = yes
+
+    option = { # Establish Duchy
+        name = FLE_war.101.duchy
+        release_puppet = FLE
+        FLE = { set_cosmetic_tag = FLE_MER_DUCHY }
+        FLM = {
+            random_character = {
+                limit = { is_character = FLE_Tulia_Korzyn }
+                set_nationality = MER
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = { # Establish navy Puppet
+        name = FLE_war.101.navy_puppet
+        release_autonomy = {
+            target = FLE
+            autonomy_state = autonomy_integrated_puppet
+            freedom_level = 0
+        }
+        FLE = {
+            set_cosmetic_tag = FLE_MER_NAVY
+            FLM = {
+                random_character = {
+                    limit = { is_character = FLE_Tulia_Korzyn }
+                    set_nationality = FLE
+                }
+            }
+            hidden_effect = { retire_character = FLE_Greatbeak_The_Third }
+            promote_character = FLE_Tulia_Korzyn
+            set_country_leader_description = { desc = FLE_Tulia_Korzyn_Desc_Victorious_Leader }
+            add_ideas = var_species_29
+        }
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+country_event = { # FLM Total Victory (SOB SIDE, FLS last to fall)
+    id = FLE_war.102
+    title = FLE_war.102.t
+    desc = FLE_war.102.desc
+    picture = GFX_report_event_achkosov
+    is_triggered_only = yes
+
+    option = {
+        name = FLE_war.102.a
+        add_war_support = -0.025
+        hidden_effect = { load_oob = FLS_DEFEAT }
+        army_experience = 25
+        FLS = {
+            random_character = {
+                limit = { is_character = FLE_Alebarksy_Achkosov }
+                set_nationality = SOB
+            }
+        }
+        ai_chance = {
+            base = 90
+        }
+    }
+    option = {
+        name = FLE_war.102.b
+        add_war_support = -0.05
+        hidden_effect = { load_oob = FLS_DEFEAT }
+        army_experience = 15
+        ai_chance = {
+            base = 10
+        }
+    }
+}
