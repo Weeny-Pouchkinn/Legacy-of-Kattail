@@ -81,6 +81,24 @@ scripted_gui = {
 					state_event = { id = LOK_state_actions.2 days = 180 trigger_for = controller }
 				}
 			}
+			lok_state_actions_integration_button_click = {
+				if = {
+					limit = { NOT = { check_variable = { state_actions_integration_button_status = 2 } } }
+					ROOT = { add_political_power = -50 }
+					add_dynamic_modifier = { modifier = lok_state_actions_integration_modifier }
+					set_variable = { state_actions_integration_button_status = 2 }
+					state_event = { id = LOK_state_actions.4 days = 180 trigger_for = controller }
+				}
+			}
+			lok_state_actions_reconstruction_button_click = {
+				if = {
+					limit = { NOT = { check_variable = { state_actions_reconstruction_button_status = 2 } } }
+					ROOT = { add_political_power = -50 }
+					add_dynamic_modifier = { modifier = lok_state_actions_reconstruction_modifier }
+					set_variable = { state_actions_reconstruction_button_status = 2 }
+					state_event = { id = LOK_state_actions.5 days = 180 trigger_for = controller }
+				}
+			}
 			#Ze Herald
 			# lok_state_actions_AUR_repression_button_click = {
 			# 	if = {
@@ -103,6 +121,12 @@ scripted_gui = {
 			}
 			lok_state_actions_stimulus_button = {
 				frame = THIS.state_actions_stimulus_button_status
+			}
+			lok_state_actions_integration_button = {
+				frame = THIS.state_actions_integration_button_status
+			}
+			lok_state_actions_reconstruction_button = {
+				frame = THIS.state_actions_reconstruction_button_status
 			}
 			#Ze Herald
 			# lok_state_actions_AUR_repression_button = {
@@ -128,6 +152,24 @@ scripted_gui = {
 			lok_state_actions_stimulus_button_click_enabled = {
 				ROOT = { has_political_power > 49 }
 				is_owned_by = ROOT
+			}
+			#Integration Protocols
+			lok_state_actions_integration_button_visible = {
+				is_owned_by = ROOT
+			}
+			lok_state_actions_integration_button_click_enabled = {
+				ROOT = { has_political_power > 49 }
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+			#Reconstruction Funds
+			lok_state_actions_reconstruction_button_visible = {
+				is_owned_by = ROOT
+			}
+			lok_state_actions_reconstruction_button_click_enabled = {
+				ROOT = { has_political_power > 49 }
+				is_owned_by = ROOT
+				check_variable = { lok_state_productivity_value < lok_state_productivity_value_base }
 			}
 			#Ze Herald
 			# lok_state_actions_AUR_repression_button_visible = {
@@ -397,6 +439,16 @@ scripted_gui = {
 			minority_icon = {
 				image = "GFX_idea_var_species_[?minority]"
 			}
+		}
+	}
+
+	lok_state_culture = {
+		context_type = selected_state_context
+		window_name = "lok_state_culture_window"
+		parent_window_token = selected_state_view
+		visible = {
+			is_space_state = no
+			var:controller = { is_non_playable_country = no }
 		}
 	}
 

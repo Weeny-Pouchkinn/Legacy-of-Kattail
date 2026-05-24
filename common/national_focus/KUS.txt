@@ -2448,6 +2448,8 @@
 		completion_reward = {
 			add_political_power = 50
 			custom_effect_tooltip = KUS_talvan_rahha_available_tt
+			set_temp_variable = { ideology_temp = 6 }
+			add_ideology_to_coalition = yes
 		}
 	}
 
@@ -2867,12 +2869,9 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_uhkus }
-				swap_ideas = {
-					remove_idea = KUS_uhkus
-					add_idea = KUS_uhkus_greater
-				}
+			swap_ideas = {
+				remove_idea = KUS_uhkus
+				add_idea = KUS_uhkus_greater
 			}
 			FSR = {
 				every_core_state = {
@@ -2947,12 +2946,9 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			if = {
-				limit = { has_idea = KUS_uhkus_greater }
-				swap_ideas = {
-					remove_idea = KUS_uhkus_greater
-					add_idea = KUS_uhkus_anti_katzen
-				}
+			swap_ideas = {
+				remove_idea = KUS_uhkus_greater
+				add_idea = KUS_uhkus_anti_katzen
 			}
 			every_country = {
 				limit = {
@@ -3672,6 +3668,11 @@
 
 		completion_reward = {
 			add_ideas = KUS_agromaxx
+			modify_building_resources = {
+				building = hydroponics_farm
+				resource = food
+				amount = 5
+			}
 			218 = {
 				add_building_construction = {
 					type = hydroponics_farm
@@ -3923,7 +3924,7 @@
 		completion_reward = {
 			add_tech_bonus = {
 				name = KUS_electronics_research
-				bonus = 0.10
+				bonus = 1
 				uses = 3
 				category = electronics
 			}
@@ -4067,14 +4068,16 @@
 					level = 3
 					instant_build = yes
 				}
+				add_extra_state_shared_building_slots = 3
+			}
+			every_owned_state = {
+				limit = { is_core_of = ROOT }
 				add_resource = {
 					type = food
-					amount = -35
+					amount = -5
 				}
-				add_extra_state_shared_building_slots = 3
 				set_temp_variable = { state_prod_change = 0.05 }
 				increase_state_productivity = yes
-				increase_base_state_productivity = yes
 			}
 		}
 	}
@@ -4138,20 +4141,6 @@
 
 		completion_reward = {
 			add_war_support = 0.05
-			swap_ideas = {
-				remove_idea = var_species_12
-				add_idea = var_species_51
-			}
-			every_core_state = {
-				limit = { check_variable = { species = 12 } }
-				set_temp_variable = { species_temp = 51 }
-				change_state_majority_species = yes
-			}
-			hidden_effect = {
-				every_controlled_state = {
-					update_matching_species_modifiers = yes
-				}
-			}
 		}
 	}
 
@@ -4222,6 +4211,10 @@
 					instant_build = yes
 				}
 				add_extra_state_shared_building_slots = 4
+				set_variable = { wonder = 16 }
+				setup_wonder_array = yes
+				set_variable = { wonder_modifiers_values^12 = 0.10 }
+				controller = { apply_wonder_effects = yes }
 			}
 			add_research_slot = 1
 		}

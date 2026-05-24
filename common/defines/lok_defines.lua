@@ -11,4 +11,6 @@ NDefines.NCountry.NUCLEAR_BOMB_DROP_WAR_SUPPORT_EFFECT_MAX_VP = 1000
 NDefines.NMilitary.SLOWEST_SPEED = 2
 NDefines.NMilitary.BASE_FEMALE_DIVISIONAL_COMMANDER_CHANCE = 0.5		--Chance to receive a female divisonal commander. This is set to zero in the base game, as we do not have generic female portraits for many graphical culture groups.
 NDefines.NMilitary.NUKE_DELAY_HOURS = 0
-NDefines.NProduction.RESOURCE_TO_ENERGY_COEFFICIENT = 1.0;
+NDefines.NProduction.RESOURCE_TO_ENERGY_COEFFICIENT = 1.0
+NDefines.NProduction.MINIMUM_NUMBER_OF_FACTORIES_TAKEN_BY_CONSUMER_GOODS_VALUE = 1		-- The minimum number of factories we have to put on consumer goods, by value.
+NDefines.NProduction.MINIMUM_NUMBER_OF_FACTORIES_TAKEN_BY_CONSUMER_GOODS_PERCENT = 0;	-- The minimum number of factories we have to put on consumer goods, in percent.

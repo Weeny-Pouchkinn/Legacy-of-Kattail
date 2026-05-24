@@ -1,4 +1,4 @@
-add_namespace = FRA_report
+﻿add_namespace = FRA_report
 country_event = {
     id = FRA_report.1
     title = FRA_report.1.t
@@ -179,3 +179,223 @@ country_event = {
 	}
 }
 
+add_namespace = FRA_radicals
+country_event = {
+	id = FRA_radicals.1
+	title = FRA_radicals.1.t
+	desc = FRA_radicals.1.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = FRA_radicals.1.a
+		add_popularity = {
+			ideology = communism
+			popularity = 0.2
+		}
+		add_popularity = {
+			ideology = socialism
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = social_democratic
+			popularity = 0.05
+		}
+	}
+	option = {
+		name = FRA_radicals.1.b
+	}
+}
+
+
+# Left
+
+add_namespace = FRA_collapse_leftist
+country_event = {
+	id = FRA_collapse_leftist.1
+	title = FRA_collapse_leftist.1.t
+	desc = FRA_collapse_leftist.1.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+
+	option = {
+		name = FRA_collapse_leftist.1.a
+		add_to_variable = {
+			var = var:peasant_points
+			value = 1
+		}
+		custom_effect_tooltip = FRA_peasant_gain
+	}
+	option = {
+		name = FRA_collapse_leftist.1.b
+		add_to_variable = {
+			var = var:internationalist_points
+			value = 1
+		}
+		custom_effect_tooltip = FRA_internationalist_gain
+	}
+}
+
+country_event = {
+	id = FRA_collapse_leftist.2
+	title = FRA_collapse_leftist.2.t
+	desc = FRA_collapse_leftist.2.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+
+	option = {
+		name = FRA_collapse_leftist.2.a
+		add_to_variable = {
+			var = var:peasant_points
+			value = 1
+		}
+		add_victory_points = {
+			province = 5105
+			value = 10
+		}
+		custom_effect_tooltip = FRA_peasant_gain
+	}
+	option = {
+		name = FRA_collapse_leftist.2.b
+		add_to_variable = {
+			var = var:internationalist_points
+			value = 1
+		}
+
+		add_victory_points = {
+			province = 3097
+			value = 2
+		}
+		custom_effect_tooltip = FRA_internationalist_gain
+	}
+}
+
+country_event = {
+	id = FRA_collapse_leftist.3
+	title = FRA_collapse_leftist.3.t
+	desc = FRA_collapse_leftist.3.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+
+	option = {
+		name = FRA_collapse_leftist.3.a
+		add_to_variable = {
+			var = var:peasant_points
+			value = 1
+		}
+		add_war_support = 0.1
+		add_manpower = -5000
+		custom_effect_tooltip = FRA_peasant_gain
+	}
+	option = {
+		name = FRA_collapse_leftist.3.b
+		add_to_variable = {
+			var = var:internationalist_points
+			value = 1
+		}
+		add_stability = 0.05
+		add_manpower = -4999
+		custom_effect_tooltip = FRA_internationalist_gain
+	}
+}
+
+country_event = {
+	id = FRA_collapse_leftist.4
+	title = FRA_collapse_leftist.4.t
+	desc = FRA_collapse_leftist.4.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+
+	option = {
+		name = FRA_collapse_leftist.4.a
+		trigger = {
+			check_variable = { var:peasant_points > var:internationalist_points }
+		}
+		complete_national_focus = FRA_left_peasant_nationalists
+	}
+	option = {
+		name = FRA_collapse_leftist.4.b
+		trigger = {
+			check_variable = { var:peasant_points < var:internationalist_points }
+		}
+		complete_national_focus = FRA_left_internationalists
+	}
+	option = {
+		name = FRA_collapse_leftist.4.c
+		trigger = {
+			check_variable = { var:peasant_points = var:internationalist_points }
+		}
+		complete_national_focus = FRA_left_internationalists
+	}
+	option = {
+		name = FRA_collapse_leftist.4.d
+		trigger = {
+			check_variable = { var:peasant_points = var:internationalist_points }
+		}
+		complete_national_focus = FRA_left_peasant_nationalists
+	}
+}
+
+add_namespace = FRA_north_consolidation
+country_event = {
+	id = FRA_north_consolidation.1
+	title = FRA_north_consolidation.1.t
+	desc = FRA_north_consolidation.1.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		trigger = { has_completed_focus = FRA_left_amewdeo }
+		name = FRA_north_consolidation.1.a
+		complete_national_focus = FRA_left_reject_the_sobakis
+	}
+	option = {
+		trigger = { has_completed_focus = FRA_left_dameow }
+		name = FRA_north_consolidation.1.b
+		complete_national_focus = FRA_left_induct_the_sobakis
+	}
+}
+
+country_event = {
+	id = FRA_north_consolidation.2
+	title = FRA_north_consolidation.2.t
+	desc = FRA_north_consolidation.2.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		trigger = { has_completed_focus = FRA_army_superior }
+		name = FRA_north_consolidation.2.a
+		complete_national_focus = FRA_left_arty_school
+	}
+	option = {
+		trigger = {
+				NOT = {
+					has_completed_focus = FRA_army_superior
+				}
+			}
+		name = FRA_north_consolidation.2.b
+		complete_national_focus = FRA_left_tank_school
+	}
+}
+
+country_event = {
+	id = FRA_north_consolidation.3
+	title = FRA_north_consolidation.3.t
+	desc = FRA_north_consolidation.3.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = FRA_north_consolidation.3.a
+		complete_national_focus = FRA_left_on_attack
+	}
+	option = {
+		name = FRA_north_consolidation.3.b
+		complete_national_focus = FRA_left_long_war
+	}
+}

@@ -234,12 +234,16 @@ AUR_commissars_cat = {
 				clr_state_flag = AUR_active_commissar
 				add_resistance = -20
 				add_resistance_target = -20
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -5000
+				var:controller = { restore_previous_manpower = yes }
 				every_neighbor_state = {
 					limit = { is_controlled_by = AUR NOT = { is_core_of = AUR } }
 					add_resistance = -10
 					add_resistance_target = -10
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -10000
+					var:controller = { restore_previous_manpower = yes }
 				}
 			}
 		}
@@ -385,7 +389,9 @@ AUR_commissars_cat = {
 				add_resistance_target = -10
 				custom_effect_tooltip = AUR_clease_unterkatzens_tt
 				set_variable = { minority = 1000 }
+				var:controller = { save_current_manpower = yes }
 				add_manpower = -500000
+				var:controller = { restore_previous_manpower = yes }
 			}
 			add_stability = -0.05
 			force_update_map_mode = {
@@ -1196,9 +1202,11 @@ lok_IPF_KSK_cat = {
 	
 		remove_effect = {
 			custom_effect_tooltip = aur_shoot_the_ksk_tt
+			save_current_manpower = yes
 			every_owned_state = {
 				add_manpower = -10000
 			}
+			restore_previous_manpower = yes
 			hidden_effect = { subtract_from_variable = { ksk_strength = 1 } calculate_ipf_ksk_resistance = yes }
 		}
 	

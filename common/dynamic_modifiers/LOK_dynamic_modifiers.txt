@@ -29,6 +29,19 @@ lok_state_actions_stimulus_modifier = {
 	state_production_speed_buildings_factor = 0.15
 }
 
+lok_state_actions_integration_modifier = {
+	enable = { always = yes }
+
+	compliance_growth = 0.5
+}
+
+lok_state_actions_reconstruction_modifier = {
+	enable = { always = yes }
+
+	repair_speed_factor = 1.0
+	lok_state_weekly_productivity_regen = 1
+}
+
 TAI_political_fluctuations = { 
 	enable = { always = yes }
 	icon = GFX_idea_generic_morale_bonus
@@ -92,6 +105,7 @@ LOK_extra_resources_modifier = {
 	country_resource_food = lok_total_extra_food
 	country_resource_fissiles = lok_total_extra_fissiles
 	country_resource_supertensiles = lok_total_extra_supertensiles
+	country_resource_energy = lok_total_extra_energy
 }
 
 LOK_food_consumption_modifier = {
@@ -199,6 +213,17 @@ lok_wonder_modifier = {
 	fascism_drift = wonder_modifiers_values^30
 	resistance_activity = wonder_modifiers_values^31
 	military_factory_donations = wonder_modifiers_values^32
+	coordination_bonus = wonder_modifiers_values^33
+	air_agility_factor = wonder_modifiers_values^34
+	air_attack_factor = wonder_modifiers_values^35
+	air_defence_factor = wonder_modifiers_values^36
+	production_speed_air_base_factor = wonder_modifiers_values^37
+	country_resource_energy = wonder_modifiers_values^38
+	industrial_capacity_factory = wonder_modifiers_values^39
+	line_change_production_efficiency_factor = wonder_modifiers_values^40
+	country_resource_supertensiles = wonder_modifiers_values^41
+	lok_food_resources_factor = wonder_modifiers_values^42
+	air_strategic_bomber_bombing_factor = wonder_modifiers_values^43
 }
 
 #Radiation modifier - At 10 or more, states stop producing anything.
@@ -328,4 +353,22 @@ space_colony_supply_modifier = {
 	enable = { always = yes }
 
 	local_supplies = space_colony_level
+}
+
+LOK_base_modifier_definitions_state = {
+	enable = { always = yes }
+
+	lok_species_food_consumption_factor = 1
+	lok_species_radiation_casualties_factor = 1
+	lok_species_radiation_effect_factor = 1
+	lok_species_radiation_threshold_value = 0
+	lok_weekly_base_productivity_change = 0
+}
+
+LOK_private_sector_modifiers = {
+	enable = { always = yes }
+
+	production_speed_buildings_factor = lok_ps_production_speed_buildings_factor
+	industrial_capacity_factory = lok_ps_industrial_capacity_factory
+	production_factory_max_efficiency_factor = lok_ps_production_factory_max_efficiency_factor
 }

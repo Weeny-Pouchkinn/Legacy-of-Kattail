@@ -5551,7 +5551,7 @@ The ideology type of the character.
 ```
 remove_country_leader_role = {
     character = GER_Character_Token
-    ideology = socialism
+    ideology = reformist_socialism
 }
 ```
 
@@ -5592,7 +5592,7 @@ retire_country_leader = yes
 The government to set. | 
 
 ```
-set_country_leader_ideology = socialism
+set_country_leader_ideology = reformist_socialism
 ```
 
  | Changes the country leader's government type for the current scope. | Creates no tooltip. | 1.0 |
@@ -7373,7 +7373,7 @@ The ideology type of the character. |
 
 ```
 remove_country_leader_role = {
-    ideology = socialism
+    ideology = reformist_socialism
 }
 ```
 

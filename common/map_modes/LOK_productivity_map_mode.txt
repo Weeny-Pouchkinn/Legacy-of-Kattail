@@ -1,0 +1,51 @@
+scripted_map_modes = {
+	LOK_productivity_map_mode = {
+		top = {
+			type = none
+		}
+		bottom = {
+			type = state
+			color = {
+				set_temp_variable = { alpha = 1 }
+				set_temp_variable = { red = 1 }
+				set_temp_variable = { green = 1 }
+				set_temp_variable = { blue = 1 }
+				# Above 100%, mix green and blue
+				# Below 100%, mix green and red
+				if = {
+					limit = { FROM = { check_variable = { lok_state_productivity_value = 1 } } }
+					set_temp_variable = { red = 1 }
+					set_temp_variable = { green = 1 }
+					set_temp_variable = { blue = 1 }
+				}
+				else_if = {
+					limit = { FROM = { check_variable = { lok_state_productivity_value < 1 } } }
+					#Say 0.75 prod
+					set_temp_variable = { green = 0 }
+					set_temp_variable = { blue = 0 }
+					add_to_temp_variable = { green = FROM.lok_state_productivity_value } #0.25
+					add_to_temp_variable = { blue = FROM.lok_state_productivity_value } #0.25
+				}
+				else_if = {
+					limit = { FROM = { check_variable = { lok_state_productivity_value > 1 } } }
+					#Say 1.3 prod, we need to get 0.7 for each
+					set_temp_variable = { blue = FROM.lok_state_productivity_value } #1.3
+					set_temp_variable = { red = FROM.lok_state_productivity_value } #1.3
+					subtract_from_temp_variable = { blue = 2 } #0.3
+					subtract_from_temp_variable = { red = 2 } #0.3
+					multiply_temp_variable = { blue = -1 }
+					multiply_temp_variable = { red = -1 }
+				}
+				if = { limit = { check_variable = { green > 1 } } set_temp_variable = { green = 1 } }
+				if = { limit = { check_variable = { green < 0 } } set_temp_variable = { green = 0 } }
+				if = { limit = { check_variable = { blue > 1 } } set_temp_variable = { blue = 1 } }
+				if = { limit = { check_variable = { blue < 0 } } set_temp_variable = { blue = 0 } }
+				if = { limit = { check_variable = { red > 1 } } set_temp_variable = { red = 1 } }
+				if = { limit = { check_variable = { red < 0 } } set_temp_variable = { red = 0 } }
+			}
+		}
+		far_text = none
+		near_text = state
+		update_daily = no
+	}
+}

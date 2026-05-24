@@ -224,6 +224,64 @@ country_event = { #Geographie
 	}
 }
 
+add_namespace = LOK_tech
+country_event = {
+	id = LOK_tech.1
+	hidden = yes
+	is_triggered_only = yes
+
+	option = {
+		calculate_bonus_resources_from_modifiers = yes
+	}
+}
+
+add_namespace = LOK_private_sector
+country_event = { #
+	id = LOK_private_sector.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_private_sector.1"}
+	title = "LOK_private_sector.1.t"
+	desc = "LOK_private_sector.1.d"
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			calculate_private_sector_modifiers = yes
+		}
+	}
+	
+	option = { #Play
+		name = "LOK_private_sector.1.a"
+		custom_effect_tooltip = "LOK_private_sector.1.a.tt"
+		hidden_effect = {
+			for_loop_effect = {
+				end = lok_ps_factory_growth_goal
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			every_owned_state = {
+				limit = {
+					check_variable = { building_level@infrastructure < 5 }
+				}
+				random = {
+					chance = lok_ps_infra_growth_odds_true
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}	
+		}
+	}
+}
+
+
 
 add_namespace = LOK_high_command
 #Leader Found and they want to work
@@ -433,6 +491,34 @@ state_event = { #stimulus
 	}
 }
 
+state_event = { #integration protocols
+	id = LOK_state_actions.4
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		save_event_target_as = state_target
+		event_target:state_target = {
+			set_variable = { state_actions_integration_button_status = 1 }
+			remove_dynamic_modifier = { modifier = lok_state_actions_integration_modifier }
+		}
+	}
+}
+
+state_event = { #reconstruction funds
+	id = LOK_state_actions.5
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		save_event_target_as = state_target
+		event_target:state_target = {
+			set_variable = { state_actions_reconstruction_button_status = 1 }
+			remove_dynamic_modifier = { modifier = lok_state_actions_reconstruction_modifier }
+		}
+	}
+}
+
 state_event = { #regent repression
 	id = LOK_state_actions.3
 	is_triggered_only = yes
@@ -449,12 +535,16 @@ state_event = { #regent repression
 					set_variable = { state_actions_AUR_repression_button_status = 1 }
 					add_resistance = -20
 					add_resistance_target = -20
+					var:controller = { save_current_manpower = yes }
 					add_manpower = -10000
+					var:controller = { restore_previous_manpower = yes }
 					every_neighbor_state = {
 						limit = { is_controlled_by = AUR NOT = { is_core_of = AUR } }
 						add_resistance = -10
 						add_resistance_target = -10
+						var:controller = { save_current_manpower = yes }
 						add_manpower = -5000
+						var:controller = { restore_previous_manpower = yes }
 					}
 				}
 				else = {
@@ -958,6 +1048,18 @@ country_event = {
 	}
 }
 
+add_namespace = LOK_utility
+country_event = {
+	id = LOK_utility.1
+	immediate = {log = "[GetDateText]: [Root.GetName]: event utility.1"}
+	hidden = yes
+	is_triggered_only = yes
+	option = {
+		restore_previous_manpower_function = yes
+	}
+}
+
+
 add_namespace = LOK_food
 country_event = {
 	id = LOK_food.1
@@ -1089,20 +1191,20 @@ country_event = {
 				tag = event_target:ussf_leader
 				NOT = { has_country_flag = usf_formed }
 			}
-			modifier = { #If we CAN annex more stuff then do it
-				factor = 0
-				NOT = {
-					tag = ROQ
-					has_government = fascism
-				}
-				event_target:peace_puppet_country = {
-					OR = {
-						any_neighbor_state = { is_core_of = ROOT }
-						any_neighbor_state = { is_claimed_by = ROOT } 
-						any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
-					}
-				}
-			}
+			# modifier = { #If we CAN annex more stuff then do it
+			# 	factor = 0
+			# 	NOT = {
+			# 		tag = ROQ
+			# 		has_government = fascism
+			# 	}
+			# 	event_target:peace_puppet_country = {
+			# 		OR = {
+			# 			any_neighbor_state = { is_core_of = ROOT }
+			# 			any_neighbor_state = { is_claimed_by = ROOT } 
+			# 			any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
+			# 		}
+			# 	}
+			# }
 		}
 		hidden_effect = {
 			clr_country_flag = deciding_nation_fate
