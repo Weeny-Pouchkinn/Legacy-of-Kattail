@@ -225,7 +225,6 @@ country_event = {
 			var = var:peasant_points
 			value = 1
 		}
-		custom_effect_tooltip = FRA_peasant_gain
 	}
 	option = {
 		name = FRA_collapse_leftist.1.b
@@ -286,6 +285,10 @@ country_event = {
 		}
 		add_war_support = 0.1
 		add_manpower = -5000
+        set_temp_variable = {ideology_temp = 1 }
+        add_ideology_to_coalition = yes
+        set_temp_variable = {ideology_temp = 2 }
+        add_ideology_to_coalition = yes
 		custom_effect_tooltip = FRA_peasant_gain
 	}
 	option = {
@@ -296,6 +299,8 @@ country_event = {
 		}
 		add_stability = 0.05
 		add_manpower = -4999
+        set_temp_variable = {ideology_temp = 1 }
+        add_ideology_to_coalition = yes
 		custom_effect_tooltip = FRA_internationalist_gain
 	}
 }
@@ -334,6 +339,19 @@ country_event = {
 			check_variable = { var:peasant_points = var:internationalist_points }
 		}
 		complete_national_focus = FRA_left_peasant_nationalists
+	}
+}
+
+add_namespace = FRA_ultraleft
+country_event = {
+	id = FRA_ultraleft.1
+	title = FRA_ultraleft.1.t
+	desc = FRA_ultraleft.1.d
+	picture = GFX_report_event_generic
+	is_triggered_only = yes
+
+	option = {
+		name = FRA_ultraleft.1.a
 	}
 }
 

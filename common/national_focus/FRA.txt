@@ -905,6 +905,9 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_amewdeo }
         completion_reward = {
+            add_ideas = { 
+                FRA_idea_converting_the_chudions
+            }
         }
     }
 
@@ -916,6 +919,12 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_abandon_the_bureaucrat_collectivism }
         completion_reward = {
+            add_stability = 0.05
+            add_political_power = -50
+            add_popularity = {
+                ideology = communism
+                popularity = 0.125
+            }
         }
     }
 
@@ -927,6 +936,7 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_abandon_the_bureaucrat_collectivism }
         completion_reward = {
+            add_ideas = FRA_idea_technosiphon
         }
     }
 
@@ -965,6 +975,8 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_compromise_with_the_bureaucrats }
         completion_reward = {
+            upgrade_economy_law = yes
+            add_manpower = 40000
         }
     }
 
@@ -989,6 +1001,7 @@ focus_tree = {
         prerequisite = { focus = FRA_left_abandon_the_bureaucrat_collectivism focus = FRA_left_compromise_with_the_bureaucrats }
         prerequisite = { focus = FRA_left_the_internationalist_charter }
         completion_reward = {
+            country_event = { id = FRA_ultraleft.1 }
             add_research_slot = 1
         }
     }   
@@ -1001,23 +1014,9 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_left_amewdeo focus = FRA_left_dameow }
         completion_reward = {
-            if = {
-                limit = {
-                    has_completed_focus = FRA_left_amewdeo
-                }
-                clr_country_flag = herzlands_warlord_regionalist
-                set_country_flag = herzlands_warlord_hegemon
-            }
-            else_if = {
-                limit = {
-                    has_completed_focus = FRA_left_dameow
-                }
-                clr_country_flag = herzlands_warlord_regionalist
-                set_country_flag = herzlands_warlord_uniter
-            }
-            else = {
-                custom_effect_tooltip = FRA_left_warlord_tooltip
-            }
+            clr_country_flag = herzlands_warlord_regionalist
+            set_country_flag = herzlands_warlord_hegemon
+            custom_effect_tooltip = FRA_left_warlord_tooltip
         }
     }
 
