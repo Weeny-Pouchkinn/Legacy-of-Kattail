@@ -4274,4 +4274,67 @@ lok_journal_entries_cat = {
 			base = 1000
 		}
 	}
+
+	ROQ_commission_delaparte = {
+		icon = GFX_decision_armored_blimp_carrier
+
+		fire_only_once = yes
+
+		allowed = {
+			tag = ROQ
+		}
+		
+		visible = {
+			tag = ROQ
+			276 = {
+				is_fully_controlled_by = ROOT
+				check_variable = { wonder = 25 }
+			}
+		}
+
+		available = {
+			has_war = yes
+			has_country_leader = { ruling_only = yes character = ROQ_Delaparte }
+			num_of_civilian_factories_available_for_projects > 99
+		}
+
+		modifier = {
+			civilian_factory_use = 100
+		}
+
+		days_remove = 180
+
+		cancel_trigger = {
+			276 = {
+				NOT = { is_fully_controlled_by = ROOT }
+			}
+		}
+
+		remove_effect = {
+			custom_effect_tooltip = ROQ_commission_delaparte_tt
+			custom_effect_tooltip = LOK_restore_blimp_carrier_unlock_tt
+			hidden_effect = {
+				set_country_flag = can_restore_blimp_carrier
+				set_technology = { armored_blimp_carrier1 = 1 }
+				if = {
+					limit = { NOT = { has_template = "Armored Blimp Carrier" } }
+					division_template = {
+						name = "Armored Blimp Carrier"
+						is_locked = yes
+						regiments = {
+							armored_blimp_carrier = { x = 0 y = 0 }
+						}
+					}
+				}
+				276 = {
+					remove_wonder = yes
+					create_unit = {
+						division = "name = \"The Delaparte\" division_template = \"Armored Blimp Carrier\" start_experience_factor = 0.4"
+						owner = ROOT
+					}
+				}
+				news_event = { id = LOK_news.24 }
+			}
+		}
+	}
 }
