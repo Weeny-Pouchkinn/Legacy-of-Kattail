@@ -1877,6 +1877,13 @@ on_actions = {
 			}
 
 			#The treshold before unification is reached
+			# PGN and KOA core reciprocity
+			every_state = { 
+				limit = { OR = { is_core_of = KOA is_core_of = PGN } }
+				add_core_of = KOA
+				add_core_of = PGN
+			}
+
 			set_variable = { global.herzlands_unification_state_prereq = global.herzlands_states_array^num }
 			multiply_variable = { global.herzlands_unification_state_prereq = 0.75 } #Let's go with 75% for now.
 			round_variable = global.herzlands_unification_state_prereq
@@ -2142,6 +2149,24 @@ on_actions = {
 				set_variable = { wonder_modifiers_values^45 = 0.05 }
 				controller = { apply_wonder_effects = yes }
 			}
+
+			#Downed Blimp Carrier (State 1051)
+			1051 = { set_variable = { wonder = 24 } setup_wonder_array = yes set_variable = { wonder_modifiers_values^44 = 0.01 } set_variable = { wonder_modifiers_values^45 = 0.05 } controller = { apply_wonder_effects = yes } }
+
+			#Downed Blimp Carrier (State 490)
+			490 = { set_variable = { wonder = 24 } setup_wonder_array = yes set_variable = { wonder_modifiers_values^44 = 0.01 } set_variable = { wonder_modifiers_values^45 = 0.05 } controller = { apply_wonder_effects = yes } }
+
+			#Downed Blimp Carrier (State 1184)
+			1184 = { set_variable = { wonder = 24 } setup_wonder_array = yes set_variable = { wonder_modifiers_values^44 = 0.01 } set_variable = { wonder_modifiers_values^45 = 0.05 } controller = { apply_wonder_effects = yes } }
+
+			#Downed Blimp Carrier (State 1321)
+			1321 = { set_variable = { wonder = 24 } setup_wonder_array = yes set_variable = { wonder_modifiers_values^44 = 0.01 } set_variable = { wonder_modifiers_values^45 = 0.05 } controller = { apply_wonder_effects = yes } }
+
+			#Downed Blimp Carrier (State 1001)
+			1001 = { set_variable = { wonder = 24 } setup_wonder_array = yes set_variable = { wonder_modifiers_values^44 = 0.01 } set_variable = { wonder_modifiers_values^45 = 0.05 } controller = { apply_wonder_effects = yes } }
+
+			#Downed Blimp Carrier (State 82)
+			82 = { set_variable = { wonder = 24 } setup_wonder_array = yes set_variable = { wonder_modifiers_values^44 = 0.01 } set_variable = { wonder_modifiers_values^45 = 0.05 } controller = { apply_wonder_effects = yes } }
 
 			#Greater Katown
 			44 = { add_to_array = { array = global.greater_katown_states_array } }
@@ -4998,6 +5023,34 @@ on_actions = {
 
 	on_annex = {
 		effect = {
+			# Extremadoughria Victory Detection (KOA/PGN death war)
+			if = {
+				limit = {
+					ROOT = { tag = KOA }
+					FROM = { tag = PGN }
+				}
+				ROOT = {
+					set_country_flag = defeated_other_nation
+					set_country_flag = { flag = defeated_other_nation_cooldown days = 365 value = 1 }
+					set_politics = { ruling_party = communism }
+					set_cosmetic_tag = KOA_ULTRAREVOLUTIONARY
+					news_event = { id = LOK_PGN_KOA.1 }
+				} 
+			}
+			if = {
+				limit = {
+					ROOT = { tag = PGN }
+					FROM = { tag = KOA }
+				}
+				ROOT = {
+					set_country_flag = defeated_other_nation
+					set_country_flag = { flag = defeated_other_nation_cooldown days = 365 value = 1 }
+					set_politics = { ruling_party = fascism }
+					set_cosmetic_tag = PGN_ACCELERATIONIST
+					news_event = { id = LOK_PGN_KOA.2 }
+				}
+			}
+
 			FROM = {
 				if = {
 					limit = { check_variable = { katzen_high_command_member_count > 0 } }
