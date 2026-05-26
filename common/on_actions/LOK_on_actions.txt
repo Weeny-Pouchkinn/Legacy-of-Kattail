@@ -2925,15 +2925,15 @@ on_actions = {
 			every_possible_country = {
 				limit = {
 					OR = {
-						has_government = communism
-						has_government = democratic
+						has_communist_gov_group = yes
+						has_democratic_gov_group = yes
 					}
 				}
 				send_embargo = AUR
 			}
 
 			every_possible_country = {
-				limit = { NOT = { has_government = fascism } }
+				limit = { NOT = { has_fascist_gov_group = yes } }
 				add_opinion_modifier = {
 					target = AUR
 					modifier = AUR_crazy_kaiserists
@@ -2960,28 +2960,28 @@ on_actions = {
 					add_dynamic_modifier = { modifier = LOK_KSK_IPF_activity }
 					#Initialize KSK/IPF
 					if = {
-						limit = { has_government = fascism }
+						limit = { has_fascist_gov_group = yes }
 						set_variable = { ipf_opinion = -4 }
 						set_variable = { ipf_strength = 4 }
 						set_variable = { ksk_opinion = -4 }
 						set_variable = { ksk_strength = 4 }
 					}
 					if = {
-						limit = { has_government = neutrality }
+						limit = { has_neutrality_gov_group = yes }
 						set_variable = { ipf_opinion = -4 }
 						set_variable = { ipf_strength = 4 }
 						set_variable = { ksk_opinion = 0 }
 						set_variable = { ksk_strength = 1 }
 					}
 					if = {
-						limit = { has_government = democratic }
+						limit = { has_democratic_gov_group = yes }
 						set_variable = { ipf_opinion = 2 }
 						set_variable = { ipf_strength = 2 }
 						set_variable = { ksk_opinion = -2 }
 						set_variable = { ksk_strength = 2 }
 					}
 					if = {
-						limit = { has_government = communism }
+						limit = { has_communist_gov_group = yes }
 						set_variable = { ipf_opinion = -2 }
 						set_variable = { ipf_strength = 2 }
 						set_variable = { ksk_opinion = 2 }
@@ -4018,7 +4018,7 @@ on_actions = {
 						state = 116
 						is_capital = yes
 					}
-					FROM = { tag = AUR has_government = fascism }
+					FROM = { tag = AUR has_fascist_gov_group = yes }
 					ROOT = { has_war_with = FROM }
 					FROM = { NOT = { original_tag = ROOT } }
 					NOT = { has_global_flag = auralia_fallen }
@@ -4394,7 +4394,7 @@ on_actions = {
 					limit = {
 						ROOT = {
 							is_herzlands_warlord = yes
-							has_government = fascism
+							has_fascist_gov_group = yes
 						}
 					}
 					ROOT = { country_event = { id = LOK_cityfall_news.34 days = 2 } }
@@ -5068,7 +5068,7 @@ on_actions = {
 					limit = {
 						WAC = {
 							NOT = { has_war_with = ACR }
-							has_government = communism
+							has_communist_gov_group = yes
 						}
 					}
 					ACR = {

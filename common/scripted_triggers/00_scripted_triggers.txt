@@ -163,20 +163,20 @@ has_same_ideology = {
 		tooltip = has_same_ideology_tt
 		OR = {
 			AND = {
-				has_government = democratic
-				ROOT = { has_government = democratic }
+				has_democratic_gov_group = yes
+				ROOT = { has_democratic_gov_group = yes }
 			}
 			AND = {
-				has_government = fascism
-				ROOT = { has_government = fascism }
+				has_fascist_gov_group = yes
+				ROOT = { has_fascist_gov_group = yes }
 			}
 			AND = {
-				has_government = communism
-				ROOT = { has_government = communism }
+				has_communist_gov_group = yes
+				ROOT = { has_communist_gov_group = yes }
 			}
 			AND = {
-				has_government = neutrality
-				ROOT = { has_government = neutrality }
+				has_neutrality_gov_group = yes
+				ROOT = { has_neutrality_gov_group = yes }
 			}
 		}
 	}
@@ -310,7 +310,7 @@ country_can_be_reasonable_target_of_wargoal = { #Expected scopes: Target country
 big_communist_exists = {
 	any_other_country = {
 		is_major = yes 
-		has_government = communism
+		has_communist_gov_group = yes
 		has_capitulated = no 
 		exists = yes 
 	}
@@ -319,7 +319,7 @@ big_communist_exists = {
 big_fascist_exists = {
 	any_other_country = {
 		is_major = yes 
-		has_government = fascism
+		has_fascist_gov_group = yes
 		has_capitulated = no 
 		exists = yes 
 	}
@@ -477,7 +477,7 @@ is_democratic_seller_trigger = {
 	custom_trigger_tooltip = {
 		tooltip = "Democratic Countries"
 		FROM = {
-			has_government = democratic
+			has_democratic_gov_group = yes
 		}
 	}
 }
@@ -485,12 +485,12 @@ is_democratic_seller_trigger = {
 #Subsidy Seller Triggers
 is_fascist_seller_trigger = {
 	NOT = { has_war_with = ROOT	}
-	has_government = fascism 
+	has_fascist_gov_group = yes 
 }
 
 is_democracy_seller_trigger = {
 	NOT = { has_war_with = ROOT	}
-	has_government = democratic 
+	has_democratic_gov_group = yes 
 }
 
 is_allied_seller_trigger = {

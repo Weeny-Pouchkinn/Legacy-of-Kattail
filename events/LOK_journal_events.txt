@@ -545,7 +545,7 @@ country_event = {
 			if = {
 				limit = {
 					is_puppet_of = event_target:LOK_vampire_faction_leader
-					NOT = { has_government = democratic }
+					NOT = { has_democratic_gov_group = yes }
 				}
 				set_politics = {
 					ruling_party = democratic
@@ -556,7 +556,7 @@ country_event = {
 			if = {
 				limit = {
 					is_puppet_of = event_target:LOK_vampire_faction_leader
-					NOT = { has_government = neutrality }
+					NOT = { has_neutrality_gov_group = yes }
 				}
 				set_politics = {
 					ruling_party = neutrality
@@ -567,7 +567,7 @@ country_event = {
 			if = {
 				limit = {
 					is_puppet_of = event_target:LOK_vampire_faction_leader
-					NOT = { has_government = neutrality }
+					NOT = { has_neutrality_gov_group = yes }
 				}
 				set_politics = {
 					ruling_party = neutrality
@@ -1276,7 +1276,7 @@ news_event = {
 
 	option = { # Democratic/Commie response (Yippee!)
 		name = "LOK_ELO.1.a"
-		trigger = { OR = { has_government = democratic has_government = communism } }
+		trigger = { OR = { has_democratic_gov_group = yes has_communist_gov_group = yes } }
 	}
 
 	option = { # SFL Response (Oh wow they lived?)
@@ -1287,12 +1287,12 @@ news_event = {
 
 	option = { # Fascist response (pitiful idealist fools)
 		name = "LOK_ELO_1.c"
-		trigger = { has_government = fascism }
+		trigger = { has_fascist_gov_group = yes }
 	}
 
 	option = { # Neutral Response (Oh neat)
 		name = "LOK_ELO_1.d"
-		trigger = { has_government = neutrality }
+		trigger = { has_neutrality_gov_group = yes }
 	}
 }
 country_event = {
