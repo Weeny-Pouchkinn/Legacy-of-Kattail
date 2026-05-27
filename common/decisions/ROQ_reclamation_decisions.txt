@@ -25,15 +25,19 @@ ROQ_reclamation_cat = {
 
 		timeout_effect = {
 			# If ROQ is still fighting anyone in the targets array, add them to MCF's faction
-			every_country = {
-				limit = {
-					is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
-					country_exists = THIS
-					has_war_with = ROQ
-					MCF = { is_faction_leader = yes }
+			DOM = {
+				if = {
+					limit = { has_war_with = ROQ country_exists = THIS }
+					MCF = { add_to_faction = DOM }
+					country_event = { id = ROQ_reclamation.20 }
 				}
-				MCF = { add_to_faction = PREV }
-				country_event = { id = ROQ_reclamation.20 }
+			}
+			FSR = {
+				if = {
+					limit = { has_war_with = ROQ country_exists = THIS }
+					MCF = { add_to_faction = FSR }
+					country_event = { id = ROQ_reclamation.20 }
+				}
 			}
 			# Cleanup: clear flag and arrays (modifier stays — it represents permanent training)
 			hidden_effect = { ROQ_reclamation_cleanup = yes }
