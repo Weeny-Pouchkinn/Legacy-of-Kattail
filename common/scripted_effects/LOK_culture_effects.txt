@@ -1,4 +1,4 @@
-﻿remove_all_state_cultures = {
+remove_all_state_cultures = {
 	custom_effect_tooltip = remove_all_state_cultures_tt
 	hidden_effect = {
 		clear_array = state_cultures
@@ -243,3 +243,33 @@ remove_culture_group_15 = {
 		}
 	}
 }
+
+remove_culture_group_16 = {
+	custom_effect_tooltip = remove_culture_group_16_tt
+	hidden_effect = {
+		for_each_loop = {
+			array = global.culture_group_16_array
+			value = v
+			set_temp_variable = { culture_temp = v }
+			remove_state_culture = yes
+		}
+	}
+}
+
+colonize_space_state_culture_effect = {
+	hidden_effect = {
+		remove_all_state_cultures = yes
+		if = {
+			limit = { is_in_array = { array = global.muno_states_array value = THIS } }
+			set_temp_variable = { culture_temp = 98 }
+			add_state_culture = yes
+		}
+		else = {
+			set_temp_variable = { culture_temp = 99 }
+			add_state_culture = yes
+		}
+		set_temp_variable = { culture_temp = 320.state_cultures^0 }
+		add_state_culture = yes
+	}
+}
+

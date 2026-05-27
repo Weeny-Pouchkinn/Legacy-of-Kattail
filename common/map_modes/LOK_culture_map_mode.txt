@@ -3608,6 +3608,82 @@ scripted_map_modes = {
 					add_to_temp_variable = { blue = culture_97_blue }
 				}
 
+				if = { #Culture 98
+					limit = {
+						any_of = {
+							array = FROM.state_cultures
+							value = v
+							check_variable = { v = 98 } 
+						}
+					}
+					add_to_temp_variable = { num_cultures = 1 }
+
+					# Define the culture's colors
+					add_to_temp_variable = { culture_98_red = 0.50 }
+					add_to_temp_variable = { culture_98_green = 0.50 }
+					add_to_temp_variable = { culture_98_blue = 0.50 }
+
+					# Divide by the current amount of cultures
+					divide_temp_variable = { culture_98_red = num_cultures }
+					divide_temp_variable = { culture_98_green = num_cultures }
+					divide_temp_variable = { culture_98_blue = num_cultures}
+
+					if = {
+						limit = { check_variable = { num_cultures > 1 } }
+						set_temp_variable = { culture_color_factor = num_cultures }
+						subtract_from_temp_variable = { culture_color_factor = 1 }
+						divide_temp_variable = { culture_color_factor = num_cultures }
+
+						# Divide existing colors by this
+						multiply_temp_variable = { red = culture_color_factor }
+						multiply_temp_variable = { green = culture_color_factor }
+						multiply_temp_variable = { blue = culture_color_factor }
+					}
+
+					# Add to the existing color
+					add_to_temp_variable = { red = culture_98_red }
+					add_to_temp_variable = { green = culture_98_green }
+					add_to_temp_variable = { blue = culture_98_blue }
+				}
+
+				if = { #Culture 99
+					limit = {
+						any_of = {
+							array = FROM.state_cultures
+							value = v
+							check_variable = { v = 99 } 
+						}
+					}
+					add_to_temp_variable = { num_cultures = 1 }
+
+					# Define the culture's colors
+					add_to_temp_variable = { culture_99_red = 0.498 }
+					add_to_temp_variable = { culture_99_green = 0.416 }
+					add_to_temp_variable = { culture_99_blue = 0.0 }
+
+					# Divide by the current amount of cultures
+					divide_temp_variable = { culture_99_red = num_cultures }
+					divide_temp_variable = { culture_99_green = num_cultures }
+					divide_temp_variable = { culture_99_blue = num_cultures}
+
+					if = {
+						limit = { check_variable = { num_cultures > 1 } }
+						set_temp_variable = { culture_color_factor = num_cultures }
+						subtract_from_temp_variable = { culture_color_factor = 1 }
+						divide_temp_variable = { culture_color_factor = num_cultures }
+
+						# Divide existing colors by this
+						multiply_temp_variable = { red = culture_color_factor }
+						multiply_temp_variable = { green = culture_color_factor }
+						multiply_temp_variable = { blue = culture_color_factor }
+					}
+
+					# Add to the existing color
+					add_to_temp_variable = { red = culture_99_red }
+					add_to_temp_variable = { green = culture_99_green }
+					add_to_temp_variable = { blue = culture_99_blue }
+				}
+
 			}
 		}
 		far_text = none
