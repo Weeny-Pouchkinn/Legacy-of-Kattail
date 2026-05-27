@@ -57,7 +57,7 @@ focus_tree = {
 	}
 	focus = { #roi reluctanctly invests in the countryside
 		id = TAK_develop_the_peripherie
-		icon = GFX_SOV_development_aid_for_eastern_allies_ccp_2d_sov_compatibility
+		icon = TAK_develop_the_peripherie
 		x = -2
 		y = 1
 		cost = 5
@@ -70,7 +70,7 @@ focus_tree = {
 	}
 	focus = { #roi makes farms
 		id = TAK_agricultural_programs
-		icon = GFX_focus_generic_farmland
+		icon = TAK_agricultural_programs
 		x = 1
 		y = 1
 		cost = 5
@@ -83,7 +83,7 @@ focus_tree = {
 	}
 	focus = { #roi makes roads
 		id = TAK_routes_du_roi
-		icon = GFX_focus_generic_road_investment
+		icon = TAK_routes_du_roi
 		x = -1
 		y = 1
 		cost = 5
@@ -116,6 +116,7 @@ focus_tree = {
 		completion_reward = {
 			347 = {
 				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
+				TAK = { add_to_array = { array = petite_charles_states value = PREV } }
 				increase_state_category = yes
 				add_manpower = 50000
 				add_victory_points = {
@@ -130,6 +131,7 @@ focus_tree = {
 			}
 			340 = {
 				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
+				TAK = { add_to_array = { array = petite_charles_states value = PREV } }
 				increase_state_category = yes
 				add_manpower = 50000
 				add_victory_points = {
@@ -140,9 +142,58 @@ focus_tree = {
 			}
 		}
 	}
+
+	focus = {
+		id = TAK_tighten_surveillance
+		icon = TAK_tighten_surveillance
+		x = 1
+		y = 1
+		cost = 10
+		relative_position_id = TAK_petites_charles
+		prerequisite = { focus = TAK_petites_charles }
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_core_of = TAK
+				}
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = electronics_bonus
+				bonus = 0.50
+				uses = 2
+				category = electronics
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_le_roi_voit_tout
+		icon = TAK_le_roi_voit_tout
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = TAK_tighten_surveillance
+		prerequisite = { focus = TAK_tighten_surveillance }
+		completion_reward = {
+			349 = {
+				add_building_construction = {
+					type = radar_station
+					level = 8
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = TAK_le_roi_voit_tout_decision_unlock
+		}
+	}
+
 	focus = { #roi makes dockyards in tak
 		id = TAK_develop_tak
-		icon = GFX_focus_generic_refit_civilian_ships
+		icon = TAK_develop_tak
 		x = -3
 		y = 2
 		cost = 5
@@ -166,7 +217,7 @@ focus_tree = {
 	}
 	focus = { #flotte du roi
 		id = TAK_flotte_du_roi
-		icon = GFX_focus_generic_navy_battleship2
+		icon = TAK_flotte_du_roi
 		x = -1
 		y = 1
 		cost = 5
@@ -190,7 +241,7 @@ focus_tree = {
 	}
 	focus = { #big guns
 		id = TAK_des_gros_cannons
-		icon = GFX_focus_SWE_let_fly_all_guns
+		icon = TAK_des_gros_cannons
 		x = -1
 		y = 1
 		cost = 5
@@ -203,7 +254,7 @@ focus_tree = {
 	}
 	focus = { #big boats
 		id = TAK_des_gros_vaisseaux
-		icon = GFX_goal_generic_navy_battleship
+		icon = TAK_des_gros_vaisseaux
 		x = 1
 		y = 1
 		cost = 5
@@ -226,7 +277,7 @@ focus_tree = {
 	}
 	focus = { #superheavy bb
 		id = TAK_lay_down_the_charles
-		icon = GFX_focus_generic_navy_research_bonus
+		icon = TAK_lay_down_the_charles
 		x = 0
 		y = 2
 		cost = 5
@@ -262,7 +313,7 @@ focus_tree = {
 	}
 	focus = { #roi makes mils in ikar
 		id = TAK_develop_ikar
-		icon = GFX_focus_generic_military_industry
+		icon = TAK_develop_ikar
 		x = -2
 		y = 1
 		cost = 5
@@ -285,7 +336,7 @@ focus_tree = {
 	}
 	focus = { #roi makes civs in die
 		id = TAK_develop_die
-		icon = GFX_focus_NORDIC_com_capstone_civilian
+		icon = TAK_develop_die
 		x = -1
 		y = 2
 		cost = 5
@@ -308,7 +359,7 @@ focus_tree = {
 	}
 	focus = { #roi turns the countryside into mines
 		id = TAK_mines_du_roi
-		icon = GFX_focus_CONGO_bakwanga_mine
+		icon = TAK_mines_du_roi
 		x = 0
 		y = 2
 		cost = 5
@@ -350,7 +401,7 @@ focus_tree = {
 	}
 	focus = { #NUCLEAR POWER (civilian)
 		id = TAK_nuclear_power
-		icon = GFX_focus_generic_uranium_extraction
+		icon = TAK_nuclear_power
 		x = 0
 		y = 2
 		cost = 10
@@ -381,7 +432,7 @@ focus_tree = {
 	}
 	focus = { #NUCLEAR POWER (civilian)
 		id = TAK_build_power_plants
-		icon = GFX_focus_generic_nuclear_development
+		icon = TAK_build_power_plants
 		x = -1
 		y = 1
 		cost = 10
@@ -407,7 +458,7 @@ focus_tree = {
 	}
 	focus = { #Nukes
 		id = TAK_make_nukes
-		icon = GFX_SOV_soviet_atomic_bomb_project_ccp_2d_sov_compatibility
+		icon = TAK_make_nukes
 		x = 1
 		y = 1
 		cost = 10
@@ -422,7 +473,7 @@ focus_tree = {
 	}
 	focus = { #NUCLEAR FUSION
 		id = TAK_towards_fusion
-		icon = GFX_focus_research2
+		icon = TAK_towards_fusion
 		x = 0
 		y = 2
 		cost = 10
@@ -442,7 +493,7 @@ focus_tree = {
 
 	focus = { #roi builds houses for his painting people
 		id = TAK_bulk_housing
-		icon = GFX_focus_SWE_urbanization
+		icon = TAK_bulk_housing
 		x = 1
 		y = 1
 		cost = 5
@@ -461,7 +512,7 @@ focus_tree = {
 
 	focus = { #roi tries to find out what exactly makes the portraits come to life
 		id = TAK_figure_it_out
-		icon = GFX_focus_ARG_defense_and_democracy
+		icon = TAK_figure_it_out
 		x = 2
 		y = 1
 		cost = 5
@@ -473,6 +524,7 @@ focus_tree = {
 			custom_effect_tooltip = TAK_figure_it_out_tt
 			set_variable = { TAK_stability_weekly_per_painting_power = 0.00005 }
 			set_variable = { TAK_war_support_weekly_per_painting_power = 0.00005 }
+			set_variable = { TAK_fascism_drift_daily_per_painting_power = 0.001 }
 			set_variable = { TAK_military_factory_donations_per_painting_power = 0.1 }
 			set_variable = { TAK_weekly_manpower_per_painting_power = 10 }
 			set_variable = { TAK_brush_count = 3 }
@@ -487,7 +539,7 @@ focus_tree = {
 	}
 	focus = { #roi sets up dedicated buildings for the paintings to be painted in
 		id = TAK_painting_factory
-		icon = GFX_SOV_russian_corporate_state_ccp_2d_sov_compatibility
+		icon = TAK_painting_factory
 		x = -1
 		y = 1
 		cost = 5
@@ -527,7 +579,7 @@ focus_tree = {
 	}
 	focus = { #for a painting to come to life the painters must understand what they are painting, so lets get some research going
 		id = TAK_painter_education
-		icon = GFX_focus_AUS_womens_education_initiative
+		icon = TAK_painter_education
 		x = 0
 		y = 2
 		cost = 5
@@ -543,7 +595,7 @@ focus_tree = {
 	}
 	focus = { #buy a bunch of guns and whatnot from other nations to study
 		id = TAK_learn_about_it_all
-		icon = GFX_focus_ETH_freedom_at_gunpoint
+		icon = TAK_learn_about_it_all
 		x = 2
 		y = 2
 		cost = 5
@@ -580,9 +632,147 @@ focus_tree = {
 			}
 		}
 	}
+
+	focus = {
+		id = TAK_vers_les_cieux
+		icon = TAK_vers_les_cieux
+		x = 6
+		y = 1
+		cost = 5
+		relative_position_id = TAK_learn_about_it_all
+		prerequisite = { focus = TAK_recruit_painters }
+		prerequisite = { focus = TAK_painting_factory }
+		completion_reward = {
+			air_experience = 50
+			add_doctrine_cost_reduction = {
+				name = LOK_doctrine_bonus
+				cost_reduction = 0.5
+				uses = 3
+				category = air_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_bolstering_hommes_chauve_souris
+		icon = TAK_bolstering_hommes_chauve_souris
+		x = 0
+		y = 3
+		cost = 5
+		relative_position_id = TAK_vers_les_cieux
+		prerequisite = { focus = TAK_vers_les_cieux }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = para_tech
+				bonus = 0.5
+				uses = 2
+			}
+			add_equipment_to_stockpile = {
+				type = transport_plane_equipment_1
+				amount = 50
+			}
+			349 = {
+				create_unit = {
+					division = "division_template = \"Hommes Chauve-Souris\" start_experience_factor = 0.1 start_equipment_factor = 1.0"
+					count = 3
+					owner = TAK
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_bombardement_helicoporte
+		icon = TAK_bombardement_helicoporte
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_vers_les_cieux
+		prerequisite = { focus = TAK_vers_les_cieux }
+		mutually_exclusive = { focus = TAK_torpillage_de_masse }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = attack_helicopter
+				bonus = 0.5
+				uses = 2
+			}
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = transport_helicopter
+				bonus = 0.5
+				uses = 2
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_torpillage_de_masse
+		icon = TAK_torpillage_de_masse
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = TAK_vers_les_cieux
+		prerequisite = { focus = TAK_vers_les_cieux }
+		mutually_exclusive = { focus = TAK_bombardement_helicoporte }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = tactical_bomber
+				bonus = 0.5
+				uses = 2
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_runways_atop_charles
+		icon = TAK_runways_atop_charles
+		x = -1
+		y = 2
+		cost = 5
+		relative_position_id = TAK_vers_les_cieux
+		prerequisite = { focus = TAK_bombardement_helicoporte focus = TAK_torpillage_de_masse }
+		completion_reward = {
+			349 = {
+				add_building_construction = {
+					type = air_base
+					level = 5
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = TAK_les_immenses_avions_du_roi
+		icon = TAK_les_immenses_avions_du_roi
+		x = 1
+		y = 2
+		cost = 5
+		relative_position_id = TAK_vers_les_cieux
+		prerequisite = { focus = TAK_bombardement_helicoporte focus = TAK_torpillage_de_masse }
+		completion_reward = {
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = cat_strategic_bomber
+				bonus = 0.5
+				uses = 2
+				ahead_reduction = 1.0
+			}
+			add_tech_bonus = {
+				name = LOK_tech_bonus
+				category = cat_heavy_fighter
+				bonus = 0.5
+				uses = 2
+				ahead_reduction = 1.0
+			}
+		}
+	}
+
 	focus = { #military school
 		id = TAK_ecole_militaire
-		icon = GFX_SOV_depoliticize_the_military_ccp_2d_sov_compatibility
+		icon = TAK_ecole_militaire
 		x = 2
 		y = 1
 		cost = 10
@@ -600,7 +790,7 @@ focus_tree = {
 	}
 	focus = { #mass assault
 		id = TAK_painting_spam
-		icon = GFX_focus_generic_fascist_troops
+		icon = TAK_painting_spam
 		x = 1
 		y = 1
 		cost = 10
@@ -621,7 +811,7 @@ focus_tree = {
 	}
 	focus = {
 		id = TAK_roi_milices
-		icon = GFX_focus_PER_stage_mass_protests
+		icon = TAK_roi_milices
 		x = 0
 		y = 2
 		cost = 5
@@ -634,7 +824,7 @@ focus_tree = {
 	}
 	focus = { #superior_firepower
 		id = TAK_superior_firepower
-		icon = GFX_SOV_soviet_artillery_ccp_2d_sov_compatibility
+		icon = TAK_superior_firepower
 		x = -1
 		y = 1
 		cost = 10
@@ -684,7 +874,7 @@ focus_tree = {
 	}
 	focus = { #train officers
 		id = TAK_train_officers
-		icon = GFX_focus_CONGO_congolese_generals
+		icon = TAK_train_officers
 		x = 0
 		y = 2
 		cost = 5
@@ -770,7 +960,7 @@ focus_tree = {
 
 	focus = { #study the roqualian body to make proper soldiers
 		id = TAK_the_roqualian_form
-		icon = GFX_focus_CHL_departemento_de_las_tropas_nacistas_de_asalto
+		icon = TAK_the_roqualian_form
 		x = -2
 		y = 2
 		cost = 5
@@ -784,7 +974,7 @@ focus_tree = {
 
 	focus = { #roi opens takicardie up for his ploys
 		id = TAK_officially_open_up
-		icon = GFX_SOV_call_for_aid_ccp_2d_sov_compatibility
+		icon = TAK_officially_open_up
 		x = 0
 		y = 4
 		cost = 5
@@ -894,7 +1084,7 @@ focus_tree = {
 
 	focus = { #lets you dispatch charleslings to states to pacify them
 		id = TAK_charlesling_vanguard
-		icon = GFX_goal_generic_intelligence_exchange
+		icon = TAK_charlesling_vanguard
 		x = 2
 		y = 1
 		cost = 10
@@ -949,7 +1139,7 @@ focus_tree = {
 
 	focus = { #roi prepares for war
 		id = TAK_war_economy
-		icon = GFX_focus_RAJ_war_taxes
+		icon = TAK_war_economy
 		x = 4
 		y = 1
 		cost = 10
@@ -1255,7 +1445,7 @@ focus_tree = {
 
 	focus = { #prepare to fight roqualia
 		id = TAK_break_roqualia
-		icon = GFX_focus_SWI_dissolve_the_federal_council
+		icon = TAK_break_roqualia
 		x = -2
 		y = 1
 		cost = 5
@@ -1286,8 +1476,10 @@ focus_tree = {
 				tooltip = TAK_need_100000_painting_charles
 				check_variable = { TAK_painting_charles_count > 99999 }
 			}
+			fascism > 0.50
 		}
 		completion_reward = {
+			set_politics = { ruling_party = fascism }
 			subtract_from_variable = { TAK_painting_charles_count = 100000 }
 			add_stability = 0.10
 			add_political_power = 150
@@ -1309,7 +1501,7 @@ focus_tree = {
 	#puppets led by natives
 	focus = {
 		id = TAK_native_puppets
-		icon = GFX_focus_GER_integration_of_puppet_economies
+		icon = TAK_native_puppets
 		x = 0
 		y = 3
 		cost = 5
@@ -1343,7 +1535,7 @@ focus_tree = {
 
 	focus = { #brain drain
 		id = TAK_brain_drain
-		icon = GFX_goal_tfv_generic_tech_sharing
+		icon = TAK_brain_drain
 		x = 2
 		y = 0
 		cost = 5
@@ -1364,7 +1556,7 @@ focus_tree = {
 
 	focus = { #brain drain
 		id = TAK_a_united_realm
-		icon = GFX_goal_generic_national_unity
+		icon = TAK_a_united_realm
 		x = -2
 		y = 0
 		cost = 5
@@ -1466,7 +1658,7 @@ focus_tree = {
 
 	focus = { #decentralized
 		id = TAK_many_many_charles
-		icon = GFX_focus_SWE_urbanization
+		icon = TAK_many_many_charles
 		x = -1
 		y = 1
 		cost = 5
@@ -1588,7 +1780,7 @@ focus_tree = {
 
 	focus = {
 		id = TAK_overseas_department
-		icon = GFX_focus_SWE_privately_managed_vacation
+		icon = TAK_overseas_department
 		x = 1
 		y = 1
 		cost = 5
@@ -1607,7 +1799,7 @@ focus_tree = {
 	#Alkroa
 	focus = {
 		id = TAK_hunt_the_mockingbird
-		icon = GFX_focus_hol_war_on_pacifism
+		icon = TAK_hunt_the_mockingbird
 		x = -2
 		y = 1
 		cost = 10
@@ -1625,7 +1817,7 @@ focus_tree = {
 
 	focus = {
 		id = TAK_burn_down_corelie
-		icon = GFX_focus_CHL_avenge_the_pacification_of_araucania
+		icon = TAK_burn_down_corelie
 		x = 7
 		y = 1
 		cost = 10
@@ -1762,7 +1954,7 @@ focus_tree = {
 
 	focus = {
 		id = TAK_the_bird_march
-		icon = GFX_focus_GER_expand_pacific_holdings
+		icon = TAK_the_bird_march
 		x = 1
 		y = 2
 		cost = 10
@@ -1800,7 +1992,7 @@ focus_tree = {
 	#Great Royal Rail
 	focus = {
 		id = TAK_bridge_solakean_gap
-		icon = GFX_focus_generic_railroad
+		icon = TAK_bridge_solakean_gap
 		x = 0
 		y = 2
 		cost = 10
@@ -1851,7 +2043,7 @@ focus_tree = {
 	#Quepler
 	focus = {
 		id = TAK_quepler_ports
-		icon = GFX_goal_generic_construct_naval_dockyard
+		icon = TAK_quepler_ports
 		x = 1
 		y = 1
 		cost = 5
@@ -1907,7 +2099,7 @@ focus_tree = {
 
 	focus = {
 		id = TAK_a_new_charles_in_quepler
-		icon = GFX_focus_SOV_rebuild_the_savior_cathedral
+		icon = TAK_a_new_charles_in_quepler
 		x = 3
 		y = 1
 		cost = 10
@@ -1969,7 +2161,7 @@ focus_tree = {
 
 	focus = {
 		id = TAK_remodel_the_dam
-		icon = GFX_focus_BEL_dam_the_consequences
+		icon = TAK_remodel_the_dam
 		x = 1
 		y = 1
 		cost = 5
@@ -2010,7 +2202,7 @@ focus_tree = {
 
 	focus = {
 		id = TAK_a_second_charles_on_quepler_crown
-		icon = GFX_focus_RAJ_the_crown_and_the_world
+		icon = TAK_a_second_charles_on_quepler_crown
 		x = 1
 		y = 2
 		cost = 10
@@ -2060,7 +2252,7 @@ focus_tree = {
 	#SOLARIA
 	focus = {
 		id = TAK_solaria_ports
-		icon = GFX_focus_POL_develop_polish_shipbuilding
+		icon = TAK_solaria_ports
 		x = -1
 		y = 1
 		cost = 5
@@ -2118,7 +2310,7 @@ focus_tree = {
 
 	focus = {
 		id = TAK_hire_solarian_city_planners
-		icon = GFX_focus_SOV_merge_plants
+		icon = TAK_hire_solarian_city_planners
 		x = 2
 		y = 2
 		cost = 5
