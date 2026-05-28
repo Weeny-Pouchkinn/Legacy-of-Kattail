@@ -4747,20 +4747,6 @@ on_actions = {
 					set_variable = { damaged_infra_level_yesterday = damaged_building_level@infrastructure }
 				}
 			}
-			# KTW Pyramid Guard - teleport to 509 if not there
-			if = {
-				limit = {
-					tag = KTW
-					owns_state = 509
-					NOT = {
-						divisions_in_state = {
-							state = 509
-							size > 0
-						}
-					}
-				}
-				teleport_armies = { to_state = 509 }
-			}
 			if = {
 				limit = { has_country_flag = has_armored_blimp_carrier }
 				every_controlled_state = {
@@ -4909,6 +4895,18 @@ on_actions = {
                     }
                 }
                 AUR = {
+					if = {
+						limit = { ROOT = { has_country_flag = AUR_eastern_pawn } }
+						AUR = { set_variable = { AUR_eastern_pawn_count = 0 } }
+					}
+					if = {
+						limit = { ROOT = { has_country_flag = AUR_central_pawn } }
+						AUR = { set_variable = { AUR_central_pawn_count = 0 } }
+					}
+					if = {
+						limit = { ROOT = { has_country_flag = AUR_northern_pawn } }
+						AUR = { set_variable = { AUR_northern_pawn_count = 0 } }
+					}
                     country_event = { id = AUR_event.32 days = 5 }
                 }
 			}
@@ -5145,6 +5143,41 @@ on_actions = {
 					}
 					subtract_from_variable = { aur_num_new_aa_built = aur_num_aa_built }
 					subtract_from_variable = { aur_num_new_radar_built = aur_num_radar_built }
+				}
+			}
+		}
+	}
+
+	on_monthly_AUR = {
+		effect = {
+			if = {
+				limit = {
+					has_completed_focus = AUR_chew_slowly
+					has_country_flag = AUR_herald_sanity_active
+				}
+				set_temp_variable = { herald_sanity_change = -1 }
+				AUR_change_herald_sanity = yes
+				random_list = {
+					10 = {
+						country_event = { id = AUR_event.82 }
+						modifier = {
+							factor = 0
+							NOT = { any_owned_state = { NOT = { is_core_of = AUR } } }
+						}
+					}
+					10 = {
+						country_event = { id = AUR_event.85 }
+						modifier = {
+							factor = 0
+							OR = {
+								has_idea = AUR_touring_herald
+								has_idea = AUR_hyperfocus_herald
+							}
+						}
+					}
+					80 = {
+						# Nothing
+					}
 				}
 			}
 		}

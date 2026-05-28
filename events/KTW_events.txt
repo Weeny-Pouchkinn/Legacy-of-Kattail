@@ -20,21 +20,9 @@ country_event = {
 		hidden_effect = {
 			set_country_flag = ktw_katown_struggle_active
 			# Add cores on required states (they already have them but just in case)
-			30 = { add_core_of = KTW }
-			27 = { add_core_of = KTW }
-			29 = { add_core_of = KTW }
-			42 = { add_core_of = KTW }
-			50 = { add_core_of = KTW }
-			39 = { add_core_of = KTW }
-			# Spawn 24 free divisions
-			for_loop_effect = {
-				end = 24
-				509 = {
-					create_unit = {
-						division = "name = \"Pyramidenwache\" division_template = \"Pyramidenwache\" start_experience_factor = 1.0 start_equipment_factor = 1.0"
-						owner = KTW
-					}
-				}
+			every_state = {
+				limit = { is_in_array = { array = global.greater_katown_states_array value = THIS } }
+				add_core_of = KTW
 			}
 		}
 	}

@@ -851,13 +851,18 @@ country_event = {
 	option = {
 		name = AUR_event.30.a
 		ai_chance = {
-			base = 1000
+			base = 1
 			modifier = {
 				factor = 0
-				OR = {
-					has_communist_gov_group = yes
-					has_democratic_gov_group = yes
-				}
+				has_communist_gov_group = yes
+			}
+			modifier = {
+				factor = 0.5
+				has_democratic_gov_group = yes
+			}
+			modifier = {
+				factor = 1.5
+				has_fascist_gov_group = yes
 			}
 			modifier = {
 				factor = 0.5
@@ -875,6 +880,20 @@ country_event = {
 				strength_ratio = {
 					tag = AUR
 					ratio > 2
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = AUR
+					ratio < 1
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = AUR
+					ratio < 2
 				}
 			}
 		}
@@ -921,6 +940,9 @@ country_event = {
 	option = {
 		name = AUR_event.30.b
 		AUR = { country_event = { id = LOK_proposal.2 } }
+		ai_chance = {
+			base = 1
+		}
 	}
 }
 
@@ -955,7 +977,7 @@ country_event = {
 	option = {
 		name = AUR_event.32.a
 		custom_effect_tooltip = AUR_event.32.a.tt
-		set_temp_variable = { herald_sanity_change = -5 }
+		set_temp_variable = { herald_sanity_change = -10 }
 		AUR_change_herald_sanity = yes
 	}
 }
@@ -1112,14 +1134,16 @@ country_event = {
 		name = AUR_event.40.a
 		add_ideas = AUR_utter_failstate
 		load_focus_tree = EMPTY_TREE
+		clr_country_flag = AUR_herald_sanity_active
 		every_country = {
-			limit = { is_puppet_of = AUR }
+			limit = { is_subject_of = AUR }
 			AUR = { set_autonomy = { target = PREV autonomy_state = autonomy_free } }
 		}
 		every_country = {
 			limit = { is_in_faction_with = AUR }
 			leave_faction = yes
 		}
+		start_civil_war = { ideology = neutrality size = 0.5 }
 		every_country = {
 			limit = { is_herzlands_warlord = yes }
 			AUR = {
@@ -1129,7 +1153,6 @@ country_event = {
 				}
 			}
 		}
-		start_civil_war = { ideology = neutrality }
 	}
 }
 
@@ -1652,5 +1675,150 @@ country_event = {
 
 	option = {
 		name = AUR_event.81.a
+	}
+}
+
+# Local Population Challenges His Return
+country_event = {
+	id = AUR_event.82
+	title = AUR_event.82.t
+	desc = AUR_event.82.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			log = "[GetDateText]: [Root.GetName]: event AUR_event.82"
+			random_owned_state = {
+				limit = {
+					NOT = { is_core_of = ROOT }
+				}
+				save_event_target_as = AUR_disgruntled_state
+			}
+		}
+	}
+
+	option = {
+		name = AUR_event.82.a
+		add_stability = -0.05
+		event_target:AUR_disgruntled_state = {
+			add_compliance = -10
+			add_resistance = 10
+		}
+	}
+
+	option = {
+		name = AUR_event.82.b
+		set_temp_variable = { failure_odds = 100 }
+		subtract_from_temp_variable = { failure_odds = herald_sanity }
+		random_list = {
+			failure_odds = {
+				country_event = { id = AUR_event.84 days = 2 }
+			}
+			herald_sanity = {
+				country_event = { id = AUR_event.83 days = 2 }
+			}
+		}
+	}
+
+	option = {
+		name = AUR_event.82.c
+		set_temp_variable = { herald_sanity_change = -5 }
+		AUR_change_herald_sanity = yes
+		add_stability = 0.05
+		event_target:AUR_disgruntled_state = {
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+}
+
+# Live Debate Success!
+country_event = {
+	id = AUR_event.83
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.83" }
+	title = AUR_event.83.t
+	desc = AUR_event.83.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	option = {
+		name = AUR_event.83.a
+		set_temp_variable = { herald_sanity_change = 5 }
+		AUR_change_herald_sanity = yes
+		event_target:AUR_disgruntled_state = {
+			add_compliance = 5
+		}
+	}
+}
+
+# Live Debate Debacle
+country_event = {
+	id = AUR_event.84
+	title = AUR_event.84.t
+	desc = AUR_event.84.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.84" }
+
+	option = {
+		name = AUR_event.84.a
+		set_temp_variable = { herald_sanity_change = -5 }
+		AUR_change_herald_sanity = yes
+		add_stability = -0.05
+		event_target:AUR_disgruntled_state = {
+			add_compliance = -10
+		}
+	}
+
+	option = {
+		name = AUR_event.84.b
+		set_temp_variable = { herald_sanity_change = -10 }
+		AUR_change_herald_sanity = yes
+		event_target:AUR_disgruntled_state = {
+			add_compliance = 10
+		}
+	}
+}
+
+# An Uncertain Return
+country_event = {
+	id = AUR_event.85
+	title = AUR_event.85.t
+	desc = AUR_event.85.d
+	picture = GFX_report_event_herald
+
+	is_triggered_only = yes
+
+	immediate = { log = "[GetDateText]: [Root.GetName]: event AUR_event.85" }
+
+	option = {
+		name = AUR_event.85.a
+		add_timed_idea = {
+			idea = AUR_touring_herald
+			days = 60
+		}
+	}
+
+	option = {
+		name = AUR_event.85.b
+		set_temp_variable = { herald_sanity_change = -5 }
+		AUR_change_herald_sanity = yes
+		add_political_power = 10
+	}
+
+	option = {
+		name = AUR_event.85.c
+		set_temp_variable = { herald_sanity_change = -10 }
+		AUR_change_herald_sanity = yes
+		add_political_power = -50
+		add_timed_idea = {
+			idea = AUR_hyperfocus_herald
+			days = 60
+		}
 	}
 }

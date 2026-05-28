@@ -646,8 +646,7 @@ focus_tree = {
 		y = 1
 		cost = 5
 		relative_position_id = TAK_learn_about_it_all
-		prerequisite = { focus = TAK_recruit_painters }
-		prerequisite = { focus = TAK_painting_factory }
+		prerequisite = { focus = TAK_learn_about_it_all }
 		completion_reward = {
 			air_experience = 50
 			add_doctrine_cost_reduction = {
@@ -1471,22 +1470,22 @@ focus_tree = {
 	focus = { #fill charles with clones of charles
 		id = TAK_the_new_charles
 		icon = TAK_the_new_charles
-		x = -1
+		x = 1
 		y = 1
 		cost = 5
-		relative_position_id = TAK_conceive_the_charlesling
-		prerequisite = { focus = TAK_conceive_the_charlesling }
+		relative_position_id = TAK_bulk_housing
 		prerequisite = { focus = TAK_bulk_housing }
+		prerequisite = { focus = TAK_conceive_the_charlesling }
 		available = {
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_100000_painting_charles
-				check_variable = { TAK_painting_charles_count > 99999 }
+				tooltip = TAK_need_50000_painting_charles
+				check_variable = { TAK_painting_charles_count > 49999 }
 			}
 			fascism > 0.50
 		}
 		completion_reward = {
 			set_politics = { ruling_party = fascism }
-			subtract_from_variable = { TAK_painting_charles_count = 100000 }
+			subtract_from_variable = { TAK_painting_charles_count = 50000 }
 			add_stability = 0.10
 			add_political_power = 150
 			349 = {
@@ -1588,9 +1587,9 @@ focus_tree = {
 			}
 			ROQ = { any_core_state = { is_owned_by = TAK } }
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_200000_painting_charles
+				tooltip = TAK_need_100000_painting_charles
 				hidden_trigger = {
-					check_variable = { TAK_painting_charles_count > 199999 }
+					check_variable = { TAK_painting_charles_count > 99999 }
 				}
 			}
 		}
@@ -1788,11 +1787,11 @@ focus_tree = {
 	focus = {
 		id = TAK_overseas_department
 		icon = TAK_overseas_department
-		x = 1
+		x = -1
 		y = 1
 		cost = 5
-		relative_position_id = TAK_bulk_housing
-		prerequisite = { focus = TAK_bulk_housing }
+		relative_position_id = TAK_conceive_the_charlesling
+		prerequisite = { focus = TAK_conceive_the_charlesling }
 		available = {
 			any_owned_state = {
 				NOT = { is_core_of = TAK }
@@ -1825,7 +1824,7 @@ focus_tree = {
 	focus = {
 		id = TAK_burn_down_corelie
 		icon = TAK_burn_down_corelie
-		x = 7
+		x = 4
 		y = 1
 		cost = 10
 		relative_position_id = TAK_overseas_department
@@ -1838,8 +1837,8 @@ focus_tree = {
 			829 = { is_controlled_by_ROOT_or_subject = yes }
 			828 = { is_controlled_by_ROOT_or_subject = yes }
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_25000_painting_charles
-				check_variable = { TAK_painting_charles_count > 24999 }
+				tooltip = TAK_need_12500_painting_charles
+				check_variable = { TAK_painting_charles_count > 12499 }
 			}
 		}
 		completion_reward = {
@@ -1911,15 +1910,15 @@ focus_tree = {
 		y = 1
 		cost = 10
 		relative_position_id = TAK_charlesling_vanguard
-		prerequisite = { focus = TAK_the_new_charles }
 		prerequisite = { focus = TAK_overseas_department }
+		prerequisite = { focus = TAK_charlesling_vanguard }
 		available = {
 			720 = { is_controlled_by_ROOT_or_subject = yes }
 			841 = { is_controlled_by_ROOT_or_subject = yes }
 			336 = { is_controlled_by_ROOT_or_subject = yes }
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_25000_painting_charles
-				check_variable = { TAK_painting_charles_count > 24999 }
+				tooltip = TAK_need_12500_painting_charles
+				check_variable = { TAK_painting_charles_count > 12499 }
 			}
 		}
 		completion_reward = {
@@ -1973,8 +1972,8 @@ focus_tree = {
 		available = {
 			720 = { is_controlled_by_ROOT_or_subject = yes }
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_25000_painting_charles
-				check_variable = { TAK_painting_charles_count > 24999 }
+				tooltip = TAK_need_12500_painting_charles
+				check_variable = { TAK_painting_charles_count > 12499 }
 			}
 		}
 		completion_reward = {
@@ -2002,7 +2001,7 @@ focus_tree = {
 	focus = {
 		id = TAK_bridge_solakean_gap
 		icon = TAK_bridge_solakean_gap
-		x = 0
+		x = -3
 		y = 2
 		cost = 10
 		relative_position_id = TAK_overseas_department
@@ -2053,7 +2052,7 @@ focus_tree = {
 	focus = {
 		id = TAK_quepler_ports
 		icon = TAK_quepler_ports
-		x = 1
+		x = -2
 		y = 1
 		cost = 5
 		relative_position_id = TAK_overseas_department
@@ -2109,19 +2108,19 @@ focus_tree = {
 	focus = {
 		id = TAK_a_new_charles_in_quepler
 		icon = TAK_a_new_charles_in_quepler
-		x = 3
+		x = 0
 		y = 1
 		cost = 10
 		relative_position_id = TAK_overseas_department
-		prerequisite = { focus = TAK_the_new_charles }
 		prerequisite = { focus = TAK_overseas_department }
+		prerequisite = { focus = TAK_charlesling_vanguard }
 		available = {
 			804 = { is_controlled_by_ROOT_or_subject = yes }
 			396 = { is_controlled_by_ROOT_or_subject = yes }
 			806 = { is_controlled_by_ROOT_or_subject = yes }
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_25000_painting_charles
-				check_variable = { TAK_painting_charles_count > 24999 }
+				tooltip = TAK_need_12500_painting_charles
+				check_variable = { TAK_painting_charles_count > 12499 }
 			}
 		}
 		completion_reward = {
@@ -2186,8 +2185,8 @@ focus_tree = {
 			1018 = { is_controlled_by_ROOT_or_subject = yes }
 			NOT = { has_global_flag = great_lake_dam_destroyed }
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_15000_painting_charles
-				check_variable = { TAK_painting_charles_count > 14999 }
+				tooltip = TAK_need_7500_painting_charles
+				check_variable = { TAK_painting_charles_count > 7499 }
 			}
 		}
 		completion_reward = {
@@ -2225,8 +2224,8 @@ focus_tree = {
 			358 = { is_controlled_by_ROOT_or_subject = yes }
 			396 = { is_controlled_by_ROOT_or_subject = yes }
 			custom_trigger_tooltip = {
-				tooltip = TAK_need_25000_painting_charles
-				check_variable = { TAK_painting_charles_count > 24999 }
+				tooltip = TAK_need_12500_painting_charles
+				check_variable = { TAK_painting_charles_count > 12499 }
 			}
 		}
 		completion_reward = {
@@ -2267,7 +2266,7 @@ focus_tree = {
 	focus = {
 		id = TAK_solaria_ports
 		icon = TAK_solaria_ports
-		x = -1
+		x = -4
 		y = 1
 		cost = 5
 		relative_position_id = TAK_overseas_department
@@ -2325,7 +2324,7 @@ focus_tree = {
 	focus = {
 		id = TAK_hire_solarian_city_planners
 		icon = TAK_hire_solarian_city_planners
-		x = 2
+		x = -1
 		y = 2
 		cost = 5
 		relative_position_id = TAK_overseas_department
