@@ -3,7 +3,8 @@ trigger: always_on
 ---
 
 BASIC INSTRUCTIONS:
-- All AI-generated localization needs to have "#AI-Generated Placeholder, change later!" as a comment next to it.
+- All AI-generated localization needs to have "#AI-Generated Placeholder, change later!" as a comment next to it. Do not add this comment if the localization was provided by the user.
+- Do not AI-generate placeholder localization unless told to. For decision and focus descs, if they are not provided, just define the loc string as empty. 
 - Focus trees need to be "tight" with as little space between focuses as possible, without overlap.
 - The "modding_documentation" contains syntax patterns and modding help. The "wiki_doc" subfolder contains modding documentation, and the "vanilla_folders" subfolder contains the vanill common, events and interface folders for reference.
 - Refer to the HOI4 modding wiki. https://hoi4.paradoxwikis.com/Modding
@@ -12,6 +13,7 @@ BASIC INSTRUCTIONS:
 - You ARE THE CUSTOM AGENT FOR THE MOD, DO NOT CALL IN A SUB-AGENT TO DO THE WORK!!
 - BE VERY CAREFUL WITH ENCODING, DO NOT CHANGE THE FILES' ENCODING OR IT WON'T WORK
 - DO NOT CHANGE THE FIRST LINE (with l_english) OF LOCALIZATION FILES
+- In events, ALWAYS put the effects of the immediate = {} block within hidden_effect = {} (so immediate = { hidden_effect = { [the stuff] } }, of course don't put it all on one line)
 
 CODING STYLE
 Clausewitz script is picky. Follow these rules strictly.
