@@ -6,6 +6,17 @@ on_actions = {
 				limit = { check_variable = { num_battalions_with_type@armored_blimp_carrier > 0 } }
 				set_country_flag = has_armored_blimp_carrier
 			}
+			# Set up initial coalitions and coalition stability for all playable countries
+			every_country = {
+				limit = {
+					is_non_playable_country = no
+					NOT = { tag = ZZZ tag = MUN tag = XEN tag = MRI }
+				}
+				add_dynamic_modifier = { modifier = lok_coalition_stability_modifier }
+				add_dynamic_modifier = { modifier = lok_hostile_stability_modifier }
+				LOK_validate_ruling_party_coalition = yes
+				LOK_calculate_coalition_stability = yes
+			}
 			#Pol Parties test
 			KUS = {
 				add_to_variable = { lok_pol_party_indicator = 1 }
@@ -3764,6 +3775,23 @@ on_actions = {
 
 	on_weekly = {
 		effect = {
+			# Coalition weekly updates
+			if = {
+				limit = {
+					is_non_playable_country = no
+					NOT = { tag = ZZZ tag = MUN tag = XEN tag = MRI }
+				}
+				if = {
+					limit = { not = { has_dynamic_modifier = { modifier = lok_coalition_stability_modifier } } }
+					add_dynamic_modifier = { modifier = lok_coalition_stability_modifier }
+				}
+				if = {
+					limit = { not = { has_dynamic_modifier = { modifier = lok_hostile_stability_modifier } } }
+					add_dynamic_modifier = { modifier = lok_hostile_stability_modifier }
+				}
+				LOK_validate_ruling_party_coalition = yes
+				LOK_calculate_coalition_stability = yes
+			}
 			calculate_private_sector_modifiers = yes
 			calculate_bonus_resources_from_modifiers = yes
 			#TEMP, MAKE THAT MONTHLY
