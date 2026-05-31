@@ -4027,6 +4027,24 @@ on_actions = {
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
 				FROM = { if = { limit = { is_herzlands_warlord = yes } subtract_from_variable = { current_herzlands_state_count = 1 } } }
 			}
+			if = {
+				limit = {
+					AUR = { has_country_flag = AUR_herald_sanity_active }
+					event_target:new_controller = { is_sane_aur_or_ally = yes }
+					event_target:old_controller = { is_sane_aur_or_ally = no }
+				}
+				set_temp_variable = { herald_sanity_change = 0.1 }
+				AUR_change_herald_sanity = yes
+			}
+			if = {
+				limit = {
+					AUR = { has_country_flag = AUR_herald_sanity_active }
+					event_target:new_controller = { is_sane_aur_or_ally = no }
+					event_target:old_controller = { is_sane_aur_or_ally = yes }
+				}
+				set_temp_variable = { herald_sanity_change = -2 }
+				AUR_change_herald_sanity = yes
+			}
 			#AI Katzen nations instantly get +40% compliance when capturing a Herzlands state
 			if = {
 				limit = {
@@ -4882,6 +4900,14 @@ on_actions = {
 
 	on_capitulation_immediate = {
 		effect = {
+			if = {
+				limit = {
+					AUR = { has_country_flag = AUR_herald_sanity_active }
+					ROOT = { has_war_with = AUR }
+				}
+				set_temp_variable = { herald_sanity_change = 5 }
+				AUR_change_herald_sanity = yes
+			}
 			if = {
 				limit = {
                     ROOT = {
