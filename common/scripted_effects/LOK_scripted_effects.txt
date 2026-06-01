@@ -2701,13 +2701,15 @@ apply_wonder_effects = {
 
 remove_wonder = { #State scope, if you need to remove every wonder in a country (or in the world idk pop off king) run this in the relevant effect scope e.g. every_controlled_state
 	custom_effect_tooltip = dismantle_wonder_tt
-	#Clearing Modifier Arrays!
-	clear_array = wonder_modifiers_values
-	clear_array = wonder_modifiers_values_real
-	#Removing Wonder Variable
-	set_variable = { wonder = 0 }
-	#Recalculating the Wonder Modifier for the controller
-	controller = { apply_wonder_effects = yes }
+	hidden_effect = {
+		#Clearing Modifier Arrays!
+		clear_array = wonder_modifiers_values
+		clear_array = wonder_modifiers_values_real
+		#Removing Wonder Variable
+		set_variable = { wonder = 0 }
+		#Recalculating the Wonder Modifier for the controller
+		controller = { apply_wonder_effects = yes }	
+	}
 }
 
 generate_generic_small_katzen_portrait = {

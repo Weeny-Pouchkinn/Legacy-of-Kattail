@@ -2,160 +2,229 @@
  # ─────────────────────────────────────────────────────────────────────────────
  # Decision Category
  # ─────────────────────────────────────────────────────────────────────────────
- ROQ_reclamation_cat:0 "La Réclamation"
- ROQ_reclamation_cat_desc:0 "Roqualia has launched the §YRéclamation§!, aiming to reconquer its lost territories, the §YProvince Perdues§!, from the Katzen settlers occupying them.\n\nWhile this seems justified, many in the Flusiobalkans see it as a concerning development. After all, much of the area used to be under Roqualian influence at one point in history. Furthermore, Roqualian irredentism includes the lands of §YDominiontracks§! into their lost lands, despite these being historically Cloudstrider! Can one be certain that Roqualia will stop there?\n\n§YThe Katzens of the Province Perdues currently benefit from...§!\n Air Agility: §G+[?ROQ.ROQ_reclamation_air_agility_factor|%0]§!\n Air Attack: §G+[?ROQ.ROQ_reclamation_air_attack_factor|%0]§!\nAir Defence: §G+[?ROQ.ROQ_reclamation_air_defence_factor|%0]§!\nArmy Attack: §G+[?ROQ.ROQ_reclamation_army_attack_factor|%0]§!\nArmy Defence: §G+[?ROQ.ROQ_reclamation_army_defence_factor|%0]§!\nBreakthrough: §G+[?ROQ.ROQ_reclamation_breakthrough_factor|%0]§!\nCoordination: §G+[?ROQ.ROQ_reclamation_coordination_bonus|%0]§!\nSupply Use: §G[?ROQ.ROQ_reclamation_supply_consumption_factor|%0]§!\nBuild Speed: §G+[?ROQ.ROQ_reclamation_build_speed_factor|%0]§!\nFactory Output: §G+[?ROQ.ROQ_reclamation_industrial_capacity_factory|%0]§!\nFort Build Speed: §G+[?ROQ.ROQ_reclamation_production_speed_bunker_factor|%0]§!\nAA Build Speed: §G+[?ROQ.ROQ_reclamation_production_speed_anti_air_building_factor|%0]§!\nConsumer Goods Factor: §Y[?ROQ.ROQ_reclamation_consumer_goods_factor|%0]§!"
+ ROQ_reclamation_cat:0 "The Réclamation"
+ ROQ_reclamation_cat_desc:0 "[ROQ.GetROQReclamationStageDesc]\n\nWe should keep a keen eye on Roqualia's military advances, as a zealous Roqualian state may attempt to go further and further.\nRoqualia's war support is currently §Y[?ROQ.has_war_support|%1]§!. The higher it is, the more likely the war is to continue escalating."
 
- # Support level labels (for scripted loc)
- ROQ_reclamation_support_level_disinterested:0 "§RDisinterested§!"
- ROQ_reclamation_support_level_supportive:0 "§YSupportive§!"
- ROQ_reclamation_support_level_protective:0 "§GProtective§!"
- ROQ_reclamation_support_level_adamant:0 "§1Adamant§!"
-
- # Dynamic modifier name
- ROQ_reclamation_support:0 "Support against the Réclamation"
+ roq_reclamation_on_cooldown:0 "We must wait a bit between each Opération."
 
  # ─────────────────────────────────────────────────────────────────────────────
- # Timed Missions
+ # Staged Tracker decisions
  # ─────────────────────────────────────────────────────────────────────────────
- MCF_reclamation_cloudstrider_intervention:0 "The Reclamation Escalates"
- MCF_reclamation_cloudstrider_intervention_desc:0 "The benefactors of the Katzens occupying the Province Perdues are considering direct intervention in their war with Roqualia. If they can survive long enough, they will be welcomed into their benefactor's faction and the war will escalate drastically!"
+ roq_reclamation_tracker_stage1:0 "Highlight Roqualia's Goals"
+ roq_reclamation_tracker_stage1_desc:0 "Roqualia is currently trying to conquer the core states of [FSR.GetName] and [DOM.GetName]."
+ roq_reclamation_tracker_stage2:0 "Highlight Roqualia's Goals"
+ roq_reclamation_tracker_stage2_desc:0 "Roqualia is now aiming to secure its 'natural borders' along the Solakatzen Channel and the Ongii River."
 
- ROQ_reclamation_cloudstrider_intervention:0 "The Reclamation Escalates"
- ROQ_reclamation_cloudstrider_intervention_desc:0 "The benefactors of the Katzens occupying the Province Perdues are considering direct intervention in their war with Roqualia. If they can survive long enough, they will be welcomed into their benefactor's faction and the war will escalate drastically!"
+ roq_reclamation_stage2_invade_target:0 "[GetROQReclamationOperationName]"
+ roq_reclamation_stage2_invade_target_desc:0 "We will launch an invasion of [FROM.GetName] to secure our natural borders."
+ roq_reclamation_stage2_invade_target_tt:0 "We will declare war on [FROM.GetName]."
 
- # FSR / DOM Lobby Decision
+ roq_reclamation_stage3_invade_target:0 "[GetROQReclamationOperationName]"
+ roq_reclamation_stage3_invade_target_desc:0 "We will launch an invasion of [FROM.GetName] to establish complete hegemony."
+ roq_reclamation_stage3_invade_target_tt:0 "We will declare war on [FROM.GetName]." #AI-Generated Placeholder, change later!
+
+ roq_reclamation_stage2_demand_land:0 "Demand Natural Border Territories from §Y[FROM.GetName]§!" 
+ roq_reclamation_stage2_demand_land_desc:0 "We will demand that [FROM.GetName] hand over their territories within our natural borders to us."
+ roq_reclamation_stage2_demand_land_tt:0 "Demand that [FROM.GetName] hand over their border territories to us."
+
+ roq_reclamation_stage3_demand_land:0 "Demand Solakean Territory from §Y[FROM.GetName]§!"
+ roq_reclamation_stage3_demand_land_desc:0 "We will demand that [FROM.GetName] hand over their Solakean territories to us." 
+ roq_reclamation_stage3_demand_land_tt:0 "Demand that [FROM.GetName] hand over their Solakean territories to us."
+
+ roq_reclamation_tracker_stage3:0 "Highlight Roqualia's Goals"
+ roq_reclamation_tracker_stage3_desc:0 "Roqualia seeks to dominate the Solakean continent."
+ roq_reclamation_tracker_stage4:0 "Highlight Roqualia's Goals"
+
+ roq_reclamation_tracker_stage5:0 "§RALL IS ROQUALIA§!"
+ roq_reclamation_tracker_stage5_desc:0 "Roqualia is currently waging a total crusade against the entire world."
+ roq_reclamation_escalate_stage5_tt:0 "Delaparte declares war on the ENTIRE WORLD!"
+
+
+ ROQ_Reclamation_Invade:0 "Invade [FROM.GetName]"
+
+ ROQ_MCF_Operation_Name:0 "Opération §YPégase§!"
+ ROQ_KUS_Operation_Name:0 "Opération §YRenardise§!"
+ ROQ_SLR_Operation_Name:0 "Opération §YRéunion de Famille§!"
+ ROQ_KHA_Operation_Name:0 "Opération §YGrands Plateaux§!"
+ ROQ_TEN_Operation_Name:0 "Opération §YDésindustrialisation§!"
+ ROQ_PLR_Operation_Name:0 "Opération §YGros Lapin§!"
+ ROQ_KEP_Operation_Name:0 "Opération §YRecolonisation§!"
+ ROQ_IZW_Operation_Name:0 "Opération §YVacherie§!"
+ ROQ_VIX_Operation_Name:0 "Opération §YSéduction§!"
+ ROQ_FST_Operation_Name:0 "Opération §YSacrifice§!"
+ ROQ_VAS_Operation_Name:0 "Opération §YDéforestation§!"
+ ROQ_HAR_Operation_Name:0 "Opération §YRéalité§!"
+ ROQ_KAR_Operation_Name:0 "Opération §YDésenclavement§!"
+ ROQ_CRE_Operation_Name:0 "Opération §YPlummage§!"
+
+ ROQ_NEK_Operation_Name:0 "Opération §YContournement§!"
+
  # ─────────────────────────────────────────────────────────────────────────────
- FSR_DOM_reclamation_lobby:0 "Lobby §Y[FROM.GetName]§!\nStance: [FROM.GetROQReclamationSupportLevel]"
- FSR_DOM_reclamation_lobby_desc:0 "Spend political capital to lobby [FROM.GetName] and increase their support for our cause."
+ # Scripted Stage Descriptions
+ # ─────────────────────────────────────────────────────────────────────────────
+ ROQ_reclamation_stage_1_desc:0 "§GSTAGE 1 OF ESCALATION§! - LES PROVINCES PERDUES\n§LIn a rightful reconquest, Roqualia seeks to reclaim their so-called Province Perdues, settled by Katzen colonists during the Crusade.§!"
+ ROQ_reclamation_stage_2_desc:0 "§YSTAGE 2 OF ESCALATION§! - LES FRONTIERES NATURELLES\n§LRoqualia, emboldened by a successful Réclamation, seeks to secure its borders against Kaiserist threats to the south and rogue Herzland regimes to the north.§!"
+ ROQ_reclamation_stage_3_desc:0 "§OSTAGE 3 OF ESCALATION§! - LA DOMINATION CONTINENTALE\n§LWith their natural borders firmly secured, Delaparte is now pushing the Roqualians to secure the entirety of Solakea.§!"
+ ROQ_reclamation_stage_4_desc:0 "§RSTAGE 4 OF ESCALATION§! - COEUR DE LA CHALLEMAGNE\n§LDelaparte has gone mad! With Solakea under his heels, the dictator is now seeking the ultimate revenge upon the perfidious Challemands, by subduing the entirety of Felinea!§!"
+ ROQ_reclamation_stage_5_desc:0 "§0STAGE 5 OF ESCALATION§! - LA CROISADE UNIFICATRICE\n§LWith Solakea and Felinea crushed beneath his unstoppable legions, Delaparte has crowned himself the Double-Empereur and has vowed to crush all remaining resistance to his rule.§!"
 
- ROQ_reclamation_lobby_tt:0 "When §Y[FROM.GetNameDef]§! sends us support, they may provide [FROM.GetROQReclamationWhatTheyCanDo]. The greater their support level, the greater bonuses their help will provide us.\n\n"
-
- ROQ_reclamation_lobby_success_tt:0 "their support level increases."
- ROQ_reclamation_lobby_fail_tt:0 "they were not moved by our arguments this time."
+ ROQ_reclamation_stage_inactive_desc:0 "The Reclamation is currently inactive."
 
  # ─────────────────────────────────────────────────────────────────────────────
- # Effect tooltips (shown in notification events)
+ # Tooltips
  # ─────────────────────────────────────────────────────────────────────────────
- ROQ_reclamation_air_agility_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_AIR_AGILITY_FACTOR$: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_air_weather_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_AIR_ATTACK_FACTOR$: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!\n$MODIFIER_AIR_DEFENCE_FACTOR$: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_war_advisors_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIERS_ARMY_ATTACK_FACTOR$: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!\n$MODIFIERS_ARMY_DEFENCE_FACTOR$: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_recon_raiders_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_BREAKTHROUGH$: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!\n§YCoordination§!: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_logistical_advisors_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_SUPPLY_CONSUMPTION_FACTOR$: §G-[?FROM.ROQ_reclamation_buff_minus_2|0%]§!"
- ROQ_reclamation_industrial_engineers_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_PRODUCTION_SPEED_BUILDINGS_FACTOR$: §G+2.[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_industrial_advisors_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_INDUSTRIAL_CAPACITY_FACTOR$: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_fortification_engineers_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\nLand Fort Build Speed: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!\nAnti Air Build Speed: §G+[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_military_support_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_BREAKTHROUGH$: §G+2.[?FROM.ROQ_reclamation_buff_2|0%]§!"
- ROQ_reclamation_political_support_received_tt:0 "Modify §Y$ROQ_reclamation_support$§! by:\n$MODIFIER_CONSUMER_GOODS_FACTOR$: §Y-[?FROM.ROQ_reclamation_buff_minus_2|0%]§!"
+ roq_reclamation_accept_demands_tt:0 "We cede all [FSR.GetName] and [DOM.GetName] core states we own to Roqualia." #AI-Generated Placeholder, change later!
+ roq_reclamation_refuse_demands_tt:0 "We refuse the demands. Roqualia declares war." #AI-Generated Placeholder, change later!
+ roq_reclamation_accept_compromise_tt:0 "We cede bordering [FSR.GetName] core states to Roqualia." #AI-Generated Placeholder, change later!
+ roq_reclamation_refuse_compromise_tt:0 "We refuse the compromise. Roqualia declares war." #AI-Generated Placeholder, change later!
+ roq_reclamation_escalate_ws_high_tt:0 "Escalate the Reclamation to Stage 2 immediately under Delaparte's command." #AI-Generated Placeholder, change later!
+ roq_reclamation_sue_peace_ws_low_tt:0 "Sue for peace with ROQ's enemies." #AI-Generated Placeholder, change later!
+ roq_reclamation_accept_peace_tt:0 "Accept peace. [FSR.GetName] and [DOM.GetName] are kicked from the faction, white peace signed." #AI-Generated Placeholder, change later!
+ roq_reclamation_refuse_peace_tt:0 "Refuse the peace offer. War continues." #AI-Generated Placeholder, change later!
+
+ # ─────────────────────────────────────────────────────────────────────────────
+ # Timed Ideas
+ # ─────────────────────────────────────────────────────────────────────────────
+ ROQ_war_exhaustion:0 "War Exhaustion" #AI-Generated Placeholder, change later!
+ ROQ_war_exhaustion_desc:0 "The strain of prolonged conflict has severely affected our stability and division combat performance." #AI-Generated Placeholder, change later!
 
  # ─────────────────────────────────────────────────────────────────────────────
  # Event Titles, Descriptions and Options
  # ─────────────────────────────────────────────────────────────────────────────
+ roq_reclamation.1.t:0 "Roqualian Demand for Territory" #AI-Generated Placeholder, change later!
+ roq_reclamation.1.d:0 "Roqualia demands the hand-over of their lost core states under our administration." #AI-Generated Placeholder, change later!
+ roq_reclamation.1.a:0 "We yield all demanded states." #AI-Generated Placeholder, change later!
+ roq_reclamation.1.b:0 "We refuse their demands!" #AI-Generated Placeholder, change later!
+ roq_reclamation.1.c:0 "We compromise and yield only bordering [FSR.GetName] states." #AI-Generated Placeholder, change later!
+ roq_reclamation.1.e:0 "We refuse to compromise!" #AI-Generated Placeholder, change later!
 
- ROQ_reclamation.2.t:0 "Support against the Réclamation"
- ROQ_reclamation.2.desc:0 "As part of our faction's commitment to aid against the Réclamation, we should send some support to the Katzen nations currently fighting Roqualia."
+ roq_reclamation.2.t:0 "Demands Accepted" #AI-Generated Placeholder, change later!
+ roq_reclamation.2.d:0 "The target has accepted our ultimatum and handed over all demanded core states." #AI-Generated Placeholder, change later!
+ roq_reclamation.2.a:0 "Splendid." #AI-Generated Placeholder, change later!
 
- ROQ_reclamation.2.a:0 "Send Air Advisors"
- ROQ_reclamation.2.b:0 "Send Weather Manipulators"
- ROQ_reclamation.2.c:0 "Send War Councilors"
- ROQ_reclamation.2.d:0 "Send Recond Riders"
- ROQ_reclamation.2.e:0 "Send Logistics Advisors"
- ROQ_reclamation.2.f:0 "Send Construction Engineers"
- ROQ_reclamation.2.g:0 "Send Industrial Advisors"
- ROQ_reclamation.2.h:0 "Send Fortification Engineers"
- ROQ_reclamation.2.i:0 "Send Industrial Support"
- ROQ_reclamation.2.j:0 "Send Army Support"
+ roq_reclamation.3.t:0 "Demands Refused" #AI-Generated Placeholder, change later!
+ roq_reclamation.3.d:0 "The target has refused our ultimatum. War is declared!" #AI-Generated Placeholder, change later!
+ roq_reclamation.3.a:0 "To arms!" #AI-Generated Placeholder, change later!
 
- # Event 10: Air Advisors
- ROQ_reclamation.10.t:0 "Cloudstrider Air Advisors Arrive"
- ROQ_reclamation.10.d:0 "[FROM.GetName] has dispatched experienced air warfare advisors to our forces. Their expertise will improve the agility and responsiveness of our air wings against the Roqualian threat."
- ROQ_reclamation.10.a:0 "Our pilots will fly faster and sharper!"
+ roq_reclamation.4.t:0 "Compromise Accepted" #AI-Generated Placeholder, change later!
+ roq_reclamation.4.d:0 "The democratic target has accepted our compromise and handed over bordering [FSR.GetName] states." #AI-Generated Placeholder, change later!
+ roq_reclamation.4.a:0 "A reasonable outcome." #AI-Generated Placeholder, change later!
 
- # Event 11: Weather Disruption
- ROQ_reclamation.11.t:0 "Weather Disruption Operations Begin"
- ROQ_reclamation.11.d:0 "Cloudstrider weather specialists from [FROM.GetName] have deployed covertly to create favourable conditions for our air operations. Roqualian strike craft will find the skies less cooperative than they expected."
- ROQ_reclamation.11.a:0 "Let the storm work for us!"
+ roq_reclamation.5.t:0 "Compromise Refused" #AI-Generated Placeholder, change later!
+ roq_reclamation.5.d:0 "The democratic target has refused our compromise. War is declared!" #AI-Generated Placeholder, change later!
+ roq_reclamation.5.a:0 "To arms!" #AI-Generated Placeholder, change later!
 
- # Event 12: War Advisors
- ROQ_reclamation.12.t:0 "Goatlandian War Advisors Arrive"
- ROQ_reclamation.12.d:0 "[FROM.GetName] has seconded seasoned military commanders to advise our officers. Their experience in offensive and defensive warfare will improve the fighting capability of our armies at every level."
- ROQ_reclamation.12.a:0 "With their guidance, we shall hold the line!"
+ roq_reclamation.10.t:0 "Reclamation Progress Check" #AI-Generated Placeholder, change later!
+ roq_reclamation.10.d:0 "We have secured control of our target states. We must now evaluate our war support." #AI-Generated Placeholder, change later!
+ roq_reclamation.10.a:0 "Excellent, our war support is high. Move on to Stage 2." #AI-Generated Placeholder, change later!
+ roq_reclamation.10.b:0 "Our war support is lacking. We must sue for peace." #AI-Generated Placeholder, change later!
 
- # Event 13: Recon Raiders
- ROQ_reclamation.13.t:0 "Goatlandian Recon Raiders Deployed"
- ROQ_reclamation.13.d:0 "Elite raiding units from [FROM.GetName] have been embedded with our forward divisions. Their expertise in reconnaissance and disruption operations will sharpen our breakthrough capability and battlefield coordination."
- ROQ_reclamation.13.a:0 "Strike hard and fast!"
+ roq_reclamation.100.t:0 "Roqualian Peace Offer" #AI-Generated Placeholder, change later!
+ roq_reclamation.100.d:0 "Roqualia is suing for a white peace. If we accept, they will retain [FSR.GetName] and [DOM.GetName] core states, ending the war." #AI-Generated Placeholder, change later!
+ roq_reclamation.100.a:0 "Accept the peace offer." #AI-Generated Placeholder, change later!
+ roq_reclamation.100.b:0 "Refuse the peace offer!" #AI-Generated Placeholder, change later!
 
- # Event 14: Logistical Advisors
- ROQ_reclamation.14.t:0 "Solarian Logistical Advisors Arrive"
- ROQ_reclamation.14.d:0 "[FROM.GetName] has sent logistics specialists to overhaul our supply chain. Redundancies have been identified and eliminated — our troops in the field will receive more with less."
- ROQ_reclamation.14.a:0 "Efficiency is its own kind of weapon."
+ roq_reclamation.111.t:0 "Reclamation Peace Talks Failed" #AI-Generated Placeholder, change later!
+ roq_reclamation.111.d:0 "The enemy has refused our peace offer. The Reclamation continues and escalates to Stage 2, causing War Exhaustion." #AI-Generated Placeholder, change later!
+ roq_reclamation.111.a:0 "Delaparte takes control!" #AI-Generated Placeholder, change later!
 
- # Event 15: Industrial Engineers
- ROQ_reclamation.15.t:0 "Solarian Industrial Engineers Arrive"
- ROQ_reclamation.15.d:0 "A team of Solarian engineers from [FROM.GetName] has arrived to assist with ongoing construction projects. Their know-how should meaningfully accelerate our building programmes."
- ROQ_reclamation.15.a:0 "Factories rising faster. Good."
+ roq_reclamation.112.t:0 "Reclamation Concluded Peacefully" #AI-Generated Placeholder, change later!
+ roq_reclamation.112.d:0 "All parties have accepted our peace sue. The Reclamation has successfully concluded." #AI-Generated Placeholder, change later!
+ roq_reclamation.112.a:0 "A peaceful victory." #AI-Generated Placeholder, change later!
 
- # Event 16: Industrial Advisors
- ROQ_reclamation.16.t:0 "Tenetianen Industrial Advisors Arrive"
- ROQ_reclamation.16.d:0 "[FROM.GetName] has sent industrial consultants to our factories. Their methods for maximising output per worker should increase the rate at which our war industries produce equipment."
- ROQ_reclamation.16.a:0 "More guns, more shells. We will need them."
+ roq_reclamation_escalate_ws_50_tt:0 "Escalate the Reclamation to Stage 3: La Domination." #AI-Generated Placeholder, change later!
+ roq_reclamation_end_reclamation_tt:0 "Conclude the Reclamation peacefully since our war support is below 50%." #AI-Generated Placeholder, change later!
 
- # Event 17: Fortification Engineers
- ROQ_reclamation.17.t:0 "Tenetianen Fortification Engineers Arrive"
- ROQ_reclamation.17.d:0 "Specialists from [FROM.GetName] in the construction of bunker networks and anti-air emplacements have arrived. Our defensive lines will be reinforced far more rapidly than before."
- ROQ_reclamation.17.a:0 "Let them come against our walls!"
+ roq_reclamation.20.t:0 "Stage 2 Progress Check" #AI-Generated Placeholder, change later!
+ roq_reclamation.20.d:0 "We have successfully secured control of all our natural border states. We must now evaluate our war support." #AI-Generated Placeholder, change later!
+ roq_reclamation.20.a:0 "Excellent, our war support is high. Move on to Stage 3: La Domination." #AI-Generated Placeholder, change later!
+ roq_reclamation.20.b:0 "Our war support is lacking. The Reclamation has concluded." #AI-Generated Placeholder, change later!
 
- # Event 18: Military Support
- ROQ_reclamation.18.t:0 "Military Support from [FROM.GetName]"
- ROQ_reclamation.18.d:0 "[FROM.GetName] has sent a package of military aid — equipment, training cadre, and advisors. While they lack the specialised expertise of some of our other supporters, their assistance still makes our forces more capable of driving through enemy lines."
- ROQ_reclamation.18.a:0 "Every ally counts."
+ roq_reclamation.200.t:0 "Roqualian Demand for Border Territory" #AI-Generated Placeholder, change later!
+ roq_reclamation.200.d:0 "Roqualia demands that we hand over all border states we control to them." #AI-Generated Placeholder, change later!
+ roq_reclamation.200.a:0 "We refuse their demands!" #AI-Generated Placeholder, change later!
+ roq_reclamation.200.b:0 "We yield the demanded territories." #AI-Generated Placeholder, change later!
 
- # Event 19: Political Support
- ROQ_reclamation.19.t:0 "Political Support from [FROM.GetName]"
- ROQ_reclamation.19.d:0 "[FROM.GetName] has leveraged its diplomatic connections to ease economic pressures on us, rallying international opinion to our cause and allowing us to redirect some of our industrial output away from consumer goods."
- ROQ_reclamation.19.a:0 "Let the world see who the true aggressors are."
+ roq_reclamation.201.t:0 "Border Demands Accepted" #AI-Generated Placeholder, change later!
+ roq_reclamation.201.d:0 "[FROM.GetName] has accepted our demands and handed over their border states." #AI-Generated Placeholder, change later!
+ roq_reclamation.201.a:0 "Excellent." #AI-Generated Placeholder, change later!
 
- # Event 20: Faction join notification
- ROQ_reclamation.20.t:0 "Gallopia Opens Its Arms"
- ROQ_reclamation.20.d:0 "After six months of steadfast resistance against Roqualian aggression, our benefactors have honoured their commitment to the Katzen peoples. We have been welcomed into their alliance.\n\nRoqualia's war against us has become a war against them."
- ROQ_reclamation.20.a:0 "We are no longer alone!"
+ roq_reclamation.202.t:0 "Border Demands Refused" #AI-Generated Placeholder, change later!
+ roq_reclamation.202.d:0 "[FROM.GetName] has refused our demands! It is war!" #AI-Generated Placeholder, change later!
+ roq_reclamation.202.a:0 "To arms!" #AI-Generated Placeholder, change later!
 
- # Event 30: Flusiobalkan reaction to the Reclamation beginning
- ROQ_reclamation.30.t:0 "Intelligence Report - The Réclamation"
- ROQ_reclamation.30.d:0 "Just a few days ago, Roqualia launched its Réclamation following several years of planning. While this is no real surprise, some within the Flusiobalkans have argued that it sets a worrying precedent for Roqualian irredentism. This has resulted in several nations vowing to protect the Katzen settlers against Roqualian aggression. As of now, this support is limited to advisors and very limited intervention, but there is a serious chance of these nations getting involved directly should the Katzens prove they are able to survive for long enough.\n\nThis would result in hazardous escalation of the conflict and the potential propagation of Roqualian warmongering to these nations and possibly even beyond, as Roqualian politics may shift unpredictably in the face of prolonged conflict. Therefore, if we wish to contain this conflict, it may be wise to aid Roqualia in achieving a swift victory, one way or another, as to ensure their rapid satisfaction and prevent their total mobilization. On the other hand, if we wish for an escalation, aiding the Katzens' survival may be the best choice.\n\nWith everything factored in, we estimate there is about six months before the conflict escalates dangerously. The choice to intervene or not is ours."
+ roq_reclamation.300.t:0 "Roqualian Demand for Solakean Territory" #AI-Generated Placeholder, change later!
+ roq_reclamation.300.d:0 "Roqualia demands that we hand over all states we control on the Solakean continent to them." #AI-Generated Placeholder, change later!
+ roq_reclamation.300.a:0 "We refuse their demands!" #AI-Generated Placeholder, change later!
+ roq_reclamation.300.b:0 "We yield the demanded territories." #AI-Generated Placeholder, change later!
 
- ROQ_reclamation.30.a:0 "This is not our war."
- ROQ_reclamation.30.b:0 "We must play a part in this conflict."
+ roq_reclamation.301.t:0 "Solakean Demands Accepted" #AI-Generated Placeholder, change later!
+ roq_reclamation.301.d:0 "[FROM.GetName] has accepted our demands and handed over their Solakean states." #AI-Generated Placeholder, change later!
+ roq_reclamation.301.a:0 "Excellent." #AI-Generated Placeholder, change later!
 
- #AI-Generated Placeholder, Change Later in front of it! Event title for DOM/FSR post-reclamation faction withdrawal
- ROQ_reclamation.40.t:0 "A New Strategic Course"
- #AI-Generated Placeholder, Change Later in front of it! Event description for DOM/FSR leaving their current faction after the Reclamation peace
- ROQ_reclamation.40.d:0 "With Roqualia no longer pressing the conflict, our leadership has decided to disengage from foreign bloc politics and pursue an independent path."
- #AI-Generated Placeholder, Change Later in front of it! Event option text for DOM/FSR faction withdrawal
- ROQ_reclamation.40.a:0 "We stand on our own."
-
- #AI-Generated Placeholder, Change Later in front of it! Event title shown to faction leaders informed of DOM/FSR departure
- ROQ_reclamation.41.t:0 "[FROM.GetName] Leaves Our Faction"
- #AI-Generated Placeholder, Change Later in front of it! Event description shown to faction leaders when DOM/FSR withdraw
- ROQ_reclamation.41.d:0 "[FROM.GetName] has formally withdrawn from our alliance in the aftermath of the Reclamation settlement."
- #AI-Generated Placeholder, Change Later in front of it! Event option text for faction-leader notification
- ROQ_reclamation.41.a:0 "Noted."
-
- #AI-Generated Placeholder, Change Later in front of it! News event title announcing DOM/FSR faction withdrawal
- ROQ_reclamation.42.t:0 "Flusiobalkan Realignment"
- #AI-Generated Placeholder, Change Later in front of it! News event description for DOM/FSR departure from their faction
- ROQ_reclamation.42.d:0 "In the wake of the Réclamation peace, [FROM.GetName] has withdrawn from its alliance bloc, signaling a new phase of political uncertainty across the Flusiobalkans."
- #AI-Generated Placeholder, Change Later in front of it! News event option text for global announcement
- ROQ_reclamation.42.a:0 "The balance shifts again."
-
- # Idea: 180-day timed idea granting volunteer tension reduction and extra volunteers
- ROQ_reclamation_flusiobalkan_volunteers:0 "Intervention in the Réclamation"
+ roq_reclamation.302.t:0 "Solakean Demands Refused" #AI-Generated Placeholder, change later!
+ roq_reclamation.302.d:0 "[FROM.GetName] has refused our demands! It is war!" #AI-Generated Placeholder, change later!
+ roq_reclamation.302.a:0 "To arms!" #AI-Generated Placeholder, change later!
 
  # ─────────────────────────────────────────────────────────────────────────────
- # Scripted loc: what each ally can contribute (used in lobby decision desc)
+ # Stage 4 Decisions & Descriptions
  # ─────────────────────────────────────────────────────────────────────────────
- ROQ_reclamation_what_mcf_can_do:0 "§GAir Agility§! or §GAir Attack§! & §GAir Defence§!"
- ROQ_reclamation_what_kha_can_do:0 "§GArmy Attack§! & §GArmy Defence§! or §GBreakthrough§! & §GCoordination§!"
- ROQ_reclamation_what_slr_can_do:0 "§GSupply Use Reduction§! or §GConstruction Speed§!"
- ROQ_reclamation_what_ten_can_do:0 "§GFactory Output§! or §GFort Build Speed§! & §GAA Build Speed§!"
- ROQ_reclamation_what_generic_can_do:0 "§GBreakthrough§! or §GConsumer Goods Reduction§!"
+ roq_reclamation_tracker_stage4_desc:0 "Roqualia is currently uniting the Katzen Herzlands under their banner." #AI-Generated Placeholder, change later!
+ roq_reclamation_stage4_invade_target:0 "Invade [FROM.GetName]" #AI-Generated Placeholder, change later!
+ roq_reclamation_stage4_invade_target_desc:0 "We will launch an invasion of [FROM.GetName] to secure the Katzen Herzlands." #AI-Generated Placeholder, change later!
+ roq_reclamation_stage4_invade_target_tt:0 "We will declare war on [FROM.GetName]." #AI-Generated Placeholder, change later!
+ roq_reclamation_stage4_demand_land:0 "Demand Herzland Territory from [FROM.GetName]" #AI-Generated Placeholder, change later!
+ roq_reclamation_stage4_demand_land_desc:0 "We will demand that [FROM.GetName] hand over their controlled Herzlands territories to us." #AI-Generated Placeholder, change later!
+ roq_reclamation_stage4_demand_land_tt:0 "Demand that [FROM.GetName] hand over their controlled Herzlands territories to us." #AI-Generated Placeholder, change later!
+ roq_reclamation_escalate_stage4_tt:0 "Move on to Stage 4: Coeur de la Challemagne." #AI-Generated Placeholder, change later!
+
+ # ─────────────────────────────────────────────────────────────────────────────
+ # Stage 4 Events
+ # ─────────────────────────────────────────────────────────────────────────────
+ roq_reclamation.30.t:0 "Stage 3 Complete" #AI-Generated Placeholder, change later!
+ roq_reclamation.30.d:0 "We have successfully dominated the Solakean continent. The time has come to march on the Katzen Herzlands." #AI-Generated Placeholder, change later!
+ roq_reclamation.30.a:0 "To the Coeur de la Challemagne!" #AI-Generated Placeholder, change later!
+
+ roq_reclamation.400.t:0 "Roqualian Demand for Herzland Territory" #AI-Generated Placeholder, change later!
+ roq_reclamation.400.d:0 "Roqualia demands that we hand over all states we control in the Katzen Herzlands to them." #AI-Generated Placeholder, change later!
+ roq_reclamation.400.a:0 "We refuse their demands!" #AI-Generated Placeholder, change later!
+ roq_reclamation.400.b:0 "We yield the demanded territories." #AI-Generated Placeholder, change later!
+
+ roq_reclamation.401.t:0 "Herzland Demands Accepted" #AI-Generated Placeholder, change later!
+ roq_reclamation.401.d:0 "[FROM.GetName] has accepted our demands and handed over their Herzlands states." #AI-Generated Placeholder, change later!
+ roq_reclamation.401.a:0 "Excellent." #AI-Generated Placeholder, change later!
+
+ roq_reclamation.402.t:0 "Herzland Demands Refused" #AI-Generated Placeholder, change later!
+ roq_reclamation.402.d:0 "[FROM.GetName] has refused our demands! It is war!" #AI-Generated Placeholder, change later!
+ roq_reclamation.402.a:0 "To arms!" #AI-Generated Placeholder, change later!
+
+ # ─────────────────────────────────────────────────────────────────────────────
+ # Debug Stage Event
+ # ─────────────────────────────────────────────────────────────────────────────
+ roq_reclamation.999.t:0 "Debug: Set Reclamation Stage" #AI-Generated Placeholder, change later!
+ roq_reclamation.999.d:0 "Console Command Debug: Choose which reclamation stage to activate." #AI-Generated Placeholder, change later!
+ roq_reclamation.999.a:0 "Set to Stage 1: The Réclamation" #AI-Generated Placeholder, change later!
+ roq_reclamation.999.b:0 "Set to Stage 2: The Natural Borders" #AI-Generated Placeholder, change later!
+ roq_reclamation.999.c:0 "Set to Stage 3: La Domination" #AI-Generated Placeholder, change later!
+ roq_reclamation.999.d:0 "Set to Stage 4: Coeur de la Challemagne" #AI-Generated Placeholder, change later!
+ roq_reclamation.999.e:0 "Set to Stage 5: La Croisade Unificatrice" #AI-Generated Placeholder, change later!
+
+ # ─────────────────────────────────────────────────────────────────────────────
+ # Stage 5 Events
+ # ─────────────────────────────────────────────────────────────────────────────
+ roq_reclamation.40.t:0 "La Croisade Unificatrice" #AI-Generated Placeholder, change later!
+ roq_reclamation.40.d:0 "The Katzen Herzlands have been secured under our banner. Benjamin Delaparte looks upon the map of the world and realizes that there can be no true security or peace until all other tags submit. We declare war on the entire world!" #AI-Generated Placeholder, change later!
+ roq_reclamation.40.a:0 "Pour la Gloire de Roqualia!" #AI-Generated Placeholder, change later!
+
+ # ─────────────────────────────────────────────────────────────────────────────
+ # Warning Event
+ # ─────────────────────────────────────────────────────────────────────────────
+ roq_reclamation.50.t:0 "Roqualia Targets Us!" #AI-Generated Placeholder, change later!
+ roq_reclamation.50.d:0 "Diplomatic intelligence and troop movements indicate that the Roqualian government is planning an imminent declaration of war against our nation. We have only a short window to prepare our defenses before their forces strike." #AI-Generated Placeholder, change later!
+ roq_reclamation.50.a:0 "To arms! Man the borders!" #AI-Generated Placeholder, change later!
+
+ # ─────────────────────────────────────────────────────────────────────────────
+ # Reorganize the East Decision
+ # ─────────────────────────────────────────────────────────────────────────────
+ ROQ_reorganize_the_east:0 "Reorganize the East" #AI-Generated Placeholder, change later!
+ ROQ_reorganize_the_east_desc:0 "Now that Benjamin Delaparte has stepped down and Roqualia is once again guided by the Council of Ministers, we must take immediate steps to reorganize our eastern acquisitions, secure our natural borders, and grant autonomy to our loyal Flusiobalkan partners." #AI-Generated Placeholder, change later!
