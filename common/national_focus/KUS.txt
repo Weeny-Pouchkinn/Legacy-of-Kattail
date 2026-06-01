@@ -2630,7 +2630,6 @@
 				}
 				add_extra_state_shared_building_slots = 2
 			}
-			custom_effect_tooltip = KUS_spawn_infantry_tt
 			hidden_effect = {
 				division_template = {
 					name = "Kusnurk Militia"
@@ -2643,12 +2642,12 @@
 						infantry = { x = 1 y = 2 }
 					}
 				}
-				218 = {
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
-					create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
-				}
+			}
+			218 = {
+				create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+				create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+				create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
+				create_unit = { division = "name = \"Kusnurk Militia\" division_template = \"Kusnurk Militia\" start_experience_factor = 0.3" owner = KUS }
 			}
 		}
 	}
@@ -2912,33 +2911,6 @@
 				remove_idea = KUS_uhkus
 				add_idea = KUS_uhkus_greater
 			}
-			FSR = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_set_60
-					hidden_effect = {
-						set_state_flag = compliance_60_@ROOT
-						add_to_array = { array = ROOT.potential_cores_array }
-					}
-				}
-			}
-			DOM = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_set_60
-					hidden_effect = {
-						set_state_flag = compliance_60_@ROOT
-						add_to_array = { array = ROOT.potential_cores_array }
-					}
-				}
-			}
-			NEK = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_set_60
-					hidden_effect = {
-						set_state_flag = compliance_60_@ROOT
-						add_to_array = { array = ROOT.potential_cores_array }
-					}
-				}
-			}
 		}
 	}
 
@@ -3151,28 +3123,28 @@
 		completion_reward = {
 			FSR = {
 				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_lower_20
+					custom_effect_tooltip = state_core_threshold_set_40
 					hidden_effect = {
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
+						set_state_flag = compliance_40_@ROOT
+						add_to_array = { array = ROOT.potential_cores_array }
 					}
 				}
 			}
 			DOM = {
 				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_lower_20
+					custom_effect_tooltip = state_core_threshold_set_40
 					hidden_effect = {
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
+						set_state_flag = compliance_40_@ROOT
+						add_to_array = { array = ROOT.potential_cores_array }
 					}
 				}
 			}
 			NEK = {
 				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_lower_20
+					custom_effect_tooltip = state_core_threshold_set_40
 					hidden_effect = {
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
+						set_state_flag = compliance_40_@ROOT
+						add_to_array = { array = ROOT.potential_cores_array }
 					}
 				}
 			}
@@ -4277,7 +4249,16 @@
 		ai_will_do = { factor = 1 }
 
 		completion_reward = {
-			add_war_support = 0.05
+			every_core_state = {
+				limit = { check_variable = { species = 12 } }
+				set_temp_variable = { species_temp = 51 }
+				change_state_majority_species = yes
+				update_matching_species_modifiers = yes
+			}
+			swap_ideas = {
+				remove_idea = var_species_12
+				add_idea = var_species_51
+			}
 		}
 	}
 
