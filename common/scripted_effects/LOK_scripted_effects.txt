@@ -1982,6 +1982,9 @@ calculate_total_food_consumption = {
 	round_variable = country_food_needs_modifier
 	divide_variable = { country_food_needs_modifier = 100 }
 
+	LOK_alert_lower_1 = yes
+	LOK_alert_lower_2 = yes
+	
 	#Apply the modifiers
 	if = {
 		limit = { check_variable = { country_food_needs_met_perc < 50 } check_variable = { country_food_stockpile < 1 } }
@@ -1997,6 +2000,10 @@ calculate_total_food_consumption = {
 		if = {
 			limit = { has_dynamic_modifier = { modifier = lok_starvation_deficit_modifier } }
 			remove_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		}
+		if = { #slight alert
+			limit = { check_variable = { country_food_needs_met_perc < 75 } }
+			LOK_alert_raise_1 = yes
 		}
 	}
 	else = {

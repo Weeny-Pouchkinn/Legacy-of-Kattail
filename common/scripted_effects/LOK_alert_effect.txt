@@ -1,0 +1,59 @@
+#Executed when an alert is left-clicked. Use trigger logic to execute the required effect from the given LOK_alert_id (value in LOK_alert_type_array)
+#You also have LOK_alert_index which is the current index of LOK_alert_type_array. Use this to access data from other arrays.
+LOK_alert_icon_click_effect = {
+	if = {
+		limit = { 
+			check_variable = { LOK_alert_id = 1 }
+		}
+		var:LOK_alert_location_array^LOK_alert_index = { PREV = { goto_state = PREV } }
+	}
+	else_if = {
+		limit = {
+			check_variable = { LOK_alert_id = 2 }
+		}
+	}
+}
+#Will only raise an alert if the country is not an AI and has not hidden that alert type
+#You can remove the hidden array check if you don't want the alerts hidden
+#Mild starvation
+LOK_alert_raise_1 = {
+	if = {
+		limit = { is_ai = no NOT = { is_in_array = { LOK_alert_icon_hidden_array = 1 } } }
+		#Creates an alert of id 1 with a location in Canterlot
+		#The data within an array can be of multiple types (variables, states, countries etc)
+		add_to_array = { LOK_alert_type_array = 1 }
+		add_to_array = { LOK_alert_location_array = ROOT.id }
+		add_to_array = { LOK_alert_special_array = 0 } #You must add something to all arrays even if you don't use it to preserve index uniformity
+		sound_effect = "Martial_Law_Interface_Brutally_Oppressive_Occupation_Unique_FAS"
+	}
+}
+#Catastrophic starvation
+LOK_alert_raise_2 = {
+	if = {
+		limit = { is_ai = no NOT = { is_in_array = { LOK_alert_icon_hidden_array = 2 } } }
+		#Creates an alert of id 2 with a location in Canterlot
+		#The data within an array can be of multiple types (variables, states, countries etc)
+		add_to_array = { LOK_alert_type_array = 2 }
+		add_to_array = { LOK_alert_location_array = ROOT.id }
+		add_to_array = { LOK_alert_special_array = 42 }
+		sound_effect = "LOK_alerts_starvation_soundeffect"
+	}
+}
+
+LOK_alert_lower_1 = {
+	if = {
+		limit = { is_in_array = { LOK_alert_type_array = 1 } }
+		remove_from_array = { LOK_alert_type_array = 1 }
+		remove_from_array = { LOK_alert_location_array = ROOT.id }
+		remove_from_array = { LOK_alert_special_array = 0 } #You must add something to all arrays even if you don't use it to preserve index uniformity
+	}
+}
+
+LOK_alert_lower_2 = {
+	if = {
+		limit = { is_in_array = { LOK_alert_type_array = 2 } }
+		remove_from_array = { LOK_alert_type_array = 2 }
+		remove_from_array = { LOK_alert_location_array = ROOT.id }
+		remove_from_array = { LOK_alert_special_array = 42 } #You must add something to all arrays even if you don't use it to preserve index uniformity
+	}
+}

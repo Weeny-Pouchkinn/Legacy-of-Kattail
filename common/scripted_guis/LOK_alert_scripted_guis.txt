@@ -1,0 +1,48 @@
+scripted_gui = {
+	LOK_alert_icon_gui = {
+		window_name = "LOK_alert_icon_window"
+		context_type = player_context
+		parent_window_name = "after_intel_agency_button"
+		dirty = LOK_alert_type_array^num
+		dynamic_lists = {
+			LOK_alert_icon_window_list = {
+				array = LOK_alert_type_array
+				change_scope = no
+				entry_container = LOK_alert_icon_entry
+				index = LOK_alert_index
+				value = LOK_alert_id
+			}
+		}
+		properties = {
+			LOK_alert_icon = { frame = LOK_alert_type_array^LOK_alert_index } #You can use a forth array if you want the frame of the alert to be discoupled from id
+		}
+		effects = {
+			LOK_alert_icon_click = { LOK_alert_icon_click_effect = yes } #Use this if you want clicking on the alert to have an effect
+			LOK_alert_icon_right_click = { #Dismisses the alert by removing its array entry from the list
+				hidden_effect = {
+					remove_from_array = { array = LOK_alert_type_array index = LOK_alert_index }
+					remove_from_array = { array = LOK_alert_location_array index = LOK_alert_index }
+					remove_from_array = { array = LOK_alert_special_array index = LOK_alert_index }
+				}
+			}
+			LOK_alert_icon_shift_right_click = { #Marks the alert type as hidden and removes all alerts of that type currently active
+				add_to_array = { LOK_alert_icon_hidden_array = LOK_alert_id }
+				set_temp_variable = { LOK_alert_index_to_remove = LOK_alert_type_array^num }
+				while_loop_effect = {
+					limit = { check_variable = { LOK_alert_index_to_remove > 0 } }
+					subtract_from_temp_variable = { LOK_alert_index_to_remove = 1 }
+					if = {
+						limit = { check_variable = { LOK_alert_type_array^LOK_alert_index_to_remove = LOK_alert_id } }
+						remove_from_array = { array = LOK_alert_type_array index = LOK_alert_index_to_remove }
+						remove_from_array = { array = LOK_alert_location_array index = LOK_alert_index_to_remove }
+						remove_from_array = { array = LOK_alert_special_array index = LOK_alert_index_to_remove }
+					}
+				}
+			}
+		}
+		triggers = {
+			LOK_alert_icon_glow_red_visible = { LOK_alert_icon_red = yes }
+			LOK_alert_icon_glow_yellow_visible = { LOK_alert_icon_red = no }
+		}
+	}
+}
