@@ -17,3 +17,35 @@ ROQ_reclamation_cleanup = {
 	clear_array = global.ROQ_reclamation_targets
 	clear_array = global.ROQ_reclamation_ssu_supporters
 }
+
+LOK_flag_reclamation_demand = {
+	if = {
+		limit = {
+			NOT = { tag = FSR }
+			NOT = { tag = DOM }
+			NOT = { tag = ROQ }
+			exists = yes
+		}
+		set_country_flag = roq_reclamation_demanded
+	}
+}
+
+ROQ_reclamation_build_stage_2_targets = {
+	ROQ = {
+		clear_array = roqualia_stage2_targets
+		for_each_scope_loop = {
+			array = roqualia_natural_border_states
+			# The scope inside for_each_scope_loop is the state itself.
+			owner = {
+				if = {
+					limit = {
+						NOT = { tag = ROQ }
+						exists = yes
+						NOT = { is_in_array = { array = ROQ.roqualia_stage2_targets value = THIS } }
+					}
+					add_to_array = { ROQ.roqualia_stage2_targets = THIS }
+				}
+			}
+		}
+	}
+}

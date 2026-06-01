@@ -44,3 +44,23 @@ defined_text = {
 		localization_key = ROQ_reclamation_what_generic_can_do
 	}
 }
+
+# Returns the current description of the Reclamation depending on the stage
+defined_text = {
+	name = GetROQReclamationStageDesc
+	text = {
+		trigger = {
+			ROQ = { check_variable = { reclamation_stage = 2 } }
+		}
+		localization_key = ROQ_reclamation_stage_2_desc
+	}
+	text = {
+		trigger = {
+			ROQ = { check_variable = { reclamation_stage = 1 } }
+		}
+		localization_key = ROQ_reclamation_stage_1_desc
+	}
+	text = {
+		localization_key = ROQ_reclamation_stage_inactive_desc
+	}
+}

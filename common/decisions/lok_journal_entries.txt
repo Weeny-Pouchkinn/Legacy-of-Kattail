@@ -3014,14 +3014,44 @@ lok_journal_entries_cat = {
 		}
 
 		remove_effect = {
+			set_global_flag = ROQ_reclamation_active
+
+			# 1. If FSR and/or DOM exist, declare war and set escalation variable to 1
+			set_temp_variable = { has_launched_war = 0 }
 			if = {
-				limit = { country_exists = DOM NOT = { is_in_faction_with = DOM } }
-				declare_war_on = { target = DOM type = annex_everything }
-			}
-			if = {
-				limit = { country_exists = FSR NOT = { is_in_faction_with = FSR } }
+				limit = { country_exists = FSR }
 				declare_war_on = { target = FSR type = annex_everything }
+				set_temp_variable = { has_launched_war = 1 }
 			}
+			if = {
+				limit = { country_exists = DOM }
+				declare_war_on = { target = DOM type = annex_everything }
+				set_temp_variable = { has_launched_war = 1 }
+			}
+			if = {
+				limit = { check_variable = { has_launched_war = 1 } }
+				set_variable = { reclamation_stage = 1 }
+			}
+
+			# 2. Check every state in target array, flag non-ROQ/FSR/DOM owners, send demands
+			every_country = {
+				clr_country_flag = roq_reclamation_demanded
+			}
+			
+			236 = { owner = { LOK_flag_reclamation_demand = yes } }
+			254 = { owner = { LOK_flag_reclamation_demand = yes } }
+			255 = { owner = { LOK_flag_reclamation_demand = yes } }
+			730 = { owner = { LOK_flag_reclamation_demand = yes } }
+			242 = { owner = { LOK_flag_reclamation_demand = yes } }
+			244 = { owner = { LOK_flag_reclamation_demand = yes } }
+
+			every_country = {
+				limit = {
+					has_country_flag = roq_reclamation_demanded
+				}
+				country_event = { id = roq_reclamation.1 days = 1 }
+			}
+
 			add_popularity = {
 				ideology = fascism
 				popularity = 0.1
@@ -3032,7 +3062,6 @@ lok_journal_entries_cat = {
 			}
 			hidden_effect = {
 				news_event = { id = LOK_news.2 days = 2 }
-				country_event = { id = ROQ_reclamation.1 days = 1 }
 			}
 		}
 
@@ -3043,288 +3072,6 @@ lok_journal_entries_cat = {
 		}
 	}
 
-	ROQ_reclamation_peace = {
-		icon = GFX_decision_generic_tank
-		allowed = {
-			tag = ROQ
-		}
-
-		visible = {
-			OR = {
-				has_war_with = DOM
-				has_war_with = FSR
-			}
-		}
-
-		available = {
-			272 = { var:controller = { has_war_with = ROQ } }
-			301 = { var:controller = { has_war_with = ROQ } }
-			299 = { var:controller = { has_war_with = ROQ } }
-			744 = { var:controller = { has_war_with = ROQ } }
-			260 = { var:controller = { has_war_with = ROQ } }
-			245 = { var:controller = { has_war_with = ROQ } }
-			238 = { var:controller = { has_war_with = ROQ } }
-		}
-
-		fire_only_once = yes
-
-		complete_effect = {
-			if = {
-				limit = { has_war_with = SLR SLR = { is_puppet = no } }
-				325 = { transfer_state_to = SLR }
-			}
-			else_if = {
-				limit = { has_war_with = MCF }
-				325 = { transfer_state_to = MCF }
-			}
-			hidden_effect = {
-				DOM = { white_peace = ROQ }
-				FSR = { white_peace = ROQ }
-			}
-			every_country = {
-				limit = {
-					is_in_faction_with = event_target:east_solakea_katzen_uniter
-					has_war_with = ROQ
-				}
-				white_peace = ROQ
-			}
-			272 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
-			301 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
-			299 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
-			744 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
-			260 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
-			245 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
-			238 = { transfer_state_to = event_target:east_solakea_katzen_uniter }
-			256 = { set_demilitarized_zone = yes }
-			740 = { set_demilitarized_zone = yes }
-			if = {
-				limit = { SLR = { controls_state = 325 } }
-				722 = { set_demilitarized_zone = yes }
-			}
-			else_if = {
-				limit = { 313 = { var:controller = { is_in_faction_with = event_target:east_solakea_katzen_uniter } } }
-				325 = { set_demilitarized_zone = yes }
-			}
-			add_war_support = -0.40
-			add_stability = -0.40
-			news_event = { id = ROQ_event.4 }
-			hidden_effect = {
-				event_target:east_solakea_katzen_uniter = {
-					set_country_flag = won_against_reclamation
-				}
-				if = {
-					limit = { country_exists = DOM DOM = { is_in_faction = yes } }
-					DOM = { country_event = { id = ROQ_reclamation.40 days = 14 } }
-				}
-				if = {
-					limit = { country_exists = FSR FSR = { is_in_faction = yes } }
-					FSR = { country_event = { id = ROQ_reclamation.40 days = 14 } }
-				}
-				if = {
-					limit = { has_global_flag = ROQ_reclamation_active }
-					ROQ_reclamation_cleanup = yes
-				}
-			}
-		}
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
-
-	ROQ_delaparte_coup = {
-		icon = GFX_decision_generic_army_support
-		allowed = {
-			tag = ROQ
-		}
-
-		available = {
-			OR = {
-				has_war_with = FSR
-				has_war_with = DOM
-			}
-			OR = {
-				FSR = { has_capitulated = yes }
-				DOM = { has_capitulated = yes }
-			}
-			has_war_with = MCF
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			set_country_flag = ROQ_delaparte_coup_done
-			add_popularity = {
-				ideology = neutrality
-				popularity = 0.10
-			}
-			set_politics = {
-				ruling_party = neutrality
-			}
-			news_event = { id = LOK_news.14 days = 1 }
-		}
-
-		days_remove = 15
-
-		ai_will_do = {
-			base = 1000
-		}
-	}
-
-	ROQ_natural_borders_of_roqualia = {
-		icon = GFX_decision_border_war
-		allowed = {
-			tag = ROQ
-		}
-
-		visible = {
-			hidden_trigger = {
-				has_country_flag = ROQ_delaparte_coup_done
-			}
-			has_neutrality_gov_group = yes
-		}
-
-		fire_only_once = yes
-
-		complete_effect = {
-			KHA = { country_event = { id = LOK_generic.1 } }
-			KUS = { country_event = { id = LOK_generic.1 } }
-			MCF = { country_event = { id = LOK_generic.1 } }
-			NEK = { country_event = { id = LOK_generic.1 } }
-			SLR = { country_event = { id = LOK_generic.1 } }
-		}
-
-		remove_effect = {
-			if = {
-				limit = { country_exists = MCF NOT = { is_in_faction_with = MCF } }
-				declare_war_on = { target = MCF type = annex_everything }
-			}
-			if = {
-				limit = { country_exists = KUS NOT = { is_in_faction_with = KUS } }
-				declare_war_on = { target = KUS type = annex_everything }
-			}
-			if = {
-				limit = { country_exists = SLR NOT = { is_in_faction_with = SLR } }
-				declare_war_on = { target = SLR type = annex_everything }
-			}
-			if = {
-				limit = { country_exists = NEK NOT = { is_in_faction_with = NEK } }
-				declare_war_on = { target = NEK type = annex_everything }
-			}
-			if = {
-				limit = { country_exists = KHA NOT = { is_in_faction_with = KHA } }
-				declare_war_on = { target = KHA type = annex_everything }
-			}
-			custom_effect_tooltip = ROQ_natural_borders_of_roqualia_effect
-			hidden_effect = {
-				news_event = { id = LOK_news.3 days = 2 }
-				MCF = {
-					every_core_state = { add_claim_by = ROQ }
-				}
-				DOM = {
-					every_core_state = { add_claim_by = ROQ }
-				}
-				FSR = {
-					every_core_state = { add_claim_by = ROQ }
-				}
-				KUS = {
-					every_core_state = { add_claim_by = ROQ }
-				}
-				NEK = {
-					every_core_state = { add_claim_by = ROQ }
-				}
-				SLR = {
-					every_core_state = { add_claim_by = ROQ }
-				}
-				818 = {
-					add_claim_by = ROQ
-				}
-				228 = {
-					add_claim_by = ROQ
-				}
-				264 = {
-					add_claim_by = ROQ
-				}
-				324 = {
-					add_claim_by = ROQ
-				}
-			}
-		}
-
-		days_remove = 15
-
-		ai_will_do = {
-			base = 1000
-			modifier = {
-				factor = 0
-				date < "105.1.1"
-			}
-		}
-	}
-
-	ROQ_coeur_de_la_challemagne = {
-		icon = GFX_decision_generic_ignite_civil_war
-		allowed = {
-			tag = ROQ
-		}
-
-		visible = {
-			hidden_trigger = { has_country_flag = ROQ_proclaim_solakean_federation_done }
-			has_fascist_gov_group = yes
-		}
-
-		fire_only_once = yes
-
-		remove_effect = {
-			custom_effect_tooltip = ROQ_coeur_de_la_challemagne_effect
-			hidden_effect = {
-				every_country = {
-					limit = { is_herzlands_warlord = yes }
-					ROQ = {
-						declare_war_on = {
-							target = PREV
-							type = annex_everything
-						}
-					}
-				}
-			}
-			PRL = {
-				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			}
-			CAT = {
-				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			}
-			HIM = {
-				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			}
-			MEO = {
-				every_core_state = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			}
-			174 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			153 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			136 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			119 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			527 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			528 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			525 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			524 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			526 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			142 = { add_claim_by = ROQ set_state_flag = compliance_100_@ROOT add_to_array = { array = ROQ.potential_cores_array } custom_effect_tooltip = state_core_threshold_set_100 }
-			hidden_effect = {
-				news_event = { id = LOK_news.4 }
-			}
-		}
-
-		days_remove = 15
-
-		ai_will_do = {
-			base = 1000
-			modifier = {
-				factor = 0
-				date < "106.1.1"
-			}
-		}
-	}
 
 	ROQ_departements_decision = {
 		icon = GFX_decision_border_war

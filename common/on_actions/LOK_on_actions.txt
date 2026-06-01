@@ -81,6 +81,63 @@ on_actions = {
 				set_variable = { pol_party_array^6 = 1 }
 				set_variable = { pol_party_array^7 = 1 }
 				set_variable = { pol_party_array^8 = 1 }
+				# Initialize target states array for reclamation
+				add_to_array = { roq_reclamation_targets_array = 236 }
+				add_to_array = { roq_reclamation_targets_array = 254 }
+				add_to_array = { roq_reclamation_targets_array = 255 }
+				add_to_array = { roq_reclamation_targets_array = 730 }
+				add_to_array = { roq_reclamation_targets_array = 242 }
+				add_to_array = { roq_reclamation_targets_array = 244 }
+				# Initialize Stage 2 natural border states array
+				add_to_array = { roqualia_natural_border_states = 1402 }
+				add_to_array = { roqualia_natural_border_states = 1403 }
+				add_to_array = { roqualia_natural_border_states = 218 }
+				add_to_array = { roqualia_natural_border_states = 225 }
+				add_to_array = { roqualia_natural_border_states = 229 }
+				add_to_array = { roqualia_natural_border_states = 231 }
+				add_to_array = { roqualia_natural_border_states = 715 }
+				add_to_array = { roqualia_natural_border_states = 716 }
+				add_to_array = { roqualia_natural_border_states = 717 }
+				add_to_array = { roqualia_natural_border_states = 233 }
+				add_to_array = { roqualia_natural_border_states = 239 }
+				add_to_array = { roqualia_natural_border_states = 240 }
+				add_to_array = { roqualia_natural_border_states = 241 }
+				add_to_array = { roqualia_natural_border_states = 243 }
+				add_to_array = { roqualia_natural_border_states = 248 }
+				add_to_array = { roqualia_natural_border_states = 270 }
+				add_to_array = { roqualia_natural_border_states = 275 }
+				add_to_array = { roqualia_natural_border_states = 286 }
+				add_to_array = { roqualia_natural_border_states = 287 }
+				add_to_array = { roqualia_natural_border_states = 745 }
+				add_to_array = { roqualia_natural_border_states = 746 }
+				add_to_array = { roqualia_natural_border_states = 265 }
+				add_to_array = { roqualia_natural_border_states = 269 }
+				add_to_array = { roqualia_natural_border_states = 294 }
+				add_to_array = { roqualia_natural_border_states = 313 }
+				add_to_array = { roqualia_natural_border_states = 725 }
+				add_to_array = { roqualia_natural_border_states = 726 }
+				add_to_array = { roqualia_natural_border_states = 727 }
+				add_to_array = { roqualia_natural_border_states = 728 }
+				add_to_array = { roqualia_natural_border_states = 729 }
+				add_to_array = { roqualia_natural_border_states = 1013 }
+				add_to_array = { roqualia_natural_border_states = 271 }
+				add_to_array = { roqualia_natural_border_states = 273 }
+				add_to_array = { roqualia_natural_border_states = 327 }
+				add_to_array = { roqualia_natural_border_states = 328 }
+				add_to_array = { roqualia_natural_border_states = 356 }
+				add_to_array = { roqualia_natural_border_states = 819 }
+				add_to_array = { roqualia_natural_border_states = 820 }
+				add_to_array = { roqualia_natural_border_states = 821 }
+				add_to_array = { roqualia_natural_border_states = 236 }
+				add_to_array = { roqualia_natural_border_states = 254 }
+				add_to_array = { roqualia_natural_border_states = 255 }
+				add_to_array = { roqualia_natural_border_states = 730 }
+				add_to_array = { roqualia_natural_border_states = 242 }
+				add_to_array = { roqualia_natural_border_states = 244 }
+				add_to_array = { roqualia_natural_border_states = 818 }
+				add_to_array = { roqualia_natural_border_states = 264 }
+				add_to_array = { roqualia_natural_border_states = 324 }
+				add_to_array = { roqualia_natural_border_states = 228 }
 			}
 
 			TAI = {
@@ -4050,6 +4107,19 @@ on_actions = {
 		effect = {
 			ROOT = { save_event_target_as = new_controller }
 			FROM = { save_event_target_as = old_controller }
+			if = {
+				limit = {
+					ROOT = { tag = ROQ }
+					ROQ = { NOT = { has_country_flag = reclamation_first_check_done } check_variable = { reclamation_stage = 1 } }
+					236 = { is_controlled_by = ROQ }
+					254 = { is_controlled_by = ROQ }
+					255 = { is_controlled_by = ROQ }
+					730 = { is_controlled_by = ROQ }
+					242 = { is_controlled_by = ROQ }
+					244 = { is_controlled_by = ROQ }
+				}
+				ROQ = { set_country_flag = reclamation_first_check_done country_event = { id = roq_reclamation.10 days = 1 } }
+			}
 			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
