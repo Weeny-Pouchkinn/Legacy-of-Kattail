@@ -403,6 +403,7 @@ country_event = {
 
 	option = {
 		name = roq_reclamation.112.a
+		news_event = { id = LOK_news.27 days = 1 }
 	}
 }
 
@@ -429,6 +430,11 @@ country_event = {
 		custom_effect_tooltip = roq_reclamation_escalate_ws_50_tt
 		ROQ_reclamation_build_stage_3_targets = yes
 		set_variable = { reclamation_stage = 3 }
+		set_politics = {
+			ruling_party = fascism
+			elections_allowed = no
+		}
+		promote_character = ROQ_Delaparte
 	}
 
 	# Option B: WS < 50% -> Conclude Reclamation
@@ -438,6 +444,14 @@ country_event = {
 			NOT = { has_war_support > 0.50 }
 		}
 		custom_effect_tooltip = roq_reclamation_end_reclamation_tt
+		set_country_flag = delaparte_stepped_down
+		retire_character = ROQ_Delaparte
+		recruit_character = ROQ_Conseil_des_Ministres
+		set_politics = {
+			ruling_party = authoritarian_democratic
+			elections_allowed = no
+		}
+		news_event = { id = LOK_news.25 days = 1 }
 		ROQ_reclamation_cleanup = yes
 	}
 }
@@ -802,6 +816,11 @@ country_event = {
 			ROQ = {
 				set_variable = { reclamation_stage = 3 }
 				ROQ_reclamation_build_stage_3_targets = yes
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+				promote_character = ROQ_Delaparte
 			}
 		}
 	}
@@ -814,6 +833,11 @@ country_event = {
 			ROQ = {
 				set_variable = { reclamation_stage = 4 }
 				ROQ_reclamation_build_stage_4_targets = yes
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+				promote_character = ROQ_Delaparte
 			}
 		}
 	}
@@ -825,6 +849,11 @@ country_event = {
 			set_global_flag = ROQ_reclamation_active
 			ROQ = {
 				set_variable = { reclamation_stage = 5 }
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+				promote_character = ROQ_Delaparte
 				every_country = {
 					limit = {
 						exists = yes
