@@ -16,6 +16,12 @@ ROQ_reclamation_cleanup = {
 	}
 	clear_array = global.ROQ_reclamation_targets
 	clear_array = global.ROQ_reclamation_ssu_supporters
+	ROQ = {
+		clear_array = roq_stage2_targets_array
+		clear_array = roq_stage3_targets_array
+		clear_array = roqualia_stage4_targets
+		set_variable = { reclamation_stage = 0 }
+	}
 }
 
 LOK_flag_reclamation_demand = {
@@ -32,20 +38,54 @@ LOK_flag_reclamation_demand = {
 
 ROQ_reclamation_build_stage_2_targets = {
 	ROQ = {
-		clear_array = roqualia_stage2_targets
+		clear_array = roq_stage2_targets_array
 		for_each_scope_loop = {
-			array = roqualia_natural_border_states
+			array = global.roq_natural_border_states_array
 			# The scope inside for_each_scope_loop is the state itself.
 			owner = {
 				if = {
 					limit = {
 						NOT = { tag = ROQ }
 						exists = yes
-						NOT = { is_in_array = { array = ROQ.roqualia_stage2_targets value = THIS } }
+						NOT = { is_in_array = { array = ROQ.roq_stage2_targets_array value = THIS } }
 					}
-					add_to_array = { ROQ.roqualia_stage2_targets = THIS }
+					add_to_array = { ROQ.roq_stage2_targets_array = THIS }
 				}
 			}
+		}
+	}
+}
+
+ROQ_reclamation_build_stage_3_targets = {
+	ROQ = {
+		clear_array = roq_stage3_targets_array
+		for_each_scope_loop = {
+			array = global.roq_solakean_states_array
+			# The scope inside for_each_scope_loop is the state itself.
+			owner = {
+				if = {
+					limit = {
+						NOT = { tag = ROQ }
+						exists = yes
+						NOT = { is_in_array = { array = ROQ.roq_stage3_targets_array value = THIS } }
+					}
+					add_to_array = { ROQ.roq_stage3_targets_array = THIS }
+				}
+			}
+		}
+	}
+}
+
+ROQ_reclamation_build_stage_4_targets = {
+	ROQ = {
+		clear_array = roqualia_stage4_targets
+		every_country = {
+			limit = {
+				is_herzlands_warlord = yes
+				NOT = { tag = ROQ }
+				exists = yes
+			}
+			add_to_array = { ROQ.roqualia_stage4_targets = THIS }
 		}
 	}
 }

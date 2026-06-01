@@ -210,6 +210,10 @@ country_event = {
 		custom_effect_tooltip = roq_reclamation_escalate_ws_high_tt
 		ROQ_reclamation_build_stage_2_targets = yes
 		set_variable = { reclamation_stage = 2 }
+		every_state = {
+			limit = { is_in_array = { global.roq_natural_border_states_array = THIS } }
+			add_claim_by = ROQ
+		}
 		add_popularity = {
 			ideology = neutrality
 			popularity = 0.50
@@ -269,7 +273,7 @@ country_event = {
 	# Option A: Agree to white peace (AI base = 100)
 	option = {
 		name = roq_reclamation.100.a
-		ai_will_do = {
+		ai_chance = {
 			base = 100
 		}
 		custom_effect_tooltip = roq_reclamation_accept_peace_tt
@@ -311,7 +315,7 @@ country_event = {
 	# Option B: Refuse peace (AI base = 0)
 	option = {
 		name = roq_reclamation.100.b
-		ai_will_do = {
+		ai_chance = {
 			base = 0
 		}
 		custom_effect_tooltip = roq_reclamation_refuse_peace_tt
@@ -338,6 +342,10 @@ country_event = {
 				# Some wars remain -> Refused! Escalate to Stage 2
 				ROQ_reclamation_build_stage_2_targets = yes
 				set_variable = { reclamation_stage = 2 }
+				every_state = {
+					limit = { is_in_array = { global.roq_natural_border_states_array = THIS } }
+					add_claim_by = ROQ
+				}
 				add_war_support = 0.20
 				add_timed_idea = { idea = ROQ_war_exhaustion days = 180 }
 				add_popularity = {
@@ -395,5 +403,461 @@ country_event = {
 
 	option = {
 		name = roq_reclamation.112.a
+	}
+}
+
+# Event 20: Stage 2 progress check (fires for ROQ)
+country_event = {
+	id = roq_reclamation.20
+	title = roq_reclamation.20.t
+	desc = roq_reclamation.20.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: WS > 50% -> Escalate to Stage 3 (La Domination)
+	option = {
+		name = roq_reclamation.20.a
+		trigger = {
+			has_war_support > 0.50
+		}
+		custom_effect_tooltip = roq_reclamation_escalate_ws_50_tt
+		ROQ_reclamation_build_stage_3_targets = yes
+		set_variable = { reclamation_stage = 3 }
+	}
+
+	# Option B: WS < 50% -> Conclude Reclamation
+	option = {
+		name = roq_reclamation.20.b
+		trigger = {
+			NOT = { has_war_support > 0.50 }
+		}
+		custom_effect_tooltip = roq_reclamation_end_reclamation_tt
+		ROQ_reclamation_cleanup = yes
+	}
+}
+
+# Event 200: Stage 2 land demand (fires for target)
+country_event = {
+	id = roq_reclamation.200
+	title = roq_reclamation.200.t
+	desc = roq_reclamation.200.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Refuse demands -> War!
+	option = {
+		name = roq_reclamation.200.a
+		ai_chance = {
+			base = 100
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.202 days = 1 }
+			declare_war_on = { target = ROOT type = annex_everything }
+		}
+	}
+
+	# Option B: Accept demands -> Cede states!
+	option = {
+		name = roq_reclamation.200.b
+		ai_chance = {
+			base = 0
+		}
+		every_owned_state = {
+			limit = {
+				is_in_array = { array = global.roq_natural_border_states_array value = THIS }
+			}
+			transfer_state_to = ROQ
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.201 days = 1 }
+		}
+	}
+}
+
+# Event 201: Stage 2 demands accepted (fires for ROQ)
+country_event = {
+	id = roq_reclamation.201
+	title = roq_reclamation.201.t
+	desc = roq_reclamation.201.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.201.a
+	}
+}
+
+# Event 202: Stage 2 demands refused (fires for ROQ)
+country_event = {
+	id = roq_reclamation.202
+	title = roq_reclamation.202.t
+	desc = roq_reclamation.202.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.202.a
+	}
+}
+
+# Event 300: Stage 3 land demand (fires for target)
+country_event = {
+	id = roq_reclamation.300
+	title = roq_reclamation.300.t
+	desc = roq_reclamation.300.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Refuse demands -> War!
+	option = {
+		name = roq_reclamation.300.a
+		ai_chance = {
+			base = 1
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.302 days = 1 }
+			declare_war_on = { target = ROOT type = annex_everything }
+		}
+	}
+
+	# Option B: Accept demands -> Cede states!
+	option = {
+		name = roq_reclamation.300.b
+		ai_chance = {
+			base = 1
+		}
+		every_owned_state = {
+			limit = {
+				is_in_array = { array = global.roq_solakean_states_array value = THIS }
+			}
+			transfer_state_to = ROQ
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.301 days = 1 }
+		}
+	}
+}
+
+# Event 301: Stage 3 demands accepted (fires for ROQ)
+country_event = {
+	id = roq_reclamation.301
+	title = roq_reclamation.301.t
+	desc = roq_reclamation.301.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.301.a
+	}
+}
+
+# Event 302: Stage 3 demands refused (fires for ROQ)
+country_event = {
+	id = roq_reclamation.302
+	title = roq_reclamation.302.t
+	desc = roq_reclamation.302.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.302.a
+	}
+}
+
+# Event 30: Stage 3 completion check (fires for ROQ)
+country_event = {
+	id = roq_reclamation.30
+	title = roq_reclamation.30.t
+	desc = roq_reclamation.30.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.30.a
+		custom_effect_tooltip = roq_reclamation_escalate_stage4_tt
+		hidden_effect = {
+			ROQ_reclamation_build_stage_4_targets = yes
+			set_variable = { reclamation_stage = 4 }
+		}
+	}
+}
+
+# Event 400: Stage 4 land demand (fires for target)
+country_event = {
+	id = roq_reclamation.400
+	title = roq_reclamation.400.t
+	desc = roq_reclamation.400.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Refuse demands -> War!
+	option = {
+		name = roq_reclamation.400.a
+		ai_chance = {
+			base = 100
+		}
+		custom_effect_tooltip = roq_reclamation_refuse_demands_tt
+		hidden_effect = {
+			ROQ = {
+				country_event = { id = roq_reclamation.402 days = 1 }
+				declare_war_on = { target = ROOT type = annex_everything }
+			}
+		}
+	}
+
+	# Option B: Accept demands -> Cede states!
+	option = {
+		name = roq_reclamation.400.b
+		ai_chance = {
+			base = 0
+		}
+		every_owned_state = {
+			limit = {
+				is_in_array = { array = global.herzlands_states_array value = THIS }
+			}
+			transfer_state_to = ROQ
+		}
+		hidden_effect = {
+			ROQ = {
+				country_event = { id = roq_reclamation.401 days = 1 }
+			}
+		}
+	}
+}
+
+# Event 401: Stage 4 demands accepted (fires for ROQ)
+country_event = {
+	id = roq_reclamation.401
+	title = roq_reclamation.401.t
+	desc = roq_reclamation.401.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.401.a
+	}
+}
+
+# Event 402: Stage 4 demands refused (fires for ROQ)
+country_event = {
+	id = roq_reclamation.402
+	title = roq_reclamation.402.t
+	desc = roq_reclamation.402.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.402.a
+	}
+}
+
+# Event 40: Stage 4 completion check (fires for ROQ)
+country_event = {
+	id = roq_reclamation.40
+	title = roq_reclamation.40.t
+	desc = roq_reclamation.40.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.40.a
+		custom_effect_tooltip = roq_reclamation_escalate_stage5_tt
+		hidden_effect = {
+			set_variable = { reclamation_stage = 5 }
+			every_country = {
+				limit = {
+					exists = yes
+					NOT = { tag = ROQ }
+					is_non_playable_country = no
+					NOT = { is_subject_of = ROQ }
+					NOT = { is_in_faction_with = ROQ }
+					NOT = { has_war_with = ROQ }
+				}
+				ROQ = {
+					declare_war_on = { target = PREV type = annex_everything }
+				}
+			}
+		}
+	}
+}
+
+# Event 999: Debug event to set Reclamation Stage (fires for ROQ)
+country_event = {
+	id = roq_reclamation.999
+	title = roq_reclamation.999.t
+	desc = roq_reclamation.999.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Set to Stage 1
+	option = {
+		name = roq_reclamation.999.a
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 1 }
+			}
+		}
+	}
+
+	# Option B: Set to Stage 2
+	option = {
+		name = roq_reclamation.999.b
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 2 }
+				every_state = {
+					limit = { is_in_array = { global.roq_natural_border_states_array = THIS } }
+					add_claim_by = ROQ
+				}
+				ROQ_reclamation_build_stage_2_targets = yes
+			}
+		}
+	}
+
+	# Option C: Set to Stage 3
+	option = {
+		name = roq_reclamation.999.c
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 3 }
+				ROQ_reclamation_build_stage_3_targets = yes
+			}
+		}
+	}
+
+	# Option D: Set to Stage 4
+	option = {
+		name = roq_reclamation.999.d
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 4 }
+				ROQ_reclamation_build_stage_4_targets = yes
+			}
+		}
+	}
+
+	# Option E: Set to Stage 5
+	option = {
+		name = roq_reclamation.999.e
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 5 }
+				every_country = {
+					limit = {
+						exists = yes
+						NOT = { tag = ROQ }
+						is_non_playable_country = no
+						NOT = { is_subject_of = ROQ }
+						NOT = { is_in_faction_with = ROQ }
+						NOT = { has_war_with = ROQ }
+					}
+					ROQ = {
+						declare_war_on = { target = PREV type = annex_everything }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Event 50: Roqualia Targets Us! (warning event sent to target)
+country_event = {
+	id = roq_reclamation.50
+	title = roq_reclamation.50.t
+	desc = roq_reclamation.50.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.50.a
 	}
 }
