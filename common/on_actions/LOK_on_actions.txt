@@ -81,7 +81,85 @@ on_actions = {
 				set_variable = { pol_party_array^6 = 1 }
 				set_variable = { pol_party_array^7 = 1 }
 				set_variable = { pol_party_array^8 = 1 }
+				# Initialize Stage 3 Solakean states array dynamically
 			}
+
+			# Initialize target states array for reclamation in global scope
+			236 = { add_to_array = { global.roq_provinces_perdues_states_array = THIS } }
+			254 = { add_to_array = { global.roq_provinces_perdues_states_array = THIS } }
+			255 = { add_to_array = { global.roq_provinces_perdues_states_array = THIS } }
+			730 = { add_to_array = { global.roq_provinces_perdues_states_array = THIS } }
+			242 = { add_to_array = { global.roq_provinces_perdues_states_array = THIS } }
+			244 = { add_to_array = { global.roq_provinces_perdues_states_array = THIS } }
+
+			# Initialize Stage 2 natural border states array in global scope
+			1402 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			1403 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			218 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			225 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			229 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			231 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			715 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			716 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			717 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			233 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			239 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			240 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			241 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			243 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			248 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			270 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			275 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			286 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			287 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			745 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			746 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			265 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			269 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			294 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			313 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			725 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			726 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			727 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			728 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			729 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			1013 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			271 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			273 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			327 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			328 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			356 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			819 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			820 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			821 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			236 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			254 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			255 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			730 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			242 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			244 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			818 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			264 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			324 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+			228 = { add_to_array = { global.roq_natural_border_states_array = THIS } }
+
+			every_country = {
+				limit = {
+					NOT = { tag = ZZZ }
+					NOT = { tag = ROQ }
+					NOT = { tag = LMB }
+					NOT = { tag = RQA }
+					NOT = { tag = PER }
+					NOT = { tag = WWW }
+				}
+				every_owned_state = {
+					limit = {
+						is_on_continent = solakea
+					}
+					add_to_array = { global.roq_solakean_states_array = THIS }
+				}
+			}
+
 
 			TAI = {
 				add_to_variable = { lok_pol_party_indicator = 1 }
@@ -3754,6 +3832,79 @@ on_actions = {
 					country_event = { id = ROQ_event.5 }
 				}
 			}
+			# Stage 2 weekly completion check
+			if = {
+				limit = {
+					check_variable = { reclamation_stage = 2 }
+					has_war = no
+				}
+				set_temp_variable = { all_border_states_controlled = 1 }
+				for_each_scope_loop = {
+					array = global.roq_natural_border_states_array
+					# Inside loop, scope is state
+					if = {
+						limit = {
+							NOT = { is_controlled_by_roq_for_reclamation = yes }
+						}
+						# At least one state is not controlled by ROQ
+						ROQ = { set_temp_variable = { all_border_states_controlled = 0 } }
+					}
+				}
+				if = {
+					limit = {
+						check_variable = { all_border_states_controlled = 1 }
+					}
+					country_event = { id = roq_reclamation.20 }
+				}
+			}
+			# Stage 3 weekly completion check (no peace/war support requirement)
+			if = {
+				limit = {
+					check_variable = { reclamation_stage = 3 }
+				}
+				set_temp_variable = { all_solakean_states_controlled = 1 }
+				for_each_scope_loop = {
+					array = global.roq_solakean_states_array
+					# Inside loop, scope is state
+					if = {
+						limit = {
+							NOT = { is_controlled_by_roq_for_reclamation = yes }
+						}
+						# At least one state is not controlled by ROQ
+						ROQ = { set_temp_variable = { all_solakean_states_controlled = 0 } }
+					}
+				}
+				if = {
+					limit = {
+						check_variable = { all_solakean_states_controlled = 1 }
+					}
+					country_event = { id = roq_reclamation.30 }
+				}
+			}
+			# Stage 4 weekly completion check
+			if = {
+				limit = {
+					check_variable = { reclamation_stage = 4 }
+				}
+				set_temp_variable = { all_herzlands_states_controlled = 1 }
+				for_each_scope_loop = {
+					array = global.herzlands_states_array
+					# Inside loop, scope is state
+					if = {
+						limit = {
+							NOT = { is_controlled_by_roq_for_reclamation = yes }
+						}
+						# At least one state is not controlled by ROQ
+						ROQ = { set_temp_variable = { all_herzlands_states_controlled = 0 } }
+					}
+				}
+				if = {
+					limit = {
+						check_variable = { all_herzlands_states_controlled = 1 }
+					}
+					country_event = { id = roq_reclamation.40 }
+				}
+			}
 		}
 	}
 
@@ -4046,10 +4197,49 @@ on_actions = {
 		}
 	}
 
+	on_war_relation_established = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = { tag = ROQ check_variable = { reclamation_stage = 1 } }
+				}
+				ROOT = { set_country_flag = roqualia_went_to_war }
+			}
+			if = {
+				limit = {
+					FROM = { tag = ROQ check_variable = { reclamation_stage = 1 } }
+				}
+				FROM = { set_country_flag = roqualia_went_to_war }
+			}
+		}
+	}
+
 	on_state_control_changed = {
 		effect = {
 			ROOT = { save_event_target_as = new_controller }
 			FROM = { save_event_target_as = old_controller }
+			if = {
+				limit = {
+					ROOT = { tag = ROQ }
+					ROQ = { NOT = { has_country_flag = reclamation_first_check_done } check_variable = { reclamation_stage = 1 } }
+				}
+				ROQ = {
+					set_variable = { roq_controls_all_stage1_states = 1 }
+					for_each_scope_loop = {
+						array = global.roq_provinces_perdues_states_array
+						if = {
+							limit = { NOT = { is_controlled_by = ROQ } }
+							ROOT = { set_variable = { roq_controls_all_stage1_states = 0 } }
+						}
+					}
+					if = {
+						limit = { check_variable = { roq_controls_all_stage1_states = 1 } }
+						set_country_flag = reclamation_first_check_done
+						country_event = { id = roq_reclamation.10 days = 1 }
+					}
+					clear_variable = roq_controls_all_stage1_states
+				}
+			}
 			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }
 				ROOT = { if = { limit = { is_herzlands_warlord = yes } add_to_variable = { current_herzlands_state_count = 1 } } }
@@ -4987,22 +5177,22 @@ on_actions = {
 					}
 					514 = {
 						transfer_state_to = ROQ
-						remove_claim_by = ROQ
+						add_core_of = ROQ
 						add_compliance = 20
 					}
 					512 = {
 						transfer_state_to = ROQ
-						remove_claim_by = ROQ
+						add_core_of = ROQ
 						add_compliance = 20
 					}
 					191 = {
 						transfer_state_to = ROQ
-						remove_claim_by = ROQ
+						add_core_of = ROQ
 						add_compliance = 20
 					}
 					1401 = {
 						transfer_state_to = ROQ
-						remove_claim_by = ROQ
+						add_core_of = ROQ
 						add_compliance = 20
 					}
 				}

@@ -378,6 +378,7 @@ focus_tree = {
 		cost = 5
 		available = { always = no }
 		completion_reward = {
+			custom_effect_tooltip = AUR_dreijahrige_tt
 			add_ideas = AUR_dreijahrige_idea
 			hidden_effect = {
 				country_event = { id = AUR_event.81 days = 1 }
@@ -478,7 +479,12 @@ focus_tree = {
 		x = -2
 		y = 1
 		cost = 5
-		available = { always = no }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_pushing_pushing_trigger_tt
+				hidden_trigger = { always = no }
+			}
+		}
 		relative_position_id = AUR_dreijahrige
 		prerequisite = { focus = AUR_dreijahrige }
 		completion_reward = {
@@ -553,7 +559,12 @@ focus_tree = {
 		x = 0
 		y = 1
 		cost = 5
-		available = { always = no }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_nearly_there_trigger_tt
+				hidden_trigger = { always = no }
+			}
+		}
 		relative_position_id = AUR_pushing_pushing
 		prerequisite = { focus = AUR_pushing_pushing }
 		completion_reward = {
@@ -679,7 +690,12 @@ focus_tree = {
 		x = 0
 		y = 1
 		cost = 5
-		available = { always = no }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = AUR_fulfilled_trigger_tt
+				hidden_trigger = { always = no }
+			}
+		}
 		relative_position_id = AUR_nearly_there
 		prerequisite = { focus = AUR_nearly_there }
 		completion_reward = {
@@ -1609,11 +1625,26 @@ focus_tree = {
 			add_threat = 5
 			PRL = { every_core_state = { add_claim_by = AUR } }
 			CAT = { every_core_state = { add_claim_by = AUR } }
+			hidden_effect = {
+				division_template = {
+					name = "Mandatory Volunteers"
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						artillery_brigade = { x = 2 y = 0 }
+						artillery_brigade = { x = 2 y = 1 }
+					}
+				}
+			}
 			for_loop_effect = {
 				end = 8
 				random_owned_state = {
 					create_unit = {
-						division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 1.0"
+						division = "division_template = \"Mandatory Volunteers\" start_experience_factor = 0.1 start_equipment_factor = 1.0"
 						count = 1
 						owner = AUR
 					}
@@ -1754,10 +1785,17 @@ focus_tree = {
 			}
 		}
 		bypass = {
-			ROQ = {
-				controls_state = 512
-				controls_state = 514
-				controls_state = 191
+			OR = {
+				ROQ = {
+					controls_state = 512
+					controls_state = 514
+					controls_state = 191
+				}
+				BAS = {
+					controls_state = 512
+					controls_state = 514
+					controls_state = 191
+				}
 			}
 		}
 		prerequisite = { focus = AUR_going_for_the_throat focus = AUR_they_wont_blunt_our_advance }
@@ -2692,7 +2730,6 @@ focus_tree = {
 			custom_effect_tooltip = AUR_grand_reorganization_tt
 			hidden_effect = {
 				country_event = { id = AUR_event.35 }
-				country_event = { id = AUR_event.33 days = 30 }
 			}
 		}
 	}
@@ -2708,7 +2745,7 @@ focus_tree = {
 		completion_reward = {
 			set_cosmetic_tag = KTZ_UNITED_AUR
 			hidden_effect = {
-				country_event = { id = AUR_event.33 }
+				country_event = { id = AUR_event.33 days = 10 }
 			}
 		}
 	}
@@ -2992,7 +3029,7 @@ focus_tree = {
 		will_lead_to_war_with = CLE
 		completion_reward = {
 			CLE = { every_core_state = { add_claim_by = AUR } }
-			declare_war_on = { target = CLE type = annex_everything }
+			declare_war_on = { target = 74.controller type = annex_everything }
 		}
 	}
 
@@ -3034,7 +3071,7 @@ focus_tree = {
 		will_lead_to_war_with = PAW
 		completion_reward = {
 			PAW = { every_core_state = { add_claim_by = AUR } }
-			declare_war_on = { target = PAW type = annex_everything }
+			declare_war_on = { target = 62.controller type = annex_everything }
 		}
 	}
 
@@ -3635,10 +3672,10 @@ focus_tree = {
 				hidden_trigger = {
 					NOT = {
 						any_country = {
-							NOT = { tag = AUR }
+							NOT = { tag = AUR is_subject_of = AUR is_in_faction_with = AUR }
 							is_herzlands_warlord = yes
 						}
-					}			
+					}
 				}
 			}
 			custom_trigger_tooltip = {

@@ -1,0 +1,119 @@
+scripted_map_modes = {
+	LOK_coring_compliance_threshold_map_mode = {
+		top = {
+			type = none
+		}
+		bottom = {
+			type = state
+			color = {
+				set_temp_variable = { alpha = 1.0 }
+				# Default: white (cannot be cored)
+				set_temp_variable = { red = 1.0 }
+				set_temp_variable = { green = 1.0 }
+				set_temp_variable = { blue = 1.0 }
+
+				# First check if already cored (black)
+				if = {
+					limit = {
+						FROM = { is_core_of = ROOT }
+					}
+					set_temp_variable = { red = 0.0 }
+					set_temp_variable = { green = 0.0 }
+					set_temp_variable = { blue = 0.0 }
+				}
+				# Else, check compliance threshold flags
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_100_@ROOT }
+					}
+					set_temp_variable = { red = 0.5 }
+					set_temp_variable = { green = 0.0 }
+					set_temp_variable = { blue = 0.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_90_@ROOT }
+					}
+					set_temp_variable = { red = 1.0 }
+					set_temp_variable = { green = 0.0 }
+					set_temp_variable = { blue = 0.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_80_@ROOT }
+					}
+					set_temp_variable = { red = 1.0 }
+					set_temp_variable = { green = 0.5 }
+					set_temp_variable = { blue = 0.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_70_@ROOT }
+					}
+					set_temp_variable = { red = 1.0 }
+					set_temp_variable = { green = 1.0 }
+					set_temp_variable = { blue = 0.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_60_@ROOT }
+					}
+					set_temp_variable = { red = 0.5 }
+					set_temp_variable = { green = 1.0 }
+					set_temp_variable = { blue = 0.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_50_@ROOT }
+					}
+					set_temp_variable = { red = 0.0 }
+					set_temp_variable = { green = 1.0 }
+					set_temp_variable = { blue = 0.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_40_@ROOT }
+					}
+					set_temp_variable = { red = 0.0 }
+					set_temp_variable = { green = 1.0 }
+					set_temp_variable = { blue = 0.5 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_30_@ROOT }
+					}
+					set_temp_variable = { red = 0.0 }
+					set_temp_variable = { green = 0.0 }
+					set_temp_variable = { blue = 1.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_20_@ROOT }
+					}
+					set_temp_variable = { red = 0.5 }
+					set_temp_variable = { green = 0.0 }
+					set_temp_variable = { blue = 1.0 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_10_@ROOT }
+					}
+					set_temp_variable = { red = 0.8 }
+					set_temp_variable = { green = 0.0 }
+					set_temp_variable = { blue = 0.8 }
+				}
+				else_if = {
+					limit = {
+						FROM = { has_state_flag = compliance_0_@ROOT }
+					}
+					set_temp_variable = { red = 0.0 }
+					set_temp_variable = { green = 0.0 }
+					set_temp_variable = { blue = 0.0 }
+				}
+			}
+		}
+		far_text = none
+		near_text = state
+		update_daily = no
+	}
+}

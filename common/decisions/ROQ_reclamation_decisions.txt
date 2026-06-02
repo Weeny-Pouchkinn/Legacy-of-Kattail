@@ -1,165 +1,603 @@
 ROQ_reclamation_cat = {
 
-	# ─────────────────────────────────────────────────────────────────────
-	# TIMED MISSION: Cloudstrider Intervention (MCF – has actual timeout effects)
-	# ─────────────────────────────────────────────────────────────────────
-	MCF_reclamation_cloudstrider_intervention = {
-		icon = GFX_decision_hol_war_on_pacifism
-		allowed = { tag = MCF }
-
-		activation = {
-			has_global_flag = ROQ_reclamation_active
-			is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
-		}
-
-		available = { always = no }
-
-		cancel_trigger = {
-			NOT = { has_global_flag = ROQ_reclamation_active }
-		}
-
-		is_good = yes
-		fire_only_once = yes
-		selectable_mission = no
-		days_mission_timeout = 180
-
-		timeout_effect = {
-			# If ROQ is still fighting anyone in the targets array, add them to MCF's faction
-			DOM = {
-				if = {
-					limit = { has_war_with = ROQ country_exists = THIS }
-					MCF = { add_to_faction = DOM }
-					country_event = { id = ROQ_reclamation.20 }
-				}
-			}
-			FSR = {
-				if = {
-					limit = { has_war_with = ROQ country_exists = THIS }
-					MCF = { add_to_faction = FSR }
-					country_event = { id = ROQ_reclamation.20 }
-				}
-			}
-			# Cleanup: clear flag and arrays (modifier stays — it represents permanent training)
-			hidden_effect = { ROQ_reclamation_cleanup = yes }
-		}
-	}
-
-	# ─────────────────────────────────────────────────────────────────────
-	# TIMED MISSION: Cloudstrider Intervention (everyone else – display only)
-	# ─────────────────────────────────────────────────────────────────────
-	ROQ_reclamation_cloudstrider_intervention = {
-		icon = GFX_decision_hol_war_on_pacifism
-		allowed = {
-			OR = {
-				tag = ROQ
-				tag = FSR
-				tag = DOM
-				is_flusiobalkan = yes
-			}
-		}
-
-		activation = {
-			has_global_flag = ROQ_reclamation_active
-			NOT = { tag = MCF }
-			OR = {
-				tag = ROQ
-				is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
-				is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
-			}
-		}
-
-		available = { always = no }
-
-		cancel_trigger = {
-			NOT = { has_global_flag = ROQ_reclamation_active }
-		}
-
-		is_good = no
-		fire_only_once = yes
-		selectable_mission = no
-		days_mission_timeout = 180
-
-		timeout_effect = { }
-	}
-
-	# ─────────────────────────────────────────────────────────────────────
-	# FSR / DOM LOBBY DECISIONS
-	# target_array = global.ROQ_reclamation_ssu_supporters
-	# 50% success if only one of FSR/DOM exists; 33% if both exist.
-	# ─────────────────────────────────────────────────────────────────────
-
-	FSR_DOM_reclamation_lobby = {
-		icon = GFX_decision_generic_diplomacy
-
+	roq_reclamation_tracker_stage1 = {
+		icon = GFX_decision_generic_tank
 		visible = {
-			has_global_flag = ROQ_reclamation_active
-			is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
+			ROQ = { check_variable = { reclamation_stage = 1 } }
 		}
-
 		available = {
-			hidden_trigger = {
-				check_variable = { FROM.ROQ_reclamation_support_level < 4 }
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				is_in_array = { array = global.roq_provinces_perdues_states_array value = THIS }
 			}
 		}
+	}
 
-		target_array = global.ROQ_reclamation_ssu_supporters
+	roq_reclamation_tracker_stage2 = {
+		icon = GFX_decision_generic_tank
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 2 } }
+		}
+		available = {
+			always = no
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				# KUS
+				state = 1402
+				state = 1403
+				state = 218
+				state = 225
+				state = 229
+				state = 231
+				state = 715
+				state = 716
+				state = 717
+				# NEK
+				state = 233
+				state = 239
+				state = 240
+				state = 241
+				state = 243
+				state = 248
+				state = 270
+				state = 275
+				state = 286
+				state = 287
+				state = 745
+				state = 746
+				# MCF
+				state = 265
+				state = 269
+				state = 294
+				state = 313
+				state = 725
+				state = 726
+				state = 727
+				state = 728
+				state = 729
+				# SLR
+				state = 1013
+				state = 271
+				state = 273
+				state = 327
+				state = 328
+				state = 356
+				state = 819
+				state = 820
+				state = 821
+				# FSR
+				state = 236
+				state = 254
+				state = 255
+				state = 730
+				# DOM
+				state = 242
+				state = 244
+				# Extra states
+				state = 818
+				state = 264
+				state = 324
+				state = 228
+			}
+		}
+	}
 
-		target_trigger = {
+	roq_reclamation_tracker_stage3 = {
+		icon = GFX_decision_generic_tank
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 3 } }
+		}
+		available = {
+			always = no
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 147
+				state = 179
+				state = 189
+				state = 213
+				state = 215
+				state = 218
+				state = 225
+				state = 228
+				state = 229
+				state = 231
+				state = 233
+				state = 236
+				state = 239
+				state = 240
+				state = 241
+				state = 242
+				state = 243
+				state = 244
+				state = 248
+				state = 250
+				state = 254
+				state = 255
+				state = 261
+				state = 264
+				state = 265
+				state = 267
+				state = 269
+				state = 270
+				state = 271
+				state = 273
+				state = 274
+				state = 275
+				state = 277
+				state = 286
+				state = 287
+				state = 289
+				state = 294
+				state = 302
+				state = 311
+				state = 313
+				state = 317
+				state = 324
+				state = 327
+				state = 328
+				state = 333
+				state = 334
+				state = 336
+				state = 337
+				state = 339
+				state = 340
+				state = 341
+				state = 343
+				state = 344
+				state = 346
+				state = 347
+				state = 349
+				state = 350
+				state = 351
+				state = 354
+				state = 355
+				state = 356
+				state = 357
+				state = 358
+				state = 359
+				state = 363
+				state = 364
+				state = 365
+				state = 366
+				state = 368
+				state = 369
+				state = 370
+				state = 377
+				state = 381
+				state = 383
+				state = 384
+				state = 386
+				state = 396
+				state = 399
+				state = 401
+				state = 402
+				state = 404
+				state = 406
+				state = 410
+				state = 411
+				state = 412
+				state = 414
+				state = 415
+				state = 416
+				state = 418
+				state = 420
+				state = 421
+				state = 422
+				state = 425
+				state = 426
+				state = 428
+				state = 431
+				state = 432
+				state = 435
+				state = 436
+				state = 437
+				state = 438
+				state = 441
+				state = 444
+				state = 715
+				state = 716
+				state = 717
+				state = 720
+				state = 721
+				state = 725
+				state = 726
+				state = 727
+				state = 728
+				state = 729
+				state = 730
+				state = 745
+				state = 746
+				state = 747
+				state = 748
+				state = 749
+				state = 750
+				state = 751
+				state = 752
+				state = 753
+				state = 754
+				state = 755
+				state = 756
+				state = 757
+				state = 758
+				state = 759
+				state = 760
+				state = 761
+				state = 762
+				state = 763
+				state = 764
+				state = 765
+				state = 766
+				state = 767
+				state = 768
+				state = 769
+				state = 770
+				state = 771
+				state = 772
+				state = 773
+				state = 774
+				state = 775
+				state = 776
+				state = 777
+				state = 778
+				state = 779
+				state = 780
+				state = 781
+				state = 782
+				state = 783
+				state = 784
+				state = 785
+				state = 786
+				state = 787
+				state = 788
+				state = 789
+				state = 803
+				state = 804
+				state = 805
+				state = 806
+				state = 817
+				state = 818
+				state = 819
+				state = 820
+				state = 821
+				state = 822
+				state = 823
+				state = 825
+				state = 826
+				state = 827
+				state = 828
+				state = 829
+				state = 830
+				state = 840
+				state = 841
+				state = 842
+				state = 843
+				state = 844
+				state = 845
+				state = 846
+				state = 847
+				state = 848
+				state = 849
+				state = 850
+				state = 851
+				state = 852
+				state = 898
+				state = 899
+				state = 900
+				state = 952
+				state = 953
+				state = 954
+				state = 955
+				state = 956
+				state = 957
+				state = 958
+				state = 959
+				state = 960
+				state = 961
+				state = 962
+				state = 963
+				state = 964
+				state = 965
+				state = 969
+				state = 970
+				state = 971
+				state = 972
+				state = 973
+				state = 974
+				state = 975
+				state = 976
+				state = 1013
+				state = 1014
+				state = 1015
+				state = 1016
+				state = 1017
+				state = 1018
+				state = 1019
+				state = 1020
+				state = 1021
+				state = 1022
+				state = 1023
+				state = 1024
+				state = 1025
+				state = 1026
+				state = 1027
+				state = 1028
+				state = 1029
+				state = 1030
+				state = 1031
+				state = 1032
+				state = 1164
+				state = 1165
+				state = 1166
+				state = 1167
+				state = 1168
+				state = 1169
+				state = 1285
+				state = 1286
+				state = 1287
+				state = 1288
+				state = 1371
+				state = 1401
+				state = 1402
+				state = 1403
+			}
+		}
+	}
+
+	roq_reclamation_stage1_demand_land = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 1 } }
 			FROM = {
-				exists = yes
-				# Only allow lobbying nations that aren't already Adamant
+				is_roq_reclamation_ally = no
+				NOT = { has_war_with = ROQ }
 			}
+			exists = yes
 		}
- 
-		cost = 50
-		days_remove = 30
+		available = {
+			NOT = { has_country_flag = roq_reclamation_on_cooldown }
+		}
+		target_array = ROQ.roq_stage1_targets_array
+		fire_only_once = yes
+		
+		days_remove = 10
 
 		remove_effect = {
-			custom_effect_tooltip = ROQ_reclamation_lobby_tt
-			if = {
-				# Both FSR and DOM are in the targets array → 33% (1 in 3) chance
-				limit = {
-					country_exists = FSR
-					country_exists = DOM
-					FSR = { is_in_array = { array = global.ROQ_reclamation_targets value = FSR } }
-					DOM = { is_in_array = { array = global.ROQ_reclamation_targets value = DOM } }
-				}
-				random_list = {
-					1 = {
-						custom_effect_tooltip = ROQ_reclamation_lobby_success_tt
-						hidden_effect = {
-							FROM = {
-								add_to_variable = { ROQ_reclamation_support_level = 1 }
-								clamp_variable = { var = ROQ_reclamation_support_level min = 1 max = 4 }
-							}
-						}
-					}
-					2 = {
-						custom_effect_tooltip = ROQ_reclamation_lobby_fail_tt
-					}
+			set_country_flag = { flag = roq_reclamation_on_cooldown value = 1 days = 30 }
+			FROM = { save_event_target_as = roq_reclamation_stage1_target }
+			country_event = { id = roq_reclamation.60 }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	roq_reclamation_stage2_invade_target = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 2 } }
+			FROM = {
+				is_roq_reclamation_ally = no
+				capital_scope = {
+					is_in_array = { array = global.roq_natural_border_states_array value = THIS }
 				}
 			}
-			else = {
-				# Only one target nation → 50% (1 in 2) chance
-				random_list = {
-					1 = {
-						custom_effect_tooltip = ROQ_reclamation_lobby_success_tt
-						hidden_effect = {
-							FROM = {
-								add_to_variable = { ROQ_reclamation_support_level = 1 }
-								clamp_variable = { var = ROQ_reclamation_support_level min = 1 max = 4 }
-							}
-						}
-					}
-					1 = {
-						custom_effect_tooltip = ROQ_reclamation_lobby_fail_tt
-					}
-				}
+			exists = yes
+		}
+		available = {
+			NOT = { has_country_flag = roq_reclamation_on_cooldown }
+		}
+		target_array = ROQ.roq_stage2_targets_array
+		fire_only_once = yes
+		days_remove = 15
+		
+		complete_effect = {
+			set_country_flag = { flag = roq_reclamation_on_cooldown value = 1 days = 30 }
+			FROM = { country_event = { id = roq_reclamation.50 } }
+		}
+		remove_effect = {
+			ROQ = {
+				declare_war_on = { target = FROM type = annex_everything }
 			}
 		}
-
 		ai_will_do = {
-			base = 50
+			base = 1000
+		}
+	}
+
+	roq_reclamation_stage2_demand_land = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 2 } }
+			FROM = {
+				is_roq_reclamation_ally = no
+				capital_scope = {
+					NOT = { is_in_array = { array = global.roq_natural_border_states_array value = THIS } }
+				}
+			}
+			exists = yes
+		}
+		available = {
+			NOT = { has_country_flag = roq_reclamation_on_cooldown }
+		}
+		target_array = ROQ.roq_stage2_targets_array
+		fire_only_once = yes
+		days_remove = 15
+		
+		complete_effect = {
+			set_country_flag = { flag = roq_reclamation_on_cooldown value = 1 days = 30 }
+		}
+		remove_effect = {
+			FROM = { country_event = { id = roq_reclamation.200 } }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	roq_reclamation_stage3_invade_target = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 3 } }
+			FROM = {
+				is_roq_reclamation_ally = no
+				capital_scope = {
+				 	is_in_array = { array = global.roq_solakean_states_array value = THIS }
+				}
+			}
+			exists = yes
+		}
+		available = {
+			NOT = { has_country_flag = roq_reclamation_on_cooldown }
+		}
+		target_array = ROQ.roq_stage3_targets_array
+		fire_only_once = yes
+		days_remove = 30
+		
+		complete_effect = {
+			set_country_flag = { flag = roq_reclamation_on_cooldown value = 1 days = 60 }
+			FROM = { country_event = { id = roq_reclamation.50 } }
+		}
+		remove_effect = {
+			ROQ = {
+				declare_war_on = { target = FROM type = annex_everything }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	roq_reclamation_stage3_demand_land = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 3 } }
+			FROM = {
+				is_roq_reclamation_ally = no
+				capital_scope = {
+					NOT = { is_in_array = { array = global.roq_solakean_states_array value = THIS } }
+				}
+			}
+			exists = yes
+		}
+		available = {
+			NOT = { has_country_flag = roq_reclamation_on_cooldown }
+		}
+		target_array = ROQ.roq_stage3_targets_array
+		fire_only_once = yes
+		days_remove = 30
+		
+		complete_effect = {
+			set_country_flag = { flag = roq_reclamation_on_cooldown value = 1 days = 60 }
+		}
+		remove_effect = {
+			FROM = { country_event = { id = roq_reclamation.300 } }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	roq_reclamation_tracker_stage4 = {
+		icon = GFX_decision_generic_tank
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 4 } }
+		}
+		available = {
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				is_in_array = { array = global.herzlands_states_array value = THIS }
+			}
+		}
+	}
+
+	roq_reclamation_stage4_invade_target = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 4 } }
+			FROM = {
+				NOT = { has_war_with = ROQ is_subject_of = ROQ is_in_faction_with = ROQ }
+				capital_scope = {
+					is_in_array = { array = global.herzlands_states_array value = THIS }
+				}
+			}
+			exists = yes
+		}
+		available = {
+			always = yes
+		}
+		target_array = ROQ.roqualia_stage4_targets
+		fire_only_once = yes
+		
+		remove_effect = {
+			ROQ = {
+				declare_war_on = { target = FROM type = annex_everything }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	roq_reclamation_stage4_demand_land = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+			tag = ROQ
+		}
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 4 } }
+			FROM = {
+				NOT = { has_war_with = ROQ is_subject_of = ROQ is_in_faction_with = ROQ }
+				capital_scope = {
+					NOT = { is_in_array = { array = global.herzlands_states_array value = THIS } }
+				}
+			}
+			exists = yes
+		}
+		available = {
+			always = yes
+		}
+		target_array = ROQ.roqualia_stage4_targets
+		fire_only_once = yes
+		
+		remove_effect = {
+			FROM = { country_event = { id = roq_reclamation.400 } }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	roq_reclamation_tracker_stage5 = {
+		icon = GFX_decision_generic_tank
+		visible = {
+			ROQ = { check_variable = { reclamation_stage = 5 } }
+		}
+		available = {
+			always = no
 		}
 	}
 }
