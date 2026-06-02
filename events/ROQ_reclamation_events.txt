@@ -403,7 +403,13 @@ country_event = {
 
 	option = {
 		name = roq_reclamation.112.a
-		news_event = { id = LOK_news.27 days = 1 }
+		if = {
+			limit = { has_country_flag = roqualia_went_to_war }
+			news_event = { id = LOK_news.27 days = 1 }
+		}
+		else = {
+			news_event = { id = LOK_news.28 days = 1 }
+		}
 	}
 }
 
@@ -788,6 +794,7 @@ country_event = {
 			set_global_flag = ROQ_reclamation_active
 			ROQ = {
 				set_variable = { reclamation_stage = 1 }
+				ROQ_reclamation_build_stage_1_targets = yes
 			}
 		}
 	}
@@ -888,5 +895,290 @@ country_event = {
 
 	option = {
 		name = roq_reclamation.50.a
+	}
+}
+
+# Event 60: ROQ decides how to deal with the occupier (Negotiate or Ultimatum)
+country_event = {
+	id = roq_reclamation.60
+	title = roq_reclamation.60.t
+	desc = roq_reclamation.60.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			save_event_target_as = roq_reclamation_sender
+		}
+	}
+
+	# Option A: Negotiate
+	option = {
+		name = roq_reclamation.60.a
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				factor = 1
+				event_target:roq_reclamation_stage1_target = { tag = KUS }
+			}
+		}
+		event_target:roq_reclamation_stage1_target = {
+			country_event = { id = roq_reclamation.61 }
+		}
+	}
+
+	# Option B: Ultimatum
+	option = {
+		name = roq_reclamation.60.b
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				event_target:roq_reclamation_stage1_target = { tag = KUS }
+			}
+		}
+		event_target:roq_reclamation_stage1_target = {
+			country_event = { id = roq_reclamation.65 }
+		}
+	}
+}
+
+# Event 61: Target gets the negotiation offer
+country_event = {
+	id = roq_reclamation.61
+	title = roq_reclamation.61.t
+	desc = roq_reclamation.61.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Accept
+	option = {
+		name = roq_reclamation.61.a
+		ai_will_do = {
+			factor = 100
+		}
+		if = {
+			limit = { controls_state = 254 }
+			254 = { transfer_state_to = ROQ }
+		}
+		if = {
+			limit = { controls_state = 730 }
+			730 = { transfer_state_to = ROQ }
+		}
+		add_ideas = ROQ_roqualian_economic_integration
+		add_ideas = ROQ_reclamation_factory_payment
+
+		if = {
+			limit = { controls_state = 236 }
+			236 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		if = {
+			limit = { controls_state = 255 }
+			255 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		if = {
+			limit = { controls_state = 255 }
+			255 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		if = {
+			limit = { controls_state = 255 }
+			255 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		ROQ = {
+			ROQ_reclamation_build_stage_1_targets = yes
+			PREV = { save_event_target_as = roq_resettlement_target }
+			country_event = { id = roq_reclamation.62 days = 180 }
+			country_event = { id = roq_reclamation.63 }
+		}
+	}
+
+	# Option B: Refuse
+	option = {
+		name = roq_reclamation.61.b
+		ai_will_do = {
+			factor = 0
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.64 }
+		}
+	}
+}
+
+# Event 62: Resettlement Completion (180 days after negotiation accepted)
+country_event = {
+	id = roq_reclamation.62
+	title = roq_reclamation.62.t
+	desc = roq_reclamation.62.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					236 = { is_owned_by = event_target:roq_resettlement_target }
+				}
+				236 = {
+					set_temp_variable = { culture_temp = 6 }
+					add_state_culture = yes
+					
+					# Swap majority and minority populations
+					set_temp_variable = { species_swap_temp = species }
+					set_variable = { species = minority }
+					set_variable = { minority = species_swap_temp }
+					apply_state_species_modifier = yes
+					update_matching_species_modifiers = yes
+				}
+			}
+			if = {
+				limit = {
+					255 = { is_owned_by = event_target:roq_resettlement_target }
+				}
+				255 = {
+					set_temp_variable = { culture_temp = 6 }
+					add_state_culture = yes
+					
+					# Swap majority and minority populations
+					set_temp_variable = { species_swap_temp = species }
+					set_variable = { species = minority }
+					set_variable = { minority = species_swap_temp }
+					apply_state_species_modifier = yes
+					update_matching_species_modifiers = yes
+				}
+			}
+		}
+	}
+
+	option = {
+		name = roq_reclamation.62.a
+	}
+}
+
+# Event 63: Negotiation accepted notification to ROQ
+country_event = {
+	id = roq_reclamation.63
+	title = roq_reclamation.63.t
+	desc = roq_reclamation.63.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.63.a
+	}
+}
+
+# Event 64: Negotiation refused notification to ROQ
+country_event = {
+	id = roq_reclamation.64
+	title = roq_reclamation.64.t
+	desc = roq_reclamation.64.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.64.a
+		declare_war_on = { target = event_target:roq_reclamation_stage1_target type = annex_everything }
+		set_country_flag = roqualia_went_to_war
+	}
+}
+
+# Event 65: Target receives the ultimatum
+country_event = {
+	id = roq_reclamation.65
+	title = roq_reclamation.65.t
+	desc = roq_reclamation.65.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Cede states
+	option = {
+		name = roq_reclamation.65.a
+		ai_will_do = {
+			factor = 10
+		}
+		if = { limit = { controls_state = 236 } 236 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 254 } 254 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 255 } 255 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 730 } 730 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 242 } 242 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 244 } 244 = { transfer_state_to = ROQ } }
+		ROQ = {
+			country_event = { id = roq_reclamation.66 }
+		}
+	}
+
+	# Option B: Refuse and war
+	option = {
+		name = roq_reclamation.65.b
+		ai_will_do = {
+			factor = 90
+		}
+		ROQ = {
+			declare_war_on = { target = PREV type = annex_everything }
+			set_country_flag = roqualia_went_to_war
+			country_event = { id = roq_reclamation.67 }
+		}
+	}
+}
+
+# Event 66: Ultimatum accepted notification to ROQ
+country_event = {
+	id = roq_reclamation.66
+	title = roq_reclamation.66.t
+	desc = roq_reclamation.66.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.66.a
+	}
+}
+
+# Event 67: Ultimatum refused notification to ROQ
+country_event = {
+	id = roq_reclamation.67
+	title = roq_reclamation.67.t
+	desc = roq_reclamation.67.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.67.a
 	}
 }

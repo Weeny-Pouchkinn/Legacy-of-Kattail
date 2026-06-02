@@ -4197,6 +4197,23 @@ on_actions = {
 		}
 	}
 
+	on_war_relation_established = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = { tag = ROQ check_variable = { reclamation_stage = 1 } }
+				}
+				ROOT = { set_country_flag = roqualia_went_to_war }
+			}
+			if = {
+				limit = {
+					FROM = { tag = ROQ check_variable = { reclamation_stage = 1 } }
+				}
+				FROM = { set_country_flag = roqualia_went_to_war }
+			}
+		}
+	}
+
 	on_state_control_changed = {
 		effect = {
 			ROOT = { save_event_target_as = new_controller }
@@ -4205,14 +4222,23 @@ on_actions = {
 				limit = {
 					ROOT = { tag = ROQ }
 					ROQ = { NOT = { has_country_flag = reclamation_first_check_done } check_variable = { reclamation_stage = 1 } }
-					236 = { is_controlled_by = ROQ }
-					254 = { is_controlled_by = ROQ }
-					255 = { is_controlled_by = ROQ }
-					730 = { is_controlled_by = ROQ }
-					242 = { is_controlled_by = ROQ }
-					244 = { is_controlled_by = ROQ }
 				}
-				ROQ = { set_country_flag = reclamation_first_check_done country_event = { id = roq_reclamation.10 days = 1 } }
+				ROQ = {
+					set_variable = { roq_controls_all_stage1_states = 1 }
+					for_each_scope_loop = {
+						array = global.roq_provinces_perdues_states_array
+						if = {
+							limit = { NOT = { is_controlled_by = ROQ } }
+							ROOT = { set_variable = { roq_controls_all_stage1_states = 0 } }
+						}
+					}
+					if = {
+						limit = { check_variable = { roq_controls_all_stage1_states = 1 } }
+						set_country_flag = reclamation_first_check_done
+						country_event = { id = roq_reclamation.10 days = 1 }
+					}
+					clear_variable = roq_controls_all_stage1_states
+				}
 			}
 			if = { #Count how many Herzlands state a Herzlands nation owns, update when territory changes.
 				limit = { FROM.FROM = { is_in_array = { array = global.herzlands_states_array value = THIS } } }

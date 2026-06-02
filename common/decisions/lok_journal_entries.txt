@@ -3016,41 +3016,20 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			set_global_flag = ROQ_reclamation_active
 
-			# 1. If FSR and/or DOM exist, declare war and set escalation variable to 1
-			set_temp_variable = { has_launched_war = 0 }
+			# 1. If FSR and/or DOM exist, declare war
 			if = {
 				limit = { country_exists = FSR }
 				declare_war_on = { target = FSR type = annex_everything }
-				set_temp_variable = { has_launched_war = 1 }
+				set_country_flag = roqualia_went_to_war
 			}
 			if = {
 				limit = { country_exists = DOM }
 				declare_war_on = { target = DOM type = annex_everything }
-				set_temp_variable = { has_launched_war = 1 }
-			}
-			if = {
-				limit = { check_variable = { has_launched_war = 1 } }
-				set_variable = { reclamation_stage = 1 }
+				set_country_flag = roqualia_went_to_war
 			}
 
-			# 2. Check every state in target array, flag non-ROQ/FSR/DOM owners, send demands
-			every_country = {
-				clr_country_flag = roq_reclamation_demanded
-			}
-			
-			236 = { owner = { LOK_flag_reclamation_demand = yes } }
-			254 = { owner = { LOK_flag_reclamation_demand = yes } }
-			255 = { owner = { LOK_flag_reclamation_demand = yes } }
-			730 = { owner = { LOK_flag_reclamation_demand = yes } }
-			242 = { owner = { LOK_flag_reclamation_demand = yes } }
-			244 = { owner = { LOK_flag_reclamation_demand = yes } }
-
-			every_country = {
-				limit = {
-					has_country_flag = roq_reclamation_demanded
-				}
-				country_event = { id = roq_reclamation.1 days = 1 }
-			}
+			set_variable = { reclamation_stage = 1 }
+			ROQ_reclamation_build_stage_1_targets = yes
 
 			add_popularity = {
 				ideology = fascism

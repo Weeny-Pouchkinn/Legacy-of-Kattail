@@ -8,7 +8,7 @@ ideas = {
             removal_cost = -1
 
             cancel = {
-                is_puppet = yes
+                is_subject = yes
             }
 
             modifier = {
@@ -124,6 +124,34 @@ ideas = {
 				stability_factor = -0.20
 				army_attack_factor = -0.20
 				army_defence_factor = -0.20
+			}
+		}
+
+		ROQ_roqualian_economic_integration = {
+			picture = generic_goods_redistribution
+			allowed = { always = no }
+			removal_cost = -1
+            cancel = {
+                OR = {
+                    has_war_with = ROQ
+                    NOT = { country_exists = ROQ }
+                    ROQ = { is_subject = yes }
+                }
+            }
+			modifier = {
+				political_power_gain = -0.10
+				production_speed_buildings_factor = 0.10
+				industrial_capacity_factory = 0.10
+				consumer_goods_factor = 0.15
+			}
+		}
+
+		ROQ_reclamation_factory_payment = {
+			picture = generic_goods_redistribution
+			allowed = { always = no }
+			removal_cost = -1
+			modifier = {
+				industrial_factory_donations = 15
 			}
 		}
 	}
