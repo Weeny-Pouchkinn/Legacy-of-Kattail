@@ -1625,11 +1625,26 @@ focus_tree = {
 			add_threat = 5
 			PRL = { every_core_state = { add_claim_by = AUR } }
 			CAT = { every_core_state = { add_claim_by = AUR } }
+			hidden_effect = {
+				division_template = {
+					name = "Mandatory Volunteers"
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						artillery_brigade = { x = 2 y = 0 }
+						artillery_brigade = { x = 2 y = 1 }
+					}
+				}
+			}
 			for_loop_effect = {
 				end = 8
 				random_owned_state = {
 					create_unit = {
-						division = "division_template = \"Katzen-Garnison\" start_experience_factor = 0.1 start_equipment_factor = 1.0"
+						division = "division_template = \"Mandatory Volunteers\" start_experience_factor = 0.1 start_equipment_factor = 1.0"
 						count = 1
 						owner = AUR
 					}
@@ -3658,10 +3673,10 @@ focus_tree = {
 				hidden_trigger = {
 					NOT = {
 						any_country = {
-							NOT = { tag = AUR }
+							NOT = { tag = AUR is_subject_of = AUR is_in_faction_with = AUR }
 							is_herzlands_warlord = yes
 						}
-					}			
+					}
 				}
 			}
 			custom_trigger_tooltip = {

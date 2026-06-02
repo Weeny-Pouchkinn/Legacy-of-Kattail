@@ -17,6 +17,7 @@ ROQ_reclamation_cleanup = {
 	clear_array = global.ROQ_reclamation_targets
 	clear_array = global.ROQ_reclamation_ssu_supporters
 	ROQ = {
+		clear_array = roq_stage1_targets_array
 		clear_array = roq_stage2_targets_array
 		clear_array = roq_stage3_targets_array
 		clear_array = roqualia_stage4_targets
@@ -33,6 +34,28 @@ LOK_flag_reclamation_demand = {
 			exists = yes
 		}
 		set_country_flag = roq_reclamation_demanded
+	}
+}
+
+ROQ_reclamation_build_stage_1_targets = {
+	ROQ = {
+		clear_array = roq_stage1_targets_array
+		for_each_scope_loop = {
+			array = global.roq_provinces_perdues_states_array
+			# The scope inside for_each_scope_loop is the state itself.
+			owner = {
+				if = {
+					limit = {
+						NOT = { tag = ROQ }
+						NOT = { tag = FSR }
+						NOT = { tag = DOM }
+						exists = yes
+						NOT = { is_in_array = { array = ROQ.roq_stage1_targets_array value = THIS } }
+					}
+					add_to_array = { ROQ.roq_stage1_targets_array = THIS }
+				}
+			}
+		}
 	}
 }
 
