@@ -570,3 +570,111 @@ country_event = {
 		name = "Done"
 	}
 }
+
+# Unlock All Noble Houses (adds IDs 3-13 to array, sets flags)
+country_event = {
+	id = lok_debug.19
+	hidden = yes
+	title = "Unlock All Noble Houses"
+	desc = "Adds all noble substate IDs (3-13) to TAI_unlocked_noble_house_array and sets their unlocked flags."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			TAI = {
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 3 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 3 }
+				}
+				set_country_flag = noble_house_3_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 4 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 4 }
+				}
+				set_country_flag = noble_house_4_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 5 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 5 }
+				}
+				set_country_flag = noble_house_5_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 6 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 6 }
+				}
+				set_country_flag = noble_house_6_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 7 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 7 }
+				}
+				set_country_flag = noble_house_7_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 8 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 8 }
+				}
+				set_country_flag = noble_house_8_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 9 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 9 }
+				}
+				set_country_flag = noble_house_9_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 10 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 10 }
+				}
+				set_country_flag = noble_house_10_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 11 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 11 }
+				}
+				set_country_flag = noble_house_11_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 12 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 12 }
+				}
+				set_country_flag = noble_house_12_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 13 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 13 }
+				}
+				set_country_flag = noble_house_13_unlocked
+			}
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+
+# Lock All Noble Houses (clears array, clears flags)
+country_event = {
+	id = lok_debug.20
+	hidden = yes
+	title = "Lock All Noble Houses"
+	desc = "Clears TAI_unlocked_noble_house_array and clears all unlocked flags."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			TAI = {
+				clear_array = TAI_unlocked_noble_house_array
+				clear_country_flag = noble_house_3_unlocked
+				clear_country_flag = noble_house_4_unlocked
+				clear_country_flag = noble_house_5_unlocked
+				clear_country_flag = noble_house_6_unlocked
+				clear_country_flag = noble_house_7_unlocked
+				clear_country_flag = noble_house_8_unlocked
+				clear_country_flag = noble_house_9_unlocked
+				clear_country_flag = noble_house_10_unlocked
+				clear_country_flag = noble_house_11_unlocked
+				clear_country_flag = noble_house_12_unlocked
+				clear_country_flag = noble_house_13_unlocked
+			}
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+

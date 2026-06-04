@@ -2538,58 +2538,68 @@ focus_tree = {
 			add_war_support = 0.15
 			
 			hidden_effect = {
-				create_dynamic_country = {
-					original_tag = NKB
-	
-					save_global_event_target_as = cat_kingdom_purrsia
-	
-					set_cosmetic_tag = PURRSIA
-
-					475 = { add_core_of = event_target:cat_kingdom_purrsia }
-					649 = { add_core_of = event_target:cat_kingdom_purrsia }
-	
-					NKB = {
-						every_core_state = { add_core_of = event_target:cat_kingdom_purrsia }
-					}
-
-					FRA = {
-						every_core_state = { add_core_of = event_target:cat_kingdom_purrsia }
-					}
-
-					set_capital = {
-						state = 477
-					}
-
-					ROOT = {
-						every_controlled_state = {
-							limit = { is_core_of = event_target:cat_kingdom_purrsia }
-	
-							event_target:cat_kingdom_purrsia = {
-								transfer_state = PREV
-							}
-						}
-	
-						puppet = event_target:cat_kingdom_purrsia
-	
-						set_autonomy = {
-							target = event_target:cat_kingdom_purrsia
-							autonomy_state = autonomy_integrated_puppet
-							freedom_level = 0.5
-						}
-					}
+				477 = {
+					set_temp_variable = { noble_house_expected_states = 20 }
+					set_temp_variable = { substate_id_temp = 8 }
+					raise_noble_house_and_core = yes
 				}
-				FRA = { every_character = { set_nationality = event_target:cat_kingdom_purrsia } }
-				event_target:cat_kingdom_purrsia = {
-					retire_country_leader = yes
-					add_country_leader_role = {
-						character = FRA_Frederick_Pawlliam
-						country_leader = {
-							expire = "1965.1.1"
-							ideology = absolutism
-						}
-						promote_leader = yes
-					}
+				set_variable = { noble_house_8_expected_states = noble_house_expected_states }
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 8 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 8 }
 				}
+				# create_dynamic_country = {
+				# 	original_tag = NKB
+	
+				# 	save_global_event_target_as = cat_kingdom_purrsia
+	
+				# 	set_cosmetic_tag = PURRSIA
+
+				# 	475 = { add_core_of = event_target:cat_kingdom_purrsia }
+				# 	649 = { add_core_of = event_target:cat_kingdom_purrsia }
+	
+				# 	NKB = {
+				# 		every_core_state = { add_core_of = event_target:cat_kingdom_purrsia }
+				# 	}
+
+				# 	FRA = {
+				# 		every_core_state = { add_core_of = event_target:cat_kingdom_purrsia }
+				# 	}
+
+				# 	set_capital = {
+				# 		state = 477
+				# 	}
+
+				# 	ROOT = {
+				# 		every_controlled_state = {
+				# 			limit = { is_core_of = event_target:cat_kingdom_purrsia }
+	
+				# 			event_target:cat_kingdom_purrsia = {
+				# 				transfer_state = PREV
+				# 			}
+				# 		}
+	
+				# 		puppet = event_target:cat_kingdom_purrsia
+	
+				# 		set_autonomy = {
+				# 			target = event_target:cat_kingdom_purrsia
+				# 			autonomy_state = autonomy_integrated_puppet
+				# 			freedom_level = 0.5
+				# 		}
+				# 	}
+				# }
+				# FRA = { every_character = { set_nationality = event_target:cat_kingdom_purrsia } }
+				# event_target:cat_kingdom_purrsia = {
+				# 	retire_country_leader = yes
+				# 	add_country_leader_role = {
+				# 		character = FRA_Frederick_Pawlliam
+				# 		country_leader = {
+				# 			expire = "1965.1.1"
+				# 			ideology = absolutism
+				# 		}
+				# 		promote_leader = yes
+				# 	}
+				# }
 			}
 		}
 	}
