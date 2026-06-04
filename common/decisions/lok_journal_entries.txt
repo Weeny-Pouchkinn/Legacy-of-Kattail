@@ -796,7 +796,7 @@ lok_journal_entries_cat = {
 			date > "105.1.1"
 			has_war = no
 			PLR = {
-				is_puppet = no
+				is_subject = no
 			}
 			HAR = { is_ai = yes }
 		}
@@ -829,7 +829,7 @@ lok_journal_entries_cat = {
 				transfer_troops = yes
 			}
 			HAR = {
-				every_core_state = { add_core_of = PLR }
+				every_core_state = { add_core_of = PLR set_temp_variable = { substate_id_temp = 17 } set_substate = yes }
 			}
 			add_ideas = PLR_king_bunbun
 			every_owned_state = {
@@ -863,7 +863,7 @@ lok_journal_entries_cat = {
 		available = {
 			date > "110.1.1"
 			has_war = no
-			PLR = { is_puppet = no }
+			PLR = { is_subject = no }
 			KAR = { is_ai = yes }
 		}
 
@@ -877,7 +877,11 @@ lok_journal_entries_cat = {
 				target = KAR
 			}
 			KAR = {
-				every_core_state = { add_core_of = PLR }
+				every_core_state = {
+					add_core_of = PLR
+					set_temp_variable = { substate_id_temp = 18 }
+					set_substate = yes
+				}
 			}
 			add_popularity = {
 				ideology = democratic
@@ -1450,7 +1454,7 @@ lok_journal_entries_cat = {
 
 		visible = {
 			country_exists = FROM
-			FROM = { NOT = { is_puppet_of = ACR } }
+			FROM = { NOT = { is_subject_of = ACR } }
 		}
 		
 		available = {
@@ -1488,7 +1492,7 @@ lok_journal_entries_cat = {
 
 		visible = {
 			country_exists = FROM
-			FROM = { is_puppet_of = ACR }
+			FROM = { is_subject_of = ACR }
 		}
 		
 		available = {
@@ -1633,7 +1637,7 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_democratic_gov_group = yes
-			is_puppet = no
+			is_subject = no
 			date > "101.1.1"
 		}
 
@@ -1662,7 +1666,7 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_democratic_gov_group = yes
-			is_puppet = no
+			is_subject = no
 			date > "101.1.6"
 		}
 
@@ -1687,7 +1691,7 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_democratic_gov_group = yes
-			is_puppet = no
+			is_subject = no
 			date > "102.1.1"
 		}
 
@@ -1712,7 +1716,7 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_democratic_gov_group = yes
-			is_puppet = no
+			is_subject = no
 			date > "102.1.5"
 		}
 	
@@ -1737,11 +1741,11 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_democratic_gov_group = yes
-			is_puppet = no
+			is_subject = no
 			STR = { has_war = no }
 			OR = {
 				NOT = { country_exists = MEW }
-				MEW = { is_puppet_of = STR }
+				MEW = { is_subject_of = STR }
 			}
 		}
 	
@@ -1766,11 +1770,11 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_democratic_gov_group = yes
-			is_puppet = no
+			is_subject = no
 			ELO = { has_war = no }
 			OR = {
 				NOT = { country_exists = AUR }
-				AUR = { is_puppet_of = ELO }
+				AUR = { is_subject_of = ELO }
 				AUR = { NOT = { has_fascist_gov_group = yes } }
 			}
 		}
@@ -1796,7 +1800,7 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_democratic_gov_group = yes
-			is_puppet = no
+			is_subject = no
 			OR = {
 				AND = {
 					date > "103.1.1"
@@ -1847,7 +1851,7 @@ lok_journal_entries_cat = {
 			has_democratic_gov_group = yes
 			has_country_flag = ussf_formed
 			has_war = no
-			is_puppet = no
+			is_subject = no
 			date > "108.1.1"
 		}
 
@@ -1875,7 +1879,7 @@ lok_journal_entries_cat = {
 		available = {
 			has_democratic_gov_group = yes
 			has_country_flag = ussf_formed
-			is_puppet = no
+			is_subject = no
 			date > "106.1.1"
 			NOT = { is_in_faction_with = CLE }
 			country_exists = CLE
@@ -1918,7 +1922,7 @@ lok_journal_entries_cat = {
 		available = {
 			has_democratic_gov_group = yes
 			has_country_flag = ussf_formed
-			is_puppet = no
+			is_subject = no
 			date > "108.1.1"
 		}
 
@@ -2769,7 +2773,7 @@ lok_journal_entries_cat = {
 		}
 
 		visible = {
-			LMB = { is_puppet_of = ROQ }
+			LMB = { is_subject_of = ROQ }
 		}
 
 		available = {
@@ -3348,18 +3352,18 @@ lok_journal_entries_cat = {
 
 		available = {
 			has_war = no
-			425 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			952 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			438 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			289 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			1027 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			336 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			349 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			1020 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			978 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			391 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			357 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
-			418 = { OR = { is_controlled_by = ROQ var:controller = { is_puppet_of = ROQ } } }
+			425 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			952 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			438 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			289 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			1027 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			336 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			349 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			1020 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			978 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			391 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			357 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
+			418 = { OR = { is_controlled_by = ROQ var:controller = { is_subject_of = ROQ } } }
 		}
 
 		fire_only_once = yes
@@ -3415,7 +3419,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { PLR = { is_puppet_of = ALK } }
+					NOT = { PLR = { is_subject_of = ALK } }
 					country_exists = ALK
 				}
 				declare_war_on = {
@@ -3459,7 +3463,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { PLR = { is_puppet_of = ROQ } }
+					NOT = { PLR = { is_subject_of = ROQ } }
 					country_exists = PLR
 				}
 				declare_war_on = {
@@ -3469,7 +3473,7 @@ lok_journal_entries_cat = {
 			}
 			if = {
 				limit = {
-					NOT = { HAR = { is_puppet_of = ROQ } }
+					NOT = { HAR = { is_subject_of = ROQ } }
 					country_exists = HAR
 				}
 				declare_war_on = {
@@ -3479,7 +3483,7 @@ lok_journal_entries_cat = {
 			}
 			if = {
 				limit = {
-					NOT = { KAR = { is_puppet_of = ROQ } }
+					NOT = { KAR = { is_subject_of = ROQ } }
 					country_exists = KAR
 				}
 				declare_war_on = {
@@ -3525,7 +3529,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { VIX = { is_puppet_of = ROQ } }
+					NOT = { VIX = { is_subject_of = ROQ } }
 					country_exists = VIX
 				}
 				declare_war_on = {
@@ -3570,7 +3574,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { IZW = { is_puppet_of = ROQ } }
+					NOT = { IZW = { is_subject_of = ROQ } }
 					country_exists = IZW
 				}
 				declare_war_on = {
@@ -3580,7 +3584,7 @@ lok_journal_entries_cat = {
 			}
 			if = {
 				limit = {
-					NOT = { PAR = { is_puppet_of = ROQ } }
+					NOT = { PAR = { is_subject_of = ROQ } }
 					country_exists = PAR
 				}
 				declare_war_on = {
@@ -3623,7 +3627,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { TEN = { is_puppet_of = ROQ } }
+					NOT = { TEN = { is_subject_of = ROQ } }
 					country_exists = TEN
 				}
 				declare_war_on = {
@@ -3666,7 +3670,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { FST = { is_puppet_of = ROQ } }
+					NOT = { FST = { is_subject_of = ROQ } }
 					country_exists = FST
 				}
 				declare_war_on = {
@@ -3711,7 +3715,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { PHR = { is_puppet_of = ROQ } }
+					NOT = { PHR = { is_subject_of = ROQ } }
 					country_exists = PHR
 				}
 				declare_war_on = {
@@ -3721,7 +3725,7 @@ lok_journal_entries_cat = {
 			}
 			if = {
 				limit = {
-					NOT = { TUN = { is_puppet_of = ROQ } }
+					NOT = { TUN = { is_subject_of = ROQ } }
 					country_exists = TUN
 				}
 				declare_war_on = {
@@ -3764,7 +3768,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { IMP = { is_puppet_of = ROQ } }
+					NOT = { IMP = { is_subject_of = ROQ } }
 					country_exists = IMP
 				}
 				declare_war_on = {
@@ -3774,7 +3778,7 @@ lok_journal_entries_cat = {
 			}
 			if = {
 				limit = {
-					NOT = { SOF = { is_puppet_of = ROQ } }
+					NOT = { SOF = { is_subject_of = ROQ } }
 					country_exists = SOF
 				}
 				declare_war_on = {
@@ -3818,7 +3822,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { CAN = { is_puppet_of = ROQ } }
+					NOT = { CAN = { is_subject_of = ROQ } }
 					country_exists = CAN
 				}
 				declare_war_on = {
@@ -3861,7 +3865,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { KEP = { is_puppet_of = ROQ } }
+					NOT = { KEP = { is_subject_of = ROQ } }
 					country_exists = KEP
 				}
 				declare_war_on = {
@@ -3908,7 +3912,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { VAS = { is_puppet_of = ROQ } }
+					NOT = { VAS = { is_subject_of = ROQ } }
 					country_exists = VAS
 				}
 				declare_war_on = {
@@ -3951,7 +3955,7 @@ lok_journal_entries_cat = {
 		remove_effect = {
 			if = {
 				limit = {
-					NOT = { CRE = { is_puppet_of = ROQ } }
+					NOT = { CRE = { is_subject_of = ROQ } }
 					country_exists = CRE
 				}
 				declare_war_on = {
