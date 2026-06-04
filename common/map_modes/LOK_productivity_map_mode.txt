@@ -19,7 +19,10 @@ scripted_map_modes = {
 					set_temp_variable = { blue = 1 }
 				}
 				else_if = {
-					limit = { FROM = { check_variable = { lok_state_productivity_value < 1 } } }
+					limit = {
+						FROM = { check_variable = { lok_state_productivity_value < 1 } }
+						FROM = { check_variable = { lok_state_productivity_value > 0 } }
+					}
 					#Say 0.75 prod
 					set_temp_variable = { green = 0 }
 					set_temp_variable = { blue = 0 }
@@ -42,6 +45,17 @@ scripted_map_modes = {
 				if = { limit = { check_variable = { blue < 0 } } set_temp_variable = { blue = 0 } }
 				if = { limit = { check_variable = { red > 1 } } set_temp_variable = { red = 1 } }
 				if = { limit = { check_variable = { red < 0 } } set_temp_variable = { red = 0 } }
+				if = {
+					limit = {
+						OR = {
+							FROM = { check_variable = { lok_state_productivity_value = 0 } }
+							FROM = { check_variable = { lok_state_productivity_value < 0 } }
+						}
+					}
+					set_temp_variable = { green = 0 }
+					set_temp_variable = { blue = 0 }
+					set_temp_variable = { red = 0 }
+				}
 			}
 		}
 		far_text = none

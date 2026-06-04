@@ -5099,19 +5099,27 @@ on_actions = {
 						limit = { is_ai = yes }
 						if = { #Fission = 1 point
 							limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 1 }
+							set_temp_variable = { lok_nuke_retaliation_score_temp = 1 }
+							multiply_temp_variable = { lok_nuke_retaliation_score_temp = modifier@lok_nuclear_retaliation_factor }
+							add_to_variable = { lok_nuke_retaliation_score = lok_nuke_retaliation_score_temp }
 						}
 						else_if = { #Fusion = 3 points
 							limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 3 }
+							set_temp_variable = { lok_nuke_retaliation_score_temp = 3 }
+							multiply_temp_variable = { lok_nuke_retaliation_score_temp = modifier@lok_nuclear_retaliation_factor }
+							add_to_variable = { lok_nuke_retaliation_score = lok_nuke_retaliation_score_temp }
 						}
 						else_if = { #Cobalt = 3 points
 							limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 3 }
+							set_temp_variable = { lok_nuke_retaliation_score_temp = 3 }
+							multiply_temp_variable = { lok_nuke_retaliation_score_temp = modifier@lok_nuclear_retaliation_factor }
+							add_to_variable = { lok_nuke_retaliation_score = lok_nuke_retaliation_score_temp }
 						}
 						else_if = { #Mondkanone = 2 points
 							limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
-							add_to_variable = { lok_nuke_retaliation_score = 2 }
+							set_temp_variable = { lok_nuke_retaliation_score_temp = 2 }
+							multiply_temp_variable = { lok_nuke_retaliation_score_temp = modifier@lok_nuclear_retaliation_factor }
+							add_to_variable = { lok_nuke_retaliation_score = lok_nuke_retaliation_score_temp }
 						}
 					}
 				}
@@ -5123,6 +5131,23 @@ on_actions = {
 
 	on_capitulation_immediate = {
 		effect = {
+			if = {
+				limit = {
+					OR = {
+						ROOT = { tag = NEK }
+						ROOT = { tag = KUS }
+					}
+					has_global_flag = KUS_NEK_war_active
+				}
+				clr_global_flag = KUS_NEK_war_active
+			}
+			if = {
+				limit = {
+					ROOT = { tag = ROQ }
+					has_global_flag = ROQ_reclamation_active
+				}
+				ROQ_reclamation_cleanup = yes
+			}
 			if = {
 				limit = {
 					AUR = { has_country_flag = AUR_herald_sanity_active }
