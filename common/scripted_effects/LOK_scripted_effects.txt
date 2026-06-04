@@ -2954,7 +2954,6 @@ calculate_noble_house_power = {
 			text = { 
 				if = {
 					limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = [ID] } }
-					add_to_variable = { noble_house_[ID]_opinion = 100 }
 					set_variable = { noble_house_[ID]_happy_states = noble_house_[ID]_expected_states }
 					multiply_variable = { noble_house_[ID]_happy_states = 2 }
 					set_variable = { noble_house_[ID]_power = 0 }
@@ -2969,13 +2968,36 @@ calculate_noble_house_power = {
 					add_to_variable = { noble_house_total_power = noble_house_[ID]_power }
 					add_to_variable = { kingdom_total_power = noble_house_[ID]_power }
 					if = { #you didn't give us twice as many states as we want... fine...
-						limit = { check_variable = { noble_house_[ID]_states > noble_house_[ID]_happy_states } }
-						subtract_from_variable = { noble_house_[ID]_opinion = 50 }
+						limit = {
+							OR = {
+								check_variable = { noble_house_[ID]_states < noble_house_[ID]_happy_states }
+								check_variable = { noble_house_[ID]_states = noble_house_[ID]_happy_states }
+							}
+						}
+						add_to_variable = { noble_house_[ID]_opinion = 1 }
 					}
 					if = { #Not enough states!!!!! grrr!!!!
 						limit = { check_variable = { noble_house_[ID]_states < noble_house_[ID]_expected_states } }
-						subtract_from_variable = { noble_house_[ID]_opinion = 50 }
+						subtract_from_variable = { noble_house_[ID]_opinion = 5 }
 					}
+					if = {
+						limit = { check_variable = { noble_house_[ID]_opinion > 0 } }
+						add_to_variable = { friendly_total_power = noble_house_[ID]_power }
+					}
+					#opinion from big crown power
+					if = {
+						limit = { check_variable = { crown_land_power_perc > 0.75 } }
+						subtract_from_variable = { noble_house_[ID]_opinion = 4 }
+					}
+					else_if = {
+						limit = { check_variable = { crown_land_power_perc > 0.50 } }
+						subtract_from_variable = { noble_house_[ID]_opinion = 2 }
+					}
+					else_if = {
+						limit = { check_variable = { crown_land_power_perc < 0.25 } }
+						add_to_variable = { noble_house_[ID]_opinion = 2 }
+					}
+					clamp_variable = { var = noble_house_[ID]_opinion min = -100 max = 100 }
 				}
 			}
 			ID = "[?noble_house_id]"
@@ -3002,4 +3024,10 @@ calculate_noble_house_power = {
 		}
 		add_to_variable = { noble_house_id = 1 }
 	}
+	
+	#what % agrees with us
+	add_to_variable = { friendly_total_power = crown_land_power }
+	divide_variable = { friendly_total_power = kingdom_total_power }
+	set_variable = { unfriendly_total_power = 1 }
+	subtract_from_variable = { unfriendly_total_power = friendly_total_power }
 }
