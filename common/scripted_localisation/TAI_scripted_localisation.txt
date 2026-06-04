@@ -1,0 +1,215 @@
+# Returns the current description of the Reclamation depending on the stage
+defined_text = {
+	name = GetNobleHouse6Status
+	text = {
+		trigger = { has_country_flag = noble_house_6_unlocked }
+		localization_key = noble_house_6_status
+	}
+	text = {
+		localization_key = ROQ_reclamation_stage_inactive_desc
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseLeaderGFX
+	text = {
+		trigger = { check_variable = { substate_id = 6 } }
+		localization_key = "GFX_portrait_PRL_Kibbles"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 4 } }
+		localization_key = "GFX_portrait_CAT_Rex"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 11 } }
+		localization_key = "GFX_portrait_TAI_Maximilian_Schwarz"
+	}
+}
+
+
+defined_text = {
+	name = GetNobleHouseLeaderName
+	text = {
+		trigger = { check_variable = { substate_id = 6 } }
+		localization_key = "PRL_Kibbles"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 4 } }
+		localization_key = "CAT_Rex"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 11 } }
+		localization_key = "TAI_Maximilian_Schwarz"
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseExpectedStates
+	text = {
+		trigger = { check_variable = { substate_id = 6 } }
+		localization_key = "[?noble_house_6_expected_states]"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 4 } }
+		localization_key = "[?noble_house_4_expected_states]"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 11 } }
+		localization_key = "[?noble_house_11_expected_states]"
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseStates
+	text = {
+		trigger = { check_variable = { substate_id = 6 } }
+		localization_key = "[?noble_house_6_states]"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 4 } }
+		localization_key = "[?noble_house_4_states]"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 11 } }
+		localization_key = "[?noble_house_11_states]"
+	}
+}
+
+defined_text = {
+	name = GetNobleHousePower
+	text = {
+		trigger = { check_variable = { substate_id = 6 } }
+		localization_key = "[?noble_house_6_power]"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 4 } }
+		localization_key = "[?noble_house_4_power]"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 11 } }
+		localization_key = "[?noble_house_11_power]"
+	}
+}
+
+defined_text = {
+	name = GetNobleHousePowerPerc
+	text = {
+		trigger = { check_variable = { substate_id = 6 } }
+		localization_key = noble_house_6_power_perc_key
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 4 } }
+		localization_key = noble_house_4_power_perc_key
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 11 } }
+		localization_key = noble_house_11_power_perc_key
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseOpinion
+	text = {
+		trigger = { check_variable = { substate_id = 6 } }
+		localization_key = noble_house_6_opinion_key
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 4 } }
+		localization_key = noble_house_4_opinion_key
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 11 } }
+		localization_key = noble_house_11_opinion_key
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseStateOwnershipSatisfaction
+	text = {
+		trigger = {
+			check_variable = { substate_id = 6 }
+			OR = {
+				check_variable = { noble_house_6_states > noble_house_6_happy_states }
+				check_variable = { noble_house_6_states = noble_house_6_happy_states }
+			}
+		}
+		localization_key = noble_house_happy_states
+	}
+	text = {
+		trigger = {
+			check_variable = { substate_id = 6 }
+			check_variable = { noble_house_6_states < noble_house_6_expected_states }
+		}
+		localization_key = noble_house_unhappy_states
+	}
+	text = {
+		trigger = {
+			check_variable = { substate_id = 6 }
+			OR = {
+				check_variable = { noble_house_6_states < noble_house_6_happy_states }
+				check_variable = { noble_house_6_states > noble_house_6_expected_states }
+				check_variable = { noble_house_6_states = noble_house_6_expected_states }
+			}
+		}
+		localization_key = noble_house_normal_states
+	}
+
+	text = {
+		trigger = {
+			check_variable = { substate_id = 4 }
+			OR = {
+				check_variable = { noble_house_4_states > noble_house_4_happy_states }
+				check_variable = { noble_house_4_states = noble_house_4_happy_states }
+			}
+		}
+		localization_key = noble_house_happy_states
+	}
+	text = {
+		trigger = {
+			check_variable = { substate_id = 4 }
+			check_variable = { noble_house_4_states < noble_house_4_expected_states }
+		}
+		localization_key = noble_house_unhappy_states
+	}
+	text = {
+		trigger = {
+			check_variable = { substate_id = 4 }
+			OR = {
+				check_variable = { noble_house_4_states < noble_house_4_happy_states }
+				check_variable = { noble_house_4_states > noble_house_4_expected_states }
+				check_variable = { noble_house_4_states = noble_house_4_expected_states }
+			}
+		}
+		localization_key = noble_house_normal_states
+	}
+
+	text = {
+		trigger = {
+			check_variable = { substate_id = 11 }
+			OR = {
+				check_variable = { noble_house_11_states > noble_house11_happy_states }
+				check_variable = { noble_house_11_states = noble_house_11_happy_states }
+			}
+		}
+		localization_key = noble_house_happy_states
+	}
+	text = {
+		trigger = {
+			check_variable = { substate_id = 11 }
+			check_variable = { noble_house_11_states < noble_house_11_expected_states }
+		}
+		localization_key = noble_house_unhappy_states
+	}
+	text = {
+		trigger = {
+			check_variable = { substate_id = 11 }
+			OR = {
+				check_variable = { noble_house_11_states < noble_house_11_happy_states }
+				check_variable = { noble_house_11_states > noble_house_11_expected_states }
+				check_variable = { noble_house_11_states = noble_house_11_expected_states }
+			}
+		}
+		localization_key = noble_house_normal_states
+	}
+
+}

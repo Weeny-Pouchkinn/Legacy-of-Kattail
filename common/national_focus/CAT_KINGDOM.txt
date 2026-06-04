@@ -961,13 +961,13 @@ focus_tree = {
 			517 = { is_controlled_by_ROOT_or_subject = yes }
 		}
 		completion_reward = {
-			115 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
-			116 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
-			520 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
-			562 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
-			551 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
-			522 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
-			517 = { add_compliance = 20 add_building_construction = { type = infrastructure level = 2 } }
+			115 = { set_temp_variable = { substate_id_temp = 13 } give_land_to_noble_house_and_core = yes add_building_construction = { type = infrastructure level = 2 } }
+			116 = { set_temp_variable = { substate_id_temp = 13 } give_land_to_noble_house_and_core = yes add_building_construction = { type = infrastructure level = 2 } }
+			520 = { set_temp_variable = { substate_id_temp = 13 } give_land_to_noble_house_and_core = yes add_building_construction = { type = infrastructure level = 2 } }
+			562 = { set_temp_variable = { substate_id_temp = 13 } give_land_to_noble_house_and_core = yes add_building_construction = { type = infrastructure level = 2 } }
+			551 = { set_temp_variable = { substate_id_temp = 13 } give_land_to_noble_house_and_core = yes add_building_construction = { type = infrastructure level = 2 } }
+			522 = { set_temp_variable = { substate_id_temp = 13 } give_land_to_noble_house_and_core = yes add_building_construction = { type = infrastructure level = 2 } }
+			517 = { set_temp_variable = { substate_id_temp = 13 } give_land_to_noble_house_and_core = yes add_building_construction = { type = infrastructure level = 2 } }
 		}
 	}
 	#PURRLIN
@@ -1031,25 +1031,24 @@ focus_tree = {
 			PRL = {
 				any_core_state = { is_controlled_by = ROOT }
 			}
+			owns_state = 173
 		}
 		completion_reward = {
 			add_stability = -0.10
 			add_popularity = { ideology = democratic popularity = 0.10 }
 			add_political_power = -200
+			173 = {
+				set_temp_variable = { noble_house_expected_states = 6 }
+				set_temp_variable = { substate_id_temp = 6 }
+				raise_noble_house_and_core = yes
+			}
+			if = {
+				limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 6 } } }
+				add_to_array = { array = TAI_unlocked_noble_house_array value = 6 }
+			}
+			set_country_flag = noble_house_6_unlocked
+			set_variable = { noble_house_6_expected_states = noble_house_expected_states }
 			PRL = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_lower_40
-					hidden_effect = {
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-					}
-					if = {
-						limit = { is_controlled_by = ROOT }
-						add_compliance = 10
-					}
-				}
 				every_unit_leader = {
 					set_nationality = ROOT
 				}
@@ -1185,48 +1184,6 @@ focus_tree = {
 	focus = {
 		id = CKG_southern_breadbasket
 		icon = CKG_southern_breadbasket
-		x = 15
-		y = 10
-		cost = 5
-		available = {
-			NOT = { country_exists = CAT }
-			CAT = { any_core_state = { is_controlled_by = CAT } }
-		}
-		completion_reward = {
-			#PM
-			custom_effect_tooltip = CKG_southern_breadbasket_tt
-			if = {
-				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
-				set_country_flag = ckg_picked_abs_const
-				country_event = { id = CKG_event.1 }
-			}
-			CAT = {
-				every_core_state = {
-					custom_effect_tooltip = state_core_threshold_lower_40
-					hidden_effect = {
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-						reduce_compliance_coring_threshold_by_10 = yes
-					}
-					if = {
-						limit = { is_controlled_by = ROOT }
-						add_building_construction = {
-							type = industrial_complex
-							level = 1
-						}
-						add_resource = { type = food amount = 10 }
-					}
-				}
-				every_unit_leader = {
-					set_nationality = ROOT
-				}
-			}
-		}
-	}
-	focus = {
-		id = CKG_the_house_of_catburg
-		icon = CKG_the_house_of_catburg
 		x = 14
 		y = 9
 		cost = 5
@@ -1250,6 +1207,49 @@ focus_tree = {
 			modifier = {
 				factor = 0
 				has_war = yes
+			}
+		}
+	}
+	focus = {
+		id = CKG_the_house_of_catburg
+		icon = CKG_the_house_of_catburg
+		x = 15
+		y = 10
+		cost = 5
+		available = {
+			NOT = { country_exists = CAT }
+			CAT = {
+				any_core_state = { is_controlled_by = ROOT }
+			}
+		}
+		completion_reward = {
+			#PM
+			custom_effect_tooltip = CKG_southern_breadbasket_tt
+			if = {
+				limit = { NOT = { has_country_flag = ckg_picked_abs_const } }
+				set_country_flag = ckg_picked_abs_const
+				country_event = { id = CKG_event.1 }
+			}
+			if = {
+				limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 4 } } }
+				add_to_array = { array = TAI_unlocked_noble_house_array value = 4 }
+			}
+			CAT = {
+				every_core_state = {
+					limit = { is_owned_by = ROOT }
+					set_temp_variable = { substate_id_temp = 4 }
+					set_substate = yes
+					add_dynamic_modifier = { modifier = noble_house_substate_modifier }
+					add_core_of = ROOT
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+					}
+					add_resource = { type = food amount = 10 }
+				}
+				every_unit_leader = {
+					set_nationality = ROOT
+				}
 			}
 		}
 	}
@@ -2370,6 +2370,10 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
+			if = {
+				limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 11 } } }
+				add_to_array = { array = TAI_unlocked_noble_house_array value = 11 }
+			}
 			OST = {
 				if = {
 					limit = { country_exists = THIS }
