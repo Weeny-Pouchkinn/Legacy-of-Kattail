@@ -2398,7 +2398,7 @@ calculate_radiation_state_modifiers = {
 		#Prod loss from rads
 		#1 rad = 0.1 prod loss, so divide by 1000
 		set_variable = { state_prod_change_from_radiation_this_check = lok_added_radiation_level }
-		divide_variable = { state_prod_change_from_radiation_this_check = -100 }
+		divide_variable = { state_prod_change_from_radiation_this_check = -500 }
 		add_to_variable = { state_prod_change_from_radiation = state_prod_change_from_radiation_this_check }
 		add_to_variable = { lok_state_productivity_value = state_prod_change_from_radiation_this_check }
 	}
@@ -2431,11 +2431,11 @@ apply_radiation_effects = {
 		#Kill people in the state (RIP Bozo)
 		set_variable = { lok_radiation_death_percent = lok_radiation_level }
 		#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
-		divide_variable = { lok_radiation_death_percent = 100 }
+		divide_variable = { lok_radiation_death_percent = 500 }
 
 		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
 		multiply_variable = { lok_radiation_death_percent = modifier@lok_species_radiation_casualties_factor }
-		multiply_variable = { lok_radiation_death_percent = var:CONTROLLER.modifier@lok_country_radiation_casualties_factor }
+		#multiply_variable = { lok_radiation_death_percent = CONTROLLER.modifier@lok_country_radiation_casualties_factor } #FIX LATER
 
 		set_variable = { lok_radiation_death_count = state_population_k }
 		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }
