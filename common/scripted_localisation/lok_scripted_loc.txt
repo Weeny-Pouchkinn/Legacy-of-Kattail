@@ -1009,8 +1009,8 @@ defined_text = {
 
 defined_text = {
 	name = get_substate_id_name
-	text = { trigger = { check_variable = { substate_id = 1 } } localization_key = "substate_id_name_1" }
-	text = { trigger = { check_variable = { substate_id = 2 } } localization_key = "substate_id_name_2" }
+	text = { trigger = { check_variable = { substate_id = 1 } } localization_key = "substate_id_name_state_itself" }
+	text = { trigger = { check_variable = { substate_id = 2 } } localization_key = "substate_id_name_state_itself" }
 	text = { trigger = { check_variable = { substate_id = 3 } } localization_key = "substate_id_name_3" }
 	text = { trigger = { check_variable = { substate_id = 4 } } localization_key = "substate_id_name_4" }
 	text = { trigger = { check_variable = { substate_id = 5 } } localization_key = "substate_id_name_5" }
@@ -1020,11 +1020,25 @@ defined_text = {
 	text = { trigger = { check_variable = { substate_id = 9 } } localization_key = "substate_id_name_9" }
 	text = { trigger = { check_variable = { substate_id = 10 } } localization_key = "substate_id_name_10" }
 	text = { trigger = { check_variable = { substate_id = 11 } } localization_key = "substate_id_name_11" }
+	text = { trigger = { check_variable = { substate_id = 12 } } localization_key = "substate_id_name_12" }
+	text = { trigger = { check_variable = { substate_id = 13 } } localization_key = "substate_id_name_13" }
 	text = { localization_key = "substate_id_name_fallback" }
 }
 
 defined_text = {
 	name = get_substate_id_type
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_federal_array value = substate_id }
+		}
+		localization_key = "substate_type_federal"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_confederal_array value = substate_id }
+		}
+		localization_key = "substate_type_confederal"
+	}
 	text = {
 		trigger = {
 			is_in_array = { array = global.substate_type_noble_family_array value = substate_id }
@@ -1035,4 +1049,5 @@ defined_text = {
 		localization_key = "substate_type_fallback"
 	}
 }
+
 

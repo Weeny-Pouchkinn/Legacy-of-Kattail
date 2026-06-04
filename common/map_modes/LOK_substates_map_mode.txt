@@ -14,70 +14,104 @@ scripted_map_modes = {
 					}
 					if = {
 						limit = { FROM = { check_variable = { substate_id = 1 } } }
+						set_temp_variable = { red = FROM.state_color_red }
+						set_temp_variable = { green = FROM.state_color_green }
+						set_temp_variable = { blue = FROM.state_color_blue }
+					}
+					else_if = {
+						limit = { FROM = { check_variable = { substate_id = 2 } } }
+						set_temp_variable = { red = FROM.state_color_red }
+						set_temp_variable = { green = FROM.state_color_green }
+						set_temp_variable = { blue = FROM.state_color_blue }
+					}
+					else_if = {
+						limit = { FROM = { check_variable = { substate_id = 3 } } }
 						set_temp_variable = { red = 0.55 }
 						set_temp_variable = { green = 0.55 }
 						set_temp_variable = { blue = 0.60 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 2 } } }
+						limit = { FROM = { check_variable = { substate_id = 4 } } }
 						set_temp_variable = { red = 0.10 }
 						set_temp_variable = { green = 0.70 }
 						set_temp_variable = { blue = 0.20 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 3 } } }
+						limit = { FROM = { check_variable = { substate_id = 5 } } }
 						set_temp_variable = { red = 1.00 }
 						set_temp_variable = { green = 0.50 }
 						set_temp_variable = { blue = 0.00 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 4 } } }
+						limit = { FROM = { check_variable = { substate_id = 6 } } }
 						set_temp_variable = { red = 0.20 }
 						set_temp_variable = { green = 0.80 }
 						set_temp_variable = { blue = 0.40 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 5 } } }
+						limit = { FROM = { check_variable = { substate_id = 7 } } }
 						set_temp_variable = { red = 0.10 }
 						set_temp_variable = { green = 0.35 }
 						set_temp_variable = { blue = 0.60 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 6 } } }
+						limit = { FROM = { check_variable = { substate_id = 8 } } }
 						set_temp_variable = { red = 0.60 }
 						set_temp_variable = { green = 0.20 }
 						set_temp_variable = { blue = 0.70 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 7 } } }
+						limit = { FROM = { check_variable = { substate_id = 9 } } }
 						set_temp_variable = { red = 0.20 }
 						set_temp_variable = { green = 0.50 }
 						set_temp_variable = { blue = 0.90 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 8 } } }
+						limit = { FROM = { check_variable = { substate_id = 10 } } }
 						set_temp_variable = { red = 0.00 }
 						set_temp_variable = { green = 0.40 }
 						set_temp_variable = { blue = 0.80 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 9 } } }
+						limit = { FROM = { check_variable = { substate_id = 11 } } }
 						set_temp_variable = { red = 0.95 }
 						set_temp_variable = { green = 0.80 }
 						set_temp_variable = { blue = 0.10 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 10 } } }
+						limit = { FROM = { check_variable = { substate_id = 12 } } }
 						set_temp_variable = { red = 0.50 }
 						set_temp_variable = { green = 0.10 }
 						set_temp_variable = { blue = 0.60 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 11 } } }
+						limit = { FROM = { check_variable = { substate_id = 13 } } }
 						set_temp_variable = { red = 0.10 }
 						set_temp_variable = { green = 0.50 }
 						set_temp_variable = { blue = 0.70 }
 					}
+
+					# Average with country color if substate takes country color
+					if = {
+						limit = {
+							FROM = {
+								is_in_array = { array = global.substates_take_country_color_array value = substate_id }
+							}
+						}
+						set_temp_variable = { red_country_add = FROM.country_color_red }
+						divide_temp_variable = { red_country_add = 2 }
+						add_to_temp_variable = { red = red_country_add }
+						set_temp_variable = { green_country_add = FROM.country_color_green }
+						divide_temp_variable = { green_country_add = 2 }
+						add_to_temp_variable = { green = green_country_add }
+						set_temp_variable = { blue_country_add = FROM.country_color_blue }
+						divide_temp_variable = { blue_country_add = 2 }
+						add_to_temp_variable = { blue = blue_country_add }
+						divide_temp_variable = { red = 1.5 }
+						divide_temp_variable = { green = 1.5 }
+						divide_temp_variable = { blue = 1.5 }
+					}
+
 					set_temp_variable = { alpha = alpha_temp }
 					set_temp_variable = { thickness = 6.0 }
 				}
@@ -101,70 +135,104 @@ scripted_map_modes = {
 					limit = { FROM = { check_variable = { substate_id > 0 } } }
 					if = {
 						limit = { FROM = { check_variable = { substate_id = 1 } } }
+						set_temp_variable = { red = FROM.state_color_red }
+						set_temp_variable = { green = FROM.state_color_green }
+						set_temp_variable = { blue = FROM.state_color_blue }
+					}
+					else_if = {
+						limit = { FROM = { check_variable = { substate_id = 2 } } }
+						set_temp_variable = { red = FROM.state_color_red }
+						set_temp_variable = { green = FROM.state_color_green }
+						set_temp_variable = { blue = FROM.state_color_blue }
+					}
+					else_if = {
+						limit = { FROM = { check_variable = { substate_id = 3 } } }
 						set_temp_variable = { red = 0.55 }
 						set_temp_variable = { green = 0.55 }
 						set_temp_variable = { blue = 0.60 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 2 } } }
+						limit = { FROM = { check_variable = { substate_id = 4 } } }
 						set_temp_variable = { red = 0.10 }
 						set_temp_variable = { green = 0.70 }
 						set_temp_variable = { blue = 0.20 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 3 } } }
+						limit = { FROM = { check_variable = { substate_id = 5 } } }
 						set_temp_variable = { red = 1.00 }
 						set_temp_variable = { green = 0.50 }
 						set_temp_variable = { blue = 0.00 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 4 } } }
+						limit = { FROM = { check_variable = { substate_id = 6 } } }
 						set_temp_variable = { red = 0.20 }
 						set_temp_variable = { green = 0.80 }
 						set_temp_variable = { blue = 0.40 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 5 } } }
+						limit = { FROM = { check_variable = { substate_id = 7 } } }
 						set_temp_variable = { red = 0.10 }
 						set_temp_variable = { green = 0.35 }
 						set_temp_variable = { blue = 0.60 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 6 } } }
+						limit = { FROM = { check_variable = { substate_id = 8 } } }
 						set_temp_variable = { red = 0.60 }
 						set_temp_variable = { green = 0.20 }
 						set_temp_variable = { blue = 0.70 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 7 } } }
+						limit = { FROM = { check_variable = { substate_id = 9 } } }
 						set_temp_variable = { red = 0.20 }
 						set_temp_variable = { green = 0.50 }
 						set_temp_variable = { blue = 0.90 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 8 } } }
+						limit = { FROM = { check_variable = { substate_id = 10 } } }
 						set_temp_variable = { red = 0.00 }
 						set_temp_variable = { green = 0.40 }
 						set_temp_variable = { blue = 0.80 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 9 } } }
+						limit = { FROM = { check_variable = { substate_id = 11 } } }
 						set_temp_variable = { red = 0.95 }
 						set_temp_variable = { green = 0.80 }
 						set_temp_variable = { blue = 0.10 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 10 } } }
+						limit = { FROM = { check_variable = { substate_id = 12 } } }
 						set_temp_variable = { red = 0.50 }
 						set_temp_variable = { green = 0.10 }
 						set_temp_variable = { blue = 0.60 }
 					}
 					else_if = {
-						limit = { FROM = { check_variable = { substate_id = 11 } } }
+						limit = { FROM = { check_variable = { substate_id = 13 } } }
 						set_temp_variable = { red = 0.10 }
 						set_temp_variable = { green = 0.50 }
 						set_temp_variable = { blue = 0.70 }
 					}
+
+					# Average with country color if substate takes country color
+					if = {
+						limit = {
+							FROM = {
+								is_in_array = { array = global.substates_take_country_color_array value = substate_id }
+							}
+						}
+						set_temp_variable = { red_country_add = FROM.country_color_red }
+						divide_temp_variable = { red_country_add = 2 }
+						add_to_temp_variable = { red = red_country_add }
+						set_temp_variable = { green_country_add = FROM.country_color_green }
+						divide_temp_variable = { green_country_add = 2 }
+						add_to_temp_variable = { green = green_country_add }
+						set_temp_variable = { blue_country_add = FROM.country_color_blue }
+						divide_temp_variable = { blue_country_add = 2 }
+						add_to_temp_variable = { blue = blue_country_add }
+						divide_temp_variable = { red = 1.5 }
+						divide_temp_variable = { green = 1.5 }
+						divide_temp_variable = { blue = 1.5 }
+					}
+
 					set_temp_variable = { alpha = alpha_temp }
 				}
 				else = {
