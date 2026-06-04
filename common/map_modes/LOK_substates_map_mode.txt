@@ -150,6 +150,12 @@ scripted_map_modes = {
 						set_temp_variable = { green = 0.75 }
 						set_temp_variable = { blue = 0.60 }
 					}
+					else_if = {
+						limit = { FROM = { check_variable = { substate_id = 24 } } }
+						set_temp_variable = { red = FROM.state_color_red }
+						set_temp_variable = { green = FROM.state_color_green }
+						set_temp_variable = { blue = FROM.state_color_blue }
+					}
 
 					# Average with country color if substate takes country color
 					if = {
@@ -330,6 +336,12 @@ scripted_map_modes = {
 						set_temp_variable = { red = 0.90 }
 						set_temp_variable = { green = 0.75 }
 						set_temp_variable = { blue = 0.60 }
+					}
+					else_if = {
+						limit = { FROM = { check_variable = { substate_id = 24 } } }
+						set_temp_variable = { red = FROM.state_color_red }
+						set_temp_variable = { green = FROM.state_color_green }
+						set_temp_variable = { blue = FROM.state_color_blue }
 					}
 
 					# Average with country color if substate takes country color

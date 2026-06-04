@@ -14,6 +14,23 @@ on_actions = {
 				limit = { ROOT = { tag = KUS } }
 				FROM.FROM = { set_variable = { substate_id = 2 } }
 			}
+			if = {
+				limit = {
+					ROOT = { tag = PLR }
+				}
+				if = {
+					limit = { FROM.FROM = { NOT = { is_core_of = KAR is_core_of = HAR } } }
+					FROM.FROM = { set_variable = { substate_id = 24 } }
+				}
+				if = {
+					limit = { FROM.FROM = { is_core_of = KAR } }
+					FROM.FROM = { set_variable = { substate_id = 18 } }
+				}
+				if = {
+					limit = { FROM.FROM = { is_core_of = HAR } }
+					FROM.FROM = { set_variable = { substate_id = 17 } }
+				}
+			}
 		}
 	}
 	on_startup = {
