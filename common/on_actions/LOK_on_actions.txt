@@ -250,6 +250,28 @@ on_actions = {
 			add_to_array = { array = global.culture_group_1_array value = 75 }
 			add_to_array = { array = global.culture_group_1_array value = 101 }
 
+			# Initialize substates array
+			add_to_array = { array = global.substate_type_noble_family_array value = 1 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 2 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 3 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 4 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 5 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 6 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 7 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 8 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 9 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 10 }
+			add_to_array = { array = global.substate_type_noble_family_array value = 11 }
+
+			# Set debug substates on states
+			78 = { set_variable = { substate_id = 1 } }
+			538 = { set_variable = { substate_id = 2 } }
+
+			# Track previous owner of states for deleting substates on owner change
+			every_state = {
+				set_variable = { previous_owner = owner }
+			}
+
 			# Group 2 (Roqualian)
 			add_to_array = { array = global.culture_group_2_array value = 6 }
 			add_to_array = { array = global.culture_group_2_array value = 7 }
@@ -4225,6 +4247,19 @@ on_actions = {
 		effect = {
 			ROOT = { save_event_target_as = new_controller }
 			FROM = { save_event_target_as = old_controller }
+
+			# Gained control: check if the state owner changed
+			FROM.FROM = {
+				set_temp_variable = { current_owner_var = owner }
+				if = {
+					limit = {
+						NOT = { check_variable = { previous_owner = current_owner_var } }
+					}
+					set_variable = { substate_id = 0 }
+					set_variable = { substate_type = 0 }
+					set_variable = { previous_owner = owner }
+				}
+			}
 			if = {
 				limit = {
 					ROOT = { tag = ROQ }
