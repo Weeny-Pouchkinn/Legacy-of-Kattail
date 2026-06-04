@@ -571,12 +571,12 @@ country_event = {
 	}
 }
 
-# Unlock All Noble Houses (adds IDs 3-13 to array, sets flags)
+# Unlock All Noble Houses (adds IDs 3-14 to array, sets flags)
 country_event = {
 	id = lok_debug.19
 	hidden = yes
 	title = "Unlock All Noble Houses"
-	desc = "Adds all noble substate IDs (3-13) to TAI_unlocked_noble_house_array and sets their unlocked flags."
+	desc = "Adds all noble substate IDs (3-14) to TAI_unlocked_noble_house_array and sets their unlocked flags."
 	is_triggered_only = yes
 
 	immediate = {
@@ -637,6 +637,11 @@ country_event = {
 					add_to_array = { array = TAI_unlocked_noble_house_array value = 13 }
 				}
 				set_country_flag = noble_house_13_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 14 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 14 }
+				}
+				set_country_flag = noble_house_14_unlocked
 			}
 		}
 	}
@@ -669,6 +674,47 @@ country_event = {
 				clear_country_flag = noble_house_11_unlocked
 				clear_country_flag = noble_house_12_unlocked
 				clear_country_flag = noble_house_13_unlocked
+				clear_country_flag = noble_house_14_unlocked
+				clear_country_flag = noble_house_15_unlocked
+			}
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+
+# Swap Noble House 8 for 15 and make Frederick Pawlliam Neutrality Leader
+country_event = {
+	id = lok_debug.21
+	hidden = yes
+	title = "Swap House 8 with 15 & Frederick Pawlliam Neutrality"
+	desc = "Removes House 8 from unlocked houses, adds 15, and sets Frederick Pawlliam as neutrality leader."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			remove_from_array = { array = TAI_unlocked_noble_house_array value = 8 }
+			clear_country_flag = noble_house_8_unlocked
+			if = {
+				limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 15 } } }
+				add_to_array = { array = TAI_unlocked_noble_house_array value = 15 }
+			}
+			set_country_flag = noble_house_15_unlocked
+			FRA = {
+				FRA_Frederick_Pawlliam = {
+					set_nationality = ROOT
+				}
+			}
+			FRA_Frederick_Pawlliam = {
+				add_country_leader_role = {
+					country_leader = {
+						expire = "1965.1.1.1"
+						ideology = despotism
+					}
+					promote_leader = yes
+				}
 			}
 		}
 	}
