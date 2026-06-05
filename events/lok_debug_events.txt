@@ -486,12 +486,20 @@ country_event = { #species
 country_event = { #dynmod
 	id = lok_debug.14
 	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
-	is_triggered_only = yes
+	is_triggered_only = yes	
 	title = ""
 	desc = "[?noble_house_power_perc_array^6]"
 	
 	option = {
 		name = "hi"
+		every_owned_state = {
+			limit = {
+				is_core_of = PRL
+			}
+			set_temp_variable = { substate_id_temp = 6 }
+			assign_state_to_noble_house_and_core = yes
+		}
+		TAI = { calculate_noble_house_power = yes }
 	}
 }
 
