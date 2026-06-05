@@ -1,0 +1,28 @@
+scripted_gui = {
+	TAI_estates_scripted_gui = {
+		window_name = "TAI_estates_gui"
+		context_type = decision_category
+		parent_window_token = decision_tab
+
+		visible = {
+			has_country_flag = open_TAI_estates_gui
+		}
+
+		dynamic_lists = {
+			parliament_diagram = {
+				array = TAI_estates_seat_x
+				change_scope = no
+				entry_container = TAI_estates_seat
+				index = seat_idx
+			}
+		}
+
+		properties = {
+			parliament_dot_icon = {
+				x = TAI_estates_seat_x^seat_idx
+				y = TAI_estates_seat_y^seat_idx
+				frame = TAI_estates_seat_frame^seat_idx
+			}
+		}
+	}
+}
