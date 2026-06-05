@@ -47,37 +47,13 @@ scripted_gui = {
 		}
 
 		effects = {
-			antagonistic_noble_house_bg_click = {
+			noble_house_bg_click = {
 				set_variable = { currently_managing_noble_house = substate_id }
-			}
-			supportive_noble_house_bg_click = {
-				set_variable = { currently_managing_noble_house = substate_id }
-			}
-			elated_noble_house_bg_click = {
-				set_variable = { currently_managing_noble_house = substate_id }
-			}
-			neutral_noble_house_bg_click = {
-				set_variable = { currently_managing_noble_house = substate_id }
+				add_to_variable = { TAI_estates_scripted_gui_variable = 1 }
 			}
 		}
 
 		triggers = {
-			supportive_noble_house_bg_visible = {
-				check_variable = { noble_house_opinion_array^substate_id = 0.5 }
-				check_variable = { noble_house_opinion_array^substate_id > 0.5 }
-				check_variable = { noble_house_opinion_array^substate_id < 0.75 }
-			}
-			antagonistic_noble_house_bg_visible = {
-				check_variable = { noble_house_opinion_array^substate_id < 0.25 }
-			}
-			neutral_noble_house_bg_visible = {
-				check_variable = { noble_house_opinion_array^substate_id = 0.25 }
-				check_variable = { noble_house_opinion_array^substate_id < 0.5 }
-			}
-			elated_noble_house_bg_visible = {
-				check_variable = { noble_house_opinion_array^substate_id > 0.75 }
-				check_variable = { noble_house_opinion_array^substate_id = 0.75 }
-			}
 			no_friendly_houses_msg_visible = {
 				check_variable = { TAI_supportive_houses_array^num = 0 }
 			}
