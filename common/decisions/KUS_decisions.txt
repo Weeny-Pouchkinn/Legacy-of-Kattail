@@ -1074,6 +1074,49 @@ political_actions = {
 		}
 		ai_will_do = { base = 100 }
 	}
+
+	KUS_reform_katzen_culture = {
+		icon = GFX_decision_generic_ignite_civil_war
+
+		allowed = { tag = KUS }
+
+		visible = {
+			has_completed_focus = KUS_good_katzens_bad_katzens
+		}
+
+		state_target = yes
+		targets = { 225 231 716 }
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				NOT = { has_state_flag = KUS_katzen_culture_reformed }
+			}
+		}
+
+		cost = 50
+		days_remove = 180
+
+		remove_effect = {
+			FROM = {
+				set_temp_variable = { culture_temp = 20 }
+				remove_state_culture = yes
+				set_temp_variable = { culture_temp = 2 }
+				add_state_culture = yes
+				set_temp_variable = { state_prod_change = 0.10 }
+				increase_state_productivity = yes
+				set_state_flag = KUS_katzen_culture_reformed
+			}
+			add_stability = 0.05
+		}
+
+		cancel_trigger = {
+			FROM = {
+				NOT = { is_controlled_by = ROOT }
+			}
+		}
+
+		ai_will_do = { base = 100 }
+	}
 }
 
 
