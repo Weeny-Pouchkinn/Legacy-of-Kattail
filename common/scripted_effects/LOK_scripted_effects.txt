@@ -2946,6 +2946,9 @@ calculate_noble_house_power = {
 	set_variable = { kingdom_total_power = 0 }
 	set_variable = { noble_house_total_power = 0 }
 	set_variable = { friendly_total_power = 0 }
+	set_variable = { friendly_noble_house_total_power = 0 }
+	set_variable = { unfriendly_noble_house_total_power = 0 }
+
 	clear_array = TAI_supportive_houses_array
 	clear_array = TAI_antagonistic_houses_array
 
@@ -3014,9 +3017,11 @@ calculate_noble_house_power = {
 			if = {
 				limit = { check_variable = { noble_house_opinion_array^noble_house_id < 0 } }
 				add_to_array = { array = TAI_antagonistic_houses_array value = noble_house_id }
+				add_to_variable = { unfriendly_noble_house_total_power = noble_house_power_array^noble_house_id }
 			}
 			else = {
 				add_to_array = { array = TAI_supportive_houses_array value = noble_house_id }
+				add_to_variable = { friendly_noble_house_total_power = noble_house_power_array^noble_house_id }
 			}
 		}
 		add_to_variable = { noble_house_id = 1 }
@@ -3024,8 +3029,17 @@ calculate_noble_house_power = {
 	#All the percs
 	set_variable = { crown_land_power_perc = crown_land_power }
 	divide_variable = { crown_land_power_perc = kingdom_total_power }
+
 	set_variable = { noble_house_total_power_perc = 1 }
 	subtract_from_variable = { noble_house_total_power_perc = crown_land_power_perc }
+	
+	set_variable = { friendly_noble_house_total_power_perc = friendly_noble_house_total_power }
+	divide_variable = { friendly_noble_house_total_power_perc = kingdom_total_power }
+
+	set_variable = { unfriendly_noble_house_total_power_perc = unfriendly_noble_house_total_power }
+	divide_variable = { unfriendly_noble_house_total_power_perc = kingdom_total_power }
+
+
 	set_variable = { noble_house_id = 3 }
 	while_loop_effect = {
 		limit = { check_variable = { noble_house_id < 16 } }
@@ -3042,15 +3056,5 @@ calculate_noble_house_power = {
 	divide_variable = { friendly_total_power = kingdom_total_power }
 	set_variable = { unfriendly_total_power = 1 }
 	subtract_from_variable = { unfriendly_total_power = friendly_total_power }
-
-	# Calculate dynamic position for antagonistic houses block in vertical card layout
-	set_variable = { friendly_rows = TAI_supportive_houses_array }
-	add_to_variable = { friendly_rows = 1 }
-	divide_variable = { friendly_rows = 2 }
-	multiply_variable = { friendly_rows = 100 }
-	
-	set_variable = { TAI_antagonistic_houses_block_y = 270 }
-	add_to_variable = { TAI_antagonistic_houses_block_y = friendly_rows }
-
 	TAI_estates_init = yes
 }
