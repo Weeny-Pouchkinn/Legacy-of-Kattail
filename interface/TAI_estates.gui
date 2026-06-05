@@ -36,33 +36,89 @@ guiTypes = {
 			}
 		}
 
-		gridBoxType = {
-			name = "TAI_supportive_noble_houses_list"
-			position = { x = 50 y = 0 }
-			#The size of the gridbox
-			size = { width = 100%% height = 100%% }
-			Orientation = upper_left
-			#The slot size
-			slotsize = {width=250 height=100 }
-			format = "UPPER_LEFT"
-			#the maximum horizontal gui elements
-			max_slots_horizontal = 2
-			#the maximum vertical gui elements
-			max_slots_vertical = 13
+		# Friendly/Supportive Houses Block (Header + List)
+		containerWindowType = {
+			name = "supportive_houses_block"
+			position = { x = 0 y = 240 }
+			size = { width = 510 height = 350 }
+
+			background = {
+				name = "Background"
+				quadTextureSprite ="GFX_tiled_window_thin_border"
+			}
+
+			instantTextBoxType = {
+				name = "supportive_houses_header"
+				position = { x = 10 y = 10 }
+				font = "hoi_18mbs"
+				text = "TAI_estates_supportive_houses_header"
+				maxWidth = 500
+				maxHeight = 20
+				format = center
+			}
+
+			gridBoxType = {
+				name = "TAI_supportive_noble_houses_list"
+				position = { x = 40 y = 25 }
+				size = { width = 100%% height = 100%% }
+				slotsize = { width = 250 height = 100 }
+				max_slots_horizontal = 2
+				max_slots_vertical = 13
+				format = "UPPER_LEFT"
+			}
+
+			instantTextBoxType = {
+				name = "no_friendly_houses_msg"
+				position = { x = 10 y = 20 }
+				font = "hoi_16mbs"
+				text = "TAI_estates_no_friendly_houses"
+				maxWidth = 500
+				maxHeight = 20
+				format = center
+			}
 		}
-		gridBoxType = {
-			name = "TAI_antagonistic_noble_houses_list"
-			position = { x = 50 y = 250 }
-			#The size of the gridbox
-			size = { width = 100%% height = 100%% }
-			Orientation = upper_left
-			#The slot size
-			slotsize = {width=250 height=100 }
-			format = "UPPER_LEFT"
-			#the maximum horizontal gui elements
-			max_slots_horizontal = 2
-			#the maximum vertical gui elements
-			max_slots_vertical = 13
+
+		# Antagonistic Houses Block (Header + List)
+		containerWindowType = {
+			name = "antagonistic_houses_block"
+			position = { x = 0 y = 590 }
+			size = { width = 510 height = 320 }
+			verticalScrollbar = "right_vertical_slider"
+
+			background = {
+				name = "Background"
+				quadTextureSprite ="GFX_tiled_window_thin_border"
+			}
+
+			instantTextBoxType = {
+				name = "antagonistic_houses_header"
+				position = { x = 10 y = 10 }
+				font = "hoi_18mbs"
+				text = "TAI_estates_antagonistic_houses_header"
+				maxWidth = 500
+				maxHeight = 20
+				format = center
+			}
+
+			gridBoxType = {
+				name = "TAI_antagonistic_noble_houses_list"
+				position = { x = 40 y = 25 }
+				size = { width = 100%% height = 100%% }
+				slotsize = { width = 250 height = 100 }
+				max_slots_horizontal = 2
+				max_slots_vertical = 13
+				format = "UPPER_LEFT"
+			}
+
+			instantTextBoxType = {
+				name = "no_antagonistic_houses_msg"
+				position = { x = 10 y = 20 }
+				font = "hoi_16mbs"
+				text = "TAI_estates_no_antagonistic_houses"
+				maxWidth = 500
+				maxHeight = 20
+				format = center
+			}
 		}
 	}
 
@@ -76,9 +132,23 @@ guiTypes = {
 			position = { x=-40 y=10 }
 			size = { width=260 height=100 }
 
-			background = {
-				name = "noble_house_background"
-				quadTextureSprite ="GFX_army_tiled_marble_bg"
+			# background = {
+			# 	name = "noble_house_background"
+			# 	quadTextureSprite ="GFX_army_tiled_marble_bg"
+			# }
+
+			iconType ={
+				name ="supportive_noble_house_bg"
+				spriteType = "GFX_supportive_noble_house_bg"
+				position = { x= 0 y = 0 }
+				Orientation = "UPPER_LEFT"
+			}
+
+			iconType ={
+				name ="antagonistic_noble_house_bg"
+				spriteType = "GFX_antagonistic_noble_house_bg"
+				position = { x= 0 y = 0 }
+				Orientation = "UPPER_LEFT"
 			}
 
 			instantTextBoxType = {

@@ -42,6 +42,24 @@ scripted_gui = {
 			noble_house_head_portrait = {
 				image = "[ROOT.GetNobleHouseLeaderGFX]"
 			}
+			antagonistic_houses_block = {
+				y = TAI_antagonistic_houses_block_y
+			}
+		}
+
+		triggers = {
+			supportive_noble_house_bg_visible = {
+				is_in_array = { array = TAI.TAI_supportive_houses_array value = substate_id }
+			}
+			antagonistic_noble_house_bg_visible = {
+				is_in_array = { array = TAI.TAI_antagonistic_houses_array value = substate_id }
+			}
+			no_friendly_houses_msg_visible = {
+				check_variable = { TAI_supportive_houses_array^num = 0 }
+			}
+			no_antagonistic_houses_msg_visible = {
+				check_variable = { TAI_antagonistic_houses_array^num = 0 }
+			}
 		}
 	}
 }

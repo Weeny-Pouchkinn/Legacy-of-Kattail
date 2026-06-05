@@ -3043,5 +3043,14 @@ calculate_noble_house_power = {
 	set_variable = { unfriendly_total_power = 1 }
 	subtract_from_variable = { unfriendly_total_power = friendly_total_power }
 
+	# Calculate dynamic position for antagonistic houses block in vertical card layout
+	set_variable = { friendly_rows = TAI_supportive_houses_array }
+	add_to_variable = { friendly_rows = 1 }
+	divide_variable = { friendly_rows = 2 }
+	multiply_variable = { friendly_rows = 100 }
+	
+	set_variable = { TAI_antagonistic_houses_block_y = 270 }
+	add_to_variable = { TAI_antagonistic_houses_block_y = friendly_rows }
+
 	TAI_estates_init = yes
 }
