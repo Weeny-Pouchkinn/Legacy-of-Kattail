@@ -2,7 +2,7 @@ guiTypes = {
 	containerWindowType = {
 		name = "TAI_estates_gui"
 		position = { x = 100 y = 0 }	
-		size = { width = 600 height = 500 }
+		size = { width = 600 height = 1500 }
 		orientation = center
 		origo = center
 		
@@ -34,60 +34,107 @@ guiTypes = {
 				maxHeight = 24
 				format = center
 			}
+		}
 
-			# Supportive/Friendly Houses Block (Title + List)
-			containerWindowType = {
-				name = "supportive_houses_block"
-				position = { x = 25 y = 30 }
-				size = { width = 260 height = 250 }
+		gridBoxType = {
+			name = "TAI_supportive_noble_houses_list"
+			position = { x = 50 y = 0 }
+			#The size of the gridbox
+			size = { width = 100%% height = 100%% }
+			Orientation = upper_left
+			#The slot size
+			slotsize = {width=250 height=100 }
+			format = "UPPER_LEFT"
+			#the maximum horizontal gui elements
+			max_slots_horizontal = 2
+			#the maximum vertical gui elements
+			max_slots_vertical = 13
+		}
+		gridBoxType = {
+			name = "TAI_antagonistic_noble_houses_list"
+			position = { x = 50 y = 250 }
+			#The size of the gridbox
+			size = { width = 100%% height = 100%% }
+			Orientation = upper_left
+			#The slot size
+			slotsize = {width=250 height=100 }
+			format = "UPPER_LEFT"
+			#the maximum horizontal gui elements
+			max_slots_horizontal = 2
+			#the maximum vertical gui elements
+			max_slots_vertical = 13
+		}
+	}
 
-				instantTextBoxType = {
-					name = "supportive_houses_header"
-					position = { x = 0 y = 0 }
-					font = "hoi_18mbs"
-					text = "TAI_estates_supportive_houses_header"
-					maxWidth = 260
-					maxHeight = 20
-					format = center
-				}
+	#the actual list of nobles
+	containerWindowType = {
+		name = "TAI_unlocked_noble_house_gui"
+		size = { width=700 height=110 }
 
-				gridboxtype = {
-					name = "TAI_supportive_houses_grid"
-					position = { x = 0 y = 25 }
-					size = { width = 260 height = 100%% }
-					slotsize = { width = 260 height = 17 }
-					max_slots_horizontal = 1
-					add_horizontal = no
-				}
+		containerWindowType = {
+			name = "noble_house_container"
+			position = { x=-40 y=10 }
+			size = { width=260 height=100 }
+
+			background = {
+				name = "noble_house_background"
+				quadTextureSprite ="GFX_army_tiled_marble_bg"
 			}
 
-			# Antagonistic Houses Block (Title + List)
-			containerWindowType = {
-				name = "antagonistic_houses_block"
-				position = { x = 315 y = 30 }
-				size = { width = 260 height = 250 }
+			instantTextBoxType = {
+				name ="noble_house_name"
+				position = { x=10 y=0 }
+				#This will write onto the button the value and index of the array
+				text = "noble_house_name_loc"
+				font = "hoi_18mbs"
+			}
 
-				instantTextBoxType = {
-					name = "antagonistic_houses_header"
-					position = { x = 0 y = 0 }
-					font = "hoi_18mbs"
-					text = "TAI_estates_antagonistic_houses_header"
-					maxWidth = 260
-					maxHeight = 20
-					format = center
+			instantTextBoxType = {
+				name ="noble_house_desc"
+				position = { x=10 y=17 }
+				#This will write onto the button the value and index of the array
+				text = "noble_house_desc_loc"
+				font = "hoi_16mbs"
+				maxWidth = 390
+				maxHeight = 20
+			}
+
+			containerWindowType = {
+				name = "noble_house_head"
+				position = { x=197 y=0 }
+				size = { width=490 height=100 }
+
+				# instantTextBoxType = {
+				# 	name ="noble_house_head_title"
+				# 	position = { x=9 y=0 }
+				# 	#This will write onto the button the value and index of the array
+				# 	text = "noble_house_head_title_loc"
+				# 	font = "hoi_16mbs"
+				# }
+
+				iconType ={
+					name ="noble_house_head_portrait"
+					#spriteType = "GFX_portrait_KTZ_Katlinin"
+					scale = 0.30
+					position = { x=-5 y=5 }
 				}
 
-				gridboxtype = {
-					name = "TAI_antagonistic_houses_grid"
-					position = { x = 0 y = 25 }
-					size = { width = 260 height = 100%% }
-					slotsize = { width = 260 height = 17 }
-					max_slots_horizontal = 1
-					add_horizontal = no
+				instantTextBoxType = {
+					name ="noble_house_head_name"
+					position = { x=-22 y=73 }
+					#This will write onto the button the value and index of the array
+					text = "[GetNobleHouseLeaderName]"
+					font = "hoi_16mbs"
+					maxWidth = 80
+					maxHeight = 20
+					format = center
+					multiline = yes
+					vertical_alignment = center
 				}
 			}
 		}
 	}
+
 	containerWindowType = {
 		name = "TAI_estates_seat"
 		position = { x = 0 y = 0 }
@@ -96,36 +143,6 @@ guiTypes = {
 			name = "parliament_dot_icon"
 			quadTextureSprite = "GFX_TAI_estates_seat"
 			pdx_tooltip = "TAI_estates_seat_tt"
-		}
-	}
-	containerWindowType = {
-		name = "TAI_supportive_house_entry"
-		position = { x = 0 y = 0 }
-		size = { width = 260 height = 10 }
-
-		instantTextBoxType = {
-			name = "name_and_power"
-			position = { x = 5 y = 0 }
-			font = "hoi_16mbs"
-			text = "TAI_supportive_house_entry_loc"
-			maxWidth = 250
-			maxHeight = 10
-			format = left
-		}
-	}
-	containerWindowType = {
-		name = "TAI_antagonistic_house_entry"
-		position = { x = 0 y = 0 }
-		size = { width = 260 height = 10 }
-
-		instantTextBoxType = {
-			name = "name_and_power"
-			position = { x = 5 y = 0 }
-			font = "hoi_16mbs"
-			text = "TAI_antagonistic_house_entry_loc"
-			maxWidth = 250
-			maxHeight = 10
-			format = left
 		}
 	}
 }
