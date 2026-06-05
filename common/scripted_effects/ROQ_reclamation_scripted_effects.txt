@@ -4,18 +4,6 @@
 # Safe to call from any scope.
 ROQ_reclamation_cleanup = {
 	clr_global_flag = ROQ_reclamation_active
-	every_country = {
-		limit = {
-			is_in_array = { array = global.ROQ_reclamation_targets value = THIS }
-			country_exists = THIS
-		}
-		if = {
-			limit = { has_dynamic_modifier = { modifier = ROQ_reclamation_support } }
-			remove_dynamic_modifier = { modifier = ROQ_reclamation_support }
-		}
-	}
-	clear_array = global.ROQ_reclamation_targets
-	clear_array = global.ROQ_reclamation_ssu_supporters
 	ROQ = {
 		clear_array = roq_stage1_targets_array
 		clear_array = roq_stage2_targets_array
