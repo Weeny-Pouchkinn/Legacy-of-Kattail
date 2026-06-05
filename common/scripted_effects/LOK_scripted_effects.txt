@@ -2970,9 +2970,17 @@ calculate_noble_house_power = {
 		limit = { check_variable = { noble_house_id < 16 } }
 		if = {
 			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = noble_house_id } }
+
+			#happy states is 2x the states they want !
 			set_variable = { noble_house_happy_states_array^noble_house_id = noble_house_expected_states_array^noble_house_id }
 			multiply_variable = { noble_house_happy_states_array^noble_house_id = 2 }
+
+			#their power
 			set_variable = { noble_house_power_array^noble_house_id = 0 }
+			#their power that goes to us
+			set_variable = { noble_house_power_friendly_array^noble_house_id = 0 }
+
+			#count their states, and the power within those states
 			set_variable = { noble_house_states_array^noble_house_id = 0 }
 			every_owned_state = {
 				limit = { check_variable = { substate_id = PREV.noble_house_id } }
@@ -2981,8 +2989,8 @@ calculate_noble_house_power = {
 				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@industrial_complex }
 				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@dockyard }
 			}
-			add_to_variable = { noble_house_total_power = noble_house_power_array^noble_house_id }
-			add_to_variable = { kingdom_total_power = noble_house_power_array^noble_house_id }
+
+			#opinion decays and fluctuations
 			if = { #you didn't give us twice as many states as we want... fine...
 				limit = {
 					OR = {
@@ -2990,38 +2998,46 @@ calculate_noble_house_power = {
 						check_variable = { noble_house_states_array^noble_house_id = noble_house_happy_states_array^noble_house_id }
 					}
 				}
-				add_to_variable = { noble_house_opinion_array^noble_house_id = 1 }
+				add_to_variable = { noble_house_opinion_array^noble_house_id = 0.01 }
 			}
 			if = { #Not enough states!!!!! grrr!!!!
 				limit = { check_variable = { noble_house_states_array^noble_house_id < noble_house_expected_states_array^noble_house_id } }
-				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 5 }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 0.01 }
 			}
 			#opinion from big crown power
 			if = {
 				limit = { check_variable = { crown_land_power_perc > 0.75 } }
-				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 4 }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 0.02 }
 			}
 			else_if = {
 				limit = { check_variable = { crown_land_power_perc > 0.50 } }
-				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 2 }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 0.01 }
 			}
 			else_if = {
 				limit = { check_variable = { crown_land_power_perc < 0.25 } }
-				add_to_variable = { noble_house_opinion_array^noble_house_id = 2 }
+				add_to_variable = { noble_house_opinion_array^noble_house_id = 0.02 }
 			}
-			clamp_variable = { var = noble_house_opinion_array^noble_house_id min = -100 max = 100 }
-			if = {
-				limit = { check_variable = { noble_house_opinion_array^noble_house_id < 0 } }
-				add_to_array = { array = TAI_antagonistic_houses_array value = noble_house_id }
-				add_to_variable = { unfriendly_noble_house_total_power = noble_house_power_array^noble_house_id }
-			}
-			else = {
-				add_to_array = { array = TAI_supportive_houses_array value = noble_house_id }
-				add_to_variable = { friendly_noble_house_total_power = noble_house_power_array^noble_house_id }
-			}
+			clamp_variable = { var = noble_house_opinion_array^noble_house_id min = 0 max = 1 }
+
+			#friendly power is power x opinion
+			set_variable = { noble_house_power_friendly_array^noble_house_id = noble_house_power_array^noble_house_id }
+			multiply_variable = { noble_house_power_friendly_array^noble_house_id = noble_house_opinion_array^noble_house_id }
+
+			#the TOTAL power of all noble houses in the kingdom
+			add_to_variable = { noble_house_total_power = noble_house_power_array^noble_house_id }
+			#the TOTAL power in the entire kingdom
+			add_to_variable = { kingdom_total_power = noble_house_power_array^noble_house_id }
+			#the TOTAL power of all FRIENDLY houses in the kingdom
+			add_to_variable = { friendly_noble_house_total_power = noble_house_power_friendly_array^noble_house_id }
+
+			add_to_array = { array = TAI_supportive_houses_array value = noble_house_id }
 		}
 		add_to_variable = { noble_house_id = 1 }
 	}
+
+	set_variable = { unfriendly_noble_house_total_power = noble_house_total_power }
+	subtract_from_variable = { unfriendly_noble_house_total_power = friendly_noble_house_total_power }
+
 	#All the percs
 	set_variable = { crown_land_power_perc = crown_land_power }
 	divide_variable = { crown_land_power_perc = kingdom_total_power }
@@ -3041,8 +3057,13 @@ calculate_noble_house_power = {
 		limit = { check_variable = { noble_house_id < 16 } }
 		if = {
 			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = noble_house_id } }
+			#what perc their power represents
 			set_variable = { noble_house_power_perc_array^noble_house_id = noble_house_power_array^noble_house_id }
 			divide_variable = { noble_house_power_perc_array^noble_house_id = kingdom_total_power }
+
+			#what perc of their power is friendly
+			set_variable = { noble_house_power_friendly_perc_array^noble_house_id = noble_house_power_friendly_array^noble_house_id }
+			divide_variable = { noble_house_power_friendly_perc_array^noble_house_id = kingdom_total_power }
 		}
 		add_to_variable = { noble_house_id = 1 }
 	}
@@ -3053,4 +3074,5 @@ calculate_noble_house_power = {
 	set_variable = { friendly_total_power_perc = friendly_total_power }
 	divide_variable = { friendly_total_power_perc = kingdom_total_power }
 	TAI_estates_init = yes
+	add_to_variable = { TAI_estates_scripted_gui = 1 }
 }

@@ -8,6 +8,8 @@ scripted_gui = {
 			has_country_flag = open_TAI_estates_gui
 		}
 
+		dirty = TAI_estates_scripted_gui_variable
+
 		dynamic_lists = {
 			parliament_diagram = {
 				array = TAI_estates_seat_x
@@ -51,14 +53,30 @@ scripted_gui = {
 			supportive_noble_house_bg_click = {
 				set_variable = { currently_managing_noble_house = substate_id }
 			}
+			elated_noble_house_bg_click = {
+				set_variable = { currently_managing_noble_house = substate_id }
+			}
+			neutral_noble_house_bg_click = {
+				set_variable = { currently_managing_noble_house = substate_id }
+			}
 		}
 
 		triggers = {
 			supportive_noble_house_bg_visible = {
-				is_in_array = { array = TAI.TAI_supportive_houses_array value = substate_id }
+				check_variable = { noble_house_opinion_array^substate_id = 0.5 }
+				check_variable = { noble_house_opinion_array^substate_id > 0.5 }
+				check_variable = { noble_house_opinion_array^substate_id < 0.75 }
 			}
 			antagonistic_noble_house_bg_visible = {
-				is_in_array = { array = TAI.TAI_antagonistic_houses_array value = substate_id }
+				check_variable = { noble_house_opinion_array^substate_id < 0.25 }
+			}
+			neutral_noble_house_bg_visible = {
+				check_variable = { noble_house_opinion_array^substate_id = 0.25 }
+				check_variable = { noble_house_opinion_array^substate_id < 0.5 }
+			}
+			elated_noble_house_bg_visible = {
+				check_variable = { noble_house_opinion_array^substate_id > 0.75 }
+				check_variable = { noble_house_opinion_array^substate_id = 0.75 }
 			}
 			no_friendly_houses_msg_visible = {
 				check_variable = { TAI_supportive_houses_array^num = 0 }
