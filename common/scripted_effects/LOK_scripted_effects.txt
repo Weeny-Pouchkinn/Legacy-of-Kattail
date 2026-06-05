@@ -2945,6 +2945,9 @@ assign_state_to_noble_house_and_core = {
 calculate_noble_house_power = {
 	set_variable = { kingdom_total_power = 0 }
 	set_variable = { noble_house_total_power = 0 }
+	set_variable = { friendly_total_power = 0 }
+	clear_array = TAI_supportive_houses_array
+	clear_array = TAI_antagonistic_houses_array
 
 	#Mewtail's power
 	set_variable = { crown_land_states = 0 }
@@ -2991,7 +2994,7 @@ calculate_noble_house_power = {
 				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 5 }
 			}
 			if = {
-				limit = { check_variable = { noble_house_opinion_array^noble_house_id > 0 } }
+				limit = { NOT = { check_variable = { noble_house_opinion_array^noble_house_id < 0 } } }
 				add_to_variable = { friendly_total_power = noble_house_power_array^noble_house_id }
 			}
 			#opinion from big crown power
@@ -3008,6 +3011,13 @@ calculate_noble_house_power = {
 				add_to_variable = { noble_house_opinion_array^noble_house_id = 2 }
 			}
 			clamp_variable = { var = noble_house_opinion_array^noble_house_id min = -100 max = 100 }
+			if = {
+				limit = { check_variable = { noble_house_opinion_array^noble_house_id < 0 } }
+				add_to_array = { array = TAI_antagonistic_houses_array value = noble_house_id }
+			}
+			else = {
+				add_to_array = { array = TAI_supportive_houses_array value = noble_house_id }
+			}
 		}
 		add_to_variable = { noble_house_id = 1 }
 	}
