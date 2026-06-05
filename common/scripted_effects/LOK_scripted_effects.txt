@@ -2920,13 +2920,26 @@ clear_substate = {
 	}
 }
 
-raise_noble_house_and_core = {
-	custom_effect_tooltip = raise_noble_house_and_core_tooltip
+raise_noble_house = {
+	custom_effect_tooltip = raise_noble_house_tooltip
 	hidden_effect = {
-		set_variable = { substate_id = substate_id_temp }
-		clear_variable = substate_id_temp
+		if = {
+			limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = substate_id_temp } } }
+			add_to_array = { array = TAI_unlocked_noble_house_array value = substate_id_temp }
+		}
+		set_variable = { noble_house_expected_states_array^substate_id_temp = noble_house_expected_states_temp }
+		set_variable = { noble_house_opinion_array^substate_id_temp = noble_house_opinion_temp }
+		set_variable = { noble_house_expected_states_array^substate_id_temp = noble_house_expected_states_temp }
+		calculate_noble_house_power = yes
+	}
+}
+
+assign_state_to_noble_house_and_core = {
+	custom_effect_tooltip = assign_state_to_noble_house_tooltip
+	hidden_effect = {
 		add_core_of = TAI
-		add_dynamic_modifier = { modifier = noble_house_substate_modifier }
+		set_variable = { substate_id = TAI.substate_id_temp }
+		TAI = { calculate_noble_house_power = yes }
 	}
 }
 
@@ -2950,57 +2963,52 @@ calculate_noble_house_power = {
 	set_variable = { noble_house_id = 3 }
 	while_loop_effect = {
 		limit = { check_variable = { noble_house_id < 16 } }
-		meta_effect = {
-			text = { 
-				if = {
-					limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = [ID] } }
-					set_variable = { noble_house_[ID]_happy_states = noble_house_[ID]_expected_states }
-					multiply_variable = { noble_house_[ID]_happy_states = 2 }
-					set_variable = { noble_house_[ID]_power = 0 }
-					set_variable = { noble_house_[ID]_states = 0 }
-					every_owned_state = {
-						limit = { check_variable = { substate_id = [ID] } }
-						add_to_variable = { PREV.noble_house_[ID]_states = 1 }
-						add_to_variable = { PREV.noble_house_[ID]_power = building_level@arms_factory }
-						add_to_variable = { PREV.noble_house_[ID]_power = building_level@industrial_complex }
-						add_to_variable = { PREV.noble_house_[ID]_power = building_level@dockyard }
-					}
-					add_to_variable = { noble_house_total_power = noble_house_[ID]_power }
-					add_to_variable = { kingdom_total_power = noble_house_[ID]_power }
-					if = { #you didn't give us twice as many states as we want... fine...
-						limit = {
-							OR = {
-								check_variable = { noble_house_[ID]_states < noble_house_[ID]_happy_states }
-								check_variable = { noble_house_[ID]_states = noble_house_[ID]_happy_states }
-							}
-						}
-						add_to_variable = { noble_house_[ID]_opinion = 1 }
-					}
-					if = { #Not enough states!!!!! grrr!!!!
-						limit = { check_variable = { noble_house_[ID]_states < noble_house_[ID]_expected_states } }
-						subtract_from_variable = { noble_house_[ID]_opinion = 5 }
-					}
-					if = {
-						limit = { check_variable = { noble_house_[ID]_opinion > 0 } }
-						add_to_variable = { friendly_total_power = noble_house_[ID]_power }
-					}
-					#opinion from big crown power
-					if = {
-						limit = { check_variable = { crown_land_power_perc > 0.75 } }
-						subtract_from_variable = { noble_house_[ID]_opinion = 4 }
-					}
-					else_if = {
-						limit = { check_variable = { crown_land_power_perc > 0.50 } }
-						subtract_from_variable = { noble_house_[ID]_opinion = 2 }
-					}
-					else_if = {
-						limit = { check_variable = { crown_land_power_perc < 0.25 } }
-						add_to_variable = { noble_house_[ID]_opinion = 2 }
-					}
-					clamp_variable = { var = noble_house_[ID]_opinion min = -100 max = 100 }
-				}
+		if = {
+			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = noble_house_id } }
+			set_variable = { noble_house_happy_states_array^noble_house_id = noble_house_expected_states_array^noble_house_id }
+			multiply_variable = { noble_house_happy_states_array^noble_house_id = 2 }
+			set_variable = { noble_house_power_array^noble_house_id = 0 }
+			set_variable = { noble_house_states_array^noble_house_id = 0 }
+			every_owned_state = {
+				limit = { check_variable = { substate_id = PREV.noble_house_id } }
+				add_to_variable = { PREV.noble_house_states_array^substate_id = 1 }
+				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@arms_factory }
+				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@industrial_complex }
+				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@dockyard }
 			}
-			ID = "[?noble_house_id]"
+			add_to_variable = { noble_house_total_power = noble_house_power_array^noble_house_id }
+			add_to_variable = { kingdom_total_power = noble_house_power_array^noble_house_id }
+			if = { #you didn't give us twice as many states as we want... fine...
+				limit = {
+					OR = {
+						check_variable = { noble_house_states_array^noble_house_id < noble_house_happy_states_array^noble_house_id }
+						check_variable = { noble_house_states_array^noble_house_id = noble_house_happy_states_array^noble_house_id }
+					}
+				}
+				add_to_variable = { noble_house_opinion_array^noble_house_id = 1 }
+			}
+			if = { #Not enough states!!!!! grrr!!!!
+				limit = { check_variable = { noble_house_states_array^noble_house_id < noble_house_expected_states_array^noble_house_id } }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 5 }
+			}
+			if = {
+				limit = { check_variable = { noble_house_opinion_array^noble_house_id > 0 } }
+				add_to_variable = { friendly_total_power = noble_house_power_array^noble_house_id }
+			}
+			#opinion from big crown power
+			if = {
+				limit = { check_variable = { crown_land_power_perc > 0.75 } }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 4 }
+			}
+			else_if = {
+				limit = { check_variable = { crown_land_power_perc > 0.50 } }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 2 }
+			}
+			else_if = {
+				limit = { check_variable = { crown_land_power_perc < 0.25 } }
+				add_to_variable = { noble_house_opinion_array^noble_house_id = 2 }
+			}
+			clamp_variable = { var = noble_house_opinion_array^noble_house_id min = -100 max = 100 }
 		}
 		add_to_variable = { noble_house_id = 1 }
 	}
@@ -3012,15 +3020,10 @@ calculate_noble_house_power = {
 	set_variable = { noble_house_id = 3 }
 	while_loop_effect = {
 		limit = { check_variable = { noble_house_id < 16 } }
-		meta_effect = {
-			text = {
-				if = {
-					limit = { has_country_flag = noble_house_[ID]_unlocked }
-					set_variable = { noble_house_[ID]_power_perc = noble_house_[ID]_power }
-					divide_variable = { noble_house_[ID]_power_perc = kingdom_total_power }
-				}
-			}
-			ID = "[?noble_house_id]"
+		if = {
+			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = noble_house_id } }
+			set_variable = { noble_house_power_perc_array^noble_house_id = noble_house_power_array^noble_house_id }
+			divide_variable = { noble_house_power_perc_array^noble_house_id = kingdom_total_power }
 		}
 		add_to_variable = { noble_house_id = 1 }
 	}
