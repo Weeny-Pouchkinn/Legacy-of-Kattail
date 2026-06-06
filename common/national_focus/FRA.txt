@@ -17,6 +17,7 @@ focus_tree = {
         cost = 2
         completion_reward = {
             FRA = { country_event = FRA_report.1 }
+            start_focus = FRA_questioning
         }
     }
 
@@ -54,7 +55,7 @@ focus_tree = {
         }
         x = 6
         y = 3
-        cost = 2
+        cost = 5
         prerequisite = { focus = FRA_firstmeeting }
         completion_reward = {
             add_tech_bonus = {
@@ -72,7 +73,7 @@ focus_tree = {
         icon = FRA_polquestion
         x = 10
         y = 3
-        cost = 2
+        cost = 3
         prerequisite = { focus = FRA_firstmeeting }
         allow_branch = {
             has_completed_focus = FRA_firstmeeting
@@ -99,7 +100,7 @@ focus_tree = {
         icon = FRA_agrieng
         x = 8
         y = 5
-        cost = 2
+        cost = 0
         prerequisite = { focus = FRA_agricomp }
         mutually_exclusive = { focus = FRA_agridoc }
         completion_reward = {
@@ -112,7 +113,7 @@ focus_tree = {
         icon = FRA_agridoc
         x = 6
         y = 5
-        cost = 2
+        cost = 0
         prerequisite = { focus = FRA_agricomp }
         mutually_exclusive = { focus = FRA_agrieng }
         completion_reward = {
@@ -125,7 +126,7 @@ focus_tree = {
         icon = FRA_agridocmore
         x = 6
         y = 6
-        cost = 2
+        cost = 8
         prerequisite = { focus = FRA_agridoc }
         completion_reward = {
             add_timed_idea = {
@@ -159,7 +160,7 @@ focus_tree = {
         icon = FRA_agriengmore
         x = 8
         y = 6
-        cost = 2
+        cost = 5
         prerequisite = { focus = FRA_agrieng }
         completion_reward = {
             585 = {
@@ -207,7 +208,7 @@ focus_tree = {
         icon = FRA_inducomp
         x = 3
         y = 4
-        cost = 2
+        cost = 10
         prerequisite = { focus = FRA_econquestion }
         completion_reward = {
             add_timed_idea = {
@@ -222,7 +223,7 @@ focus_tree = {
         icon = FRA_indusolA
         x = 1
         y = 5
-        cost = 2
+        cost = 4
         prerequisite = { focus = FRA_inducomp }
         completion_reward = {
             add_tech_bonus = {
@@ -255,7 +256,7 @@ focus_tree = {
         icon = FRA_indusolB
         x = 3
         y = 5
-        cost = 2
+        cost = 5
         prerequisite = { focus = FRA_inducomp }
         completion_reward = {
             590 = {
@@ -295,7 +296,7 @@ focus_tree = {
         icon = FRA_induuniB
         x = 2
         y = 6
-        cost = 2
+        cost = 6
         prerequisite = { focus = FRA_indusolA focus = FRA_indusolB }
         completion_reward = {
             586 = {
@@ -351,7 +352,7 @@ focus_tree = {
         icon = FRA_econfin
         x = 5
         y = 8
-        cost = 2
+        cost = 10
         prerequisite = { focus = FRA_indufin }
         prerequisite = { focus = FRA_agriengmost focus = FRA_agridocmore }
         completion_reward = {
@@ -376,7 +377,7 @@ focus_tree = {
         icon = FRA_kskreform
         x = 10
         y = 5
-        cost = 2
+        cost = 8
         prerequisite = { focus = FRA_partisanquestion }
         completion_reward = {
             swap_ideas = {
@@ -394,7 +395,7 @@ focus_tree = {
         icon = FRA_ipfreform
         x = 12
         y = 5
-        cost = 2
+        cost = 8
         prerequisite = { focus = FRA_partisanquestion }
         completion_reward = {
             add_stability = -0.02
@@ -410,7 +411,7 @@ focus_tree = {
         icon = FRA_factorysecurity
         x = 11
         y = 6
-        cost = 2
+        cost = 3
         prerequisite = { focus = FRA_partisanquestion }
         completion_reward = {
             add_ideas = FRA_idea_factory_security
@@ -470,7 +471,7 @@ focus_tree = {
                 }
             }
             add_popularity = {
-                ideology = democratic
+                ideology = social_conservative
                 popularity = 0.3
             }
             activate_advisor = FRA_Pawlbert
@@ -703,13 +704,117 @@ focus_tree = {
                 }
                	set_variable = { var:peasant_points = 0 }
                 set_variable = { var:internationalist_points = 0 }
-                country_event = FRA_collapse_leftist.1
+                PUR = {
+                    add_state_core = 650
+                    add_state_core = 588
+                    add_state_core = 544
+                    add_state_core = 79
+                    add_state_core = 542
+                    add_state_core = 543
+                    add_state_core = 645
+                    add_state_core = 587
+                    add_state_core = 48
+                    set_politics = {
+                        ruling_party = social_conservative
+                        last_election = "1932.5.1"
+                        election_frequency = 48
+                        elections_allowed = no
+                    }
+                    set_popularities = {
+                        authoritarian_democratic = 10
+                        communism = 0
+                        social_liberal = 10
+                        democratic = 10
+                        socialism = 5
+                        social_democratic = 15
+                        social_conservative = 40
+                        neutrality = 5
+                        fascism = 5
+                    }
+                }
+                release = PUR
+                every_owned_state = {
+                    limit = {
+                        NOT = {
+                            state = 587
+                            state = 48
+                            state = 589
+                            state = 586
+                            state = 585
+                            state = 477
+                            state = 475
+                            state = 649
+                            state = 60
+                            state = 652
+                            state = 32
+                            state = 22
+                            state = 24
+                        }
+                    }
+                    add_core_of = PSR
+                }
+                PSR = {
+                    set_politics = {
+                        ruling_party = fascism
+                        last_election = "1932.5.1"
+                        election_frequency = 48
+                        elections_allowed = no
+                    }
+                    set_popularities = {
+                        authoritarian_democratic = 10 
+                        communism = 0
+                        social_liberal = 5
+                        democratic = 0
+                        socialism = 0
+                        social_democratic = 15
+                        social_conservative = 0
+                        neutrality = 20
+                        fascism = 50
+                    }
+                    add_ideas = FRA_idea_minority_rule
+                }
+                release = PSR
+                transfer_units_fraction = {
+                    target = PSR
+                    size = 0.33
+                }
+                transfer_units_fraction = {
+                    target = PUR
+                    size = 0.5
+                }
+                FRA_trans_com = { 
+                    promote_character = yes
+                }
+                set_politics = {
+                    ruling_party = communism
+                    last_election = "1932.5.1"
+                    election_frequency = 48
+                    elections_allowed = no
+                }
+                set_cosmetic_tag = FRA_COM
+                country_event = FRA_collapse_all.1
+            }
+            division_template = {
+                name = "Militia"
+                is_locked = yes 
+                priority = 0
+                regiments = {
+                    militia = { x = 0 y = 0 }
+                    militia = { x = 0 y = 1 }
+                    militia = { x = 0 y = 2 }
+                    militia = { x = 0 y = 3 }
+                    militia = { x = 1 y = 0 }
+                    militia = { x = 1 y = 1 }
+                    militia = { x = 1 y = 2 }
+                    militia = { x = 1 y = 3 }
+                }
             }
             ELSE = {
                 country_event = FRA_collapse_rightist.1
             }
         }
     }
+    
 
     ### Leftist Paths
 
@@ -721,37 +826,7 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = FRA_pe_regime_explodes }
         completion_reward = {
-            start_civil_war = {
-                ideology = neutrality
-                ruling_party = communism
-                states = all
-                states_filter = {
-                    NOT = {
-                        state = 587
-                        state = 48
-                        state = 589
-                        state = 586
-                        state = 585
-                        state = 477
-                        state = 475
-                        state = 649
-                        state = 60
-                        state = 652
-                        state = 32
-                        state = 22
-                        state = 24
-                    } 
-                }
-                army_ratio = 0.2
-                navy_ratio = 0
-                hidden_effect = {
-                    set_cosmetic_tag = FRA_counter_rev
-                }
-            }
-            FRA_trans_com = { 
-                promote_character = yes
-            }
-            set_cosmetic_tag = FRA_COM
+            country_event = FRA_collapse_leftist.1
         }
     }
 
@@ -1443,7 +1518,7 @@ focus_tree = {
         icon = FRA_elwin_first_war
         x = 20
         y = 5
-        cost = 5
+        cost = 10
         prerequisite = { focus = FRA_elwin_faction }
         bypass = {
             owns_state = 543
@@ -1465,11 +1540,11 @@ focus_tree = {
         prerequisite = { focus = FRA_elwin_first_war }
         completion_reward = {
             add_state_core = 646
-            add_state_core = 474
-            add_state_core = 645
-            add_state_core = 648
-            add_state_core = 647
-            add_state_core = 43
+            add_state_claim = 474
+            add_state_claim = 645
+            add_state_claim = 648
+            add_state_claim = 647
+            add_state_claim = 43
             create_wargoal = {
                 target = 646.owner
                 type = take_core_state
@@ -1584,4 +1659,3 @@ focus_tree = {
         }
     }           
 }
-
