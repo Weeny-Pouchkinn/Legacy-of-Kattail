@@ -484,7 +484,10 @@ TAK_painting_cat = {
 		target_trigger = {
 			FROM = {
 				NOT = { is_controlled_by = TAK }
-				var:controller = { NOT = { is_puppet_of = TAK } }
+				var:controller = {
+					NOT = { is_subject_of = TAK }
+					is_in_array = { array = TAK.TAK_possible_wardec_targets value = THIS }
+				}
 			}
 		}
 
