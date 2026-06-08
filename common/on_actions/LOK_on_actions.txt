@@ -5237,7 +5237,10 @@ on_actions = {
 				every_controlled_state = {
 					limit = { has_state_flag = has_armored_blimp_carrier_state }
 					clr_state_flag = has_armored_blimp_carrier_state
-					remove_building = { type = air_base level = 2 }
+					if = {
+						limit = { check_variable = { building_level@air_base > 1 } }
+						remove_building = { type = air_base level = 2 }
+					}
 					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
 				}
 				every_controlled_state = {
