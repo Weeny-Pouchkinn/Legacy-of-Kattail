@@ -96,6 +96,53 @@ TAK_painting_cat = {
 		}
 	}
 
+	TAK_install_relais_radio_royal = {
+		icon = GFX_decision_charles
+
+		allowed = {
+			original_tag = TAK
+		}
+
+		target_array = controlled_states
+		state_target = yes
+		on_map_mode = map_only
+
+		target_trigger = {
+			FROM = { has_dynamic_modifier = { modifier = TAK_petite_charles_state } }
+			FROM = { NOT = { has_state_flag = TAK_has_relais_radio_royal } }
+		}
+
+		visible = {
+			tag = TAK
+			has_completed_focus = TAK_le_roi_voit_tout
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 9
+		}
+
+		cost = 25
+
+		fire_only_once = yes
+
+		days_remove = 50
+
+		modifier = {
+			civilian_factory_use = 10
+		}
+
+		remove_effect = {
+			FROM = {
+				set_state_flag = TAK_has_relais_radio_royal
+				add_building_construction = {
+					type = radar_station
+					level = 6
+					instant_build = yes
+				}
+			}
+		}
+	}
+
 	#the roi can recruit painters
 	#each painter gives a painting power
 	#painters are listed in an array
@@ -437,7 +484,10 @@ TAK_painting_cat = {
 		target_trigger = {
 			FROM = {
 				NOT = { is_controlled_by = TAK }
-				var:controller = { NOT = { is_puppet_of = TAK } }
+				var:controller = {
+					NOT = { is_subject_of = TAK }
+					is_in_array = { array = TAK.TAK_possible_wardec_targets value = THIS }
+				}
 			}
 		}
 
@@ -645,6 +695,7 @@ TAK_painting_cat = {
 				create_petite_charles = yes
 				increase_state_category = yes
 				add_dynamic_modifier = { modifier = TAK_petite_charles_state }
+				TAK = { add_to_array = { array = petite_charles_states value = PREV } }
 				add_compliance = 10
 				custom_effect_tooltip = state_core_threshold_lower_20
 				hidden_effect = {
@@ -676,6 +727,7 @@ TAK_painting_cat = {
 					}
 				}
 			}
+			NOT = { FROM = { has_dynamic_modifier = { modifier = TAK_petite_charles_state } } }
 		}
 
 		available = {

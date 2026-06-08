@@ -1,3 +1,27 @@
+
+defined_text = { # Country
+	name = GetKatownBattleCount
+	text = {
+		trigger = {
+			check_variable = { global.katown_battle_count = 1}
+		}
+		localization_key = "LOK_news.20.t.1battle"
+	}
+	text = {
+		trigger = {
+			check_variable = { global.katown_battle_count > 1 }
+			check_variable = { global.katown_battle_count < 5 }
+		}
+		localization_key = "LOK_news.20.t.2to5battle"
+	}
+	text = {
+		trigger = {
+			check_variable = { global.katown_battle_count > 4 }
+		}
+		localization_key = "LOK_news.20.t.5ormorebattle"
+	}
+}
+
 defined_text = { # Country
 	name = GetNationIntroDesc
 	text = {
@@ -20,6 +44,12 @@ defined_text = { # Country
 	}
 	text = {
 		trigger = {
+			tag = KUS
+		}
+		localization_key = "LOK_country_intro_KUS"
+	}
+	text = {
+		trigger = {
 			OR = {
 				tag = SIL
 				tag = ROQ
@@ -39,6 +69,7 @@ defined_text = { # Country
 			NOT = {
 				tag = AUR
 				tag = TAK
+				tag = KUS
 				tag = TAI
 				tag = SIL
 				tag = ROQ
@@ -922,6 +953,243 @@ defined_text = {
 }
 
 defined_text = {
+	name = GetStateCoringThresholdTooltip
+	text = {
+		trigger = {
+			is_core_of = ROOT
+		}
+		localization_key = "coring_mapmode_already_cored_loc"
+	}
+	text = {
+		trigger = {
+			NOT = {
+				is_in_array = { array = ROOT.potential_cores_array value = THIS }
+			}
+		}
+		localization_key = "coring_mapmode_cannot_be_cored_loc"
+	}
+	text = { trigger = { has_state_flag = compliance_100_@ROOT } localization_key = "coring_mapmode_100_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_90_@ROOT } localization_key = "coring_mapmode_90_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_80_@ROOT } localization_key = "coring_mapmode_80_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_70_@ROOT } localization_key = "coring_mapmode_70_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_60_@ROOT } localization_key = "coring_mapmode_60_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_50_@ROOT } localization_key = "coring_mapmode_50_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_40_@ROOT } localization_key = "coring_mapmode_40_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_30_@ROOT } localization_key = "coring_mapmode_30_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_20_@ROOT } localization_key = "coring_mapmode_20_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_10_@ROOT } localization_key = "coring_mapmode_10_percent_loc" }
+	text = { trigger = { has_state_flag = compliance_0_@ROOT } localization_key = "coring_mapmode_0_percent_loc" }
+}
+
+defined_text = {
+	name = GetSubstatesTooltip
+	text = {
+		trigger = {
+			check_variable = { substate_id > 0 }
+			NOT = { is_controlled_by = owner }
+		}
+		localization_key = "substates_occupied_with_substate"
+	}
+	text = {
+		trigger = {
+			check_variable = { substate_id > 0 }
+		}
+		localization_key = "substates_controlled_by_substate"
+	}
+	text = {
+		trigger = {
+			NOT = { is_controlled_by = owner }
+		}
+		localization_key = "substates_occupied_state"
+	}
+	text = {
+		localization_key = "substates_direct_control"
+	}
+}
+
+defined_text = {
+	name = get_substate_id_name
+	text = { trigger = { check_variable = { substate_id = 1 } } localization_key = "substate_id_name_state_itself" }
+	text = { trigger = { check_variable = { substate_id = 2 } } localization_key = "substate_id_name_state_itself" }
+	text = { trigger = { check_variable = { substate_id = 3 } } localization_key = "substate_id_name_3" }
+	text = { trigger = { check_variable = { substate_id = 4 } } localization_key = "substate_id_name_4" }
+	text = { trigger = { check_variable = { substate_id = 5 } } localization_key = "substate_id_name_5" }
+	text = { trigger = { check_variable = { substate_id = 6 } } localization_key = "substate_id_name_6" }
+	text = { trigger = { check_variable = { substate_id = 7 } } localization_key = "substate_id_name_7" }
+	text = { trigger = { check_variable = { substate_id = 8 } } localization_key = "substate_id_name_8" }
+	text = { trigger = { check_variable = { substate_id = 9 } } localization_key = "substate_id_name_9" }
+	text = { trigger = { check_variable = { substate_id = 10 } } localization_key = "substate_id_name_10" }
+	text = { trigger = { check_variable = { substate_id = 11 } } localization_key = "substate_id_name_11" }
+	text = { trigger = { check_variable = { substate_id = 12 } } localization_key = "substate_id_name_12" }
+	text = { trigger = { check_variable = { substate_id = 13 } } localization_key = "substate_id_name_13" }
+	text = { trigger = { check_variable = { substate_id = 14 } } localization_key = "substate_id_name_14" }
+	text = { trigger = { check_variable = { substate_id = 15 } } localization_key = "substate_id_name_15" }
+	text = { trigger = { check_variable = { substate_id = 16 } } localization_key = "substate_id_name_16" }
+	text = { trigger = { check_variable = { substate_id = 17 } } localization_key = "substate_id_name_17" }
+	text = { trigger = { check_variable = { substate_id = 18 } } localization_key = "substate_id_name_18" }
+	text = { trigger = { check_variable = { substate_id = 19 } } localization_key = "substate_id_name_19" }
+	text = { trigger = { check_variable = { substate_id = 20 } } localization_key = "substate_id_name_20" }
+	text = { trigger = { check_variable = { substate_id = 21 } } localization_key = "substate_id_name_21" }
+	text = { trigger = { check_variable = { substate_id = 22 } } localization_key = "substate_id_name_22" }
+	text = { trigger = { check_variable = { substate_id = 23 } } localization_key = "substate_id_name_23" }
+	text = { trigger = { check_variable = { substate_id = 24 } } localization_key = "substate_id_name_state_itself" }
+	text = { localization_key = "substate_id_name_fallback" }
+}
+
+defined_text = {
+	name = get_substate_id_type
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_federal_array value = substate_id }
+		}
+		localization_key = "substate_type_federal"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_confederal_array value = substate_id }
+		}
+		localization_key = "substate_type_confederal"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_inner_mayorland_array value = substate_id }
+		}
+		localization_key = "substate_type_inner_mayorland"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_noble_family_array value = substate_id }
+		}
+		localization_key = "substate_type_noble_family"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_frontier_mayorland_array value = substate_id }
+		}
+		localization_key = "substate_type_frontier_mayorland"
+	}
+	text = {
+		localization_key = "substate_type_fallback"
+	}
+}
+
+defined_text = {
+	name = get_substate_id_temp_name
+	text = { trigger = { check_variable = { substate_id_temp = 1 } } localization_key = "substate_id_name_state_itself" }
+	text = { trigger = { check_variable = { substate_id_temp = 2 } } localization_key = "substate_id_name_state_itself" }
+	text = { trigger = { check_variable = { substate_id_temp = 3 } } localization_key = "substate_id_name_3" }
+	text = { trigger = { check_variable = { substate_id_temp = 4 } } localization_key = "substate_id_name_4" }
+	text = { trigger = { check_variable = { substate_id_temp = 5 } } localization_key = "substate_id_name_5" }
+	text = { trigger = { check_variable = { substate_id_temp = 6 } } localization_key = "substate_id_name_6" }
+	text = { trigger = { check_variable = { substate_id_temp = 7 } } localization_key = "substate_id_name_7" }
+	text = { trigger = { check_variable = { substate_id_temp = 8 } } localization_key = "substate_id_name_8" }
+	text = { trigger = { check_variable = { substate_id_temp = 9 } } localization_key = "substate_id_name_9" }
+	text = { trigger = { check_variable = { substate_id_temp = 10 } } localization_key = "substate_id_name_10" }
+	text = { trigger = { check_variable = { substate_id_temp = 11 } } localization_key = "substate_id_name_11" }
+	text = { trigger = { check_variable = { substate_id_temp = 12 } } localization_key = "substate_id_name_12" }
+	text = { trigger = { check_variable = { substate_id_temp = 13 } } localization_key = "substate_id_name_13" }
+	text = { trigger = { check_variable = { substate_id_temp = 14 } } localization_key = "substate_id_name_14" }
+	text = { trigger = { check_variable = { substate_id_temp = 15 } } localization_key = "substate_id_name_15" }
+	text = { trigger = { check_variable = { substate_id_temp = 16 } } localization_key = "substate_id_name_16" }
+	text = { trigger = { check_variable = { substate_id_temp = 17 } } localization_key = "substate_id_name_17" }
+	text = { trigger = { check_variable = { substate_id_temp = 18 } } localization_key = "substate_id_name_18" }
+	text = { trigger = { check_variable = { substate_id_temp = 19 } } localization_key = "substate_id_name_19" }
+	text = { trigger = { check_variable = { substate_id_temp = 20 } } localization_key = "substate_id_name_20" }
+	text = { trigger = { check_variable = { substate_id_temp = 21 } } localization_key = "substate_id_name_21" }
+	text = { trigger = { check_variable = { substate_id_temp = 22 } } localization_key = "substate_id_name_22" }
+	text = { trigger = { check_variable = { substate_id_temp = 23 } } localization_key = "substate_id_name_23" }
+	text = { trigger = { check_variable = { substate_id_temp = 24 } } localization_key = "substate_id_name_state_itself" }
+	text = { localization_key = "substate_id_name_fallback" }
+}
+
+defined_text = {
+	name = get_substate_id_temp_type
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_federal_array value = substate_id_temp }
+		}
+		localization_key = "substate_type_federal"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_confederal_array value = substate_id_temp }
+		}
+		localization_key = "substate_type_confederal"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_inner_mayorland_array value = substate_id_temp }
+		}
+		localization_key = "substate_type_inner_mayorland"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_noble_family_array value = substate_id_temp }
+		}
+		localization_key = "substate_type_noble_family"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_frontier_mayorland_array value = substate_id_temp }
+		}
+		localization_key = "substate_type_frontier_mayorland"
+	}
+	text = {
+		localization_key = "substate_type_fallback"
+	}
+}
+
+defined_text = {
+	name = get_substate_id_type_desc
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_federal_array value = substate_id }
+		}
+		localization_key = "substate_type_federal_desc"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_confederal_array value = substate_id }
+		}
+		localization_key = "substate_type_confederal_desc"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_inner_mayorland_array value = substate_id }
+		}
+		localization_key = "substate_type_inner_mayorland_desc"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_frontier_mayorland_array value = substate_id }
+		}
+		localization_key = "substate_type_frontier_mayorland_desc"
+	}
+	text = {
+		trigger = {
+			is_in_array = { array = global.substate_type_noble_family_array value = substate_id }
+		}
+		localization_key = "substate_type_noble_family_desc"
+	}
+	text = {
+		localization_key = "substate_type_desc_fallback"
+	}
+}
+
+defined_text = {
+	name = get_substate_id_desc
+	text = {
+		trigger = {
+			check_variable = { substate_id = 23 }
+		}
+		localization_key = "substate_id_desc_23"
+	}
+	text = {
+		localization_key = "substate_id_desc_fallback"
+	}
+}
+
+defined_text = {
 	name = GetGeneratingAdvisorSpecies
 	text = {
 		trigger = {
@@ -941,4 +1209,5 @@ defined_text = {
 		}
 		localization_key = "roqualian"
 	}
-}
+
+

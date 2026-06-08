@@ -3,6 +3,8 @@ calculate_private_sector_modifiers = {
 	add_to_variable = { consumer_goods_perc = 1 }
 	multiply_variable = { consumer_goods_perc = modifier@consumer_goods_expected_value }
 	
+	clamp_variable = { var = consumer_goods_perc min = 0 max = 100 }
+
 	set_variable = { ps_modifiers = 0 }
 
 	add_to_variable = { ps_modifiers = consumer_goods_perc }
@@ -520,7 +522,6 @@ ACR_dissolve_nation = {
 			}
 		}
 	}
-	release_on_controlled = BAZ
 	release_on_controlled = DAW
 	release_on_controlled = EUL
 	release_on_controlled = MSN
@@ -1211,6 +1212,7 @@ damage_muno_colonies = {
 			add_manpower = -1000000
 			remove_core_of = ROOT
 			transfer_state_to = MUN
+			remove_all_state_cultures = yes
 			set_building_level = {
 				type = infrastructure
 				level = 0
@@ -1237,6 +1239,7 @@ damage_xenon_colonies = {
 			add_manpower = -1000000
 			remove_core_of = ROOT
 			transfer_state_to = XEN
+			remove_all_state_cultures = yes
 			set_building_level = {
 				type = infrastructure
 				level = 0
@@ -1500,7 +1503,7 @@ calculate_ai_nuke_production = {
 	set_variable = { factories_for_nukes = num_of_military_factories }
 	multiply_variable = { factories_for_nukes = 0.05 } #5% of mils are put on nukes, say 100 so now it's 20
 	if = { #Fascists like WMDs
-		limit = { has_government = fascism }
+		limit = { has_fascist_gov_group = yes }
 		multiply_variable = { factories_for_nukes = 1.5 }
 	}
 	if = { #Katzens like WMDs
@@ -1981,6 +1984,9 @@ calculate_total_food_consumption = {
 	round_variable = country_food_needs_modifier
 	divide_variable = { country_food_needs_modifier = 100 }
 
+	LOK_alert_lower_1 = yes
+	LOK_alert_lower_2 = yes
+
 	#Apply the modifiers
 	if = {
 		limit = { check_variable = { country_food_needs_met_perc < 50 } check_variable = { country_food_stockpile < 1 } }
@@ -1996,6 +2002,10 @@ calculate_total_food_consumption = {
 		if = {
 			limit = { has_dynamic_modifier = { modifier = lok_starvation_deficit_modifier } }
 			remove_dynamic_modifier = { modifier = lok_starvation_deficit_modifier }
+		}
+		if = { #slight alert
+			limit = { check_variable = { country_food_needs_met_perc < 75 } }
+			LOK_alert_raise_1 = yes
 		}
 	}
 	else = {
@@ -2186,6 +2196,7 @@ fire_thermonuclear_salvo = {
 							ratio = yes
 							army = yes
 						}
+						add_threat = 0.05
 					}
 					else_if = { #Fusion
 						limit = { ROOT = { check_variable = { current_nuke_type = 2 } } }
@@ -2199,6 +2210,7 @@ fire_thermonuclear_salvo = {
 							ratio = yes
 							army = yes
 						}
+						add_threat = 0.1
 					}
 					else_if = { #Cobalt
 						limit = { ROOT = { check_variable = { current_nuke_type = 3 } } }
@@ -2212,6 +2224,7 @@ fire_thermonuclear_salvo = {
 							ratio = yes
 							army = yes
 						}
+						add_threat = 0.15
 					}
 					else_if = { #Mondkanone
 						limit = { ROOT = { check_variable = { current_nuke_type = 4 } } }
@@ -2225,6 +2238,7 @@ fire_thermonuclear_salvo = {
 							ratio = yes
 							army = yes
 						}
+						add_threat = 0.1
 					}
 					else_if = { #Sturmer
 						limit = { ROOT = { check_variable = { current_nuke_type = 5 } } }
@@ -2238,6 +2252,7 @@ fire_thermonuclear_salvo = {
 							ratio = yes
 							army = yes
 						}
+						add_threat = 0.1
 					}
 					#FIRESTORMS!!! Cities multiply soot
 					if = {
@@ -2388,7 +2403,7 @@ calculate_radiation_state_modifiers = {
 		#Prod loss from rads
 		#1 rad = 0.1 prod loss, so divide by 1000
 		set_variable = { state_prod_change_from_radiation_this_check = lok_added_radiation_level }
-		divide_variable = { state_prod_change_from_radiation_this_check = -100 }
+		divide_variable = { state_prod_change_from_radiation_this_check = -500 }
 		add_to_variable = { state_prod_change_from_radiation = state_prod_change_from_radiation_this_check }
 		add_to_variable = { lok_state_productivity_value = state_prod_change_from_radiation_this_check }
 	}
@@ -2421,11 +2436,11 @@ apply_radiation_effects = {
 		#Kill people in the state (RIP Bozo)
 		set_variable = { lok_radiation_death_percent = lok_radiation_level }
 		#Every level of radiation kills %, so 10 radiation = 10% death (Or 0.02)
-		divide_variable = { lok_radiation_death_percent = 100 }
+		divide_variable = { lok_radiation_death_percent = 500 }
 
 		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
 		multiply_variable = { lok_radiation_death_percent = modifier@lok_species_radiation_casualties_factor }
-		multiply_variable = { lok_radiation_death_percent = var:CONTROLLER.modifier@lok_country_radiation_casualties_factor }
+		#multiply_variable = { lok_radiation_death_percent = CONTROLLER.modifier@lok_country_radiation_casualties_factor } #FIX LATER
 
 		set_variable = { lok_radiation_death_count = state_population_k }
 		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }
@@ -2513,6 +2528,14 @@ clear_all_state_species_modifier = {
 		limit = { has_dynamic_modifier = { modifier = lok_species_complex_architecture_trait_modifier } }
 		remove_dynamic_modifier = { modifier = lok_species_complex_architecture_trait_modifier }
 	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_photosynthetic_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_photosynthetic_trait_modifier }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = lok_species_budding_trait_modifier } }
+		remove_dynamic_modifier = { modifier = lok_species_budding_trait_modifier }
+	}
 }
 
 apply_state_species_modifier = {
@@ -2580,9 +2603,17 @@ apply_state_species_modifier = {
 		limit = { has_complex_architecture_trait = yes }
 		add_dynamic_modifier = { modifier = lok_species_complex_architecture_trait_modifier }
 	}
+	if = {
+		limit = { has_photosynthetic_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_photosynthetic_trait_modifier }
+	}
+	if = {
+		limit = { has_budding_trait = yes }
+		add_dynamic_modifier = { modifier = lok_species_budding_trait_modifier }
+	}
 }
 
-@wonder_modifier_count = 44
+@wonder_modifier_count = 47
 
 setup_wonder_array = {
 	resize_array = { #Array containing BASE modifiers, modify this in script!
@@ -2675,13 +2706,15 @@ apply_wonder_effects = {
 
 remove_wonder = { #State scope, if you need to remove every wonder in a country (or in the world idk pop off king) run this in the relevant effect scope e.g. every_controlled_state
 	custom_effect_tooltip = dismantle_wonder_tt
-	#Clearing Modifier Arrays!
-	clear_array = wonder_modifiers_values
-	clear_array = wonder_modifiers_values_real
-	#Removing Wonder Variable
-	set_variable = { wonder = 0 }
-	#Recalculating the Wonder Modifier for the controller
-	controller = { apply_wonder_effects = yes }
+	hidden_effect = {
+		#Clearing Modifier Arrays!
+		clear_array = wonder_modifiers_values
+		clear_array = wonder_modifiers_values_real
+		#Removing Wonder Variable
+		set_variable = { wonder = 0 }
+		#Recalculating the Wonder Modifier for the controller
+		controller = { apply_wonder_effects = yes }
+	}
 }
 
 generate_generic_small_katzen_portrait = {
@@ -2874,6 +2907,21 @@ restore_previous_manpower_function = {
 			clear_variable = current_country_manpower_se
 			#clear_variable = previous_country_manpower_se
 		}
+	}
+}
+
+set_substate = {
+	custom_effect_tooltip = set_substate_tooltip
+	hidden_effect = {
+		set_variable = { substate_id = substate_id_temp }
+		clear_variable = substate_id_temp
+	}
+}
+
+clear_substate = {
+	custom_effect_tooltip = clear_substate_tooltip
+	hidden_effect = {
+		set_variable = { substate_id = 0 }
 	}
 }
 

@@ -129,39 +129,64 @@ FRA_remnant_alliance = {
     }
 }
 
-FRA_left_liberation = {
-    FRA_anti_SIL = {
-        fire_only_once = yes
-        days_remove = 30
-        war_with_on_remove = SIL
-        visible = {
-            tag = FRA
-        }
-        available = {
-            is_neighbor_of = SIL
-        }
-        remove_effect = {
-            declare_war_on = {
-                target = SIL
-                type = annex_everything
+FRA_three_civil_war = {
+    three_civil_war_start = {
+        activation = {
+            OR = { 
+                country_exists = PUR
+                country_exists = PSR
             }
         }
-    }
-    FRA_anti_PAW = {
-        fire_only_once = yes
-        days_remove = 30
-        war_with_on_remove = PAW
-        visible = {
-            tag = FRA
-        }
         available = {
-            is_neighbor_of = PAW
+            always = no
         }
-        remove_effect = {
+        icon = GFX_decision_revolt     # For GFX_decision_mission_icon
+        is_good = yes
+        war_with_on_timeout = PUR
+        war_with_on_timeout = PSR
+        fire_only_once = yes
+        days_mission_timeout = 21
+        timeout_effect = {
             declare_war_on = {
-                target = PAW
-                type = annex_everything
+                target = PUR
+                type = civil_war
             }
+            add_civil_war_target = PUR
+            declare_war_on = {
+                target = PSR
+                type = civil_war
+            }
+            add_civil_war_target = PSR
+            PUR = {
+                declare_war_on = {
+                    target = PSR
+                    type = civil_war
+                }
+                add_civil_war_target = PSR 
+            }
+            # FRA_muster_militia = {
+            #     state_target = yes
+            #     target_root_trigger = {
+            #         NOT = { has_country_flag = FRA_mustering_militia}
+            #         country_exists = PUR
+            #         country_exists = PSR
+            #     }
+            #     target_trigger = {
+            #         NOT = { has_state_flag = FRA_mustered_militia }
+            #     }
+            #     available = { NOT = { has_country_flag = FRA_mustering_militia } }
+            #     on_map_mode = map_and_decisions_view
+            #     icon = GFX_decision_generic_military
+            #     cost = 20
+            #     days_remove = 14
+            #     complete_effect = {
+            #         set_country_flag = FRA_mustering_militia
+            #         create_unit = {
+            #             division = "name = \"Infantry Division\" division_template = \"Militia\" start_experience_factor = 0.5"
+            #             owner = ROOT
+            #         }
+            #     }
+            # }
         }
     }
 }

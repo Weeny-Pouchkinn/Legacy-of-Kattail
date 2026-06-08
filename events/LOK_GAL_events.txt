@@ -1,0 +1,36 @@
+add_namespace = LOK_GAL_isolation
+
+# GAL Isolationism delayed country event
+country_event = {
+	id = LOK_GAL_isolation.1
+	title = LOK_GAL_isolation.1.t
+	desc = LOK_GAL_isolation.1.d
+	picture = GFX_report_event_kattail
+	is_triggered_only = yes
+
+	option = {
+		name = LOK_GAL_isolation.1.a
+		swap_ideas = { remove_idea = civilian_economy add_idea = isolation }
+		swap_ideas = { remove_idea = GAL_growing_isolationism add_idea = GAL_paranoid_isolationism }
+		release = BAZ
+		set_autonomy = {
+			target = BAZ
+			autonomy_state = autonomy_puppet
+		}
+		news_event = { id = LOK_GAL_isolation.2 days = 1 }
+	}
+}
+
+# GAL Isolationism global news event
+news_event = {
+	id = LOK_GAL_isolation.2
+	title = LOK_GAL_isolation.2.t
+	desc = LOK_GAL_isolation.2.d
+	picture = GFX_news_event_colony_ship
+	major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = LOK_GAL_isolation.2.a
+	}
+}

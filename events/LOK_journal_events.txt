@@ -545,7 +545,7 @@ country_event = {
 			if = {
 				limit = {
 					is_puppet_of = event_target:LOK_vampire_faction_leader
-					NOT = { has_government = democratic }
+					NOT = { has_democratic_gov_group = yes }
 				}
 				set_politics = {
 					ruling_party = democratic
@@ -556,7 +556,7 @@ country_event = {
 			if = {
 				limit = {
 					is_puppet_of = event_target:LOK_vampire_faction_leader
-					NOT = { has_government = neutrality }
+					NOT = { has_neutrality_gov_group = yes }
 				}
 				set_politics = {
 					ruling_party = neutrality
@@ -567,7 +567,7 @@ country_event = {
 			if = {
 				limit = {
 					is_puppet_of = event_target:LOK_vampire_faction_leader
-					NOT = { has_government = neutrality }
+					NOT = { has_neutrality_gov_group = yes }
 				}
 				set_politics = {
 					ruling_party = neutrality
@@ -719,11 +719,12 @@ country_event = {
 					target = PAW
 					autonomy_state = autonomy_free
 				}
+				every_controlled_state = {
+					limit = { is_core_of = KTW }
+					transfer_state_to = KTW
+					set_demilitarized_zone = no
+				}
 			}
-			34 = { transfer_state_to = KTW set_demilitarized_zone = no }
-			44 = { transfer_state_to = KTW set_demilitarized_zone = no }
-			45 = { transfer_state_to = KTW set_demilitarized_zone = no }
-			36 = { transfer_state_to = KTW set_demilitarized_zone = no }
 
 			KKH = { declare_war_on = { target = SIL type = annex_everything } }
 			KVK = { declare_war_on = { target = SIL type = annex_everything } }
@@ -732,24 +733,12 @@ country_event = {
 			KTW = {
 				declare_war_on = { target = SIL type = annex_everything }
 				country_event = { id = KTW_event.1 days = 1 }
-				# Spawn the Pyramid Guard
-				division_template = {
-					name = "Pyramidenwache"
-					regiments = {
-						power_infantry = { x = 0 y = 0 }
-						power_infantry = { x = 0 y = 1 }
-						power_infantry = { x = 1 y = 0 }
-						power_infantry = { x = 1 y = 1 }
-					}
-					support = {
-						anti_tank = { x = 0 y = 0 }
-						anti_air = { x = 0 y = 1 }
-					}
-				}
-				509 = {
+				every_controlled_state = {
 					create_unit = {
-						division = "name = \"Pyramidenwache\" division_template = \"Pyramidenwache\" start_experience_factor = 1.0 start_equipment_factor = 1.0"
+						division = "division_template = \"Katown Loyalists\" start_experience_factor = 0.1 start_equipment_factor = &"
+						count = 3
 						owner = KTW
+						allow_spawning_on_enemy_provs = yes
 					}
 				}
 			}
@@ -1081,6 +1070,11 @@ news_event = {
 	#Whatever
 	option = {
 		name = "LOK_SIL.10.a"
+		hidden_effect = {
+			GAL = {
+				country_event = { id = LOK_GAL_isolation.1 days = 30 }
+			}
+		}
 	}
 }
 
@@ -1133,6 +1127,9 @@ add_namespace = LOK_NEK
 #Peace out for Akiba
 country_event = {
 	id = LOK_NEK.1
+	trigger = {
+		has_global_flag = KUS_NEK_war_active
+	}
 	immediate = {log = "[GetDateText]: [Root.GetName]: event LOK_NEK.1"}
 	title = "LOK_NEK.1.t"
 	desc = "LOK_NEK.1.d"
@@ -1276,7 +1273,7 @@ news_event = {
 
 	option = { # Democratic/Commie response (Yippee!)
 		name = "LOK_ELO.1.a"
-		trigger = { OR = { has_government = democratic has_government = communism } }
+		trigger = { OR = { has_democratic_gov_group = yes has_communist_gov_group = yes } }
 	}
 
 	option = { # SFL Response (Oh wow they lived?)
@@ -1287,12 +1284,12 @@ news_event = {
 
 	option = { # Fascist response (pitiful idealist fools)
 		name = "LOK_ELO_1.c"
-		trigger = { has_government = fascism }
+		trigger = { has_fascist_gov_group = yes }
 	}
 
 	option = { # Neutral Response (Oh neat)
 		name = "LOK_ELO_1.d"
-		trigger = { has_government = neutrality }
+		trigger = { has_neutrality_gov_group = yes }
 	}
 }
 country_event = {

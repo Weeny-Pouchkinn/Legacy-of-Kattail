@@ -1,46 +1,134 @@
-# ROQ Reclamation scripted localisation
-
-# Returns a coloured label for THIS country's current support level
+# Returns the current description of the Reclamation depending on the stage
 defined_text = {
-	name = GetROQReclamationSupportLevel
+	name = GetROQReclamationStageDesc
 	text = {
-		trigger = { check_variable = { ROQ_reclamation_support_level > 3 } }
-		localization_key = ROQ_reclamation_support_level_adamant
+		trigger = {
+			ROQ = { check_variable = { reclamation_stage = 5 } }
+		}
+		localization_key = ROQ_reclamation_stage_5_desc
 	}
 	text = {
-		trigger = { check_variable = { ROQ_reclamation_support_level > 2 } }
-		localization_key = ROQ_reclamation_support_level_protective
+		trigger = {
+			ROQ = { check_variable = { reclamation_stage = 4 } }
+		}
+		localization_key = ROQ_reclamation_stage_4_desc
 	}
 	text = {
-		trigger = { check_variable = { ROQ_reclamation_support_level > 1 } }
-		localization_key = ROQ_reclamation_support_level_supportive
+		trigger = {
+			ROQ = { check_variable = { reclamation_stage = 3 } }
+		}
+		localization_key = ROQ_reclamation_stage_3_desc
 	}
 	text = {
-		localization_key = ROQ_reclamation_support_level_disinterested
+		trigger = {
+			ROQ = { check_variable = { reclamation_stage = 2 } }
+		}
+		localization_key = ROQ_reclamation_stage_2_desc
+	}
+	text = {
+		trigger = {
+			ROQ = { check_variable = { reclamation_stage = 1 } }
+		}
+		localization_key = ROQ_reclamation_stage_1_desc
+	}
+	text = {
+		localization_key = ROQ_reclamation_stage_inactive_desc
 	}
 }
 
-# Returns a one-line description of what THIS country can do as an SSU supporter.
-# Used in FSR/DOM's lobby decision description so players know what each ally offers.
 defined_text = {
-	name = GetROQReclamationWhatTheyCanDo
+	name = GetROQReclamationOperationName
 	text = {
-		trigger = { tag = MCF }
-		localization_key = ROQ_reclamation_what_mcf_can_do
+		trigger = {
+			FROM = { original_tag = MCF }
+		}
+		localization_key = ROQ_MCF_Operation_Name
 	}
 	text = {
-		trigger = { tag = KHA }
-		localization_key = ROQ_reclamation_what_kha_can_do
+		trigger = {
+			FROM = { original_tag = KUS }
+		}
+		localization_key = ROQ_KUS_Operation_Name
 	}
 	text = {
-		trigger = { tag = SLR }
-		localization_key = ROQ_reclamation_what_slr_can_do
+		trigger = {
+			FROM = { original_tag = SLR }
+		}
+		localization_key = ROQ_SLR_Operation_Name
 	}
 	text = {
-		trigger = { tag = TEN }
-		localization_key = ROQ_reclamation_what_ten_can_do
+		trigger = {
+			FROM = { original_tag = KHA }
+		}
+		localization_key = ROQ_KHA_Operation_Name
 	}
 	text = {
-		localization_key = ROQ_reclamation_what_generic_can_do
+		trigger = {
+			FROM = { original_tag = TEN }
+		}
+		localization_key = ROQ_TEN_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = PLR }
+		}
+		localization_key = ROQ_PLR_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = KEP }
+		}
+		localization_key = ROQ_KEP_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = IZW }
+		}
+		localization_key = ROQ_IZW_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = VIX }
+		}
+		localization_key = ROQ_VIX_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = FST }
+		}
+		localization_key = ROQ_FST_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = VAS }
+		}
+		localization_key = ROQ_VAS_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = HAR }
+		}
+		localization_key = ROQ_HAR_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = KAR }
+		}
+		localization_key = ROQ_KAR_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = CRE }
+		}
+		localization_key = ROQ_CRE_Operation_Name
+	}
+	text = {
+		trigger = {
+			FROM = { original_tag = NEK }
+		}
+		localization_key = ROQ_NEK_Operation_Name
+	}
+	text = {
+		localization_key = ROQ_Reclamation_Invade
 	}
 }

@@ -1,3 +1,34 @@
+is_controlled_by_roq_for_reclamation = {
+	var:controller = {
+		OR = {
+			tag = ROQ
+			is_subject_of = ROQ
+			is_in_faction_with = ROQ
+			has_country_flag = ROQ_country_approved
+		}
+	}
+}
+
+is_roq_reclamation_ally = {
+	OR = {
+		tag = ROQ
+		is_subject_of = ROQ
+		is_in_faction_with = ROQ
+		has_country_flag = ROQ_country_approved
+	}
+}
+
+is_sane_aur_or_ally = {
+	OR = {
+		tag = AUR
+		has_country_flag = AUR_central_pawn
+		has_country_flag = AUR_northern_pawn
+		has_country_flag = AUR_eastern_pawn
+		is_subject_of = AUR
+		is_in_faction_with = AUR
+	}
+}
+
 tak_is_artistic_species = {
 	OR = {
 		check_variable = { species = 3 } #roq
@@ -232,6 +263,33 @@ is_infrastructure_state = {
 		state = 835
 		state = 1404
 	}
+}
+
+has_communist_gov_group = {
+	OR = {
+		has_government = communism
+		has_government = socialism
+	}
+}
+
+has_democratic_gov_group = {
+	OR = {
+		has_government = social_democratic
+		has_government = social_liberal
+		has_government = democratic
+		has_government = social_conservative
+	}
+}
+
+has_neutrality_gov_group = {
+	OR = {
+		has_government = authoritarian_democratic
+		has_government = neutrality
+	}
+}
+
+has_fascist_gov_group = {
+	has_government = fascism
 }
 
 has_silent_workhorse_trait = { # im sorry

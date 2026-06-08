@@ -1,0 +1,74 @@
+add_namespace = UMR_event
+
+# A new Republic
+country_event = {
+    ID = UMR_event.1
+    title = UMR_event.1.t
+    desc = UMR_event.1.d
+    is_triggered_only = yes
+    option = {
+        name = UMR_event.1.a
+        add_political_power = 150
+        country_event = { id = UMR_event.2 days = 365 }
+    }
+}
+# The First Elections
+country_event = {
+    ID = UMR_event.2
+    title = UMR_event.2.t
+    desc = UMR_event.2.d
+    is_triggered_only = yes
+    Option = {
+        name = UMR_event.2.a
+        complete_national_focus = UMR_Focus_3
+        hidden_effect = {
+            set_country_flag = UMR_election
+        }
+        Custom_effect_tooltip = "More options to be added in the future."
+    }
+}
+# The katzen Question
+COUNTRY_EVENT = {
+    ID = UMR_event.3
+    title = UMR_event.3.t
+    desc = UMR_event.3.d
+    is_triggered_only = yes
+    option = {
+        name = UMR_event.3.a
+        remove_ideas = UMR_interspecies_tensions
+        add_ideas = UMR_katzen_integration
+        Custom_effect_tooltip = "by the end of next year these settlers will be Sobani"
+        country_event = { id = UMR_event.4 days = 372}
+    }
+    option = {
+        name = UMR_event.3.b
+        remove_ideas = UMR_interspecies_tensions
+        add_ideas = UMR_katzen_displacement
+        Custom_effect_tooltip = "large scale deportation will begin and is expected to take around a year"
+        country_event = { id = UMR_event.5 days = 358}
+    }
+    option = {
+        Name = UMR_event.3.c
+        Custom_effect_tooltip = "DO NOT PICK, will not remove the interspecies tensions. the option exists for future content."
+    }
+}
+country_event = {
+    ID = UMR_event.4
+    title = UMR_event.4.t
+    desc = UMR_event.4.d
+    is_triggered_only = yes
+    option = {
+        name = UMR_event.4.a
+        remove_ideas = UMR_katzen_integration
+        Custom_effect_tooltip = "Unity has been restored"
+    }
+}
+country_event = {
+    ID = UMR_event.5
+    title = UMR_event.5.t
+    desc = UMR_event.5.d
+    is_triggered_only = yes
+    option = {
+        name = UMR_event.5.a
+        remove_ideas = UMR_katzen_displacement
+        Custom_effect_tooltip = "Unity has been restored"

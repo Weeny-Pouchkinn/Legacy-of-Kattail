@@ -23,7 +23,7 @@ democratic_faction_members = {
 	operators = {
 		faction_members
 		limit = {
-			has_government = democratic
+			has_democratic_gov_group = yes
 		}
 	}
 	name = COLLECTION_DEMOCRATIC_FACTION_MEMBERS
@@ -34,7 +34,7 @@ uncapitulated_democratic_faction_members = {
 	operators = {
 		faction_members
 		limit = {
-			has_government = democratic
+			has_democratic_gov_group = yes
 			has_capitulated = no
 		}
 	}
@@ -46,7 +46,7 @@ world_democratic_countries = {
 	name = COLLECTION_WORLD_DEMOCRATIC_COUNTRIES
 	operators = {
 		limit = {
-			has_government = democratic
+			has_democratic_gov_group = yes
 		}
 	}
 }
@@ -57,7 +57,7 @@ world_uncapitulated_democratic_countries_and_dominions = {
 	name = COLLECTION_UNCAPITULATED_DEMOCRATIC_COUNTRIES_AND_DOMINIONS
 	operators = {
 		limit = {
-			has_government = democratic
+			has_democratic_gov_group = yes
 			has_capitulated = no
 			OR = {
 				is_subject = no
@@ -82,7 +82,7 @@ world_non_communist_countries = {
 	name = COLLECTION_NON_COMMUNIST_COUNTRIES
 	operators = {
 		limit = {
-			NOT = { has_government = communism }
+			NOT = { has_communist_gov_group = yes }
 		}
 	}
 }
@@ -92,7 +92,7 @@ world_non_communist_states = {
 	name = COLLECTION_NON_COMMUNIST_STATES
 	operators = {
 		limit = {
-			NOT = { controller = { has_government = communism } }
+			NOT = { controller = { has_communist_gov_group = yes } }
 		}
 	}
 }
@@ -102,7 +102,7 @@ world_communist_countries = {
 	name = COLLECTION_WORLD_COMMUNIST_COUNTRIES
 	operators = {
 		limit = {
-			has_government = communism
+			has_communist_gov_group = yes
 		}
 	}
 }
@@ -198,7 +198,7 @@ world_non_fascist_controlled_states = {
 	input = game:all_states
 	operators = {
 		limit = {
-			controller = { NOT = { has_government = fascism } }
+			controller = { NOT = { has_fascist_gov_group = yes } }
 		}
 	}
 }
@@ -543,7 +543,7 @@ non_fascist_controlled_states_on_my_continent = {
 	input = collection:states_on_my_continent
 	operators = {
 		limit = {
-			controller = { NOT = { has_government = fascism } }
+			controller = { NOT = { has_fascist_gov_group = yes } }
 		}
 	}
 	name = COLLECTION_NON_FASCIST_STATES_MY_CONTINENT
@@ -552,7 +552,7 @@ non_communist_controlled_states_on_my_continent = {
 	input = collection:states_on_my_continent
 	operators = {
 		limit = {
-			controller = { NOT = { has_government = communism } }
+			controller = { NOT = { has_communist_gov_group = yes } }
 		}
 	}
 	name = COLLECTION_NON_COMMUNIST_STATES_MY_CONTINENT
@@ -561,7 +561,7 @@ non_democratic_controlled_states_on_my_continent = {
 	input = collection:states_on_my_continent
 	operators = {
 		limit = {
-			controller = { NOT = { has_government = democratic } }
+			controller = { NOT = { has_democratic_gov_group = yes } }
 		}
 	}
 	name = COLLECTION_NON_DEMOCRATIC_STATES_MY_CONTINENT
@@ -617,7 +617,7 @@ communist_controlled_states_my_continent = {
 		limit = {
 			is_on_same_continent_as = ROOT
 			controller = {
-				has_government = communism
+				has_communist_gov_group = yes
 			}
 		}
 	}
@@ -640,7 +640,7 @@ communist_or_capitulated_countries_my_continent = {
 		limit = {
 			is_on_same_continent_as = ROOT
 			OR = {
-				has_government = communism 
+				has_communist_gov_group = yes
 				has_capitulated = yes
 			}
 		}
@@ -655,7 +655,7 @@ fascist_controlled_states_my_continent = {
 		limit = {
 			is_on_same_continent_as = ROOT
 			controller = {
-				has_government = fascism
+				has_fascist_gov_group = yes
 			}
 		}
 	}
@@ -670,8 +670,8 @@ anti_communist_controlled_states_my_continent = {
 			is_on_same_continent_as = ROOT
 			controller = {
 				OR = {
-					has_government = fascism
-					has_government = democratic
+					has_fascist_gov_group = yes
+					has_democratic_gov_group = yes
 				}
 			}
 		}
@@ -686,8 +686,8 @@ anti_fascist_controlled_states_my_continent = {
 			is_on_same_continent_as = ROOT
 			controller = {
 				OR = {
-					has_government = communism
-					has_government = democratic
+					has_communist_gov_group = yes
+					has_democratic_gov_group = yes
 				}
 			}
 		}

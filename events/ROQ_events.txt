@@ -10,11 +10,11 @@ country_event = {
 
 	trigger = {
 		tag = ROQ
-		is_puppet = no
+		is_subject = no
 		514 = {
 			var:controller = {
 				is_herzlands_warlord = yes
-				has_government = democratic
+				has_democratic_gov_group = yes
 				surrender_progress > 0.1
 				OR = { 
 					has_war_with = AUR
@@ -31,7 +31,7 @@ country_event = {
 
 	option = {
 		name = ROQ_event.1.a
-		custom_effect_tooltip = AUR_event.1.a.tt
+		custom_effect_tooltip = ROQ_event.1.a.tt
 		effect_tooltip = {
 			514 = { var:controller = { add_ideas = ROQ_south_looks_to_roqualia } }
 		}
@@ -134,17 +134,17 @@ news_event = {
 
 	option = {
 		name = ROQ_event.4.a
-		trigger = { has_government = democratic }
+		trigger = { has_democratic_gov_group = yes }
 	}
 
 	option = {
 		name = ROQ_event.4.b
-		trigger = { has_government = communism }
+		trigger = { has_communist_gov_group = yes }
 	}
 
 	option = {
 		name = ROQ_event.4.c
-		trigger = { OR = { has_government = neutrality has_government = fascism has_government = gestalt } }
+		trigger = { OR = { has_neutrality_gov_group = yes has_fascist_gov_group = yes has_government = gestalt } }
 	}
 }
 
@@ -333,8 +333,8 @@ country_event = {
 			modifier = {
 				add = 100
 				OR = {
-					has_government = fascism
-					has_government = neutrality
+					has_fascist_gov_group = yes
+					has_neutrality_gov_group = yes
 				}
 			}
 		}
@@ -348,10 +348,39 @@ country_event = {
 			modifier = {
 				factor = 0
 				OR = {
-					has_government = fascism
-					has_government = neutrality
+					has_fascist_gov_group = yes
+					has_neutrality_gov_group = yes
 				}
 			}
+		}
+	}
+}
+
+# To Go Further Beyond?
+country_event = {
+	id = ROQ_event.7
+	title = ROQ_event.7.t
+	desc = ROQ_event.7.d
+	picture = GFX_report_event_dofus
+
+	is_triggered_only = yes
+
+	# Roqualia is safe. I am not needed anymore.
+	option = {
+		name = ROQ_event.7.a
+		retire_character = ROQ_Delaparte
+		set_politics = {
+			ruling_party = authoritarian_democratic
+		}
+		set_country_flag = delaparte_stepped_down
+		news_event = { id = LOK_news.25 days = 1 }
+	}
+
+	# Why stop here? Why limit myself?
+	option = {
+		name = ROQ_event.7.b
+		set_politics = {
+			ruling_party = fascism
 		}
 	}
 }

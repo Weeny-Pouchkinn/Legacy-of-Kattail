@@ -1,544 +1,1183 @@
-add_namespace = ROQ_reclamation
+add_namespace = roq_reclamation
 
-# Event 1: Hidden initialization - fires 1 day after ROQ_begin_the_reclamation completes.
-# Builds the SSU supporters array, the targets array, initialises modifier variables
-# and dynamic modifiers for FSR/DOM, and fires the global flag.
+# Event 1: Ultimatum/Demand sent to third-party owners of target states
 country_event = {
-	id = ROQ_reclamation.1
+	id = roq_reclamation.1
+	title = roq_reclamation.1.t
+	desc = roq_reclamation.1.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Logs or other hidden initialization
+		}
+	}
+
+	# OPTION A: Hand over all states (Non-Democratic)
+	option = {
+		name = roq_reclamation.1.a
+		trigger = {
+			NOT = { has_democratic_gov_group = yes }
+		}
+		custom_effect_tooltip = roq_reclamation_accept_demands_tt
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 236
+					state = 254
+					state = 255
+					state = 730
+					state = 242
+					state = 244
+				}
+			}
+			transfer_state_to = ROQ
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.2 }
+			if = {
+				limit = {
+					236 = { is_owned_by = ROQ }
+					254 = { is_owned_by = ROQ }
+					255 = { is_owned_by = ROQ }
+					730 = { is_owned_by = ROQ }
+					242 = { is_owned_by = ROQ }
+					244 = { is_owned_by = ROQ }
+					has_war = no
+				}
+				ROQ_reclamation_cleanup = yes
+			}
+		}
+	}
+
+	# OPTION B: Refuse and go to war (Non-Democratic)
+	option = {
+		name = roq_reclamation.1.b
+		trigger = {
+			NOT = { has_democratic_gov_group = yes }
+		}
+		custom_effect_tooltip = roq_reclamation_refuse_demands_tt
+		ROQ = {
+			declare_war_on = { target = ROOT type = annex_everything }
+			set_variable = { reclamation_stage = 1 }
+			country_event = { id = roq_reclamation.3 }
+		}
+	}
+
+	# OPTION C: Compromise and hand over bordering FSR states (Democratic)
+	option = {
+		name = roq_reclamation.1.c
+		trigger = {
+			has_democratic_gov_group = yes
+		}
+		custom_effect_tooltip = roq_reclamation_accept_compromise_tt
+		every_owned_state = {
+			limit = {
+				is_core_of = FSR
+				any_neighbor_state = { is_owned_by = ROQ }
+			}
+			transfer_state_to = ROQ
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.4 }
+			if = {
+				limit = {
+					236 = { is_owned_by = ROQ }
+					254 = { is_owned_by = ROQ }
+					255 = { is_owned_by = ROQ }
+					730 = { is_owned_by = ROQ }
+					242 = { is_owned_by = ROQ }
+					244 = { is_owned_by = ROQ }
+					has_war = no
+				}
+				ROQ_reclamation_cleanup = yes
+			}
+		}
+	}
+
+	# OPTION D: Refuse compromise and go to war (Democratic)
+	option = {
+		name = roq_reclamation.1.e
+		trigger = {
+			has_democratic_gov_group = yes
+		}
+		custom_effect_tooltip = roq_reclamation_refuse_compromise_tt
+		ROQ = {
+			declare_war_on = { target = ROOT type = annex_everything }
+			set_variable = { reclamation_stage = 1 }
+			country_event = { id = roq_reclamation.5 }
+		}
+	}
+}
+
+# Event 2: Inform ROQ of Acceptance (Non-Democratic)
+country_event = {
+	id = roq_reclamation.2
+	title = roq_reclamation.2.t
+	desc = roq_reclamation.2.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.2.a
+	}
+}
+
+# Event 3: Inform ROQ of Refusal (Non-Democratic)
+country_event = {
+	id = roq_reclamation.3
+	title = roq_reclamation.3.t
+	desc = roq_reclamation.3.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.3.a
+	}
+}
+
+# Event 4: Inform ROQ of Acceptance (Democratic Compromise)
+country_event = {
+	id = roq_reclamation.4
+	title = roq_reclamation.4.t
+	desc = roq_reclamation.4.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.4.a
+	}
+}
+
+# Event 5: Inform ROQ of Refusal (Democratic Compromise)
+country_event = {
+	id = roq_reclamation.5
+	title = roq_reclamation.5.t
+	desc = roq_reclamation.5.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.5.a
+	}
+}
+
+# Event 10: Stage 1 completion check event for ROQ (controls all states)
+country_event = {
+	id = roq_reclamation.10
+	title = roq_reclamation.10.t
+	desc = roq_reclamation.10.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Process capture check
+		}
+	}
+
+	# Option A: Above 75% WS -> Coup & Stage 2
+	option = {
+		name = roq_reclamation.10.a
+		trigger = {
+			has_war_support > 0.50
+		}
+		custom_effect_tooltip = roq_reclamation_escalate_ws_high_tt
+		ROQ_reclamation_build_stage_2_targets = yes
+		set_variable = { reclamation_stage = 2 }
+		every_state = {
+			limit = { is_in_array = { global.roq_natural_border_states_array = THIS } }
+			add_claim_by = ROQ
+		}
+		add_popularity = {
+			ideology = neutrality
+			popularity = 0.50
+		}
+		set_politics = {
+			ruling_party = neutrality
+			elections_allowed = no
+		}
+		news_event = { id = LOK_news.14 days = 1 }
+	}
+
+	# Option B: Below 75% WS -> Sue for peace and trigger 7-day escalation check
+	option = {
+		name = roq_reclamation.10.b
+		trigger = {
+			NOT = { has_war_support > 0.75 }
+		}
+		custom_effect_tooltip = roq_reclamation_sue_peace_ws_low_tt
+		every_country = {
+			limit = {
+				has_war_with = ROQ
+				NOT = { tag = FSR }
+				NOT = { tag = DOM }
+				OR = {
+					AND = {
+						is_faction_leader = yes
+						is_subject = no
+					}
+					AND = {
+						is_in_faction = no
+						is_subject = no
+					}
+				}
+			}
+			country_event = { id = roq_reclamation.100 }
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.110 days = 7 }
+		}
+	}
+}
+
+# Event 100: Peace offer sent to ROQ's enemies (faction leaders and independent nations)
+country_event = {
+	id = roq_reclamation.100
+	title = roq_reclamation.100.t
+	desc = roq_reclamation.100.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Agree to white peace (AI base = 100)
+	option = {
+		name = roq_reclamation.100.a
+		ai_chance = {
+			base = 100
+		}
+		custom_effect_tooltip = roq_reclamation_accept_peace_tt
+		if = {
+			limit = {
+				FSR = { is_in_faction_with = ROOT }
+			}
+			FSR = { leave_faction = yes }
+		}
+		if = {
+			limit = {
+				DOM = { is_in_faction_with = ROOT }
+			}
+			DOM = { leave_faction = yes }
+		}
+		white_peace = ROQ
+		every_country = {
+			limit = {
+				is_in_faction_with = ROOT
+				has_war_with = ROQ
+			}
+			white_peace = ROQ
+		}
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 236
+					state = 254
+					state = 255
+					state = 730
+					state = 242
+					state = 244
+				}
+			}
+			transfer_state_to = ROQ
+		}
+	}
+
+	# Option B: Refuse peace (AI base = 0)
+	option = {
+		name = roq_reclamation.100.b
+		ai_chance = {
+			base = 0
+		}
+		custom_effect_tooltip = roq_reclamation_refuse_peace_tt
+		# No immediate effect, the ROQ 7-day escalation check will handle this if they are still at war.
+	}
+}
+
+# Event 110: 7-day post-peace check processor (hidden)
+country_event = {
+	id = roq_reclamation.110
 	hidden = yes
 	is_triggered_only = yes
 
 	immediate = {
-		log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.1 - Reclamation initialization"
-
-		set_global_flag = ROQ_reclamation_active
-
-		# Build the targets array (FSR/DOM who are actually at war with ROQ)
-		every_country = {
-			limit = {
-				OR = { tag = FSR tag = DOM }
-				country_exists = THIS
-				has_war_with = ROQ
-			}
-			add_to_array = { global.ROQ_reclamation_targets = THIS }
-			add_dynamic_modifier = { modifier = ROQ_reclamation_support }
-		}
-
-		# Build the SSU supporters array: MCF + all nations in faction with MCF
-		if = {
-			limit = { country_exists = MCF }
-			MCF = {
-				add_to_array = { global.ROQ_reclamation_ssu_supporters = MCF }
-				every_country = {
-					limit = {
-						is_in_faction_with = MCF
-						NOT = { tag = MCF }
-						country_exists = THIS
-					}
-					add_to_array = { global.ROQ_reclamation_ssu_supporters = THIS }
-				}
-			}
-		}
-
-		# Initialise support level for each SSU member (0 = Disinterested)
-		every_country = {
-			limit = {
-				is_in_array = { array = global.ROQ_reclamation_ssu_supporters value = THIS }
-				country_exists = THIS
-			}
-			country_event = { id = ROQ_reclamation.2 days = 5 }
+		hidden_effect = {
 			if = {
-				limit = { tag = KHA }
-				set_variable = { ROQ_reclamation_support_level = 2 }
-			}
-			else_if = {
-				limit = { tag = MCF }
-				set_variable = { ROQ_reclamation_support_level = 3 }
+				limit = {
+					any_country = {
+						has_war_with = ROQ
+						NOT = { tag = FSR }
+						NOT = { tag = DOM }
+					}
+				}
+				# Some wars remain -> Refused! Escalate to Stage 2
+				ROQ_reclamation_build_stage_2_targets = yes
+				set_variable = { reclamation_stage = 2 }
+				every_state = {
+					limit = { is_in_array = { global.roq_natural_border_states_array = THIS } }
+					add_claim_by = ROQ
+				}
+				add_war_support = 0.20
+				add_timed_idea = { idea = ROQ_war_exhaustion days = 180 }
+				add_popularity = {
+					ideology = neutrality
+					popularity = 0.50
+				}
+				set_politics = {
+					ruling_party = neutrality
+					elections_allowed = no
+				}
+				news_event = { id = LOK_news.14 days = 1 }
+				country_event = { id = roq_reclamation.111 }
 			}
 			else = {
-				set_variable = { ROQ_reclamation_support_level = 1 }
+				# No remaining wars -> Peace succeeded!
+				ROQ_reclamation_cleanup = yes
+				country_event = { id = roq_reclamation.112 }
 			}
-		}
-
-		# Fire Flusiobalkan reaction event for every Flusiobalkan except FSR, DOM and MCF faction members
-		every_country = {
-			limit = {
-				is_flusiobalkan = yes
-				NOT = { tag = FSR }
-				NOT = { tag = DOM }
-				NOT = { is_in_faction_with = MCF }
-				country_exists = THIS
-			}
-			country_event = { id = ROQ_reclamation.30 days = 3 }
 		}
 	}
 }
 
-
-# Regular support demand
+# Event 111: Peace talks failed (ROQ informed of escalation)
 country_event = {
-	id = ROQ_reclamation.2
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.2" }
-	title = ROQ_reclamation.2.t
-	desc = ROQ_reclamation.2.desc
+	id = roq_reclamation.111
+	title = roq_reclamation.111.t
+	desc = roq_reclamation.111.d
 	picture = GFX_report_event_generic_diplomacy
 	is_triggered_only = yes
-
-	trigger = {
-		NOT = { is_in_faction_with = DOM }
-		NOT = { is_in_faction_with = FSR }
-	}
 
 	immediate = {
 		hidden_effect = {
-			set_variable = { ROQ_reclamation_buff_2 = 0.02 }
-			set_variable = { ROQ_reclamation_buff_minus_2 = -0.02 }
-			multiply_variable = { ROQ_reclamation_buff_2 = ROQ_reclamation_support_level }
-			multiply_variable = { ROQ_reclamation_buff_minus_2 = ROQ_reclamation_support_level }
-			country_event = { id = ROQ_reclamation.2 days = 30 }
+			# Empty
 		}
 	}
 
-	option = { #send air advisors (MCF)
-		name = ROQ_reclamation.2.a
-		trigger = { tag = MCF }
-		custom_effect_tooltip = ROQ_reclamation_air_agility_received_tt
+	option = {
+		name = roq_reclamation.111.a
+	}
+}
+
+# Event 112: Peace talks succeeded (ROQ informed of clean wrap-up)
+country_event = {
+	id = roq_reclamation.112
+	title = roq_reclamation.112.t
+	desc = roq_reclamation.112.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
 		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_air_agility_factor = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.10 days = 1 random_days = 2 }
-			}
+			# Empty
 		}
 	}
 
-	option = { #weather (MCF)
-		name = ROQ_reclamation.2.b
-		trigger = { tag = MCF }
-		custom_effect_tooltip = ROQ_reclamation_air_weather_received_tt
+	option = {
+		name = roq_reclamation.112.a
+		if = {
+			limit = { has_country_flag = roqualia_went_to_war }
+			news_event = { id = LOK_news.27 days = 1 }
+		}
+		else = {
+			news_event = { id = LOK_news.28 days = 1 }
+		}
+	}
+}
+
+# Event 20: Stage 2 progress check (fires for ROQ)
+country_event = {
+	id = roq_reclamation.20
+	title = roq_reclamation.20.t
+	desc = roq_reclamation.20.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
 		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_air_attack_factor = ROOT.ROQ_reclamation_buff_2 }
-				add_to_variable = { ROQ_reclamation_air_defence_factor = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.11 days = 1 random_days = 2 }
-			}
+			# Empty
 		}
 	}
 
-	option = { #war advisors (KHA)
-		name = ROQ_reclamation.2.c
-		trigger = { tag = KHA }
-		custom_effect_tooltip = ROQ_reclamation_war_advisors_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_army_attack_factor = ROOT.ROQ_reclamation_buff_2 }
-				add_to_variable = { ROQ_reclamation_army_defence_factor = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.12 days = 1 random_days = 2 }
-			}
-		}
-	}
-
-
-	option = { #recon riders (KHA)
-		name = ROQ_reclamation.2.d
-		trigger = { tag = KHA }
-		custom_effect_tooltip = ROQ_reclamation_recon_raiders_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_breakthrough_factor = ROOT.ROQ_reclamation_buff_2 }
-				add_to_variable = { ROQ_reclamation_coordination_bonus = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.13 days = 1 random_days = 2 }
-			}
-		}
-	}
-
-	option = { #logi advisors (SLR)
-		name = ROQ_reclamation.2.e
-		trigger = { tag = SLR }
-		custom_effect_tooltip = ROQ_reclamation_logistical_advisors_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_supply_consumption_factor = ROOT.ROQ_reclamation_buff_minus_2 }
-				country_event = { id = ROQ_reclamation.14 days = 1 random_days = 2 }
-			}
-		}
-	}
-
-	option = { #construction engineers (SLR)
-		name = ROQ_reclamation.2.f
-		trigger = { tag = SLR }
-		custom_effect_tooltip = ROQ_reclamation_industrial_engineers_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_build_speed_factor = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.15 days = 1 random_days = 2 }
-			}
-		}
-	}
-
-	option = { #industry advisors (TEN)
-		name = ROQ_reclamation.2.g
-		trigger = { tag = TEN }
-		custom_effect_tooltip = ROQ_reclamation_industrial_advisors_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_industrial_capacity_factory = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.16 days = 1 random_days = 2 }
-			}
-		}
-	}
-
-	option = { #fortifications engineers (TEN)
-		name = ROQ_reclamation.2.h
-		trigger = { tag = TEN }
-		custom_effect_tooltip = ROQ_reclamation_fortification_engineers_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_production_speed_bunker_factor = ROOT.ROQ_reclamation_buff_2 }
-				add_to_variable = { ROQ_reclamation_production_speed_anti_air_building_factor = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.17 days = 1 random_days = 2 }
-			}
-		}
-	}
-
-	option = { #industry support
-		name = ROQ_reclamation.2.i
-		trigger = { tag = TEN }
-		custom_effect_tooltip = ROQ_reclamation_political_support_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_consumer_goods_factor = ROOT.ROQ_reclamation_buff_minus_2 }
-				country_event = { id = ROQ_reclamation.18 days = 1 random_days = 2 }
-			}
-		}
-	}
-
-	option = { #army support
-		name = ROQ_reclamation.2.j
-		trigger = { tag = TEN }
-		custom_effect_tooltip = ROQ_reclamation_military_support_received_tt
-		hidden_effect = {
-			every_country = {
-				limit = {
-					OR = {
-						has_dynamic_modifier = { modifier = ROQ_reclamation_support }
-						tag = ROQ
-					}
-				}
-				add_to_variable = { ROQ_reclamation_breakthrough_factor = ROOT.ROQ_reclamation_buff_2 }
-				country_event = { id = ROQ_reclamation.19 days = 1 random_days = 2 }
-			}
-		}
-	}
-}
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Support notification events (fired at FSR/DOM by the supporting SSU nation)
-# ROOT = FSR or DOM (receiver)   FROM = the SSU member (sender)
-# ─────────────────────────────────────────────────────────────────────────────
-
-# Event 10: Air Advisors received (MCF: +air agility)
-country_event = {
-	id = ROQ_reclamation.10
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.10" }
-	title = ROQ_reclamation.10.t
-	desc = ROQ_reclamation.10.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
+	# Option A: WS > 50% -> Escalate to Stage 3 (La Domination)
 	option = {
-		name = ROQ_reclamation.10.a
-		custom_effect_tooltip = ROQ_reclamation_air_agility_received_tt
-	}
-}
-
-# Event 11: Weather Disruption received (MCF: +air attack & defence)
-country_event = {
-	id = ROQ_reclamation.11
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.11" }
-	title = ROQ_reclamation.11.t
-	desc = ROQ_reclamation.11.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.11.a
-		custom_effect_tooltip = ROQ_reclamation_air_weather_received_tt
-	}
-}
-
-# Event 12: War Advisors received (KHA: +army attack & defence)
-country_event = {
-	id = ROQ_reclamation.12
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.12" }
-	title = ROQ_reclamation.12.t
-	desc = ROQ_reclamation.12.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.12.a
-		custom_effect_tooltip = ROQ_reclamation_war_advisors_received_tt
-	}
-}
-
-# Event 13: Recon Raiders received (KHA: +breakthrough & coordination)
-country_event = {
-	id = ROQ_reclamation.13
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.13" }
-	title = ROQ_reclamation.13.t
-	desc = ROQ_reclamation.13.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.13.a
-		custom_effect_tooltip = ROQ_reclamation_recon_raiders_received_tt
-	}
-}
-
-# Event 14: Logistical Advisors received (SLR: -supply use)
-country_event = {
-	id = ROQ_reclamation.14
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.14" }
-	title = ROQ_reclamation.14.t
-	desc = ROQ_reclamation.14.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.14.a
-		custom_effect_tooltip = ROQ_reclamation_logistical_advisors_received_tt
-	}
-}
-
-# Event 15: Industrial Engineers received (SLR: +build speed)
-country_event = {
-	id = ROQ_reclamation.15
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.15" }
-	title = ROQ_reclamation.15.t
-	desc = ROQ_reclamation.15.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.15.a
-		custom_effect_tooltip = ROQ_reclamation_industrial_engineers_received_tt
-	}
-}
-
-# Event 16: Industrial Advisors received (TEN: +factory output)
-country_event = {
-	id = ROQ_reclamation.16
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.16" }
-	title = ROQ_reclamation.16.t
-	desc = ROQ_reclamation.16.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.16.a
-		custom_effect_tooltip = ROQ_reclamation_industrial_advisors_received_tt
-	}
-}
-
-# Event 17: Fortification Engineers received (TEN: +fort & AA build speed)
-country_event = {
-	id = ROQ_reclamation.17
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.17" }
-	title = ROQ_reclamation.17.t
-	desc = ROQ_reclamation.17.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.17.a
-		custom_effect_tooltip = ROQ_reclamation_fortification_engineers_received_tt
-	}
-}
-
-# Event 18: Military Support received (generic SSU member: +breakthrough)
-country_event = {
-	id = ROQ_reclamation.18
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.18" }
-	title = ROQ_reclamation.18.t
-	desc = ROQ_reclamation.18.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.18.a
-		custom_effect_tooltip = ROQ_reclamation_military_support_received_tt
-	}
-}
-
-# Event 19: Political Support received (generic SSU member: -consumer goods)
-country_event = {
-	id = ROQ_reclamation.19
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.19" }
-	title = ROQ_reclamation.19.t
-	desc = ROQ_reclamation.19.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.19.a
-		custom_effect_tooltip = ROQ_reclamation_political_support_received_tt
-	}
-}
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Event 20: FSR/DOM joins MCF faction notification (fired at FSR/DOM from MCF on mission timeout)
-# ─────────────────────────────────────────────────────────────────────────────
-country_event = {
-	id = ROQ_reclamation.20
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.20" }
-	title = ROQ_reclamation.20.t
-	desc = ROQ_reclamation.20.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.20.a
-	}
-}
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Event 30: Flusiobalkan reaction to the Reclamation
-# Fires for every Flusiobalkan nation except FSR, DOM, and those in faction with MCF
-# ─────────────────────────────────────────────────────────────────────────────
-country_event = {
-	id = ROQ_reclamation.30
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.30" }
-	title = ROQ_reclamation.30.t
-	desc = ROQ_reclamation.30.d
-	picture = GFX_report_event_generic_diplomacy
-	is_triggered_only = yes
-
-	option = {
-		name = ROQ_reclamation.30.a
-		add_political_power = 100
-		add_stability = 0.05
-	}
-
-	option = {
-		name = ROQ_reclamation.30.b
-		add_stability = -0.05
-		add_war_support = 0.05
-		add_timed_idea = {
-			idea = ROQ_reclamation_flusiobalkan_volunteers
-			days = 180
-		}
+		name = roq_reclamation.20.a
 		trigger = {
-			is_ai = no
+			has_war_support > 0.50
+		}
+		custom_effect_tooltip = roq_reclamation_escalate_ws_50_tt
+		ROQ_reclamation_build_stage_3_targets = yes
+		set_variable = { reclamation_stage = 3 }
+		set_politics = {
+			ruling_party = fascism
+			elections_allowed = no
+		}
+		promote_character = ROQ_Delaparte
+	}
+
+	# Option B: WS < 50% -> Conclude Reclamation
+	option = {
+		name = roq_reclamation.20.b
+		trigger = {
+			NOT = { has_war_support > 0.50 }
+		}
+		custom_effect_tooltip = roq_reclamation_end_reclamation_tt
+		set_country_flag = delaparte_stepped_down
+		retire_character = ROQ_Delaparte
+		set_politics = {
+			ruling_party = authoritarian_democratic
+			elections_allowed = no
+		}
+		news_event = { id = LOK_news.25 days = 1 }
+		ROQ_reclamation_cleanup = yes
+	}
+}
+
+# Event 200: Stage 2 land demand (fires for target)
+country_event = {
+	id = roq_reclamation.200
+	title = roq_reclamation.200.t
+	desc = roq_reclamation.200.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Refuse demands -> War!
+	option = {
+		name = roq_reclamation.200.a
+		ai_chance = {
+			base = 100
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.202 days = 1 }
+			declare_war_on = { target = ROOT type = annex_everything }
+		}
+	}
+
+	# Option B: Accept demands -> Cede states!
+	option = {
+		name = roq_reclamation.200.b
+		ai_chance = {
+			base = 0
+		}
+		every_owned_state = {
+			limit = {
+				is_in_array = { array = global.roq_natural_border_states_array value = THIS }
+			}
+			transfer_state_to = ROQ
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.201 days = 1 }
 		}
 	}
 }
 
-# Event 40: DOM/FSR withdraw from faction after Reclamation peace
+# Event 201: Stage 2 demands accepted (fires for ROQ)
 country_event = {
-	id = ROQ_reclamation.40
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.40" }
-	title = ROQ_reclamation.40.t
-	desc = ROQ_reclamation.40.d
+	id = roq_reclamation.201
+	title = roq_reclamation.201.t
+	desc = roq_reclamation.201.d
 	picture = GFX_report_event_generic_diplomacy
 	is_triggered_only = yes
 
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
 	option = {
-		name = ROQ_reclamation.40.a
+		name = roq_reclamation.201.a
+	}
+}
+
+# Event 202: Stage 2 demands refused (fires for ROQ)
+country_event = {
+	id = roq_reclamation.202
+	title = roq_reclamation.202.t
+	desc = roq_reclamation.202.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.202.a
+	}
+}
+
+# Event 300: Stage 3 land demand (fires for target)
+country_event = {
+	id = roq_reclamation.300
+	title = roq_reclamation.300.t
+	desc = roq_reclamation.300.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Refuse demands -> War!
+	option = {
+		name = roq_reclamation.300.a
+		ai_chance = {
+			base = 1
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.302 days = 1 }
+			declare_war_on = { target = ROOT type = annex_everything }
+		}
+	}
+
+	# Option B: Accept demands -> Cede states!
+	option = {
+		name = roq_reclamation.300.b
+		ai_chance = {
+			base = 1
+		}
+		every_owned_state = {
+			limit = {
+				is_in_array = { array = global.roq_solakean_states_array value = THIS }
+			}
+			transfer_state_to = ROQ
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.301 days = 1 }
+		}
+	}
+}
+
+# Event 301: Stage 3 demands accepted (fires for ROQ)
+country_event = {
+	id = roq_reclamation.301
+	title = roq_reclamation.301.t
+	desc = roq_reclamation.301.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.301.a
+	}
+}
+
+# Event 302: Stage 3 demands refused (fires for ROQ)
+country_event = {
+	id = roq_reclamation.302
+	title = roq_reclamation.302.t
+	desc = roq_reclamation.302.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.302.a
+	}
+}
+
+# Event 30: Stage 3 completion check (fires for ROQ)
+country_event = {
+	id = roq_reclamation.30
+	title = roq_reclamation.30.t
+	desc = roq_reclamation.30.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.30.a
+		custom_effect_tooltip = roq_reclamation_escalate_stage4_tt
+		hidden_effect = {
+			ROQ_reclamation_build_stage_4_targets = yes
+			set_variable = { reclamation_stage = 4 }
+		}
+	}
+}
+
+# Event 400: Stage 4 land demand (fires for target)
+country_event = {
+	id = roq_reclamation.400
+	title = roq_reclamation.400.t
+	desc = roq_reclamation.400.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Refuse demands -> War!
+	option = {
+		name = roq_reclamation.400.a
+		ai_chance = {
+			base = 100
+		}
+		custom_effect_tooltip = roq_reclamation_refuse_demands_tt
+		hidden_effect = {
+			ROQ = {
+				country_event = { id = roq_reclamation.402 days = 1 }
+				declare_war_on = { target = ROOT type = annex_everything }
+			}
+		}
+	}
+
+	# Option B: Accept demands -> Cede states!
+	option = {
+		name = roq_reclamation.400.b
+		ai_chance = {
+			base = 0
+		}
+		every_owned_state = {
+			limit = {
+				is_in_array = { array = global.herzlands_states_array value = THIS }
+			}
+			transfer_state_to = ROQ
+		}
+		hidden_effect = {
+			ROQ = {
+				country_event = { id = roq_reclamation.401 days = 1 }
+			}
+		}
+	}
+}
+
+# Event 401: Stage 4 demands accepted (fires for ROQ)
+country_event = {
+	id = roq_reclamation.401
+	title = roq_reclamation.401.t
+	desc = roq_reclamation.401.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.401.a
+	}
+}
+
+# Event 402: Stage 4 demands refused (fires for ROQ)
+country_event = {
+	id = roq_reclamation.402
+	title = roq_reclamation.402.t
+	desc = roq_reclamation.402.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.402.a
+	}
+}
+
+# Event 40: Stage 4 completion check (fires for ROQ)
+country_event = {
+	id = roq_reclamation.40
+	title = roq_reclamation.40.t
+	desc = roq_reclamation.40.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.40.a
+		custom_effect_tooltip = roq_reclamation_escalate_stage5_tt
+		hidden_effect = {
+			set_variable = { reclamation_stage = 5 }
+			every_country = {
+				limit = {
+					exists = yes
+					NOT = { tag = ROQ }
+					is_non_playable_country = no
+					NOT = { is_subject_of = ROQ }
+					NOT = { is_in_faction_with = ROQ }
+					NOT = { has_war_with = ROQ }
+				}
+				ROQ = {
+					declare_war_on = { target = PREV type = annex_everything }
+				}
+			}
+		}
+	}
+}
+
+# Event 999: Debug event to set Reclamation Stage (fires for ROQ)
+country_event = {
+	id = roq_reclamation.999
+	title = roq_reclamation.999.t
+	desc = roq_reclamation.999.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Set to Stage 1
+	option = {
+		name = roq_reclamation.999.a
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 1 }
+				ROQ_reclamation_build_stage_1_targets = yes
+			}
+		}
+	}
+
+	# Option B: Set to Stage 2
+	option = {
+		name = roq_reclamation.999.b
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 2 }
+				every_state = {
+					limit = { is_in_array = { global.roq_natural_border_states_array = THIS } }
+					add_claim_by = ROQ
+				}
+				ROQ_reclamation_build_stage_2_targets = yes
+			}
+		}
+	}
+
+	# Option C: Set to Stage 3
+	option = {
+		name = roq_reclamation.999.c
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 3 }
+				ROQ_reclamation_build_stage_3_targets = yes
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+				promote_character = ROQ_Delaparte
+			}
+		}
+	}
+
+	# Option D: Set to Stage 4
+	option = {
+		name = roq_reclamation.999.d
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 4 }
+				ROQ_reclamation_build_stage_4_targets = yes
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+				promote_character = ROQ_Delaparte
+			}
+		}
+	}
+
+	# Option E: Set to Stage 5
+	option = {
+		name = roq_reclamation.999.e
+		hidden_effect = {
+			set_global_flag = ROQ_reclamation_active
+			ROQ = {
+				set_variable = { reclamation_stage = 5 }
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+				promote_character = ROQ_Delaparte
+				every_country = {
+					limit = {
+						exists = yes
+						NOT = { tag = ROQ }
+						is_non_playable_country = no
+						NOT = { is_subject_of = ROQ }
+						NOT = { is_in_faction_with = ROQ }
+						NOT = { has_war_with = ROQ }
+					}
+					ROQ = {
+						declare_war_on = { target = PREV type = annex_everything }
+					}
+				}
+			}
+		}
+	}
+}
+
+# Event 50: Roqualia Targets Us! (warning event sent to target)
+country_event = {
+	id = roq_reclamation.50
+	title = roq_reclamation.50.t
+	desc = roq_reclamation.50.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.50.a
+	}
+}
+
+# Event 60: ROQ decides how to deal with the occupier (Negotiate or Ultimatum)
+country_event = {
+	id = roq_reclamation.60
+	title = roq_reclamation.60.t
+	desc = roq_reclamation.60.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			save_event_target_as = roq_reclamation_sender
+		}
+	}
+
+	# Option A: Negotiate
+	option = {
+		name = roq_reclamation.60.a
+		ai_chance = {
+			factor = 0
+			modifier = {
+				factor = 1
+				event_target:roq_reclamation_stage1_target = { tag = KUS }
+			}
+		}
+		event_target:roq_reclamation_stage1_target = {
+			country_event = { id = roq_reclamation.61 }
+		}
+	}
+
+	# Option B: Ultimatum
+	option = {
+		name = roq_reclamation.60.b
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 0
+				event_target:roq_reclamation_stage1_target = { tag = KUS }
+			}
+		}
+		event_target:roq_reclamation_stage1_target = {
+			country_event = { id = roq_reclamation.65 }
+		}
+	}
+}
+
+# Event 61: Target gets the negotiation offer
+country_event = {
+	id = roq_reclamation.61
+	title = roq_reclamation.61.t
+	desc = roq_reclamation.61.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Accept
+	option = {
+		name = roq_reclamation.61.a
+		ai_chance = {
+			factor = 100
+		}
+		if = {
+			limit = { controls_state = 254 }
+			254 = { transfer_state_to = ROQ }
+		}
+		if = {
+			limit = { controls_state = 730 }
+			730 = { transfer_state_to = ROQ }
+		}
+		add_ideas = ROQ_roqualian_economic_integration
+		add_ideas = ROQ_reclamation_factory_payment
+
+		if = {
+			limit = { controls_state = 236 }
+			236 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		if = {
+			limit = { controls_state = 255 }
+			255 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		if = {
+			limit = { controls_state = 255 }
+			255 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		if = {
+			limit = { controls_state = 255 }
+			255 = { remove_from_array = { global.roq_provinces_perdues_states_array = THIS } }
+		}
+		ROQ = {
+			ROQ_reclamation_build_stage_1_targets = yes
+			PREV = { save_event_target_as = roq_resettlement_target }
+			country_event = { id = roq_reclamation.62 days = 180 }
+			country_event = { id = roq_reclamation.63 }
+		}
+	}
+
+	# Option B: Refuse
+	option = {
+		name = roq_reclamation.61.b
+		ai_chance = {
+			factor = 0
+		}
+		ROQ = {
+			country_event = { id = roq_reclamation.64 }
+		}
+	}
+}
+
+# Event 62: Resettlement Completion (180 days after negotiation accepted)
+country_event = {
+	id = roq_reclamation.62
+	title = roq_reclamation.62.t
+	desc = roq_reclamation.62.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
 		hidden_effect = {
 			if = {
 				limit = {
-					is_in_faction = yes
-					NOT = { is_faction_leader = yes }
+					236 = { is_owned_by = event_target:roq_resettlement_target }
 				}
-				faction_leader = {
-					country_event = { id = ROQ_reclamation.41 }
+				236 = {
+					set_temp_variable = { culture_temp = 6 }
+					add_state_culture = yes
+					
+					# Swap majority and minority populations
+					set_temp_variable = { species_swap_temp = species }
+					set_variable = { species = minority }
+					set_variable = { minority = species_swap_temp }
+					apply_state_species_modifier = yes
+					update_matching_species_modifiers = yes
 				}
-				leave_faction = yes
-				news_event = { id = ROQ_reclamation.42 days = 3 }
 			}
+			if = {
+				limit = {
+					255 = { is_owned_by = event_target:roq_resettlement_target }
+				}
+				255 = {
+					set_temp_variable = { culture_temp = 6 }
+					add_state_culture = yes
+					
+					# Swap majority and minority populations
+					set_temp_variable = { species_swap_temp = species }
+					set_variable = { species = minority }
+					set_variable = { minority = species_swap_temp }
+					apply_state_species_modifier = yes
+					update_matching_species_modifiers = yes
+				}
+			}
+		}
+	}
+
+	option = {
+		name = roq_reclamation.62.a
+	}
+}
+
+# Event 63: Negotiation accepted notification to ROQ
+country_event = {
+	id = roq_reclamation.63
+	title = roq_reclamation.63.t
+	desc = roq_reclamation.63.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.63.a
+	}
+}
+
+# Event 64: Negotiation refused notification to ROQ
+country_event = {
+	id = roq_reclamation.64
+	title = roq_reclamation.64.t
+	desc = roq_reclamation.64.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	option = {
+		name = roq_reclamation.64.a
+		declare_war_on = { target = event_target:roq_reclamation_stage1_target type = annex_everything }
+		set_country_flag = roqualia_went_to_war
+	}
+}
+
+# Event 65: Target receives the ultimatum
+country_event = {
+	id = roq_reclamation.65
+	title = roq_reclamation.65.t
+	desc = roq_reclamation.65.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
+	# Option A: Cede states
+	option = {
+		name = roq_reclamation.65.a
+		ai_chance = {
+			factor = 10
+		}
+		if = { limit = { controls_state = 236 } 236 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 254 } 254 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 255 } 255 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 730 } 730 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 242 } 242 = { transfer_state_to = ROQ } }
+		if = { limit = { controls_state = 244 } 244 = { transfer_state_to = ROQ } }
+		ROQ = {
+			country_event = { id = roq_reclamation.66 }
+		}
+	}
+
+	# Option B: Refuse and war
+	option = {
+		name = roq_reclamation.65.b
+		ai_chance = {
+			factor = 90
+		}
+		ROQ = {
+			declare_war_on = { target = PREV type = annex_everything }
+			set_country_flag = roqualia_went_to_war
+			country_event = { id = roq_reclamation.67 }
 		}
 	}
 }
 
-# Event 41: Faction leader notified that DOM/FSR left
+# Event 66: Ultimatum accepted notification to ROQ
 country_event = {
-	id = ROQ_reclamation.41
-	immediate = { log = "[GetDateText]: [Root.GetName]: event ROQ_reclamation.41" }
-	title = ROQ_reclamation.41.t
-	desc = ROQ_reclamation.41.d
+	id = roq_reclamation.66
+	title = roq_reclamation.66.t
+	desc = roq_reclamation.66.d
 	picture = GFX_report_event_generic_diplomacy
 	is_triggered_only = yes
 
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
 	option = {
-		name = ROQ_reclamation.41.a
+		name = roq_reclamation.66.a
 	}
 }
 
-# Event 42: Global news about DOM/FSR leaving their faction
-news_event = {
-	id = ROQ_reclamation.42
-	title = ROQ_reclamation.42.t
-	desc = ROQ_reclamation.42.d
+# Event 67: Ultimatum refused notification to ROQ
+country_event = {
+	id = roq_reclamation.67
+	title = roq_reclamation.67.t
+	desc = roq_reclamation.67.d
 	picture = GFX_report_event_generic_diplomacy
 	is_triggered_only = yes
 
+	immediate = {
+		hidden_effect = {
+			# Empty
+		}
+	}
+
 	option = {
-		name = ROQ_reclamation.42.a
+		name = roq_reclamation.67.a
 	}
 }
