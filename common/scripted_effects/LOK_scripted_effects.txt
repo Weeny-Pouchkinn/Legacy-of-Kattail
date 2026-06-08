@@ -2876,3 +2876,655 @@ restore_previous_manpower_function = {
 		}
 	}
 }
+
+generate_generic_advisors = {
+	# If generating normal species,
+	### EXPECTED VARIABLES ###
+	# [civs] = 1/0 // yes/no, whether or not to generate civilian advisors
+	# [army] = 1/0 // yes/no, whether or not to generate army advisors
+	# [navy] = 1/0 // yes/no, whether or not to generate naval advisors
+	# [air]  = 1/0 // yes/no, whether or not to generate air advisors
+	if = { # Civilians
+		limit = { check_variable = { civs = 1 } }
+		meta_effect = {
+			text = {
+				# [TAG]_error_generator_effect = yes # High Quality Debugging tools :)
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = captain_of_industry } } }
+					generate_character = {
+						token_base = [TAG]_gen_captain_of_industry
+						gender = male
+						advisor = {
+							slot = political_advisor
+							traits = { captain_of_industry }
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_1_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = fortification_engineer } } }
+					generate_character = {
+						token_base = [TAG]_gen_fortification_engineer
+						gender = male
+						advisor = {
+							slot = political_advisor
+							traits = { fortification_engineer }
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_2_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = war_industrialist } } }
+					generate_character = {
+						token_base = [TAG]_gen_war_industrialist
+						gender = male
+						advisor = {
+							slot = political_advisor
+							traits = { war_industrialist }
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_3_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = agriculture_minister } } }
+					generate_character = {
+						token_base = [TAG]_gen_agriculture_minister
+						gender = female
+						advisor = {
+							slot = political_advisor
+							traits = { agriculture_minister }
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_4_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = prince_of_terror } } }
+					generate_character = {
+						token_base = [TAG]_gen_prince_of_terror
+						gender = female
+						advisor = {
+							slot = political_advisor
+							traits = { prince_of_terror }
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_5_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = quartermaster_general } } }
+					generate_character = {
+						token_base = [TAG]_gen_quartermaster_general
+						gender = female
+						advisor = {
+							slot = political_advisor
+							traits = { quartermaster_general }
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_6_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_silent_workhorse_trait = yes} } }
+					generate_character = {
+						token_base = [TAG]_gen_silent_workhorse
+						gender = female
+						advisor = {
+							slot = political_advisor
+							traits = { silent_workhorse_[SPECIES_ID] }
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_6_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = head_scientist } } }
+					generate_character = {
+						token_base = [TAG]_gen_theorist_head_scientist
+						gender = male
+						advisor = {
+							slot = theorist
+							traits = { head_scientist }
+							cost = 50
+							ledger = army
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_1_small }
+						}
+					}
+				}
+				if = {
+					limit = {
+						has_dlc = "La Resistance"
+						NOT = {
+							any_character = {
+								has_trait = head_of_intelligence
+							}
+						}
+					}
+					generate_character = {
+						token_base = [TAG]_gen_head_of_intelligence
+						gender = male
+						advisor = {
+							slot = political_advisor
+							traits = { head_of_intelligence }
+							available = {
+								has_intelligence_agency = yes
+							}
+							ai_will_do = {
+								factor = 1
+								modifier = {
+									has_intelligence_agency = no
+									factor = 0
+								}
+							}
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_civilian_1_small }
+						}
+					}
+				}
+			}
+			SPECIES_ID = "[This.GetGeneratingAdvisorSpecies]"
+			TAG = "[This.GetTag]"
+		}
+	}
+	if = { # Army
+		limit = { check_variable = { army = 1 } }
+		meta_effect = {
+			text = {
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = army_chief_offensive_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_army_chief_offensive
+						gender = male
+						advisor = {
+							slot = army_chief
+							traits = { army_chief_offensive_2 }
+							cost = 50
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_1_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = army_chief_defensive_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_army_chief_defensive
+						gender = female
+						advisor = {
+							slot = army_chief
+							traits = { army_chief_defensive_2 }
+							cost = 50
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_4_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = army_chief_reform_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_army_chief_reform
+						gender = female
+						advisor = {
+							slot = army_chief
+							traits = { army_chief_reform_2 }
+							cost = 100
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_6_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = army_infantry_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_combined_arms
+						gender = male
+						advisor = {
+							slot = high_command
+							traits = { army_infantry_1 }
+							cost = 100
+							ledger = army
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_2_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = army_CombinedArms_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_army
+						gender = female
+						advisor = {
+							slot = high_command
+							traits = { army_CombinedArms_1 }
+							cost = 100
+							ledger = army
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_5_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = army_commando_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_commando
+						gender = male
+						advisor = {
+							slot = high_command
+							traits = { army_commando_1 }
+							cost = 100
+							ledger = army
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_3_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = military_theorist } } }
+					generate_character = {
+						token_base = [TAG]_gen_theorist_military
+						gender = male
+						advisor = {
+							slot = theorist
+							traits = { military_theorist }
+							cost = 50
+							ledger = army
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_1_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = superior_firepower_expert } } }
+					generate_character = {
+						token_base = [TAG]_gen_theorist_superior_firepower
+						gender = male
+						advisor = {
+							slot = theorist
+							traits = { superior_firepower_expert }
+							cost = 150
+							ledger = army
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_2_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = mobile_warfare_expert } } }
+					generate_character = {
+						token_base = [TAG]_gen_theorist_mobile_warfare
+						gender = female
+						advisor = {
+							slot = theorist
+							traits = { mobile_warfare_expert }
+							cost = 150
+							ledger = army
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_5_small }
+						}
+					}
+				}
+			}
+			SPECIES_ID = "[This.GetGeneratingAdvisorSpecies]"
+			TAG = "[This.GetTag]"
+		}
+	}
+	if = { # Navy
+		limit = { check_variable = { navy = 1 } }
+		meta_effect = {
+			text = {
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = navy_chief_decisive_battle_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_navy_chief_decisive_battle
+						gender = male
+						advisor = {
+							slot = navy_chief
+							traits = { navy_chief_decisive_battle_2 }
+							cost = 100
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_navy_1_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = navy_anti_submarine_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_navy_chief_anti_submarine
+						gender = female
+						advisor = {
+							slot = navy_chief
+							traits = { navy_anti_submarine_2 }
+							cost = 100
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_navy_3_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = navy_chief_reform_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_navy_chief_reform
+						gender = male
+						advisor = {
+							slot = navy_chief
+							traits = { navy_chief_reform_2 }
+							cost = 100
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_navy_2_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = navy_carrier_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_navy_carrier
+						gender = male
+						advisor = {
+							slot = high_command
+							traits = { navy_carrier_1 }
+							cost = 100
+							ledger = navy
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_navy_1_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = navy_capital_ship_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_navy_capital_ship
+						gender = male
+						advisor = {
+							slot = high_command
+							traits = { navy_capital_ship_1 }
+							cost = 100
+							ledger = navy
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_navy_2_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = navy_submarine_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_navy_submarine
+						gender = female
+						advisor = {
+							slot = high_command
+							traits = { navy_submarine_1 }
+							cost = 100
+							ledger = navy
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_navy_3_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = naval_theorist } } }
+					generate_character = {
+						token_base = [TAG]_gen_theorist_naval
+						gender = female
+						advisor = {
+							slot = theorist
+							traits = { naval_theorist }
+							cost = 50
+							ledger = navy
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_navy_3_small }
+						}
+					}
+				}
+			}
+			SPECIES_ID = "[This.GetGeneratingAdvisorSpecies]"
+			TAG = "[This.GetTag]"
+		}
+	}
+	if = { # Air
+		limit = { check_variable = { air = 1 } }
+		meta_effect = {
+			text = {
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = air_close_air_support_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_air_chief_close_air_support
+						gender = male
+						advisor = {
+							slot = air_chief
+							traits = { air_close_air_support_2 }
+							cost = 100
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_1_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = air_air_superiority_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_air_chief_air_superiority
+						gender = female
+						advisor = {
+							slot = air_chief
+							traits = { air_air_superiority_2 }
+							cost = 100
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_4_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = air_chief_reform_2 } } }
+					generate_character = {
+						token_base = [TAG]_gen_air_chief_reform
+						gender = male
+						advisor = {
+							slot = air_chief
+							traits = { air_chief_reform_2 }
+							cost = 100
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_3_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = air_chief_all_weather_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_all_weather
+						gender = male
+						advisor = {
+							slot = high_command
+							traits = { air_chief_all_weather_1 }
+							cost = 100
+							ledger = air
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_2_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = air_air_combat_training_1 } } }
+					generate_character = {
+						token_base = [TAG]_gen_high_command_air_combat_training
+						gender = female
+						advisor = {
+							slot = high_command
+							traits = { air_air_combat_training_1 }
+							cost = 100
+							ledger = air
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_5_small }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { any_character = { is_advisor = yes can_be_country_leader = no has_trait = air_warfare_theorist } } }
+					generate_character = {
+						token_base = [TAG]_gen_theorist_air
+						gender = female
+						advisor = {
+							slot = theorist
+							traits = { air_warfare_theorist }
+							cost = 50
+							ledger = air
+						}
+						portraits = {
+							army = { small = GFX_portrait_species_[SPECIES_ID]_military_6_small }
+						}
+					}
+				}
+			}
+			SPECIES_ID = "[This.GetGeneratingAdvisorSpecies]"
+			TAG = "[This.GetTag]"
+		}
+	}
+	# Cleanup
+	clear_variable = advisor_species
+	clear_variable = civs
+	clear_variable = army
+	clear_variable = navy
+	clear_variable = air
+}
+
+d_test_tags_for_setup = {
+	log = "ran test_tags_for_setup"
+	every_possible_country = {
+		limit = {
+			tag_is_species_0 = no
+			tag_is_species_1 = no
+			tag_is_species_2 = no
+			tag_is_species_3 = no
+			tag_is_species_4 = no
+			tag_is_species_5 = no
+			tag_is_species_6 = no
+			tag_is_species_7 = no
+			tag_is_species_8 = no
+			tag_is_species_9 = no
+			tag_is_species_10 = no
+			tag_is_species_11 = no
+			tag_is_species_12 = no
+			tag_is_species_13 = no
+			tag_is_species_14 = no
+			tag_is_species_15 = no
+			tag_is_species_16 = no
+			tag_is_species_17 = no
+			tag_is_species_18 = no
+			tag_is_species_19 = no
+			tag_is_species_20 = no
+			tag_is_species_21 = no
+			tag_is_species_22 = no
+			tag_is_species_23 = no
+			tag_is_species_24 = no
+			tag_is_species_25 = no
+			tag_is_species_26 = no
+			tag_is_species_27 = no
+			tag_is_species_28 = no
+			tag_is_species_29 = no
+			tag_is_species_30 = no
+			tag_is_species_31 = no
+			tag_is_species_32 = no
+			tag_is_species_33 = no
+			tag_is_species_34 = no
+			tag_is_species_35 = no
+			tag_is_species_36 = no
+			tag_is_species_37 = no
+			tag_is_species_38 = no
+			tag_is_species_39 = no
+			tag_is_species_40 = no
+			tag_is_species_41 = no
+			tag_is_species_42 = no
+			tag_is_species_43 = no
+			tag_is_species_44 = no
+			tag_is_species_45 = no
+			tag_is_species_46 = no
+			tag_is_species_47 = no
+			tag_is_species_48 = no
+			tag_is_species_49 = no
+			tag_is_species_50 = no
+			tag_is_species_51 = no
+			tag_is_species_52 = no
+			tag_is_species_53 = no
+			tag_is_species_54 = no
+			tag_is_species_55 = no
+			tag_is_species_56 = no
+			tag_is_species_57 = no
+			tag_is_species_58 = no
+			tag_is_species_59 = no
+			tag_is_species_60 = no
+			tag_is_species_61 = no
+			tag_is_species_62 = no
+			tag_is_species_63 = no
+			tag_is_species_64 = no
+			tag_is_species_65 = no
+			tag_is_species_66 = no
+			tag_is_species_67 = no
+			tag_is_species_68 = no
+			tag_is_species_69 = no
+			tag_is_species_70 = no
+			tag_is_species_71 = no
+			tag_is_species_72 = no
+			tag_is_species_73 = no
+			tag_is_species_74 = no
+			tag_is_species_75 = no
+			tag_is_species_76 = no
+			tag_is_species_77 = no
+			tag_is_species_78 = no
+			tag_is_species_79 = no
+			tag_is_species_80 = no
+			tag_is_species_81 = no
+			tag_is_species_82 = no
+			tag_is_species_83 = no
+			tag_is_species_84 = no
+			tag_is_species_85 = no
+			tag_is_species_86 = no
+			tag_is_species_87 = no
+			tag_is_species_88 = no
+			tag_is_species_89 = no
+			tag_is_species_90 = no
+			tag_is_species_91 = no
+			tag_is_species_92 = no
+			tag_is_species_93 = no
+			tag_is_species_94 = no
+			tag_is_species_95 = no
+			tag_is_species_96 = no
+			tag_is_species_97 = no
+			tag_is_species_98 = no
+			tag_is_species_99 = no
+			tag_is_species_100 = no
+			tag_is_amphibian_species = no
+			tag_is_roqualian_species = no
+		}
+		log = "[This.GetTag] is not present in any lok_advisor_setup_tag_trigger.txt trigger"
+	}
+}

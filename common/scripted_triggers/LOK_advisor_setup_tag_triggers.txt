@@ -1,0 +1,901 @@
+tag_should_have_civilian_advisors = {
+    NOT = { # Assume everyone knows what a government is, except anarchy tags
+        original_tag = ZZZ
+        original_tag = AAA
+        original_tag = WWW
+        original_tag = MUN
+        original_tag = XEN
+        original_tag = MRI
+        has_country_flag = tag_shouldnt_have_civilian_advisors # Add before running generate_generic_advisors
+    }
+}
+tag_should_have_army_advisors = {
+    NOT = { # Assume everyone knows what an army is, except anarchy tags
+        original_tag = ZZZ
+        original_tag = AAA
+        original_tag = WWW
+        original_tag = MUN
+        original_tag = XEN
+        original_tag = MRI
+        has_country_flag = tag_shouldnt_have_army_advisors # Add before running generate_generic_advisors
+    }
+}
+tag_should_have_navy_advisors = {
+    NOT = { # Assume landlocked nations dont know what a fleet is, also that anarchy tags dont have advisors.
+        NOT = { any_controlled_state = { is_coastal = yes } }
+        original_tag = ZZZ
+        original_tag = AAA
+        original_tag = WWW
+        original_tag = MUN
+        original_tag = XEN
+        original_tag = MRI
+        has_country_flag = tag_shouldnt_have_navy_advisors # Add before running generate_generic_advisors
+    }
+}
+tag_should_have_air_advisors = {
+    NOT = { # Assume everyone knows what a plane is, except anarchy tags
+        original_tag = ZZZ
+        original_tag = AAA
+        original_tag = WWW
+        original_tag = MUN
+        original_tag = XEN
+        original_tag = MRI
+        has_country_flag = tag_shouldnt_have_air_advisors # Add before running generate_generic_advisors
+    }
+}
+##############################################################################################################
+### Dummy Tags ###############################################################################################
+##############################################################################################################
+is_dummy_tag = {
+    OR = {
+        original_tag = NGR
+        original_tag = SOK
+        original_tag = YUN
+        original_tag = NXM
+        original_tag = TAJ
+        original_tag = SIK
+        original_tag = KYR
+        original_tag = AFG
+        original_tag = AZR
+        original_tag = KBK
+        original_tag = SND
+        original_tag = BRN
+        original_tag = CZE
+        original_tag = XIC
+        original_tag = VOL
+        original_tag = BUK
+        original_tag = KOS
+        original_tag = SYR
+        original_tag = GNA
+        original_tag = LIT
+        original_tag = LEB
+        original_tag = GAM
+        original_tag = MLD
+        original_tag = TAT
+        original_tag = BSK
+        original_tag = PAL
+        original_tag = BAN
+        original_tag = PAK
+        original_tag = KKP
+        original_tag = CHM
+        original_tag = KHM
+        original_tag = ALG
+        original_tag = BLC
+        original_tag = ALB
+        original_tag = CHI
+        original_tag = XSM
+        original_tag = HBC
+        original_tag = SEN
+        original_tag = KUM
+        original_tag = GER
+        original_tag = SIE
+        original_tag = EST
+        original_tag = YUG
+        original_tag = MRT
+        original_tag = POL
+        original_tag = OMA
+        original_tag = KLT
+        original_tag = ICE
+        original_tag = GSM
+        original_tag = MLI
+        original_tag = CIN
+        original_tag = CRI
+        original_tag = FSA
+        original_tag = ITA
+        original_tag = LAT
+        original_tag = KHI
+        original_tag = SWE
+        original_tag = LBA
+        original_tag = SAB
+        original_tag = EGY
+        original_tag = SIN
+        original_tag = BEL
+        original_tag = UZB
+        original_tag = MOR
+        original_tag = SOM
+        original_tag = IRQ
+        original_tag = INS
+        original_tag = TUR
+        original_tag = LUX
+        original_tag = GXC
+        original_tag = YEM
+        original_tag = AUS
+        original_tag = HOL
+        original_tag = GNB
+        original_tag = DEN
+        original_tag = BHR
+        original_tag = HUN
+        original_tag = SIC
+        original_tag = DJI
+        original_tag = ROM
+        original_tag = GRE
+        original_tag = WES
+        original_tag = SHX
+        original_tag = GDC
+        original_tag = UAE
+        original_tag = JOR
+        original_tag = KAZ
+        original_tag = MAL
+        original_tag = KUR
+        original_tag = NOR
+        original_tag = RNG
+        original_tag = TMS
+        original_tag = SUD
+        original_tag = BUL
+        original_tag = RIF
+        original_tag = IMO
+        original_tag = FIN
+        original_tag = KAS
+        original_tag = DAG
+        original_tag = NGA
+        original_tag = SPR
+        original_tag = QAT
+        original_tag = SWI
+        original_tag = AFA
+        original_tag = SAU
+
+    }
+}
+
+##############################################################################################################
+### Species Tags #############################################################################################
+##############################################################################################################
+
+dont_generate_advisors_for_this_tag = { # List of tags that shouldnt have advisors generated for them, use when a tag is fully fleshed out with characters
+    OR = {
+        original_tag = ZZZ
+        original_tag = AAA
+        original_tag = WWW
+        original_tag = MUN
+        original_tag = XEN
+        original_tag = MRI
+        is_dynamic_country = yes # For Now, not sure what this does
+        is_dummy_tag = yes
+    }
+}
+tag_with_unique_species_mix_for_advisors = {
+    OR = {
+        always = no
+    }
+}
+tag_is_species_0 = { # Diverse
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = BKM
+        original_tag = RQP
+        original_tag = MON
+        original_tag = WWW
+        original_tag = AAA
+        original_tag = ZZZ
+        original_tag = MRI
+        original_tag = XEN
+        original_tag = MUN
+    }
+}
+tag_is_species_1 = { # Katzen
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = SIL
+        original_tag = CLE
+        original_tag = PAW
+        original_tag = HYP
+        original_tag = NEU
+        original_tag = POT
+        original_tag = FRA
+        original_tag = KKH
+        original_tag = KVK
+        original_tag = BLM
+        original_tag = AKR
+        original_tag = KTV
+        original_tag = PMB
+        original_tag = KTW
+        #has_cosmetic_tag = KOC # Glory to Kocura # Original Tag is OST anyway
+        original_tag = PUR
+        original_tag = PSR
+        original_tag = MEW
+        original_tag = STR
+        original_tag = PTQ
+        original_tag = IMF
+        original_tag = NAV
+        original_tag = PLI
+        original_tag = PRL
+        original_tag = WPR
+        original_tag = CAT
+        original_tag = HIM
+        original_tag = MEO
+        original_tag = LIO
+        original_tag = KPK
+        original_tag = KSL
+        original_tag = NKB
+        original_tag = AUR
+        original_tag = TAI
+        original_tag = OST
+        original_tag = ELO
+        original_tag = DOM
+        original_tag = FST
+        original_tag = KKN
+        original_tag = FOD
+        original_tag = KTZ # hello pawldrin
+        original_tag = FSR
+        original_tag = RQA
+        original_tag = FKN
+        original_tag = BSS
+        original_tag = FKS
+        original_tag = SMI
+    }
+}
+tag_is_species_2 = { # Sobaki
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = SOB
+        original_tag = FLS
+    }
+}
+tag_is_species_3 = { # Solakean
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = RST
+        original_tag = TEN
+        original_tag = KEP
+        original_tag = NGE
+        original_tag = PRO
+        original_tag = WSF
+        original_tag = SLR
+    }
+}
+tag_is_species_4 = { # Zuspri
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = ZUS
+        original_tag = UST
+    }
+}
+tag_is_species_5 = { # Nekeox
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = NKC
+    }
+}
+tag_is_species_6 = { # Puffian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = PUF
+        original_tag = PMT
+        original_tag = PMW
+        original_tag = PMA
+        original_tag = PMM
+        original_tag = PMC
+        original_tag = PMD
+    }
+
+}
+tag_is_species_7 = { # Kronk
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = EUL
+        original_tag = NKR
+        original_tag = KRO
+    }
+}
+tag_is_species_8 = { # Nitromethane
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = NMI
+    }
+}
+tag_is_species_9 = { # Macaquian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = SAR
+        original_tag = FMT
+    }
+}
+tag_is_species_10 = { # Brambles
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = BRA
+    }
+}
+tag_is_species_11 = { # Rattish
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+
+tag_is_species_12 = { # Loxian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = KUS
+        original_tag = VIX
+    }
+}
+tag_is_species_13 = { # Cloudstrider
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = MCF
+    }
+}
+tag_is_species_14 = { # Solakatzen
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = NEK
+    }
+}
+tag_is_species_15 = { # Paluush
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        AND = {
+            original_tag = PLR
+            original_tag = HAR
+            original_tag = KAR
+        }
+    }
+}
+tag_is_species_16 = { # Maizerian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = MAC
+    }
+}
+tag_is_species_17 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_18 = { # Axolin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = AXO
+    }
+}
+tag_is_species_19 = { # Nederkatten
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = KTN
+    }
+}
+tag_is_species_20 = { # Hyperdiverse
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_21 = { # Haranian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_22 = { # Etoya
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = KHA
+    }
+}
+tag_is_species_23 = { # Penguin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no #wilhelm...
+    }
+}
+tag_is_species_24 = { # Yinjite
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = YIN
+    }
+}
+tag_is_species_25 = { # Galletian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = GAL
+        original_tag = KOA
+        original_tag = PGN
+        original_tag = BAZ
+    }
+}
+tag_is_species_26 = { # Droogian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = DRO
+        original_tag = VAR
+        original_tag = FRO
+    }
+}
+tag_is_species_27 = { # Enotitan
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = ENO
+        original_tag = TEM
+    }
+}
+tag_is_species_28 = { # Alkroan
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = FLE
+        original_tag = CRE
+        original_tag = ALK
+    }
+}
+tag_is_species_29 = { # Mercurian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = MER
+        original_tag = FLM
+        original_tag = VAS
+    }
+}
+tag_is_species_30 = { # Calderite
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = FRU
+    }
+}
+tag_is_species_31 = { # Hiveform
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = FOR
+        original_tag = FOF
+        original_tag = ANT
+    }
+}
+tag_is_species_32 = { # Ravka
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = SOF
+    }
+}
+tag_is_species_33 = { # Lihler
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = PLA
+    }
+}
+tag_is_species_34 = { # Novian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = NFS
+    }
+}
+tag_is_species_35 = { # Urscyd
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_36 = { # Thalothinian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no # Sorry Lux
+    }
+}
+tag_is_species_37 = { # Marsini'Thin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_38 = { # Igni'Thin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_39 = { # Craey'Thin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = CRA
+    }
+}
+tag_is_species_40 = { # Dunari'Thin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_41 = { # Tera'Thin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_42 = { # Cryzt'Thin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_43 = { # Mecha'Thin
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_44 = { # Platypus
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = SMP
+    }
+}
+tag_is_species_45 = { # Muldvarpe
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = MUL
+    }
+}
+tag_is_species_46 = { # Loutrien
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = LTR
+    }
+}
+tag_is_species_47 = { # Procione
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = PRC
+    }
+}
+tag_is_species_48 = { # Kapypara
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = KAP
+        original_tag = KPE
+    }
+}
+tag_is_species_49 = { # Sillicron
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = SLC
+    }
+}
+tag_is_species_50 = { # Poltro
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = DUR
+    }
+}
+tag_is_species_51 = { # Cyborg Loxian
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_52 = { # Cyborg Katzen
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_53 = { # Cyborg Solakean
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_54 = { # Cyborg Cloudstrider
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_55 = { # Cyborg Solakatzen
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_56 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no
+    }
+}
+tag_is_species_57 = { # Sobani
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = UMR # May change later since alaurus are a thing
+    }
+}
+tag_is_species_58 = { # Kolech
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = KOL
+    }
+}
+tag_is_species_59 = { # Izwae
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = IZW
+    }
+}
+tag_is_species_60 = { # Pangma
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = PAN
+    }
+}
+tag_is_species_61 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_62 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_63 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_64 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_65 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_66 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_67 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_68 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_69 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_70 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_71 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_72 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_73 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_74 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_75 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_76 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_77 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_78 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_79 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_80 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_81 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_82 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_83 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_84 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_85 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_86 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_87 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_88 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_89 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_90 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_91 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_92 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_93 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_94 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_95 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_96 = { # VACANT
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        always = no 
+    }
+}
+tag_is_species_97 = { # VACANT
+    OR = {
+        always = no }
+}
+tag_is_species_98 = { # VACANT
+    OR = {
+        always = no }
+}
+tag_is_species_99 = { # VACANT
+    OR = {
+        always = no }
+}
+tag_is_species_100 = { # VACANT
+    OR = {
+        always = no }
+}
+### UNIQUE SPECIES MIXES ###
+tag_is_amphibian_species = { # Kronks + Yinjite
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = ACR
+    }
+}
+tag_is_roqualian_species = { # Humans with headphones
+    tag_with_unique_species_mix_for_advisors = no
+    OR = {
+        original_tag = ROQ
+        original_tag = LMB
+        original_tag = PER
+        original_tag = TAK
+        original_tag = DEM
+        original_tag = REC
+        original_tag = OBS
+        original_tag = BOC
+        original_tag = GLI
+        original_tag = BRU
+        original_tag = UCE
+        original_tag = VEL
+        original_tag = POI
+        original_tag = RSA
+    }
+}
+# tag_is_solarian_species = {
+#     OR = {
+#        tag_with_unique_species_mix_for_advisors = no
+#         original_tag = SLR
+#     }
+# }

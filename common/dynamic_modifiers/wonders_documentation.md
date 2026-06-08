@@ -276,12 +276,12 @@ And with that, its all done! your new modifier has been added
 |    15     | Great City of Charles        |  349  |            TAK            |
 |    16     | Rakvir Supercomputer         |  —    |            KUS            |
 |    17     | Lutécie Tower                |  320  |            ROQ            |
-|    18     | Steelloft                    |  726  |            MCF              |
-|    19     | Katlantropa Dam              | 1324  |            —              |
-|    20     | Great Lake Dam               | 1018  |            —              |
-|    21     | Harelyne Spire               |  418  |            —              |
-|    22     | Bunville Palace              |  406  |            —              |
-|    23     | Great Missile Array          |  275  |            —              |
+|    18     | Steelloft                    |  726  |            MCF            |
+|    19     | Katlantropa Dam              | 1324  |             —             |
+|    20     | Great Lake Dam               | 1018  |             —             |
+|    21     | Harelyne Spire               |  418  |            HAR            |
+|    22     | Bunville Palace              |  406  |            PLR            |
+|    23     | Great Missile Array          |  275  |            NEK            |
 
 ## The Wonder Output Modifier, Adding New/Updating Modifiers Midgame and Adding New Wonders Midgame
 To begin with, any time a wonders modifier is updated by script ingame, its recommended you run the "apply_wonder_effects" scripted effect on the scope of whoever controls the state with the wonder in it. This would look like
