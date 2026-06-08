@@ -1,0 +1,413 @@
+# Right, my vision here is to rework the generic advisor generator to iterate through this scripted trigger to make the like 20,000 line file a bit simpler
+#
+# The general idea, cascading series of scripted triggers going up in size
+# nordherzlander > herzlander > katzen or nordherzlander > herzlander > felinean > flusionea (supercontinent)
+# CURRENT LIST
+#   is_flusionean_tag = {
+#       is_herzland_tag = {
+#           is_nordherzlands_tag = {}
+#           is_centralherzlands_tag = {}
+#           is_westherzlands_tag = {}
+#           is_ostherzlands_tag = {}
+#           is_sudherzlands_tag = {}
+#       }
+#       is_amphibian_tag = {}
+#       is_great_desert_tag = {}
+#       is_thinian_frontier_tag = {}
+#       is_urscydian_highlands_tag = {}
+#       is_puffian_tag = {}
+#       is_laurnaise_tag = {}
+#   }
+#   is_solakean_tag = {
+#       is_roqualian_tag = {}
+#       is_flusiobalkan_tag = {}
+#       is_south_solakean_tag = {
+#           is_paluush_tag = {}
+#       }
+#       is_solakean_peninsula_tag = {}
+#   }
+#   is_oshian_tag = {}
+#   is_arivoejan_tag = {}
+#   is_north_pole_tag = {}
+#   is_south_pole_tag = {}
+#   is_sun_sea_tag = {}
+#   is_altarian_tag = {}
+#   is_space_tag = {
+#       is_muno_tag = {
+#           is_playable_muno_tag = {}
+#           is_npc_muno_tag = {}
+#       }
+#       is_xenon_tag = {
+#           is_playable_xenon_tag = {}
+#           is_npc_xenon_tag = {}
+#       }
+#       is_merries_tag = {
+#           is_playable_merries_tag = {}
+#           is_npc_merries_tag = {}
+#       }
+#   }
+#   is_playable_space_tag = {
+#       is_playable_muno_tag = {}
+#       is_playable_xenon_tag = {}
+#       is_playable_merries_tag = {}
+#   }
+#   is_npc_space_tag = {
+#       is_npc_muno_tag = {}
+#       is_npc_xenon_tag = {}
+#       is_npc_merries_tag = {}
+#   }
+#   is_npc_tag = {
+#       is_npc_space_tag = {}
+#   }
+
+
+is_nordherzland_tag = {
+    OR = {
+        original_tag = SIL
+        original_tag = CLE
+        original_tag = PAW
+        original_tag = HYP
+        original_tag = NEU
+        original_tag = POT
+        original_tag = FRA
+        original_tag = KKH
+        original_tag = KVK
+        original_tag = BLM
+        original_tag = AKR
+        original_tag = KTV
+        original_tag = PMB
+        original_tag = KTW
+        has_cosmetic_tag = KOC # Glory to Kocura
+        original_tag = PUR
+        original_tag = PSR
+    }
+}
+is_centralherzland_tag = {
+    OR = {
+        original_tag = NKB
+        original_tag = AUR
+        original_tag = TAI
+        original_tag = OST
+        original_tag = ELO
+    }
+}
+is_westherzland_tag = { # Blasteria
+    OR = {
+        original_tag = SOB
+        original_tag = MOC
+        original_tag = NDB
+    }
+}
+is_sudherzland_tag = {
+    OR = {
+        original_tag = PRL
+        original_tag = WPR
+        original_tag = CAT
+        original_tag = HIM
+        original_tag = NMI # Paid for by elwin
+        original_tag = BAS # I think
+        original_tag = MEO
+        original_tag = LIO
+        original_tag = KPK
+        original_tag = KSL
+    }
+}
+is_ostherzland_tag = {
+    OR = {
+        original_tag = MEW
+        original_tag = STR
+        original_tag = WAC
+        original_tag = PTQ
+        original_tag = NKC
+        original_tag = IMF
+        original_tag = ZUS
+        original_tag = NAV
+        original_tag = PLI
+
+    }
+}
+is_herzland_tag = {
+    OR = {
+        is_nordherzland_tag = yes
+        is_ostherzland_tag = yes
+        is_sudherzland_tag = yes
+        is_westherzland_tag = yes
+        is_centralherzland_tag = yes
+        has_cosmetic_tag = BK_HERZ #troll
+    }
+}
+is_amphibian_tag = {
+    OR = {
+        original_tag = ENO
+        original_tag = TEM
+        original_tag = KKN
+        original_tag = FOD
+        original_tag = ACR
+        original_tag = YIN
+        original_tag = KRO
+        original_tag = NKR
+    }
+}
+is_great_desert_tag = { # Working name for what is basically all tags between sudherzlands and amphibia.
+    OR = {
+        original_tag = GAL
+        original_tag = BRA
+        original_tag = KOL
+        original_tag = PAN
+        original_tag = UST
+        original_tag = KOA
+        original_tag = UMR
+        original_tag = RQP
+        original_tag = EUL
+        original_tag = PGN
+        original_tag = BAZ
+        original_tag = SMI
+        original_tag = FKS
+    }
+}
+is_thinian_frontier_tag = { # Big Thins to Come
+    OR = {
+        original_tag = CRA
+    }
+}
+is_puffian_tag = {
+    OR = {
+        original_tag = PUF
+        original_tag = AXO
+        original_tag = PMT
+        original_tag = PMW
+        original_tag = PMA
+        original_tag = PMM
+        original_tag = PMC
+        original_tag = PMD
+    }
+}
+is_urscydian_highlands_tag = { # Placeholder for gap between Puffia and Amphibia, below the thinian area up north
+    OR = {
+        always = no
+    }
+}
+is_laurnaise_tag = {
+    OR = {
+        always = no
+    }
+}
+is_flusionean_tag = { # Supercontinent
+    OR = {
+        is_herzland_tag = yes
+        is_great_desert_tag = yes
+        is_amphibian_tag = yes
+        is_urscydian_highlands_tag = yes
+        is_thinian_frontier_tag = yes
+        is_puffian_tag = yes
+        is_laurnaise_tag = yes
+    }
+}
+is_arivoejan_tag = {
+    OR = {
+        original_tag = KTN
+        original_tag = SMP
+        original_tag = MUL
+        original_tag = LTR
+        original_tag = PRC
+        original_tag = KAP
+        original_tag = BKM
+        original_tag = KPE
+        original_tag = NFS
+        has_cosmetic_tag = BDR
+    }
+}
+is_flusiobalkan_tag = {
+    OR = {
+        original_tag = KUS
+        original_tag = DOM
+        original_tag = FSR
+        original_tag = NEK
+        original_tag = MCF
+        original_tag = SLR
+        original_tag = TEN
+        original_tag = KHA
+        original_tag = VIX
+        original_tag = IZW
+        original_tag = FST
+    }
+}
+is_roqualian_tag = {
+    OR = {
+        original_tag = ROQ
+        original_tag = LMB
+        original_tag = PER
+        original_tag = ALK
+        original_tag = TAK
+        original_tag = DEM
+        original_tag = REC
+        original_tag = OBS
+        original_tag = BOC
+        original_tag = GLI
+        original_tag = BRU
+        original_tag = UCE
+        original_tag = VEL
+        original_tag = POI
+        original_tag = RQA
+        original_tag = RST # Paid for by Deleparte
+        original_tag = CRE
+        original_tag = RSA
+    }
+}
+is_paluush_tag = {
+    OR = {
+        original_tag = PLR
+        original_tag = HAR
+        original_tag = KAR
+        original_tag = MAC
+    }
+}
+is_south_solakean_tag = {
+    OR = {
+        original_tag = KEP
+        original_tag = PLA
+        original_tag = SOF
+        original_tag = VAS
+        is_paluush_tag = yes
+    }
+}
+is_solakean_peninsula_tag = { # Anything South of tenet and East of Ravka
+    OR = {
+        always = no
+    }
+}
+is_solakean_tag = {
+    OR = {
+        is_south_solakean_tag = yes
+        is_flusiobalkan_tag = yes
+        is_roqualian_tag = yes
+        is_solakean_peninsula_tag = yes
+    }
+}
+
+is_oshia_tag = {
+    original_tag = WSF
+    original_tag = FKN
+    original_tag = SAR
+    original_tag = DRO
+    original_tag = FRU
+    original_tag = FMT
+    original_tag = VAR
+    original_tag = ANT
+    original_tag = FOR
+    original_tag = FOF
+    original_tag = KOT
+    original_tag = PRO
+    original_tag = NRW
+    original_tag = ITZ
+}
+
+is_altarian_tag = { # Nothing Yet :P
+    OR = {
+        always = no
+    }
+}
+
+is_sun_sea_tag = {
+    OR = {
+        original_tag = DUR
+        original_tag = MER
+        original_tag = SLC
+        original_tag = FLE
+        original_tag = FLS
+        original_tag = FLM
+    }
+}
+
+is_north_pole_tag = { # Unsued
+    OR = {
+        always = no
+    }
+}
+
+is_south_pole_tag = { # Unsued
+    OR = {
+        original_tag = BSS
+        original_tag = NGE
+        original_tag = AKZ
+    }
+}
+is_playable_muno_tag = {
+    OR = {
+        original_tag = KTZ
+        original_tag = MON
+    }
+}
+is_npc_muno_tag = {
+    OR = {
+        original_tag = MUN
+    }
+}
+is_muno_tag = {
+    OR = {
+        is_playable_muno_tag = yes
+        is_npc_tag = yes
+    }
+}
+is_playable_xenon_tag = {
+    OR = {
+        always = no
+    }
+}
+is_npc_xenon_tag = {
+    OR = {
+        original_tag = XEN
+    }
+}
+is_xenon_tag = {
+    OR = {
+        is_playable_xenon_tag = yes
+        is_npc_xenon_tag = yes
+    }
+}
+is_playable_merries_tag = {
+    OR = {
+        always = no
+    }
+}
+is_npc_merries_tag = {
+    OR = {
+        original_tag = MRI
+    }
+}
+is_merries_tag = {
+    OR = {
+        is_playable_merries_tag = yes
+        is_npc_merries_tag = yes
+    }
+}
+is_space_tag = {
+    OR = {
+        is_muno_tag = yes
+        is_xenon_tag = yes
+        is_merries_tag = yes
+    }
+}
+is_playable_space_tag = {
+    OR = {
+        is_playable_muno_tag = yes
+        is_playable_xenon_tag = yes
+        is_playable_merries_tag = yes
+    }
+}
+is_npc_space_tag = {
+    OR = {
+        is_npc_muno_tag = yes
+        is_npc_xenon_tag = yes
+        is_npc_merries_tag = yes
+    }
+}
+is_npc_tag = {
+    OR = {
+        original_tag = WWW
+        original_tag = AAA
+        original_tag = ZZZ
+        is_npc_space_tag = yes
+    }
+}
+
