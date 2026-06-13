@@ -1,13 +1,13 @@
 focus_tree = {
-   id = PAW_TREE
-   country = {
-     factor = 0
-     modifier = {
-         add = 10
-         tag = PAW
-    }
-   }  
-   continuous_focus_position = { x = 900 y = 1100}
+   	id = PAW_TREE
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = PAW
+		}
+	}
+   	continuous_focus_position = { x = 900 y = 1100}
 
  	focus = {
  		id = PAW_bring_an_end_to_the_anarchy
@@ -23,41 +23,40 @@ focus_tree = {
  			}
  		} 	}
 
- 	 focus = {
+ 	focus = {
 		id = PAW_confront_the_bandits
 		icon = PAW_confront_the_bandits
 		x = -4
 		y = 1 
-		prerequisite = { focus =  PAW_bring_an_end_to_the_anarchy }	
-		
-
+		prerequisite = { focus =  PAW_bring_an_end_to_the_anarchy }
 		cost = 5
+
 		completion_reward = {
 			swap_ideas = {
 				remove_idea = PAW_banditism_0
 				add_idea = PAW_banditism_1
 			}
 		} 
-	 }
+	}
 	focus = {
 		id = PAW_restore_territorial_Integrity
 		icon = PAW_restore_territorial_Integrity
 		x = 4
 		y = 1
-			prerequisite = { focus =  PAW_bring_an_end_to_the_anarchy }
-		
-
+		prerequisite = { focus =  PAW_bring_an_end_to_the_anarchy }
 		cost = 5
+
         completion_reward = { transfer_state = 43 transfer_state = 656 transfer_state = 655 }  
 	}
-        focus = {
+	focus = {
 	    id = PAW_destroy_the_bandits
 	    icon = PAW_destroy_the_bandits
 	    x = -3
 	    y = 2
-		cost = 5
 	    prerequisite = { focus = PAW_confront_the_bandits }
 		mutually_exclusive = { focus = PAW_bargain_with_the_bandits }
+		cost = 5
+
         completion_reward = {
 			swap_ideas = {
 				remove_idea = PAW_banditism_1
@@ -65,72 +64,72 @@ focus_tree = {
 			}
 			add_stability = 0.05
 			add_war_support = 0.05
-		} 
-
-			
-		
+		}
     }
-	 focus = {
-	    id = PAW_bargain_with_the_bandits
-	    icon = PAW_bargain_with_the_bandits
-	    x = -5
-	    y = 2
-		cost = 5
-	    prerequisite = { focus = PAW_confront_the_bandits }
+	focus = {
+		id = PAW_bargain_with_the_bandits
+		icon = PAW_bargain_with_the_bandits
+		x = -5
+		y = 2
+		prerequisite = { focus = PAW_confront_the_bandits }
 		mutually_exclusive = { focus = PAW_destroy_the_bandits }
+		cost = 5
+
 		completion_reward = {
 			swap_ideas = {
 				remove_idea = PAW_banditism_1
 				add_idea = PAW_banditism_2
 			}
-		} 
-	 }	
-	 focus = {
+		}
+	}
+	focus = {
 		id = PAW_raise_the_meowrines
 		icon = PAW_raise_the_meowrines
-
 		x = 0
 		y = 1
-		cost = 1
 		prerequisite = { focus = PAW_bring_an_end_to_the_anarchy}
+		cost = 1
+
 		completion_reward = { add_ideas = PAW_prewar_1 }
-	 }
-	  focus = {
+	}
+	focus = {
 		id = PAW_raid_their_stockpiles
 		icon = PAW_raid_their_stockpiles
-	
 		x = -3
 		y = 3
-		cost = 5
 		prerequisite = { focus = PAW_destroy_the_bandits }
-		completion_reward = { 
+		cost = 5
+
+		completion_reward = {
 			swap_ideas = {
 				remove_idea = PAW_banditism_3
 				add_idea = PAW_banditism_4
 			}
 		}
-	 }
-	  focus = {
+	}
+	focus = {
 		id = PAW_utilize_their_influence
 		icon = PAW_utilize_their_influence
 		x = -5
 		y = 3
-		cost = 5
 		prerequisite = { focus = PAW_bargain_with_the_bandits }
-		completion_reward = { 
+		cost = 5
+
+		completion_reward = {
 			swap_ideas = {
 				remove_idea = PAW_banditism_2
 				add_idea = PAW_banditism_5
 			}
 		}
-	 }
+	}
     focus = {
 		id = PAW_crack_down_on_crime
 		icon = PAW_crack_down_on_crime
 		x = -4
 		y = 4
-		cost = 3
 		prerequisite = { focus = PAW_utilize_their_influence focus = PAW_raid_their_stockpiles }
+		cost = 3
+
 		completion_reward = { add_ideas = PAW_crackdown_on_crime}
 	}
 	focus = {
@@ -138,55 +137,62 @@ focus_tree = {
 		icon = PAW_repair_our_frontlines
 		x = 0
 		y = 2
+		prerequisite = { focus = PAW_raise_the_meowrines  }
 		cost = 1
 
-		prerequisite = { focus = PAW_raise_the_meowrines  }
-		completion_reward = { swap_ideas = {
-			remove_idea = PAW_prewar_1
-			add_idea = PAW_prewar_2
-		} }
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_prewar_1
+				add_idea = PAW_prewar_2
+			}
+		}
 	}
 	focus = {
 		id = PAW_raise_conscripts
 		icon = PAW_raise_conscripts
 		x = 0
 		y = 3
-
-		cost = 1
 		prerequisite = { focus = PAW_repair_our_frontlines  }
-		completion_reward = { swap_ideas = {
-			remove_idea = PAW_prewar_2
-			add_idea = PAW_prewar_3
-		}}
+		cost = 1
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_prewar_2
+				add_idea = PAW_prewar_3
+			}
+		}
 	}
 	focus = {
 		id = PAW_strike_against_elwin
 		icon = PAW_strike_against_elwin
 		x = 0
 		y = 5
-
-		cost = 5
-		prerequisite = { focus = PAW_raise_conscripts } 
+		prerequisite = { focus = PAW_raise_conscripts }
 		prerequisite = { focus = PAW_crack_down_on_crime}
 	    prerequisite = { focus = PAW_establish_martial_law  }
-		completion_reward = { declare_war_on = {
-			target = SIL
-			type = annex_everything
-		}}
+		cost = 5
+
+		completion_reward = {
+			declare_war_on = {
+				target = SIL
+				type = annex_everything
+			}
+		}
 	}
 	focus = {
 		id = PAW_imprison_the_resistance
 		icon = PAW_imprison_the_resistance
 		x = 3
 		y = 2
-
+		prerequisite = { focus = PAW_restore_territorial_Integrity }
+		mutually_exclusive = { focus = PAW_exectute_the_resistance }
 		cost = 5
-	 prerequisite = { focus = PAW_restore_territorial_Integrity }
-	 mutually_exclusive = { focus = PAW_exectute_the_resistance }
-		completion_reward = { 
+
+		completion_reward = {
 			swap_ideas = {
 				remove_idea = PAW_underground_resistance_0
-				add_idea = PAW_underground_resistance_1 }
+				add_idea = PAW_underground_resistance_1
+			}
 		}
 	}
 	focus = {
@@ -194,51 +200,59 @@ focus_tree = {
 		icon = PAW_exectute_the_resistance
 		x = 5
 		y = 2
-
+	 	prerequisite = { focus = PAW_restore_territorial_Integrity }
+	 	mutually_exclusive = { focus = PAW_imprison_the_resistance }
 		cost = 5
-	 prerequisite = { focus = PAW_restore_territorial_Integrity }
-	 mutually_exclusive = { focus = PAW_imprison_the_resistance }
-		completion_reward = { swap_ideas = {
-			remove_idea = PAW_underground_resistance_0
-			add_idea = PAW_underground_resistance_3
-		}}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_underground_resistance_0
+				add_idea = PAW_underground_resistance_3
+			}
+		}
 	}
-		focus = {
+	focus = {
 		id = PAW_put_them_to_work
 		icon = PAW_put_them_to_work
 		x = 3
 		y = 3
-
+	 	prerequisite = { focus = PAW_imprison_the_resistance }
 		cost = 5
-	 prerequisite = { focus = PAW_imprison_the_resistance }
-		completion_reward = { swap_ideas = {
-			remove_idea = PAW_underground_resistance_1
-			add_idea = PAW_underground_resistance_2
-		} }
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAW_underground_resistance_1
+				add_idea = PAW_underground_resistance_2
+			}
+		}
 	}
-		focus = {
+	focus = {
 		id = PAW_begin_terror_tactics
 		icon = PAW_begin_terror_tactics
 		x = 5
 		y = 3
-
+		prerequisite = { focus = PAW_exectute_the_resistance }
 		cost = 5
-	 prerequisite = { focus = PAW_exectute_the_resistance }
-		completion_reward = { add_ideas = PAW_terror_tactics }
+
+		completion_reward = {
+			add_ideas = PAW_terror_tactics
+		}
 	}
 	focus = {
 		id = PAW_establish_martial_law
 		icon = PAW_establish_martial_law
 		x = 4
 		y = 4
-
+	 	prerequisite = { focus = PAW_put_them_to_work focus = PAW_begin_terror_tactics }
 		cost = 3
-	 prerequisite = { focus = PAW_put_them_to_work focus = PAW_begin_terror_tactics }
-		completion_reward = { add_stability = 0.05 }
+
+		completion_reward = {
+			add_stability = 0.05
+		}
 	}
 	focus = {
 		id = PAW_march_to_katucky
-		icon = PAW_march_to_katucky/A
+		icon = PAW_march_to_katucky
 		x = 0
 		y = 6
 		cost = 3
@@ -248,7 +262,7 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_seize_sud_kattown
-		icon = PAW_seize_sud_kattown/A
+		icon = PAW_seize_sud_kattown
 		x = 2
 		y = 6
 		cost = 3
@@ -259,7 +273,7 @@ focus_tree = {
 	focus = {
 		## Border War with Neukats, give events to decided whether or not to push furhter into neukats
 		id = PAW_strike_at_mimimi
-		icon = PAW_strike_at_mimimi/A
+		icon = PAW_strike_at_mimimi
 		x = -2
 		y = 6
 		cost = 3
@@ -268,257 +282,260 @@ focus_tree = {
 		}
 	}
 	focus = {
-		id = PAW_consolidate_mimimi
 		## just mimimi
-		icon = PAW_consolidate_mimimi/A
+		id = PAW_consolidate_mimimi
+		icon = PAW_consolidate_mimimi
 		x = -1
 		y = 7
+		prerequisite = { focus = PAW_strike_at_mimimi }
+		mutually_exclusive = { focus = PAW_push_into_the_neukats }
 		cost = 3
-		    prerequisite = { focus = PAW_strike_at_mimimi }
-		    mutually_exclusive = { focus = PAW_push_into_the_neukats }
-		}
+	}
 
 	focus = {
 		## Full war with neukats
 		id = PAW_push_into_the_neukats
-		icon = PAW_push_into_the_neukats/A
+		icon = PAW_push_into_the_neukats
 		x = -3
 		y = 7
+		prerequisite = { focus = PAW_strike_at_mimimi }
+		mutually_exclusive = { focus = PAW_consolidate_mimimi }
 		cost = 3
-		    prerequisite = { focus = PAW_strike_at_mimimi }
-		    mutually_exclusive = { focus = PAW_consolidate_mimimi }
 	}
 	focus = {
 		## Peace out after controlling mimimi,pouckington and meowmeow
 		id = PAW_negotiate_an_end_to_the_neukat_war
-		icon = PAW_negotiate_an_end_to_the_neukat_war/A
+		icon = PAW_negotiate_an_end_to_the_neukat_war
 		x = -3
 		y = 8
+		prerequisite = { focus = PAW_push_into_the_neukats }
 		cost = 3
-		prerequisite = {
-			focus = PAW_push_into_the_neukats
-		}
 	}
 	focus = {
 		id = PAW_consolidate_the_north
-		icon = PAW_consolidate_the_north/A
+		icon = PAW_consolidate_the_north
 		x = 2
 		y = 7
-		cost = 3
 		prerequisite = {
 			focus = PAW_march_to_katucky
 			focus = PAW_seize_sud_kattown
 			focus = PAW_occupy_katalonia
 		}
+		cost = 3
 	}
 	focus = {
 		id = PAW_occupy_katalonia
-		icon = PAW_occupy_katalonia/A
+		icon = PAW_occupy_katalonia
 		x = 4
 		y = 6
-		cost = 3
 		prerequisite = { focus = PAW_strike_against_elwin }
+		cost = 3
     }
 	focus = {
 		id = PAW_give_peace_a_chance
-		icon = PAW_give_peace_a_chance/A
+		icon = PAW_give_peace_a_chance
 		x = 2
 		y = 8
-		cost = 3
 		prerequisite = { focus = PAW_consolidate_the_north }
+		cost = 3
 	}
 	focus = {
 		id = PAW_examine_the_new_territories
-		icon = PAW_examine_the_new_territories/A
+		icon = PAW_examine_the_new_territories
 		x = -1
 		y = 9
-		cost = 3
 		prerequisite = { focus = PAW_give_peace_a_chance }
-        prerequisite = { focus = PAW_consolidate_mimimi focus = PAW_negotiate_an_end_to_the_neukat_war }
+        prerequisite = {
+			focus = PAW_consolidate_mimimi
+			focus = PAW_negotiate_an_end_to_the_neukat_war
+		}
+		cost = 3
 	}
 	focus = {
 		id = PAW_IPF
-		icon = PAW_IPF/KSK_coup_prep
+		icon = PAW_IPF
 		x = -4
 		y = 10
-		cost = 3
 		prerequisite = { focus = PAW_examine_the_new_territories }
 		mutually_exclusive = { focus = PAW_frankats_consolidation }
-			
-		}
+		cost = 3
+	}
 	focus = {
 		id = PAW_frankats_consolidation
 		icon = PAW_frankats_consolidation
 		x = 2
 		y = 10
-		cost = 3
 		prerequisite = { focus = PAW_examine_the_new_territories }
 		mutually_exclusive = { focus = PAW_IPF } # Edited from "PAW_IPF/KSK_coup_prep" to just "PAW_IPF"
+		cost = 3
 	}
 	focus = {
 		id = PAW_purge_kattownite_rebels
+		icon = PAW_placeholder
 		x = 4
 		y = 7
-		cost = 3 
 		prerequisite = { focus = PAW_occupy_katalonia }
+		cost = 3
 	}
 	focus = {
 		id = PAW_construction_of_the_state
+		icon = PAW_placeholder
 		x = 36
 		y = 0
-        cost = 5
 		prerequisite = {  }
 		available = { has_completed_focus = PAW_frankats_consolidation }
+        cost = 5
 	}
 	focus = {
 		id = PAW_enter_the_house_of_cards
-		icon = GFX_emerging_power_medium
-		cost = 5
+		icon = PAW_placeholder
 		x = 32
 		y = 1
-		completion_reward = { }
 		prerequisite = { focus = PAW_construction_of_the_state }
-		
+		cost = 5
 	}
 	focus = {
 		id = PAW_economic_path
-		cost = 5
+		icon = PAW_placeholder
 		x = 16
 		y = 1
-		completion_reward = {}
 		prerequisite = { focus = PAW_construction_of_the_state }
+		cost = 5
 	}
 	focus = {
 		id = PAW_foreign_policy_meowkills
-		cost = 5
+		icon = PAW_placeholder
 		x = 55
 		y = 1
-		completion_reward = { }
 		prerequisite = { focus = PAW_construction_of_the_state}
+		cost = 5
 	}
 	focus = {
 		id = PAW_command_economy
-		cost = 5
+		icon = PAW_placeholder
 		x = 9
 		y = 2
-		completion_reward = { }
 		prerequisite = { focus = PAW_economic_path }
 		mutually_exclusive = { focus = PAW_corporatist_economy }
+		cost = 5
 	}
 	focus = {
 		id = PAW_corporatist_economy
-		cost = 5
+		icon = PAW_placeholder
 		x = 23
 		y = 2
-		completion_reward = { }
 		prerequisite = { focus = PAW_economic_path }
 		mutually_exclusive = { focus = PAW_command_economy }
+		cost = 5
 	}
 	focus = {
 		id = PAW_establish_militarized_infrastructure
-		cost = 5
+		icon = PAW_placeholder
 		x = 15
 		y = 3
-		completion_reward = {}
 		prerequisite = { focus = PAW_corporatist_economy focus = PAW_command_economy }
+		cost = 5
 	}
 	focus = {
 		id = PAW_light_the_nuclear_torch
-		cost = 5
+		icon = PAW_placeholder
 		x = 16
 		y = 4
-		completion_reward = {}
 		prerequisite = { focus = PAW_establish_militarized_infrastructure }
+		cost = 5
 	}
 	focus = {
 		id = PAW_construct_dual_use_infrastructure
-		cost = 5
+		icon = PAW_placeholder
 		x = 14
 		y = 4
-		completion_reward = {}
 		prerequisite = { focus = PAW_establish_militarized_infrastructure }
+		cost = 5
 	}
 	focus = {
 		id = PAW_mimic_the_kiloforges
-		cost = 5
+		icon = PAW_placeholder
 		x = 15
 		y = 5
-		completion_reward = {}
 		prerequisite = { focus = PAW_construct_dual_use_infrastructure  }
 		prerequisite = { focus = PAW_light_the_nuclear_torch }
+		cost = 5
 	}
 	focus = {
 		id = PAW_establish_advisory_councils
-		cost = 5
+		icon = PAW_placeholder
 		x = 20
 		y = 3
-		completion_reward = {}
 		prerequisite = { focus = PAW_corporatist_economy }
+		cost = 5
 
 	}
 	focus = {
 		id = PAW_fund_industrial_expansion
-		cost = 5
+		icon = PAW_placeholder
 		x = 25
 		y = 3
 		prerequisite = { focus = PAW_corporatist_economy }
-		completion_reward = { }
+		cost = 5
 	}
 	focus = {
 		id = PAW_allow_independent_firms
-		cost = 5
+		icon = PAW_placeholder
 		x = 22
 		y = 4
 		prerequisite = { focus = PAW_establish_advisory_councils }
-		completion_reward = {}
+		cost = 5
 	}
 	focus = {
 		id = PAW_appease_rural_interests
-		cost = 5
+		icon = PAW_placeholder
 		x = 22
 		y = 5
 		prerequisite = { focus = PAW_allow_independent_firms }
 		mutually_exclusive = { focus = PAW_appease_urban_workers } # Swapped "PAW_extend_the_olive_branch_to_the_cities" (which doesnt exist) for "PAW_appease_urban_workers" as that is mutually exclusive with this
+		cost = 5
 	}
 	focus = {
 		id = PAW_expand_managerial_firms
-		cost = 5
-		icon = GFX_N/A
+		icon = PAW_placeholder
 		x = 18
 		y = 4
-		completion_reward = { }
 		prerequisite = { focus = PAW_establish_advisory_councils }
-		
-	}
-	focus = {
-		id = PAW_appease_urban_workers
-		x = 18
-		y = 5
-		cost = 5 
-		prerequisite = { focus = PAW_expand_managerial_firms }
-        mutually_exclusive = { focus = PAW_appease_rural_interests }
+		cost = 5
 
 	}
 	focus = {
+		id = PAW_appease_urban_workers
+		icon = PAW_placeholder
+		x = 18
+		y = 5
+		prerequisite = { focus = PAW_expand_managerial_firms }
+        mutually_exclusive = { focus = PAW_appease_rural_interests }
+		cost = 5
+	}
+	focus = {
 		id = PAW_retool_abandoned_industries
+		icon = PAW_placeholder
 		x = 24
 		y = 4
-		cost = 5 
-		prerequisite = { focus = PAW_fund_industrial_expansion   }
+		prerequisite = { focus = PAW_fund_industrial_expansion }
+		cost = 5
 	}
 	focus = {
 		id = PAW_bring_about_an_industrial_revolution
+		icon = PAW_placeholder
 		x = 26
 		y = 4
-		cost = 5 
 		prerequisite = { focus = PAW_fund_industrial_expansion }
+		cost = 5
 	}
 	focus = {
 		id = PAW_create_guilds
+		icon = PAW_placeholder
 		x = 18
 		y = 6
-		cost = 5
 		prerequisite = { focus = PAW_appease_urban_workers }
+		cost = 5
 	}
 	focus = {
 		id = PAW_instill_triumvarate_governance
@@ -530,14 +547,15 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_militarize_the_workers
+		icon = PAW_placeholder
 		x = 17
 		y = 7
-		prerequisite = { focus = PAW_create_guilds  }
+		prerequisite = { focus = PAW_create_guilds }
 		cost = 5
 	}
 	focus = {
 		id = PAW_expand_cooperative_firms
-
+		icon = PAW_placeholder
 		x = 19
 		y = 7
 		prerequisite = { focus = PAW_create_guilds }
@@ -545,6 +563,7 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_expand_the_mining_sector
+		icon = PAW_placeholder
 		x = 24
 		y = 5
 		prerequisite = { focus = PAW_retool_abandoned_industries }
@@ -552,28 +571,32 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_excavate_the_countryside
+		icon = PAW_placeholder
 		x = 23
 		y = 6
-		cost = 5
 		prerequisite = { focus = PAW_appease_rural_interests }
 		prerequisite = { focus = PAW_expand_the_mining_sector }
+		cost = 5
 	}
 	focus = {
 		id = PAW_expand_steel_refineries
+		icon = PAW_placeholder
 		x = 25 
 		y = 6
-		cost = 5
 		prerequisite = { focus = PAW_expand_the_mining_sector }
+		cost = 5
 	}
 	focus = {
 		id = PAW_revive_the_industrial_hearts_of_the_north
+		icon = PAW_placeholder
 		x = 26
 		y = 5
-		cost = 5
 		prerequisite = { focus = PAW_bring_about_an_industrial_revolution }
+		cost = 5
 	}
 	focus = {
 		id = PAW_enlargen_the_bureacratic_complex
+		icon = PAW_placeholder
 		x = 7
 		y = 3
 		prerequisite = { focus = PAW_command_economy }
@@ -581,43 +604,48 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_centralize_the_industries
+		icon = PAW_placeholder
 		x = 11
 		y = 3
-		cost = 5
 		prerequisite = { focus = PAW_command_economy }
+		cost = 5
 	}
 	focus = {
 		id = PAW_prepare_to_erect_monuments
+		icon = PAW_placeholder
 		x = 9
 		y = 3
-		cost = 5
 		prerequisite = { focus = PAW_command_economy }
-
+		cost = 5
 	}
 	focus = {
 		id = PAW_Kontinentalsturmer
+		icon = PAW_placeholder
 		x = 10
 		y = 4
-		cost = 5 
 		prerequisite = { focus = PAW_prepare_to_erect_monuments }
 		prerequisite = { focus = PAW_centralize_the_industries }
+		cost = 5
 	}
 	focus = {
 		id = PAW_deepen_the_mines
+		icon = PAW_placeholder
 		x = 6
 		y = 4
-		cost = 5
 		prerequisite = { focus = PAW_enlargen_the_bureacratic_complex }
+		cost = 5
 	}
 	focus = {
 		id = PAW_build_more_factories
+		icon = PAW_placeholder
 		x = 8
 		y = 4
-		cost = 5
 		prerequisite = { focus = PAW_enlargen_the_bureacratic_complex }
+		cost = 5
 	}
 	focus = {
 		id = PAW_prepare_our_industries
+		icon = PAW_placeholder
 		x = 12
 		y = 4
 		prerequisite = { focus = PAW_centralize_the_industries   }
@@ -625,15 +653,16 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_our_own_kiloforges
+		icon = PAW_placeholder
 		x = 12
 		y = 6
-		cost = 5
 		prerequisite = { focus = PAW_mimic_the_kiloforges }
 		prerequisite = { focus = PAW_prepare_our_industries}
-
+		cost = 5
 	}
 	focus = {
 		id = PAW_hive_like_cities
+		icon = PAW_placeholder
 		x = 13
 		y = 7
 		prerequisite = { focus = PAW_our_own_kiloforges }
@@ -642,6 +671,7 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_urban_industrial_fusion
+		icon = PAW_placeholder
 		x = 11
 		y = 7
 		prerequisite = { focus = PAW_our_own_kiloforges }
@@ -650,21 +680,24 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_turn_cities_into_factories
+		icon = PAW_placeholder
 		x = 12 
 		y = 8
-		cost = 5
 		prerequisite = { focus = PAW_urban_industrial_fusion }
 		prerequisite = { focus = PAW_hive_like_cities }
+		cost = 5
 	}
 	focus = {
 		id = PAW_develop_refineries
+		icon = PAW_placeholder
 		x = 6
 		y = 5
-		cost = 5
 		prerequisite = { focus = PAW_deepen_the_mines }
+		cost = 5
 	}
 	focus = {
-		id = PAW_MORE_FACTORIES
+		id = PAW_more_factories
+		icon = PAW_placeholder
 		x = 8
 		y = 5
 		prerequisite = { focus = PAW_build_more_factories }
@@ -673,14 +706,16 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_militarize_the_industries
+		icon = PAW_placeholder
 		x = 7
 		y = 6
+		prerequisite = { focus = PAW_develop_refineries }
+		prerequisite = { focus = PAW_more_factories }
 		cost = 5
-		prerequisite = { focus = PAW_develop_refineries  }
-		prerequisite = { focus = PAW_MORE_FACTORIES  }
 	}
 	focus = {
 		id = PAW_establish_drive_military_production
+		icon = PAW_placeholder
 		x = 6
 		y = 7
 		prerequisite = { focus = PAW_militarize_the_industries }
@@ -688,6 +723,7 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_convert_into_a_war_economy
+		icon = PAW_placeholder
 		x = 8
 		y = 7
 		prerequisite = { focus = PAW_militarize_the_industries }
@@ -696,51 +732,58 @@ focus_tree = {
 	}
 	focus = {
 		id = PAW_produce_blast_plate
+		icon = PAW_placeholder
 		x = 10
 		y = 5
-		cost = 5
 		prerequisite = { focus = PAW_Kontinentalsturmer }
+		cost = 5
 	}
 	focus = {
 		id = PAW_the_opening_volley
+		icon = PAW_placeholder
 		x = 31
 		y = 2
-		cost = 5
 		prerequisite = { focus = PAW_enter_the_house_of_cards }
-
+		cost = 5
 	}
 	focus = {
 		id = PAW_find_allies
+		icon = PAW_placeholder
 		x = 33
 		y = 2
-		cost = 5
 		prerequisite = { focus = PAW_enter_the_house_of_cards }
-
+		cost = 5
 	}
 	focus = {
-		id = PAW_the_IKdPB
+		id = PAW_the_ikdpb
+		icon = PAW_placeholder
 		x = 29
 		y = 4
 		prerequisite = { focus = PAW_the_opening_volley }
 		prerequisite = { focus = PAW_find_allies }
-
+		cost = 5
 	}
 	focus = {
-		id = PAW_the_OuSKdRA
+		id = PAW_the_ouskdra
+		icon = PAW_placeholder
 		x = 35
 		y = 4
 		prerequisite = { focus = PAW_the_opening_volley }
 		prerequisite = { focus = PAW_find_allies }
+		cost = 5
 	}
 	focus = {
-		id = PAW_the_dRA
+		id = PAW_the_dra
+		icon = PAW_placeholder
 		x = 41
 		y = 4
 		prerequisite = { focus = PAW_the_opening_volley }
 		prerequisite = { focus = PAW_find_allies }
+		cost = 5
 	}
 	focus = {
 		id = PAW_the_esoteric_clique
+		icon = PAW_placeholder
 		x = 47
 		y = 4
 		prerequisite = { focus = PAW_the_opening_volley }
