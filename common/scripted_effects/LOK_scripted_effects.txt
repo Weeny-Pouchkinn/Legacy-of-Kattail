@@ -1250,6 +1250,76 @@ damage_xenon_colonies = {
 	calculate_xenon_colonies_stats = yes
 }
 
+smart_remove_buildings = {
+	# No errors yes yes.
+	#
+	# This effect will remove buildings in a state without the extra hassle of checking if they actually can remove the building (as it generates an error if there is no level of the building they're trying to remove)
+	#
+	# Call in state scope
+	# EXPECTED VARIABLES
+	# ?building_type = the building, duh. These are tokenizable so it makes my job a lot easier here
+	# ?level_diff = levels removed, if set to 0 the script will assume you are using ?level_set
+	# ?level_set = level set, use instead of ?level_diff if you want to set to a specific level (Dont set level_diff if you're using this)
+	#
+	# !!! IF NEITHER VARIABLE ARE SET, SCRIPT WILL ASSUME YOU ARE REMOVING ALL OF THOSE BUILDINGS IN THE STATE !!!
+	#
+	# Example use in script [State scope] (will remove up to 2 levels of civilian factories if capable. If there's 1 factory left it will only remove 1)
+	#
+	# set_temp_variable = { building_type = token:industrial_complex }
+	# set_temp_variable = { level_diff = 2 }
+	# smart_remove_buildings = yes
+
+	# Calculating how many buildings to remove in this state
+	if = {
+		limit = { check_variable = { level_diff > 0 } }
+		custom_effect_tooltip = smart_remove_buildings_tt1
+	}
+	else = { custom_effect_tooltip = smart_remove_buildings_tt2 }
+	hidden_effect = {
+		meta_effect = {
+			text = {
+				if = { # Only run if there's actually levels present. Causes Errors otherwise
+					limit = { check_variable = { building_level@[BUILDING_TYPE] > 0 } }
+					if = { # level_diff mode
+						limit = { check_variable = { level_diff > 0 } }
+						if = {
+							limit = { # If the building level is greater/equal to the removed levels, just fire the effect
+								check_variable = {
+									var = building_level@[BUILDING_TYPE]
+									value = level_diff
+									compare = greater_than_or_equals
+								}
+							}
+							remove_building = { type = [BUILDING_TYPE] level = level_diff }
+						}
+						# If building level is less than removed levels, set level_diff to the building level
+						else = { set_temp_variable = { level_diff = building_level@[BUILDING_TYPE] } }
+						remove_building = { type = [BUILDING_TYPE] level = level_diff }
+					}
+					else_if = { # Level Set Mode
+						limit = { # Only run if the building level is higher than the desired level
+							check_variable = {
+								var = building_level@[BUILDING_TYPE]
+								value = level_set
+								compare = greater_than
+							}
+						}
+						set_temp_variable = { levels_to_remove = building_level@[BUILDING_TYPE] }
+						subtract_from_variable = { levels_to_remove = level_set }
+						remove_building = { type = [BUILDING_TYPE] level = levels_to_remove }
+					}
+				}
+			}
+			BUILDING_TYPE = "[?building_type.GetTokenKey]"
+		}
+		# Cleanup! Lets you reuse the effect for other buildings in the same effect block
+		set_temp_variable = { building_type = 0 }
+		set_temp_variable = { level_set = 0 }
+		set_temp_Variable = { level_diff = 0 }
+		set_temp_Variable = { levels_to_remove = 0 }
+	}
+}
+
 destroy_random_building = {
 	random_list = {
 		0 = {

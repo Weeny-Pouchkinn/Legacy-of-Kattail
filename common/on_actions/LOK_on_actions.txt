@@ -4625,7 +4625,10 @@ on_actions = {
 						has_state_flag = has_armored_blimp_carrier_state
 					}
 					clr_state_flag = has_armored_blimp_carrier_state
-					remove_building = { type = air_base level = 2 }
+
+					set_temp_variable = { building_type = token:air_base }
+					set_temp_variable = { level_diff = 2 }
+					smart_remove_buildings = yes
 					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
 				}
 				#Clear and apply species match modifiers
@@ -5292,10 +5295,9 @@ on_actions = {
 				every_controlled_state = {
 					limit = { has_state_flag = has_armored_blimp_carrier_state }
 					clr_state_flag = has_armored_blimp_carrier_state
-					if = {
-						limit = { check_variable = { building_level@air_base > 1 } }
-						remove_building = { type = air_base level = 2 }
-					}
+					set_temp_variable = { building_type = token:air_base }
+					set_temp_variable = { level_diff = 2 }
+					smart_remove_buildings = yes
 					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
 				}
 				every_controlled_state = {

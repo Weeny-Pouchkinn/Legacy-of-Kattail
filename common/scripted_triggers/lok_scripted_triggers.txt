@@ -399,3 +399,51 @@ has_silent_workhorse_trait = { # im sorry
 		has_trait = silent_workhorse_amphibian
 	}
 }
+
+tag_has_custom_elections = { # If countries use special election events, add tag here to avoid vanilla elections being used
+	OR = {
+		always = no # REPLACE WHEN ADDING A NEW TAG
+	}
+}
+
+can_lose_democracy_support = {
+	set_temp_variable = { far_left_total_popularity = party_popularity@communism }
+	add_to_temp_variable = { far_left_total_popularity = party_popularity@socialism }
+	check_variable = { far_left_total_popularity < 0.18 }
+
+	fascism < 0.18
+
+	neutrality < 0.18
+
+	set_temp_variable = { democracy_total_popularity = party_popularity@democratic }
+	add_to_temp_variable = { democracy_total_popularity = party_popularity@social_democratic }
+	add_to_temp_variable = { democracy_total_popularity = party_popularity@social_liberal }
+	add_to_temp_variable = { democracy_total_popularity = party_popularity@social_conservative }
+	add_to_temp_variable = { democracy_total_popularity = party_popularity@authoritarian_democratic }
+	check_variable = { democracy_total_popularity > 0.65 }
+}
+
+lok_from_has_same_government_group = {
+	OR = {
+		AND = {
+			ROOT = { has_fascist_gov_group = yes }
+			has_fascist_gov_group = yes
+		}
+		AND = {
+			ROOT = { has_democratic_gov_group = yes }
+			has_democratic_gov_group = yes
+		}
+		AND = {
+			ROOT = { has_communist_gov_group = yes }
+			has_communist_gov_group = yes
+		}
+		AND = {
+			ROOT = { has_neutrality_gov_group = yes }
+			has_neutrality_gov_group = yes
+		}
+		AND = {
+			ROOT = { has_government = gestalt }
+			has_government = gestalt
+		}
+	}
+}

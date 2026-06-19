@@ -375,9 +375,12 @@ debug_decisions = {
 
 		complete_effect = {
 			1018 = {
-				remove_building = {
-					type = dam
-					level = 1
+				if = {
+					limit = { check_variable = { building_level@dam > 0 }  }
+					remove_building = {
+						type = dam
+						level = 1
+					}
 				}
 			}
 			set_global_flag = great_lake_dam_destroyed

@@ -1,14 +1,4 @@
 on_actions = {
-	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
-	on_state_control_changed = {
-	}
-	#ROOT is winner #FROM gets annexed - This will also fire on_annex
-	on_civil_war_end = {
-	}
-	
-	on_ruling_party_change = { 
-	}
-	
 	#FROM - Country (owner)
 	#ROOT - leader
 	#FROMFROM - original owner for exiled leaders
@@ -64,6 +54,8 @@ on_actions = {
 					}
 				}
 			}
+
+
 			if = {
 				limit = {
 					FROM = { has_idea = instilled_aggression_spirit }
@@ -121,29 +113,26 @@ on_actions = {
 
 	on_unit_leader_created = { # This uses the UNIT LEADER sub scope of a character, FROM == country
 		effect = {
-			log = "[GetDateText]: ROOT: [Root.GetName] FROM: [From.GetName] on_unit_leader_created - NSB on Actions"
 			character = {
-				log = "[GetDateText]: Character: [This.GetName] on_unit_leader_created - NSB on Actions"
-				if = { 
+				if = {
 					limit = {
 						is_army_leader = yes
 					}
-					log = "[GetDateText]: Character: [This.GetName] is_army_leader = yes - on_unit_leader_created - NSB on Actions"
 					if = {
-						limit = {	
+						limit = {
 							FROM = { has_idea = political_loyalty_spirit } #done here instead of the trait file to avoid some oddness with generating assignable traits under certain circumstances, makes it easier to control probabilities
 						}
 						root = {
 							random_list = {
-								50 = { 
+								50 = {
 									add_unit_leader_trait = media_personality
 								}
-								50 = { 
+								50 = {
 									add_unit_leader_trait = politically_connected
 								}
 							}
 						}
-						
+
 					}
 					else_if = {
 						limit = {
@@ -151,8 +140,8 @@ on_actions = {
 						}
 						root = {
 							random_list = {
-								50 = { 
-									add_unit_leader_trait = panzer_leader
+								50 = {
+									add_unit_leader_trait = armor_officer
 								}
 								50 = {}
 							}
@@ -164,7 +153,7 @@ on_actions = {
 						}
 						root = {
 							random_list = {
-								50 = { 
+								50 = {
 									add_unit_leader_trait = infantry_officer
 								}
 								50 = {}
@@ -177,7 +166,7 @@ on_actions = {
 						}
 						root = {
 							random_list = {
-								75 = { 
+								75 = {
 									random_list = {
 										33 = { add_unit_leader_trait = naval_invader }
 										33 = { add_unit_leader_trait = commando }
@@ -194,10 +183,10 @@ on_actions = {
 						}
 						root = {
 							random_list = {
-								50 = { 
+								50 = {
 									add_unit_leader_trait = engineer_officer
 								}
-								50 = {}
+								50 = { }
 							}
 						}
 					}
@@ -207,13 +196,13 @@ on_actions = {
 						}
 						root = {
 							random_list = {
-								50 = { 
+								50 = {
 									random_list = {
 										50 = { add_unit_leader_trait = brilliant_strategist }
 										50 = { add_unit_leader_trait = inflexible_strategist }
 									}
 								}
-								50 = {}
+								50 = { }
 							}
 						}
 					}
@@ -224,10 +213,10 @@ on_actions = {
 					}
 					root = {
 						random_list = {
-							50 = { 
+							50 = {
 								add_unit_leader_trait = gunnery_expert
 							}
-							50 = {}
+							50 = { }
 						}
 					}
 				}
@@ -237,13 +226,13 @@ on_actions = {
 					}
 					root = {
 						random_list = {
-							25 = { 
+							25 = {
 								add_unit_leader_trait = seawolf
 							}
-							25 = { 
+							25 = {
 								add_unit_leader_trait = blockade_runner
 							}
-							50 = {}
+							50 = { }
 						}
 					}
 				}
@@ -253,66 +242,14 @@ on_actions = {
 					}
 					root = {
 						random_list = {
-							50 = { 
-								add_unit_leader_trait = aviation_enthusiast 
+							50 = {
+								add_unit_leader_trait = aviation_enthusiast
 							}
 							50 = {}
 						}
 					}
 				}
-				else = {
-					log = "[GetDateText]: Character: [This.GetName] is_army_leader = no - on_unit_leader_created - NSB on Actions"
-				}
 			}
 		}
 	}
-
-	on_government_change = {
-	}
-	on_peace = {
-	}
-	
-	#ROOT - country that just went to peace
-	on_peaceconference_ended = {
-	}
-
-	#ROOT = attacking side
-	#FROM = defending side
-	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
-	on_war_relation_added = { # ---> Fires in 2nd place (1st is on_declare_war) -> This one is triggered ALWAYS
-	}
-
-	#FROM is faction leader on join faction requests. THIS DOES NOT FIRE ON ADD_TO_FACTION EFFECT! USE ON_OFFER_JOIN_FACTION!
-	on_join_faction = {
-	}
-
-	#FROM is country getting invited.
-	on_offer_join_faction = {
-	}
-
-	on_release_as_puppet = {
-	}
-
-	# called when a country send volunteers to another
-	# ROOT is sender, FROM is receiver
-	on_send_volunteers = {
-	}
-
-	on_startup = {
-	}
-
-	# ROOT is capitulated country, FROM is winner
-	on_capitulation = {
-	}
-	#ROOT = attacking side
-	#FROM = defending side
-	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
-	on_war_relation_added = {
-	}
-
-	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
-	on_state_control_changed = {
-	}
-
-	
 }

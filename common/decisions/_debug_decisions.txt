@@ -700,4 +700,33 @@ debug_decisions = {
 
 	}
 
+	destroy_a_kocuran_orphanage = { # Testing for smart_remove_buildings
+		available = { is_ai = no }
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			540 = {
+				set_temp_variable = { building_type = token:industrial_complex }
+				set_temp_variable = { level_diff = 1 }
+				smart_remove_buildings = yes
+
+				set_temp_variable = { building_type = token:infrastructure }
+				set_temp_variable = { level_set = 0 }
+				smart_remove_buildings = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 0
+		}
+	}
+
 }

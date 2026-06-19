@@ -390,3 +390,284 @@ LOK_calculate_coalition_stability = {
 		}
 	}
 }
+
+# Chnage party popularity across your coalition based on their respective popularity.
+#
+# Meant to simulate how the larger party likely has their candidate running the ministry responsible for this boost in popularity
+LOK_change_coalition_party_popularity_weighted = {
+	custom_effect_tooltip = LOK_change_coalition_party_popularity_weighted_tt
+	# Calculating Coalition and Non Coalition Share
+	if = { limit = { check_variable = { pol_party_array^0 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@communism } }
+	if = { limit = { check_variable = { pol_party_array^1 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@socialism } }
+	if = { limit = { check_variable = { pol_party_array^2 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@social_democratic } }
+	if = { limit = { check_variable = { pol_party_array^3 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@social_liberal } }
+	if = { limit = { check_variable = { pol_party_array^4 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@democratic } }
+	if = { limit = { check_variable = { pol_party_array^5 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@social_conservative } }
+	if = { limit = { check_variable = { pol_party_array^6 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@authoritarian_democratic } }
+	if = { limit = { check_variable = { pol_party_array^7 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@neutrality } }
+	if = { limit = { check_variable = { pol_party_array^8 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@fascism } }
+	if = { limit = { check_variable = { pol_party_array^9 = 1 } } add_to_temp_variable = { coalition_total_pop = party_popularity@gestalt } } # Gestalts cant be in coalition but they're still an ideology so
+	set_temp_variable = { non_coalition_total_pop = 1 }
+	subtract_from_temp_variable = { non_coalition_total_pop = coalition_total_pop }
+
+	# Calculating post change popularities
+	if = { # Communism
+		limit = { check_variable = { pol_party_array^0 = 1 } }															# Checking if its in coalition
+		set_temp_variable = { party_0_popularity = party_popularity@communism }		# Setting to communism party share
+		multiply_temp_variable = { party_0_popularity = popularity_temp }										# Multiplying by the coalition gain factor
+		divide_temp_variable = { party_0_popularity = coalition_total_pop }									# Dividing by the total share of the coalition
+		add_to_temp_variable = { party_0_popularity = party_popularity@communism }								# Adding gained pop to current pop
+	}
+	else = {																											# If not in coalition
+		set_temp_variable = { party_0_popularity = party_popularity@communism }		# Set to communism party share
+		multiply_temp_variable = { party_0_popularity = popularity_temp }										# Multiplying by coalition gain factor
+		multiply_temp_variable = { party_0_popularity = -1 }													# Making gain negative
+		divide_temp_variable = { party_0_popularity = non_coalition_total_pop }								# Divide by the total share of the opposition
+		add_to_temp_variable = { party_0_popularity = party_popularity@communism }								# Adding to current pop
+	}
+	if = { # Socialism
+		limit = { check_variable = { pol_party_array^1 = 1 } }
+		set_temp_variable = { party_1_popularity = party_popularity@socialism }
+		multiply_temp_variable = { party_1_popularity = popularity_temp }
+		divide_temp_variable = { party_1_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_1_popularity = party_popularity@socialism }
+	}
+	else = {
+		set_temp_variable = { party_1_popularity = party_popularity@socialism }
+		multiply_temp_variable = { party_1_popularity = popularity_temp }
+		multiply_temp_variable = { party_1_popularity = -1 }
+		divide_temp_variable = { party_1_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_1_popularity = party_popularity@socialism }
+	}
+	if = { # Social Democratic
+		limit = { check_variable = { pol_party_array^2 = 1 } }
+		set_temp_variable = { party_2_popularity = party_popularity@social_democratic }
+		multiply_temp_variable = { party_2_popularity = popularity_temp }
+		divide_temp_variable = { party_2_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_2_popularity = party_popularity@social_democratic }
+	}
+	else = {
+		set_temp_variable = { party_2_popularity = party_popularity@social_democratic }
+		multiply_temp_variable = { party_2_popularity = popularity_temp }
+		multiply_temp_variable = { party_2_popularity = -1 }
+		divide_temp_variable = { party_2_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_2_popularity = party_popularity@social_democratic }
+	}
+	if = { # Social Liberal
+		limit = { check_variable = { pol_party_array^3 = 1 } }
+		set_temp_variable = { party_3_popularity = party_popularity@social_liberal }
+		multiply_temp_variable = { party_3_popularity = popularity_temp }
+		divide_temp_variable = { party_3_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_3_popularity = party_popularity@social_liberal }
+	}
+	else = {
+		set_temp_variable = { party_3_popularity = party_popularity@social_liberal }
+		multiply_temp_variable = { party_3_popularity = popularity_temp }
+		multiply_temp_variable = { party_3_popularity = -1 }
+		divide_temp_variable = { party_3_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_3_popularity = party_popularity@social_liberal }
+	}
+	if = { # Market Liberal
+		limit = { check_variable = { pol_party_array^4 = 1 } }
+		set_temp_variable = { party_4_popularity = party_popularity@democratic }
+		multiply_temp_variable = { party_4_popularity = popularity_temp }
+		divide_temp_variable = { party_4_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_4_popularity = party_popularity@democratic }
+	}
+	else = {
+		set_temp_variable = { party_4_popularity = party_popularity@democratic }
+		multiply_temp_variable = { party_4_popularity = popularity_temp }
+		multiply_temp_variable = { party_4_popularity = -1 }
+		divide_temp_variable = { party_4_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_4_popularity = party_popularity@democratic }
+	}
+	if = { # Social Conservative
+		limit = { check_variable = { pol_party_array^5 = 1 } }
+		set_temp_variable = { party_5_popularity = party_popularity@social_conservative }
+		multiply_temp_variable = { party_5_popularity = popularity_temp }
+		divide_temp_variable = { party_5_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_5_popularity = party_popularity@social_conservative }
+	}
+	else = {
+		set_temp_variable = { party_5_popularity = party_popularity@social_conservative }
+		multiply_temp_variable = { party_5_popularity = popularity_temp }
+		multiply_temp_variable = { party_5_popularity = -1 }
+		divide_temp_variable = { party_5_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_5_popularity = party_popularity@social_conservative }
+	}
+	if = { # Authoritarian Democratic
+		limit = { check_variable = { pol_party_array^6 = 1 } }
+		set_temp_variable = { party_6_popularity = party_popularity@authoritarian_democratic }
+		multiply_temp_variable = { party_6_popularity = popularity_temp }
+		divide_temp_variable = { party_6_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_6_popularity = party_popularity@authoritarian_democratic }
+	}
+	else = {
+		set_temp_variable = { party_6_popularity = party_popularity@authoritarian_democratic }
+		multiply_temp_variable = { party_6_popularity = popularity_temp }
+		multiply_temp_variable = { party_6_popularity = -1 }
+		divide_temp_variable = { party_6_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_6_popularity = party_popularity@authoritarian_democratic }
+	}
+	if = { # Autocratic
+		limit = { check_variable = { pol_party_array^7 = 1 } }
+		set_temp_variable = { party_7_popularity = party_popularity@neutrality }
+		multiply_temp_variable = { party_7_popularity = popularity_temp }
+		divide_temp_variable = { party_7_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_7_popularity = party_popularity@neutrality }
+	}
+	else = {
+		set_temp_variable = { party_7_popularity = party_popularity@neutrality }
+		multiply_temp_variable = { party_7_popularity = popularity_temp }
+		multiply_temp_variable = { party_7_popularity = -1 }
+		divide_temp_variable = { party_7_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_7_popularity = party_popularity@neutrality }
+	}
+	if = { # National Mysticist
+		limit = { check_variable = { pol_party_array^8 = 1 } }
+		set_temp_variable = { party_8_popularity = party_popularity@fascism }
+		multiply_temp_variable = { party_8_popularity = popularity_temp }
+		divide_temp_variable = { party_8_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_8_popularity = party_popularity@fascism }
+	}
+	else = {
+		set_temp_variable = { party_8_popularity = party_popularity@fascism }
+		multiply_temp_variable = { party_8_popularity = popularity_temp }
+		multiply_temp_variable = { party_8_popularity = -1 }
+		divide_temp_variable = { party_8_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_8_popularity = party_popularity@fascism }
+	}
+	if = { # Gestalt
+		limit = { check_variable = { pol_party_array^9 = 1 } }
+		set_temp_variable = { party_9_popularity = party_popularity@gestalt }
+		multiply_temp_variable = { party_9_popularity = popularity_temp }
+		divide_temp_variable = { party_9_popularity = coalition_total_pop }
+		add_to_temp_variable = { party_9_popularity = party_popularity@gestalt }
+	}
+	else = {
+		set_temp_variable = { party_9_popularity = party_popularity@gestalt }
+		multiply_temp_variable = { party_9_popularity = popularity_temp }
+		multiply_temp_variable = { party_9_popularity = -1 }
+		divide_temp_variable = { party_9_popularity = non_coalition_total_pop }
+		add_to_temp_variable = { party_9_popularity = party_popularity@gestalt }
+	}
+	# Setting popularities!
+	set_popularities = {
+		communism = party_0_popularity
+		socialism = party_1_popularity
+		social_democratic = party_2_popularity
+		social_liberal = party_3_popularity
+		democratic = party_4_popularity
+		social_conservative = party_5_popularity
+		authoritarian_democratic = party_6_popularity
+		neutrality = party_7_popularity
+		fascism = party_8_popularity
+		gestalt = party_9_popularity
+	}
+}
+LOK_change_democratic_parties_pop_random = {
+	random_list = {
+		party_popularity@democratic = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^4 = 0 }
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = popularity_temp
+			}
+		}
+		party_popularity@social_democratic = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^2 = 0 }
+			}
+			add_popularity = {
+				ideology = social_democratic
+				popularity = popularity_temp
+			}
+		}
+		party_popularity@social_liberal = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^3 = 0 }
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = popularity_temp
+			}
+		}
+		party_popularity@social_conservative = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^5 = 0 }
+			}
+			add_popularity = {
+				ideology = social_conservative
+				popularity = popularity_temp
+			}
+		}
+	}
+}
+LOK_change_communist_parties_pop_random = {
+	random_list = {
+		party_popularity@communism = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^0 = 0 }
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = popularity_temp
+			}
+		}
+		party_popularity@socialism = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^1 = 0 }
+			}
+			add_popularity = {
+				ideology = socialism
+				popularity = popularity_temp
+			}
+		}
+	}
+}
+LOK_change_fascist_parties_pop_random = {
+	random_list = {
+		party_popularity@fascism = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^8 = 0 }
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = popularity_temp
+			}
+		}
+	}
+}
+LOK_change_neutrality_parties_pop_random = {
+	random_list = {
+		party_popularity@neutrality = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^7 = 0 }
+			}
+			add_popularity = {
+				ideology = neutrality
+				popularity = popularity_temp
+			}
+		}
+		party_popularity@authoritarian_democratic = {
+			modifier = {
+				factor = 0
+				check_variable = { pol_party_array^6 = 0 }
+			}
+			add_popularity = {
+				ideology = authoritarian_democratic
+				popularity = popularity_temp
+			}
+		}
+	}
+}

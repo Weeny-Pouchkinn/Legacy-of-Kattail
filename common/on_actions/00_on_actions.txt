@@ -1,0 +1,861 @@
+on_actions = {
+    on_startup = {
+        # Add Canals
+        effect = {
+            IF = {
+                limit = {
+                    has_dlc = "Gotterdammerung"
+                }
+                # None Right Now
+            }
+        }
+
+    }
+
+    # country
+    on_new_term_election = {
+        random_events = {
+            100 = election.2
+            100 = election.3
+            100 = election.4
+            100 = election.41
+            100 = election.42
+            100 = election.5
+            100 = election.51
+            100 = election.52
+            100 = election.6
+            # 100 = election.11 # Communist Majority
+            # 100 = election.12 # Fascist Majority
+            # Autocrat Majority
+            # Socialist Majority
+            # Democratic Coalition forming
+            100 = election.13
+            100 = election.14
+            100 = election.15
+        }
+    }
+
+
+    # Ace pilots
+    # country, FROM = ace
+    on_ace_promoted = {
+        random_events = {
+            100 = ace_promoted.1
+            5 = ace_promoted.2
+        }
+    }
+
+    # country, FROM = ace, PREV = enemy ace
+    # This event fires twice, once for each ace.
+    on_aces_killed_each_other = {
+        random_events = {
+            100 = aces_killed_each_other.1
+        }
+    }
+
+    # country, FROM = our ace,
+    # PREV = enemy ace, has killed FROM
+    on_ace_killed_by_ace = {
+        random_events = {
+            100 = ace_killed_by_ace.1
+        }
+    }
+
+    # country, FROM = our ace,
+    # PREV = enemy ace, killed by FROM
+    on_ace_killed_other_ace = {
+        random_events = {
+            100 = ace_killed_other_ace.1
+        }
+    }
+
+    # our ace is killed by no name
+    # country, FROM = ace
+    on_ace_killed = {
+        random_events = {
+            100 = ace_died.1
+        }
+    }
+
+    # our ace died in accident
+    # country, FROM = ace
+    on_ace_killed_on_accident = {
+
+    }
+
+    # enemy ace is killed by our non name
+    # country, FROM = enemy ace
+    on_non_ace_killed_other_ace = {
+
+    }
+
+    # During justifying wargoals
+    # triggered daily, so make sure there is a sink somewhere not firing events
+    # country, FROM = target nation
+    on_justifying_wargoal_pulse = {
+
+        random_events = {
+            100 = war_justification.1
+            100 = war_justification.2
+            100 = war_justification.3
+            100 = war_justification.4
+            100 = war_justification.5
+            100 = war_justification.6
+            100 = war_justification.7
+            100 = war_justification.8
+            100 = war_justification.9
+            100 = war_justification.10
+            100 = war_justification.11
+            100 = war_justification.12
+            100 = war_justification.13
+            100 = war_justification.14
+            100 = war_justification.15
+            100 = war_justification.16
+            100 = war_justification.17
+            100 = war_justification.18
+            100 = war_justification.19
+            100 = war_justification.21
+            100 = war_justification.22
+            100 = war_justification.23
+            17000 = 0
+        }
+    }
+
+    on_wargoal_expire = {
+        random_events = {
+            100 = war_justification.301
+        }
+    }
+
+    on_nuke_drop = {
+        effect = {
+            set_global_flag = first_nuke_dropped
+            set_variable = {
+                global.nukecountry = ROOT
+            }
+            if = {
+                limit = { NOT = { has_global_flag = first_nuke_dropped } }
+                country_event = { id = generic.8 }
+            }
+        }
+        random_events = {
+            100 = nuke_dropped.0
+        }
+    }
+
+    # country random events
+    #on_bi_yearly_pulse = {
+    #
+    #}
+
+    #on_five_year_pulse = {
+    #
+    #}
+
+    # FROM is the faction Leader, ROOT is the country leaving the faction
+    on_leave_faction = {
+        effect = {
+            IF = {
+                limit = {
+                    NOT = {
+                        ROOT = { #We should remove this
+                            has_country_flag = leave_faction_happily_flag
+                        }
+                        FROM = { is_subject_of = ROOT } # This shouldn't really be possible outside of specific content so best to block
+                        ROOT = { is_subject_of = FROM } # If the effect is desired, add something custom
+                    }
+                }
+                FROM = {
+                    add_opinion_modifier = {
+                        modifier = faction_traitor
+                        target = ROOT
+                        days = 365
+                    }
+
+                    add_opinion_modifier = {
+                        modifier = faction_traitor_trade
+                        target = ROOT
+                        days = 365
+                    }
+                }
+            }
+        }
+    }
+
+    #FROM is the one that joins the faction
+    on_create_faction = {
+        effect = {
+        }
+    }
+
+    #FROM is country getting invited.
+    on_offer_join_faction = {
+        effect = {
+        }
+    }
+
+    #FROM is faction leader on join faction requests. THIS DOES NOT FIRE ON ADD_TO_FACTION EFFECT! USE ON_OFFER_JOIN_FACTION!
+    on_join_faction = {
+        effect = {
+        }
+    }
+
+    #FROM is war target
+    on_declare_war = {
+        effect = {
+            #If prepared by siphoning equipment, receive equipment back
+            if = {
+                limit = {
+                    FROM = {
+                        has_civil_war = yes
+                        has_country_flag = siphoned_equipment_stockpiles_for_civil_war
+                    }
+                    has_civil_war = yes
+                }
+                FROM = {
+                    clr_country_flag = siphoned_equipment_stockpiles_for_civil_war
+                    add_equipment_to_stockpile = {
+                        type = infantry_equipment
+                        amount = 1000
+                    }
+                }
+            }
+
+            #If prepared with surprise attack plan, get bonus
+            if = {
+                limit = {
+                    FROM = {
+                        original_tag = ROOT
+                        #has_civil_war = yes
+                        has_country_flag = formulated_surprise_attack_plan_for_civil_war
+                    }
+                    #has_civil_war = yes
+                }
+                FROM = {
+                    clr_country_flag = formulated_surprise_attack_plan_for_civil_war
+                    add_timed_idea = {
+                        idea = civil_war_surprise_attack_plan
+                        days = 30
+                    }
+                }
+            }
+        }
+    }
+
+    # When a new faction is formed
+    on_faction_formed = {
+        effect = {
+            news_event = { id = news.159 }
+        }
+    }
+
+    # ROOT is capitulated country, FROM is winner
+    on_capitulation = {
+        effect = {
+        }
+    }
+
+    # ROOT is previously capitulated country
+    on_uncapitulation = {
+        effect = {
+        }
+    }
+    #ROOT is capitulated country, FROM is winner.
+    on_capitulation_immediate = {
+        effect = {
+        }
+    }
+
+    on_government_change = {
+        effect = {
+            if = {
+                limit = { has_democratic_gov_group = yes }
+                if = {
+                    limit = { has_idea = democratic_opposition_voicing_protests }
+                    remove_ideas = democratic_opposition_voicing_protests
+                }
+                if = {
+                    limit = { has_idea = democratic_revolutionaries }
+                    remove_ideas = democratic_revolutionaries
+                }
+                if = {
+                    limit = { has_idea = reign_of_terror }
+                    remove_ideas = reign_of_terror
+                }
+            }
+            if = {
+                limit = { has_communist_gov_group = yes }
+                if = {
+                    limit = { has_idea = communist_partisans_recruiting }
+                    remove_ideas = communist_partisans_recruiting
+                }
+                if = {
+                    limit = { has_idea = communist_revolutionaries }
+                    remove_ideas = communist_revolutionaries
+                }
+                if = {
+                    limit = { has_idea = communism_defeated }
+                    remove_ideas = communism_defeated
+                }
+            }
+            if = {
+                limit = { has_fascist_gov_group = yes }
+                if = {
+                    limit = { has_idea = fascist_assault_divisions }
+                    remove_ideas = fascist_assault_divisions
+                }
+                if = {
+                    limit = { has_idea = fascist_revolutionaries }
+                    remove_ideas = fascist_revolutionaries
+                }
+                if = {
+                    limit = { has_idea = fascism_defeated }
+                    remove_ideas = fascism_defeated
+                }
+            }
+        }
+    }
+
+    on_coup_succeeded = {
+        effect = {
+            #Turn elections on for democracies created from coup
+            random_other_country = {
+                limit = {
+                    has_democratic_gov_group = yes
+                    original_tag = ROOT
+                }
+                # probably a neater way of doing this but alas
+                if = {
+                    limit = { has_government = social_democratic }
+                    set_politics = {
+                        ruling_party = social_democratic
+                        elections_allowed = yes
+                    }
+                }
+                if = {
+                    limit = { has_government = social_liberal }
+                    set_politics = {
+                        ruling_party = social_liberal
+                        elections_allowed = yes
+                    }
+                }
+                if = {
+                    limit = { has_government = democratic }
+                    set_politics = {
+                        ruling_party = democratic
+                        elections_allowed = yes
+                    }
+                }
+                if = {
+                    limit = { has_government = social_conservative }
+                    set_politics = {
+                        ruling_party = social_conservative
+                        elections_allowed = yes
+                    }
+                }
+            }
+        }
+    }
+
+    #ROOT is winner #FROM gets annexed - This will also fire on_annex
+    on_civil_war_end = {
+        effect = {
+
+            # Enable Elections
+            if = {
+                limit = { has_government = social_democratic }
+                set_politics = {
+                    ruling_party = social_democratic
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = social_liberal }
+                set_politics = {
+                    ruling_party = social_liberal
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = democratic }
+                set_politics = {
+                    ruling_party = democratic
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = social_conservative }
+                set_politics = {
+                    ruling_party = social_conservative
+                    elections_allowed = yes
+                }
+            }
+
+            #End of ideology Civil War
+            if = {
+                limit = {
+                    has_country_flag = ideology_civil_war
+                }
+                clr_country_flag = ideology_civil_war
+                set_country_flag = { flag = won_ideology_civil_war value = 1 days = 365 }
+                country_event = { id = generic.11 days = 1 }
+            }
+        }
+    }
+
+    #used when puppeting in a peace conference
+    #ROOT = nation being puppeted, FROM = overlord
+
+    on_puppet = {
+        effect = {
+            # Enable Elections
+            if = {
+                limit = { has_government = social_democratic }
+                set_politics = {
+                    ruling_party = social_democratic
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = social_liberal }
+                set_politics = {
+                    ruling_party = social_liberal
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = democratic }
+                set_politics = {
+                    ruling_party = democratic
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = social_conservative }
+                set_politics = {
+                    ruling_party = social_conservative
+                    elections_allowed = yes
+                }
+            }
+        }
+    }
+
+    #used when puppeting through the occupied territories menu during peace time (or when releasing from non-core but owned territory, f.e. Britain releasing Egypt)
+    #ROOT = nation being released, FROM = overlord
+
+    on_release_as_puppet = {
+        effect = {
+            # Enable Elections
+            if = {
+                limit = { has_government = social_democratic }
+                set_politics = {
+                    ruling_party = social_democratic
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = social_liberal }
+                set_politics = {
+                    ruling_party = social_liberal
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = democratic }
+                set_politics = {
+                    ruling_party = democratic
+                    elections_allowed = yes
+                }
+            }
+            if = {
+                limit = { has_government = social_conservative }
+                set_politics = {
+                    ruling_party = social_conservative
+                    elections_allowed = yes
+                }
+            }
+        }
+    }
+
+    #ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+    on_annex = {
+        effect = {
+        }
+    }
+
+    #Not run on a specific country.
+    on_startup = {
+
+        effect = {
+            # Ai strategies should go here but idk what to put yet - Evelynn
+            # Refer to vanilla implemenetation of this file, there is a LOT
+        }
+    }
+
+
+    #ROOT = country that joined a war
+    #Fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first
+    on_war = {
+        effect = {
+        }
+    }
+    #ROOT = attacking side
+    #FROM = defending side
+    #fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
+    on_war_relation_added = {
+    }
+
+    #ROOT - country that just went to peace
+    on_peaceconference_ended = {
+        effect = {
+            #Country becomes a colonial power
+            if = {
+                limit = {
+                    ROOT = {
+                        any_owned_state = {
+                            NOT = { is_core_of = PREV }
+                        }
+                        NOT = {
+                            is_in_array = {
+                                array = global.colonial_powers
+                                value = THIS
+                            }
+                        }
+                    }
+                }
+                ROOT = {
+                    add_to_array = { global.colonial_powers = THIS }
+                }
+            }
+            #Country loses colonial possessions
+            if = {
+                limit = {
+                    ROOT = {
+                        is_in_array = {
+                            array = global.colonial_powers
+                            value = THIS
+                        }
+                        NOT = {
+                            any_owned_state = {
+                                NOT = { is_core_of = PREV }
+                            }
+                        }
+                    }
+                }
+                ROOT = {
+                    remove_from_array = { global.colonial_powers = THIS }
+                }
+            }
+        }
+    }
+
+    #ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+    on_state_control_changed = {
+        effect = {
+            if = { # Probably important, not touching
+                limit = {
+                    FROM = {
+                        is_in_faction = yes
+                    }
+
+                    FROM.FROM = {
+                        has_state_flag = prevent_auto_flip_after_capitulation
+                    }
+                }
+
+                FROM.FROM = { clr_state_flag = prevent_auto_flip_after_capitulation }
+                FROM = {
+                    set_state_controller = FROM.FROM
+                }
+            }
+        }
+
+        #ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+        #Modify Colonial Powers
+        effect = {
+            #Country becomes a colonial power
+            if = {
+                limit = {
+                    ROOT = {
+                        any_owned_state = {
+                            NOT = { is_core_of = PREV }
+                        }
+                        NOT = {
+                            is_in_array = {
+                                array = global.colonial_powers
+                                value = THIS
+                            }
+                        }
+                    }
+                }
+                ROOT = {
+                    add_to_array = { global.colonial_powers = THIS }
+                }
+            }
+            #Country loses colonial possessions
+            if = {
+                limit = {
+                    FROM = {
+                        is_in_array = {
+                            array = global.colonial_powers
+                            value = THIS
+                        }
+                        NOT = {
+                            any_owned_state = {
+                                NOT = { is_core_of = PREV }
+                            }
+                        }
+                    }
+                }
+                FROM = {
+                    remove_from_array = { global.colonial_powers = THIS }
+                }
+            }
+        }
+    }
+
+
+
+    # From is owner country
+    on_army_leader_daily = {
+        effect = {
+            if = {
+                limit = {
+                    check_variable = { random < 0.02 }
+                    NOT = { has_trait = sick }
+                    set_temp_variable = { temp = sum_unit_terrain_modifier@sickness_chance }
+                    divide_temp_variable = { temp = num_units }
+                    check_variable = { temp > 0.75 }
+                    NOT = { has_unit_leader_flag = recently_sick }
+                }
+                add_timed_unit_leader_trait = {
+                    trait = sick
+                    days = 30
+                }
+                set_unit_leader_flag = {
+                    flag = recently_sick
+                    value = 1
+                    days = 180
+                }
+            }
+        }
+    }
+
+    # From is owner country
+    on_army_leader_won_combat = {
+        effect = {
+            if = {
+                limit = {
+                    set_temp_variable = { chance = 0.001 }
+                    set_temp_variable = { factor = 1.0 }
+                    add_to_temp_variable = { factor = leader_modifier@wounded_chance_factor }
+                    multiply_temp_variable = { chance = factor }
+                    check_variable = { random < chance }
+                    NOT = { has_trait = wounded }
+                }
+                add_timed_unit_leader_trait = {
+                    trait = wounded
+                    days = 90
+                }
+            }
+        }
+    }
+
+    # From is owner country
+    on_army_leader_lost_combat = {
+        effect = {
+            if = {
+                limit = {
+                    set_temp_variable = { chance = 0.005 }
+                    set_temp_variable = { factor = 1.0 }
+                    add_to_temp_variable = { factor = leader_modifier@wounded_chance_factor }
+                    multiply_temp_variable = { chance = factor }
+                    check_variable = { random < chance }
+                    NOT = { has_trait = wounded }
+                }
+                add_timed_unit_leader_trait = {
+                    trait = wounded
+                    days = 90
+                }
+            }
+        }
+    }
+
+    on_army_leader_promoted = {
+        effect = {
+            add_timed_unit_leader_trait = {
+                trait = recently_promoted
+                days = 100
+            }
+        }
+    }
+
+    on_deployed_leader_defeated = {
+        effect = {
+            if = {
+                limit = { can_be_captured = yes }
+                # TODO TAOG: a percentage chance to be captured? Other effects otherwise?
+                capture_by = FROM
+                FROM = {
+                    if = {
+                        limit = { is_ai = no }
+                        set_country_flag = achievement_captured_a_general
+                    }
+                }
+                if = {
+                    limit = {
+                        is_field_marshal = yes
+                        FROM = { is_ai = no }
+                    }
+                    FROM = {
+                        set_country_flag = achievement_captured_a_field_marshal
+                    }
+                }
+            }
+            else = {
+                # uncapturable leaders (e.g. country leaders) get wounded instead
+                if = {
+                    limit = { NOT = { has_trait = wounded } }
+                    add_timed_unit_leader_trait = {
+                        trait = wounded
+                        days = 90
+                    }
+                }
+            }
+        }
+    }
+
+    # root country that invades
+    # scope state that is invaded
+    # from scope state that the invasion started
+    on_naval_invasion = {
+        effect = {
+            if = {
+                limit = {
+                    ROOT = {
+                        divisions_in_state = {
+                            unit = marine_commando
+                            size > 0
+                            state = PREV
+                        }
+                        has_mastery_level = {
+                            amount = 3
+                            sub_doctrine = marines_1
+                            #has_tech = marines_commandos_demolition - old equivalent
+                        }
+                    }
+                    NOT = { has_state_flag = marines_commando_effect }
+                    OWNER = { NOT = { tag = ROOT } }
+                }
+                SF_marine_demoliton_effect = yes # Note that the state flag condition is not preventing it from doing 1 damage per division
+            }
+        }
+    }
+
+
+    # root country that paradrops
+    # scope state that is paradroped into
+    # from scope state that the paradrop started
+    on_paradrop = {
+        effect = {
+            ROOT = { set_country_flag = has_paradropped_flag }
+        }
+    }
+
+    on_ruling_party_change = {
+        # temp var old_ideology_token is available for effects
+        effect = {
+            every_controlled_state = {
+                limit = {
+                    has_resistance = yes
+                }
+                set_temp_variable = { new_compliance = compliance }
+                multiply_temp_variable = { new_compliance = 0.5 }
+                set_compliance = new_compliance
+            }
+        }
+    }
+
+    on_unit_leader_promote_from_ranks_veteran = { #Unit leader scope, FROM is unit
+        effect = {
+            if = {
+                limit = {
+                    is_navy_leader = yes
+                    OWNER = { is_ai = no }
+                }
+                OWNER = { set_country_flag = achievement_navy_promoted_from_ranks }
+            }
+        }
+    }
+
+    on_unit_leader_promote_from_ranks_green = { #Unit leader scope, FROM is unit
+        effect = {
+            if = {
+                limit = {
+                    is_navy_leader = yes
+                    OWNER = { is_ai = no }
+                }
+                OWNER = { set_country_flag = achievement_navy_promoted_from_ranks }
+            }
+        }
+    }
+
+    on_add_history = { #Unit Scope
+        effect = {
+            #add_unit_medal_to_latest_entry = {
+            #	unit_medals = iron_cross_second_class
+            #} #This would add a unit medal to the history entry you just received
+        }
+    }
+
+    # root is the state that was dropped into
+    # from is the dropping country
+    # this differs from on_paradrop in that it is run once per paradrop, not once per unit dropped
+    on_units_paradropped_in_state = {
+        effect = {
+            if = {
+                limit = {
+                    FROM = {
+                        has_mastery_level = {
+                            amount = 1
+                            sub_doctrine = paratroopers_1
+                        }
+                        #has_tech = paras_dispersed_drop - old equivalent
+                    }
+                    NOT = {
+                        has_state_flag = {
+                            flag = para_drop_effect
+                            value = 0
+                        }
+                    }
+                    CONTROLLER = { NOT = { tag = FROM } }
+                }
+                SF_PARA_sabotage_effect = yes
+            }
+            if = {
+                limit = {
+                    FROM = {
+                        has_mastery_level = {
+                            amount = 1
+                            sub_doctrine = paratroopers_2
+                        }
+                        #has_tech = paras_combat_drop  - old equivalent
+                    }
+                    NOT = {
+                        has_state_flag = {
+                            flag = para_drop_effect
+                            value = 0
+                        }
+                    }
+                }
+                SF_PARA_combat_effect = yes
+            }
+        }
+    }
+
+    on_peaceconference_started = {
+        effect = {
+
+        }
+    }
+}
