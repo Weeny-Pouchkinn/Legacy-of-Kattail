@@ -8655,6 +8655,27 @@ focus_tree = {
 					instant_build = yes
 				}
 			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			custom_effect_tooltip = available_industrial_concern
+			show_ideas_tooltip = CZE_csd
+			if = {
+				limit = {
+					has_dlc = "Peace For Our Time"
+				}
+				custom_effect_tooltip = generic_skip_one_line_tt
+				if = {
+					limit = {
+						has_dlc = "Arms Against Tyranny"
+					}
+					unlock_military_industrial_organization_tooltip = mio:CZE_CKD_plzen_organization
+				}
+				else = {
+					custom_effect_tooltip = available_designer
+					show_ideas_tooltip = CZE_CKD_plzen
+				}
+			}
 		}
 	}
 
@@ -8714,6 +8735,27 @@ focus_tree = {
 					type = industrial_complex
 					level = 1
 					instant_build = yes
+				}
+			}
+			if = {
+				limit = {
+					has_dlc = "Peace For Our Time"
+				}
+
+				custom_effect_tooltip = generic_skip_one_line_tt
+
+				custom_effect_tooltip = available_industrial_concern
+				show_ideas_tooltip = CZE_walter_co
+				custom_effect_tooltip = generic_skip_one_line_tt
+				if = {
+					limit = {
+						has_dlc = "Arms Against Tyranny"
+					}
+					unlock_military_industrial_organization_tooltip = mio:CZE_zbrojovka_vsetin_organization
+				}
+				else = {
+					custom_effect_tooltip = available_designer
+					show_ideas_tooltip = CZE_zbrojovka_vsetin
 				}
 			}
 		}
@@ -8776,6 +8818,30 @@ focus_tree = {
 					type = arms_factory
 					level = 1
 					instant_build = yes
+				}
+			}
+			if = {
+				limit = {
+					has_dlc = "Peace For Our Time"
+				}
+
+				custom_effect_tooltip = generic_skip_one_line_tt
+
+				if = {
+					limit = {
+						has_dlc = "Arms Against Tyranny"
+					}
+					unlock_military_industrial_organization_tooltip = mio:CZE_skoda_plzen_tank_destroyer_organization
+					unlock_military_industrial_organization_tooltip = mio:CZE_ceska_zbrojovka_uhersky_brod_organization
+				}
+				else = {
+					custom_effect_tooltip = available_designer
+					show_ideas_tooltip = CZE_skoda_plzen_tank_destroyer
+
+					custom_effect_tooltip = generic_skip_one_line_tt
+
+					custom_effect_tooltip = available_designer
+					show_ideas_tooltip = CZE_ceska_zbrojovka_uhersky_brod
 				}
 			}
 		}
@@ -9868,14 +9934,14 @@ focus_tree = {
 					infantry = { x = 0 y = 0 }
 					infantry = { x = 0 y = 1 }
 					infantry = { x = 0 y = 2 }
-		
+					infantry = { x = 0 y = 3 }
 					infantry = { x = 1 y = 0 }
 					infantry = { x = 1 y = 1 }
 					infantry = { x = 1 y = 2 }
-		
-					infantry = { x = 2 y = 0 }
+					infantry = { x = 1 y = 3 }
+
+					artillery_brigade = { x = 2 y = 0 }
 					artillery_brigade = { x = 2 y = 1 }
-					artillery_brigade = { x = 2 y = 2 }
 				}
 				support = {
 					engineer = { x = 0 y = 0 }
@@ -13468,15 +13534,13 @@ focus_tree = {
 		icon = GFX_goal_anschluss
 		available = {
 			is_subject = no
-			if = {
-				limit = {
-					is_faction_leader = no
-				}
-				is_in_faction = no
-			}
 			OR = {
 				is_major = yes
 				is_faction_leader = yes
+				AND = {
+					is_in_faction = no
+					is_faction_leader = no
+				}
 			}
 			has_army_manpower = { size > 699999 }
 			OR = {

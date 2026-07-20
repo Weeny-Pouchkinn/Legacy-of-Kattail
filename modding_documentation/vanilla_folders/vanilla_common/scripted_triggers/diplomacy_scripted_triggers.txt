@@ -348,6 +348,44 @@ DIPLOMACY_RELEASE_NATION_ENABLE_TRIGGER = {
 			NOT = { FROM = { tag = TRA } }
 		}
 	}
+	if = {
+		limit = {
+			OR = {
+				has_game_rule = {
+					rule = allow_release_nations
+					option = FREE
+				}
+				has_game_rule = {
+					rule = allow_release_nations
+					option = PEACE_ONLY
+				}
+			}
+			FROM = { tag = SDL }
+		}
+		custom_trigger_tooltip = {
+			tooltip = RULE_ALLOW_RELEASE_NATIONS_ALL_NATIONS_SUDETENLAND_TOOLTIP
+			NOT = { FROM = { tag = SDL } }
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				has_game_rule = {
+					rule = allow_release_nations
+					option = FREE
+				}
+				has_game_rule = {
+					rule = allow_release_nations
+					option = PEACE_ONLY
+				}
+			}
+			FROM = { tag = RUT }
+		}
+		custom_trigger_tooltip = {
+			tooltip = RULE_ALLOW_RELEASE_NATIONS_ALL_NATIONS_RUTHENIA_TOOLTIP
+			NOT = { FROM = { tag = RUT } }
+		}
+	}
 	IF = {
 		limit = {
 			OR = {
@@ -367,7 +405,58 @@ DIPLOMACY_RELEASE_NATION_ENABLE_TRIGGER = {
 		}
 		custom_trigger_tooltip = {
 			tooltip = RULE_ALLOW_RELEASE_NATIONS_NO_SLOVAKIA_TOOLTIP
-			NOT = { FROM = { tag = SLO } }
+			if = {
+				limit = {
+					original_tag = CZE
+				}
+				if = {
+					limit = {
+						OR = {
+							if = {
+								limit = {
+									has_dlc = "Peace For Our Time"
+								}
+								has_country_flag = CZE_cant_release_SLO_anymore_flag #set in MUN_czech_bop.1 event
+							}
+							else = {
+								date > 1936.1.7
+							}
+						}
+					}
+					NOT = {
+						FROM = {
+							tag = SLO 
+						}
+					}
+				}
+			}
+			else = {
+				NOT = {
+					FROM = {
+						tag = SLO 
+					}
+				}
+			}
+		}
+	}
+	if = {
+		limit = {
+			OR = {
+				has_game_rule = {
+					rule = allow_release_nations
+					option = FREE
+				}
+				has_game_rule = {
+					rule = allow_release_nations
+					option = PEACE_ONLY
+				}
+			}
+			original_tag = CZE
+			has_dlc = "Peace For Our Time"
+		}
+		custom_trigger_tooltip = {
+			tooltip = RULE_ALLOW_RELEASE_NATIONS_ALL_NATIONS_SUDETENLAND_TOOLTIP
+			NOT = { FROM = { tag = UKR } }
 		}
 	}
 	if = {

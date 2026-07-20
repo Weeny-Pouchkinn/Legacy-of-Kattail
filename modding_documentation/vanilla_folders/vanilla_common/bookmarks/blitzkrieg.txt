@@ -5,10 +5,12 @@ bookmarks = {
 		date = 1939.8.14.12
 		picture = "GFX_select_date_1939"
 		default_country = "GER"
+		filters = { new_content continent }
 	
 		FRA = {
 			history = FRA_BLITZKRIEG_DESC
 			ideology = democratic
+			version = base_game
 			ideas={
 				FRA_victors_of_wwi
 				FRA_disjointed_government
@@ -23,6 +25,7 @@ bookmarks = {
 		USA = {
 			history = USA_BLITZKRIEG_DESC
 			ideology = democratic
+			version = base_game
 			ideas = {
 				home_of_the_free
 				great_depression_3
@@ -39,6 +42,7 @@ bookmarks = {
 		ENG = {
 			history = ENG_BLITZKRIEG_DESC
 			ideology = democratic
+			version = base_game
 			ideas = {
 				stiff_upper_lip
 				ENG_the_war_to_end_all_wars
@@ -56,6 +60,7 @@ bookmarks = {
 		GER = {
 			history = GER_BLITZKRIEG_DESC
 			ideology = fascism
+			version = base_game
 			ideas = { #TODO_Danne Make sure these spirits display the proper numbers!
 				GER_mefo_bills_1939_fake_ns
 				GER_army_1939_fake_ns
@@ -70,6 +75,7 @@ bookmarks = {
 		ITA = {
 			history = ITA_BLITZKRIEG_DESC
 			ideology = fascism
+			version = base_game
 			ideas={
 				vittorio_emanuele_albania_ethiopia
 				ITA_camicie_nere
@@ -84,7 +90,7 @@ bookmarks = {
 		JAP = {
 			history = JAP_BLITZKRIEG_DESC
 			ideology = fascism
-			new_content = yes
+			version = base_game
 			override_leader_portrait = JAP_emperor_hirohito
 			ideas = {
 				JAP_1939_fake_state_shintoism_idea
@@ -100,6 +106,7 @@ bookmarks = {
 		SOV = {
 			history = SOV_BLITZKRIEG_DESC
 			ideology = communism
+			version = base_game
 			ideas = {
 				SOV_anti_soviet_military_thinking_banned_navy
 				SOV_second_five_year_plan_fake_1939_ns
@@ -121,6 +128,7 @@ bookmarks = {
 			minor = yes
 			history = "CAN_BLITZKRIEG_DESC"
 			ideology = democratic
+			version = base_game
 			ideas = {
 				CAN_great_depression_1
 				CAN_conscription_crisis
@@ -134,6 +142,9 @@ bookmarks = {
 		"AST"={
 			minor = yes
 			history = "AST_BLITZKRIEG_DESC"
+			available = {  NOT = { has_dlc = "Thunder at Our Gates" } }
+			version = base_game
+			assume_not_played_if_missing_data = yes
 			ideology = democratic
 			ideas = {
 				AST_great_depression_1
@@ -144,10 +155,30 @@ bookmarks = {
 				AST_delegation_to_china
 			}
 		}
+		"AST" = {
+			minor = yes
+			history = AST_BLITZKRIEG_TAOG_DESC
+			required_dlc  = { "Thunder at Our Gates" }
+			version = thunder_at_our_gates
+			assume_not_played_if_missing_data = yes
+			ideology = democratic
+			ideas = {
+				AST_war_is_coming_spirit_fake
+				AST_australian_war_cabinet_idea
+				AST_country_party_influence_uap
+			}
+			focuses = {
+				AST_its_fight_work_or_perish
+				AST_a_change_of_authority
+				AST_the_pacific_resistance
+			}		
+		}
 		"NZL"={
 			minor = yes
 			history = "NZL_BLITZKRIEG_DESC"
 			ideology = democratic
+			version = thunder_at_our_gates
+			assume_not_played_if_missing_data = yes
 			ideas = {
 				
 			}
@@ -161,6 +192,7 @@ bookmarks = {
 			minor = yes
 			history = "SAF_BLITZKRIEG_DESC"
 			ideology = democratic
+			version = base_game
 			ideas = {
 				SAF_ossewabrandwag
 				SAF_history_of_segregation
@@ -177,6 +209,7 @@ bookmarks = {
 			history = "RAJ_BLITZKRIEG_DESC"
 			available = {  NOT = { has_dlc = "Graveyard of Empires" } }
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				RAJ_agrarian_society
 				RAJ_princely_states
@@ -191,8 +224,9 @@ bookmarks = {
 		RAJ = {
 			minor = yes
 			history = "RAJ_BLITZKRIEG_DESC"
-			available = {  has_dlc = "Graveyard of Empires" }
+			required_dlc = { "Graveyard of Empires" }
 			ideology = neutrality
+			version = graveyard_of_empires
 			ideas = {
 				RAJ_risk_of_famine
 				idea_RAJ_tenancy_reforms
@@ -210,6 +244,7 @@ bookmarks = {
 			history = "HUN_BLITZKRIEG_DESC"
 			ideology = neutrality
 			available = {  NOT = { has_dlc = "Gotterdammerung" } }
+			version = base_game
 			ideas = {
 				HUN_treaty_of_triannon_3
 				HUN_interventionism
@@ -226,6 +261,7 @@ bookmarks = {
 			minor = yes
 			history = "ROM_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				ROM_king_carol_ii_hedonist
 				ROM_preserve_greater_romania
@@ -242,6 +278,7 @@ bookmarks = {
 			minor = yes
 			history = "YUG_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				anti_german_military
 				YUG_idea_croatian_opposition
@@ -259,6 +296,7 @@ bookmarks = {
 			history = "CHI_BLITZKRIEG_DESC"
 			available = { NOT = {	has_dlc = "No Compromise, No Surrender" } }
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				CHI_army_corruption_2
 				CHI_hyper_inflation_1
@@ -276,6 +314,7 @@ bookmarks = {
 			history = "PRC_BLITZKRIEG_DESC"
 			available = { NOT = { has_dlc = "No Compromise, No Surrender" } }
 			ideology = communism
+			version = base_game
 			ideas = {
 				PRC_the_long_march_1
 				PRC_low_popular_support_1
@@ -293,6 +332,7 @@ bookmarks = {
 			history = "MAN_BLITZKRIEG_DESC"
 			available = { NOT = { has_dlc = "No Compromise, No Surrender" } }
 			ideology = fascism
+			version = base_game
 			ideas = {
 				MAN_kwantung_veto
 				MAN_five_year_plan_industry
@@ -310,6 +350,7 @@ bookmarks = {
 			available = { NOT = { has_dlc = "No Compromise, No Surrender" } }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = fascism
+			version = base_game
 			ideas = {
 				CHI_long_term_economic_planning
 			}
@@ -325,6 +366,7 @@ bookmarks = {
 			available = { NOT = { has_dlc = "No Compromise, No Surrender" } }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = fascism
+			version = base_game
 			ideas = {
 				CHI_long_term_economic_planning
 			}
@@ -340,6 +382,7 @@ bookmarks = {
 			available = { NOT = { has_dlc = "No Compromise, No Surrender" } }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = fascism
+			version = base_game
 			ideas = {
 				CHI_long_term_economic_planning
 			}
@@ -355,6 +398,7 @@ bookmarks = {
 			available = { NOT = { has_dlc = "No Compromise, No Surrender" } }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = fascism
+			version = base_game
 			ideas = {
 				CHI_long_term_economic_planning
 				CHI_ideological_education
@@ -371,6 +415,7 @@ bookmarks = {
 			minor = yes
 			history = "MEXICO_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				MEX_church_power_1
 				MEX_politicised_army
@@ -388,6 +433,7 @@ bookmarks = {
 			minor = yes
 			history = "NETHERLANDS_BLITZKRIEG_DESC"
 			ideology = democratic
+			version = base_game
 			ideas = {
 				HOL_wilhelmina
 				HOL_shell_shocked_spectator_5
@@ -404,6 +450,7 @@ bookmarks = {
 			minor = yes
 			history = "SPAIN_BLITZKRIEG_DESC"
 			ideology = fascism
+			version = base_game
 			ideas = {
 				SPA_carlism_4
 				SPA_recovering_from_civil_war
@@ -419,6 +466,7 @@ bookmarks = {
 			minor = yes
 			history = "PORTUGAL_BLITZKRIEG_DESC"
 			ideology = democratic
+			version = base_game
 			ideas = {
 				POR_volunteers_in_the_war_nationalist
 				POR_colonial_assimilation_policy
@@ -434,6 +482,7 @@ bookmarks = {
 			minor = yes
 			history = "BUL_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				BUL_bulgarian_irredentism
 				BUL_imro_01
@@ -450,6 +499,7 @@ bookmarks = {
 			minor = yes
 			history = "GRE_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				GRE_metaxism_2
 				GRE_schachtplan
@@ -466,6 +516,7 @@ bookmarks = {
 			minor = yes
 			history = "TUR_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				TUR_kemalist_army_officers_extended_power_neutral
 				TUR_sectarian_woes
@@ -481,6 +532,7 @@ bookmarks = {
 			minor = yes
 			history = "LIT_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				LIT_victory_in_trust_idea
 				LIT_invested_in_farms_1
@@ -497,6 +549,7 @@ bookmarks = {
 			minor = yes
 			history = "LAT_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				LAT_saeima_idea_military_1
 				LAT_the_sun_shines_equally_idea
@@ -513,6 +566,7 @@ bookmarks = {
 			minor = yes
 			history = "EST_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				EST_ismaaliit_idea
 				EST_national_council_idea
@@ -528,6 +582,7 @@ bookmarks = {
 			minor = yes
 			history = "POL_BLITZKRIEG_DESC"
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				deterrence
 			}
@@ -541,6 +596,7 @@ bookmarks = {
 			minor = yes
 			history = "SWI_BLITZKRIEG_DESC"
 			ideology = democratic
+			version = base_game
 			ideas = {
 				SWI_spirit_of_helvetia_aggressive_war
 				SWI_frontier_defense_plan_idea_3
@@ -556,6 +612,7 @@ bookmarks = {
 			minor = yes
 			history = FIN_BLITZKRIEG_DESC
 			ideology = neutrality
+			version = base_game
 			ideas = {
 				FIN_sisu_3
 				FIN_fortification_effort
@@ -571,7 +628,8 @@ bookmarks = {
 			minor = yes
 			history = "SWE_BLITZKRIEG_DESC"
 			ideology = democratic
-			available = { has_dlc = "Arms Against Tyranny" } 
+			required_dlc = { "Arms Against Tyranny" }
+			version = arms_against_tyranny
 			ideas = {
 				SWE_radiotjanst_democratic
 				SWE_saltsjobaden_agreement
@@ -587,7 +645,8 @@ bookmarks = {
 			minor = yes
 			history = "NOR_BLITZKRIEG_DESC"
 			ideology = democratic
-			available = { has_dlc = "Arms Against Tyranny" } 
+			required_dlc = { "Arms Against Tyranny" }
+			version = arms_against_tyranny
 			ideas = {
 				NOR_defensive_rearmament_ns
 				NOR_crumbling_fortifications_ns
@@ -604,6 +663,7 @@ bookmarks = {
 			history = DEN_BLITZKRIEG_DESC
 			ideology = democratic
 			available = { NOT = { has_dlc = "By Blood Alone" } }
+			version = base_game
 			ideas = {
 				DEN_fake_industrial_capability_2_ns
 				DEN_declaration_of_neutrality_no_BBA
@@ -619,7 +679,8 @@ bookmarks = {
 			minor = yes
 			history = DEN_BLITZKRIEG_DESC
 			ideology = democratic
-			available = { has_dlc = "By Blood Alone" }
+			required_dlc = { "By Blood Alone" }
+			version = by_blood_alone
 			ideas = {
 				DEN_fake_industrial_capability_2_ns
 				DEN_declaration_of_neutrality
@@ -635,7 +696,8 @@ bookmarks = {
 			minor = yes
 			history = ICE_BLITZKRIEG_DESC
 			ideology = democratic
-			available = { has_dlc = "Arms Against Tyranny" } 
+			required_dlc = { "Arms Against Tyranny" }
+			version = arms_against_tyranny
 			ideas = {
 				ICE_christian_x
 				ICE_fishing_industry
@@ -651,7 +713,8 @@ bookmarks = {
 			minor = yes
 			history = BRA_BLITZKRIEG_DESC
 			ideology = neutrality
-			available = { has_dlc = "Trial of Allegiance" }
+			required_dlc = { "Trial of Allegiance" }
+			version = trial_of_allegiance
 			ideas = {
 				BRA_estado_novo_dummy_idea
 				BRA_radio_nacional_idea
@@ -667,7 +730,8 @@ bookmarks = {
 			minor = yes
 			history = CHL_BLITZKRIEG_DESC
 			ideology = democratic
-			available = { has_dlc = "Trial of Allegiance" }
+			required_dlc = { "Trial of Allegiance" }
+			version = trial_of_allegiance
 			ideas = {
 				idea_CHL_the_Hacienda_inquilinaje_system
 				CHL_the_mapuche_conflict
@@ -683,7 +747,8 @@ bookmarks = {
 			minor = yes
 			history = ARG_BLITZKRIEG_DESC
 			ideology = neutrality
-			available = { has_dlc = "Trial of Allegiance" }
+			required_dlc = { "Trial of Allegiance" }
+			version = trial_of_allegiance
 			ideas = {
 				SMB_MTG_naval_arms_race_legacy
 				ARG_raf_cooperation_idea
@@ -695,11 +760,46 @@ bookmarks = {
 				ARG_the_american_push
 			}
 		}
+		PAR = {
+			minor = yes
+			history = PAR_BLITZKRIEG_DESC
+			ideology = communism
+			required_dlc = { "Trial of Allegiance" }
+			version = trial_of_allegiance
+			ideas = {
+				PAR_febrerista_land_reform
+				BOL_toll_of_the_chaco_war
+				idea_PAR_the_aftershock_of_the_tripple_alliance
+			}
+			focuses = {
+				PAR_pull_back_troops_from_the_chaco
+				PAR_revenge_for_the_chaco_war
+				PAR_nazify_the_army
+			}
+		}
+		URG = {
+			minor = yes
+			history = URG_BLITZKRIEG_DESC
+			ideology = democratic
+			required_dlc = { "Trial of Allegiance" }
+			version = trial_of_allegiance
+			ideas = {
+				idea_URG_statism
+				idea_URG_prohibition_of_usury
+				idea_GUAY_electrification_of_the_country
+			}
+			focuses = {
+				URG_the_good_coup
+				URG_legacy_of_batlle
+				URG_investigate_german_and_italian_cultural_organization
+			}
+		}
 		"AFG"={
 			minor = yes
 			history = AFG_BLITZKRIEG_DESC
 			ideology = neutrality
-			available = { has_dlc = "Graveyard of Empires" }
+			required_dlc = { "Graveyard of Empires" }
+			version = graveyard_of_empires
 			ideas = {
 				AFG_mohammad_zahir_shah_ns
 				AFG_pashtunwali
@@ -715,7 +815,8 @@ bookmarks = {
 			minor = yes
 			history = "HUN_BLITZKRIEG_DESC"
 			ideology = neutrality
-			available = { has_dlc = "Gotterdammerung" }
+			required_dlc = { "Gotterdammerung" }
+			version = gotterdammerung
 			ideas = {
 				HUN_gombos_trade_treaty
 				HUN_hungarian_national_defense_association_horthyist
@@ -732,11 +833,12 @@ bookmarks = {
 			history = BEL_GATHERING_STORM_DESC
 			ideology = democratic
 			available = { 
-				has_dlc = "Gotterdammerung" 
 				NOT = {
 					has_dlc = "No Compromise, No Surrender"
 				}
 			} 
+			required_dlc = { "Gotterdammerung" }
+			version = gotterdammerung
 			ideas = {
 				BEL_chasseurs_ardennais_ns
 				BEL_scars_of_ww1_ns_fake
@@ -752,7 +854,8 @@ bookmarks = {
 			minor = yes
 			history = BEL_GATHERING_STORM_DESC
 			ideology = democratic
-			available = { has_dlc = "Gotterdammerung" has_dlc = "No Compromise, No Surrender" } 
+			required_dlc = { "Gotterdammerung" "No Compromise, No Surrender" }
+			version = no_compromise_no_surrender
 			ideas = {
 				BEL_chasseurs_ardennais_ns_ncns
 				BEL_scars_of_ww1_ns_fake
@@ -768,7 +871,8 @@ bookmarks = {
 			minor = yes
 			history = COG_BLITZKRIEG_DESC
 			ideology = neutrality
-			available = { has_dlc = "Gotterdammerung" } 
+			required_dlc = { "Gotterdammerung" }
+			version = gotterdammerung
 			ideas = {
 				COG_banque_du_congo_belge_idea
 				COG_vast_decentralized_state_idea_4
@@ -784,7 +888,8 @@ bookmarks = {
 			minor = yes
 			history = "IRQ_BLITZKRIEG_DESC"
 			ideology = neutrality
-			available = { has_dlc = "Graveyard of Empires" }
+			required_dlc = { "Graveyard of Empires" }
+			version = graveyard_of_empires
 			ideas = {
 				IRQ_anglo_iraqi_treaty
 				IRQ_al_muthanna_club_idea
@@ -800,7 +905,8 @@ bookmarks = {
 			minor = yes
 			history = PER_BLITZKRIEG_DESC
 			ideology = neutrality
-			available = { has_dlc = "Graveyard of Empires" }
+			required_dlc = { "Graveyard of Empires" }
+			version = graveyard_of_empires
 			ideas = {
 				PER_white_revolution_idea
 				PER_homeland_not_fall_idea
@@ -816,8 +922,8 @@ bookmarks = {
 			minor = yes
 			history = "PHI_BLITZKRIEG_DESC" 
 			ideology = neutrality
-			available = { has_dlc = "No Compromise, No Surrender" }
-			new_content = yes
+			required_dlc = { "No Compromise, No Surrender" }
+			version = no_compromise_no_surrender
 			ideas = {
 				PHI_island_nation_ns_fake
 				PHI_the_great_depression_ns_fake
@@ -833,9 +939,9 @@ bookmarks = {
 		CHI = {
 			minor = yes
 			history = "CHI_BLITZKRIEG_DESC"
-			available = { has_dlc = "No Compromise, No Surrender" }
+			required_dlc = { "No Compromise, No Surrender" }
 			ideology = neutrality
-			new_content = yes
+			version = no_compromise_no_surrender
 			ideas = {
 				CHI_corruption_in_the_administration_fake_ns
 				CHI_protracted_warfare_idea_fake_ns
@@ -850,9 +956,9 @@ bookmarks = {
 		PRC = {
 			minor = yes
 			history = "PRC_BLITZKRIEG_DESC"
-			available = { has_dlc = "No Compromise, No Surrender" }
+			required_dlc = { "No Compromise, No Surrender" }
 			ideology = communism
-			new_content = yes
+			version = no_compromise_no_surrender
 			ideas = { #TODO_DANNE Needs to be fixed when we have settled all the modifiers
 				PRC_central_committee_1939_fake
 				PRC_the_chinese_red_army_1939_fake
@@ -866,10 +972,10 @@ bookmarks = {
 		}
 		MAN = {
 			minor = yes
-			available = { has_dlc = "No Compromise, No Surrender" } 
+			required_dlc = { "No Compromise, No Surrender" }
 			history = "MAN_TSR_BLITZKRIEG_DESC"
 			ideology = fascism
-			new_content = yes
+			version = no_compromise_no_surrender
 			ideas = {
 				MAN_the_kangde_emperor
 				MAN_five_year_plan_industry
@@ -883,10 +989,26 @@ bookmarks = {
 		}
  		GXC = {
 			minor = yes
-			available = { has_dlc = "No Compromise, No Surrender" }
+			required_dlc = { "No Compromise, No Surrender" }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = neutrality
-			new_content = yes
+			version = no_compromise_no_surrender
+			ideas = {
+				CHI_long_term_economic_planning
+				CHI_warlord_state_idea
+			}
+			focuses = {
+				CHI_sea_join_the_republican_government
+				CHI_sea_battle_for_china
+				CHI_sea_power_struggle
+			}
+		}	
+		SHX = {
+			minor = yes
+			required_dlc = { "No Compromise, No Surrender" }
+			history = "WARLORDS_BLITZKRIEG_DESC"
+			ideology = neutrality
+			version = no_compromise_no_surrender
 			ideas = {
 				CHI_long_term_economic_planning
 				CHI_warlord_state_idea
@@ -899,10 +1021,10 @@ bookmarks = {
 		}		
 		YUN = {
 			minor = yes
-			available = { has_dlc = "No Compromise, No Surrender" }
+			required_dlc = { "No Compromise, No Surrender" }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = neutrality
-			new_content = yes
+			version = no_compromise_no_surrender
 			ideas = {
 				CHI_long_term_economic_planning
 				CHI_warlord_state_idea
@@ -915,10 +1037,10 @@ bookmarks = {
 		}		
 		XSM = {
 			minor = yes
-			available = { has_dlc = "No Compromise, No Surrender" }
+			required_dlc = { "No Compromise, No Surrender" }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = neutrality
-			new_content = yes
+			version = no_compromise_no_surrender
 			ideas = {
 				CHI_long_term_economic_planning
 				CHI_warlord_state_idea
@@ -928,13 +1050,45 @@ bookmarks = {
 				CHI_sea_battle_for_china
 				XSM_a_united_ma_state
 			}
+		}	
+		GSM = {
+			minor = yes
+			required_dlc = { "No Compromise, No Surrender" }
+			history = "WARLORDS_BLITZKRIEG_DESC"
+			ideology = neutrality
+			version = no_compromise_no_surrender
+			ideas = {
+				CHI_long_term_economic_planning
+				CHI_warlord_state_idea
+			}
+			focuses = {
+				CHI_sea_join_the_republican_government
+				CHI_sea_battle_for_china
+				CHI_sea_anti_opposition_campaigns
+			}
+		}	
+		NXM = {
+			minor = yes
+			required_dlc = { "No Compromise, No Surrender" }
+			history = "WARLORDS_BLITZKRIEG_DESC"
+			ideology = neutrality
+			version = no_compromise_no_surrender
+			ideas = {
+				CHI_long_term_economic_planning
+				CHI_warlord_state_idea
+			}
+			focuses = {
+				CHI_sea_join_the_republican_government
+				CHI_sea_battle_for_china
+				CHI_sea_anti_opposition_campaigns
+			}
 		}		
 		SIK = {
 			minor = yes
-			available = { has_dlc = "No Compromise, No Surrender" }
+			required_dlc = { "No Compromise, No Surrender" }
 			history = "WARLORDS_BLITZKRIEG_DESC"
 			ideology = communism
-			new_content = yes
+			version = no_compromise_no_surrender
 			ideas = {
 				SIK_soviet_military_cooperation
 				SIK_soviet_pilot_schools
@@ -944,6 +1098,44 @@ bookmarks = {
 				SIK_rejoin_the_central_government
 				SIK_reestablish_the_guominjun
 				SIK_reaffirm_soviet_connections
+			}
+		}
+
+		"SIA"={
+			minor = yes
+			history = "SIA_BLITZKRIEG_DESC"
+			ideology = neutrality
+			required_dlc  = { "Thunder at Our Gates" }
+			version = thunder_at_our_gates
+			assume_not_played_if_missing_data = yes
+			ideas = {
+				idea_SIA_military_full_support
+				idea_SIA_civilian_opposition
+				idea_SIA_thai_irredentism
+			}
+			focuses = {
+				SIA_hold_military_parades
+				SIA_drum_up_irredentism
+				SIA_mobilize_the_defenders_of_siam
+			}
+		}
+
+		INS = {
+			minor = yes
+			history = "INS_BLITZKRIEG_DESC"
+			ideology = neutrality
+			required_dlc  = { "Thunder at Our Gates" }
+			version = thunder_at_our_gates
+			assume_not_played_if_missing_data = yes
+			ideas = {
+				idea_INS_volksraad
+				idea_INS_great_depression_fake_2
+				idea_INS_mismanaged_admin_fake_2
+			}
+			focuses = {
+				INSHOL_economic_integration
+				INSHOL_netherlands_indonesia_union
+				INS_defenders_of_homeland
 			}
 		}
 

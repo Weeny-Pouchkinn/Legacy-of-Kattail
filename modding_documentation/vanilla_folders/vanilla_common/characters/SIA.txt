@@ -3,15 +3,315 @@ characters={
 		name="Phraya Phahon"
 		portraits={
 			civilian={
-				large=GFX_portrait_Phraya_Phahon
+				large=GFX_portrait_SIA_phraya_phahon
 			}
 		}
 		country_leader={
 			ideology=despotism
 			expire="1965.1.1.1"
 			id=-1
+			traits = { SIA_leader_of_the_1932_revolution }
 		}
 	}
+
+
+	SIA_phraya_songsuradet = {
+		advisor={
+			slot = army_chief
+			idea_token = SIA_phraya_songsuradet
+			ledger = army
+			allowed = {
+				original_tag = SIA
+			}
+
+			visible = {
+				NOT = { has_completed_focus = SIA_the_songsuradet_rebellion }
+			}
+
+			available = {
+				NOT = { has_completed_focus = SIA_the_songsuradet_rebellion }
+			}
+			traits = {
+				SIA_leader_of_the_senior_officers
+			}
+			cost = 150
+			ai_will_do = {
+				factor = 1.000
+
+				modifier = {
+					OR = {
+						is_historical_focus_on = yes
+						has_game_rule = {
+							rule = SIA_ai_behavior
+							option = HISTORICAL
+						}
+					}
+					factor = 0
+				}
+			}
+		}
+		portraits={
+			army={
+				small = GFX_portrait_SIA_phraya_songsuradet_small
+				large = GFX_portrait_SIA_phraya_songsuradet
+			}
+		}
+		corps_commander={
+			traits={ brilliant_strategist }
+			skill=3
+			attack_skill=3
+			defense_skill=3
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=0
+			visible = {
+				if = {
+					limit = {
+						has_civil_war = yes
+					}
+
+					has_completed_focus = SIA_support_songsuradets_military_clique
+				}
+			}
+		}
+	}
+
+	SIA_pridi_banomyong={
+		instance = { 
+			allowed = {
+				has_dlc = "Thunder at Our Gates"  
+			}
+
+			advisor={
+				slot = political_advisor
+				idea_token = SIA_pridi_banomyong
+
+					allowed = {
+						original_tag = SIA
+					}
+					available = {
+						is_country_leader = no
+					}
+					traits = {
+						JUNO_minister_of_foreign_affairs
+					}
+					cost = 150
+					ai_will_do = {
+						factor = 1.000
+						modifier = {
+							OR = {
+								has_country_flag = SIA_AI_RANDOM_DEMOCRATIC
+								has_game_rule = {
+									rule = SIA_ai_behavior
+									option = DEMOCRATIC
+								}
+							}
+
+							factor = 100
+						}
+					}
+
+					on_add = {
+						SIA_increase_civilian_approval = yes
+					}
+
+					on_remove = {
+						SIA_decrease_civilian_approval = yes
+					}
+			}
+			country_leader={
+				ideology=socialism
+				traits={ JUNO_minister_of_foreign_affairs }
+			}
+			name=SIA_pridi_banomyong
+			portraits={
+				army={
+					large=GFX_portrait_SIA_pridi_banomyong
+					small=GFX_portrait_SIA_pridi_banomyong_small
+				}
+			}
+		}
+
+		#NON TAOG
+		instance = {
+			allowed = {
+				NOT = { has_dlc = "Thunder at Our Gates" }
+			}
+
+			advisor={
+				slot = high_command
+				idea_token = SIA_pridi_banomyong
+				ledger = navy
+					allowed = {
+						original_tag = SIA
+					}
+					traits = {
+						navy_screen_2
+					}
+					cost = 100
+					ai_will_do = {
+						factor = 1.000
+					}
+			}
+			name=SIA_pridi_banomyong
+			portraits={
+				army={
+					large=GFX_portrait_SIA_pridi_banomyong
+					small=GFX_portrait_SIA_pridi_banomyong_small
+				}
+			}
+		}
+	}
+
+	SIA_ananda_mahidol = {
+		name=SIA_ananda_mahidol
+		portraits={
+			civilian={
+				small = GFX_portrait_SIA_ananda_mahidol_small
+				large = GFX_portrait_SIA_ananda_mahidol
+			}
+		}
+	}
+	SIA_prajadhipok = {
+		#advisor={
+		#	slot = political_advisor
+		#	idea_token = SIA_prajadhipok
+#
+		#		allowed = {
+		#			original_tag = SIA
+		#		}
+		#		traits = {
+		#			SIA_ailing
+		#		}
+		#		cost = 150
+		#		ai_will_do = {
+		#			factor = 1.000
+		#		}
+#
+		#}
+		name=SIA_prajadhipok
+		portraits={
+			civilian={
+				small = GFX_portrait_SIA_prajadhipok_small
+				large = GFX_portrait_SIA_prajadhipok
+			}
+		}
+	}
+
+	SIA_rambai_barni = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_rambai_barni
+
+				allowed = {
+					original_tag = SIA
+				}
+				available = {
+					OR = {
+						has_completed_focus = SIA_seri_thai
+						has_completed_focus = SIA_the_provincial_council_of_state
+					}
+				}
+				traits = {
+					SIA_queen_consort
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+		}
+
+		name=SIA_rambai_barni
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_rambhai_barni_small
+				large = GFX_portrait_SIA_rambhai_barni
+			}
+		}
+	}
+
+	SIA_bowardej = {
+		name=SIA_bowardej
+		portraits={
+			civilian={
+				small = GFX_portrait_SIA_prince_boworadet_small
+				large = GFX_portrait_SIA_prince_boworadet
+			}
+		}
+
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_bowardej
+
+			allowed = {
+				original_tag = SIA
+
+			}
+
+			available = {
+				has_completed_focus = SIA_the_provincial_council_of_state
+			}
+			traits = {
+				royalist_bulldog
+			}
+			cost = 150
+			ai_will_do = {
+				factor = 1.000
+			}
+		}
+
+
+		corps_commander={
+			traits={ trait_reckless politically_connected harsh_leader }
+			skill=3
+			attack_skill=4
+			defense_skill=3
+			planning_skill=2
+			logistics_skill=1
+			legacy_id=0
+			visible = { has_completed_focus = SIA_the_provincial_council_of_state }
+		}
+	}
+
+	#Potential Monarchist leader
+	SIA_rangsit_prayurasakdi = { 
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_rangsit_prayurasakdi
+
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					SIA_prince_of_chai_nat
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+
+		name=SIA_rangsit_prayurasakdi
+		portraits={
+			army={
+				small=GFX_portrait_SIA_rangsit_prayurasakdi_small
+				large = GFX_portrait_SIA_rangsit_prayurasakdi
+			}
+		}
+
+		corps_commander={
+			traits={ }
+			skill=1
+			attack_skill=1
+			defense_skill=1
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=0
+			visible = { NOT = { has_completed_focus = SIA_the_songsuradet_rebellion } }
+		}
+	}
+
 	SIA_nangklao_chichalerm={
 		name="Nangklao Chichalerm"
 		portraits={
@@ -40,6 +340,128 @@ characters={
 			id=-1
 		}
 	}
+
+	SIA_plaek_phibunsongkhram={
+		instance = {
+			allowed = {
+				 has_dlc = "Thunder at Our Gates"
+			}
+
+			name=SIA_plaek_phibunsongkhram
+			portraits={
+				civilian={
+					large=GFX_portrait_SIA_plaek_phibunsongkhram
+					small=GFX_portrait_SIA_plaek_phibunsongkhram_small
+				}
+			}
+			country_leader={
+				ideology=fascism_ideology
+				expire="1953.1.1.12"
+				id=-1
+				traits = { SIA_military_wing_leader }
+			}
+
+			advisor={
+				slot = political_advisor
+				idea_token = SIA_plaek_phibunsongkhram
+
+					allowed = {
+						original_tag = SIA
+					}
+
+					visible = {
+						NOT = {
+							has_completed_focus = SIA_the_kings_gambit
+							has_completed_focus = SIA_and_spring_the_trap
+						}
+					}
+
+					available = {
+						NOT = {
+							has_completed_focus = SIA_and_spring_the_trap
+							has_completed_focus = SIA_the_kings_gambit
+							
+						}
+					}
+					traits = {
+						SIA_military_strongman
+					}
+
+					on_add = {
+						SIA_increase_military_approval = yes
+					}
+
+					on_remove = {
+						SIA_decrease_military_approval = yes
+					}
+
+					cost = 150
+					ai_will_do = {
+						factor = 1.000
+						modifier = {
+							OR = {
+								is_historical_focus_on = yes
+								has_game_rule = {
+									rule = SIA_ai_behavior
+									option = HISTORICAL
+								}
+							}
+							factor = 50
+						}
+
+						modifier = {
+							OR = {
+								has_country_flag = SIA_AI_RANDOM_DEMOCRATIC 
+								has_country_flag = SIA_AI_RANDOM_MONARCHIST
+
+								has_game_rule = {
+									rule = SIA_ai_behavior
+									option = DEMOCRATIC
+								}
+
+								has_game_rule = {
+									rule = SIA_ai_behavior
+									option = MONARCHIST
+								}
+							}
+							factor = 0
+						}
+					}
+			}
+
+			corps_commander={
+				traits={  politically_connected inspirational_leader  }
+				skill=2
+				attack_skill=2
+				defense_skill=1
+				planning_skill=1
+				logistics_skill=3
+				legacy_id=0
+				visible = {  }
+			}
+		}
+
+		#NON TAOG
+		instance = {
+			allowed = {
+				NOT = { has_dlc = "Thunder at Our Gates" }
+			}
+
+			name=SIA_plaek_phibunsongkhram
+			portraits={
+				civilian={
+					large=GFX_portrait_SIA_plaek_phibunsongkhram
+					small=GFX_portrait_SIA_plaek_phibunsongkhram_small
+				}
+			}
+			country_leader={
+				ideology=fascism_ideology
+				expire="1953.1.1.12"
+				id=-1
+			}
+		}
+	}
+
 	SIA_nangklao_suriyawongse={
 		name="Nangklao Suriyawongse"
 		portraits={
@@ -53,19 +475,10 @@ characters={
 			id=-1
 		}
 	}
-	SIA_plaek_phibunsongkhram={
-		name="Plaek Phibunsongkhram"
-		portraits={
-			civilian={
-				large=GFX_portrait_Plaek_Phibunsongkhram
-			}
-		}
-		country_leader={
-			ideology=fascism_ideology
-			expire="1953.1.1.12"
-			id=-1
-		}
-	}
+
+
+
+	#Non Taog
 	SIA_tianliang_huntrakool={
 		advisor={
 			
@@ -143,8 +556,6 @@ characters={
 	}
 	SIA_thawon_thamrongnawasawat={
 		advisor={
-			
-			
 			slot = navy_chief
 			idea_token = SIA_thawon_thamrongnawasawat
 			allowed = {
@@ -162,10 +573,1094 @@ characters={
 		name="Thawon Thamrongnawasawat"
 		portraits={
 			army={
-				small="GFX_idea_generic_navy_asia_3"
+				small=GFX_portrait_SIA_thawan_thamrongnawasawat_small
 			}
 		}
 	}
+
+	SIA_luang_wichitwathakan = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_luang_wichitwathakan
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+
+				visible = {
+
+					NOT = { has_completed_focus = SIA_the_kings_gambit }
+					NOT = { has_completed_focus = SIA_and_spring_the_trap }
+					
+				}
+				available = {
+					has_completed_focus = SIA_drum_up_irredentism
+
+					NOT = { has_completed_focus = SIA_the_kings_gambit }
+					NOT = { has_completed_focus = SIA_and_spring_the_trap }
+					
+				}
+				traits = {
+					SIA_fascist_agitator	
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+					modifier = {
+						OR = {
+							is_historical_focus_on = yes
+							has_game_rule = {
+								rule = SIA_ai_behavior
+								option = HISTORICAL
+							}
+						}
+						factor = 50
+					}
+				}
+		}
+		name=SIA_luang_wichitwathakan
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_luang_wichitwathakan_small
+			}
+		}
+	}
+
+		SIA_josiah_crosby = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_josiah_crosby
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				available = {
+					NOT = { has_war_with = ENG }
+				}
+
+				traits = {
+					SIA_ambassador_to_the_uk
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_civilian_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_civilian_approval = yes
+				}
+			}
+		}
+		name=SIA_josiah_crosby
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_josiah_crosby_small
+			}
+		}
+	}
+
+	SIA_puey_ungpakorn = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_puey_ungpakorn
+
+			allowed = {
+				original_tag = SIA
+			}
+
+			traits = {
+				captain_of_industry
+			}
+			cost = 150
+			ai_will_do = {
+				factor = 1.000
+			}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_civilian_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_civilian_approval = yes
+				}
+			}
+		}
+		name=SIA_puey_ungpakorn
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_puey_ungpakorn_small
+			}
+		}
+	}
+
+	SIA_seni_pramoj = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_seni_pramoj
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					SIA_democratic_ambasaddor
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+					modifier = {
+						OR = {
+							has_country_flag = SIA_AI_RANDOM_DEMOCRATIC
+							has_game_rule = {
+								rule = SIA_ai_behavior
+								option = DEMOCRATIC
+							}
+						}
+
+						factor = 100
+					}
+				}
+
+				on_add = {
+					SIA_increase_civilian_approval = yes
+				}
+
+				on_remove = {
+					SIA_decrease_civilian_approval = yes
+				}
+		}
+		name=SIA_seni_pramoj
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_seni_pramoj_small
+			}
+		}
+	}
+
+	SIA_prayoon_pamornmontri = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_prayoon_pamornmontri
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					war_industrialist
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_prayoon_pamornmontri
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_prayoon_pamornmontri_small
+			}
+		}
+	}
+
+	SIA_direk_jayanama = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_direk_jayanama
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					humanist
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+					modifier = {
+						OR = {
+							has_country_flag = SIA_AI_RANDOM_DEMOCRATIC
+							has_game_rule = {
+								rule = SIA_ai_behavior
+								option = DEMOCRATIC
+							}
+						}
+
+						factor = 100
+					}
+				}
+
+				on_add = {
+					SIA_increase_civilian_approval = yes
+				}
+
+				on_remove = {
+					SIA_decrease_civilian_approval = yes
+				}
+		}
+		name=SIA_direk_jayanama
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_direk_jayanama_small
+			}
+		}
+	}
+
+	SIA_phra_sitthi_ruang_dejpol = {
+		advisor={
+			ledger = army
+			slot = high_command
+			idea_token = SIA_phra_sitthi_ruang_dejpol
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					army_regrouping_2
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_military_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_military_approval = yes
+				}
+			}
+		}
+		name=SIA_phra_sitthi_ruang_dejpol
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_phra_sitthi_ruang_dejpol_small
+			}
+		}
+	}
+
+	SIA_pao_pienlert_boripanyutakit = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_pao_pienlert_boripanyutakit
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					JUNO_minister_of_finance
+				}
+				cost = 110
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_pao_pienlert_boripanyutakit
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_pao_pienlert_boripanyutakit_small
+			}
+		}
+	}
+
+	SIA_sanguan_tularaksa = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_sanguan_tularaksa
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				available = {
+					has_completed_focus = SIA_a_fledgling_tobacco_industry
+				}
+
+				traits = {
+					SIA_chairman_of_the_tobacco_monopoly_bureau
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_sanguan_tularaksa
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_sanguan_tularaksa_small
+			}
+		}
+	}
+
+	SIA_chao_phraya_sri_dharmathibhet = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_chao_phraya_sri_dharmathibhet
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				available = {
+					has_completed_focus = SIA_meet_with_king_prajadhipok
+				}
+
+				traits = {
+					SIA_privy_council_president
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_chao_phraya_sri_dharmathibhet
+		portraits={
+			civilian={
+				small="GFX_portrait_SIA_chao_phraya_sri dharmathibhet_small"
+			}
+		}
+	}
+
+	SIA_vanich_pananont = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_vanich_pananont
+
+				allowed = {
+					original_tag = SIA
+				}
+				available = {
+					has_completed_focus = SIA_fuel_oil_act
+				}
+				traits = {
+					SIA_head_of_the_fuel_oil_department
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_vanich_pananont
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_vanich_pananont_small
+			}
+		}
+	}
+
+	SIA_manopakorn_nitithada = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_manopakorn_nitithada
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					SIA_restored_politician
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_manopakorn_nitithada
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_manopakorn_nitithada_small
+			}
+		}
+	}
+
+	SIA_damrong_rajanubhab = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_damrong_rajanubhab
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					SIA_royalist_reformer
+				}
+
+				available = {
+					has_completed_focus = SIA_the_provincial_council_of_state
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_damrong_rajanubhab
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_damrong_rajanubhab_small
+			}
+		}
+	}
+
+	SIA_paribatra_sukhumbandhu = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_paribatra_sukhumbandhu
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				available = {
+					has_completed_focus = SIA_the_provincial_council_of_state
+				}
+				traits = {
+					SIA_prince_of_nakhon_sawan
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_paribatra_sukhumbandhu
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_paribatra_sukhumbandhu_small
+			}
+		}
+	}
+
+	SIA_wan_waithayakon = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_wan_waithayakon
+
+				allowed = {
+					original_tag = SIA
+				}
+				available = {
+					has_completed_focus = SIA_the_provincial_council_of_state
+				}
+				traits = {
+					SIA_renowned_ambassador
+				}
+				cost = 100
+				ai_will_do = {
+					factor = 1.000
+				}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_civilian_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_civilian_approval = yes
+				}
+			}
+		}
+		name=SIA_wan_waithayakon
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_wan_waithayakon_small
+			}
+		}
+	}
+
+	SIA_vilas_osathanondh = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_vilas_osathanondh
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					popular_figurehead3
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_vilas_osathanondh
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_vilas_osathanondh_small
+			}
+		}
+	}
+
+	SIA_dhani_nivat = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_dhani_nivat
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				available = { has_completed_focus = SIA_the_provincial_council_of_state }
+
+				traits = {
+					SIA_noble_courtier
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_dhani_nivat
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_dhani_nivat_small
+			}
+		}
+	}
+
+	SIA_chamkat_phalangkun = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_chamkat_phalangkun
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				available = {
+					OR ={
+						has_completed_focus = SIA_standing_our_ground
+						has_completed_focus = SIA_seri_thai
+					}
+				}
+				traits = {
+					SIA_resistance_fighter
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_civilian_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_civilian_approval = yes
+				}
+			}
+		}
+		name=SIA_chamkat_phalangkun
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_chamkat_phalangkun_small
+			}
+		}
+	}
+
+	SIA_phra_bisal_sukhumvit = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_phra_bisal_sukhumvit
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					SIA_chief_of_department_of_highways
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_phra_bisal_sukhumvit
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_phra_bisal_sukhumvit_small
+			}
+		}
+	}
+
+	SIA_kukrit_pramoj = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_kukrit_pramoj
+
+				allowed = {
+					original_tag = SIA
+				}
+
+				traits = {
+					technocrat
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_civilian_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_civilian_approval = yes
+				}
+			}
+		}
+		name=SIA_kukrit_pramoj
+		portraits={
+			civilian={
+				small=GFX_portrait_SIA_kukrit_pramoj_small
+				large = GFX_Portrait_PLACEHOLDER_large
+			}
+		}
+	}
+
+	SIA_luang_chawengsaksongkhram = {
+		advisor={
+			slot = high_command
+			idea_token = SIA_luang_chawengsaksongkhram
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					army_commando_2	
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_military_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_military_approval = yes
+				}
+			}
+		}
+		name=SIA_luang_chawengsaksongkhram
+		portraits={
+			army={
+				small=GFX_portrait_SIA_luang_chawengsaksongkhram_small
+				large = GFX_portrait_SIA_luang_chawengsaksongkhram
+			}
+		}
+
+		corps_commander={
+			traits={ politically_connected }
+			skill=2
+			attack_skill=2
+			defense_skill=3
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=0
+			visible = {  }
+		}
+	}
+
+	SIA_aditya_dibabha = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_aditya_dibabha
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				available = {
+					has_completed_focus = SIA_the_provincial_council_of_state	
+				}
+				traits = {
+					SIA_chairman_of_the_regency_council	
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_military_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_military_approval = yes
+				}
+			}
+		}
+		name=SIA_aditya_dibabha
+		portraits={
+			army={
+				small=GFX_portrait_SIA_prince_aditya_dibabha_small
+				large = GFX_portrait_SIA_prince_aditya_dibabha
+			}
+		}
+
+		corps_commander={
+			traits={ politically_connected organizer }
+			skill=1
+			attack_skill=1
+			defense_skill=1
+			planning_skill=1
+			logistics_skill=1
+			visible = { ROOT = { has_completed_focus = SIA_the_provincial_council_of_state } }
+		}
+	
+	}
+
+	SIA_mangkorn_phromyothi = {
+		advisor={
+			slot = high_command
+			idea_token = SIA_mangkorn_phromyothi
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					BRA_minister_of_defense	
+				}
+				cost = 200
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_mangkorn_phromyothi
+		portraits={
+			army={
+				large=GFX_portrait_SIA_mangkorn_phromyothi
+				small=GFX_portrait_SIA_mangkorn_phromyothi_small
+			}
+		}
+
+		corps_commander={
+			traits={ infantry_officer trait_engineer }
+			skill=2
+			attack_skill=2
+			defense_skill=2
+			planning_skill=1
+			logistics_skill=2
+			legacy_id=0
+			visible = {  }
+		}
+	}
+
+	SIA_luang_haansongkhram = {
+		advisor={
+			slot = high_command
+			idea_token = SIA_luang_haansongkhram
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					army_infantry_2	
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+		name=SIA_luang_haansongkhram
+		portraits={
+			army={
+				large=GFX_portrait_SIA_luang_haansongkhram
+				small=GFX_portrait_SIA_luang_haansongkhram_small
+			}
+		}
+
+		corps_commander={
+			traits={ skilled_staffer trickster }
+			skill=2
+			attack_skill=1
+			defense_skill=1
+			planning_skill=2
+			logistics_skill=3
+			legacy_id=0
+			visible = {  }
+		}
+	}
+
+	SIA_adul_aduldejajaras = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_adul_aduldejajaras
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					SIA_police_general	
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+				available = {
+					has_completed_focus = SIA_the_royal_police_counterweight
+				}
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_civilian_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_civilian_approval = yes
+				}
+			}
+		}
+		name=SIA_adul_aduldejajaras
+		portraits={
+			army={
+				small=GFX_portrait_SIA_adul_aduldejajaras_small
+				large = GFX_portrait_SIA_adul_aduldejajaras
+			}
+		}
+
+		corps_commander={
+			traits={ }
+			skill=2
+			attack_skill=1
+			defense_skill=4
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=0
+			visible = { has_completed_focus = SIA_the_royal_police_counterweight }
+		}
+	}
+
+	SIA_charun_rattanakun_seriroengrit = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_charun_rattanakun_seriroengrit
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					SIA_militaristic_politician
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+
+
+			on_add = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_increase_military_approval = yes
+				}
+			}
+
+			on_remove = {
+				if = {
+					limit = { has_dlc = "Thunder at Our Gates" }
+					SIA_decrease_military_approval = yes
+				}
+			}
+		}
+		name=SIA_charun_rattanakun_seriroengrit
+		portraits={
+			army={
+				small=GFX_portrait_SIA_charun_rattanakun_seriroengrit_small
+				large = GFX_portrait_SIA_charun_rattanakun_seriroengrit
+			}
+		}
+
+		corps_commander={
+			traits={ politically_connected hill_fighter }
+			skill=1
+			attack_skill=1
+			defense_skill=1
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=0
+			visible = {  }
+		}
+	}
+
+	SIA_phichit_kriangsakphichit = {
+		advisor={
+			slot = high_command
+			idea_token = SIA_phichit_kriangsakphichit
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					SIA_artillery_enthusiast
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+
+		name=SIA_phichit_kriangsakphichit
+		portraits={
+			army={
+				large=GFX_portrait_SIA_phichit_kriangsakphichit
+				small=GFX_portrait_SIA_phichit_kriangsakphichit_small
+			}
+		}
+
+		corps_commander={
+			traits={ career_officer harsh_leader urban_assault_specialist  }
+			skill=2
+			attack_skill=2
+			defense_skill=1
+			planning_skill=1
+			logistics_skill=2
+			legacy_id=0
+			visible = {  }
+		}
+	}
+
+	SIA_prince_subhasvasti = {
+		advisor={
+			slot = political_advisor
+			idea_token = SIA_prince_subhasvasti
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				available = {
+					OR = {
+						has_completed_focus = SIA_seri_thai
+						has_completed_focus = SIA_standing_our_ground
+						has_completed_focus = SIA_the_provincial_council_of_state
+					}
+				}
+				traits = {
+					SIA_seri_thai_organizer
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+
+		name=SIA_prince_subhasvasti
+		portraits={
+			army={
+				large=GFX_portrait_SIA_prince_subhasvasti
+				small=GFX_portrait_SIA_prince_subhasvasti_small
+			}
+		}
+
+		corps_commander={
+			traits={ inflexible_strategist trait_cautious organizer }
+			skill=2
+			attack_skill=2
+			defense_skill=2
+			planning_skill=2
+			logistics_skill=1
+			legacy_id=0
+			visible = {
+				OR = {
+					has_completed_focus = SIA_seri_thai
+					has_completed_focus = SIA_standing_our_ground
+					has_completed_focus = SIA_the_provincial_council_of_state
+				}
+			}
+		}
+	}
+
+	SIA_jira_wichitsongkhram = {
+		advisor={
+			slot = high_command
+			idea_token = SIA_jira_wichitsongkhram
+			ledger = army
+				allowed = {
+					original_tag = SIA
+				}
+				traits = {
+					army_logistics_2
+				}
+				cost = 150
+				ai_will_do = {
+					factor = 1.000
+				}
+		}
+
+		name=SIA_jira_wichitsongkhram
+		portraits={
+			army={
+				large=GFX_portrait_SIA_jira_wicithhitsongkhram
+				small=GFX_portrait_SIA_jira_wicithhitsongkhram_small
+			}
+		}
+
+		corps_commander={
+			traits={ jungle_rat  }
+			skill=2
+			attack_skill=1
+			defense_skill=1
+			planning_skill=1
+			logistics_skill=4
+			legacy_id=0
+			visible = {  }
+		}
+	}
+
 	SIA_phraya_preechacholayudha={
 		advisor={
 			
@@ -192,32 +1687,8 @@ characters={
 			}
 		}
 	}
-	SIA_pridi_phanomyong={
-		advisor={
-			
-			
-			slot = high_command
-			idea_token = SIA_pridi_phanomyong
-			ledger = navy
-				allowed = {
-					original_tag = SIA
-				}
-				traits = {
-					navy_screen_2
-				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Pridi Phanomyong"
-		portraits={
-			army={
-				small="GFX_idea_generic_navy_asia_3"
-			}
-		}
-	}
+
+
 	SIA_sindhu_kamalanavin={
 		advisor={
 			
@@ -236,11 +1707,11 @@ characters={
 					factor = 5.000
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
 		name="Sindhu Kamalanavin"
 		portraits={
 			army={
-				small="GFX_idea_generic_army_asia_1"
+				large=GFX_portrait_SIA_sindh_kamalanavin
+				small=GFX_portrait_SIA_sindh_kamalanavin_small
 			}
 		}
 	}
@@ -345,8 +1816,7 @@ characters={
 	}
 	SIA_luang_phibunsongkhram={
 		advisor={
-			
-			
+
 			slot = army_chief
 			idea_token = SIA_luang_phibunsongkhram
 			allowed = {
@@ -355,7 +1825,7 @@ characters={
 				traits = {
 					army_chief_morale_3
 				}
-				cost = 100
+				cost = 200
 				ai_will_do = {
 					factor = 5.000 #supply sucks
 				}
@@ -452,11 +1922,11 @@ characters={
 					silent_workhorse 
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Kuang Abhayavongsa"
+			name=SIA_kuang_abhayavongsa
 		portraits={
 			army={
-				small="GFX_idea_generic_political_advisor_asia_3"
+				large=GFX_portrait_SIA_khuang_aphaiwong
+				small=GFX_portrait_SIA_khuang_aphaiwong_small
 			}
 		}
 	}
@@ -475,7 +1945,7 @@ characters={
 		name="Thawee Punyaketu"
 		portraits={
 			army={
-				small="GFX_idea_generic_political_advisor_asia_1"
+				small=GFX_portrait_SIA_thawi_bunyaket_small
 			}
 		}
 	}
@@ -496,6 +1966,148 @@ characters={
 			army={
 				small="GFX_idea_generic_political_advisor_asia_2"
 			}
+		}
+	}
+
+	SIA_sindh_kamalanavin = {
+		name=SIA_sindh_kamalanavin
+		portraits={
+			navy={
+				small=GFX_portrait_SIA_sindh_kamalanavin_small
+				large=GFX_portrait_SIA_sindh_kamalanavin
+			}
+		}
+		advisor={
+			slot = navy_chief
+			idea_token = SIA_sindh_kamalanavin
+			ledger = navy
+			allowed = { original_tag = SIA }
+			traits = { navy_chief_decisive_battle_2 }
+			cost = 50
+			ai_will_do = { factor = 1.000 }
+		}
+		navy_leader={
+			traits={ navy_career_officer gunnery_expert }
+			skill=2
+			attack_skill=2
+			defense_skill=2
+			maneuvering_skill=1
+			coordination_skill=2
+			legacy_id=-1
+		}
+	}
+
+	SIA_prayoon_yuthasastrkosol = {
+		name=SIA_prayoon_yuthasastrkosol
+		portraits={
+			navy={
+				small=GFX_portrait_SIA_prayoon_yuthasastrkosol_small
+				large=GFX_portrait_SIA_prayoon_yuthasastrkosol
+			}
+		}
+		advisor={
+			slot = high_command
+			idea_token = SIA_prayoon_yuthasastrkosol
+			ledger = navy
+			allowed = { original_tag = SIA }
+			traits = { navy_screen_1 }
+			cost = 100
+			ai_will_do = { factor = 1.000 }
+		}
+		navy_leader={
+			traits={ bold }
+			skill=1
+			attack_skill=2
+			defense_skill=1
+			maneuvering_skill=1
+			coordination_skill=1
+			legacy_id=-1
+		}
+	}
+
+	SIA_luang_subhachalasai = {
+		name=SIA_luang_subhachalasai
+		portraits={
+			navy={
+				small=GFX_portrait_SIA_luang_subhachalasai_small
+				large=GFX_portrait_SIA_luang_subhachalasai
+			}
+		}
+		advisor={
+			slot = high_command
+			idea_token = SIA_luang_subhachalasai
+			ledger = navy
+			allowed = { original_tag = SIA }
+			traits = { navy_submarine_1 }
+			cost = 100
+			ai_will_do = { factor = 1.000 }
+		}
+		navy_leader={
+			traits={ spotter }
+			skill=1
+			attack_skill=1
+			defense_skill=2
+			maneuvering_skill=1
+			coordination_skill=1
+			legacy_id=-1
+		}
+	}
+
+	SIA_phin_choonhavan = {
+		name=SIA_phin_choonhavan
+		portraits={
+			army={
+				small=GFX_portrait_SIA_phin_choonhavan_small
+				large=GFX_portrait_SIA_phin_choonhavan
+			}
+		}
+		advisor={
+			slot = army_chief
+			idea_token = SIA_phin_choonhavan
+			ledger = army
+			allowed = { original_tag = SIA }
+			traits = { army_chief_offensive_2 }
+			cost = 50
+			ai_will_do = { factor = 1.000 }
+		}
+		corps_commander={
+			traits={ infantry_officer politically_connected }
+			skill=3
+			attack_skill=3
+			defense_skill=2
+			planning_skill=2
+			logistics_skill=2
+			legacy_id=-1
+		}
+	}
+
+	SIA_tiang_sirikhan = {
+		name=SIA_tiang_sirikhan
+		portraits={
+			army={
+				small=GFX_portrait_SIA_tiang_sirikhan_small
+				large=GFX_portrait_SIA_tiang_sirikhan
+			}
+		}
+		advisor={
+			slot = high_command
+			idea_token = SIA_tiang_sirikhan
+			ledger = army
+			allowed = { original_tag = SIA }
+			available = { has_completed_focus = SIA_seri_thai }
+			traits = { army_commando_1 }
+			cost = 100
+			ai_will_do = { factor = 1.000 }
+		}
+		corps_commander={
+			traits={ trickster commando }
+			skill=2
+			attack_skill=2
+			defense_skill=2
+			planning_skill=1
+			logistics_skill=2
+			legacy_id=-1
+			visible = { has_completed_focus = SIA_seri_thai }
 		}
 	}
 }

@@ -2645,10 +2645,12 @@ political_actions = {
 			event_target:WTT_communist_china = {
 				tag = ROOT
 			}
+			is_subject = no 
 			JAP = {
 				has_government = communism
-				not = {
+				NOT = {
 					has_war_with = ROOT
+					has_subject = ROOT
 				}
 				is_in_faction_with = ROOT
 				OR = {
@@ -2679,8 +2681,9 @@ political_actions = {
 			}
 			JAP = {
 				has_government = communism
-				not = {
+				NOT = {
 					has_war_with = ROOT
+					has_subject = ROOT
 				}
 				is_in_faction_with = ROOT
 				OR = {
@@ -2697,12 +2700,12 @@ political_actions = {
 					controls_state = 609
 				}
 			}
-		}
+		} 
 
-		cost = 25
+		cost = 75 
 
 		ai_will_do = {
-			factor = 1
+			base = 1
 		}
 
 		complete_effect = {
@@ -5190,16 +5193,14 @@ PRC_guerilla_suppression_sea_cat = {
 		target_trigger = {
 			FROM = {
 				OR = {
-					OR = {
-						has_dynamic_modifier = {
-							modifier = PRC_guerilla_cells_active_1
-						}
-						has_dynamic_modifier = {
-							modifier = PRC_guerilla_cells_active_2
-						}
-						has_dynamic_modifier = {
-							modifier = PRC_anti_japanese_base
-						}
+					has_dynamic_modifier = {
+						modifier = PRC_guerilla_cells_active_1
+					}
+					has_dynamic_modifier = {
+						modifier = PRC_guerilla_cells_active_2
+					}
+					has_dynamic_modifier = {
+						modifier = PRC_anti_japanese_base
 					}
 				}
 			}
@@ -6988,13 +6989,10 @@ PRC_war_of_resistance_cat = {
 
 		timeout_effect = {
 
-			add_political_power = -25
-			add_stability = -0.05
-			add_war_support = -0.05
-
-			custom_effect_tooltip = generic_skip_one_line_tt
-
 			country_event = { id = SEA_PRC_misc_events.2 hours = 1 }
+			effect_tooltip = {
+				add_ideas = PRC_passive_revolutionaries_idea
+			}
 
 		}
 	}

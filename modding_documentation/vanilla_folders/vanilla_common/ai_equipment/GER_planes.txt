@@ -73,17 +73,17 @@ GER_fighter = {
 		}
 	}
 
-	# known as 'Fw 190 B' in game
-	improved_fighter_default = { #BF 109 G these were basically entirely new airplaens compared to the BF 109 E
+	# Fw 190 A-1 - early radial fighter (1941)
+	fw_190_a1 = {
 		priority = {
 			factor = 10
-			modifier = { 
-				has_tech = advanced_small_airframe 
+			modifier = {
+				has_tech = advanced_small_airframe
 				factor = 0 #let's not waste XP here
 			}
-			modifier = { 
-				has_tech = engines_3 
-				factor = 0 #let's not waste XP here
+			modifier = {
+				has_tech = engines_3
+				factor = 0 #superseded by the A-5
 			}
 		}
 
@@ -93,31 +93,32 @@ GER_fighter = {
 			type = small_plane_airframe_2
 			modules = {
 				fixed_main_weapon_slot = aircraft_cannon_1_2x
-				fixed_auxiliary_weapon_slot_1 = light_mg_2x
+				fixed_auxiliary_weapon_slot_1 = light_mg_4x
 				engine_type_slot = engine_2_1x
 				special_type_slot_1 = armor_plate_small
-				special_type_slot_2 = drop_tanks	
+				special_type_slot_2 = self_sealing_fuel_tanks_small
 			}
 		}
 
 		allowed_modules = {
-			heavy_mg_2x
-			light_mg_4x
-			aircraft_cannon_1_1x
 			aircraft_cannon_1_2x
+			aircraft_cannon_1_1x
+			light_mg_4x
+			light_mg_2x
 			engine_2_1x
 			armor_plate_small
-			drop_tanks
 			self_sealing_fuel_tanks_small
-			fuel_tanks_small
+			drop_tanks
 		}
 	}
 
-	improved_fighter_improved = { #Fw 190A-5
+	# Fw 190 A-5 - definitive radial fighter, adds a drop tank (1942-43)
+	# kept as a fallback past engines_4 in case the 30mm hub cannon for the D-12 isn't researched yet; the D-12's higher match_value supersedes it once buildable
+	fw_190_a5 = {
 		priority = {
 			factor = 10
-			modifier = { 
-				has_tech = advanced_small_airframe 
+			modifier = {
+				has_tech = advanced_small_airframe
 				factor = 0 #let's not waste XP here
 			}
 		}
@@ -128,26 +129,60 @@ GER_fighter = {
 			type = small_plane_airframe_2
 			modules = {
 				fixed_main_weapon_slot = aircraft_cannon_1_2x
-				fixed_auxiliary_weapon_slot_1 = aircraft_cannon_1_1x
+				fixed_auxiliary_weapon_slot_1 = aircraft_cannon_1_2x
 				fixed_auxiliary_weapon_slot_2 = light_mg_2x
 				engine_type_slot = engine_3_1x
 				special_type_slot_1 = armor_plate_small
-				special_type_slot_2 = fuel_tanks_small
-				special_type_slot_3 = self_sealing_fuel_tanks_small		
+				special_type_slot_2 = self_sealing_fuel_tanks_small
+				special_type_slot_3 = drop_tanks
 			}
 		}
 
 		allowed_modules = {
-			light_mg_4x
-			light_mg_2x
 			aircraft_cannon_1_2x
 			aircraft_cannon_1_1x
+			light_mg_2x
 			heavy_mg_2x
 			engine_3_1x
 			armor_plate_small
-			drop_tanks
 			self_sealing_fuel_tanks_small
-			fuel_tanks_small
+			drop_tanks
+		}
+	}
+
+	# Fw 190 D-12 - inline "Dora" with 30mm hub cannon (1945)
+	fw_190_d12 = {
+		priority = {
+			factor = 10
+			modifier = {
+				has_tech = advanced_small_airframe
+				factor = 0 #let's not waste XP here
+			}
+		}
+
+		history = yes
+		target_variant = {
+			match_value = 3800
+			type = small_plane_airframe_2
+			modules = {
+				fixed_main_weapon_slot = aircraft_cannon_2_1x
+				fixed_auxiliary_weapon_slot_1 = aircraft_cannon_1_2x
+				engine_type_slot = engine_4_1x
+				special_type_slot_1 = armor_plate_small
+				special_type_slot_2 = self_sealing_fuel_tanks_small
+				special_type_slot_3 = drop_tanks
+			}
+		}
+
+		allowed_modules = {
+			aircraft_cannon_2_1x
+			aircraft_cannon_1_2x
+			aircraft_cannon_1_1x
+			heavy_mg_2x
+			engine_4_1x
+			armor_plate_small
+			self_sealing_fuel_tanks_small
+			drop_tanks
 		}
 	}
 

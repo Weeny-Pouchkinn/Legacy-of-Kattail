@@ -1066,6 +1066,58 @@ country_event = {
 	}
 }
 
+## IRQ reuests our annexation
+country_event = {
+	id = IRQ_political_events.44
+	title = IRQ_political_events.44.t
+	desc = IRQ_political_events.44.desc
+	picture = GFX_report_event_generic_sign_treaty2
+	is_triggered_only = yes
+	# Ok
+	option = {
+		name = IRQ_political_events.44.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_war_with = IRQ
+			}
+		}
+		effect_tooltip = {
+			FROM = {
+				annex_country = {
+				 	target = ROOT
+				 	transfer_troops = yes
+				} 
+			}
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+		IRQ = {
+			country_event = {
+				id = IRQ_political_events.43
+				hours = 1
+			}
+		}
+	}
+	# No
+	option = {
+		name = IRQ_political_events.44.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				has_war_with = IRQ
+			}
+		}
+		IRQ = {
+			country_event = {
+				id = IRQ_political_events.42
+				hours = 1
+			}
+		}
+	}
+}
+
 
 ################### 
 

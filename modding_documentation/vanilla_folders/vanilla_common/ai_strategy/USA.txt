@@ -545,7 +545,7 @@ USA_ENG_sync_invasions_on_europe = {
 	enable = {
 		set_temp_variable = { days = global.num_days }
 		modulo_temp_variable = { days = 90 }
-		check_variable = { days < 60 }
+		check_variable = { days < 50 }
 	}
 
 	abort_when_not_enabled = yes
@@ -670,6 +670,12 @@ USA_torch_boost = {
 	}
 
 	ai_strategy = {
+		type = naval_dominance
+		id = 48
+		value = 80
+	}
+
+	ai_strategy = {
 		type = area_priority
 		id = vichy_mainland
 		value = -200
@@ -696,7 +702,7 @@ USA_torch_boost = {
 		value = 200
 	}
 }
-
+	
 
 
 USA_save_the_aussies = {
@@ -1065,7 +1071,7 @@ USA_naval_role_ratios_historical = {
 	ai_strategy = {
 		type = role_ratio
 		id = naval_capital_bb
-		value = 10
+		value = 30
 	}
 
 	ai_strategy = {
@@ -1077,65 +1083,65 @@ USA_naval_role_ratios_historical = {
 	ai_strategy = {
 		type = role_ratio
 		id = naval_carrier
-		value = 25
+		value = 30
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_submarine
-		value = 25
+		value = 60
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_screen
-		value = 130
+		value = 320
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_escort
-		value = 65
+		value = 55
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_cruiser_light
-		value = 40
+		value = 75
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_cruiser_heavy
-		value = 5
+		value = 50
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_mine_sweeper
-		value = 15
+		value = 3
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_mine_layer
-		value = 10
+		value = -3
 	}
 
 	ai_strategy = {
 		type = unit_ratio
 		id = capital_ship
-		value = 1		 #1 to 2
+		value = 5		 #1 to 12
 	}
 	ai_strategy = {
 		type = unit_ratio
 		id = screen_ship
-		value = 100		 #1 to 2
+		value = 70		 #10 to 12
 	}
 	ai_strategy = {
 		type = unit_ratio
 		id = carrier
-		value = 20		 #1 to 2
+		value = 5		 #1 to 12
 	}
 }
 
@@ -1157,35 +1163,28 @@ USA_naval_role_ratios_produce_screen = {
 
 	ai_strategy = {
 		type = role_ratio
-		id = naval_screen
-		value = 400
-	}
-
-	ai_strategy = {
-		type = role_ratio
 		id = naval_mine_sweeper
-		value = 0
+		value = -15
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_mine_layer
-		value = 0
+		value = -2
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_cruiser_light
-		value = 150
+		value = 20
 	}
 
 	ai_strategy = {
 		type = unit_ratio
 		id = screen_ship
-		value = 300
+		value = 60
 	}
 }
-
 
 USA_naval_role_ratios_produce_screen_late = {
 	allowed = {
@@ -1206,75 +1205,31 @@ USA_naval_role_ratios_produce_screen_late = {
 	ai_strategy = {
 		type = role_ratio
 		id = naval_screen
-		value = 400
+		value = 100
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_mine_sweeper
-		value = 0
+		value = -15
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_mine_layer
-		value = 0
+		value = -2
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_cruiser_light
-		value = 150
+		value = 7
 	}
 
 	ai_strategy = {
 		type = unit_ratio
 		id = screen_ship
-		value = 300
-	}
-}
-
-USA_naval_role_ratios_anti_submarine = {
-	allowed = {
-		has_dlc = "Man the Guns"
-		original_tag = USA
-	}
-	enable = {
-		anti_submarine_strategy_required_trigger = yes
-	}
-
-	abort = {
-		not = { anti_submarine_strategy_required_trigger = yes }
-	}
-
-	ai_strategy = {
-		type = role_ratio
-		id = naval_capital_bb
-		value = 0
-	}
-
-	ai_strategy = {
-		type = role_ratio
-		id = naval_screen
-		value = -20
-	}
-
-	ai_strategy = {
-		type = role_ratio
-		id = naval_escort
-		value = 50
-	}
-
-	ai_strategy = {
-		type = role_ratio
-		id = naval_cruiser_light
-		value = 40
-	}
-
-	ai_strategy = {
-		type = role_ratio
-		id = naval_cruiser_heavy
-		value = -15
+		value = 15
 	}
 }
 
@@ -1308,6 +1263,7 @@ USA_home_land_is_safe = {
 				has_civil_war = yes
 				has_war_with = CAN
 				has_war_with = MEX
+				USA_homeland_threatened = yes
 			}
 		}
 	}
@@ -1317,6 +1273,151 @@ USA_home_land_is_safe = {
 	ai_strategy = {
 		type = garrison
 		value = -60
+	}
+}
+
+# Hold a graduated reserve on the West Coast once an enemy has a Pacific launchpad.
+USA_home_guard_pacific = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_war = yes
+		USA_pacific_foothold_threatened = yes
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = garrison
+		value = 150
+	}
+
+	ai_strategy = {
+		type = put_unit_buffers
+		ratio = 0.15
+		states = {
+			378 # California
+			385 # Oregon
+			386 # Washington
+		}
+		area = north_america
+		subtract_invasions_from_need = yes
+		subtract_fronts_from_need = no
+	}
+}
+
+# Hold a graduated reserve on the East and Gulf coasts when threatened from the Atlantic,
+# or when the allies shielding the USA have collapsed.
+USA_home_guard_atlantic = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_war = yes
+		OR = {
+			USA_atlantic_foothold_threatened = yes
+			USA_strategic_shield_cracked = yes
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = garrison
+		value = 150
+	}
+
+	ai_strategy = {
+		type = put_unit_buffers
+		ratio = 0.15
+		states = {
+			357 # New England
+			358 # New York
+			359 # New Jersey
+			361 # Maryland
+			362 # Virginia
+			363 # North Carolina
+			364 # South Carolina
+			365 # Georgia
+			366 # Florida
+			367 # Alabama
+			370 # Mississippi
+			371 # Louisiana
+			375 # Texas
+		}
+		area = north_america
+		subtract_invasions_from_need = yes
+		subtract_fronts_from_need = no
+	}
+}
+
+USA_home_guard_invaded = {
+	allowed = { original_tag = USA }
+	enable = {
+		surrender_progress > 0
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_control
+		state_trigger = {
+			is_core_of = USA
+		}
+		area = north_america
+		priority = 250
+		ratio = 0
+		ordertype = front
+		execution_type = rush
+		execute_order = yes
+		manual_attack = yes
+	}
+
+	ai_strategy = {
+		type = area_priority
+		id = north_america
+		value = 60
+	}
+
+	ai_strategy = {
+		type = front_unit_request
+		state_trigger = {
+			is_core_of = USA
+		}
+		area = north_america
+		value = 250
+	}
+}
+
+# Modest standing synthetic capacity: the USA is rubber-poor regardless of the war.
+USA_synthetic_industry_baseline = {
+	allowed = { original_tag = USA }
+	enable = { date > 1939.1.1 }
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = research_weight_factor
+		id = synth_oil_experiments
+		value = 100
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = rubber_processing
+		value = 100
+	}
+	ai_strategy = {
+		type = building_target
+		id = synthetic_refinery
+		value = 5
+	}
+}
+
+# Pacific war cuts off natural rubber from SE Asia, so prioritise synthetics hard.
+USA_synthetic_industry_pacific_war = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_war_with = JAP
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = building_target
+		id = synthetic_refinery
+		value = 12
 	}
 }
 
@@ -1392,16 +1493,15 @@ USA_convoy_hungry = {
 	enable = {
 		date > 1940.1.1
 		has_equipment = {
-  			convoy < 800
+  			convoy < 1000
   		}
-		convoy_threat < 0.2 # there are other strategies for this, so we dont want to double up
 	}
 	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = unit_ratio
 		id = convoy
-		value = 35
+		value = 1000
 	}
 }
 
@@ -1558,11 +1658,30 @@ USA_stay_away_from_my_pacific = {
 	}
 }
 
+USA_prioritize_navy_chief = {
+	allowed = { original_tag = USA }
+	enable = {
+		date > 1937.1.1
+		NOT = {
+			any_character = {
+				has_advisor_role = navy_chief
+				is_hired_as_advisor = yes
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = pp_spend_priority
+		id = navy_chief
+		value = 200 
+	}
+}
+
 USA_lets_do_a_navy = {
 	allowed = { original_tag = USA }
 	enable = {
 		has_government = democratic
-		has_war = no
 		date > 1937.10.1
 		dockyard < 75 # If we have this many we can probably stop
 	}
@@ -1571,7 +1690,71 @@ USA_lets_do_a_navy = {
 	ai_strategy = {
 		type = build_building
 		id = dockyard
-		value = 2
+		value = 20
+	}
+}
+
+USA_peacetime_capital_bias = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_government = democratic
+		has_war = no
+	}
+	abort_when_not_enabled = yes
+
+	# Capitals take ~3-4 years to build, so start them in peacetime — they need to be
+	# in commission well before Pearl Harbor or they will not contribute to the Pacific war.
+	ai_strategy = {
+		type = unit_ratio
+		id = capital_ship
+		value = 20
+	}
+}
+
+USA_avoid_med_for_escort = {
+	allowed = { original_tag = USA }
+	enable = {
+		date < 1945.1.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = { type = naval_avoid_region id = 30  value = 500 } # Black Sea
+	ai_strategy = { type = naval_avoid_region id = 168 value = 500 } # Adriatic Sea
+	ai_strategy = { type = naval_avoid_region id = 69  value = 500 } # Eastern Mediterranean Sea
+	ai_strategy = { type = naval_avoid_region id = 202 value = 500 } # Aegean Sea
+	ai_strategy = { type = naval_avoid_region id = 232 value = 500 } # Levant
+	ai_strategy = { type = naval_avoid_region id = 29  value = 500 } # Central Mediterranean Sea
+	ai_strategy = { type = naval_avoid_region id = 169 value = 500 } # Tyrrhenian Sea
+}
+
+# SPECIAL PROJECT FACILITIES
+USA_build_a_naval_facility = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_government = democratic
+		date > 1937.3.1
+		naval_facility < 1 # one is enough
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = build_building
+		id = naval_facility
+		value = 25
+	}
+}
+
+USA_build_an_air_facility = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_government = democratic
+		date > 1936.6.1
+		air_facility < 1 # one is enough
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = build_building
+		id = air_facility
+		value = 25
 	}
 }
 
@@ -1580,14 +1763,14 @@ USA_srsly_mils_now = {
 		original_tag = USA
 	}
 	enable = {
-		date > 1941.1.1
+		date > 1941.6.1
 		has_war = yes
 	}
 	abort_when_not_enabled = yes
 	ai_strategy = {
 		type = building_target
 		id = arms_factory
-		value = 200
+		value = 50
 	}
 }
 
@@ -1945,6 +2128,12 @@ USA_sugar_daddy_for_UK = {
 		id = ENG
 		value = 500
 	}
+		
+	ai_strategy = {
+		type = support
+		id = ENG
+		value = 75
+	}
 }
 
 USA_sugar_daddy_for_SOV = {
@@ -1963,6 +2152,12 @@ USA_sugar_daddy_for_SOV = {
 		type = send_lend_lease_desire
 		id = SOV
 		value = 500
+	}
+	
+	ai_strategy = {
+		type = support
+		id = SOV
+		value = 60
 	}
 }
 
@@ -2182,6 +2377,55 @@ USA_prepare_guam_3_naval_hq_supply = {
 
 }
 
+USA_prepare_wake = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1940.1.1
+		632 = {
+			naval_base < 3
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = build_building
+		id = naval_base
+		target = 13047
+		value = 50
+	}
+}
+
+USA_prepare_iwo_jima = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1943.3.1
+		OR = {
+			645 = {
+				naval_base < 6
+			}
+			645 = {
+				air_base < 4
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = build_building
+		id = naval_base
+		target = 13025
+		value = 100
+	}
+	ai_strategy = {
+		type = build_building
+		id = air_base
+		target = 645
+		value = 100
+	}
+}
+
 
 ### FACTION RELATED STRATEGIES
 
@@ -2255,50 +2499,55 @@ USA_maybe_send_some_lend_lease_to_japan = {
 
 ### Pacific war strategies
 
-USA_JAP_pacific_war_dominance = {
-	allowed = {
-		OR = {
-			original_tag = USA
-			original_tag = JAP
-		}
-	}
-	
+USA_scared_of_navy_early = {
+	allowed = { original_tag = USA }
 	enable = {
-		OR = {
-			has_war_with = USA
-			has_war_with = JAP
-		}
-		surrender_progress < 0.15 #Just give up trying to compete now
-		set_temp_variable = { t = num_ships_with_type@carrier }
-		check_variable = { t > 4 } #We lost the carrier war now, time to retreat
+		is_historical_focus_on = yes
+		has_war_with = JAP
+		date < 1942.3.1
 	}
-	
 	abort_when_not_enabled = yes
-	
-	ai_strategy = {
-		type = naval_dominance
-		id = micronesia_pacific_control_zone
-		value = 80
+
+	ai_strategy = { type = naval_avoid_region id = 90 value = 500 } # Coast of Japan
+	ai_strategy = { type = naval_avoid_region id = 75 value = 500 } # South China Sea
+	ai_strategy = { type = naval_avoid_region id = 76 value = 500 } # East China Sea
+	ai_strategy = { type = naval_avoid_region id = 77 value = 500 } # Yellow Sea
+	ai_strategy = { type = naval_avoid_region id = 78 value = 500 } # Philippine Sea
+	ai_strategy = { type = naval_avoid_region id = 79 value = 500 } # Sea of Japan
+	ai_strategy = { type = naval_avoid_region id = 87 value = 500 } # Sea of Okhotsk
+	ai_strategy = { type = naval_avoid_region id = 94 value = 500 } # Mariana
+	ai_strategy = { type = naval_avoid_region id = 84 value = 500 } # Bismarck Sea
+}
+
+USA_block_japanese_waters_early = {
+	allowed = { original_tag = USA }
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = JAP
+		date < 1943.1.1
 	}
-	
-	ai_strategy = {
-		type = naval_dominance
-		id = mariana_pacific_control_zone
-		value = 80
+	abort_when_not_enabled = yes
+
+	ai_strategy = { type = naval_avoid_region id = 79 value = 500 } # Sea of Japan
+	ai_strategy = { type = naval_avoid_region id = 90 value = 500 } # Coast of Japan
+	ai_strategy = { type = naval_avoid_region id = 76 value = 500 } # East China Sea
+	ai_strategy = { type = naval_avoid_region id = 77 value = 500 } # Yellow Sea
+	ai_strategy = { type = naval_avoid_region id = 87 value = 500 } # Sea of Okhotsk
+	ai_strategy = { type = naval_avoid_region id = 94 value = 500 } # Mariana
+}
+
+# Outer-ring focus before the inner Japanese seas.
+USA_early_island_hopping = {
+	allowed = { original_tag = USA }
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = JAP
+		date < 1943.8.1
 	}
-	
-	ai_strategy = {
-		type = naval_dominance
-		id = north_pacific_control_zone
-		value = 80
-	}
-	
-	ai_strategy = {
-		type = naval_dominance
-		id = pearl_harbor_pacific_control_zone
-		value = 80
-	}
-	
+	abort_when_not_enabled = yes
+
+	ai_strategy = { type = naval_dominance id = 84 value = 100 } # Bismarck Sea
+	ai_strategy = { type = naval_dominance id = 97 value = 100 } # Eastern Micronesia
 }
 
 USA_dominate_the_home_islands = {
@@ -2320,5 +2569,57 @@ USA_dominate_the_home_islands = {
 		type = naval_dominance
 		id = home_islands_control_zone
 		value = 100
+	}
+}
+
+USA_build_tank_destroyers = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_tech = basic_medium_tank_chassis
+		date > 1942.1.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = medium_tank_destroyer_chassis
+		value = 1
+	}
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = modern_tank_destroyer_chassis
+		value = 1
+	}
+}
+
+USA_leave_england_to_the_brits = {
+	allowed = { original_tag = USA }
+	enable = {
+		has_war_with = GER
+		ENG = {
+			exists = yes
+			set_temp_variable = { t = num_ships }
+			check_variable = { t > 80 }
+		}
+	}
+	abort = {
+		date > 1943.6.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_dominance
+		id = 18
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 16
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 173
+		value = -100
 	}
 }

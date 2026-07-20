@@ -143,4 +143,31 @@ peace_ai_desires = {
         ai_desire = 200 
     }
 
+    # If Japan defeats themselves in a civil war, they want to take the states for themselves 
+    JAP_wants_all_of_japan = {
+        peace_action_type = take_states
+        enable = {
+            original_tag = JAP  # Negotiatior is Japan
+            FROM = { tag = ROOT }  # And the negotiator is also taking for themselves
+            FROM.FROM.FROM = { 
+                is_core_of = JAP # Japanese Core Territory
+            }  
+        }
+
+        ai_desire = 200  # 200 percent higher desire
+    }
+
+    # If Japan defeats themselves in a civil war, they don't want to puppet etc
+    JAP_wants_all_of_japan_2 = {
+        peace_action_type = { puppet liberate force_government }
+        enable = {
+            original_tag = JAP  # Negotiatior is Japan
+            FROM.FROM.FROM = { 
+                is_core_of = JAP # Japanese Core Territory
+            }  
+        }
+
+        ai_desire = -200  # 200 percent lower desire
+    }
+
 }

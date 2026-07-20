@@ -84,14 +84,24 @@
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		available_if_capitulated = no
-		search_filters = { FOCUS_FILTER_MANPOWER }
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_RESEARCH }
 
 		completion_reward = {
 
 			army_experience = 10
 
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			add_ideas = CZE_fortification_focus
 
+			custom_effect_tooltip = generic_skip_one_line_tt
+			
+			add_tech_bonus = {
+				name = CZE_fortification_studies
+				bonus = 0.25
+				uses = 1
+				category = cat_fortification
+			}
 		}
 	}
 
@@ -923,7 +933,7 @@
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		available_if_capitulated = no
-		search_filters = { FOCUS_FILTER_INDUSTRY }
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
 
 		completion_reward = {
 			add_ideas = CZE_industrial_legacy_idea
@@ -1002,6 +1012,11 @@
 					instant_build = yes
 				}
 			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = CZE_emil_kolben_dod
 		}
 	}
 
@@ -1087,7 +1102,7 @@
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		available_if_capitulated = no
-		search_filters = { FOCUS_FILTER_INDUSTRY }
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
 
 		completion_reward = {
 			9 = {
@@ -1105,6 +1120,15 @@
 					level = 1
 					instant_build = yes
 				}
+			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			add_tech_bonus = {
+				name = CZE_favor_czechs_3
+				bonus = 0.50
+				uses = 1
+				category = cat_production
 			}
 		}
 	}
@@ -1262,7 +1286,7 @@
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		available_if_capitulated = no
-		search_filters = { FOCUS_FILTER_INDUSTRY }
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
 
 		completion_reward = {
 			9 = {
@@ -1285,6 +1309,15 @@
 					level = 1
 					instant_build = yes
 				}
+			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			add_tech_bonus = {
+				name = CZE_bolster_domestic_construction
+				bonus = 0.25
+				uses = 1
+				category = construction_tech
 			}
 		}
 	}
@@ -1374,6 +1407,11 @@
 
 		completion_reward = {
 			add_ideas = CZE_export_focus1
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = CZE_frantisek_machnik_dod
 		}
 	}
 
@@ -1472,7 +1510,7 @@
 	focus = {
 		id = CZE_political_direction
 		icon = GFX_goal_generic_intelligence_exchange
-		x = 8
+		x = 9
 		y = 0
 		relative_position_id = CZE_industrial_legacy
 
@@ -1509,7 +1547,7 @@
 		icon = GFX_focus_generic_soviet_politics
 		prerequisite = { focus = CZE_political_direction }
 		mutually_exclusive = { focus = CZE_democratic_bastion focus = CZE_go_right }
-		x = -2
+		x = -3
 		y = 1
 		relative_position_id = CZE_political_direction
 
@@ -1618,12 +1656,18 @@
 		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY }
 
 		completion_reward = {
+			add_political_power = 120
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			if = {
 				limit = { has_idea = CZE_divided_nation }
 				remove_ideas = CZE_divided_nation
+
+				custom_effect_tooltip = generic_skip_one_line_tt
+
 			}
 			add_ideas = CZE_czech_socialism
-			add_political_power = 120
 		}
 	}
 
@@ -1656,9 +1700,13 @@
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		available_if_capitulated = yes
-		search_filters = { FOCUS_FILTER_MANPOWER }
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_WAR_SUPPORT }
 
 		completion_reward = {
+			add_war_support = 0.05
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			add_ideas = CZE_communism_with_a_human_face
 		}
 	}
@@ -1850,6 +1898,9 @@
 
 		completion_reward = {
 			add_political_power = 200
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			add_ideas = CZE_democratic_bastion
 		}
 	}
@@ -1865,7 +1916,7 @@
 		cost = 2
 
 		ai_will_do = {
-			factor = 70
+			factor = 75
 			modifier = {
 				factor = 0.1
 				HABSBURG_joint_trigger = yes
@@ -1873,7 +1924,7 @@
 		}
 
 		available = {
-			democratic > 0.7
+			democratic > 0.75
 		}
 
 		bypass = {
@@ -1887,6 +1938,50 @@
 
 		completion_reward = {
 			swap_ideas = { remove_idea = CZE_democratic_bastion add_idea = CZE_beacon_of_liberty }
+		}
+	}
+
+	focus = {
+		id = CZE_healing_a_divided_nation
+		icon = GFX_goal_generic_national_unity
+		prerequisite = { focus = CZE_beacon_of_liberty }
+		x = -1
+		y = 1
+		relative_position_id = CZE_beacon_of_liberty
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0.1
+				HABSBURG_joint_trigger = yes
+			}
+		}
+
+		available = {
+			democratic > 0.80
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			if = {
+				limit = { has_idea = CZE_divided_nation }
+				remove_ideas = CZE_divided_nation
+			}
+			else = {
+				add_political_power = 150
+				add_stability = 0.1
+				add_war_support = 0.1
+			}
 		}
 	}
 
@@ -1972,7 +2067,7 @@
 		icon = GFX_focus_generic_strike_at_democracy1
 		prerequisite = { focus = CZE_political_direction }
 		mutually_exclusive = { focus = CZE_democratic_bastion focus = CZE_go_left }
-		x = 2
+		x = 3
 		y = 1
 		relative_position_id = CZE_political_direction
 
@@ -2011,8 +2106,7 @@
 			add_popularity = {
 				ideology = fascism
 				popularity = 0.05
-			}	
-			#allow nazi leader
+			}
 			custom_effect_tooltip = generic_skip_one_line_tt 
 			every_other_country = {
 				limit = { 
@@ -2367,7 +2461,7 @@
 	focus = {
 		id = CZE_strategy_decisions
 		icon = GFX_goal_generic_position_armies
-		x = 12
+		x = 13
 		y = 0
 		relative_position_id = CZE_political_direction
 
@@ -2698,6 +2792,10 @@
 				}
 			}
 
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = CZE_karel_englis
 		}
 	}
 
@@ -2733,6 +2831,10 @@
 		search_filters = { FOCUS_FILTER_RESEARCH }
 
 		completion_reward = {
+			army_experience = 5
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			add_doctrine_cost_reduction = {
 				name = land_doc_bonus
 				cost_reduction = 0.75
@@ -3262,7 +3364,7 @@
 		y = 1
 		relative_position_id = CZE_strategy_decisions
 
-		cost = 10
+		cost = 5
 
 		ai_will_do = {
 			factor = 60
@@ -3288,7 +3390,7 @@
 			set_rule = {
 				can_send_volunteers = yes
 			}
-			add_ideas = foreign_expeditions_focus
+			add_ideas = CZE_state_sponsored_recruitment_idea_2
 		}
 	}
 	#######################################
@@ -3326,6 +3428,9 @@
 
 		completion_reward = {
 			army_experience = 50
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			add_breakthrough_progress = {
 				specialization = specialization_land
 				value = 0.25
@@ -3751,6 +3856,13 @@
 				uses = 2
 				category = land_doctrine
 			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			add_breakthrough_progress = {
+				specialization = specialization_land
+				value = 0.25
+			}
 		}
 	}
 
@@ -3792,6 +3904,9 @@
 				limit = {
 					NOT = { amount_research_slots > 4 }
 				}
+
+				custom_effect_tooltip = generic_skip_one_line_tt
+
 				add_research_slot = 1
 				custom_effect_tooltip = CZE_war_college_effect_tt
 			}
@@ -3833,6 +3948,9 @@
 
 		completion_reward = {
 			air_experience = 100
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			add_breakthrough_progress = {
 				specialization = specialization_air
 				value = 0.25
@@ -3998,6 +4116,11 @@
 
 		completion_reward = {
 			add_ideas = CZE_air_focus
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			custom_effect_tooltip = available_chief_of_airforce
+			show_ideas_tooltip = CZE_alois_vicherek_advisor_idea_reform
 		}
 	}
 
@@ -4177,7 +4300,7 @@
 	focus = {
 		id = CZE_access_to_the_sea
 		icon = GFX_goal_generic_occupy_states_coastal
-		x = 7
+		x = 8
 		y = 0
 		relative_position_id = CZE_military_aeronautical_institute
 
@@ -4211,6 +4334,14 @@
 				specialization = specialization_naval
 				value = 0.25
 			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			unlock_decision_tooltip = {
+				decision = CZE_recall_zdenko_hudecek
+				show_effect_tooltip = yes # default is no
+				show_modifiers = yes # default is no
+			} 
 		}
 	}
 

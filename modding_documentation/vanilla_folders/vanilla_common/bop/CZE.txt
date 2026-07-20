@@ -1,0 +1,337 @@
+CZE_bop_army_readiness = {
+	initial_value = 0.25 #WARNING, If you change the initial vaule into a different range you NEED to change what level of BoP idea is given out in MUN_czech_bop.1 event immediate effect to the one of that range!
+	left_side = CZE_bop_army_readiness_left_side
+	right_side = CZE_bop_army_readiness_right_side
+	decision_category = CZE_bop_army_readiness_category 
+	### Inbetween
+	range = {
+		id = CZE_bop_army_readiness_middle
+		min = -0.10
+		max = 0.10
+		modifier = {
+		
+		}
+		on_activate = {
+			if = {
+				limit = {
+					has_idea = CZE_army_readiness_1
+				}
+				swap_ideas = {
+					remove_idea = CZE_army_readiness_1
+					add_idea = CZE_army_readiness_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = CZE_army_readiness_2
+				}
+				swap_ideas = {
+					remove_idea = CZE_army_readiness_2
+					add_idea = CZE_army_readiness_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = CZE_army_readiness_4
+				}
+				swap_ideas = {
+					remove_idea = CZE_army_readiness_4
+					add_idea = CZE_army_readiness_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = CZE_army_readiness_5
+				}
+				swap_ideas = {
+					remove_idea = CZE_army_readiness_5
+					add_idea = CZE_army_readiness_3
+				}
+			}
+			else = {
+				effect_tooltip = {
+					add_ideas = CZE_army_readiness_3
+				}
+			}
+		}
+		on_deactivate = {
+			
+		}
+
+	}
+
+	###Army Readiness Right Side
+	side = {
+		id = CZE_bop_army_readiness_right_side
+		icon = GFX_bop_CZE_army_readiness_good_side
+		range = {
+			id = CZE_bop_army_high_confidence
+			min = 0.10
+			max = 0.75
+			modifier = {
+				war_stability_factor = 0.05
+				party_popularity_stability_factor = 0.05
+				foreign_subversive_activites = -0.05
+				fuel_gain_factor = -0.05
+				production_lack_of_resource_penalty_factor = 0.05
+				industrial_concern_cost_factor = 0.05
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = CZE_army_readiness_1
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_1
+						add_idea = CZE_army_readiness_4
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_2
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_2
+						add_idea = CZE_army_readiness_4
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_3
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_3
+						add_idea = CZE_army_readiness_4
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_5
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_5
+						add_idea = CZE_army_readiness_4
+					}
+				}
+				else = {
+					effect_tooltip = {
+						add_ideas = CZE_army_readiness_4
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+
+		}
+		range = {
+			id = CZE_bop_army_very_high_confidence
+			min = 0.75
+			max = 1
+			modifier = {
+				war_stability_factor = 0.15
+				party_popularity_stability_factor = 0.15
+				foreign_subversive_activites = -0.15
+				fuel_gain_factor = -0.15
+				production_lack_of_resource_penalty_factor = 0.15
+				industrial_concern_cost_factor = 0.15
+			}
+			on_activate = {
+				set_power_balance_gfx = {
+					id = CZE_bop_army_readiness
+					side = CZE_bop_army_readiness_right_side
+					gfx = "GFX_bop_CZE_army_readiness_good_improved_side"
+				}
+				set_power_balance_gfx = {
+					id = CZE_bop_army_readiness
+					side = CZE_bop_army_readiness_left_side
+					gfx = "GFX_bop_CZE_army_readiness_bad_side"
+				}
+				if = {
+					limit = {
+						has_idea = CZE_army_readiness_1
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_1
+						add_idea = CZE_army_readiness_5
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_2
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_2
+						add_idea = CZE_army_readiness_5
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_3
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_3
+						add_idea = CZE_army_readiness_5
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_4
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_4
+						add_idea = CZE_army_readiness_5
+					}
+				}
+				else = {
+					effect_tooltip = {
+						add_ideas = CZE_army_readiness_5
+					}
+				}
+			}
+			on_deactivate = {
+				
+			}
+
+		}
+	}
+
+	###Low Army Confidence Left Side
+	side = {
+		id = CZE_bop_army_readiness_left_side
+		icon = GFX_bop_CZE_army_readiness_bad_side
+		range = {
+			id = CZE_bop_army_low_confidence
+			min = -0.75
+			max = -0.10
+			modifier = {
+				war_stability_factor = -0.05
+				war_support_factor = -0.05
+				foreign_subversive_activites = 0.05
+				line_change_production_efficiency_factor = 0.05 #The army isn't using it
+				fuel_gain_factor = 0.05 #The army isn't using it
+				production_factory_efficiency_gain_factor = 0.05 #The army isn't using it
+				production_lack_of_resource_penalty_factor = -0.05 #The army isn't using it
+			}
+			on_activate = {
+				if = {
+					limit = {
+						has_idea = CZE_army_readiness_1
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_1
+						add_idea = CZE_army_readiness_2
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_3
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_3
+						add_idea = CZE_army_readiness_2
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_4
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_4
+						add_idea = CZE_army_readiness_2
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_5
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_5
+						add_idea = CZE_army_readiness_2
+					}
+				}
+				else = {
+					effect_tooltip = {
+						add_ideas = CZE_army_readiness_2
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+
+		}
+		range = {
+			id = CZE_bop_army_very_low_confidence
+			min = -1
+			max = -0.75
+			modifier = {
+				war_stability_factor = -0.15
+				war_support_factor = -0.15
+				foreign_subversive_activites = 0.15
+				line_change_production_efficiency_factor = 0.15 #The army isn't using it
+				fuel_gain_factor = 0.15 #The army isn't using it
+				production_factory_efficiency_gain_factor = 0.15 #The army isn't using it
+				production_lack_of_resource_penalty_factor = -0.15 #The army isn't using it
+				
+			}
+			on_activate = {
+				set_power_balance_gfx = {
+					id = CZE_bop_army_readiness
+					side = CZE_bop_army_readiness_right_side
+					gfx = "GFX_bop_CZE_army_readiness_good_side"
+				}
+				set_power_balance_gfx = {
+					id = CZE_bop_army_readiness
+					side = CZE_bop_army_readiness_left_side
+					gfx = "GFX_bop_CZE_army_readiness_bad_improved_side"
+				}
+				if = {
+					limit = {
+						has_idea = CZE_army_readiness_2
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_2
+						add_idea = CZE_army_readiness_1
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_3
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_3
+						add_idea = CZE_army_readiness_1
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_4
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_4
+						add_idea = CZE_army_readiness_1
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = CZE_army_readiness_5
+					}
+					swap_ideas = {
+						remove_idea = CZE_army_readiness_5
+						add_idea = CZE_army_readiness_1
+					}
+				}
+				else = {
+					effect_tooltip = {
+						add_ideas = CZE_army_readiness_1
+					}
+				}
+			}
+			on_deactivate = {
+			
+			}
+		}
+	}
+
+}

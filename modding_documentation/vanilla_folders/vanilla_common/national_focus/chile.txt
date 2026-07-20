@@ -4259,19 +4259,13 @@ focus_tree = {
 		dynamic = yes
 
 		icon = {
-			trigger = {
+			GFX_focus_CHL_taking_back_patagonia_monarchist = {
 				NOT = {
 					has_completed_focus = CHL_address_the_mapuche_conflict
 				}
 			}
-			value = GFX_focus_CHL_taking_back_patagonia_monarchist
+			GFX_focus_CHL_taking_back_patagonia_mapuche = yes
 		}
-		icon = {
-			trigger = {
-				has_completed_focus = CHL_address_the_mapuche_conflict
-			}
-			value = GFX_focus_CHL_taking_back_patagonia_mapuche
-		} 
 
 		relative_position_id = CHL_the_patagonian_giants
 		x = 0
@@ -5052,6 +5046,8 @@ focus_tree = {
 			hidden_effect = {
 				retire_country_leader = yes
 
+				remove_ideas = CHL_carlos_ibanez
+
 				add_country_leader_role  = {
 					character = CHL_carlos_ibanez
 				    promote_leader = yes
@@ -5066,7 +5062,6 @@ focus_tree = {
 					set_portraits = {
 						civilian = {
 							large = GFX_portrait_CHL_carlos_ibanez_king
-							small = GFX_portrait_CHL_carlos_ibanez_king_small
 						}
 					}
 				}
@@ -6547,28 +6542,14 @@ focus_tree = {
 		dynamic = yes
 
 		icon = {
-			trigger = {
+			GFX_focus_intervention_spain_nationalists = {
 				CHL_has_right_wing_government = yes
 			}
-			value = GFX_focus_intervention_spain_nationalists
-		}
-		icon = {
-			trigger = {
+			GFX_focus_generic_befriend_communist_spain_focus = {
 				CHL_has_left_wing_government = yes
 			}
-			value = GFX_focus_generic_befriend_communist_spain_focus
-		} 
-		icon = {
-			trigger = {
-				NOT = {
-					OR = {
-						CHL_has_left_wing_government = yes
-						CHL_has_right_wing_government = yes
-					}
-				}
-			}
-			value = GFX_focus_generic_befriend_republican_spain_focus
-		} 
+			GFX_focus_generic_befriend_republican_spain_focus = yes
+		}
 
 		relative_position_id = CHL_low_cost_housing
 		x = 5
@@ -12244,8 +12225,12 @@ focus_tree = {
 			has_war = no
 		}
 
-		bypass ={
-			has_government = communism
+		bypass = {
+			OR = {
+				has_government = communism
+				is_in_faction = yes 
+				has_war = yes 
+			}
 		}
 
 		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_HISTORICAL }

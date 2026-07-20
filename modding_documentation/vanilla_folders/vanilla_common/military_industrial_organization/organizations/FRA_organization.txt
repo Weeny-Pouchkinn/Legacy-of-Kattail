@@ -453,3 +453,60 @@ FRA_schneider_organization = {
 		tag = FRA 
 	}
 }
+
+FRA_alsthom_organization = {
+	include = generic_train_organization
+	icon = GFX_idea_FRA_alsthom
+	allowed = {
+		original_tag = FRA
+	}
+
+	research_categories = { train_tech support_tech }
+
+	initial_trait = {
+		name = generic_mio_initial_trait_generic_train_manufacturer
+		limit_to_equipment_type = { 
+			train_equipment 
+			#support_equipment
+		}
+
+		production_bonus = {
+			production_efficiency_cap_factor = 0.03
+		}
+
+		organization_modifier = {
+			military_industrial_organization_research_bonus = 0 #5% from MIO base
+		}
+	}
+
+	add_trait = {
+		token = FRA_mio_trait_scam_facilities
+		name = FRA_mio_trait_scam_facilities
+		icon = GFX_generic_mio_department_icon_facilities
+		special_trait_background = yes
+
+		position = { x=9 y=0 }
+
+		visible = {
+			FROM = { 
+				original_tag = FRA
+			}
+		}
+
+		limit_to_equipment_type = { train_equipment }
+
+		available = {
+			FROM = {
+				controls_state = 28
+			}
+		}
+
+		production_bonus = {
+			production_capacity_factor = 0.05
+		}
+
+		ai_will_do = {
+			base = 2
+		}
+	}
+}

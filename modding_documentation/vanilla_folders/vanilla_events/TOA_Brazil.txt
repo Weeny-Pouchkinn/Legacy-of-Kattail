@@ -3487,7 +3487,7 @@ country_event = {
 				character = BRA_minervino_de_oliveira
 				promote_leader = yes
 				country_leader = {
-					ideology = reformist_socialism
+					ideology = socialism
 					expire = "1965.1.1"
 					traits =  { ICE_trade_unionist }
 				}
@@ -3714,6 +3714,79 @@ news_event = {
 
 	option = {
 		name = JUNO_brazil_news.6.a
+	}
+}
+
+# King Pedro de Alcantara Dies 
+news_event = {
+	id = JUNO_brazil_news.7
+	title = JUNO_brazil_news.7.t
+	desc = JUNO_brazil_news.7.desc
+	picture = GFX_news_event_generic_funeral
+	
+	major = no
+
+	fire_only_once = yes
+
+	trigger = {
+		has_dlc = "Trial of Allegiance"
+		original_tag = BRA
+		has_country_leader = {
+			ruling_only = yes
+			character = BRA_pedro_de_alcantara
+		}	
+		date > 1940.01.01
+	}
+
+	mean_time_to_happen = {
+		days = 30
+		modifier = {
+			factor = 2
+			date > 1941.01.01
+		}
+	}
+
+	option = {
+		name = JUNO_brazil_news.7.a
+
+		retire_character = BRA_pedro_de_alcantara 
+
+		IF = {
+			limit = {
+				NOT = {
+					has_completed_focus = BRA_empire_of_brazil
+				}
+			}
+			custom_effect_tooltip = generic_skip_one_line_tt
+			BRA_pedro_gastao = {
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+						traits = { BRA_head_of_house_orleans_braganza_trait }
+					}
+					promote_leader = yes
+				} 
+			}
+		}
+		ELSE = {
+			custom_effect_tooltip = generic_skip_one_line_tt
+			BRA_pedro_gastao = {
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+						traits = { BRA_head_of_house_orleans_braganza_trait BRA_emperor_trait }
+					}
+					promote_leader = yes
+				} 
+			}
+		}
+		
+		hidden_effect = {
+			set_country_flag = BRA_pedro_de_alcantara_dead_flag
+			mark_focus_tree_layout_dirty = yes
+		}
 	}
 }
 

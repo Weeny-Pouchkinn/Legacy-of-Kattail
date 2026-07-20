@@ -1051,6 +1051,12 @@ country_event = {
 		if = {
 			limit = {
 				has_dlc = "Together for Victory"
+				NOT = {
+					AND = {
+						tag = AST
+						has_dlc = "Thunder at Our Gates"
+					}
+				}
 			}
 			custom_effect_tooltip = ENG_staying_loyal_tt
 			if = {
@@ -1976,7 +1982,7 @@ country_event = {
 
 	immediate = {
 		hidden_effect = {
-			was_raj_a_subject = yes  
+			was_uk_dominion_a_subject = yes  
 			add_stability = 30
 			every_state = {
 				limit = {
@@ -3299,6 +3305,10 @@ country_event = {
 				NOT = { original_tag = LAO }
 				owns_state = 670
 				has_full_control_of_state = 670
+				owns_state = 1069
+				has_full_control_of_state = 1069
+				owns_state = 1068
+				has_full_control_of_state = 1068
 			}
 			release = LAO
 		}
@@ -3316,6 +3326,8 @@ country_event = {
 				NOT = { original_tag = CAM }
 				owns_state = 741
 				has_full_control_of_state = 741
+				owns_state = 1067
+				has_full_control_of_state = 1067
 			}
 			release = CAM
 		}
@@ -3337,6 +3349,8 @@ country_event = {
 				has_full_control_of_state = 286
 				owns_state = 1017
 				has_full_control_of_state = 1017
+				owns_state = 1066
+				has_full_control_of_state = 1066
 			}
 			release = VIN
 		}
@@ -4755,6 +4769,9 @@ country_event = {
 			tag = AST
 			tag = NZL
 		}
+		NOT = {
+			has_government = ENG ## Make sure you're not communist / fascist too
+		}
 		is_subject_of = ENG
 		OR = {
 			ENG = { has_government = fascism }
@@ -4779,12 +4796,174 @@ country_event = {
 		ai_chance = {
 			factor = 0
 		}
+
+		trigger = { #If Dominion is on fascist path when UK is fascist OR communist path when UK is communist, DON'T SHOW this option
+			NOT = {
+				AND = {
+					original_tag = AST
+					OR = {
+						AND = {
+							has_completed_focus = AST_support_the_centre_party
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = AST_empower_the_workers
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = AST
+					has_dlc = "Thunder at Our Gates"
+					OR = {
+						AND = {
+							has_completed_focus = AST_australia_first
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = AST_against_war_and_fascism
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = NZL
+					OR = {
+						AND = {
+							has_completed_focus = NZL_in_the_darkness
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = NZL_the_lee_affair
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = CAN
+					OR = {
+						AND = {
+							has_completed_focus = CAN_swastika_clubs
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = CAN_burn_the_royal_portraits
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = SAF
+					OR = {
+						AND = {
+							has_completed_focus = SAF_support_the_afrikaner_broederbond
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = SAF_empower_the_workers
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			#RAJ has other solution	
+		}
+
 		set_country_flag = ENG_dominions_stayed_with_fascist_britain_flag
-	}
+	}	
 
 	# We will leave
 	option = {
 		name = mtg_britain.66.b
+
+		trigger = { #If Dominion is on fascist path when UK is fascist OR communist path when UK is communist, DON'T SHOW this option
+			NOT = {
+				AND = {
+					original_tag = AST
+					OR = {
+						AND = {
+							has_completed_focus = AST_support_the_centre_party
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = AST_empower_the_workers
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = AST
+					has_dlc = "Thunder at Our Gates"
+					OR = {
+						AND = {
+							has_completed_focus = AST_australia_first
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = AST_against_war_and_fascism
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = NZL
+					OR = {
+						AND = {
+							has_completed_focus = NZL_in_the_darkness
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = NZL_the_lee_affair
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = CAN
+					OR = {
+						AND = {
+							has_completed_focus = CAN_swastika_clubs
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = CAN_burn_the_royal_portraits
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			NOT = {
+				AND = {
+					original_tag = SAF
+					OR = {
+						AND = {
+							has_completed_focus = SAF_support_the_afrikaner_broederbond
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = SAF_empower_the_workers
+							ENG = { has_government = communism }
+						}
+					}
+				}
+			}
+			#RAJ has other solution	
+		}
+
 		if = {
 			limit = {
 				OR = {
@@ -4875,6 +5054,105 @@ country_event = {
 		
 		
 		hidden_effect = { news_event = { id = mtg_news.63 days = 1 } }
+	}
+
+	# We will stay - On path to same ideology
+	option = {
+		name = mtg_britain.66.c
+
+		trigger = { #If Dominion is on fascist path when UK is fascist / communist path when UK is communist, SHOW this option
+			OR = {
+				AND = {
+					original_tag = AST
+					OR = {
+						AND = {
+							has_completed_focus = AST_support_the_centre_party
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = AST_empower_the_workers
+							ENG = { has_government = communism }
+						}
+					}
+				}
+				AND = {
+					original_tag = AST
+					has_dlc = "Thunder at Our Gates"
+					OR = {
+						AND = {
+							has_completed_focus = AST_australia_first
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = AST_against_war_and_fascism
+							ENG = { has_government = communism }
+						}
+					}
+				}
+				AND = {
+					original_tag = NZL
+					OR = {
+						AND = {
+							has_completed_focus = NZL_in_the_darkness
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = NZL_the_lee_affair
+							ENG = { has_government = communism }
+						}
+					}
+				}
+				AND = {
+					original_tag = CAN
+					OR = {
+						AND = {
+							has_completed_focus = CAN_swastika_clubs
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = CAN_burn_the_royal_portraits
+							ENG = { has_government = communism }
+						}
+					}
+				}
+				AND = {
+					original_tag = SAF
+					OR = {
+						AND = {
+							has_completed_focus = SAF_support_the_afrikaner_broederbond
+							ENG = { has_government = fascism }
+						}
+						AND = {
+							has_completed_focus = SAF_empower_the_workers
+							ENG = { has_government = communism }
+						}
+					}
+				}
+				#RAJ has other solution		
+			}
+		}
+
+		IF = {
+			limit = {
+				ENG = { has_government = fascism }
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.05
+			}
+		}
+
+		ELSE_IF = {
+			limit = {
+				ENG = { has_government = communism }
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+		}
+
+		set_country_flag = ENG_dominions_stayed_with_fascist_britain_flag
 	}
 }
 
@@ -8061,3 +8339,254 @@ country_event = {
 		hidden_effect = { news_event = { id = mtg_news.59 days = 1 } }
 	}
 }
+
+
+
+
+## Event triggered from ENG decisions (like ENG_replace_government_in_british_raj_fascism) to Dominions - install new regime 
+
+country_event = {
+	id = mtg_britain.200
+	title = mtg_britain.200.t
+	desc = mtg_britain.200.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	
+
+	is_triggered_only = yes
+
+
+	## Agree 
+	option = {
+		name = mtg_britain.200.a
+		## AI will do yes - same event and effects as in decision
+
+		ai_chance = {
+			base = 1
+		}
+
+		if = {
+			limit = {
+				FROM = {
+					has_government = fascism
+				}
+			}
+			set_politics = { ruling_party = fascism elections_allowed = no }
+			add_popularity = { ideology = fascism popularity = 0.2 }
+			add_timed_idea = { idea = fascist_influence days = 730 }
+			hidden_effect = { news_event = { id = mtg_news.32 days = 1 } }
+
+
+			if = {
+				limit = {
+					original_tag = RAJ
+				}
+				RAJ_enforce_loyalty = yes 
+			}
+			else_if = {
+				limit = {
+					original_tag = AST
+				}
+				AST_enforce_loyalty = yes 
+			}
+			else_if = {
+				limit = {
+					original_tag = NZL
+				}
+				NZL_enforce_loyalty = yes
+			}
+			else_if = {
+				limit = {
+					original_tag = CAN
+				}
+				CAN_enforce_loyalty = yes
+			}
+			else_if = {
+				limit = {
+					original_tag = SAF
+				}
+				SAF_enforce_loyalty = yes
+			}
+		}
+		else = {
+			custom_effect_tooltip = ENG_replace_government_communism_tt
+			set_politics = { ruling_party = communism elections_allowed = no }
+			add_popularity = { ideology = communism popularity = 0.2 }
+			add_timed_idea = { idea = communist_influence days = 730 }
+			
+			hidden_effect = { set_country_flag = ENG_remain_as_puppet } ## Check meaning of this - is ENG_replace_government_communism_tt
+			hidden_effect = { news_event = { id = mtg_news.32 days = 1 } }
+			
+			if = {
+				limit = {
+					original_tag = RAJ
+				}
+				RAJ_enforce_loyalty = yes 
+			}
+			else_if = {
+				limit = {
+					original_tag = AST
+				}
+				AST_enforce_loyalty = yes 
+			}
+			else_if = {
+				limit = {
+					original_tag = NZL
+				}
+				NZL_enforce_loyalty = yes
+			}
+			else_if = {
+				limit = {
+					original_tag = CAN
+				}
+				CAN_enforce_loyalty = yes
+			}
+			else_if = {
+				limit = {
+					original_tag = SAF
+				}
+				SAF_enforce_loyalty = yes
+			}
+
+		}
+
+	}
+
+
+	## Disagree, send event to ENG back 
+	option = {
+		name = mtg_britain.200.b
+		## AI will do yes - same event and effects as in decision
+
+		ai_chance = {
+			base = 0
+		}
+
+		FROM = {
+			country_event = {
+				id = mtg_britain.201 hours = 1
+			}
+		}
+
+		custom_effect_tooltip = mtg_britain.200.tt
+	}
+}
+
+
+
+## Dominion says no to regime change - ENG can drop it or go to war
+
+country_event = {
+	id = mtg_britain.201
+	title = mtg_britain.201.t
+	desc = mtg_britain.201.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	
+
+	is_triggered_only = yes
+
+
+	## Drop it 
+	option = {
+		name = mtg_britain.201.a
+		## AI will do yes
+
+		ai_chance = {
+			base = 1
+		}
+
+		FROM = {
+			country_event = {
+				id = mtg_britain.203 hours = 1
+			}
+		}
+
+	}
+
+
+	## Declare war, send event back to dominion declaring war 
+	## Release subject, declare war 
+	option = {
+		name = mtg_britain.202.b
+		## AI will do no
+
+		set_autonomy = {
+		 	target= FROM
+		 	autonomy_state = autonomy_free
+		 	#freedom_level = 1 
+		 	end_wars  = no # default yes. will not cancel non civil wars if set to no
+		 	end_civil_wars = no # default yes. will not cancel civil wars if set to no
+		 } 
+		 declare_war_on = {
+		 	target = FROM
+		 	type = annex_everything
+		 }
+
+
+
+		FROM = {
+			country_event = {
+				id = mtg_britain.202 hours = 1
+			}
+		}
+
+		ai_chance = {
+			base = 0
+		}
+
+	}
+}
+
+
+
+
+
+## Event to dominion, declared war
+country_event = {
+	id = mtg_britain.202
+	title = mtg_britain.202.t
+	desc = mtg_britain.202.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	
+
+	is_triggered_only = yes
+
+
+	## It is war
+	option = {
+		name = mtg_britain.202.a
+
+		add_war_support = 0.2
+	}
+
+
+
+}
+
+
+## Event to dominion, ENG drops it
+country_event = {
+	id = mtg_britain.203
+	title = mtg_britain.203.t
+	desc = mtg_britain.203.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	
+
+	is_triggered_only = yes
+
+
+	## They dropped it
+	option = {
+		name = mtg_britain.203.a
+		add_political_power = 25
+
+	}
+
+
+
+}
+
+
