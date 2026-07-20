@@ -83,6 +83,18 @@ on_actions = {
 				set_variable = { pol_party_array^8 = 1 }
 				# Initialize Stage 3 Solakean states array dynamically
 			}
+			PAW = {
+				add_to_variable = { lok_pol_party_indicator = 1 }
+				set_variable = { pol_party_array^0 = 1 }
+				set_variable = { pol_party_array^1 = 3 }
+				set_variable = { pol_party_array^2 = 3 }
+				set_variable = { pol_party_array^3 = 3 }
+				set_variable = { pol_party_array^4 = 1 }
+				set_variable = { pol_party_array^5 = 1 }
+				set_variable = { pol_party_array^6 = 2 }
+				set_variable = { pol_party_array^7 = 2 }
+				set_variable = { pol_party_array^8 = 2 }
+			}
 
 			# Initialize target states array for reclamation in global scope
 			236 = { add_to_array = { global.roq_provinces_perdues_states_array = THIS } }
@@ -281,6 +293,19 @@ on_actions = {
 
 			add_to_array = { array = global.substate_type_frontier_mayorland_array value = 26 }
 
+
+			# Gonna jump to like 40 cos idk how many paluush are left
+			add_to_array = { array = global.substate_type_ktn_nieuw_pawsterdam_state_array 			value = 40 } # Nieuw Pawsterdam Unique
+			add_to_array = { array = global.substate_type_ktn_commonwealth_district_array 			value = 41 } # Miauwhattan
+			add_to_array = { array = global.substate_type_ktn_commonwealth_district_array 			value = 42 } # Jorviland
+			add_to_array = { array = global.substate_type_ktn_commonwealth_district_array 			value = 43 } # Purriland
+			add_to_array = { array = global.substate_type_ktn_commonwealth_district_array 			value = 44 } # Noordkust
+			add_to_array = { array = global.substate_type_ktn_commonwealth_district_array 			value = 45 } # Zealand
+			add_to_array = { array = global.substate_type_ktn_commonwealth_district_array 			value = 46 } # Katjeisland
+			add_to_array = { array = global.substate_type_ktn_katpine_autonomous_zone_array 		value = 47 } # Katpine Unique
+			add_to_array = { array = global.substate_type_ktn_katpine_valley_district_array 		value = 48 } # Katpine Valley unique
+
+
 			add_to_array = { array = global.substates_take_country_color_array value = 1 } #federal
 			add_to_array = { array = global.substates_take_country_color_array value = 2 } #confederal
 			add_to_array = { array = global.substates_take_country_color_array value = 26 } #frontier mayorland
@@ -340,6 +365,36 @@ on_actions = {
 			754 = { set_variable = { substate_id = 25 } }
 			753 = { set_variable = { substate_id = 25 } }
 			756 = { set_variable = { substate_id = 25 } }
+
+			### KTN - Katteneiland ###
+			# Nieuw Pawterdam
+			409 = { set_variable = { substate_id = 40 } }
+			832 = { set_variable = { substate_id = 40 } }
+			833 = { set_variable = { substate_id = 40 } }
+			# Miauwhattan
+			382 = { set_variable = { substate_id = 41 } }
+			# Jorviland
+			831 = { set_variable = { substate_id = 42 } }
+			# Purriland
+			834 = { set_variable = { substate_id = 43 } }
+			# Noordkust
+			408 = { set_variable = { substate_id = 44 } }
+			374 = { set_variable = { substate_id = 44 } }
+			# Zeeland
+			1352 = { set_variable = { substate_id = 45 } }
+			1353 = { set_variable = { substate_id = 45 } }
+			407 = { set_variable = { substate_id = 45 } }
+			# Katjeisland
+			394 = { set_variable = { substate_id = 46 } }
+			# Katpine Mountains
+			393 = { set_variable = { substate_id = 47 } }
+			835 = { set_variable = { substate_id = 47 } }
+			836 = { set_variable = { substate_id = 47 } }
+			837 = { set_variable = { substate_id = 47 } }
+			838 = { set_variable = { substate_id = 47 } }
+			839 = { set_variable = { substate_id = 47 } }
+			# Katpine Valley
+			824 = { set_variable = { substate_id = 48 } }
 
 			every_state = {
 				limit = { is_controlled_by = PRL }
@@ -4572,7 +4627,10 @@ on_actions = {
 						has_state_flag = has_armored_blimp_carrier_state
 					}
 					clr_state_flag = has_armored_blimp_carrier_state
-					remove_building = { type = air_base level = 2 }
+
+					set_temp_variable = { building_type = token:air_base }
+					set_temp_variable = { level_diff = 2 }
+					smart_remove_buildings = yes
 					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
 				}
 				#Clear and apply species match modifiers
@@ -5239,10 +5297,9 @@ on_actions = {
 				every_controlled_state = {
 					limit = { has_state_flag = has_armored_blimp_carrier_state }
 					clr_state_flag = has_armored_blimp_carrier_state
-					if = {
-						limit = { check_variable = { building_level@air_base > 1 } }
-						remove_building = { type = air_base level = 2 }
-					}
+					set_temp_variable = { building_type = token:air_base }
+					set_temp_variable = { level_diff = 2 }
+					smart_remove_buildings = yes
 					remove_dynamic_modifier = { modifier = lok_armored_blimp_carrier_modifier }
 				}
 				every_controlled_state = {

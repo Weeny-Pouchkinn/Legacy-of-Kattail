@@ -1,16 +1,9 @@
 on_actions = {
-	#on_new_term_election = {
-	#	random_events = {
-	#		100 = mexico.18 # 1940 Mexican election
-	#	}
-	#}
-	
 	#Root is exile
 	#From is new host
 	#FromFrom is old host
 	on_host_changed_from_capitulation = {
 		effect = {
-			log = "[GetDateText]: ROOT: [Root.GetName] FROM: [From.GetName] FROM.FROM: [From.From.GetName] on_host_changed_from_capitulation"
 			#Transfer exile leaders to new host
 			From.From = {
 				every_army_leader = {
@@ -25,7 +18,6 @@ on_actions = {
 	#From is old host
 	on_exile_government_reinstated = {
 		effect = {
-			log = "[GetDateText]: ROOT: [Root.GetName] FROM: [From.GetName] on_exile_government_reinstated"
 			From = {
 				every_army_leader = {
 					limit = { is_exiled_leader_from = Root }
@@ -44,12 +36,11 @@ on_actions = {
 
 	on_unit_leader_created = {
 		effect = {
-			log = "[GetDateText]: ROOT: [Root.GetName] on_unit_leader_created"
 			if = {
 				limit = { is_exiled_leader = yes }
 				From.From = { save_event_target_as = exile_nation }
 				add_unit_leader_trait = exiled_leader
-				
+
 				add_random_trait = {
 					old_guard
 					brilliant_strategist
@@ -70,10 +61,10 @@ on_actions = {
 					cavalry_leader
 					trait_engineer
 					infantry_leader
-					naval_invader						
+					naval_invader
 					commando
 					skilled_staffer
-					trickster					
+					trickster
 				}
 
 				unit_leader_event = { id = mtg_exile_leader_added.1 }
@@ -81,22 +72,11 @@ on_actions = {
 		}
 	}
 
-	#ROOT is winner #FROM gets annexed - This fires just before FROM gets annexed, meaning the country and everything it owns still exists. It will also fire on_annex and on_civil_war_end
-	on_civil_war_end_before_annexation = {
+	#ROOT is winner #FROM gets annexed - This will also fire on_annex
+	on_civil_war_end = {
 		effect = {
+			# Cleaning up anti-exploiter divisions
+			delete_unit_template_and_units = { division_template = "Anti-Exploit Punitive Brigade" }
 		}
 	}
-
-	on_government_exiled = {
-		effect = {
-
-		}
-	}
-
-	# FROM is the sinker, ROOT is the owner of the ship being sunk
-	on_pride_of_the_fleet_sunk = {
-		effect = {
-		}
-	}
-
 }

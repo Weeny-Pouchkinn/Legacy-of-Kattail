@@ -5,62 +5,62 @@ on_actions = {
 	on_operative_on_mission_spotted = {
 
 		effect = {
-			# SCOPE  the operative
-			# ROOT   the country the operative was performing its mission in
-			# FROM   the country the operative is operating for
+            # SCOPE  the operative
+            # ROOT   the country the operative was performing its mission in
+            # FROM   the country the operative is operating for
 
 			# base values
-			set_temp_variable = {
-				var = capture_chance
-				value = 40
-			}
-			set_temp_variable = {
-				var = kill_chance
-				value = 5
-			}
-			set_temp_variable = {
-				var = hiding_chance
-				value = 55
-			}
+            set_temp_variable = {
+                var = capture_chance
+                value = 40
+            }
+            set_temp_variable = {
+                var = kill_chance
+                value = 5
+            }
+            set_temp_variable = {
+                var = hiding_chance
+                value = 55
+            }
 
-			# nullify kill chance for some missions
-			if = {
-				limit = {
-					OR = {
-						operative_leader_mission = control_trade
-						operative_leader_mission = diplomatic_pressure
-					}
-				}
-				set_temp_variable = {
-					var = kill_chance
-					value = 0
-				}
-				# redistribute to hiding
-				add_to_temp_variable = {
-					var = hiding_chance
-					value = 5
-				}
-			}
+            # nullify kill chance for some missions
+            if = {
+                limit = {
+                    OR = {
+                        operative_leader_mission = control_trade
+                        operative_leader_mission = diplomatic_pressure
+                    }
+                }
+                set_temp_variable = {
+                    var = kill_chance
+                    value = 0
+                }
+                # redistribute to hiding
+                add_to_temp_variable = {
+                    var = hiding_chance
+                    value = 5
+                }
+            }
 
-			random_list = {
-				temp_var:capture_chance = {
-					capture_operative = {
-						captured_by = ROOT
-					}
-				}
-				temp_var:kill_chance = {
-					kill_operative = {
-						killed_by = ROOT
-					}
-				}
-				temp_var:hiding_chance = {
-					force_operative_leader_into_hiding = 28
-				}
-			}
+            random_list = {
+                temp_var:capture_chance = {
+                   	capture_operative = {
+                   	    captured_by = ROOT
+                   	}
+                }
+                temp_var:kill_chance = {
+                    kill_operative = {
+                        killed_by = ROOT
+                    }
+                }
+                temp_var:hiding_chance = {
+                    force_operative_leader_into_hiding = 28
+                }
+            }
 
-		}
+        }
 
-	}
+    }
 
 	on_operative_captured = {
 		effect = {
@@ -68,12 +68,12 @@ on_actions = {
 			# ROOT   the country the operative was performing its mission in
 			# FROM   the country the operative is operating for
 			operative_leader_event = {
-				id = lar_operative_event.6
-				recipient = ROOT
-				originator = ROOT
-				set_from_from = ROOT
-				set_from = FROM
-				days = 1
+					id = lar_operative_event.6
+					recipient = ROOT
+					originator = ROOT
+					set_from_from = ROOT
+					set_from = FROM
+					days = 1
 			}
 			random_list = {
 				log = yes
