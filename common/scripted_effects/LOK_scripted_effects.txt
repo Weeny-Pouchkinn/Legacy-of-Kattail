@@ -2995,9 +2995,97 @@ clear_substate = {
 	}
 }
 
+TAI_ensure_noble_house_arrays = {
+	# Array elements must exist before they can be addressed by noble-house ID.
+	if = {
+		limit = { check_variable = { noble_house_power_array^num < 114 } }
+		resize_array = { array = noble_house_power_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_power_perc_array^num < 114 } }
+		resize_array = { array = noble_house_power_perc_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_power_friendly_array^num < 114 } }
+		resize_array = { array = noble_house_power_friendly_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_power_friendly_perc_array^num < 114 } }
+		resize_array = { array = noble_house_power_friendly_perc_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_states_array^num < 114 } }
+		resize_array = { array = noble_house_states_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_expected_states_array^num < 114 } }
+		resize_array = { array = noble_house_expected_states_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_happy_states_array^num < 114 } }
+		resize_array = { array = noble_house_happy_states_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_opinion_array^num < 114 } }
+		resize_array = { array = noble_house_opinion_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { TAI_estates_seats_array^num < 114 } }
+		resize_array = { array = TAI_estates_seats_array value = 0 size = 114 }
+	}
+}
+
+TAI_migrate_legacy_noble_house_ids = {
+	if = {
+		limit = { NOT = { has_country_flag = TAI_noble_house_ids_migrated_to_101 } }
+		TAI_ensure_noble_house_arrays = yes
+
+		set_temp_variable = { old_noble_house_id = 3 }
+		set_temp_variable = { new_noble_house_id = 101 }
+		while_loop_effect = {
+			limit = { check_variable = { old_noble_house_id < 16 } }
+			if = {
+				limit = {
+					OR = {
+						check_variable = { old_noble_house_id > 3 }
+						is_in_array = { array = TAI_unlocked_noble_house_array value = old_noble_house_id }
+					}
+				}
+				every_owned_state = {
+					limit = { check_variable = { substate_id = PREV.old_noble_house_id } }
+					set_variable = { substate_id = PREV.new_noble_house_id }
+				}
+			}
+			if = {
+				limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = old_noble_house_id } }
+
+				# Preserve the unlocked list, owned substates, and per-house data in old saves.
+				remove_from_array = { array = TAI_unlocked_noble_house_array value = old_noble_house_id }
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = new_noble_house_id } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = new_noble_house_id }
+				}
+				set_variable = { noble_house_power_array^new_noble_house_id = noble_house_power_array^old_noble_house_id }
+				set_variable = { noble_house_power_perc_array^new_noble_house_id = noble_house_power_perc_array^old_noble_house_id }
+				set_variable = { noble_house_power_friendly_array^new_noble_house_id = noble_house_power_friendly_array^old_noble_house_id }
+				set_variable = { noble_house_power_friendly_perc_array^new_noble_house_id = noble_house_power_friendly_perc_array^old_noble_house_id }
+				set_variable = { noble_house_states_array^new_noble_house_id = noble_house_states_array^old_noble_house_id }
+				set_variable = { noble_house_expected_states_array^new_noble_house_id = noble_house_expected_states_array^old_noble_house_id }
+				set_variable = { noble_house_happy_states_array^new_noble_house_id = noble_house_happy_states_array^old_noble_house_id }
+				set_variable = { noble_house_opinion_array^new_noble_house_id = noble_house_opinion_array^old_noble_house_id }
+			}
+			add_to_temp_variable = { old_noble_house_id = 1 }
+			add_to_temp_variable = { new_noble_house_id = 1 }
+		}
+		set_country_flag = TAI_noble_house_ids_migrated_to_101
+	}
+}
+
 raise_noble_house = {
 	custom_effect_tooltip = raise_noble_house_tooltip
 	hidden_effect = {
+		TAI_migrate_legacy_noble_house_ids = yes
+		TAI_ensure_noble_house_arrays = yes
 		if = {
 			limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = substate_id_temp } } }
 			add_to_array = { array = TAI_unlocked_noble_house_array value = substate_id_temp }
@@ -3018,6 +3106,8 @@ assign_state_to_noble_house_and_core = {
 }
 
 calculate_noble_house_power = {
+	TAI_migrate_legacy_noble_house_ids = yes
+	TAI_ensure_noble_house_arrays = yes
 	set_variable = { kingdom_total_power = 0 }
 	set_variable = { noble_house_total_power = 0 }
 	set_variable = { friendly_total_power = 0 }
@@ -3149,7 +3239,7 @@ calculate_noble_house_power = {
 	set_variable = { friendly_total_power_perc = friendly_total_power }
 	divide_variable = { friendly_total_power_perc = kingdom_total_power }
 	TAI_estates_init = yes
-	add_to_variable = { TAI_estates_scripted_gui = 1 }
+	add_to_variable = { TAI_estates_scripted_gui_variable = 1 }
 }
 
 generate_generic_advisors = {
