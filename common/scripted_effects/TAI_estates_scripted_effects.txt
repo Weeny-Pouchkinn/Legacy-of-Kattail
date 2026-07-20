@@ -1,11 +1,11 @@
 # Initialize the TAI Estates GUI Seats and calculate seat distribution (including Crown)
 TAI_estates_init = {	
-	# Determine the last unlocked/active group ID (0 = Crown, 3-15 = Noble Houses)
+	# Determine the last unlocked/active group ID (0 = Crown, 101-113 = Noble Houses)
 	set_variable = { last_active_group_id = 0 }
-	set_variable = { temp_id = 15 }
+	set_variable = { temp_id = 113 }
 	while_loop_effect = {
 		limit = {
-			check_variable = { temp_id > 2 }
+			check_variable = { temp_id > 100 }
 			check_variable = { last_active_group_id = 0 }
 		}
 		if = {
@@ -17,9 +17,9 @@ TAI_estates_init = {
 
 	# Count unlocked houses
 	set_variable = { unlocked_houses_count = 0 }
-	set_variable = { temp_counter = 3 }
+	set_variable = { temp_counter = 101 }
 	while_loop_effect = {
-		limit = { check_variable = { temp_counter < 16 } }
+		limit = { check_variable = { temp_counter < 114 } }
 		if = {
 			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = temp_counter } }
 			add_to_variable = { unlocked_houses_count = 1 }
@@ -27,7 +27,7 @@ TAI_estates_init = {
 		add_to_variable = { temp_counter = 1 }
 	}
 
-	# Allocate seats for Crown (ID 0) and Noble Houses (IDs 3-15) proportional to their power out of 300 seats
+	# Allocate seats for Crown (ID 0) and Noble Houses (IDs 101-113) proportional to their power out of 300 seats
 	set_variable = { allocated_seats = 0 }
 	
 	# 1. Crown Land allocation
@@ -57,9 +57,9 @@ TAI_estates_init = {
 	}
 
 	# 2. Noble Houses allocation
-	set_variable = { noble_house_id = 3 }
+	set_variable = { noble_house_id = 101 }
 	while_loop_effect = {
-		limit = { check_variable = { noble_house_id < 16 } }
+		limit = { check_variable = { noble_house_id < 114 } }
 		if = {
 			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = noble_house_id } }
 			if = {
@@ -98,63 +98,63 @@ TAI_estates_init = {
 	# Sum cumulative seats to build the seat frames array
 	set_temp_variable = { t0 = TAI_estates_seats_array^0 }
 	
-	set_temp_variable = { t3 = TAI_estates_seats_array^3 }
-	add_to_temp_variable = { t3 = t0 }
+	set_temp_variable = { t101 = TAI_estates_seats_array^101 }
+	add_to_temp_variable = { t101 = t0 }
 	
-	set_temp_variable = { t4 = TAI_estates_seats_array^4 }
-	add_to_temp_variable = { t4 = t3 }
+	set_temp_variable = { t102 = TAI_estates_seats_array^102 }
+	add_to_temp_variable = { t102 = t101 }
 	
-	set_temp_variable = { t5 = TAI_estates_seats_array^5 }
-	add_to_temp_variable = { t5 = t4 }
+	set_temp_variable = { t103 = TAI_estates_seats_array^103 }
+	add_to_temp_variable = { t103 = t102 }
 	
-	set_temp_variable = { t6 = TAI_estates_seats_array^6 }
-	add_to_temp_variable = { t6 = t5 }
+	set_temp_variable = { t104 = TAI_estates_seats_array^104 }
+	add_to_temp_variable = { t104 = t103 }
 	
-	set_temp_variable = { t7 = TAI_estates_seats_array^7 }
-	add_to_temp_variable = { t7 = t6 }
+	set_temp_variable = { t105 = TAI_estates_seats_array^105 }
+	add_to_temp_variable = { t105 = t104 }
 	
-	set_temp_variable = { t8 = TAI_estates_seats_array^8 }
-	add_to_temp_variable = { t8 = t7 }
+	set_temp_variable = { t106 = TAI_estates_seats_array^106 }
+	add_to_temp_variable = { t106 = t105 }
 	
-	set_temp_variable = { t9 = TAI_estates_seats_array^9 }
-	add_to_temp_variable = { t9 = t8 }
+	set_temp_variable = { t107 = TAI_estates_seats_array^107 }
+	add_to_temp_variable = { t107 = t106 }
 	
-	set_temp_variable = { t10 = TAI_estates_seats_array^10 }
-	add_to_temp_variable = { t10 = t9 }
+	set_temp_variable = { t108 = TAI_estates_seats_array^108 }
+	add_to_temp_variable = { t108 = t107 }
 	
-	set_temp_variable = { t11 = TAI_estates_seats_array^11 }
-	add_to_temp_variable = { t11 = t10 }
+	set_temp_variable = { t109 = TAI_estates_seats_array^109 }
+	add_to_temp_variable = { t109 = t108 }
 	
-	set_temp_variable = { t12 = TAI_estates_seats_array^12 }
-	add_to_temp_variable = { t12 = t11 }
+	set_temp_variable = { t110 = TAI_estates_seats_array^110 }
+	add_to_temp_variable = { t110 = t109 }
 	
-	set_temp_variable = { t13 = TAI_estates_seats_array^13 }
-	add_to_temp_variable = { t13 = t12 }
+	set_temp_variable = { t111 = TAI_estates_seats_array^111 }
+	add_to_temp_variable = { t111 = t110 }
 	
-	set_temp_variable = { t14 = TAI_estates_seats_array^14 }
-	add_to_temp_variable = { t14 = t13 }
+	set_temp_variable = { t112 = TAI_estates_seats_array^112 }
+	add_to_temp_variable = { t112 = t111 }
 	
-	set_temp_variable = { t15 = 300 }
+	set_temp_variable = { t113 = 300 }
 
 	clear_array = TAI_estates_seat_frame
 
 	# Resize and populate frame colors:
 	# Crown is frame 14 (first t0 seats)
 	resize_array = { array = TAI_estates_seat_frame value = 14 size = t0 }
-	# Noble houses 3-15 are frames 1-13 (remaining seats)
-	resize_array = { array = TAI_estates_seat_frame value = 1 size = t3 }
-	resize_array = { array = TAI_estates_seat_frame value = 2 size = t4 }
-	resize_array = { array = TAI_estates_seat_frame value = 3 size = t5 }
-	resize_array = { array = TAI_estates_seat_frame value = 4 size = t6 }
-	resize_array = { array = TAI_estates_seat_frame value = 5 size = t7 }
-	resize_array = { array = TAI_estates_seat_frame value = 6 size = t8 }
-	resize_array = { array = TAI_estates_seat_frame value = 7 size = t9 }
-	resize_array = { array = TAI_estates_seat_frame value = 8 size = t10 }
-	resize_array = { array = TAI_estates_seat_frame value = 9 size = t11 }
-	resize_array = { array = TAI_estates_seat_frame value = 10 size = t12 }
-	resize_array = { array = TAI_estates_seat_frame value = 11 size = t13 }
-	resize_array = { array = TAI_estates_seat_frame value = 12 size = t14 }
-	resize_array = { array = TAI_estates_seat_frame value = 13 size = t15 }
+	# Noble houses 101-113 are frames 1-13 (remaining seats)
+	resize_array = { array = TAI_estates_seat_frame value = 1 size = t101 }
+	resize_array = { array = TAI_estates_seat_frame value = 2 size = t102 }
+	resize_array = { array = TAI_estates_seat_frame value = 3 size = t103 }
+	resize_array = { array = TAI_estates_seat_frame value = 4 size = t104 }
+	resize_array = { array = TAI_estates_seat_frame value = 5 size = t105 }
+	resize_array = { array = TAI_estates_seat_frame value = 6 size = t106 }
+	resize_array = { array = TAI_estates_seat_frame value = 7 size = t107 }
+	resize_array = { array = TAI_estates_seat_frame value = 8 size = t108 }
+	resize_array = { array = TAI_estates_seat_frame value = 9 size = t109 }
+	resize_array = { array = TAI_estates_seat_frame value = 10 size = t110 }
+	resize_array = { array = TAI_estates_seat_frame value = 11 size = t111 }
+	resize_array = { array = TAI_estates_seat_frame value = 12 size = t112 }
+	resize_array = { array = TAI_estates_seat_frame value = 13 size = t113 }
 
 	# Populate coordinates
 	clear_array = TAI_estates_seat_x
