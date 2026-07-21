@@ -1,0 +1,898 @@
+# Vanilla 1.17 support units omitted by same-name mod overrides.
+# Kept separate so Legacy of Kattail balance changes remain isolated.
+sub_units = {
+	light_sp_anti_air_support = {
+		abbreviation = "LAA"
+		sprite = light_armor
+		map_icon_category = armored
+		priority = 301
+		ai_priority = 100
+		active = yes
+		
+		type = {
+			support
+			armor
+			anti_air
+		}
+		
+		group = support
+		allowed_battalion_groups = {armor mobile_combat_support armor_combat_support }
+		categories = {
+			category_all_armor
+			category_army
+			category_self_propelled_anti_air
+			category_support_battalions
+			category_regimental_support_battalions
+			category_self_propelled_anti_air_regimental_support
+		}
+
+		divisional = no
+		
+
+		need = {
+			light_tank_aa_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.3
+		training_time = 120
+		weight = 0.3
+		supply_consumption = 0.05
+		own_equipment_fuel_consumption_mult = 0.33
+		breakthrough = -0.75
+		defense = -0.25
+		soft_attack = -0.33
+		hard_attack = -0.33
+		air_attack = -0.15
+		suppression = 0.5
+		armor_value = -0.33
+		
+	}
+
+	medium_sp_anti_air_support = {
+		abbreviation = "MAA"
+		sprite = medium_armor
+		map_icon_category = armored
+		priority = 301
+		ai_priority = 100
+		active = yes
+		
+		type = {
+			support
+			armor
+			anti_air
+		}
+		
+		group = support
+		allowed_battalion_groups = {armor mobile_combat_support armor_combat_support }
+		categories = {
+			category_all_armor
+			category_army
+			category_self_propelled_anti_air
+			category_support_battalions
+			category_regimental_support_battalions
+			category_self_propelled_anti_air_regimental_support
+		}
+
+		divisional = no
+
+		need = {
+			medium_tank_aa_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.3
+		training_time = 120
+		weight = 0.4
+		supply_consumption = 0.06
+		own_equipment_fuel_consumption_mult = 0.33
+		breakthrough = -0.7
+		defense = -0.25
+		soft_attack = -0.33
+		hard_attack = -0.33
+		air_attack = -0.15
+		suppression = 0.6
+		armor_value = -0.33
+	}
+
+	heavy_sp_anti_air_support = {
+		abbreviation = "HAA"
+		sprite = heavy_armor
+		map_icon_category = armored
+		priority = 301
+		ai_priority = 100
+		active = yes
+		training_time = 120
+		
+		type = {
+			support
+			armor
+			anti_air
+		}
+		
+		group = support
+		allowed_battalion_groups = {armor mobile_combat_support armor_combat_support }
+
+		categories = {
+			category_all_armor
+			category_army
+			category_self_propelled_anti_air
+			category_support_battalions
+			category_regimental_support_battalions
+			category_self_propelled_anti_air_regimental_support
+		}
+
+		divisional = no
+
+		need = {
+			heavy_tank_aa_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		weight = 0.5
+		supply_consumption = 0.07
+		own_equipment_fuel_consumption_mult = 0.33
+		breakthrough = -0.65
+		defense = -0.25
+		soft_attack = -0.33
+		hard_attack = -0.33
+		air_attack = -0.15
+		suppression = 0.5
+		armor_value = -0.33		
+	}
+
+	modern_sp_anti_air_support = {
+		abbreviation = "OAA"
+		sprite = medium_armor
+		map_icon_category = armored
+		priority = 301
+		ai_priority = 100
+		active = yes
+		
+		type = {
+			support
+			armor
+			anti_air
+		}
+		
+		group = support
+		allowed_battalion_groups = {armor mobile_combat_support armor_combat_support }
+
+		categories = {
+			category_all_armor
+			category_army
+			category_self_propelled_anti_air
+			category_support_battalions
+			category_regimental_support_battalions
+			category_self_propelled_anti_air_regimental_support
+		}
+
+		divisional = no
+
+		need = {
+			modern_tank_aa_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		training_time = 120
+		weight = 0.5
+		supply_consumption = 0.06
+		own_equipment_fuel_consumption_mult = 0.33
+		breakthrough = -0.6
+		defense = -0.25
+		soft_attack = -0.33
+		hard_attack = -0.33
+		air_attack = -0.15
+		suppression = 0.5
+		armor_value = -0.33
+	}
+
+	jungle_pioneers_support = { #ToA support for jungle/rainforest terrain
+		abbreviation = "JLS"
+		sprite = infantry
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = no
+
+		type = {
+			infantry
+			support
+		}
+		
+		group = support
+		
+		categories = {
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+		}
+
+		regimental = no
+		combat_width = 0
+	
+		#Size Definitions
+		max_strength = 1
+		max_organisation = 30
+		default_morale = 0.3
+		manpower = 500
+		training_time = 120
+
+		#Misc Abilities
+		weight = 0.1
+		supply_consumption = 0.1
+		can_be_parachuted = yes
+		acclimatization_hot_climate_gain_factor = 3
+
+		# Support nerfs to combat abilities
+		
+		entrenchment = 2
+		breakthrough = 0.3
+		defense = 0.05
+		
+		essential = {
+			infantry_equipment
+			support_equipment
+		}
+
+		need = {
+			infantry_equipment = 10
+			support_equipment = 40
+		}
+		
+		forest = {
+			attack = 0.1
+			defence = 0.05
+			movement = 0.3
+		}
+		
+		jungle = {
+			attack = 0.1
+			defence = 0.2
+			movement = 0.3
+		}
+
+		river = {
+			attack = 0.1
+			defence = 0.25
+			movement = 0.25
+		}
+
+
+		same_support_type = engineer
+	}
+
+	rocket_artillery = {
+		abbreviation = "RART"
+		sprite = "artillery"
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = yes
+		affects_speed = no
+		is_artillery_brigade = yes
+		
+		type = {
+			infantry
+			support
+		}
+		
+		group = support
+
+		categories = {
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+			category_artillery
+			category_support_artillery
+			category_rocket_artillery
+		}		
+
+		regimental = no
+		combat_width = 0
+
+		need = {
+			rocket_artillery_equipment = 12
+		}
+
+		manpower = 300
+		training_time = 120
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		weight = 0.1
+		
+		supply_consumption = 0.16
+
+		# Support nerfs to combat abilities
+		defense = -0.4
+		breakthrough = -0.4
+		soft_attack = -0.4
+		hard_attack = -0.4
+
+
+		can_be_parachuted = no
+	}
+
+	super_heavy_artillery = {
+		abbreviation = "EMH"
+		sprite = super_heavy_artillery
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = yes
+		affects_speed = yes
+		is_artillery_brigade = yes
+		type = { infantry support }
+		group = support
+		categories = {
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+			category_artillery
+			category_support_artillery
+		}
+		regimental = no
+		combat_width = 0
+		essential = { super_heavy_artillery_equipment }
+		need = { super_heavy_artillery_equipment = 3 }
+		manpower = 1000
+		training_time = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		weight = 0.1
+		supply_consumption = 0.25
+		can_be_parachuted = no
+		same_support_type = super_heavy_artillery
+	}
+
+	self_propelled_super_heavy_artillery = {
+		abbreviation = "MESA"
+		sprite = self_propelled_super_heavy_artillery
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = yes
+		affects_speed = no
+		is_artillery_brigade = yes
+		type = { infantry support }
+		group = support
+		categories = {
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+			category_artillery
+			category_support_artillery
+		}
+		regimental = no
+		combat_width = 0
+		essential = { self_propelled_super_heavy_artillery_equipment }
+		need = { self_propelled_super_heavy_artillery_equipment = 3 }
+		manpower = 1000
+		training_time = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		weight = 0.1
+		supply_consumption = 0.35
+		can_be_parachuted = no
+		same_support_type = super_heavy_artillery
+	}
+
+	light_tank_destroyer_support = {
+		abbreviation = "LTD"
+		sprite = "light_armor"
+		map_icon_category = armored
+		priority = 1795
+		ai_priority = 100
+		active = yes
+
+		type = {
+			support
+			armor
+			anti_tank
+		}
+		
+		group = support
+		allowed_battalion_groups = { armor mobile_combat_support armor_combat_support }
+
+		categories = {
+			category_front_line
+			category_all_armor
+			category_army
+			category_tank_destroyers
+			category_support_battalions
+			category_regimental_support_battalions
+			category_tank_destroyer_regimental_support
+		}
+
+		divisional = no
+
+		need = {
+			light_tank_destroyer_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		training_time = 120
+		own_equipment_fuel_consumption_mult = 0.33
+		weight = 0.3
+		supply_consumption = 0.06
+
+		breakthrough = -0.75
+		defense = -0.25
+		hard_attack = -0.33
+		suppression = 0.25
+		armor_value = -0.33
+		
+	}
+
+	medium_tank_destroyer_support = {
+		abbreviation = "MTD"
+		sprite = "medium_armor"
+		map_icon_category = armored
+		priority = 1796
+		ai_priority = 100
+		active = yes
+
+		type = {
+			support
+			armor
+			anti_tank
+		}
+		
+		divisional = no
+		group = support
+		allowed_battalion_groups = { armor mobile_combat_support armor_combat_support }
+		
+		categories = {
+			category_front_line
+			category_all_armor
+			category_army
+			category_tank_destroyers
+			category_support_battalions
+			category_regimental_support_battalions
+			category_tank_destroyer_regimental_support
+		}
+
+
+		need = {
+			medium_tank_destroyer_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		training_time = 180
+		own_equipment_fuel_consumption_mult = 0.33
+		weight = 0.4
+		supply_consumption = 0.07
+
+		breakthrough = -0.7
+		defense = -0.25
+		soft_attack = -0.33
+		hard_attack = -0.33
+		suppression = 0.25
+		armor_value = -0.33
+		
+	}
+
+	heavy_tank_destroyer_support = {
+		abbreviation = "HTD"
+		sprite = "heavy_armor"
+		map_icon_category = armored
+		priority = 1797
+		ai_priority = 100
+		active = yes
+		training_time = 180
+
+		type = {
+			support
+			armor
+			anti_tank
+		}
+		divisional = no
+		group = support
+		allowed_battalion_groups = { armor mobile_combat_support armor_combat_support }
+		
+		categories = {
+			category_front_line
+			category_all_armor
+			category_army
+			category_tank_destroyers
+			category_support_battalions
+			category_regimental_support_battalions
+			category_tank_destroyer_regimental_support
+		}
+
+		need = {
+			heavy_tank_destroyer_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		training_time = 120
+		own_equipment_fuel_consumption_mult = 0.33
+		weight = 0.5
+		supply_consumption = 0.09
+
+		breakthrough = -0.65
+		defense = -0.25
+		soft_attack = -0.33
+		hard_attack = -0.33
+		suppression = 0.25
+		armor_value = -0.33
+	}
+
+	modern_tank_destroyer_support = {
+		abbreviation = "OTD"
+		sprite = "medium_armor"
+		map_icon_category = armored
+		priority = 1796
+		ai_priority = 100
+		active = yes
+
+		type = {
+			support
+			armor
+			anti_tank
+		}
+		divisional = no
+		group = support
+		allowed_battalion_groups = { armor mobile_combat_support armor_combat_support }
+		
+		categories = {
+			category_front_line
+			category_all_armor
+			category_army
+			category_tank_destroyers
+			category_support_battalions
+			category_regimental_support_battalions
+			category_tank_destroyer_regimental_support
+		}
+
+		need = {
+			modern_tank_destroyer_chassis = 10
+		}
+		manpower = 180
+		max_organisation = 0
+		default_morale = 0.1
+		max_strength = 0.2
+		training_time = 120
+		own_equipment_fuel_consumption_mult = 0.33
+		weight = 0.5
+		supply_consumption = 0.08
+		
+		breakthrough = -0.6
+		defense = -0.25
+		soft_attack = -0.33
+		hard_attack = -0.33
+		suppression = 0.25
+		armor_value = -0.33
+		
+	}
+
+	helicopter_field_hospital = {
+		abbreviation = "HELF"
+		sprite = helicopter_brigade
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = no
+		affects_speed = no
+
+		type = {
+			infantry
+			support
+		}
+		
+		group = support
+		
+		categories = {
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+			category_helicopter_support_companies
+		}
+
+
+		regimental = no
+		combat_width = 0
+	
+		#Size Definitions
+		max_strength = 2 #Same as reg hospital
+		max_organisation = 20
+		default_morale = 0.3
+		manpower = 500
+		training_time = 120
+
+		#Misc Abilities
+		weight = 0.1
+		supply_consumption = 0.070
+		can_be_parachuted = yes
+
+		# Important Ability
+		casualty_trickleback = 0.25
+		experience_loss_factor = -0.10
+		
+		battalion_mult = {
+			category = category_all_infantry
+			max_strength = 0.05 #Less than reg hospital (0.1)
+			default_morale = 0.1 #More than reg hospital (0)
+		}
+		
+		essential = {
+			support_equipment
+			transport_helicopter_equipment
+		}
+		
+		need = {
+			support_equipment = 30
+			transport_helicopter_equipment = 15
+			motorized_equipment = 15
+		}
+
+		same_support_type = field_hospital
+		same_support_type = helicopter_field_hospital
+	}
+
+	helicopter_transport = {
+		abbreviation = "HELT"
+		sprite = helicopter_brigade
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = no
+		affects_speed = no
+
+		type = {
+			support
+		}
+		
+		regimental = no
+		group = support
+		
+		categories = {
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+			category_helicopter_support_companies
+		}
+
+
+		combat_width = 0
+	
+		#Size Definitions
+		max_strength = 1
+		max_organisation = 12	
+		default_morale = 0.3
+		manpower = 500
+		training_time = 120
+
+		#Misc Abilities
+		weight = 0.1
+		can_be_parachuted = no
+
+		# Important Ability
+		supply_consumption_factor = -0.1
+		#fuel_consumption_factor = -0.05 #MM: No bonus or penalty to fuel consumption, just extra supply bonus
+		own_equipment_fuel_consumption_mult = 0.0 # no fuel use
+		
+		essential = {
+			support_equipment
+			transport_helicopter_equipment
+		}
+
+		need = {
+			support_equipment = 20
+			transport_helicopter_equipment = 10
+			motorized_equipment = 10
+		}
+
+		forest = {
+			movement = 0.05
+		}
+		hills = {
+			movement = 0.05
+		}
+		mountain = {
+			movement = 0.05
+		}
+		jungle = {
+			movement = 0.05
+		}
+		marsh = {
+			movement = 0.05
+		}
+		plains = {
+			movement = 0.05
+		}
+		desert = {
+			movement = 0.05
+		}
+		river = {
+			movement = 0.05
+		}
+
+		same_support_type = logistics_company
+		same_support_type = helicopter_transport
+	}
+
+	northern_territory_recon_support = { #AST: Northern Territory Reconnaissance Unit
+		abbreviation = "NTR"
+		sprite = infantry
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = no
+
+		type = {
+			infantry
+			support
+		}
+		
+		group = support
+		
+		categories = {
+			category_front_line
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+			category_recon
+			category_mountaineers
+			category_rangers
+		}
+
+
+		regimental = no
+		combat_width = 0
+	
+		#Size Definitions
+		max_strength = 2
+		max_organisation = 30
+		default_morale = 0.3
+		manpower = 500
+		training_time = 120
+
+		#Misc Abilities
+		weight = 0.1
+		supply_consumption = 0.04
+		recon = 1
+		can_be_parachuted = yes
+
+		# Support nerfs to combat abilities
+
+		maximum_speed = 0.6 # move at horsie speeds
+		
+		essential = {
+			infantry_equipment
+			support_equipment
+		}
+
+		need = {
+			infantry_equipment = 20
+			support_equipment = 10
+		}
+		
+		forest = {
+			movement = 0.20
+			attack = 0.075
+		}
+		hills = {
+			movement = 0.20
+			attack = 0.075
+		}
+		mountain = {
+			movement = 0.10
+			defence = 0.05
+		}
+		jungle = {
+			movement = 0.10
+		}
+		plains = {
+			movement = 0.1
+			attack = 0.05
+		}
+		
+		same_support_type = recon # blocks adding other recon types to template
+	}
+
+	helicopter_recon = {
+		abbreviation = "HELR"
+		sprite = helicopter_brigade
+		map_icon_category = infantry
+		priority = 0
+		ai_priority = 0
+		active = no
+		affects_speed = no
+
+		type = {
+			support
+		}
+		
+		group = support
+		
+		categories = {
+			category_support_battalions
+			category_divisional_support_battalions
+			category_army
+			category_recon
+			category_helicopter_support_companies
+		}
+
+	
+
+		
+		battalion_mult = {
+			category = category_artillery
+			soft_attack = 0.1 #Same as reg recon (0.1)
+		}
+		
+		regimental = no
+		combat_width = 0
+	
+		#Size Definitions
+		max_strength 		= 2
+		max_organisation 	= 20
+		default_morale 		= 0.3
+		manpower 			= 500
+		training_time 		= 120
+
+		#Misc Abilities
+		weight 				= 0.1
+		supply_consumption 	= 0.070
+		recon 				= 2 #More than reg recon (1)
+		can_be_parachuted 	= no
+
+		essential = {
+			infantry_equipment
+			support_equipment
+			transport_helicopter_equipment
+		}
+
+		transport = motorized_equipment 
+		need = {
+			infantry_equipment = 20
+			support_equipment = 10
+			transport_helicopter_equipment = 20
+		}
+
+		forest = {
+			movement = 0.15
+		}
+		hills = {
+			movement = 0.1
+		}
+		mountain = {
+			movement = 0.1
+		}
+		jungle = {
+			movement = 0.15
+		}
+		marsh = {
+			movement = 0.15
+		}
+		plains = {
+			movement = 0.15
+		}
+		desert = {
+			movement = 0.15
+		}
+		river = {
+			movement = 0.15
+		}
+		
+		same_support_type = recon # blocks adding other recon types to template
+		same_support_type = helicopter_recon
+	}
+
+}

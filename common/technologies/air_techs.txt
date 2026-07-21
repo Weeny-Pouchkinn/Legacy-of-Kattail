@@ -327,6 +327,10 @@ technologies = {
 	transport_helicopter1 = {
 		special_project_specialization = { specialization_air }
 
+		enable_subunits = {
+			helicopter_brigade
+		}
+
 		enable_equipments = {
 			transport_helicopter_equipment_1
 		}
@@ -354,52 +358,6 @@ technologies = {
 			custom_effect_tooltip = TRANSPORT_HELI_RESEARCHED
 		}
 
-		engineer = {
-			entrenchment = 0.25
-			hills = { attack = 0.05 }
-			mountain = { attack = 0.50 }
-			amphibious = { attack = 0.05 }
-			urban = { attack = 0.05 }
-			marsh = { attack = 0.05 }
-			forest = { attack = 0.05 }
-			jungle = { attack = 0.05 }
-			river = { attack = 0.05 }
-			need = {
-				transport_helicopter_equipment = 10
-			}
-		}
-
-		recon = {
-			recon = 1
-			hills = { movement = 0.05 }
-			mountain = { movement = 0.05 }
-			amphibious = { movement = 0.05 }
-			urban = { movement = 0.05 }
-			marsh = { movement = 0.05 }
-			forest = { movement = 0.05 }
-			jungle = { movement = 0.05 }
-			river = { movement = 0.05 }
-			need = {
-				transport_helicopter_equipment = 10
-			}
-		}
-
-		field_hospital = {
-			casualty_trickleback = 0.05
-			experience_loss_factor = -0.05
-			need = {
-				transport_helicopter_equipment = 10
-			}
-		}
-		
-		field_hospital = {
-			supply_consumption_factor = -0.05
-			fuel_consumption_factor = -0.025
-			need = {
-				transport_helicopter_equipment = 10
-			}
-		}
-		
 		ai_will_do = {
 			factor = 4
 			
@@ -433,6 +391,13 @@ technologies = {
 	transport_helicopter2 = {
 		special_project_specialization = { specialization_air }
 
+		helicopter_brigade = {
+			recon = 0.5
+			casualty_trickleback = 0.025
+			experience_loss_factor = -0.025
+			supply_consumption_factor = -0.025
+		}
+
 		enable_equipments = {
 			transport_helicopter_equipment_2
 		}
@@ -444,6 +409,7 @@ technologies = {
 				
 
 		on_research_complete = {
+			custom_effect_tooltip = ADVANCED_TRANSPORT_HELI_RESEARCHED
 			if = {
 				limit = { has_dlc = "La Resistance" }
 				set_technology = {
@@ -470,40 +436,6 @@ technologies = {
 		# 	cv_transport_helicopter2
 		# }
 		
-		engineer = {
-			entrenchment = 0.25
-			hills = { attack = 0.05 }
-			mountain = { attack = 0.50 }
-			amphibious = { attack = 0.05 }
-			urban = { attack = 0.05 }
-			marsh = { attack = 0.05 }
-			forest = { attack = 0.05 }
-			jungle = { attack = 0.05 }
-			river = { attack = 0.05 }
-		}
-
-		recon = {
-			recon = 1
-			hills = { movement = 0.05 }
-			mountain = { movement = 0.05 }
-			amphibious = { movement = 0.05 }
-			urban = { movement = 0.05 }
-			marsh = { movement = 0.05 }
-			forest = { movement = 0.05 }
-			jungle = { movement = 0.05 }
-			river = { movement = 0.05 }
-		}
-
-		field_hospital = {
-			casualty_trickleback = 0.05
-			experience_loss_factor = -0.05
-		}
-		
-		field_hospital = {
-			supply_consumption_factor = -0.05
-			fuel_consumption_factor = -0.025
-		}
-
 		ai_will_do = {
 			factor = 4
 			
@@ -561,6 +493,17 @@ technologies = {
 		# }
 
 		engineer = {
+			entrenchment = 0.25
+			hills = { attack = 0.05 }
+			mountain = { attack = 0.50 }
+			amphibious = { attack = 0.05 }
+			urban = { attack = 0.05 }
+			marsh = { attack = 0.05 }
+			forest = { attack = 0.05 }
+			jungle = { attack = 0.05 }
+			river = { attack = 0.05 }
+		}
+		armored_engineer = {
 			entrenchment = 0.25
 			hills = { attack = 0.05 }
 			mountain = { attack = 0.50 }

@@ -174,8 +174,8 @@ sp_land_military_engineering_vehicles = {
 
 	available = {
 		FROM = {
-			has_tech = tech_engineers2
-			has_tech = improved_computing_machine
+			has_tech = tech_engineers
+			has_tech = computing_machine
 			OR = {
 				AND = {
 					has_dlc = "No Step Back"
@@ -1004,6 +1004,101 @@ sp_land_land_cruiser = {
 #  #    #  #####     ##    #    #  #    #   ####   ######  #####       #    #  #    #    #    #  ######  ######  ######  #    #    #        #       #    #   ####    ####   ######   ####     #     ####
 #
 #
+sp_land_super_heavy_howitzer = {
+	specialization = specialization_land
+	narrative = { desc = LOK_SP_HEAVY_ELECTROMAGNETIC_HOWITZER_DESC }
+	icon = GFX_sp_land_super_heavy_howitzer
+	project_tags = sp_tag_artillery
+
+	allowed = { has_dlc = "Gotterdammerung" }
+	available = { FROM = { has_tech = gw_artillery } }
+
+	prototype_time = sp_time.prototype.short
+	complexity = sp_complexity.medium
+	breakthrough_cost = { specialization_land = 2 }
+	resource_cost = { resources = { steel = 8 tungsten = 4 } }
+
+	project_output = {
+		enable_subunits = { super_heavy_artillery }
+		enable_equipments = { super_heavy_artillery_equipment_1 }
+		country_effects = {
+			custom_effect_tooltip = LOK_SP_HEAVY_ELECTROMAGNETIC_HOWITZER_OUTCOME_TT
+		}
+	}
+
+	generic_prototype_rewards = {
+		sp_land_generic_reward_scientist_xp_1
+		sp_land_generic_reward_scientist_xp_2
+		sp_land_generic_reward_scientist_xp_3
+		sp_land_generic_reward_army_xp_1
+		sp_land_generic_reward_army_xp_2
+		sp_land_generic_reward_army_xp_3
+		sp_land_generic_reward_major_progress_1
+		sp_land_generic_reward_major_progress_2
+		sp_land_generic_reward_major_progress_3
+		sp_land_generic_reward_test_failure_1
+		sp_land_generic_reward_test_failure_2
+		sp_land_generic_reward_test_failure_3
+		sp_land_generic_reward_artillery_tech_1
+		sp_land_generic_reward_artillery_tech_2
+		sp_land_generic_reward_artillery_tech_3
+		sp_land_generic_reward_artillery_bonus_1
+		sp_land_generic_reward_artillery_bonus_2
+		sp_land_generic_reward_artillery_bonus_3
+		sp_land_generic_reward_resource_scarcity
+		sp_land_generic_reward_critical_failure
+	}
+}
+
+sp_land_self_propelled_super_heavy_howitzer = {
+	specialization = specialization_land
+	narrative = { desc = LOK_SP_MOBILE_ELECTROMAGNETIC_SIEGE_ARTILLERY_DESC }
+	icon = GFX_sp_land_self_propelled_super_heavy_howitzer
+	project_tags = sp_tag_artillery
+
+	allowed = { has_dlc = "Gotterdammerung" }
+	special_project_parent = {
+		sp_land_military_engineering_vehicles
+		sp_land_super_heavy_howitzer
+	}
+
+	prototype_time = sp_time.prototype.medium
+	complexity = sp_complexity.medium
+	breakthrough_cost = { specialization_land = 2 }
+	resource_cost = { resources = { steel = 8 tungsten = 6 chromium = 2 } }
+
+	project_output = {
+		enable_subunits = { self_propelled_super_heavy_artillery }
+		enable_equipments = { self_propelled_super_heavy_artillery_equipment_1 }
+		country_effects = {
+			custom_effect_tooltip = LOK_SP_MOBILE_ELECTROMAGNETIC_SIEGE_ARTILLERY_OUTCOME_TT
+		}
+	}
+
+	generic_prototype_rewards = {
+		sp_land_generic_reward_scientist_xp_1
+		sp_land_generic_reward_scientist_xp_2
+		sp_land_generic_reward_scientist_xp_3
+		sp_land_generic_reward_army_xp_1
+		sp_land_generic_reward_army_xp_2
+		sp_land_generic_reward_army_xp_3
+		sp_land_generic_reward_major_progress_1
+		sp_land_generic_reward_major_progress_2
+		sp_land_generic_reward_major_progress_3
+		sp_land_generic_reward_test_failure_1
+		sp_land_generic_reward_test_failure_2
+		sp_land_generic_reward_test_failure_3
+		sp_land_generic_reward_artillery_tech_1
+		sp_land_generic_reward_artillery_tech_2
+		sp_land_generic_reward_artillery_tech_3
+		sp_land_generic_reward_artillery_bonus_1
+		sp_land_generic_reward_artillery_bonus_2
+		sp_land_generic_reward_artillery_bonus_3
+		sp_land_generic_reward_resource_scarcity
+		sp_land_generic_reward_critical_failure
+	}
+}
+
 # sp_land_super_heavy_howitzer = {
 # 	specialization = specialization_land
 #
