@@ -5,7 +5,7 @@ sp_lok_atomic_engines = {
 	project_tags = sp_tag_nuclear_power
 
 	available = {
-		FROM = { has_tech = naval_nuclear_power }
+		FROM = { has_tech = jet_engines }
 	}
 
 	breakthrough_cost = { specialization_nuclear = 2 }
@@ -178,6 +178,10 @@ sp_lok_quantum_computing = {
 	narrative = { desc = LOK_SP_QUANTUM_COMPUTING_DESC }
 	icon = GFX_LOK_sp_quantum_computing
 	project_tags = sp_tag_nuclear_power
+
+	available = {
+		FROM = { has_tech = advanced_computing_machine4 }
+	}
 
 	breakthrough_cost = { specialization_nuclear = 2 }
 	resource_cost = { resources = { aluminium = 8 chromium = 6 tungsten = 6 } }
@@ -366,7 +370,10 @@ sp_lok_autonomous_combat_assistance = {
 
 	available = {
 		FROM = {
-			has_tech = advanced_computing_machine2
+			custom_trigger_tooltip = {
+				tooltip = LOK_SP_REQUIRES_DEEP_LEARNING_TT
+				has_country_flag = lok_has_deep_learning
+			}
 			is_special_project_completed = sp:sp_land_military_engineering_vehicles
 		}
 	}
