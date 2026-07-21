@@ -4345,31 +4345,6 @@ on_actions = {
 
 			if = {
 				limit = { is_non_playable_country = no }
-				#Nuclear Facility Buffs
-				clear_nuclear_facility_ideas = yes
-				set_variable = { nuclear_facility_count = 0 }
-				every_controlled_state = {
-					limit = { check_variable = { non_damaged_building_level@nuclear_facility > 0 } }
-					if = {
-						limit = { is_core_of = ROOT }
-						add_to_variable = { ROOT.nuclear_facility_count = 2 }
-					}
-					else = {
-						add_to_variable = { ROOT.nuclear_facility_count = 1 }
-					}
-				}
-				if = {
-					limit = { check_variable = { nuclear_facility_count > 0 } }
-					if = {
-						limit = { check_variable = { nuclear_facility_count > 20 } }
-						set_variable = { nuclear_facility_count = 20 }
-					}
-					meta_effect = {
-						text = { add_ideas = LOK_nuclear_facility_[NUCLEAR_FACILITY_COUNT] }
-						NUCLEAR_FACILITY_COUNT = "[?ROOT.nuclear_facility_count]"
-					}
-				}
-
 				#Various calculations
 				calculate_combat_casualties = yes #Casualties in states
 				calculate_stab_ws_hit_from_noncore = yes #Effect of noncore states

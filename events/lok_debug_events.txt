@@ -401,43 +401,6 @@ country_event = { #species
 	}
 }
 
-country_event = {
-	id = lok_debug.11
-	title = ""
-	desc = "[?ROOT.nuclear_facility_count]"
-	is_triggered_only = yes
-
-	immediate = {
-		clear_nuclear_facility_ideas = yes
-		set_variable = { nuclear_facility_count = 0 }
-		every_controlled_state = {
-			limit = { check_variable = { non_damaged_building_level@nuclear_facility > 0 } }
-			if = {
-				limit = { is_core_of = ROOT }
-				add_to_variable = { ROOT.nuclear_facility_count = 2 }
-			}
-			else = {
-				add_to_variable = { ROOT.nuclear_facility_count = 1 }
-			}
-		}
-		if = {
-			limit = { check_variable = { nuclear_facility_count > 0 } }
-			if = {
-				limit = { check_variable = { nuclear_facility_count > 20 } }
-				set_variable = { nuclear_facility_count = 20 }
-			}
-			meta_effect = {
-				text = { add_ideas = LOK_nuclear_facility_[NUCLEAR_FACILITY_COUNT] }
-				NUCLEAR_FACILITY_COUNT = "[?ROOT.nuclear_facility_count]"
-			}
-		}
-	}
-
-	option = {
-		name = "aaah"
-	}
-}
-
 country_event = { #species
 	id = lok_debug.12
 	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}

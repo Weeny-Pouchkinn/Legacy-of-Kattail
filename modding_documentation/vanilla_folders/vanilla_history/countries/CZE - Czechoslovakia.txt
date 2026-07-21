@@ -1,0 +1,1447 @@
+capital = 9
+
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	if = {
+		limit = {
+			NOT = {
+				has_dlc = "No Step Back"
+			}
+		}
+		set_oob = "CZE_1936_mun"
+	}
+	if = {
+		limit = {
+			has_dlc = "No Step Back"
+		}
+		set_oob = "CZE_1936_nsb_mun"
+	}
+}
+
+if = {
+	limit = {
+		NOT = {
+			has_dlc = "Peace For Our Time"
+		}
+	}
+	if = {
+		limit = {
+			NOT = {
+				has_dlc = "No Step Back"
+			}
+		}
+		set_oob = "CZE_1936"
+	}
+	if = {
+		limit = {
+			has_dlc = "No Step Back"
+		}
+		set_oob = "CZE_1936_nsb"
+	}
+}
+
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+		set_air_oob = "CZE_1936_air_bba"
+		set_technology = {
+			aa_lmg = 1
+			engines_1 = 1
+			engines_2 = 1
+			iw_small_airframe = 1
+			iw_medium_airframe = 1
+			early_bombs = 1
+			bba_early_transport_plane = 1
+		}
+	else = {
+		set_air_oob = "CZE_1936_air_legacy"
+		set_technology = {
+			early_fighter = 1
+			early_bomber = 1
+			CAS1 = 1
+			early_transport_plane = 1
+		}
+	}
+}
+
+IF = {
+	limit = { has_dlc = "Man the Guns" }
+		set_technology = {
+			mtg_transport = 1
+			basic_battery = 1
+		}
+	ELSE = {
+		set_technology = {
+			transport = 1
+		}
+	}
+}
+
+set_research_slots = 3
+
+### SETUP STABILITY ###
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	set_stability = 0.56 #to account for Taticek idea and Bojnice castle 60+15+5=~70
+	else = {
+		set_stability = 0.80
+	}
+}
+
+set_technology = {
+	infantry_weapons = 1
+	infantry_weapons1 = 1
+	tech_mountaineers = 1
+	tech_support = 1
+	tech_recon = 1
+	tech_engineers = 1
+	tech_trucks = 1
+	motorised_infantry = 1
+	gw_artillery = 1
+	interwar_antitank = 1
+	interwar_antiair = 1
+
+	fuel_silos = 1
+	basic_train = 1
+	basic_fortification_tech = 1
+}
+
+add_breakthrough_progress = {
+	specialization = specialization_land
+	value = 0.40
+}
+
+add_breakthrough_progress = {
+	specialization = specialization_air
+	value = 0.25
+}
+
+add_breakthrough_progress = {
+	specialization = specialization_naval
+	value = 0.01
+}
+
+if = {
+	limit = {
+		NOT = { has_dlc = "No Step Back" }
+	}
+	set_technology = {
+		gwtank = 1
+		basic_light_tank = 1
+		improved_light_tank = 1
+	}
+}
+if = {
+	limit = {
+		has_dlc = "No Step Back"
+	}
+	set_technology = {
+		gwtank_chassis = 1
+		basic_light_tank_chassis = 1
+		improved_light_tank_chassis = 1
+	}
+}
+
+if = {
+	limit = {
+		has_dlc = "La Resistance"
+	}
+	set_technology = {
+		armored_car1 = 1
+	}
+}
+
+### INFANTRY VARIANTS ###
+create_equipment_variant = {
+	type = infantry_equipment_1
+	design_team = mio:CZE_zbrojovka_brno_organization
+	show_position = no
+	mark_older_equipment_obsolete = yes
+}
+create_equipment_variant = {
+	type = artillery_equipment_1
+	design_team = mio:CZE_skoda_artillery_organization
+	show_position = no
+	mark_older_equipment_obsolete = yes
+}
+create_equipment_variant = {
+	type = anti_tank_equipment_1
+	design_team = mio:CZE_skoda_artillery_organization
+	show_position = no
+	mark_older_equipment_obsolete = yes
+}
+create_equipment_variant = {
+	type = anti_air_equipment_1
+	design_team = mio:CZE_skoda_artillery_organization
+	show_position = no
+	mark_older_equipment_obsolete = yes
+}
+create_equipment_variant = {
+	type = motorized_equipment_1
+	design_team = mio:CZE_praga_organization
+	show_position = no
+	mark_older_equipment_obsolete = yes
+}
+create_equipment_variant = {
+	type = transport_plane_equipment_1
+	design_team = mio:CZE_aero_organization
+	show_position = no
+	mark_older_equipment_obsolete = yes
+}
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	create_equipment_variant = {
+		type = support_equipment_1
+		design_team = mio:CZE_zbrojovka_vsetin_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+}
+# if = {
+# 	limit = {
+# 		has_dlc = "Peace For Our Time"
+# 		has_dlc = "La Resistance"
+# 	}
+# 	create_equipment_variant = {
+# 		type = gw_armored_car_equipment
+# 		design_team = mio:CZE_skoda_armor_organization
+# 		show_position = no
+# 		mark_older_equipment_obsolete = yes
+# 	}
+# }
+
+### PLANE VARIANTS ###
+if = {
+	limit = {
+		has_dlc = "By Blood Alone"
+	}
+	create_equipment_variant = {
+		name = "Avia B.534"
+		type = small_plane_airframe_0
+		design_team = mio:CZE_avia_organization
+		modules = {
+			fixed_main_weapon_slot = light_mg_4x
+			engine_type_slot = engine_2_1x
+			special_type_slot_1 = empty
+		}
+	}
+	create_equipment_variant = {
+		name = "Avia B.34.1"
+		type = small_plane_airframe_0
+		design_team = mio:CZE_avia_organization
+		modules = {
+			fixed_main_weapon_slot = light_mg_4x
+			engine_type_slot = engine_1_1x
+			special_type_slot_1 = empty
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Aero A.101"
+		type = small_plane_cas_airframe_0
+		design_team = mio:CZE_aero_organization
+		modules = {
+			fixed_main_weapon_slot = bomb_locks
+			fixed_auxiliary_weapon_slot_1 = light_mg_2x
+			engine_type_slot = engine_2_1x
+			special_type_slot_1 = lmg_defense_turret
+		}
+	}
+	create_equipment_variant = {
+		name = "Letov S-16"
+		type = small_plane_cas_airframe_0
+		design_team = mio:CZE_letov_organization
+		modules = {
+			fixed_main_weapon_slot = bomb_locks
+			engine_type_slot = engine_1_1x
+			special_type_slot_1 = lmg_defense_turret
+		}
+	}
+}
+
+### TANK VARIANTS ###
+if = {
+	limit = {
+		has_dlc = "No Step Back"
+	}
+	create_equipment_variant = {
+		name = "Tancik vz. 33"
+		type = light_tank_chassis_0
+		design_team = mio:CZE_ckd_organization
+		parent_version = 0
+		modules = {
+			main_armament_slot = tank_heavy_machine_gun
+			turret_type_slot = tank_light_fixed_superstructure_turret
+			suspension_type_slot = tank_bogie_suspension
+			armor_type_slot = tank_riveted_armor
+			engine_type_slot = tank_gasoline_engine
+		}
+		upgrades = {
+			tank_nsb_engine_upgrade = 1
+			tank_nsb_armor_upgrade = 1
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = { 
+		name = "AH-IV"
+		type = light_tank_chassis_0
+		design_team = mio:CZE_ckd_organization
+		parent_version = 1
+		modules = {
+			main_armament_slot = tank_heavy_machine_gun
+			turret_type_slot =  tank_light_one_man_tank_turret
+			suspension_type_slot = tank_bogie_suspension
+			armor_type_slot = tank_riveted_armor
+			engine_type_slot = tank_gasoline_engine
+		}
+		upgrades = {
+			tank_nsb_engine_upgrade = 1
+			tank_nsb_armor_upgrade = 1
+		}
+		obsolete = no #Was still being made for export
+		icon = "GFX_ROM_basic_light_tank_medium" #Is this tank
+	}
+	create_equipment_variant = {
+		name = "Lt vz. 34"
+		type = light_tank_chassis_1
+		design_team = mio:CZE_ckd_organization
+		parent_version = 0
+		modules = {
+			main_armament_slot = tank_high_velocity_cannon
+			turret_type_slot = tank_light_one_man_tank_turret
+			suspension_type_slot = tank_bogie_suspension
+			armor_type_slot = tank_riveted_armor
+			engine_type_slot = tank_gasoline_engine
+			special_type_slot_1 = tank_radio_1
+		}
+		upgrades = {
+			tank_nsb_engine_upgrade = 2
+			tank_nsb_armor_upgrade = 1
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = { #Export model by Skoda
+		name = "T-32"
+		type = light_tank_chassis_1
+		design_team = mio:CZE_skoda_armor_organization
+		parent_version = 1
+		modules = {
+			main_armament_slot = tank_high_velocity_cannon
+			turret_type_slot = tank_light_fixed_superstructure_turret
+			suspension_type_slot = tank_bogie_suspension
+			armor_type_slot = tank_riveted_armor
+			engine_type_slot = tank_gasoline_engine
+		}
+		upgrades = {
+			tank_nsb_engine_upgrade = 1
+			tank_nsb_armor_upgrade = 3
+		}
+		obsolete = no #Recent design made for export
+		icon = "GFX_ITA_light_ABA_camo" #Best fit
+	}
+	create_equipment_variant = {
+		name = "LT vz. 35"
+		type = light_tank_chassis_2
+		design_team = mio:CZE_skoda_armor_organization
+		parent_version = 0
+		modules = {
+			main_armament_slot = tank_high_velocity_cannon
+			turret_type_slot = tank_light_two_man_tank_turret
+			suspension_type_slot = tank_bogie_suspension
+			armor_type_slot = tank_riveted_armor
+			engine_type_slot = tank_gasoline_engine
+			special_type_slot_1 = tank_radio_1
+		}
+		upgrades = {
+			tank_nsb_engine_upgrade = 2
+			tank_nsb_armor_upgrade = 3
+		}
+		icon = "GFX_CZE_improved_light_tank_medium"
+	}
+	create_equipment_variant = { #Export model by CKD. TNHP was the variant that was being produced as of start date. 'TNH' refers to the series. Improvements over LT vz. 35
+		name = "TNHP"
+		type = light_tank_chassis_2
+		design_team = mio:CZE_ckd_organization
+		parent_version = 1
+		modules = {
+			main_armament_slot = tank_high_velocity_cannon
+			turret_type_slot = tank_light_two_man_tank_turret
+			suspension_type_slot = tank_christie_suspension #Sort of, kinda, close enough.
+			armor_type_slot = tank_riveted_armor
+			engine_type_slot = tank_gasoline_engine
+			special_type_slot_1 = tank_radio_1
+		}
+		upgrades = {
+			tank_nsb_engine_upgrade = 3
+			tank_nsb_armor_upgrade = 3
+		}
+	}
+	add_equipment_to_stockpile = {
+    	type = light_tank_chassis_1
+    	amount = 50
+		producer = CZE
+		variant_name = "Lt vz. 34"
+	}
+}
+if = {
+	limit = {
+		NOT = { has_dlc = "No Step Back" }
+	}
+	add_equipment_to_stockpile = {
+		type = light_tank_equipment_1
+		amount = 50
+	}
+}
+
+### TRAIN VARIANTS ###
+if = {
+	limit = {
+		has_dlc = "Arms Against Tyranny"
+		has_dlc = "Peace For Our Time"
+	}
+	create_equipment_variant = {
+    	name = "Lokomotiva 464"
+    	type = train_equipment_1
+		mark_older_equipment_obsolete = yes
+		design_team = mio:CZE_CKD_plzen_organization
+	}
+}
+
+# SETUP CZECH POLITICS
+set_politics = {
+	ruling_party = democratic
+	last_election = "1935.5.19"
+	election_frequency = 60
+	elections_allowed = yes
+}
+set_popularities = { #Based on the 1935 election, % popularities were roughly adjusted to account for subtracting ~15% of votes for the SdP who were 'locked out' of the government by all other parties. 
+	democratic = 71
+	neutrality = 14
+	fascism = 3
+	communism = 12
+}
+
+##RECRUITING CZECH CHARACTERS
+#Shared
+recruit_character = CZE_karl_albrecht
+recruit_character = CZE_jaroslav_krejchi
+recruit_character = CZE_klement_gottwald
+recruit_character = CZE_vojtyech_luzha
+recruit_character = CZE_josef_shnejdarek
+recruit_character = CZE_richard_tesarzhik
+recruit_character = CZE_sergej_vojcechovsky
+recruit_character = CZE_rudolf_viest
+recruit_character = CZE_alois_vicherek
+recruit_character = CZE_jaroslav_fajfr
+recruit_character = CZE_jan_golian
+recruit_character = CZE_karel_janousek
+recruit_character = CZE_josef_frantisek
+recruit_character = CZE_ludvik_krejci
+recruit_character = CZE_karel_vaclav_petrik
+recruit_character = CZE_frantisek_havel
+recruit_character = CZE_stefan_osusky
+recruit_character = CZE_ferdinand_catlos
+recruit_character = CZE_jozef_tiso
+recruit_character = CZE_vojtech_tuka
+recruit_character = CZE_albrecht_franz
+recruit_character =	CZE_karel_englis
+recruit_character = CZE_andrej_hlinka
+
+#Shared characters that are instanced 
+recruit_character = CZE_edvard_benesh
+recruit_character = CZE_konrad_henlein		
+recruit_character = CZE_frantisek_moravec
+recruit_character = CZE_emil_kolben 
+recruit_character = CZE_frantisek_machnik
+recruit_character = CZE_zdenek_fierlinger
+recruit_character = CZE_karel_pavala
+recruit_character = CZE_zdenko_hudecek
+
+#No Pfot only
+if = {
+	limit = {
+		NOT = {
+			has_dlc = "Peace For Our Time"
+		}
+	}
+	recruit_character = CZE_robert_rychtrmoc
+		CZE_robert_rychtrmoc = {	#make sure the other non-aligned options dont take priority due to later position
+		 	promote_character = yes
+		}
+	recruit_character = CZE_ludvik_svoboda
+	recruit_character = CZE_gustav_husak		
+	recruit_character = CZE_karel_kuttelwascher	
+}
+
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	recruit_character = CZE_antonin_hampl		#Demo leader during second Republic. PLACE INFRONT OF MILAN!
+	recruit_character = CZE_milan_hodza			#start date leader for DLC
+	recruit_character = CZE_bohumir_smeral		#alternate communist leader
+	recruit_character = CZE_karel_schwarzenberg	#monarchist leader
+	recruit_character = CZE_radola_gajda		#non-collaborationist fascist leader
+	recruit_character = CZE_emil_hacha			#neutrality party leader
+	recruit_character = CZE_kamil_krofta		#advisor
+	recruit_character = CZE_karel_domin			#advisor
+	recruit_character = CZE_josef_guttman		#communist editor
+	recruit_character = CZE_milada_horakova		#womens rights activist
+	recruit_character = CZE_ferdinand_peroutka	#"liberal journalist"
+	recruit_character = CZE_bohumil_lausman		#cpt of industry
+	recruit_character = CZE_jan_dostalek		#advisor
+	recruit_character = CZE_emil_franke			#advisor
+	recruit_character = CZE_jan_krcmar			#advisor
+	recruit_character = CZE_pavel_reiman		#"socialist writer"
+	recruit_character = CZE_vaclav_kopecky		#stalinist backroom backstabber
+	recruit_character = CZE_josef_rozsevac		#monarchofascist advisor
+	recruit_character = CZE_jan_ruckl			#csl economist
+	recruit_character = CZE_vladimir_mandl		#advisor
+	recruit_character = AUS_ernst_fischer		#advisor
+	recruit_character = CZE_ludwig_czech		#advisor
+	recruit_character = CZE_jan_sramek			#advisor
+	recruit_character = CZE_bozena_machacova_dostalova #advisor
+	recruit_character = CZE_josef_cerny			#advisor
+	recruit_character =	CZE_rudolf_mlcoch 		#advisor
+	recruit_character = CZE_josef_kalfus		#advisor
+	recruit_character =	CZE_alois_tucny			#advisor
+	recruit_character = CZE_rudolf_bechyne 		#advisor
+	recruit_character = CZE_frantisek_chvalkovsky #advisor
+	recruit_character = CZE_stanislav_bukovsky	#advisor
+	recruit_character = CZE_augustin_voloshyn 	#advisor
+	recruit_character = CZE_simon_drgac			#generic head of intelligence for the context of having dlc as františek moravec has a custom trait
+	recruit_character = CZE_bedrich_homola		#general
+	recruit_character = CZE_emil_linhart		#general
+	recruit_character = CZE_frantisek_hrabcik	#general
+	recruit_character = CZE_antonin_hasal		#general
+	recruit_character = CZE_lev_prchala			#general, soon field marshall
+	recruit_character = CZE_josef_votruba		#general, soon field marshall
+	recruit_character = CZE_jan_syrovy			#field marshall, country leader later historically
+	recruit_character = CZE_stefan_jurech		#general
+	recruit_character = CZE_melichar_frantisek	#general and advisor, unlocked by focus
+	recruit_character = CZE_mikulas_dolezal		#defensive army chief - replaces Krejci so he can be high command
+	recruit_character = CZE_antonin_pavlik		#armor hc
+	recruit_character = CZE_vladimir_prikryl	#artillery hc - born 1888, not to be confused with the general born in 1895
+	recruit_character = CZE_karel_husarek		#general and advisor, unlocked by focus
+	recruit_character = CZE_alois_elias			#general, unlocked by focus
+	recruit_character = CZE_josef_vana			#general, unlocked by focus
+	recruit_character = CZE_emanuel_moravec		#general, unlocked by focus
+	recruit_character = CZE_jaroslav_kejla 		#air chief
+	recruit_character = CZE_karel_prochazka		#air chief replacement for Kuttelwascher
+	recruit_character = CZE_frantisek_placak	#navy chief
+	recruit_character = CZE_alexej_surin		#land scientist
+	recruit_character = CZE_antonin_husnik		#air scientist
+	recruit_character = CZE_georg_placzek		#nuclear scientist
+	recruit_character = CZE_karel_pavala_army	#general, split character to avoid a bug that doesn't allow admiral/commander on one character
+	recruit_character = CZE_jaroslav_slechta	#advisor
+	recruit_character = CZE_hugo_vavrecka		#advisor
+	recruit_character = CZE_jan_antonin_bata	#advisor
+	recruit_character = CZE_dominik_cipera		#advisor
+	recruit_character = CZE_sergej_ingr			#Army High Command
+	recruit_character = CZE_louis_eugene_faucher #Chief of Army
+
+	# Character Flags
+	# CZE_vojtech_tuka = {	#for tooltip purposes, I set a flag when he's released instead
+	# 	set_character_flag = CZE_imprisoned_flag
+	# }
+}
+
+### COUNTRY LEADER RESTACKING ### - WARNING: NEEDS TO GO AFTER CHARACTER RECRUITMENT!
+if = { #Makes sure the other options dont take priority due to later position
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	CZE_milan_hodza	= {	#Demo
+		promote_character = yes
+	}
+	CZE_emil_hacha	= { #Non-aligned 
+		promote_character = yes
+	}
+	CZE_radola_gajda = { #Fascist
+		promote_character = yes
+	}
+}
+CZE_andrej_hlinka = { #NEEDS TO GO BEHIND HACHA!
+	promote_character = yes
+}
+
+IF = {
+	limit = {
+		has_dlc = "La Resistance"
+	}
+	CZE_create_paul_thummel_operative = yes
+}
+
+### SETUP NATIONAL SPIRITS AND DIPLO NO PFOT ###
+if = {
+	limit = {
+		NOT = {
+			has_dlc = "Peace For Our Time"
+		}
+		has_dlc = "Death or Dishonor"
+	}
+	add_ideas = {
+		CZE_skoda_works
+		CZE_divided_nation
+	}
+	give_guarantee = YUG
+	give_guarantee = ROM
+}
+
+if = {
+	limit = {
+		NOT = { has_dlc = "Death or Dishonor" }
+	}
+	add_ideas = {
+		CZE_fortification_focus
+	}
+}
+
+### SETUP NATIONAL SPIRITS PFOT ### - WARNING: NEEDS TO GO AFTER CHARACTER RECRUITMENT!
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	add_ideas = {
+		CZE_sudeten_german_quandary
+		CZE_taticek_of_czechoslovakia
+		CZE_industrialists_veto
+		CZE_agrarian_politics_1
+		CZE_a_divided_nation_fake_ns
+		CZE_edvard_benesh_idea
+	}
+	if = {
+		limit = {
+			has_dlc = "No Step Back"
+		}
+		add_ideas = CZE_legacy_of_the_czechoslovak_legion_army_spirit
+	}
+}
+
+# RETIRE CHARCTER EVENTS
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	#The death of Tomas Masaryk
+	country_event = {
+		id = MUN_czech.5
+		days = 622
+		random_hours = 12
+	}
+}
+
+country_event = { #Flavor for a real start date non-aligned party leader placeholder Hlinka to be retired - hidden
+	id = MUN_czech.6
+	days = 958
+	random_hours = 12
+}
+
+# BALANCE OF POWER SETUP
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	#BOP 
+	# set_power_balance = {
+	# 	id = CZE_bop_army_readiness
+	# 	set_default = yes  # whether or not to reset the power balance to the initial value, default = no
+	# }
+
+	#Starts BOP
+	country_event = {
+		id = MUN_czech_bop.1
+		days = 8
+		random_hours = 4
+	}
+}
+
+#MISSION ACTIVATIONS
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+	activate_mission = CZE_fate_of_the_ro
+}
+
+### DYNAMIC MODIFIERS AND VARIABLES ###
+if = {
+	limit = {
+		has_dlc = "Peace For Our Time"
+	}
+
+	#Skoda Variables
+	set_variable = { skoda_plane_x = 208 } 
+	set_variable = { skoda_optimization_tier = 2 } #Starting Optimization Tier
+	set_variable = { skoda_max_optimization_tier = 4 } #Starting Optimization Cap
+	set_variable = { skoda_focus_var = 0 } 
+
+	# CZE_update_skoda_tier = yes #Is triggered by event MUN_czech_skoda_priority.1
+
+	#Days Remove Variable that is changed to be a lower value as an effect for Fortification Program Decisions
+	set_variable = { CZE_second_sudetenland_fortification_program_days_remove_variable_0 = 125 } #Days
+	set_variable = { CZE_second_sudetenland_fortification_program_days_remove_variable_1 = 175 } #Days
+	set_variable = { CZE_second_sudetenland_fortification_program_days_remove_variable_2 = 325 } #Days
+	
+	###Dynamic Modifiers###
+	#State Modifiers for Fortification Program State Modifiers
+	if = {
+		limit = {
+			has_dlc = "Gotterdammerung"
+		}
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 9 #Bohemia
+					state = 69 #North Sudetenland
+					state = 972 #South Sudetenland
+					state = 74 #Czeske Slezsko
+					state = 70 #Western Slovakia
+				}
+			}
+			add_dynamic_modifier = {
+				modifier = CZE_first_sudetenland_fortification_program_GD
+			}
+		}
+	}
+	if = {
+		limit = {
+			NOT = {
+				has_dlc = "Gotterdammerung"
+			}
+		}
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 9 #Bohemia
+					state = 69 #North Sudetenland
+					state = 972 #South Sudetenland
+					state = 74 #Czeske Slezsko
+					state = 70 #Western Slovakia
+				}
+			}
+			add_dynamic_modifier = {
+				modifier = CZE_first_sudetenland_fortification_program
+			}
+		}
+	}
+
+	##Dynamic Modifiers for Divided Nation start here##
+	#Divided Nation Dynamic Modifier National Spirit and related state modifiers# 
+	#DANGER! Number changes here must have changes with how these stats decrease in CZE_a_divided_nation_category decisions, and should be divisible by 10* (* the number of start date states CZE own). Also CZE_a_divided_nation_fake_ns ideas numbers must also be updated to reflect changes.
+	set_variable = { CZE_a_divided_nation_stability_factor = -0.20 } #Should be divisible by 10*
+	set_variable = { CZE_a_divided_nation_drift_defence_factor = -0.30 } #DANGER WILL ROBINSON DANGER!!! This value is a variable that is used for the remove check on when CZE_a_divided_nation_dynamic_modifier is removed in the CZE_a_divided_nation_category. Should be divisible by 10*
+	set_variable = { CZE_a_divided_nation_political_power_cost = 0.30 } #Should be divisible by 10*
+
+	add_dynamic_modifier = { modifier = CZE_a_divided_nation_dynamic_modifier }
+
+	#Decision Costs Variables
+	set_variable = { CZE_divided_nation_25_default = 25 } #PP
+	set_variable = { CZE_divided_nation_15_default = 15 } #PP
+
+	#Days Remove Variables
+	set_variable = { CZE_a_divided_nation_days_remove_variable = 40 } #Days
+
+	#State Modifiers for Divided Nation#
+	every_owned_state = {
+		limit = {
+			OR = {
+				state = 69 #North Sudetenland
+				state = 972 #South Sudetenland
+				state = 74 #Czeske Slezsko
+			}
+		}
+		add_dynamic_modifier = {
+			modifier = CZE_sudetenland_german_state_modifier
+			scope = ROOT
+		}
+	}
+
+	every_owned_state = {
+		limit = {
+			state = 72 #Tesinko
+		}
+		add_dynamic_modifier = {
+			modifier = CZE_tesinko_polish_state_modifier
+			scope = ROOT
+		}
+	}
+
+	every_owned_state = {
+		limit = {
+			OR = {
+				state = 9 #Bohemia
+				state = 75 #Morvia
+			}
+		}
+		add_dynamic_modifier = {
+			modifier = CZE_czech_state_modifier
+			scope = ROOT
+		}
+	}
+
+	every_owned_state = {
+		limit = {
+			OR = {
+				state = 70 #Western Slovakia
+				state = 71 #Eastern Slovakia
+			}
+		}
+		add_dynamic_modifier = {
+			modifier = CZE_slovakia_state_modifier
+			scope = ROOT
+		}
+	}
+
+	every_owned_state = {
+		limit = {
+			state = 664 #Southern Slovakia
+		}
+		add_dynamic_modifier = {
+			modifier = CZE_hungarian_state_modifier
+			scope = ROOT
+		}
+	}
+
+	every_owned_state = {
+		limit = {
+			state = 73 #Podkarpatska Rus 
+		}
+		add_dynamic_modifier = {
+			modifier = CZE_ukrainian_state_modifier
+			scope = ROOT
+		}
+	}
+
+	set_rule = { #Prevent ideology change from bypassing a focus
+		can_send_volunteers = no
+	}
+
+	#Skoda Works Dynamic Modifier - Not to be confused with the GUI
+	set_variable = { CZE_skoda_works_dynamic_modifier_industrial_capacity_factory = 0.05 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_factory_max_efficiency_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_factory_efficiency_gain_factor = 0 } 
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_arms_factory_factor = 0 } 
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_buildings_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_facility_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_industrial_capacity_dockyard = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_synthetic_refinery_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_fuel_gain_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_rail_way_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_infrastructure_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_industry_air_damage_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_line_change_production_efficiency_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_buildings_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_equipment_conversion_speed = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_factory_start_efficiency_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_lack_of_resource_penalty_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_industrial_infrastructure_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_production_speed_energy_infrastructure_factor = 0 }
+	set_variable = { CZE_skoda_works_dynamic_modifier_out_of_power_impact_factor = 0 }
+
+	#Czech Army
+	set_variable = { CZE_ceskoslovenska_armada_training_time_factor = 0.10 }
+	set_variable = { CZE_ceskoslovenska_armada_experience_gain_army_unit_factor = 0.05 }
+	set_variable = { CZE_ceskoslovenska_armada_army_org_factor = -0.15 }
+	set_variable = { CZE_ceskoslovenska_armada_supply_combat_penalties_on_core_factor = -0.10 }
+	set_variable = { CZE_ceskoslovenska_armada_out_of_supply_factor = 0.10 }
+	set_variable = { CZE_ceskoslovenska_armada_conscription_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_dig_in_speed_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_special_forces_out_of_supply_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_special_forces_cap = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_unit_artillery_brigade_design_cost_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_org_loss_when_moving = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_army_speed_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_truck_attrition_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_army_core_defence_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_army_armor_attack_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_field_officer_promotion_penalty = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_military_leader_cost_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_max_dig_in_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_army_core_attack_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_coordination_bonus = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_army_regain = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_acclimatization_cold_climate_gain_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_cas_damage_reduction = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_equipment_capture_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_intel_from_combat_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_experience_gain_army_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_modifier_army_sub_unit_militia_defence_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_dynamic_modifier_army_morale_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_dynamic_modifier_command_power_gain_mult = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_dynamic_modifier_party_popularity_stability_factor = 0 }
+	set_variable = { CZE_ceskoslovenska_armada_dynamic_modifier_mobilization_speed = 0 }
+
+	add_dynamic_modifier = { modifier = CZE_ceskoslovenska_armada_dynamic_modifier }
+
+	#Czech Air Force
+	set_variable = { CZE_ceskoslovenske_letectvo_air_untrained_pilots_penalty_factor = -0.25 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_training_xp_gain_factor = 0.05 }
+	set_variable = { CZE_ceskoslovenske_letectvo_dynamic_air_volunteer_cap = 1 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_accidents_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_ace_generation_chance_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_ace_effectiveness_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_production_speed_air_base_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_production_speed_anti_air_building_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_home_defence_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_superiority_efficiency = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_range_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_strategic_bomber_bombing_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_cas_efficiency = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_attack_factor = 0.0 }
+	set_variable = { CZE_ceskoslovenske_letectvo_air_night_penalty = 0.0 }
+	
+	#Czech Navy 
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_experience_gain_navy_factor= 0.10 }
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_navy_capital_ship_attack_factor = 0 }
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_navy_screen_attack_factor = 0 }
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_screening_efficiency = 0 }
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_convoy_raiding_efficiency_factor = 0 }
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_naval_heavy_gun_hit_chance_factor = 0 }
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_sortie_efficiency = 0 }
+	set_variable = { CZE_ceskoslovenske_alecne_lodstvo_navy_max_range_factor = 0 }
+}
+
+### LICENSE AND MARKET DIPLOMACY ###
+##Not DLC locked License and Market Diplomacy
+#Europe
+add_opinion_modifier = {
+	target = ROM
+	modifier = CZE_recent_contract_purchases #a few months from Janaury
+}
+ROM = {
+	add_relation_modifier = {
+		target = ROOT
+		modifier = CZE_i_am_agreeable_to_license
+	}
+	if = {
+		limit = {
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = CZE
+			value = 75
+		}
+		add_equipment_subsidy = {
+    		cic = 20
+    		equipment_type = light_tank_chassis
+    		seller_tags = { CZE }
+		}
+	}
+}
+add_opinion_modifier = {
+	target = YUG
+	modifier = CZE_recent_contract_purchases 
+}
+YUG = {
+	add_relation_modifier = {
+		target = ROOT
+		modifier = CZE_i_am_agreeable_to_license
+	}
+	if = {
+		limit = {
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = CZE
+			value = 75
+		}
+		add_equipment_subsidy = {
+    		cic = 80
+    		equipment_type = light_tank_chassis
+    		seller_tags = { CZE }
+		}
+	}
+}
+if = {
+	limit = {
+		has_dlc = "No Step Back"
+	}
+	create_production_license = { #T-32
+		target = YUG
+		equipment = {
+			type = light_tank_chassis_1
+			version = 1
+		}
+		cost_factor = 0
+	}
+	create_production_license = { #AH-IV
+    	target = ROM
+    	equipment = {
+        	type = light_tank_chassis_0
+       		version = 1
+   		}
+    	cost_factor = 0
+	}
+}
+if = {
+	limit = {
+		NOT = { has_dlc = "No Step Back" }
+	}
+	create_production_license = { #T-32
+		target = YUG
+		equipment = {
+			type = light_tank_equipment_2
+			version = 1
+		}
+		cost_factor = 0
+	}
+	#Don't need the license in this context
+	# create_production_license = { #AH-IV
+	# 	target = ROM
+	# 	equipment = {
+	# 		type = light_tank_equipment_1
+	# 		version = 1
+	# 	}
+	# 	cost_factor = 0
+	# }
+}
+#South America
+PRU = {
+	add_relation_modifier = {
+		target = ROOT
+		modifier = CZE_i_am_agreeable_to_license
+	}
+	if = {
+		limit = {
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = CZE
+			value = 175 #Need alot for you
+		}
+	}
+}
+#Asia
+CHI = {
+	add_relation_modifier = {
+		target = ROOT
+		modifier = CZE_i_am_agreeable_to_license
+	}
+	if = {
+		limit = {
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = CZE
+			value = 75
+		}
+	}
+}
+##CZE Market AI Strats
+if = {
+	limit = {
+		has_dlc = "Arms Against Tyranny"
+	}
+	#Europe
+	add_ai_strategy = {
+		type = equipment_market_trade_desire
+		id = ROM
+		value = 75
+	}
+	add_ai_strategy = {
+		type = equipment_market_trade_desire
+		id = YUG
+		value = 75
+	}
+	#South America
+	add_ai_strategy = {
+		type = equipment_market_trade_desire
+		id = PRU
+		value = 175 #Need alot for you
+	}
+	#Asia
+	add_ai_strategy = {
+		type = equipment_market_trade_desire
+		id = CHI
+		value = 100
+	}
+	give_market_access = PRU
+	give_market_access = CHI
+	give_market_access = YUG
+	give_market_access = ROM
+}
+##DLC locked License and Market Diplomacy by either Pfot or Relevant Country's DLC
+#Europe
+if = {
+	limit = {
+		OR = {
+			has_dlc = "No Step Back"
+			has_dlc = "Peace For Our Time"
+		}
+	}
+	EST = {
+		add_relation_modifier = {
+			target = ROOT
+			modifier = CZE_i_am_agreeable_to_license
+		}
+		if = {
+			limit = {
+				has_dlc = "Arms Against Tyranny"
+			}
+			add_ai_strategy = {
+				type = equipment_market_trade_desire
+				id = CZE
+				value = 75
+			}
+		}
+	}
+	LIT = {
+		add_relation_modifier = {
+			target = ROOT
+			modifier = CZE_i_am_agreeable_to_license
+		}
+		if = {
+			limit = {
+				has_dlc = "Arms Against Tyranny"
+			}
+			add_ai_strategy = {
+				type = equipment_market_trade_desire
+				id = CZE
+				value = 75
+			}
+		}
+	}
+	#CZE Market AI Strats
+	if = {
+		limit = {
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = LIT
+			value = 75
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = EST
+			value = 75
+		}
+		give_market_access = LIT
+		give_market_access = EST
+	}
+}
+if = {
+	limit = {
+		OR = {
+			has_dlc = "Arms Against Tyranny"
+			has_dlc = "Peace For Our Time"
+		}
+	}
+	SWE = {
+		add_relation_modifier = {
+			target = ROOT
+			modifier = CZE_i_am_agreeable_to_license
+		}
+		if = {
+			limit = { #Because of the OR statement we do need to check again :(
+				has_dlc = "Arms Against Tyranny"
+			}
+			add_ai_strategy = {
+				type = equipment_market_trade_desire
+				id = CZE
+				value = 75
+			}
+		}
+	}
+	#CZE Market AI Strats
+	if = {
+		limit = { #Because of the OR statement we do need to check again :(
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = SWE
+			value = 75
+		}
+		give_market_access = SWE
+	}
+}
+#South America
+if = {
+	limit = {
+		OR = {
+			has_dlc = "Trial of Allegiance"
+			has_dlc = "Peace For Our Time"
+		}
+	}
+	ARG = {
+		add_relation_modifier = {
+			target = ROOT
+			modifier = CZE_i_am_agreeable_to_license
+		}
+		if = {
+			limit = {
+				has_dlc = "Arms Against Tyranny"
+			}
+			add_ai_strategy = {
+				type = equipment_market_trade_desire
+				id = CZE
+				value = 75 #Need alot for you
+			}
+		}
+	}
+	BRA = {
+		add_relation_modifier = {
+			target = ROOT
+			modifier = CZE_i_am_agreeable_to_license
+		}
+		if = {
+			limit = {
+				has_dlc = "Arms Against Tyranny"
+			}
+			add_ai_strategy = {
+				type = equipment_market_trade_desire
+				id = CZE
+				value = 75
+			}
+		}
+	}
+	BOL = {
+		add_relation_modifier = {
+			target = ROOT
+			modifier = CZE_i_am_agreeable_to_license
+		}
+		if = {
+			limit = {
+				has_dlc = "Arms Against Tyranny"
+			}
+			add_ai_strategy = {
+				type = equipment_market_trade_desire
+				id = CZE
+				value = 75
+			}
+		}
+	}
+	#CZE Market AI Strats
+	if = {
+		limit = {
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = ARG
+			value = 100
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = BRA
+			value = 100
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = BOL
+			value = 100
+		}
+		give_market_access = BOL
+		give_market_access = BRA
+		#give_market_access = ARG they will just cancel it right away due to no trade route
+	}
+}
+#Asia
+add_opinion_modifier = {
+	target = PER
+	modifier = CZE_recent_contract_purchases 
+}
+if = {
+	limit = {
+		OR = {
+			has_dlc = "Graveyard of Empires"
+			has_dlc = "Peace For Our Time"
+		}
+	}
+	if = {
+		limit = {
+			has_dlc = "No Step Back"
+		}
+		create_production_license = { #AH-IV
+			target = PER
+			equipment = {
+				type = light_tank_chassis_0
+				version = 1
+			}
+			cost_factor = 0
+		}
+		create_production_license = { #TNHP
+			target = PER
+			equipment = {
+				type = light_tank_chassis_2
+				version = 1
+			}
+			cost_factor = 0
+		}
+	}
+	if = {
+		limit = {
+			NOT = { has_dlc = "No Step Back" }
+		}
+		create_production_license = { #AH-IV
+			target = PER
+			equipment = {
+				type = light_tank_equipment_1
+				version = 1
+			}
+			cost_factor = 0
+		}
+		create_production_license = { #TNHP
+    		target = PER
+    		equipment = {
+        		type = light_tank_equipment_2
+       			version = 1
+   			}
+    		cost_factor = 0
+		}
+	}
+	PER = {
+		add_relation_modifier = {
+			target = ROOT
+			modifier = CZE_i_am_agreeable_to_license
+		}
+		if = {
+			limit = {
+				has_dlc = "Arms Against Tyranny"
+			}
+			add_ai_strategy = {
+				type = equipment_market_trade_desire
+				id = CZE
+				value = 75
+			}
+			add_equipment_subsidy = {
+    			cic = 200
+    			equipment_type = light_tank_chassis
+    			seller_tags = { CZE }
+			}
+		}
+	}
+	#CZE Market AI Strats
+	if = {
+		limit = {
+			has_dlc = "Arms Against Tyranny"
+		}
+		add_ai_strategy = {
+			type = equipment_market_trade_desire
+			id = PER
+			value = 100
+		}
+		give_market_access = PER
+	}
+}
+
+### 1939 SETUP ###
+
+1939.1.1 = { #Everything I did before I got eaten
+
+	add_political_power = 1198
+	add_command_power = 100
+
+	set_grand_doctrine = grand_battleplan
+	set_grand_doctrine = new_battlefield_support
+
+	set_technology = {
+		#doctrines
+		# formation_flying = 1
+		# grand_battle_plan = 1
+		# trench_warfare = 1
+
+		#electronics
+		electronic_mechanical_engineering = 1
+		radio = 1
+		mechanical_computing = 1
+		computing_machine = 1
+
+		#industry
+		basic_machine_tools = 1
+		improved_machine_tools = 1
+		fuel_silos = 1
+		construction1 = 1
+		concentrated_industry = 1
+	}
+
+	complete_special_project = {
+		project = sp:sp_air_radar
+	}
+
+	if = {
+		limit = {
+			has_dlc = "Peace For Our Time"
+		}
+		if = {
+			limit = {
+				has_dynamic_modifier = {
+					modifier = CZE_a_divided_nation_dynamic_modifier
+				}
+			}
+			remove_dynamic_modifier = { modifier = CZE_a_divided_nation_dynamic_modifier }
+		}
+
+		#National Focuses
+		complete_national_focus = CZE_force_the_industrialists_hand
+		complete_national_focus = CZE_continue_armed_force_reform
+		complete_national_focus = CZE_form_the_state_defense_guard
+		complete_national_focus = CZE_the_second_fortification_program	
+		complete_national_focus = CZE_vonapo_20
+		complete_national_focus = CZE_placate_benes_faction
+		complete_national_focus = CZE_no_compromise_with_the_sdp
+		complete_national_focus = CZE_keep_focus_on_weapon_exports
+		complete_national_focus = CZE_establish_a_armament_factory_in_uhersky_brod
+		complete_national_focus = CZE_the_slovak_arrow
+		complete_national_focus = CZE_merge_the_financial_and_state_guard
+		complete_national_focus = CZE_department_two_expansion
+		complete_national_focus = CZE_continue_the_central_bohemia_plan
+		complete_national_focus = CZE_free_tuka
+		complete_national_focus = CZE_air_force_officer_recruitment
+		complete_national_focus = CZE_reorient_the_broad_coalition
+		complete_national_focus = CZE_king_of_the_castle
+		complete_national_focus = CZE_bribery_investigations
+		complete_national_focus = CZE_opl_exercises
+		complete_national_focus = CZE_closer_ties_with_the_moderate_germany_parties
+		complete_national_focus = CZE_national_defense_act
+		complete_national_focus = CZE_contact_henlein
+		complete_national_focus = CZE_car_and_oil_rationing
+		complete_national_focus = CZE_establish_the_fall_backlines
+		complete_national_focus = CZE_deepend_ties_with_the_trademans
+		complete_national_focus = CZE_grow_ckd_secondary_facilities
+		complete_national_focus = CZE_bolster_domestic_construction
+		complete_national_focus = CZE_compromise_with_the_veteran_agrarian
+
+		# ONES THAT HAVE TO BE BYPASSED
+		unlock_national_focus = CZE_mobilize_the_reserves
+		unlock_national_focus = CZE_coalition_building
+		unlock_national_focus = CZE_continue_industrial_relocation_schemes
+		unlock_national_focus = CZE_devaluate_the_koruna
+
+		#Skoda setup
+		unlock_national_focus = CZE_raise_more_industrial_funds
+		CZE_start_skoda_GUI = yes
+		mark_focus_tree_layout_dirty = yes
+		add_dynamic_modifier = { modifier = CZE_skoda_works_dynamic_modifier }
+
+		remove_ideas = {
+			CZE_sudeten_german_quandary
+			CZE_taticek_of_czechoslovakia
+			CZE_industrialists_veto
+			CZE_industrialists_veto_2
+			CZE_agrarian_politics_1
+			CZE_a_divided_nation_fake_ns
+		}
+
+		#Second Republic was a thing
+		CZE_get_rid_of_the_auto_blok = yes
+		CZE_emil_hacha = {
+			add_country_leader_trait = CZE_3rd_prezident
+		}
+		set_cosmetic_tag = CZE_fall_of_the_republic
+	}
+}
+
+
+

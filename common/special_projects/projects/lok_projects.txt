@@ -224,6 +224,140 @@ sp_lok_genetically_perfected_infantry = {
 	}
 }
 
+# Aerospace projects use the existing space-technology branch. Technologies granted
+# by these projects remain visible in that branch but cannot be researched normally.
+sp_lok_exo_atmospheric_ballistics = {
+	specialization = specialization_air
+	narrative = { desc = LOK_SP_EXO_ATMOSPHERIC_BALLISTICS_DESC }
+	icon = GFX_LOK_sp_exo_atmospheric_ballistics
+	project_tags = sp_tag_rocket
+
+	available = { FROM = { has_tech = experimental_rockets } }
+	breakthrough_cost = { specialization_air = 2 }
+	resource_cost = { resources = { steel = 8 aluminium = 10 tungsten = 4 } }
+	prototype_time = sp_time.prototype.long
+	complexity = sp_complexity.large
+
+	project_output = {
+		country_effects = {
+			custom_effect_tooltip = LOK_SP_EXO_ATMOSPHERIC_BALLISTICS_OUTPUT_TT
+			set_technology = { rocket_engines = 1 popup = yes }
+		}
+	}
+
+	generic_prototype_rewards = {
+		sp_rockets_scientist_xp_generic_reward
+		sp_rockets_political_interference_generic_reward
+		sp_rockets_onsite_explosion_generic_reward
+		sp_rockets_generic_major_breakthrough_reward
+	}
+}
+
+sp_lok_reusable_rocketry = {
+	specialization = specialization_air
+	narrative = { desc = LOK_SP_REUSABLE_ROCKETRY_DESC }
+	icon = GFX_LOK_sp_reusable_rocketry
+	project_tags = sp_tag_rocket
+
+	available = {
+		FROM = {
+			has_tech = heavy_chemical_rocket
+			custom_trigger_tooltip = {
+				tooltip = LOK_SP_REQUIRES_20_SPACE_EXPERIENCE_TT
+				check_variable = { space_exp > 19 }
+			}
+		}
+	}
+	breakthrough_cost = { specialization_air = 2 }
+	resource_cost = { resources = { steel = 10 aluminium = 12 chromium = 4 } }
+	prototype_time = sp_time.prototype.long
+	complexity = sp_complexity.large
+
+	project_output = {
+		country_effects = {
+			custom_effect_tooltip = LOK_SP_REUSABLE_ROCKETRY_OUTPUT_TT
+			set_technology = { improved_rocket_engines = 1 popup = yes }
+		}
+	}
+
+	generic_prototype_rewards = {
+		sp_rockets_scientist_xp_generic_reward
+		sp_rockets_political_interference_generic_reward
+		sp_rockets_onsite_explosion_generic_reward
+		sp_rockets_generic_major_breakthrough_reward
+	}
+}
+
+sp_lok_sustained_offworld_habitation = {
+	specialization = specialization_air
+	narrative = { desc = LOK_SP_SUSTAINED_OFFWORLD_HABITATION_DESC }
+	icon = GFX_LOK_sp_sustained_offworld_habitation
+	project_tags = sp_tag_rocket
+
+	available = {
+		FROM = {
+			custom_trigger_tooltip = {
+				tooltip = LOK_SP_REQUIRES_20_MUNO_OR_XENON_EXPERIENCE_TT
+				OR = {
+					check_variable = { muno_exp > 19 }
+					check_variable = { xenon_exp > 19 }
+				}
+			}
+		}
+	}
+	breakthrough_cost = { specialization_air = 3 }
+	resource_cost = { resources = { steel = 12 aluminium = 14 chromium = 8 } }
+	prototype_time = sp_time.prototype.very_long
+	complexity = sp_complexity.large
+
+	project_output = {
+		country_effects = { custom_effect_tooltip = LOK_SP_SUSTAINED_OFFWORLD_HABITATION_OUTPUT_TT }
+	}
+
+	generic_prototype_rewards = {
+		sp_rockets_scientist_xp_generic_reward
+		sp_rockets_political_interference_generic_reward
+		sp_rockets_onsite_explosion_generic_reward
+		sp_rockets_generic_major_breakthrough_reward
+	}
+}
+
+sp_lok_atomic_rocketry = {
+	specialization = specialization_air
+	narrative = { desc = LOK_SP_ATOMIC_ROCKETRY_DESC }
+	icon = GFX_LOK_sp_atomic_rocketry
+	project_tags = { sp_tag_rocket sp_tag_nuclear_power }
+
+	available = {
+		FROM = {
+			has_tech = reusable_heavy_chemical_rocket
+			has_tech = naval_nuclear_power
+			custom_trigger_tooltip = {
+				tooltip = LOK_SP_REQUIRES_50_SPACE_EXPERIENCE_TT
+				check_variable = { space_exp > 49 }
+			}
+		}
+	}
+	breakthrough_cost = { specialization_air = 3 specialization_nuclear = 1 }
+	resource_cost = { resources = { steel = 14 aluminium = 10 chromium = 10 tungsten = 6 } }
+	prototype_time = sp_time.prototype.very_long
+	complexity = sp_complexity.large
+
+	project_output = {
+		country_effects = {
+			custom_effect_tooltip = LOK_SP_ATOMIC_ROCKETRY_OUTPUT_TT
+			set_technology = { advanced_rocket_engines = 1 popup = yes }
+		}
+	}
+
+	generic_prototype_rewards = {
+		sp_rockets_scientist_xp_generic_reward
+		sp_rockets_political_interference_generic_reward
+		sp_rockets_onsite_explosion_generic_reward
+		sp_rockets_generic_major_breakthrough_reward
+	}
+}
+
 sp_lok_autonomous_combat_assistance = {
 	specialization = specialization_land
 	narrative = { desc = LOK_SP_AUTONOMOUS_COMBAT_ASSISTANCE_DESC }

@@ -1,0 +1,976 @@
+﻿capital = 285
+
+oob = "AST_1936"
+set_stability = 0.7
+set_war_support = 0
+# Starting tech
+set_technology = {
+	infantry_weapons = 1
+	infantry_weapons1 = 1
+	tech_support = 1		
+	tech_engineers = 1
+	tech_recon = 1
+	tech_trucks = 1
+	motorised_infantry = 1
+	gw_artillery = 1
+	interwar_antiair = 1
+	basic_train = 1
+	fuel_silos = 1
+}
+
+set_research_slots = 3
+
+set_grand_doctrine = grand_battleplan
+set_grand_doctrine = new_fleet_in_being
+
+if = {
+	limit = {
+		NOT = { has_dlc = "No Step Back" }
+	}
+	set_technology = {
+		gwtank = 1
+	}
+}
+if = {
+	limit = {
+		has_dlc = "No Step Back"
+	}
+	set_technology = {
+		gwtank_chassis = 1
+	}
+}
+if = {
+	limit = {
+		not = { has_dlc = "Man the Guns" }
+	}
+	set_technology = {
+		early_destroyer = 1
+		early_light_cruiser = 1
+		early_heavy_cruiser = 1
+		early_submarine = 1
+		transport = 1
+	}
+	set_naval_oob = "AST_1936_naval_legacy"
+}
+if = {
+	limit = {
+		 has_dlc = "Man the Guns"
+	}
+	set_technology = {
+		basic_naval_mines = 1
+		submarine_mine_laying = 1
+		early_ship_hull_light = 1
+		early_ship_hull_cruiser = 1
+		basic_ship_hull_cruiser = 1
+		early_ship_hull_submarine = 1
+		basic_battery = 1
+		basic_torpedo = 1
+		basic_depth_charges = 1
+		basic_cruiser_armor_scheme = 1
+		mtg_transport = 1
+	}
+	set_naval_oob = "AST_1936_naval"
+}
+if = {
+	limit = { has_dlc = "By Blood Alone" }
+	set_air_oob = "AST_1936_air_bba"
+	set_technology = {
+		bba_early_transport_plane = 1
+	}
+	else = {
+		set_air_oob = "AST_1936_air_legacy"
+		set_technology = {
+			early_fighter = 1
+			cv_early_fighter = 1
+			cv_naval_bomber1 = 1
+			naval_bomber1 = 1
+			early_bomber = 1
+			CAS1 = 1
+			early_transport_plane = 1
+		}
+	}
+}
+
+recruit_character = AST_john_curtin
+recruit_character = AST_eric_campbell
+recruit_character = AST_richard_dixon
+recruit_character = AST_robert_menzies
+recruit_character = AST_ben_chifley
+recruit_character = AST_frank_forde
+recruit_character = AST_alexander_hore_ruthven
+recruit_character = AST_jack_beasley
+recruit_character = AST_lance_sharkey
+recruit_character = AST_herbert_v_evatt
+recruit_character = AST_jack_piddington
+recruit_character = AST_leslie_morshead
+recruit_character = AST_thomas_blamey
+recruit_character = AST_iven_mackay
+recruit_character = AST_alan_vasey #George A. Vasey"
+recruit_character = AST_horace_robertson
+recruit_character = AST_john_northcott
+recruit_character = AST_john_collins
+recruit_character = AST_harold_farncomb
+recruit_character = AST_victor_crutchley
+recruit_character = AST_john_lavarack
+recruit_character = AST_sydney_rowell
+recruit_character = AST_vernon_sturdee
+recruit_character = AST_ragnar_colvin
+recruit_character = AST_richard_williams
+recruit_character = AST_charles_burnett
+recruit_character = AST_henry_wynter
+recruit_character = AST_james_fairbairn
+recruit_character = AST_arthur_allen
+recruit_character = AST_john_crace
+recruit_character = AST_edmund_herring
+
+if = {
+	limit = {
+		has_dlc = "Thunder at Our Gates"
+	}
+	recruit_character = AST_joseph_lyons
+	recruit_character = AST_billy_hughes
+	recruit_character = AST_jack_miles
+	recruit_character = AST_fred_paterson
+	recruit_character = AST_percy_stephensen
+	recruit_character = AST_adela_walsh
+	recruit_character = AST_essington_lewis
+	recruit_character = AST_jacob_vouza
+	recruit_character = AST_geoffrey_street
+	recruit_character = AST_florence_v._mckenzie
+	recruit_character = AST_eric_l._lloyd
+	recruit_character = AST_jack_lang
+	recruit_character = AST_dorothy_tangney
+	recruit_character = AST_arthur_fadden
+	recruit_character = AST_james_scullin
+	recruit_character = AST_maurice_blackburn
+	recruit_character = AST_alexander_rud_mills
+	recruit_character = AST_rex_ingamells
+	recruit_character = AST_clare_stevenson
+	recruit_character = AST_gordon_bennett
+	recruit_character = AST_edward_milford
+	recruit_character = AST_herbert_lloyd
+	recruit_character = AST_stanley_savige
+	recruit_character = AST_kenneth_eather
+	recruit_character = AST_ivan_dougherty
+	recruit_character = AST_frank_berryman
+	recruit_character = AST_george_wootten
+	recruit_character = AST_gwynydd_meredith
+	recruit_character = AST_reginald_saunders
+	recruit_character = AST_joseph_burnett
+	recruit_character = AST_eric_feldt
+	recruit_character = AST_james_mcmanus
+	recruit_character = AST_leighton_bracegirdle
+	recruit_character = AST_george_jones
+	recruit_character = AST_stanley_goble
+	recruit_character = AST_george_mackinolty
+	recruit_character = AST_brudenell_white
+	recruit_character = AST_percival_mcneil
+	recruit_character = AST_guy_royle
+	recruit_character = AST_james_cannan
+	recruit_character = AST_peter_jeffrey
+	recruit_character = AST_mark_oliphant
+	recruit_character = AST_lawrence_wackett
+
+	add_dynamic_modifier = { modifier = AST_great_depression_taog_spirit } 
+	add_dynamic_modifier = { modifier = AST_citizen_army_spirit }
+	add_ideas = { AST_poor_population_growth }
+
+	set_party_name = {
+		ideology = neutrality
+		name = AST_colonial_administration
+		long_name = AST_colonial_administration_long
+	}
+
+	add_ideas = AST_brudenell_white
+}
+
+if = {
+	limit = {
+		NOT = {
+			has_dlc = "Thunder at Our Gates"
+		}
+	}
+	recruit_character = AST_earle_page
+	recruit_character = AST_rod_hull
+	recruit_character = AST_arthur_calwell
+	recruit_character = AST_generic_fascist_demagogue
+	recruit_character = AST_clive_caldwell
+	recruit_character = AST_arthur_drakeford
+	recruit_character = AST_cederic_hicks
+	recruit_character = AST_norman_makin
+
+	add_ideas = AST_great_depression_1
+}
+
+add_to_tech_sharing_group = commonwealth_research
+add_ideas = AST_unratified_westminster_act_idea
+
+1939.1.1 = {
+	add_political_power = 1198
+	add_command_power = 100
+	oob = "AST_1939"
+	if = {
+		limit = { has_dlc = "By Blood Alone" }
+			set_air_oob = "AST_1939_air_bba"
+		else = {
+			set_air_oob = "AST_1939_air_legacy"
+			set_technology = {
+				fighter1 = 1
+				tactical_bomber1 = 1
+			}
+		}
+	}
+	if = {
+		limit = { has_dlc = "Thunder at Our Gates" }
+		complete_national_focus = AST_war_is_coming
+		complete_national_focus = AST_a_democratic_bulwark
+		unlock_national_focus = AST_call_for_a_referendum
+		complete_national_focus = AST_domestic_industries
+		complete_national_focus = AST_populate_or_perish
+		complete_national_focus = AST_recruitment_drive
+		complete_national_focus = AST_new_deal
+		complete_national_focus = AST_department_of_aboriginal_affairs
+		complete_national_focus = AST_australian_military_forces
+		complete_national_focus = AST_public_works
+		complete_national_focus = AST_exports_for_economic_recovery
+		complete_national_focus = AST_reverse_industry_tariffs
+		complete_national_focus = AST_income_tax_assessment_act
+		complete_national_focus = AST_reverse_wage_cuts
+		complete_national_focus = AST_industrial_expansion
+		complete_national_focus = AST_bring_home_the_farmers
+		complete_national_focus = AST_recovery
+		complete_national_focus = AST_standard_gauge_line_to_darwin
+		complete_national_focus = AST_solidarity_by_the_empire
+		complete_national_focus = AST_australian_war_cabinet
+		
+		else = {
+			complete_national_focus = AST_additional_militia_training
+			complete_national_focus = AST_royal_australian_artillery
+			complete_national_focus = AST_daimler_dingo
+			complete_national_focus = AST_expand_the_raaf
+			complete_national_focus = AST_cockatoo_island_shipyards
+			complete_national_focus = AST_expand_northern_presence
+			complete_national_focus = AST_standard_gauge_railway
+			complete_national_focus = AST_industries_assistance_corporation
+			complete_national_focus = AST_western_australian_government_railways
+			complete_national_focus = AST_south_australian_housing_trust
+		}
+	}
+	if = {
+		limit = { has_dlc = "Thunder at Our Gates" }
+		add_country_leader_role = {
+			character = AST_robert_menzies
+			promote_leader = yes
+			country_leader = {
+				ideology = socialism
+				expire = "1989.1.1.1"
+			}
+		}
+	}
+	if = {
+		limit = { has_dlc = "Thunder at Our Gates" }
+		set_variable = { AST_uap_votes_var = 53.5 }
+		set_variable = { AST_alp_votes_var = 46.5 }
+		set_variable = { AST_uap_election_win_count = 1 }
+		add_ideas = AST_referendum_aviation_idea
+		set_country_flag = AST_1939_start
+	}
+
+	add_ideas = {
+		#laws		
+		volunteer_only
+		low_economic_mobilisation
+	}
+
+	
+	set_technology = {
+		interwar_artillery = 1
+		interwar_antitank = 1
+		infantry_weapons2 = 1
+		support_weapons = 1
+		support_weapons2 = 1
+		
+
+		#doctrines
+		#air_superiority = 1
+
+		#electronics
+		electronic_mechanical_engineering = 1
+		radio = 1
+		mechanical_computing = 1
+		computing_machine = 1
+
+		#industry
+		basic_machine_tools = 1
+		improved_machine_tools = 1
+		advanced_machine_tools = 1
+		fuel_refining = 1
+		construction1 = 1
+		construction2 = 1
+		dispersed_industry = 1
+		dispersed_industry2 = 1
+	}
+
+	set_grand_doctrine = grand_battleplan
+	set_grand_doctrine = new_fleet_in_being
+	set_grand_doctrine = new_strategic_destruction
+
+	complete_special_project = {
+		project = sp:sp_air_radar
+	}
+	if = {
+		limit = {
+			NOT = {
+				has_dlc = "No Step Back"
+			}
+		}
+		set_technology = {
+			basic_light_tank = 1
+			improved_light_tank = 1
+			basic_medium_tank = 1
+			basic_heavy_tank = 1
+		}
+	}
+	if = {
+		limit = {
+			
+			has_dlc = "No Step Back"
+			
+		}
+		set_technology = {
+			basic_light_tank_chassis = 1
+			improved_light_tank_chassis = 1
+			basic_medium_tank_chassis = 1
+			basic_heavy_tank_chassis = 1
+		}
+	}
+	if = {
+		limit = {
+			not = {
+				has_dlc = "Man the Guns"
+			}
+		}
+		set_technology = {
+			basic_destroyer = 1
+		}
+		set_naval_oob = "AST_1939_naval_legacy"
+	}
+	if = {
+		limit = {
+			has_dlc = "Man the Guns"
+		}
+		set_technology = {
+			basic_ship_hull_light = 1
+			basic_light_battery = 1
+			sonar = 1
+			improved_sonar = 1
+			improved_depth_charges = 1
+		}
+		set_naval_oob = "AST_1939_naval"
+	}
+}
+
+IF = {
+	limit = {
+		has_dlc = "Thunder at Our Gates"
+		has_dlc = "Arms Against Tyranny"
+	}
+	create_equipment_variant = {
+		type = infantry_equipment_0
+		design_team = mio:AST_lithgow_arms_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+
+	create_equipment_variant = {
+		type = infantry_equipment_1
+		design_team = mio:AST_lithgow_arms_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+
+	create_equipment_variant = {
+		type = support_equipment_1
+		design_team = mio:AST_lysaght_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+
+	create_equipment_variant = {
+		type = support_equipment_1
+		design_team = mio:AST_lysaght_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+
+	create_equipment_variant = {
+		type = motorized_equipment_1
+		design_team = mio:AST_holden_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+
+	create_equipment_variant = {
+		type = artillery_equipment_1
+		design_team = mio:AST_vickers-ruwolt_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+
+	create_equipment_variant = {
+		type = anti_air_equipment_1
+		design_team = mio:AST_vickers-ruwolt_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+
+	create_equipment_variant = {
+		type = transport_plane_equipment_1
+		design_team = mio:AST_de_havilland_australia_organization
+		show_position = no
+		mark_older_equipment_obsolete = yes
+	}
+}
+
+set_politics = {
+	ruling_party = democratic
+	last_election = "1934.9.15"
+	election_frequency = 36
+	elections_allowed = yes
+}
+
+set_popularities = {
+	democratic = 98
+	communism = 2
+}
+
+set_convoys = 100
+
+1939.1.1 = {
+	set_politics = {
+		ruling_party = democratic
+		last_election = "1937.10.23"
+		election_frequency = 36
+		elections_allowed = yes
+	}
+
+	set_popularities = {
+		democratic = 99
+		communism = 1
+	}
+
+	set_convoys = 100
+}
+
+IF = {
+	limit = {
+		has_dlc = "Thunder at Our Gates"
+		has_dlc = "Arms Against Tyranny"
+	}
+
+	#light cruisers
+	create_equipment_variant = {
+		name = "Sydney Class"
+		type = ship_hull_cruiser_2
+		name_group = AST_CL_HISTORICAL
+		parent_version = 0
+		design_team = mio:AST_cockatoo_docks_organization
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_2
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			front_1_custom_slot = empty
+			mid_1_custom_slot = ship_torpedo_1
+			mid_2_custom_slot = ship_airplane_launcher_1
+			rear_1_custom_slot = ship_light_medium_battery_2
+		}
+		optional_assets = {
+			{
+				icon = "GFX_commonwealth_light_cruiser_hobart"
+				model = "commonwealth_gfx_light_cruiser_entity"
+			}
+		}
+	}
+
+	create_equipment_variant = {
+		name = "Town Class"
+		type = ship_hull_cruiser_1
+		name_group = AST_CL_HISTORICAL
+		parent_version = 0
+		design_team = mio:AST_cockatoo_docks_organization
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_1
+			fixed_ship_anti_air_slot = empty
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_1
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			mid_1_custom_slot = empty
+			mid_2_custom_slot = empty
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+	
+	create_equipment_variant = {
+		name = "Leander Class"
+		type = ship_hull_cruiser_2
+		name_group = AST_CL_HISTORICAL
+		parent_version = 0
+		design_team = mio:AST_cockatoo_docks_organization
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_2
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			fixed_ship_secondaries_slot = dp_ship_secondaries_1
+			front_1_custom_slot = empty
+			mid_1_custom_slot = ship_torpedo_1
+			mid_2_custom_slot = ship_airplane_launcher_1
+			rear_1_custom_slot = ship_light_medium_battery_2
+		}
+	}
+
+	#heavy cruisers
+	create_equipment_variant = {
+		name = "Canberra Class"
+		type = ship_hull_cruiser_1
+		name_group = AST_CA_HISTORICAL
+		parent_version = 0
+		design_team = mio:AST_cockatoo_docks_organization
+		modules = {
+			fixed_ship_battery_slot = ship_medium_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_1
+			fixed_ship_armor_slot = ship_armor_cruiser_2
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			mid_1_custom_slot = ship_airplane_launcher_1
+			mid_2_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_medium_battery_2
+		}
+		optional_assets = {
+			{
+				icon = "GFX_commonwealth_heavy_cruiser_australia"
+				model = "commonwealth_gfx_heavy_cruiser_entity"
+			}
+		}
+	}
+	create_equipment_variant = {
+		name = "County Class"
+		type = ship_hull_cruiser_1
+		name_group = AST_CA_HISTORICAL
+		parent_version = 0
+		design_team = mio:AST_cockatoo_docks_organization
+		modules = {
+			fixed_ship_battery_slot = ship_medium_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			fixed_ship_secondaries_slot = dp_ship_secondaries_1
+			mid_1_custom_slot = ship_airplane_launcher_1
+			mid_2_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_medium_battery_2
+		}
+	}
+
+	# Destroyers #
+	create_equipment_variant = {
+		name = "V/W Class"
+		type = ship_hull_light_1
+		name_group = AST_DD_HISTORICAL
+		parent_version = 0
+		design_team = mio:AST_morts_dock_organization
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = light_ship_engine_1
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = empty
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+		optional_assets = {
+			{
+				icon = "GFX_commonwealth_destroyer_vampire"
+				model = "commonwealth_gfx_destroyer_1_entity"
+			}
+		}
+	}
+	create_equipment_variant = {
+		name = "S Class"
+		type = ship_hull_light_1
+		name_group = AST_DD_HISTORICAL
+		parent_version = 0
+		design_team = mio:AST_morts_dock_organization
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = empty
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = light_ship_engine_1
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = empty
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+		obsolete = yes
+	}
+
+	ELSE = {
+		create_equipment_variant = {
+			name = "Sydney Class"
+			type = ship_hull_cruiser_2
+			name_group = AST_CL_HISTORICAL
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_medium_battery_2
+				fixed_ship_anti_air_slot = ship_anti_air_2
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_2
+				fixed_ship_armor_slot = ship_armor_cruiser_1
+				front_1_custom_slot = empty
+				mid_1_custom_slot = ship_torpedo_1
+				mid_2_custom_slot = ship_airplane_launcher_1
+				rear_1_custom_slot = ship_light_medium_battery_2
+			}
+			optional_assets = {
+				{
+					icon = "GFX_commonwealth_light_cruiser_hobart"
+					model = "commonwealth_gfx_light_cruiser_entity"
+				}
+			}
+		}
+
+		create_equipment_variant = {
+			name = "Town Class"
+			type = ship_hull_cruiser_1
+			name_group = AST_CL_HISTORICAL
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_medium_battery_1
+				fixed_ship_anti_air_slot = empty
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_1
+				fixed_ship_armor_slot = ship_armor_cruiser_1
+				mid_1_custom_slot = empty
+				mid_2_custom_slot = empty
+				rear_1_custom_slot = empty
+			}
+			obsolete = yes
+		}
+		
+		create_equipment_variant = {
+			name = "Leander Class"
+			type = ship_hull_cruiser_2
+			name_group = AST_CL_HISTORICAL
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_medium_battery_2
+				fixed_ship_anti_air_slot = ship_anti_air_2
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_2
+				fixed_ship_armor_slot = ship_armor_cruiser_1
+				fixed_ship_secondaries_slot = dp_ship_secondaries_1
+				front_1_custom_slot = empty
+				mid_1_custom_slot = ship_torpedo_1
+				mid_2_custom_slot = ship_airplane_launcher_1
+				rear_1_custom_slot = ship_light_medium_battery_2
+			}
+		}
+
+		#heavy cruisers
+		create_equipment_variant = {
+			name = "Canberra Class"
+			type = ship_hull_cruiser_1
+			name_group = AST_CA_HISTORICAL
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_medium_battery_2
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_1
+				fixed_ship_armor_slot = ship_armor_cruiser_2
+				fixed_ship_secondaries_slot = ship_secondaries_1
+				mid_1_custom_slot = ship_airplane_launcher_1
+				mid_2_custom_slot = ship_torpedo_1
+				rear_1_custom_slot = ship_medium_battery_2
+			}
+			optional_assets = {
+				{
+					icon = "GFX_commonwealth_heavy_cruiser_australia"
+					model = "commonwealth_gfx_heavy_cruiser_entity"
+				}
+			}
+		}
+		create_equipment_variant = {
+			name = "County Class"
+			type = ship_hull_cruiser_1
+			name_group = AST_CA_HISTORICAL
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_medium_battery_2
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_2
+				fixed_ship_armor_slot = ship_armor_cruiser_1
+				fixed_ship_secondaries_slot = dp_ship_secondaries_1
+				mid_1_custom_slot = ship_airplane_launcher_1
+				mid_2_custom_slot = ship_torpedo_1
+				rear_1_custom_slot = ship_medium_battery_2
+			}
+		}
+		
+		# Destroyers #
+		create_equipment_variant = {
+			name = "V/W Class"
+			type = ship_hull_light_1
+			name_group = AST_DD_HISTORICAL
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_battery_1
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = light_ship_engine_1
+				fixed_ship_torpedo_slot = ship_torpedo_1
+				mid_1_custom_slot = empty
+				rear_1_custom_slot = ship_depth_charge_1
+			}
+			optional_assets = {
+				{
+					icon = "GFX_commonwealth_destroyer_vampire"
+					model = "commonwealth_gfx_destroyer_1_entity"
+				}
+			}
+		}
+		create_equipment_variant = {
+			name = "S Class"
+			type = ship_hull_light_1
+			name_group = AST_DD_HISTORICAL
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_battery_1
+				fixed_ship_anti_air_slot = empty
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = light_ship_engine_1
+				fixed_ship_torpedo_slot = ship_torpedo_1
+				mid_1_custom_slot = empty
+				rear_1_custom_slot = ship_depth_charge_1
+			}
+			obsolete = yes
+		}
+	}
+}
+
+1939.1.1 = {
+    IF = {
+        limit = {
+            has_dlc = "Thunder at Our Gates"
+            has_dlc = "Arms Against Tyranny"
+        }
+        create_equipment_variant = {
+            name = "Arunta Class"
+            type = ship_hull_light_2
+            name_group = AST_DD_HISTORICAL
+            design_team = mio:AST_de_havilland_australia_organization
+            modules = {
+                fixed_ship_battery_slot = ship_light_battery_2
+                fixed_ship_anti_air_slot = ship_anti_air_1
+                fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+                fixed_ship_radar_slot = ship_sonar_2
+                fixed_ship_engine_slot = light_ship_engine_2
+                fixed_ship_torpedo_slot = ship_torpedo_1
+                mid_1_custom_slot = ship_light_battery_2
+                rear_1_custom_slot = ship_depth_charge_2
+            }
+        }
+        ELSE = {
+            create_equipment_variant = {
+                name = "Arunta Class"
+                type = ship_hull_light_2
+                name_group = AST_DD_HISTORICAL
+                modules = {
+                    fixed_ship_battery_slot = ship_light_battery_2
+                    fixed_ship_anti_air_slot = ship_anti_air_1
+                    fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+                    fixed_ship_radar_slot = ship_sonar_2
+                    fixed_ship_engine_slot = light_ship_engine_2
+                    fixed_ship_torpedo_slot = ship_torpedo_1
+                    mid_1_custom_slot = ship_light_battery_2
+                    rear_1_custom_slot = ship_depth_charge_2
+                }
+            }
+        }
+    }
+}
+########## Flags & Variables ##########
+
+### Industrial
+# Great Depression
+set_variable = { AST_great_depression_consumer_goods_factor = 0.40 }
+set_variable = { AST_great_depression_stability_factor = -0.10 }
+set_variable = { AST_great_depression_industrial_capacity_factory = -0.15 }
+set_variable = { AST_great_depression_industrial_capacity_dockyard = -0.15 }
+
+# Forging Australia's Future
+set_variable = { AST_forging_australias_future_spirit_stability_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_consumer_goods_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_speed_buildings_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_speed_supply_node_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_speed_rail_way_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_speed_infrastructure_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_resource_trade_cost_bonus_per_factory = 0 } 
+set_variable = { AST_forging_australias_future_spirit_local_resources_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_local_resource_gain_efficiency_per_infrastructure = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_factory_start_efficiency_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_research_speed_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_lack_of_resource_penalty_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_industrial_capacity_factory = 0 }
+set_variable = { AST_forging_australias_future_spirit_industrial_capacity_dockyard = 0 }
+set_variable = { AST_forging_australias_future_spirit_political_power_cost = 0 }
+set_variable = { AST_forging_australias_future_spirit_cic_construction_boost_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_trade_opinion_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_overlord_trade_cost_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_extra_trade_to_overlord_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_convoy_retreat_speed = 0 }
+set_variable = { AST_forging_australias_future_spirit_trade_laws_cost_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_factory_efficiency_gain_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_factory_max_efficiency_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_monthly_population = 0 }
+set_variable = { AST_forging_australias_future_spirit_line_change_production_efficiency_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_special_project_speed_factor = 0 }
+set_variable = { AST_forging_australias_future_spirit_production_speed_facility_factor = 0}
+set_variable = { AST_forging_australias_future_spirit_conscription_factor = 0 }
+
+### Democratic
+# War is Coming
+set_variable = { AST_war_is_coming_production_speed_arms_factory_factor = 0 }
+set_variable = { AST_war_is_coming_production_speed_dockyard_factor = 0 }
+set_variable = { AST_war_is_coming_conversion_cost_civ_to_mil_factor = 0 }
+set_variable = { AST_war_is_coming_war_support_factor = 0 }
+set_variable = { AST_war_is_coming_operative_slot = 0 }
+
+# British War Cabinet
+set_variable = { AST_british_war_cabinet_stability_factor = 0 }
+set_variable = { AST_british_war_cabinet_political_power_factor = 0 }
+set_variable = { AST_british_war_cabinet_war_support_factor = 0 }
+
+# No Foreign Battlefields
+set_variable = { AST_no_foreign_battlefields_autonomy_gain = 0 }
+
+# Pacific Fleet Hub
+set_variable = { AST_pacific_fleet_hub_repair_speed_factor = 0 }
+set_variable = { AST_pacific_fleet_hub_industrial_capacity_dockyard = 0 }
+set_variable = { AST_pacific_fleet_hub_production_speed_dockyard_factor = 0}
+
+# War Angst
+set_variable = { AST_war_angst_stability_factor = -0.30 }
+set_variable = { AST_war_angst_stability_weekly_factor = 0 }
+
+# Strength in Numbers
+set_variable = { AST_strength_in_numbers_monthly_population = 0 }
+set_variable = { AST_strength_in_numbers_weekly_manpower = 0 }
+set_variable = { AST_strength_in_numbers_conscription = 0 }
+set_variable = { AST_strength_in_numbers_conscription_factor = 0 }
+set_variable = { AST_strength_in_numbers_stability_factor = 0 }
+set_variable = { AST_strength_in_numbers_non_core_manpower = 0 }
+
+# Eminent Successors
+set_variable = { AST_eminent_successors_political_advisor_cost_factor = 0 }
+set_variable = { AST_eminent_successors_army_chief_cost_factor = 0 }
+
+# Australia First
+set_variable = { AST_australia_first_fascism_drift = 0 }
+set_variable = { AST_australia_first_war_support_factor = 0 }
+set_variable = { AST_australia_first_operative_slot = 0 }
+
+# Imperial Pressure
+set_variable = { AST_imperial_pressure_democratic_drift = 0 }
+set_variable = { AST_imperial_pressure_stability_factor = 0 }
+
+### Military
+## Army
+
+#Citizen Army
+set_variable = { AST_citizen_army_spirit_army_non_core_attack_factor = -0.15 }
+set_variable = { AST_citizen_army_spirit_army_non_core_defence_factor = -0.15 }
+
+#Australian Military Forces
+set_variable = { AST_australian_military_forces_spirit_army_org_factor = 0.05 }
+set_variable = { AST_australian_military_forces_spirit_coordination_bonus = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_org_regain = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_defence_factor = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_core_attack_factor = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_core_defence_factor = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_non_core_attack_factor = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_non_core_defence_factor = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_org = 0 }
+set_variable = { AST_australian_military_forces_spirit_max_dig_in = 0 }
+set_variable = { AST_australian_military_forces_spirit_army_attack_factor = 0 }
+set_variable = { AST_australian_military_forces_spirit_production_speed_supply_node_factor = 0 }
+set_variable = { AST_australian_military_forces_spirit_acclimatization_hot_climate_gain_factor = 0 }
+
+#Australian Air Force
+set_variable = { AST_royal_australian_air_force_spirit_air_accidents_factor = -0.15 }
+set_variable = { AST_royal_australian_air_force_spirit_air_mission_efficiency = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_experience_gain_air_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_air_ace_generation_chance_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_ace_effectiveness_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_air_interception_detect_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_airforce_intel_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_air_attack_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_air_defence_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_air_close_air_support_org_damage_factor = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_air_cas_efficiency  = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_air_superiority_efficiency  = 0 }
+set_variable = { AST_royal_australian_air_force_spirit_production_speed_air_base_factor  = 0 }
+
+#Democratic Elections
+set_variable = { AST_ruling_party = 0 }
+set_variable = { AST_uap_votes_var = 58 }
+set_variable = { AST_alp_votes_var = 42 }
+set_variable = { AST_uap_votes_change_var = 0 } #UAP votes total daily decrease/increase
+set_variable = { AST_alp_votes_change_var = 0 } #ALP votes total daily decrease/increase
+set_variable = { AST_uap_votes_daily_var = 0 } #UAP votes modifiers daily decrease/increase
+set_variable = { AST_alp_votes_daily_var = 0 } #ALP votes modifiers daily decrease/increase
+set_variable = { AST_uap_votes_daily_impact_var = 0 } #How much UAP votes daily decrease/increase ALP votes 
+set_variable = { AST_alp_votes_daily_impact_var = 0 } #How much ALP votes daily decrease/increase UAP votes 
+
+#Royal Australian Navy
+set_variable = { AST_royal_australian_navy_spirit_navy_org_factor = 0.10 }
+set_variable = { AST_royal_australian_navy_spirit_spotting_chance = 0.10 }
+set_variable = { AST_royal_australian_navy_spirit_navy_weather_penalty = 0 }
+set_variable = { AST_royal_australian_navy_spirit_navy_max_range_factor = 0 }
+set_variable = { AST_royal_australian_navy_spirit_invasion_preparation = 0 }
+set_variable = { AST_royal_australian_navy_spirit_naval_invasion_penalty = 0 }
+set_variable = { AST_royal_australian_navy_spirit_navy_intel_factor = 0 }
+set_variable = { AST_royal_australian_navy_spirit_airforce_intel_factor = 0 }
+set_variable = { AST_royal_australian_navy_spirit_navy_casualty_on_sink = 0 }
+set_variable = { AST_royal_australian_navy_spirit_air_wing_xp_loss_when_killed_factor = 0 }
+
+#Cabinet Trust
+set_variable = { AST_cabinet_trust_state = 3 }
+
+#Demanding Vichy France African Terriotries
+set_variable = { AST_vichy_transfer_count = 0 }
+
+#AFM Decision System
+set_variable = { AST_call_on_fascists_cost = 20 }
+
+
+
