@@ -301,6 +301,87 @@ equipment_modules = {
 		}
 	}
 
+	### Legged locomotion
+	# Leg modules select the engine-supported Walker role (internally "rocket").
+	# Each chassis family maps that role to its own class-specific Walker archetype.
+	tank_bipedal_locomotion = {
+		abbreviation = "bip"
+		category = tank_legged_locomotion_type
+		sfx = sfx_ui_sd_module_sonar
+		allow_equipment_type = rocket
+		forbid_equipment_type = { artillery anti_air anti_tank }
+		forbid_equipment_type_exact_match = armor
+		multiply_stats = {
+			build_cost_ic = 0.30
+			reliability = -0.40
+			maximum_speed = 0.20
+			breakthrough = 0.20
+			armor_value = -0.60
+		}
+		dismantle_cost_ic = 2
+		xp_cost = 2
+	}
+
+	tank_quadrupedal_locomotion = {
+		abbreviation = "qua"
+		category = tank_legged_locomotion_type
+		sfx = sfx_ui_sd_module_sonar
+		allow_equipment_type = rocket
+		forbid_equipment_type = { artillery anti_air anti_tank }
+		forbid_equipment_type_exact_match = armor
+		multiply_stats = {
+			build_cost_ic = 0.40
+			reliability = -0.30
+			maximum_speed = 0.15
+			breakthrough = 0.40
+			armor_value = -0.45
+			soft_attack = 0.10
+			hard_attack = 0.10
+		}
+		dismantle_cost_ic = 3
+		xp_cost = 3
+	}
+
+	tank_hexapedal_locomotion = {
+		abbreviation = "hex"
+		category = tank_legged_locomotion_type
+		sfx = sfx_ui_sd_module_sonar
+		allow_equipment_type = rocket
+		forbid_equipment_type = { artillery anti_air anti_tank }
+		forbid_equipment_type_exact_match = armor
+		multiply_stats = {
+			build_cost_ic = 0.50
+			reliability = -0.20
+			maximum_speed = 0.10
+			breakthrough = 0.60
+			armor_value = -0.30
+			soft_attack = 0.20
+			hard_attack = 0.20
+		}
+		dismantle_cost_ic = 4
+		xp_cost = 4
+	}
+
+	tank_octopedal_locomotion = {
+		abbreviation = "oct"
+		category = tank_legged_locomotion_type
+		sfx = sfx_ui_sd_module_sonar
+		allow_equipment_type = rocket
+		forbid_equipment_type = { artillery anti_air anti_tank }
+		forbid_equipment_type_exact_match = armor
+		multiply_stats = {
+			build_cost_ic = 0.60
+			reliability = -0.10
+			maximum_speed = 0.05
+			breakthrough = 0.80
+			armor_value = -0.15
+			soft_attack = 0.30
+			hard_attack = 0.30
+		}
+		dismantle_cost_ic = 5
+		xp_cost = 5
+	}
+
 	###Turret Types - light
 	### turrets are split by chassis to make it easier to control which guns they can mount
 
@@ -362,7 +443,7 @@ equipment_modules = {
 		abbreviation = "lfs"
 		category = tank_light_turret_type
 		sfx = sfx_ui_sd_module_turret
-		forbid_equipment_type = anti_air
+		forbid_equipment_type = { anti_air rocket }
 
 		allowed_module_categories = {
 			main_armament_slot = {
@@ -467,7 +548,7 @@ equipment_modules = {
 		abbreviation = "mfs"
 		category = tank_medium_turret_type
 		sfx = sfx_ui_sd_module_turret
-		forbid_equipment_type = anti_air
+		forbid_equipment_type = { anti_air rocket }
 
 		allowed_module_categories = {
 			main_armament_slot = {
@@ -559,7 +640,7 @@ equipment_modules = {
 		abbreviation = "hfs"
 		category = tank_heavy_turret_type
 		sfx = sfx_ui_sd_module_turret
-		forbid_equipment_type = anti_air
+		forbid_equipment_type = { anti_air rocket }
 
 		allowed_module_categories = {
 			main_armament_slot = {

@@ -8,6 +8,60 @@
 
 
 #
+sp_land_walker_prototypes = {
+	specialization = specialization_land
+	narrative = { desc = LOK_SP_WALKER_PROTOTYPES_DESC }
+	icon = GFX_LOK_sp_walker_prototypes
+
+	project_tags = sp_tag_tank
+
+	allowed = {
+		has_dlc = "No Step Back"
+	}
+
+	available = {
+		FROM = {
+			has_tech = engine_tech_1
+			has_tech = armor_tech_1
+			has_tech = construction2
+		}
+	}
+
+	ai_will_do = { base = 2 }
+	breakthrough_cost = { specialization_land = 1 }
+	prototype_time = sp_time.prototype.short
+	complexity = sp_complexity.small
+
+	project_output = {
+		country_effects = {
+			custom_effect_tooltip = LOK_SP_UNLOCK_LIGHT_WALKER_LOCOMOTION_TT
+			hidden_effect = {
+				set_technology = {
+					light_walker_locomotion = 1
+					popup = no
+				}
+			}
+		}
+	}
+
+	generic_prototype_rewards = {
+		sp_land_generic_reward_scientist_xp_1
+		sp_land_generic_reward_scientist_xp_2
+		sp_land_generic_reward_scientist_xp_3
+		sp_land_generic_reward_army_xp_1
+		sp_land_generic_reward_army_xp_2
+		sp_land_generic_reward_army_xp_3
+		sp_land_generic_reward_major_progress_1
+		sp_land_generic_reward_major_progress_2
+		sp_land_generic_reward_major_progress_3
+		sp_land_generic_reward_test_failure_1
+		sp_land_generic_reward_test_failure_2
+		sp_land_generic_reward_test_failure_3
+		sp_land_generic_reward_resource_scarcity
+	}
+}
+
+#
 sp_land_flamethrower_tank = {
 	specialization = specialization_land
 	narrative = { desc = LOK_SP_THERMOBARIC_ASSAULT_VEHICLE_DESC }
@@ -322,6 +376,7 @@ sp_land_land_cruiser = {
 				has_dlc = "No Step Back"
 			}
 			land_cruiser_chassis_1
+			cruiser_walker_chassis_1
 		}
 
 		enable_equipments = {

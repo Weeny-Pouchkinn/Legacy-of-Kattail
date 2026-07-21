@@ -13,6 +13,7 @@ sub_units = {
 		}
 		
 		group = support
+		same_support_type = land_cruiser
 
 		categories = {
 			category_tanks
@@ -80,5 +81,45 @@ sub_units = {
 			attack = 0.2
 			defence = 0.1
 		}
+	}
+
+	superheavy_mech_support = {
+		abbreviation = "SHM"
+		sprite = super_heavy_mech
+		map_icon_category = armored
+		priority = 2521
+		ai_priority = 2521
+		active = no
+		type = { support armor }
+		group = support
+		same_support_type = land_cruiser
+		categories = {
+			category_mechs
+			category_tanks
+			category_support_battalions
+			category_front_line
+			category_all_armor
+			category_army
+		}
+		combat_width = 0
+		need = { cruiser_walker_chassis = 1 }
+		manpower = 1000
+		max_organisation = 39.6
+		default_morale = 0.3
+		max_strength = 16.5
+		training_time = 250
+		weight = 2
+		supply_consumption = 0.75
+		suppression = 4
+		# All walker classes halve their corresponding tank terrain penalties.
+		forest = { attack = -0.15 defence = -0.15 movement = -0.1 }
+		hills = { attack = -0.1 defence = -0.1 }
+		mountain = { attack = -0.15 defence = -0.15 }
+		jungle = { attack = -0.2 defence = -0.2 movement = -0.175 }
+		marsh = { attack = -0.2 defence = -0.2 movement = -0.25 }
+		urban = { attack = -0.15 defence = -0.15 }
+		river = { attack = -0.175 defence = -0.175 movement = -0.25 }
+		amphibious = { attack = -0.35 }
+		fort = { attack = 0.2 defence = 0.1 }
 	}
 }

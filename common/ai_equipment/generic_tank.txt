@@ -2619,6 +2619,7 @@ generic_land_cruiser_tanks = {
 			match_value = 1000
 			type = land_cruiser_chassis_1
 			modules = {
+				suspension_type_slot = tank_bogie_suspension
 				lc_main_armament_slot = lc_heavy_naval_guns
 				lc_secondary_armament_slot = lc_medium_naval_guns
 				lc_special_features_slot_1 = lc_radio_module
@@ -2648,6 +2649,7 @@ generic_land_cruiser_tanks = {
 		}
 
 		allowed_modules = {
+			tank_bogie_suspension
 
 			lc_heavy_naval_guns
 			lc_super_heavy_railway_gun
@@ -2679,6 +2681,135 @@ generic_land_cruiser_tanks = {
 			lc_wet_ammunition_storage
 			lc_smoke_generators
 			lc_stabilizers
+		}
+	}
+}
+
+# Walking designs use the same hulls, turrets, armor, engines, and weapons as
+# tanks; choosing a leg module moves the finished design to its walker archetype.
+generic_infantry_walkers = {
+	category = land
+	roles = { land_light_tank }
+	priority = { factor = 250 }
+	basic_infantry_walker_default = {
+		priority = { factor = 10 }
+		history = yes
+		target_variant = {
+			match_value = 1500
+			type = infantry_walker_chassis_1
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_light_one_man_tank_turret
+				suspension_type_slot = tank_bipedal_locomotion
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = empty
+				special_type_slot_2 = empty
+				special_type_slot_3 = empty
+				special_type_slot_4 = empty
+			}
+			upgrades = { tank_nsb_engine_upgrade = 5 tank_nsb_armor_upgrade = 3 }
+		}
+		allowed_modules = {
+			tank_heavy_machine_gun tank_light_one_man_tank_turret
+			tank_bipedal_locomotion tank_riveted_armor tank_gasoline_engine
+		}
+	}
+}
+
+generic_battle_walkers = {
+	category = land
+	roles = { land_medium_tank }
+	priority = { factor = 200 }
+	basic_battle_walker_default = {
+		priority = { factor = 10 }
+		history = yes
+		target_variant = {
+			match_value = 1500
+			type = battle_walker_chassis_1
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_medium_one_man_tank_turret
+				suspension_type_slot = tank_quadrupedal_locomotion
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = empty
+				special_type_slot_2 = empty
+				special_type_slot_3 = empty
+				special_type_slot_4 = empty
+			}
+			upgrades = { tank_nsb_engine_upgrade = 5 tank_nsb_armor_upgrade = 4 }
+		}
+		allowed_modules = {
+			tank_heavy_machine_gun tank_medium_one_man_tank_turret
+			tank_quadrupedal_locomotion tank_riveted_armor tank_gasoline_engine
+		}
+	}
+}
+
+generic_siegebreaker_walkers = {
+	category = land
+	roles = { land_heavy_tank }
+	priority = {
+		factor = 100
+		modifier = { num_of_factories < 50 factor = 0 }
+	}
+	basic_siegebreaker_walker_default = {
+		priority = { factor = 10 }
+		history = yes
+		target_variant = {
+			match_value = 1500
+			type = siegebreaker_walker_chassis_1
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_heavy_two_man_tank_turret
+				suspension_type_slot = tank_quadrupedal_locomotion
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = empty
+				special_type_slot_2 = empty
+				special_type_slot_3 = empty
+				special_type_slot_4 = empty
+			}
+			upgrades = { tank_nsb_engine_upgrade = 5 tank_nsb_armor_upgrade = 5 }
+		}
+		allowed_modules = {
+			tank_heavy_machine_gun tank_heavy_two_man_tank_turret
+			tank_quadrupedal_locomotion tank_riveted_armor tank_gasoline_engine
+		}
+	}
+}
+
+generic_cruiser_walkers = {
+	category = land
+	roles = { land_mega_heavy_breakthrough_tank }
+	priority = {
+		factor = 50
+		modifier = { num_of_factories < 100 factor = 0 }
+	}
+	basic_cruiser_walker_default = {
+		priority = { factor = 10 }
+		history = yes
+		target_variant = {
+			match_value = 1500
+			type = cruiser_walker_chassis_1
+			modules = {
+				suspension_type_slot = tank_hexapedal_locomotion
+				lc_main_armament_slot = lc_heavy_naval_guns
+				lc_secondary_armament_slot = lc_medium_naval_guns
+				lc_special_features_slot_1 = lc_radio_module
+				lc_special_features_slot_2 = empty
+				lc_special_features_slot_3 = empty
+				lc_additional_armament_slot_1 = lc_heavy_naval_guns
+				lc_additional_armament_slot_2 = empty
+				lc_additional_armament_slot_3 = empty
+				lc_additional_armament_slot_4 = empty
+			}
+			upgrades = { tank_nsb_engine_upgrade = 12 tank_nsb_armor_upgrade = 10 }
+		}
+		allowed_modules = {
+			tank_hexapedal_locomotion lc_heavy_naval_guns lc_medium_naval_guns
+			lc_radio_1 lc_radio_2 lc_radio_3
 		}
 	}
 }

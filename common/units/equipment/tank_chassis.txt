@@ -7,6 +7,8 @@ equipments = {
 	light_tank_chassis = {
 		year = 80
 		is_archetype = yes
+		# Explicitly inherited by role duplicates such as Infantry Walkers.
+		is_frame = yes
 		is_buildable = no
 
 		picture = archetype_light_tank_equipment
@@ -39,6 +41,7 @@ equipments = {
 				allowed_module_categories = {
 					tank_suspension_type
 					tank_non_tracked_suspension_type
+					tank_legged_locomotion_type
 				}
 			}
 
@@ -144,6 +147,9 @@ equipments = {
 		}
 		module_count_limit = { module = tank_repurposed_naval_reactor count < 1 }
 		module_count_limit = { module = tank_modular_vehicle_reactor count < 1 }
+		# Light chassis permit bipedal and quadrupedal locomotion only.
+		module_count_limit = { module = tank_hexapedal_locomotion count < 1 }
+		module_count_limit = { module = tank_octopedal_locomotion count < 1 }
 		default_modules = {
 			main_armament_slot = empty
 			turret_type_slot = tank_light_one_man_tank_turret
@@ -269,6 +275,8 @@ equipments = {
 	medium_tank_chassis = {
 		year = 80
 		is_archetype = yes
+		# Explicitly inherited by role duplicates such as Battle Walkers.
+		is_frame = yes
 		is_buildable = no
 		can_be_produced = {
 			if = {
@@ -313,6 +321,7 @@ equipments = {
 				required = yes
 				allowed_module_categories = {
 					tank_suspension_type
+					tank_legged_locomotion_type
 				}
 			}
 
@@ -417,6 +426,8 @@ equipments = {
 		}
 		module_count_limit = { module = tank_repurposed_naval_reactor count < 1 }
 		module_count_limit = { module = tank_modular_vehicle_reactor count < 1 }
+		# Medium chassis permit bipedal, quadrupedal, and hexapedal locomotion.
+		module_count_limit = { module = tank_octopedal_locomotion count < 1 }
 		default_modules = {
 			main_armament_slot = empty
 			turret_type_slot = tank_medium_one_man_tank_turret
@@ -543,6 +554,8 @@ equipments = {
 	heavy_tank_chassis = {
 		year = 80
 		is_archetype = yes
+		# Explicitly inherited by role duplicates such as Siegebreaker Walkers.
+		is_frame = yes
 		is_buildable = no
 		can_be_produced = {
 			if = {
@@ -588,6 +601,7 @@ equipments = {
 				required = yes
 				allowed_module_categories = {
 					tank_suspension_type
+					tank_legged_locomotion_type
 				}
 			}
 
@@ -689,6 +703,8 @@ equipments = {
 		}
 		module_count_limit = { module = tank_repurposed_naval_reactor count < 1 }
 		module_count_limit = { module = tank_modular_vehicle_reactor count < 1 }
+		# Heavy chassis permit quadrupedal, hexapedal, and octopedal locomotion.
+		module_count_limit = { module = tank_bipedal_locomotion count < 1 }
 		default_modules = {
 			main_armament_slot = empty
 			turret_type_slot = tank_heavy_two_man_tank_turret
@@ -1396,6 +1412,8 @@ equipments = {
 	land_cruiser_chassis = {
 		year = 89
 		is_archetype = yes
+		# Explicitly inherited by the Cruiser Walker role duplicate.
+		is_frame = yes
 		is_buildable = no
 		can_be_produced = {
 			if = {
@@ -1421,6 +1439,14 @@ equipments = {
 		max_military_factories = 5
 
 		module_slots = {
+			suspension_type_slot = {
+				required = yes
+				allowed_module_categories = {
+					tank_suspension_type
+					tank_legged_locomotion_type
+				}
+			}
+
 			lc_main_armament_slot = {
 				required = yes
 				allowed_module_categories = {
@@ -1553,8 +1579,12 @@ equipments = {
 			module = lc_stabilizers
 			count < 2
 		}
+		# Land cruisers permit hexapedal and octopedal locomotion only.
+		module_count_limit = { module = tank_bipedal_locomotion count < 1 }
+		module_count_limit = { module = tank_quadrupedal_locomotion count < 1 }
 
 		default_modules = {
+			suspension_type_slot = tank_bogie_suspension
 			lc_main_armament_slot = lc_heavy_naval_guns
 			lc_secondary_armament_slot = lc_medium_naval_guns
 		}

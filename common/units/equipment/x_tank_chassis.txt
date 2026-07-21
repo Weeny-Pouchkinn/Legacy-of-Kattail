@@ -52,6 +52,17 @@ duplicate_archetypes = {
 		}
 	}
 
+	infantry_walker_chassis = {
+		archetype = light_tank_chassis
+		# "rocket" is an otherwise-unused, engine-defined tank designer role.
+		# Custom equipment categories are rejected by EQUIPMENT_CATEGORY_META,
+		# so it is used internally for all class-specific Walker archetypes.
+		type = { armor rocket }
+		for_each = {
+			variant_name = { find_and_replace = { "light_tank_chassis" "infantry_walker_equipment" } }
+		}
+	}
+
 	# medium_tank
 
 	medium_tank_aa_chassis = {
@@ -97,6 +108,14 @@ duplicate_archetypes = {
 		}
 	}
 
+	battle_walker_chassis = {
+		archetype = medium_tank_chassis
+		type = { armor rocket }
+		for_each = {
+			variant_name = { find_and_replace = { "medium_tank_chassis" "battle_walker_equipment" } }
+		}
+	}
+
 	# heavy_tank
 
 	heavy_tank_aa_chassis = {
@@ -139,6 +158,14 @@ duplicate_archetypes = {
 		type = { armor flame }
 		for_each = {
 			variant_name = { find_and_replace = { "chassis" "equipment" } }
+		}
+	}
+
+	siegebreaker_walker_chassis = {
+		archetype = heavy_tank_chassis
+		type = { armor rocket }
+		for_each = {
+			variant_name = { find_and_replace = { "heavy_tank_chassis" "siegebreaker_walker_equipment" } }
 		}
 	}
 
@@ -195,6 +222,15 @@ duplicate_archetypes = {
 		type = { armor anti_tank }
 		for_each = {
 			variant_name = { find_and_replace = { "chassis" "equipment" } }
+		}
+	}
+
+	cruiser_walker_chassis = {
+		archetype = land_cruiser_chassis
+		type = { armor rocket }
+		for_each = {
+			variant_name = { find_and_replace = { "land_cruiser_chassis" "cruiser_walker_equipment" } }
+			hardness = { set = 0 }
 		}
 	}
 }
