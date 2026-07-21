@@ -63,13 +63,13 @@ technologies = {
 	}
 
 	sp_autonomous_engineer_tech = {
-		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
-		is_special_project_tech = yes
+		allow = { ROOT = { custom_trigger_tooltip = { tooltip = LOK_TECH_REQUIRES_DEEP_LEARNING_TT has_country_flag = lok_has_deep_learning } } }
 		research_cost = 2.5
 		start_year = 108
 		folder = { name = support_folder position = { x = 1 y = 14 } }
 		categories = { support_tech engineers_tech }
 		dependencies = { sp_armored_engineer_tech = 1 }
+		path = { leads_to_tech = sp_intelligent_engineer_tech research_cost_coeff = 1 }
 		armored_engineer = {
 			entrenchment = 0.25
 			fort = { attack = 0.05 defence = 0.05 }
@@ -77,13 +77,13 @@ technologies = {
 	}
 
 	sp_autonomous_maintenance_tech = {
-		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
-		is_special_project_tech = yes
+		allow = { ROOT = { custom_trigger_tooltip = { tooltip = LOK_TECH_REQUIRES_DEEP_LEARNING_TT has_country_flag = lok_has_deep_learning } } }
 		research_cost = 2.5
 		start_year = 108
 		folder = { name = support_folder position = { x = 7 y = 14 } }
 		categories = { support_tech maintenance_company_tech }
 		dependencies = { sp_armored_maintenance_tech = 1 }
+		path = { leads_to_tech = sp_intelligent_maintenance_tech research_cost_coeff = 1 }
 		armored_maintenance = {
 			reliability_factor = 0.025
 			equipment_capture_factor = 0.025
@@ -91,29 +91,79 @@ technologies = {
 	}
 
 	sp_autonomous_signal_tech = {
-		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
-		is_special_project_tech = yes
+		allow = { ROOT = { custom_trigger_tooltip = { tooltip = LOK_TECH_REQUIRES_DEEP_LEARNING_TT has_country_flag = lok_has_deep_learning } } }
 		research_cost = 2.5
 		start_year = 108
 		folder = { name = support_folder position = { x = 13 y = 14 } }
 		categories = { support_tech signal_company_tech electronics }
 		dependencies = { sp_armored_signal_tech = 1 }
+		path = { leads_to_tech = sp_intelligent_signal_tech research_cost_coeff = 1 }
 		armored_signal = {
 			initiative = 0.06
 		}
 	}
 
 	sp_autonomous_motorized_military_police_tech = {
-		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
-		is_special_project_tech = yes
+		allow = { ROOT = { custom_trigger_tooltip = { tooltip = LOK_TECH_REQUIRES_DEEP_LEARNING_TT has_country_flag = lok_has_deep_learning } } }
 		research_cost = 2.5
 		start_year = 108
 		folder = { name = support_folder position = { x = 5 y = 14 } }
 		categories = { support_tech military_police_tech }
 		dependencies = { sp_armored_motorized_military_police_tech = 1 }
+		path = { leads_to_tech = sp_intelligent_motorized_military_police_tech research_cost_coeff = 1 }
 		motorized_military_police = {
 			suppression_factor = 0.05
 		}
+	}
+
+	sp_intelligent_engineer_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 3
+		start_year = 114
+		folder = { name = support_folder position = { x = 1 y = 22 } }
+		categories = { support_tech engineers_tech }
+		dependencies = { sp_autonomous_engineer_tech = 1 }
+		armored_engineer = {
+			entrenchment = 0.25
+			fort = { attack = 0.05 defence = 0.05 }
+		}
+	}
+
+	sp_intelligent_maintenance_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 3
+		start_year = 114
+		folder = { name = support_folder position = { x = 7 y = 22 } }
+		categories = { support_tech maintenance_company_tech }
+		dependencies = { sp_autonomous_maintenance_tech = 1 }
+		armored_maintenance = {
+			reliability_factor = 0.025
+			equipment_capture_factor = 0.025
+		}
+	}
+
+	sp_intelligent_signal_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 3
+		start_year = 114
+		folder = { name = support_folder position = { x = 13 y = 22 } }
+		categories = { support_tech signal_company_tech electronics }
+		dependencies = { sp_autonomous_signal_tech = 1 }
+		armored_signal = { initiative = 0.06 }
+	}
+
+	sp_intelligent_motorized_military_police_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 3
+		start_year = 114
+		folder = { name = support_folder position = { x = 5 y = 22 } }
+		categories = { support_tech military_police_tech }
+		dependencies = { sp_autonomous_motorized_military_police_tech = 1 }
+		motorized_military_police = { suppression_factor = 0.05 }
 	}
 
 	helicopter_recon_support_tech = {
@@ -159,6 +209,7 @@ technologies = {
 		folder = { name = support_folder position = { x = 3 y = 14 } }
 		categories = { support_tech recon_tech helicopter transport_helicopter }
 		dependencies = { helicopter_recon_support_tech = 1 transport_helicopter2 = 1 }
+		path = { leads_to_tech = gunship_helicopter_recon_support_tech research_cost_coeff = 1 }
 		helicopter_recon = {
 			recon = 0.5
 			forest = { movement = 0.025 }
@@ -180,6 +231,7 @@ technologies = {
 		folder = { name = support_folder position = { x = 9 y = 14 } }
 		categories = { support_tech hospital_tech helicopter transport_helicopter }
 		dependencies = { helicopter_medevac_support_tech = 1 transport_helicopter2 = 1 }
+		path = { leads_to_tech = gunship_helicopter_medevac_support_tech research_cost_coeff = 1 }
 		helicopter_field_hospital = {
 			casualty_trickleback = 0.025
 			experience_loss_factor = -0.025
@@ -194,6 +246,53 @@ technologies = {
 		folder = { name = support_folder position = { x = 11 y = 14 } }
 		categories = { support_tech logistics_tech helicopter transport_helicopter }
 		dependencies = { helicopter_transport_support_tech = 1 transport_helicopter2 = 1 }
+		path = { leads_to_tech = gunship_helicopter_transport_support_tech research_cost_coeff = 1 }
+		helicopter_transport = { supply_consumption_factor = -0.025 }
+		ai_will_do = { factor = 2 modifier = { factor = 2 is_major = yes } }
+	}
+
+	gunship_helicopter_recon_support_tech = {
+		special_project_specialization = { specialization_air }
+		research_cost = 3
+		start_year = 114
+		folder = { name = support_folder position = { x = 3 y = 22 } }
+		categories = { support_tech recon_tech helicopter transport_helicopter }
+		dependencies = { advanced_helicopter_recon_support_tech = 1 transport_helicopter3 = 1 }
+		helicopter_recon = {
+			recon = 0.5
+			forest = { movement = 0.025 }
+			hills = { movement = 0.025 }
+			mountain = { movement = 0.025 }
+			jungle = { movement = 0.025 }
+			marsh = { movement = 0.025 }
+			plains = { movement = 0.025 }
+			desert = { movement = 0.025 }
+			river = { movement = 0.025 }
+		}
+		ai_will_do = { factor = 2 modifier = { factor = 2 is_major = yes } }
+	}
+
+	gunship_helicopter_medevac_support_tech = {
+		special_project_specialization = { specialization_air }
+		research_cost = 3
+		start_year = 114
+		folder = { name = support_folder position = { x = 9 y = 22 } }
+		categories = { support_tech hospital_tech helicopter transport_helicopter }
+		dependencies = { advanced_helicopter_medevac_support_tech = 1 transport_helicopter3 = 1 }
+		helicopter_field_hospital = {
+			casualty_trickleback = 0.025
+			experience_loss_factor = -0.025
+		}
+		ai_will_do = { factor = 2 modifier = { factor = 2 is_major = yes } }
+	}
+
+	gunship_helicopter_transport_support_tech = {
+		special_project_specialization = { specialization_air }
+		research_cost = 3
+		start_year = 114
+		folder = { name = support_folder position = { x = 11 y = 22 } }
+		categories = { support_tech logistics_tech helicopter transport_helicopter }
+		dependencies = { advanced_helicopter_transport_support_tech = 1 transport_helicopter3 = 1 }
 		helicopter_transport = { supply_consumption_factor = -0.025 }
 		ai_will_do = { factor = 2 modifier = { factor = 2 is_major = yes } }
 	}
