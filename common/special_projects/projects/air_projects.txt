@@ -793,7 +793,7 @@
 sp_air_jet_engine = {
 	specialization = specialization_air
 	narrative = { name = LOK_SP_NUCLEAR_RAMJETS_NAME desc = LOK_SP_NUCLEAR_RAMJETS_DESC }
-	icon = GFX_PLACEHOLDER_sp_project_icon
+	icon = GFX_LOK_sp_nuclear_powered_ramjets
 
 	project_tags = {
 		sp_tag_aircraft
@@ -802,19 +802,11 @@ sp_air_jet_engine = {
 
 	available = {
 		FROM = {
-			if = {
-				limit = { has_dlc = "By Blood Alone" }
-				has_tech = engines_2
-				OR = {
-					has_tech = improved_small_airframe
-					has_tech = improved_medium_airframe
-				}
-			}
-			else = {
-				OR = {
-					has_tech = fighter2
-					has_tech = tactical_bomber2
-				}
+			OR = {
+				has_tech = fighter3
+				has_tech = tactical_bomber3
+				has_tech = strategic_bomber3
+				has_tech = heavy_fighter3
 			}
 		}
 	}
@@ -838,71 +830,11 @@ sp_air_jet_engine = {
 	project_output = {
 
 		country_effects = {
-			#custom_effect_tooltip = LOK_SP_UNLOCK_NUCLEAR_RAMJET_TT
+			custom_effect_tooltip = LOK_SP_UNLOCK_NUCLEAR_RAMJET_TT
 			set_technology = {
 				jet_engines = 1
 				popup = yes
 			}
-			if =  {
-				limit = {
-					has_dlc = "By Blood Alone"
-				}
-				add_design_template_bonus = {
-					name = air_equipment
-					uses = 1
-					cost_factor = 0.75
-					equipment = small_plane_airframe
-					equipment = medium_plane_airframe
-					equipment = large_plane_airframe
-				}
-				add_design_template_bonus = {
-					name = air_equipment
-					uses = 1
-					cost_factor = 0.5
-					equipment = small_plane_airframe
-					equipment = medium_plane_airframe
-					equipment = large_plane_airframe
-				}
-			}
-			else = {
-				custom_effect_tooltip = {
-					localization_key = SP_UNLOCK_TECH
-					TECH = jet_fighter_equipment_1
-				}
-				custom_effect_tooltip = {
-					localization_key = SP_UNLOCK_TECH
-					TECH = jet_tac_bomber_equipment_1
-				}
-				add_equipment_bonus = {
-					name = sp_air_jet_engine
-					bonus = {
-						medium_plane_airframe = {
-							air_agility = 0.05
-							maximum_speed = 0.05
-							instant = yes
-						}
-					}
-				}
-				add_equipment_bonus = {
-					name = sp_air_jet_engine
-					bonus = {
-						small_plane_airframe = {
-							air_agility = 0.05
-							maximum_speed = 0.05
-							instant = yes
-						}
-					}
-				}
-			}
-		}
-
-		enable_equipment_modules = {
-			limit = { has_dlc = "By Blood Alone" }
-			jet_engine_1x
-			jet_engine_2x
-			jet_engine_3x
-			jet_engine_4x
-			jet_engine_6x
 		}
 
 		enable_equipment_modules = {
@@ -1354,7 +1286,7 @@ sp_air_jet_engine = {
 sp_air_supersonic_jet = {
 	specialization = specialization_air
 	narrative = { name = LOK_SP_LOW_ORBITAL_HYPERSONIC_NAME desc = LOK_SP_LOW_ORBITAL_HYPERSONIC_DESC }
-	icon = GFX_PLACEHOLDER_sp_project_icon
+	icon = GFX_LOK_sp_low_orbital_hypersonic_aircraft
 
 	project_tags = {
 		sp_tag_aircraft
@@ -1390,34 +1322,6 @@ sp_air_supersonic_jet = {
 	}
 
 	prototype_time = sp_time.prototype.long
-
-	project_output = {
-		country_effects = {
-			if = {
-				limit = { has_dlc = "By Blood Alone" }
-			}
-			add_design_template_bonus = {
-				name = sp_air_supersonic_jet_fighter_free_design
-				uses = 1
-				cost_factor = 1
-				equipment = small_plane_airframe_5
-			}
-		}
-
-		enable_equipments = {
-			limit = {
-				has_dlc = "By Blood Alone"
-			}
-			small_plane_airframe_5
-		}
-
-		enable_equipments = {
-			limit = {
-				NOT = { has_dlc = "By Blood Alone" }
-			}
-			supersonic_fighter_equipment_1
-		}
-	}
 
 	generic_prototype_rewards = {
 		sp_air_political_interference_generic_reward
@@ -1572,7 +1476,7 @@ sp_air_supersonic_jet = {
 sp_air_helicopter = {
 	specialization = specialization_air
 	narrative = { name = LOK_SP_EXOTIC_ROTORCRAFT_NAME desc = LOK_SP_EXOTIC_ROTORCRAFT_DESC }
-	icon = GFX_PLACEHOLDER_sp_project_icon
+	icon = GFX_LOK_sp_exotic_compound_rotorcraft
 
 	project_tags = {
 		sp_tag_aircraft
@@ -1604,7 +1508,7 @@ sp_air_helicopter = {
 
 	project_output = {
 		country_effects = {
-			#custom_effect_tooltip = LOK_SP_UNLOCK_EXOTIC_COMPOUND_ROTORCRAFT_TT
+			custom_effect_tooltip = LOK_SP_UNLOCK_EXOTIC_COMPOUND_ROTORCRAFT_TT
 			set_technology = {
 				exotic_compound_rotorcraft = 1
 				popup = yes
