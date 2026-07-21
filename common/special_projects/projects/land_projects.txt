@@ -10,7 +10,7 @@
 #
 sp_land_flamethrower_tank = {
 	specialization = specialization_land
-	narrative = { name = LOK_SP_THERMOBARIC_ASSAULT_VEHICLE_NAME desc = LOK_SP_THERMOBARIC_ASSAULT_VEHICLE_DESC }
+	narrative = { desc = LOK_SP_THERMOBARIC_ASSAULT_VEHICLE_DESC }
 	icon = GFX_LOK_sp_thermobaric_assault_vehicle
 
 	project_tags = sp_tag_tank
@@ -113,14 +113,25 @@ sp_land_flamethrower_tank = {
 #
 sp_land_military_engineering_vehicles = {
 	specialization = specialization_land
-	narrative = { name = LOK_SP_AUTONOMOUS_ENGINEERING_VEHICLES_NAME desc = LOK_SP_AUTONOMOUS_ENGINEERING_VEHICLES_DESC }
+	narrative = { desc = LOK_SP_AUTONOMOUS_ENGINEERING_VEHICLES_DESC }
 	icon = GFX_LOK_sp_autonomous_combat_engineering_vehicles
 
 	project_tags = sp_tag_tank
 
 	available = {
 		FROM = {
-			has_tech = tech_engineers
+			has_tech = tech_engineers2
+			has_tech = improved_computing_machine
+			OR = {
+				AND = {
+					has_dlc = "No Step Back"
+					has_tech = basic_light_tank_chassis
+				}
+				AND = {
+					NOT = { has_dlc = "No Step Back" }
+					has_tech = basic_light_tank
+				}
+			}
 		}
 	}
 
@@ -143,7 +154,7 @@ sp_land_military_engineering_vehicles = {
 
 		country_effects = {
 			# Vanilla equipment-designer variant creation disabled: the fixed
-			# Autonomous Assault Engineer equipment is enabled directly above.
+			# The fixed Uncrewed Engineering Vehicle is enabled directly above.
 			# SP_create_variant_based_on_country_assault_engineer = yes
 
 			custom_effect_tooltip = {
@@ -202,7 +213,7 @@ sp_land_military_engineering_vehicles = {
 #
 sp_land_land_cruiser = {
 	specialization = specialization_land
-	narrative = { name = LOK_SP_HEAVY_ASSAULT_LANDKREUZER_NAME desc = LOK_SP_HEAVY_ASSAULT_LANDKREUZER_DESC }
+	narrative = { desc = LOK_SP_HEAVY_ASSAULT_LANDKREUZER_DESC }
 	icon = GFX_LOK_sp_heavy_assault_landkreuzer
 
 	project_tags = sp_tag_tank
@@ -1293,7 +1304,7 @@ sp_land_land_cruiser = {
 #
 sp_land_multi_charge_large_caliber_gun = {
 	specialization = specialization_land
-	narrative = { name = LOK_SP_FIXED_MASS_DRIVER_NAME desc = LOK_SP_FIXED_MASS_DRIVER_DESC }
+	narrative = { desc = LOK_SP_FIXED_MASS_DRIVER_DESC }
 	icon = GFX_LOK_sp_fixed_long_range_mass_driver
 
 	project_tags = sp_tag_artillery
@@ -1535,7 +1546,7 @@ sp_land_multi_charge_large_caliber_gun = {
 #
 sp_land_stronghold_network = {
 	specialization = specialization_land
-	narrative = { name = LOK_SP_AUTONOMOUS_FORTIFICATION_NAME desc = LOK_SP_AUTONOMOUS_FORTIFICATION_DESC }
+	narrative = { desc = LOK_SP_AUTONOMOUS_FORTIFICATION_DESC }
 	icon = GFX_LOK_sp_autonomous_fortification_network
 
 	project_tags = sp_tag_artillery

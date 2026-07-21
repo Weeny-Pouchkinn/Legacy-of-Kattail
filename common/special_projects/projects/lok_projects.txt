@@ -1,6 +1,6 @@
 sp_lok_atomic_engines = {
 	specialization = specialization_nuclear
-	narrative = { name = LOK_SP_ATOMIC_ENGINES_NAME desc = LOK_SP_ATOMIC_ENGINES_DESC }
+	narrative = { desc = LOK_SP_ATOMIC_ENGINES_DESC }
 	icon = GFX_LOK_sp_atomic_engines
 	project_tags = sp_tag_nuclear_power
 
@@ -35,7 +35,7 @@ sp_lok_atomic_engines = {
 
 sp_lok_nuclear_backpacks = {
 	specialization = specialization_nuclear
-	narrative = { name = LOK_SP_NUCLEAR_BACKPACKS_NAME desc = LOK_SP_NUCLEAR_BACKPACKS_DESC }
+	narrative = { desc = LOK_SP_NUCLEAR_BACKPACKS_DESC }
 	icon = GFX_LOK_sp_nuclear_backpacks
 	project_tags = sp_tag_nuclear_power
 
@@ -70,7 +70,7 @@ sp_lok_nuclear_backpacks = {
 
 sp_naval_nuclear_missile_submarine = {
 	specialization = specialization_naval
-	narrative = { name = LOK_SP_NAVAL_BALLISTIC_PLATFORMS_NAME desc = LOK_SP_NAVAL_BALLISTIC_PLATFORMS_DESC }
+	narrative = { desc = LOK_SP_NAVAL_BALLISTIC_PLATFORMS_DESC }
 	icon = GFX_LOK_sp_naval_ballistic_platforms
 	project_tags = { sp_tag_nuclear_warfare sp_tag_submarine }
 
@@ -96,7 +96,7 @@ sp_naval_nuclear_missile_submarine = {
 
 sp_naval_modern_carrier = {
 	specialization = specialization_naval
-	narrative = { name = LOK_SP_SUPERSCALED_CARRIER_NAME desc = LOK_SP_SUPERSCALED_CARRIER_DESC }
+	narrative = { desc = LOK_SP_SUPERSCALED_CARRIER_DESC }
 	icon = GFX_LOK_sp_super_scaled_aerial_maritime_platforms
 	project_tags = sp_tag_surface_ship
 
@@ -123,7 +123,7 @@ sp_naval_modern_carrier = {
 
 sp_naval_super_heavy_battleship = {
 	specialization = specialization_naval
-	narrative = { name = LOK_SP_DREADNOUGHT_SHIPS_NAME desc = LOK_SP_DREADNOUGHT_SHIPS_DESC }
+	narrative = { desc = LOK_SP_DREADNOUGHT_SHIPS_DESC }
 	icon = GFX_LOK_sp_dreadnought_ships
 	project_tags = sp_tag_surface_ship
 
@@ -149,7 +149,7 @@ sp_naval_super_heavy_battleship = {
 
 sp_lok_vacuum_airship_refurbishment = {
 	specialization = specialization_air
-	narrative = { name = LOK_SP_VACUUM_AIRSHIP_NAME desc = LOK_SP_VACUUM_AIRSHIP_DESC }
+	narrative = { desc = LOK_SP_VACUUM_AIRSHIP_DESC }
 	icon = GFX_LOK_sp_vacuum_airship_refurbishment
 	project_tags = sp_tag_aircraft
 
@@ -175,7 +175,7 @@ sp_lok_vacuum_airship_refurbishment = {
 
 sp_lok_quantum_computing = {
 	specialization = specialization_nuclear
-	narrative = { name = LOK_SP_QUANTUM_COMPUTING_NAME desc = LOK_SP_QUANTUM_COMPUTING_DESC }
+	narrative = { desc = LOK_SP_QUANTUM_COMPUTING_DESC }
 	icon = GFX_LOK_sp_quantum_computing
 	project_tags = sp_tag_nuclear_power
 
@@ -197,7 +197,7 @@ sp_lok_quantum_computing = {
 
 sp_lok_genetically_perfected_infantry = {
 	specialization = specialization_land
-	narrative = { name = LOK_SP_GENETICALLY_PERFECTED_INFANTRY_NAME desc = LOK_SP_GENETICALLY_PERFECTED_INFANTRY_DESC }
+	narrative = { desc = LOK_SP_GENETICALLY_PERFECTED_INFANTRY_DESC }
 	icon = GFX_LOK_sp_genetically_perfected_infantry
 	project_tags = sp_tag_tank
 
@@ -221,5 +221,37 @@ sp_lok_genetically_perfected_infantry = {
 				popup = yes
 			}
 		}
+	}
+}
+
+sp_lok_autonomous_combat_assistance = {
+	specialization = specialization_land
+	narrative = { desc = LOK_SP_AUTONOMOUS_COMBAT_ASSISTANCE_DESC }
+	icon = GFX_LOK_sp_autonomous_combat_assistance
+	project_tags = sp_tag_tank
+
+	available = {
+		FROM = {
+			has_tech = advanced_computing_machine2
+			is_special_project_completed = sp:sp_land_military_engineering_vehicles
+		}
+	}
+
+	breakthrough_cost = { specialization_land = 2 }
+	resource_cost = { resources = { steel = 6 aluminium = 4 chromium = 4 } }
+	prototype_time = sp_time.prototype.medium
+	complexity = sp_complexity.medium
+
+	project_output = {
+		country_effects = {
+			custom_effect_tooltip = LOK_SP_AUTONOMOUS_COMBAT_ASSISTANCE_OUTPUT_TT
+		}
+	}
+
+	generic_prototype_rewards = {
+		sp_land_generic_reward_scientist_xp_1
+		sp_land_generic_reward_major_progress_1
+		sp_land_generic_reward_test_failure_1
+		sp_land_generic_reward_armor_tech_1
 	}
 }
