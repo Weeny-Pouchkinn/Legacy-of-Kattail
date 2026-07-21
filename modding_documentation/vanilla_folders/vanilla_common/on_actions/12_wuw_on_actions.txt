@@ -1865,6 +1865,23 @@ on_actions = {
 	            	ROOT = {
 	            		original_tag = HUN
 	            	}
+					FROM = {
+						NOT = {
+							AND = {
+								original_tag = RUT
+								is_in_faction = no
+								all_other_country = {
+									OR = {
+										NOT = {
+											has_guaranteed = PREV
+										}
+										is_ally_with = ROOT
+										has_guaranteed = ROOT
+									}
+								}
+							}
+						}
+					}
 	               	NOT = {
 	               		has_global_flag = HUN_entered_an_offensive_war_flag	
 	               	}

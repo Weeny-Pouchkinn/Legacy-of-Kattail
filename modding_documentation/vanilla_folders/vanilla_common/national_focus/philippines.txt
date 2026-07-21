@@ -6449,25 +6449,19 @@ initial_show_position = {
 
 		#When editing this, try to keep this somewhat in line with how the if/else block below works
 		icon = {
-			trigger = {
+			GFX_focus_generic_befriend_nationalist_spain_focus = {
 				OR = {
 					country_exists = SPA
 					country_exists = SPC
 				}
 			}
-			value = GFX_focus_generic_befriend_nationalist_spain_focus
-		}
-		icon = {
-			trigger = {
+			GFX_focus_generic_befriend_communist_spain_focus = {
 				country_exists = SPD
 				SPD = {
 					has_government = communism
 				}
 			}
-			value = GFX_focus_generic_befriend_communist_spain_focus
-		}
-		icon = {
-			value = GFX_focus_generic_befriend_republican_spain_focus
+			GFX_focus_generic_befriend_republican_spain_focus = yes
 		}
 		dynamic = yes
 
@@ -7035,6 +7029,7 @@ initial_show_position = {
 			add_state_claim = 725 #Nauru
 			add_state_claim = 727 #Line Islands
 			add_state_claim = 737 #Bismark
+			add_state_claim = 1070 #Bougainville
 			add_state_claim = 634 #Solomon Islands
 			add_state_claim = 734 #Nendo
 
@@ -7081,6 +7076,7 @@ initial_show_position = {
 		available_if_capitulated = no
 	
 		completion_reward = {
+			add_state_claim = 1070 #Bougainville
 			add_state_claim = 634	#Solomon Islands
 			add_state_claim = 734	#Nendo
 			add_state_claim = 1024	#Sabah
@@ -7237,9 +7233,9 @@ initial_show_position = {
 								state = 725 #Nauru
 								state = 727 #Line Islands
 								state = 737 #Bismark
+								state = 1070 #Bougainville
 								state = 634 #Solomon Islands
 								state = 734 #Nendo
-								state = 634	#Solomon Islands
 								state = 734	#Nendo
 								state = 1024 #Sabah
 								state = 334	#Kalimantan
@@ -8632,9 +8628,23 @@ focus = {
 				name = PHI_philippine_scouts
 				cost_reduction = 0.25
 				uses = 2
-				category = cat_rangers_doctrine
+				category = special_forces_doctrine
 			}
-			
+			custom_effect_tooltip = ranger_subdoctrines_default_add_mastery_bonus_effect_tooltip
+			hidden_effect = {
+				add_mastery_bonus = {
+					name = PHI_philippine_scouts
+					bonus = 0.1
+					days = 240
+					sub_doctrine = rangers_1
+				}
+				add_mastery_bonus = {
+					name = PHI_philippine_scouts
+					bonus = 0.1
+					days = 240
+					sub_doctrine = rangers_2
+					}
+				}			
 			custom_effect_tooltip = generic_skip_one_line_tt
 			add_potential_special_forces_tree = yes
 		}
@@ -9456,7 +9466,22 @@ focus = {
 					name = PHI_marine_corps
 					cost_reduction = 0.25
 					uses = 1
-					category = cat_marines_doctrine
+					category = special_forces_doctrine
+				}
+				custom_effect_tooltip = marine_subdoctrines_default_add_mastery_bonus_effect_tooltip
+				hidden_effect = {
+					add_mastery_bonus = {
+						name = PHI_marine_corps
+						bonus = 0.1
+						days = 240
+						sub_doctrine = marines_1
+					}
+					add_mastery_bonus = {
+						name = PHI_marine_corps
+						bonus = 0.1
+						days = 240
+						sub_doctrine = marines_2
+					}
 				}
 			}
 			add_tech_bonus = {

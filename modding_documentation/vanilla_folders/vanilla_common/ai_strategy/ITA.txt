@@ -138,14 +138,17 @@ ITA_unit_production = {
 }
 
 ITA_trade_with_sweden = {
+	
 	allowed = {
 		original_tag = ITA
 	}
+	
 	enable = {
 		# if we're not communist and they're not communist
 		NOT = { has_government = communism }
 		NOT = { SWE = { has_government = communism } }
 	}
+	
 	abort_when_not_enabled = yes
 
 	ai_strategy = {
@@ -153,6 +156,7 @@ ITA_trade_with_sweden = {
 		id = SWE
 		value = 60
 	}
+	
 }
 
 ITA_trade_with_germany = {
@@ -256,6 +260,25 @@ ITA_greece_war_goal = {
 		id = GRE
 		value = 200
 	}
+}
+
+ITA_dont_overcommit_to_greece = {
+	allowed = {
+		original_tag = ITA
+	}
+	enable = {
+		has_war_with = GRE
+		has_war_with = ENG
+	}
+	abort_when_not_enabled = yes
+
+	# Don't drain North Africa and other fronts to fight Greece
+	ai_strategy = {
+		type = front_unit_request
+		tag = GRE
+		value = -40
+	}
+
 }
 
 ITA_shore_up_against_france = {
@@ -928,23 +951,61 @@ ITA_please_help_me_buget_this_my_country_is_dieing = {
 	}
 }
 
+# Hold africa until we have enemies in our core territory!
 ITA_hold_africa = {
 	allowed = {
 		original_tag = ITA
 	}
 	enable = {
-		date < 1941.1.1
+		date > 1937.6.1
 	}
 	abort = {
-		any_owned_state = { is_core_of = ITA NOT = { is_controlled_by = ITA } }
-		date > 1941.1.1
+		OR = {
+			any_owned_state = { is_core_of = ITA is_on_continent = europe NOT = { is_controlled_by = ITA } }
+			NOT = { has_war_with = ENG }
+			date > 1942.9.1
+		}
+	}
+	
+	#### North Africa
+	ai_strategy = {
+		type = area_priority
+		id = central_north_africa
+		value = 100
+	}
+	
+	## Tobruk area
+	ai_strategy = {
+		type = put_unit_buffers
+		ratio = 0.025
+
+		states = {
+			451
+			663
+			450
+		}
+		subtract_invasions_from_need = no
+		subtract_fronts_from_need = no
+	}
+
+	## Tripoli area - defend against naval invasions
+	ai_strategy = {
+		type = put_unit_buffers
+		ratio = 0.035
+
+		states = {
+			448 # Tripoli
+			458 # Tunisia
+		}
+		subtract_invasions_from_need = no
+		subtract_fronts_from_need = no
 	}
 
 	# Tripoli
 	ai_strategy = {
 		type = theatre_distribution_demand_increase
 		id = 448
-		value = 2
+		value = 4
 	}
 
 	# Benghasi
@@ -959,6 +1020,143 @@ ITA_hold_africa = {
 		type = theatre_distribution_demand_increase
 		id = 447
 		value = 2
+	}
+}
+
+ITA_hold_in_north_africa_early = {
+	allowed = { original_tag = ITA }
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = ENG
+		date < 1940.8.26
+	}
+	abort_when_not_enabled = yes
+
+	# Don't attack in North Africa yet, hold defensive positions
+	ai_strategy = {
+		type = front_control
+		tag = ENG
+		strategic_region = 225 # Tripoli
+		strategic_region = 126 # East Maghreb
+		ratio = 0.5
+		execute_order = no
+		manual_attack = no
+	}
+}
+
+ITA_dont_invade_north_africa_early = {
+	allowed = { original_tag = ITA }
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = FRA
+		date < 1940.6.15
+	}
+	abort_when_not_enabled = yes
+
+	# Don't push into East Maghreb by land
+	ai_strategy = {
+		type = front_control
+		tag = FRA
+		strategic_region = 126 # East Maghreb
+		execute_order = no
+		manual_attack = no
+	}
+
+	# Don't naval invade France either
+	ai_strategy = {
+		type = invade
+		id = FRA
+		value = -5000
+	}
+}
+
+ITA_push_towards_alexandria = {
+	allowed = {
+		original_tag = ITA
+	}
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = ENG
+		date > 1940.8.26
+		# Only push once we have secured our position in Libya
+		any_owned_state = {
+			region = 126 # Libyan coast
+			is_controlled_by = ITA
+		}
+		date < 1942.9.1
+	}
+	abort = {
+		OR = {
+			any_owned_state = { is_core_of = ITA is_on_continent = europe NOT = { is_controlled_by = ITA } }
+			NOT = { has_war_with = ENG }
+			date > 1942.9.1
+		}
+	}
+
+	# Push along the coast toward Alexandria
+	ai_strategy = {
+		type = front_control
+		state = 452 # Matrouh
+		ratio = 0.25
+		priority = 80
+		ordertype = front
+		execution_type = rush_weak
+		execute_order = yes
+	}
+
+	ai_strategy = {
+		type = front_control
+		state = 447 # Alexandria
+		ratio = 0.25
+		priority = 60
+		ordertype = front
+		execution_type = rush_weak
+		execute_order = yes
+	}
+
+	ai_strategy = {
+		type = front_unit_request
+		tag = ENG
+		value = 15
+	}
+
+	ai_strategy = {
+		type = front_armor_score
+		id = ENG
+		value = 200
+	}
+}
+
+ITA_abbandon_eth = {
+	allowed = {
+		original_tag = ITA
+	}
+	enable = {
+		date > 1938.6.1
+	}
+	abort_when_not_enabled = yes
+		
+	ai_strategy = {
+		type = front_unit_request
+		value = -35
+
+		state_trigger = {
+			controller = {
+				OR = {
+					tag = AOI 
+					tag = FRA
+					tag = ENG
+					has_war_with = AOI
+				}
+			}
+			OR = {
+				region = 17    
+				region = 274    
+				region = 273    
+				region = 216    
+				region = 217    
+			}
+		}
 	}
 }
 
@@ -984,6 +1182,19 @@ ITA_dont_invade_NOR_until_FRA_falls = {
 		tag = NOR
 		value = -100
 	}
+	
+	ai_strategy = {
+		type = invade
+		id = NOR
+		value = -5000
+	}
+
+	ai_strategy = {
+		type = front_unit_request
+		value = -200
+		
+		tag = NOR
+	}
 }
 
 ITA_let_germany_handle_polish_front_alone = {
@@ -1004,7 +1215,7 @@ ITA_let_germany_handle_polish_front_alone = {
 				}
 			}
 		}
-		date < 1940.8.1
+		date < 1940.8.26
 	}
 	abort_when_not_enabled = yes
 	ai_strategy = {
@@ -1062,6 +1273,18 @@ ITA_commit_to_ethiopian_theatre = {
 		id = horn_of_africa
 		value = 100
 	}
+	
+	ai_strategy = {
+		type = front_control
+		ordertype = front
+		ratio = 0.5
+		priority = 600
+		execution_type = rush_weak
+		execute_order = yes
+
+		tag = ETH
+	}
+	
 }
 
 ITA_prepare_ethiopian_theatre = {
@@ -1333,7 +1556,7 @@ ITA_prepare_yugoslavian_invasion = {
 	ai_strategy = { #Pull troops from the ENG border in order to be able to invade YUG, mainly from africa
 	    type = front_unit_request
 	    tag = ENG
-	    value = -70
+	    value = -40
 	}
 }
 
@@ -1358,13 +1581,42 @@ ITA_balbo_ignore_germany = {
 	}
 }
 
-ITA_invasion_buffer = {
+ITA_invasion_buffer_early = {
 	allowed = {
 		original_tag = ITA
 	}
 	enable = {
 		is_historical_focus_on = yes
-		date > 1943.1.1
+		date > 1941.3.1
+		date < 1942.10.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = put_unit_buffers
+		states = {
+			156
+			117
+			849
+			157
+			2
+			162
+			161
+			115 #We protect sicily!
+		}
+		ratio = 0.18
+		area = italy
+		subtract_invasions_from_need = no
+		subtract_fronts_from_need = yes
+	}
+}
+ITA_invasion_buffer_late = {
+	allowed = {
+		original_tag = ITA
+	}
+	enable = {
+		is_historical_focus_on = yes
+		date > 1942.10.1
 	}
 	abort_when_not_enabled = yes
 
@@ -1418,14 +1670,10 @@ ITA_dont_die_in_mountains = {
 		original_tag = ITA
 	}
 	enable = {
-		date < 1942.5.1
 		country_exists = SWI
-		is_historical_focus_on = no
+		NOT = { has_war_with = SWI }
 	}
-	abort = {
-		NOT = { country_exists = FRA }
-		date > 1942.5.1
-	}
+	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = ignore
@@ -1454,7 +1702,7 @@ ITA_other_priorities = {
 	allowed = { original_tag = ITA }
 	enable = {
 		is_historical_focus_on = yes
-		date > 1941.4.6
+		date > 1942.6.1
 		date < 1943.6.6
 		ENG = {
 			is_ai = yes
@@ -1473,6 +1721,36 @@ ITA_other_priorities = {
 		type = front_unit_request
 		area = north_africa
 		value = -50
+	}
+}
+
+ITA_ignore_sub_saharan_africa = {
+	allowed = { original_tag = ITA }
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = ENG
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = area_priority
+		id = sub_saharan_africa
+		value = -200
+	}
+	ai_strategy = {
+		type = front_unit_request
+		area = sub_saharan_africa
+		value = -100
+	}
+	ai_strategy = {
+		type = area_priority
+		id = belgian_congo
+		value = -200
+	}
+	ai_strategy = {
+		type = front_unit_request
+		area = belgian_congo
+		value = -100
 	}
 }
 
@@ -1573,6 +1851,55 @@ ITA_dont_join_ww2_too_early = {
 	}
 }
 
+ITA_air_support_north_africa = {
+	allowed = {
+		original_tag = ITA
+	}
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = ENG
+		date < 1942.3.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 225 # Tripoli
+		value = 5500
+	}
+
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 128 # Egypt
+		value = 3000
+	}
+
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 29 # Central Mediterranean Sea
+		value = 2000
+	}
+}
+
+ITA_air_defense_homeland = {
+	allowed = { original_tag = ITA }
+	enable = {
+		has_war_with = ENG
+		any_owned_state = {
+			is_core_of = ITA
+			is_on_continent = europe
+			NOT = { is_controlled_by = ITA }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 23 # Italy
+		value = 10000
+	}
+}
+
 ITA_contest_the_med = {
 	allowed = {
 		original_tag = ITA
@@ -1603,6 +1930,53 @@ ITA_contest_the_med = {
 	}
 }
 
+ITA_naval_role_ratios_produce_screen = {
+	allowed = {
+		has_dlc = "Man the Guns"
+		original_tag = ITA
+	}
+	enable = {
+		has_navy_size = {
+				unit = destroyer
+				size < 100
+			}
+		has_war = yes
+		date < 1943.6.1
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = role_ratio
+		id = naval_screen
+		value = 400
+	}
+
+	ai_strategy = {
+		type = role_ratio
+		id = naval_mine_sweeper
+		value = 0
+	}
+
+	ai_strategy = {
+		type = role_ratio
+		id = naval_mine_layer
+		value = 0
+	}
+
+	ai_strategy = {
+		type = role_ratio
+		id = naval_cruiser_light
+		value = 150
+	}
+
+	ai_strategy = {
+		type = unit_ratio
+		id = screen_ship
+		value = 300
+	}
+}
+
 ITA_dont_invade_uk_early = {
 	allowed = { 
 		original_tag = ITA
@@ -1610,7 +1984,7 @@ ITA_dont_invade_uk_early = {
 	
 	enable = {
 		is_historical_focus_on = yes
-		date < 1941.1.1
+		date < 1942.1.1
 	}
 	
 	abort_when_not_enabled = yes
@@ -1619,5 +1993,30 @@ ITA_dont_invade_uk_early = {
 		type = invade
 		id = ENG
 		value = -500
+	}
+}
+
+ITA_dont_send_air_to_middle_east = {
+	allowed = { original_tag = ITA }
+	enable = {
+		is_historical_focus_on = yes
+		date > 1941.3.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 28 # Middle East
+		value = -30000
+	}
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 232 # Levant
+		value = -30000
+	}
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 116 # Iran
+		value = -30000
 	}
 }

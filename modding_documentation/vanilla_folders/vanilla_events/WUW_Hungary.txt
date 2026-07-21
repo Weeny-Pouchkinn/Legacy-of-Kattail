@@ -1091,8 +1091,26 @@ country_event = {
 			type = take_state_focus
 			target = FROM
 			generator = { 73 }
-		}		
-
+		}
+		if = {
+			limit = {
+				RUT = {
+					exists = yes
+					is_subject_of = FROM
+					owns_state = 73
+				}
+			}
+			add_ai_strategy = {
+				type = declare_war
+				id = RUT
+				value = 100
+			}
+			add_ai_strategy = {
+				type = conquer
+				id = RUT
+				value = 100
+			}
+		}
 	}
 
 	# It is simply not worth the effort
@@ -5015,7 +5033,7 @@ country_event = {
 
 		promote_character = {
 			character = HUN_arpad_szakasits 
-			ideology = reformist_socialism 
+			ideology = socialism 
 		}	
 
 		add_political_power = 25

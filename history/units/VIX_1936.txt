@@ -1,4 +1,4 @@
-﻿##### Division Templates #####
+##### Division Templates #####
 division_template = { #Good infantry
 	name = "Motorized Infantry"		
 	regiments = {
@@ -169,13 +169,28 @@ instant_effect = {
 		efficiency = 50
 	}
 
-	add_equipment_production = {
-		equipment = {
-			type = light_tank_equipment_1
-			creator = "VIX" 
-		}
-		requested_factories = 1
-		progress = 0.4
-		efficiency = 50
+	IF = {
+		limit = { has_dlc = "No Step Back" }
+			add_equipment_production = {
+				equipment = {
+					type = light_tank_chassis_1
+					creator = "VIX"
+						version_name = "Kaisertech IFV" 
+				}
+				requested_factories = 1
+				progress = 0.4
+				efficiency = 50
+			}
+	}
+	ELSE = {
+			add_equipment_production = {
+				equipment = {
+					type = light_tank_equipment_1
+					creator = "VIX" 
+				}
+				requested_factories = 1
+				progress = 0.4
+				efficiency = 50
+			}
 	}
 }

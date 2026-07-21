@@ -1205,28 +1205,24 @@ en_svensk_tiger = {
 				from = GER
 				equipment = {
 					type = heavy_tank_equipment_2
-					version = 0
 				}
 			}
 			has_license = {
-				from = GER		
+				from = GER
 				equipment = {
 					type = heavy_tank_equipment_3
-					version = 0
 				}
 			}
 			has_license = {
 				from = GER
 				equipment = {
 					type = heavy_tank_chassis_2
-					version = 0
 				}
 			}
 			has_license = {
-				from = GER		
+				from = GER
 				equipment = {
 					type = heavy_tank_chassis_3
-					version = 0
 				}
 			}
 		}
@@ -2057,7 +2053,10 @@ bevrijding = {
 	
 	happened = {
 		has_government = democratic
-		has_completed_focus = HOL_liberation
+		OR = {
+			has_completed_focus = HOL_liberation
+			has_completed_focus = HOL_liberation_taog
+		}
 	}
 }
 
@@ -4360,7 +4359,7 @@ by_merit_alone = {
 	
 	happened = {
 		any_unit_leader = {
-			has_unit_leader_flag = field_promotion_achievement
+			is_promoted_from_unit = yes
 			skill > 8
 		}
 	}
@@ -4958,8 +4957,9 @@ and_the_snake_smoked = {
 	happened = {
 		controls_State = 64
 		is_in_faction_with = ENG
-		GER = {
-			has_capitulated = yes
+		OR = {
+			GER = { has_capitulated = yes }
+			GER = { exists = no }
 		}
 	}
 }
@@ -5490,6 +5490,8 @@ chilean_empire = {
 		controls_state = 289
 		controls_state = 724
 		controls_state = 336
+		controls_state = 1017
+		controls_state = 1066
 	}
 }
 
@@ -7465,20 +7467,12 @@ the_juannines = {
 	}
 
 	happened = {
-		PHI = {
-			SPR = {
-				all_core_state = {
-					hidden_trigger = {
-						if = {
-							limit = {
-								has_dlc = "La Resistance"
-							}
-							has_state_flag = SPR_original_core
-						}
-					}
-					is_fully_controlled_by = PHI
-					is_core_of = PHI
-				}
+		custom_trigger_tooltip = {
+			tooltip = the_juannines_tt
+			all_of_scopes = {
+				array =  global.starting_SPR_european_core_states
+				is_fully_controlled_by = PHI
+				is_core_of = PHI
 			}
 		}
 	}
@@ -7719,8 +7713,576 @@ doctrine_of_choice = {
 				check_variable = { strikers_milestone_var > 2 }
 				check_variable = { mediums_milestone_var > 2 }
 				check_variable = { heavies_milestone_var > 2 }
+				#SPECIAL FORCES
+				check_variable = { special_forces_milestone_var > 2 }
 			}
 		}
 	}
 }
 
+### PfOT
+
+im_playing_both_sides_so_i_always_come_out_on_top = {
+    id = 268
+    possible = {
+        is_ironman = yes
+        difficulty > 1
+        has_any_custom_difficulty_setting = no
+        game_rules_allow_achievements = yes
+		OR = {
+			has_dlc = "Arms Against Tyranny"
+			AND = {
+				has_dlc = "Peace For Our Time"
+				tag = CZE
+			}
+		}
+    }
+
+    happened = {
+		OR = {
+			any_country = {
+				has_country_flag = achievement_bought_cze_weapons
+				any_enemy_country = {
+					has_country_flag = achievement_bought_cze_weapons
+				}
+			}
+			any_country = {
+				any_purchase_contract = {
+					seller = ROOT
+				}
+				any_enemy_country = {
+					any_purchase_contract = {
+						seller = ROOT
+					}
+				}
+			}
+		}
+    }
+}
+
+i_didnt_hear_no_bell = {
+    id = 269
+    possible = {
+		tag = CZE
+        is_ironman = yes
+        difficulty > 1
+		has_start_date < 1936.01.02
+        has_any_custom_difficulty_setting = no
+        game_rules_allow_achievements = yes
+		has_dlc = "Peace For Our Time"
+    }
+
+    happened = {
+		custom_trigger_tooltip = {
+			tooltip = i_didnt_hear_no_bell_tt
+			has_country_flag = achievement_became_second_cze_republic
+		}
+		has_country_flag = CZE_capitulated_germany
+    }
+}
+
+premyslids_dream = {
+    id = 270
+    possible = {
+		tag = CZE
+        is_ironman = yes
+        difficulty > 1
+		has_start_date < 1936.01.02
+        has_any_custom_difficulty_setting = no
+        game_rules_allow_achievements = yes
+		has_dlc = "Peace For Our Time"
+    }
+
+    happened = {
+		has_completed_focus = CZE_proclaim_the_restoration_of_bohemia
+		has_completed_focus = CZE_the_legacy_of_ottokar
+    }
+}
+
+kutaci = {
+    id = 271
+    possible = {
+		tag = CZE
+        is_ironman = yes
+        difficulty > 1
+		has_start_date < 1936.01.02
+        has_any_custom_difficulty_setting = no
+        game_rules_allow_achievements = yes
+    }
+
+    happened = {
+		land_facility > 0
+		air_facility > 0
+		nuclear_facility > 0
+		naval_facility > 0
+    }
+}
+
+first_train_home = {
+    id = 272
+    possible = {
+		tag = CZE
+        is_ironman = yes
+        difficulty > 1
+		has_start_date < 1936.01.02
+        has_any_custom_difficulty_setting = no
+        game_rules_allow_achievements = yes
+    }
+
+    happened = {
+		OR = {
+			owns_state = 219		#Moscow
+			owns_state = 253		#Ivanovo
+			owns_state = 252
+			owns_state = 256
+			owns_state = 249
+			owns_state = 399
+			owns_state = 398
+			owns_state = 573
+			owns_state = 653
+			owns_state = 572		#The railway has 2 routes here, Im counting both
+			owns_state = 403
+			owns_state = 571
+			owns_state = 570
+			owns_state = 569
+			owns_state = 568
+			owns_state = 567
+			owns_state = 566
+			owns_state = 563
+			owns_state = 561
+			owns_state = 657		#Birobidzhan
+			owns_state = 409		#Khabarovosk
+			owns_state = 408		#Vladivostok
+		}
+    }
+}
+
+aint_like_that_now = {
+    id = 273
+    possible = {
+		tag = CZE
+        is_ironman = yes
+        difficulty > 1
+		has_start_date < 1936.01.02
+        has_any_custom_difficulty_setting = no
+        game_rules_allow_achievements = yes
+		has_dlc = "Peace For Our Time"
+    }
+
+    happened = {
+		has_completed_focus = CZE_return_to_democracy
+    }
+}
+
+czechoslovaustrohungarian_union = {
+    id = 274
+    possible = {
+		tag = CZE
+        is_ironman = yes
+        difficulty > 1
+		has_start_date < 1936.01.02
+        has_any_custom_difficulty_setting = no
+        game_rules_allow_achievements = yes
+		has_dlc = "Peace For Our Time"
+    }
+
+    happened = {
+		has_completed_focus = CZE_balkan_union
+		HUN = {
+			is_subject_of = ROOT
+			has_idea = CZE_integration_efforts_communism
+		}
+		AUS = {
+			is_subject_of = ROOT
+			has_idea = CZE_integration_efforts_communism
+		}
+    }
+}
+
+et_tu_paulus = {
+	id = 275
+	possible = {
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_captured_a_field_marshal
+	}
+}
+
+hunt_for_the_desert_fox = {
+	id = 276
+	possible = {
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_captured_rommel
+	}
+}
+
+the_7th_state = {
+	id = 277
+	possible = {
+		tag = AST
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		1081 = { is_owned_and_controlled_by = AST }
+		723 = { is_owned_and_controlled_by = AST }
+		1080 = { is_owned_and_controlled_by = AST }
+		284 = { is_owned_and_controlled_by = AST }
+		1079 = { is_owned_and_controlled_by = AST }
+	}
+}
+
+right_side_up = {
+	id = 278
+	possible = {
+		tag = AST
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		914 = { is_owned_and_controlled_by = AST }
+	}
+}
+
+a_succulent_chinese_meal = {
+	id = 279
+	possible = {
+		tag = AST
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		any_owned_state = {
+			is_core_of = CHI
+			is_controlled_by = AST
+		}
+	}
+}
+
+java_script = {
+	id = 280
+	possible = {
+		tag = INS
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_tech = advanced_computing_machine
+		has_done_agency_upgrade = upgrade_decryption_boost_2
+		capital_scope = {
+			OR = {
+				state = 335
+				state = 1058
+				state = 1051
+			}
+		}
+	}
+}
+
+maphilindia = {
+	id = 281
+	possible = {
+		OR = {
+			tag = PHI
+			tag = INS
+		}
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		custom_trigger_tooltip = {
+			tooltip = maphilindia_formed_tt
+			OR = {
+				has_global_flag = PHI_maphilindo_flag
+				has_cosmetic_tag = INS_maphilindo
+			}
+		}
+		423 = { is_owned_and_controlled_by = ROOT }
+		424 = { is_owned_and_controlled_by = ROOT }
+		425 = { is_owned_and_controlled_by = ROOT }
+		426 = { is_owned_and_controlled_by = ROOT }
+		427 = { is_owned_and_controlled_by = ROOT }
+		428 = { is_owned_and_controlled_by = ROOT }
+		429 = { is_owned_and_controlled_by = ROOT }
+		430 = { is_owned_and_controlled_by = ROOT }
+		431 = { is_owned_and_controlled_by = ROOT }
+		432 = { is_owned_and_controlled_by = ROOT }
+		433 = { is_owned_and_controlled_by = ROOT }
+		434 = { is_owned_and_controlled_by = ROOT }
+		435 = { is_owned_and_controlled_by = ROOT }
+		436 = { is_owned_and_controlled_by = ROOT }
+		437 = { is_owned_and_controlled_by = ROOT }
+		438 = { is_owned_and_controlled_by = ROOT }
+		439 = { is_owned_and_controlled_by = ROOT }
+		989 = { is_owned_and_controlled_by = ROOT }
+		990 = { is_owned_and_controlled_by = ROOT }
+		991 = { is_owned_and_controlled_by = ROOT }
+	}
+}
+
+walzing_matilda = {
+	id = 282
+	possible = {
+		tag = AST
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		check_variable = { num_battalions_with_type@heavy_armor > 24 }
+	}
+}
+
+old_zealand = {
+	id = 283
+	possible = {
+		tag = NZL
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		35 = { is_owned_and_controlled_by = ROOT }
+		37 = { is_owned_and_controlled_by = ROOT }
+	}
+}
+
+hail_to_the_king = {
+	id = 284
+	possible = {
+		tag = SIA
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_completed_focus = SIA_the_greater_thai_empire
+		NOT = { check_variable = { SIA_anandas_age > 14 } }
+	}
+}
+
+thaitanic = {
+	id = 285
+	possible = {
+		NOT = { original_tag = SIA }
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_thaitanic
+	}
+}
+
+thaifighters = {
+	id = 286
+	possible = {
+		tag = SIA
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		check_variable = { SIA_ace_count > 9 }
+	}
+}
+
+from_rags_to_admiral_stripes = {
+	id = 287
+	possible = {
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_navy_promoted_from_ranks
+	}
+}
+
+the_man_of_medan = {
+	id = 288
+	possible = {
+		tag = INS
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		check_variable = { convoys_destroyed > 99 }
+	}
+}
+
+no_one_will_notice_the_difference = {
+	id = 289
+	possible = {
+		tag = INS
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		any_unit_leader = {
+			is_character = INS_gustav_adolf_ilgen
+			is_in_state = 141
+		}
+	}
+}
+
+anzac = {
+	id = 290
+	possible = {
+		OR = {
+			tag = AST
+			tag = NZL
+		}
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		date > 1945.01.01
+		NOT = { has_global_flag = achievement_anzac_failed }
+		any_army_leader = {
+			OR = {
+				is_in_state = 47
+				is_in_state = 164
+				is_in_state = 182
+				is_in_state = 184
+				is_in_state = 185
+				is_in_state = 186
+				is_in_state = 187
+				is_in_state = 731
+			}
+		}
+	}
+}
+
+a_bridge_too_far = {
+	id = 291
+	possible = {
+		tag = ENG
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_a_bridge_too_far
+	}
+}
+
+saving_private_bryansk = {
+	id = 292
+	possible = {
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_captured_general_in_bryansk
+	}
+}
+
+grand_siam = {
+	id = 293
+	possible = {
+		tag = SIA
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_grand_siam
+	}
+}
+
+steiner = {
+	id = 294
+	possible = {
+		original_tag = GER
+		is_ironman = yes
+		difficulty > 1
+		has_start_date < 1936.01.02
+		has_any_custom_difficulty_setting = no
+		game_rules_allow_achievements = yes
+	}
+
+	happened = {
+		has_country_flag = achievement_steiner_reached_surrender
+		has_capitulated = no
+		has_war_with = SOV
+		has_war_with = FRA
+		has_war_with = ENG
+		controls_state = 16 	#paris
+		controls_state = 126 	#london
+		controls_state = 219 	#moscow
+	}
+}

@@ -6902,6 +6902,10 @@ focus_tree = {
 			add_political_power = 100
 			custom_effect_tooltip = BRA_monarch_choice_2_tt
 			show_ideas_tooltip = BRA_king_vassouras
+			add_victory_points = {
+				province = 5172
+				value = 1
+			}	
 		}
 	}
 
@@ -6926,6 +6930,10 @@ focus_tree = {
 			add_political_power = 100
 			custom_effect_tooltip = BRA_monarch_choice_1_tt
 			show_ideas_tooltip = BRA_king_petropolis
+			add_victory_points = {
+				province = 12334
+				value = 1
+			}	
 		}
 	}
 
@@ -7000,7 +7008,7 @@ focus_tree = {
 			set_cosmetic_tag = BRA_const_kingdom
 			add_political_power = 120
 			hidden_effect = {
-				news_event = { hours = 12 id =JUNO_brazil_news.2 }
+				news_event = { hours = 12 id = JUNO_brazil_news.2 }
 			}
 		}
 	}
@@ -7295,6 +7303,16 @@ focus_tree = {
 			}
 		}
 
+		bypass = {
+			OR = {
+				has_subject = POR
+				POR = {
+					exists = no 
+				}
+				has_war_with = POR
+			}
+		}
+
 		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ANNEXATION }
 
 		completion_reward = {
@@ -7305,6 +7323,66 @@ focus_tree = {
 					hours = 1
 				}
 			}
+		}
+	}
+
+	focus = {
+		id = BRA_claim_the_french_throne
+
+		allow_branch = {
+			IF = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				NOT = { 
+					has_completed_focus = BRA_prepare_for_second_intentona 
+					has_completed_focus = BRA_tribunal_de_seguranca_nacional
+				}
+			}
+			has_country_flag = BRA_pedro_de_alcantara_dead_flag
+		}
+
+		available = {
+			is_subject = no 
+			FRA = {
+				exists = yes 
+				NOT = {
+					is_subject_of = ROOT
+				}
+			}
+		}
+
+		bypass = {
+		}
+
+		prerequisite = { focus = BRA_united_kingdom_of_brazil_and_portugal }
+		
+		icon = GFX_focus_focus_fra_orleans_restoration
+		x = 0
+		y = 1
+		relative_position_id = BRA_united_kingdom_of_brazil_and_portugal
+		cost = 10
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			
+			create_wargoal = {
+				type = annex_everything
+				target = FRA
+			}
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
+			FRA = {
+				every_core_state = {
+					add_claim_by = ROOT
+				}
+			}
+			
 		}
 	}
 

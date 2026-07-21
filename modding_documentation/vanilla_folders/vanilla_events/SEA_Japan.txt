@@ -605,15 +605,24 @@ country_event = {
 	is_triggered_only = yes
 
 	fire_only_once = yes
-	
+
 	# We will be stronger together 
 	option = { 
 		name = SEA_japan_foreign_policy.4.a
+		trigger = {
+			NOT = { has_active_mission = SIA_limited_war_indochina }
+		}
 		ai_chance = {
 			base = 70
 			modifier = {
 				strength_ratio = { tag = JAP ratio < 0.8 }
 				factor = 1.5
+			}
+
+			modifier = {
+				has_dlc = "Thunder at Our Gates"
+				is_historical_focus_on = yes
+				factor = 0
 			}
 		}
 
@@ -632,11 +641,26 @@ country_event = {
 			}
 		}
 
+		#Make sure reluctant submission is triggered via this event
+		if = {
+			limit = {
+				has_dlc = "Thunder at Our Gates"
+				NOT = { 
+					has_completed_focus = SIA_standing_our_ground 
+					has_completed_focus = SIA_reluctant_submission
+				}
+			} 
+			complete_national_focus = SIA_reluctant_submission
+		}
+
 	}
 
 	# That would go against our principals of neutrality!
 	option = { 
 		name = SEA_japan_foreign_policy.4.b
+		trigger = {
+			NOT = { has_active_mission = SIA_limited_war_indochina }
+		}
 		ai_chance = {
 			base = 30
 			modifier = {
@@ -665,6 +689,14 @@ country_event = {
 			}
 		}
 
+	}
+
+	option = { 
+		name = SEA_japan_foreign_policy.4.c
+		trigger = { has_active_mission = SIA_limited_war_indochina }
+
+		JAP = { SIA = { country_event = { id = SEA_japan_foreign_policy.4 days = 181 } } } #Scoping to JAP first for loc to work with FROM
+		custom_effect_tooltip = SEA_japan_foreign_policy.4.c_tt
 	}
 }
 
@@ -756,6 +788,12 @@ country_event = {
 		name = SEA_japan_foreign_policy.7.a
 		ai_chance = {
 			base = 90
+
+			modifier = {
+				is_historical_focus_on = yes
+				has_dlc = "Thunder at Our Gates"
+				factor = 0
+			}
 		}
 
 		FROM = {
@@ -807,7 +845,6 @@ country_event = {
 				}
 			}
 		}
-
 	}
 }
 
@@ -10355,7 +10392,7 @@ country_event = {
 			character = JAP_abe_isoo
 			promote_leader = yes
 			country_leader = {
-				ideology = reformist_socialism
+				ideology = socialism
 				expire = "1989.1.1.1"
 				traits = { JAP_socialist_politician } 
 			}

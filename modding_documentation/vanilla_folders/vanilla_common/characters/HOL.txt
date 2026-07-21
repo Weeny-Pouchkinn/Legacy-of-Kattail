@@ -95,27 +95,41 @@ characters={
 			slot = political_advisor
 			idea_token = HOL_willem_schermerhorn
 			allowed  = {
-					original_tag  = HOL
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				available  = {
-					if  = {
-						limit  = {
-							has_dlc = "Man the Guns"
-						}
-						has_completed_focus  = HOL_unity_through_democracy 
-					}
-					if  = {
-						limit  = {
-							has_dlc = "Man the Guns"
-						}
-						not  = {
-							has_autonomy_state  = autonomy_supervised_state
-						}
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
 				}
-				traits  = {
-					democratic_reformer 
+			}
+			available  = {
+				if  = {
+					limit  = {
+						original_tag = HOL
+						has_dlc = "Man the Guns"
+					}
+					has_completed_focus  = HOL_unity_through_democracy 
 				}
+				if  = {
+					limit  = {
+						original_tag = HOL
+						has_dlc = "Man the Guns"
+					}
+					not  = {
+						has_autonomy_state  = autonomy_supervised_state
+					}
+				}
+			}
+			traits  = {
+				democratic_reformer 
+			}
 		}
 		name=HOL_willem_schermerhorn
 		portraits={
@@ -152,26 +166,39 @@ characters={
 		advisor={
 			slot = army_chief
 			idea_token = HOL_izaak_reijnders
-			allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				available = {
-					if = {
-						limit = {
-							has_dlc = "Man the Guns"
-						}
-						not = {
-							has_completed_focus = HOL_appoint_new_supreme_commander
-						}
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
 				}
-				traits = {
-					army_chief_maneuver_2
+			}
+			available = {
+				if = {
+					limit = {
+						has_dlc = "Man the Guns"
+						original_tag = HOL
+					}
+					not = {
+						has_completed_focus = HOL_appoint_new_supreme_commander
+					}
 				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				army_chief_maneuver_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 	}
 	HOL_petrus_wilhelmus_best={
@@ -194,16 +221,28 @@ characters={
 		advisor={
 			slot = air_chief
 			idea_token = HOL_petrus_wilhelmus_best
-			allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				traits = {
-					air_chief_night_operations_2
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				air_chief_night_operations_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 	}
 	HOL_godfried_van_voorst_tot_voorst={
@@ -229,7 +268,13 @@ characters={
 			idea_token = HOL_godfried_van_voorst_tot_voorst
 			ledger = army
 				allowed = {
-					original_tag = HOL
+					OR = {
+						original_tag = HOL
+						AND = {
+							original_tag = INS
+							has_cosmetic_tag = INS_UNION
+						}
+					}
 				}
 				
 				traits = {
@@ -253,13 +298,24 @@ characters={
 			slot = theorist
 			idea_token = HOL_johan_furstner
 			ledger = navy
-				allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				
-				traits = {
-					naval_theorist
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
+			}
+			traits = {
+				naval_theorist
+			}
 		}
 		navy_leader={
 			traits={ caustic_personality blockade_runner fly_swatter }
@@ -280,7 +336,7 @@ characters={
 			}
 		}
 		navy_leader={
-			traits={ bold navy_career_officer seawolf superior_tactician }
+			traits={ bold navy_career_officer seawolf superior_tactician INS_loyalty_to_netherlands }
 			skill=4
 			attack_skill=5
 			defense_skill=2
@@ -291,16 +347,25 @@ characters={
 		advisor={
 			slot = navy_chief
 			idea_token = HOL_conrad_helfrich
-			allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				traits = {
-					navy_chief_commerce_raiding_3
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				cost = 200
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				navy_chief_commerce_raiding_3
+			}
+			cost = 200
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 	}
 
@@ -346,16 +411,28 @@ characters={
 		advisor={
 			slot = navy_chief
 			idea_token = HOL_karel_doorman
-			allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				traits = {
-					navy_chief_decisive_battle_1
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				cost =  50
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				navy_chief_decisive_battle_1
+			}
+			cost =  50
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 
 	}
@@ -364,16 +441,28 @@ characters={
 			slot = high_command
 			idea_token = HOL_charles_douw_van_der_krap
 			ledger = navy
-				allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				traits = {
-					air_naval_strike_2
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				air_naval_strike_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 		name=HOL_charles_douw_van_der_krap
 		portraits={
@@ -387,16 +476,28 @@ characters={
 			slot = high_command
 			idea_token = HOL_nico_van_straten
 			ledger = army
-				allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				traits = {
-					army_cavalry_2
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				army_cavalry_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 
 		name=HOL_nico_van_straten
@@ -410,16 +511,19 @@ characters={
 		advisor={
 			slot = army_chief
 			idea_token = HOL_hein_ter_poorten
-			allowed = {
-					original_tag = HOL
-				}
-				traits = {
-					army_chief_morale_2
-				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			allowed  = {
+				original_tag = HOL
+			}
+			visible = {
+				original_tag = HOL
+			}
+			traits = {
+				army_chief_morale_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 		name=HOL_hein_ter_poorten
 		portraits={
@@ -434,16 +538,28 @@ characters={
 			slot = high_command
 			idea_token = HOL_adrianus_rudolphus_van_den_bent
 			ledger = army
-				allowed = {
+			allowed  = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				traits = {
-					army_infantry_2
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				army_infantry_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 		name=HOL_adrianus_rudolphus_van_den_bent
 		portraits={
@@ -456,16 +572,19 @@ characters={
 		advisor={
 			slot = air_chief
 			idea_token = HOL_hendrik_van_oyen
-			allowed = {
-					original_tag = HOL
-				}
-				traits = {
-					air_chief_reform_2
-				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			allowed  = {
+				original_tag = HOL
+			}
+			visible = {
+				original_tag = HOL
+			}
+			traits = {
+				air_chief_reform_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 		name=HOL_hendrik_van_oyen
 		portraits={
@@ -479,19 +598,31 @@ characters={
 			slot = army_chief
 			idea_token = HOL_hendrik_seyffardt
 			allowed = {
+				OR = {
 					original_tag = HOL
-					has_dlc = "Man the Guns"
+					original_tag = INS
 				}
-				available = {
-					has_government = fascism
+				has_dlc = "Man the Guns"
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				traits = {
-					army_chief_offensive_2
-				}
-				cost = 100
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			available = {
+				has_government = fascism
+			}
+			traits = {
+				army_chief_offensive_2
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 		name=HOL_hendrik_seyffardt
 		portraits={
@@ -501,16 +632,32 @@ characters={
 		}
 	}
 	HOL_henri_winkelman={
-		advisor={	
-			slot = army_chief
-			idea_token = HOL_henri_winkelman
-			allowed = {
-					original_tag = HOL
+		instance = {
+			allowed = { NOT = { has_dlc = "Thunder at Our Gates" } }
+
+			advisor={
+				slot = army_chief
+				idea_token = HOL_henri_winkelman
+				allowed = {
+					OR = {
+						original_tag = HOL
+						original_tag = INS
+					}
+				}
+				visible = {
+					OR = {
+						original_tag = HOL
+						AND = {
+							original_tag = INS
+							has_cosmetic_tag = INS_UNION
+						}
+					}
 				}
 				available = {
 					if = {
 						limit = {
 							has_dlc = "Man the Guns"
+							original_tag = HOL
 						}
 						has_completed_focus = HOL_appoint_new_supreme_commander
 					}
@@ -522,12 +669,60 @@ characters={
 				ai_will_do = {
 					factor = 1.000
 				}
+			}
+			name=HOL_henri_winkelman
+			portraits={
+				army={
+					small="GFX_idea_HOL_henri_winkelman"
+					large="GFX_portrait_hol_henri_winkelman"
+				}
+			}
 		}
-		name=HOL_henri_winkelman
-		portraits={
-			army={
-				small="GFX_idea_HOL_henri_winkelman"
-				large="GFX_portrait_hol_henri_winkelman"
+
+		instance = {
+			allowed = { has_dlc = "Thunder at Our Gates" }
+
+			advisor={	
+				slot = army_chief
+				idea_token = HOL_henri_winkelman
+				allowed = {
+					OR = {
+						original_tag = HOL
+						original_tag = INS
+					}
+				}
+				visible = {
+					OR = {
+						original_tag = HOL
+						AND = {
+							original_tag = INS
+							has_cosmetic_tag = INS_UNION
+						}
+					}
+				}
+				available = {
+					if = {
+						limit = {
+							has_dlc = "Man the Guns"
+							original_tag = HOL
+						}
+						has_completed_focus = HOL_appoint_new_supreme_commander
+					}
+				}
+				traits = {
+					army_chief_defensive_2
+				}
+				cost = 100
+				ai_will_do = {
+					factor = 1.000
+				}
+			}
+			name=HOL_henri_winkelman
+			portraits={
+				army={
+					small="GFX_portrait_INS_henri_winkelman_small"
+					large="GFX_portrait_INS_henri_winkelman"
+				}
 			}
 		}
 	}
@@ -536,16 +731,28 @@ characters={
 			slot = high_command
 			idea_token = HOL_maarten_belzer
 			ledger = army
-				allowed = {
+			allowed = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				traits = {
-					army_concealment_1
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				cost =  50
-				ai_will_do = {
-					factor = 1.000
-				}
+			}
+			traits = {
+				army_concealment_1
+			}
+			cost =  50
+			ai_will_do = {
+				factor = 1.000
+			}
 		}
 		name=HOL_maarten_belzer
 		portraits={
@@ -561,13 +768,25 @@ characters={
 			slot = theorist
 			idea_token = HOL_marius_raaijmakers
 			ledger = air
-				allowed = {
+			allowed = {
+				OR = {
 					original_tag = HOL
+					original_tag = INS
 				}
-				
-				traits = {
-					air_warfare_theorist
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
+			}
+			
+			traits = {
+				air_warfare_theorist
+			}
 		}
 		name=HOL_marius_raaijmakers
 		portraits={
@@ -580,28 +799,42 @@ characters={
 		advisor={
 			slot = political_advisor
 			idea_token = HOL_saul_de_groot
-			allowed  = {
-					original_tag  = HOL
+			allowed = {
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				available  = {
-					if  = {
-						limit  = {
-							has_dlc = "Man the Guns"
-						}
-						has_completed_focus  = HOL_legacy_of_the_de_zeven_provincien_mutiny 
-					}
-					if  = {
-						limit  = {
-							has_dlc = "Man the Guns"
-						}
-						not  = {
-							has_autonomy_state  = autonomy_supervised_state
-						}
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
 				}
-				traits  = {
-					communist_revolutionary 
+			}
+			available  = {
+				if  = {
+					limit  = {
+						has_dlc = "Man the Guns"
+						original_tag = HOL
+					}
+					has_completed_focus  = HOL_legacy_of_the_de_zeven_provincien_mutiny 
 				}
+				if  = {
+					limit  = {
+						has_dlc = "Man the Guns"
+						original_tag = HOL
+					}
+					not  = {
+						has_autonomy_state  = autonomy_supervised_state
+					}
+				}
+			}
+			traits  = {
+				communist_revolutionary 
+			}
 		}
 
 		name=HOL_saul_de_groot
@@ -616,23 +849,32 @@ characters={
 			slot = political_advisor
 			idea_token = HOL_antonie_pannekoek
 			allowed  = {
-					OR = {
-						original_tag  = HOL
-						original_tag = SWE
-						original_tag = CHL
+				OR = {
+					original_tag = HOL
+					original_tag = SWE
+					original_tag = CHL
+					original_tag = INS
+				}
+				has_dlc = "Man the Guns"
+			}
+			visible = {
+				if = {
+					limit = {
+						original_tag = INS
 					}
-					has_dlc = "Man the Guns"
+					has_cosmetic_tag = INS_UNION
 				}
-				available  = {
-					OR = {
-						has_government  = communism 
-						SWE_refuge_for_revolutionaries_trigger = yes
-						CHL_hub_of_the_revolution_trigger = yes
-					}
+			}
+			available  = {
+				OR = {
+					has_government  = communism 
+					SWE_refuge_for_revolutionaries_trigger = yes
+					CHL_hub_of_the_revolution_trigger = yes
 				}
-				traits  = {
-					council_communist 
-				}
+			}
+			traits  = {
+				council_communist 
+			}
 		}
 		name=HOL_antonie_pannekoek
 		portraits={
@@ -646,19 +888,31 @@ characters={
 			slot = political_advisor
 			idea_token = HOL_walraven_van_hall
 			allowed  = {
+				OR = {
 					original_tag  = HOL
-					has_dlc = "Man the Guns"
+					original_tag  = INS
 				}
-				available  = {
-					has_capitulated  = yes 
-					or  = {
-						has_government  = democratic 
-						has_government  = neutrality 
+				has_dlc = "Man the Guns"
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
 				}
-				traits  = {
-					resistance_banker 
+			}
+			available  = {
+				has_capitulated  = yes 
+				or  = {
+					has_government  = democratic 
+					has_government  = neutrality 
 				}
+			}
+			traits  = {
+				resistance_banker 
+			}
 		}
 
 		name=HOL_walraven_van_hall
@@ -672,18 +926,30 @@ characters={
 		advisor={
 			slot = political_advisor
 			idea_token = HOL_jacob_adriaan_de_wilde
-			allowed  = {
-					original_tag  = HOL
+			allowed = {
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				available  = {
-					or  = {
-						has_government  = democratic 
-						has_government  = neutrality 
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
 				}
-				traits  = {
-					genial_anti_revolutionary 
+			}
+			available  = {
+				or  = {
+					has_government  = democratic 
+					has_government  = neutrality 
 				}
+			}
+			traits  = {
+				genial_anti_revolutionary 
+			}
 		}
 		name=HOL_jacob_adriaan_de_wilde
 		portraits={
@@ -697,26 +963,41 @@ characters={
 			slot = political_advisor
 			idea_token = HOL_anton_de_kom
 			allowed  = {
-					OR = {
-						original_tag  = HOL
-						original_tag = SWE
-						original_tag = CHL
+				OR = {
+					original_tag = HOL
+					original_tag = SWE
+					original_tag = CHL
+					original_tag = INS
+				}
+				has_dlc = "Man the Guns"
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
-					has_dlc = "Man the Guns"
 				}
-				available  = {
-					OR = {
-						AND = {
-							has_government  = communism 
-							has_completed_focus  = HOL_decolonization 
-						}
-						SWE_refuge_for_revolutionaries_trigger = yes
-						CHL_hub_of_the_revolution_trigger = yes
+			}
+			available  = {
+				OR = {
+					AND = {
+						original_tag = HOL
+						has_government  = communism 
+						has_completed_focus  = HOL_decolonization 
 					}
+					AND = {
+						original_tag = INS
+						has_government = communism
+					}
+					SWE_refuge_for_revolutionaries_trigger = yes
+					CHL_hub_of_the_revolution_trigger = yes
 				}
-				traits  = {
-					colonial_communist 
-				}
+			}
+			traits  = {
+				colonial_communist 
+			}
 		}
 		name=HOL_anton_de_kom
 		portraits={
@@ -729,12 +1010,24 @@ characters={
 		advisor={
 			slot = political_advisor
 			idea_token = HOL_jan_goudriaan
-			allowed  = {
-					original_tag  = HOL
+			allowed = {
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				traits  = {
-					captain_of_industry 
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
+			}
+			traits  = {
+				captain_of_industry 
+			}
 		}
 		name=HOL_jan_goudriaan
 		portraits={
@@ -747,18 +1040,30 @@ characters={
 		advisor={
 			slot = political_advisor
 			idea_token = HOL_adriaan_dijxhoorn
-			allowed  = {
-					original_tag  = HOL
+			allowed = {
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				available  = {
-					or  = {
-						has_government  = democratic 
-						has_government  = neutrality 
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
 				}
-				traits  = {
-					war_industrialist 
+			}
+			available  = {
+				or  = {
+					has_government  = democratic 
+					has_government  = neutrality 
 				}
+			}
+			traits  = {
+				war_industrialist 
+			}
 		}
 
 		name=HOL_adriaan_dijxhoorn
@@ -773,16 +1078,33 @@ characters={
 			slot = political_advisor
 			idea_token = HOL_prince_bernhard
 			cost  = 100.000
-				allowed  = {
+			allowed  = {
+				OR = {
 					original_tag  = HOL
-					has_dlc = "Man the Guns"
+					original_tag  = INS
 				}
-				available  = {
+				has_dlc = "Man the Guns"
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
+				}
+			}
+			available  = {
+				if = {
+					limit = {
+						original_tag = HOL
+					}
 					has_completed_focus  = HOL_the_only_man_in_the_dutch_government 
 				}
-				traits  = {
-					adventurous_daredevil 
-				}
+			}
+			traits  = {
+				adventurous_daredevil 
+			}
 		}
 		name=HOL_prince_bernhard
 		portraits={
@@ -795,15 +1117,27 @@ characters={
 		advisor={
 			slot = political_advisor
 			idea_token = HOL_cornelis_van_geelkerken
-			allowed  = {
-					original_tag  = HOL
+			allowed = {
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				available  = {
-					has_government  = fascism 
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
+					}
 				}
-				traits  = {
-					prince_of_terror 
-				}
+			}
+			available  = {
+				has_government  = fascism 
+			}
+			traits  = {
+				prince_of_terror 
+			}
 		}
 		name=HOL_cornelis_van_geelkerken
 		portraits={
@@ -816,28 +1150,42 @@ characters={
 		advisor={
 			slot = political_advisor
 			idea_token = HOL_meinout_rost_van_tonningen
-			allowed  = {
-					original_tag  = HOL
+			allowed = {
+				OR = {
+					original_tag = HOL
+					original_tag = INS
 				}
-				available  = {
-					if  = {
-						limit  = {
-							has_dlc = "Man the Guns"
-						}
-						has_completed_focus  = HOL_volk_en_vaderland 
-					}
-					if  = {
-						limit  = {
-							has_dlc = "Man the Guns"
-						}
-						not  = {
-							has_autonomy_state  = autonomy_supervised_state
-						}
+			}
+			visible = {
+				OR = {
+					original_tag = HOL
+					AND = {
+						original_tag = INS
+						has_cosmetic_tag = INS_UNION
 					}
 				}
-				traits  = {
-					fascist_demagogue 
+			}
+			available  = {
+				if  = {
+					limit  = {
+						original_tag = HOL
+						has_dlc = "Man the Guns"
+					}
+					has_completed_focus  = HOL_volk_en_vaderland 
 				}
+				if  = {
+					limit  = {
+						original_tag = HOL
+						has_dlc = "Man the Guns"
+					}
+					not  = {
+						has_autonomy_state  = autonomy_supervised_state
+					}
+				}
+			}
+			traits  = {
+				fascist_demagogue 
+			}
 		}
 
 		name=HOL_meinout_rost_van_tonningen

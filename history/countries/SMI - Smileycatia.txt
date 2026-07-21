@@ -23,8 +23,22 @@ set_technology = {
 	motorised_infantry = 1
 	mechanised_infantry = 1
 	tech_trucks = 1
-	basic_light_tank = 1
 	basic_train = 1
+}
+
+# DLC-gated starting armor technologies: designer chassis or fixed equipment, never both.
+if = {
+	limit = { has_dlc = "No Step Back" }
+	set_technology = {
+		basic_light_tank_chassis = 1
+	}
+	LOK_create_starting_tank_variants = yes
+}
+if = {
+	limit = { NOT = { has_dlc = "No Step Back" } }
+	set_technology = {
+		basic_light_tank = 1
+	}
 }
 
 create_equipment_variant = {

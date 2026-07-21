@@ -3618,7 +3618,7 @@ prospect_for_resources = {
 		ai_will_do = {
 			base = 0.5
 			modifier = {
-				factor = 2 #1 was the default weight before
+				factor = 50
 				original_tag = USA
 			}
 			modifier = {
@@ -3632,7 +3632,6 @@ prospect_for_resources = {
 						has_manpower < 10000
 						NOT = { has_idea = scraping_the_barrel }
 					}
-					has_political_power < 200
 				}
 			}
 			modifier = { #Running out of the stuff, need more!
@@ -3911,7 +3910,7 @@ prospect_for_resources = {
 		ai_will_do = {
 			base = 0.5
 			modifier = {
-				factor = 2 #1 was the default weight before
+				factor = 50
 				original_tag = USA
 			}
 			modifier = {
@@ -3925,7 +3924,6 @@ prospect_for_resources = {
 						has_manpower < 10000
 						NOT = { has_idea = scraping_the_barrel }
 					}
-					has_political_power < 200
 				}
 			}
 			modifier = { #Running out of the stuff, need more!
@@ -4022,7 +4020,7 @@ prospect_for_resources = {
 		ai_will_do = {
 			base = 0.5
 			modifier = {
-				factor = 2 #1 was the default weight before
+				factor = 50
 				original_tag = USA
 			}
 			modifier = {
@@ -4036,7 +4034,6 @@ prospect_for_resources = {
 						has_manpower < 10000
 						NOT = { has_idea = scraping_the_barrel }
 					}
-					has_political_power < 200
 				}
 			}
 			modifier = { #Running out of the stuff, need more!
@@ -4133,7 +4130,7 @@ prospect_for_resources = {
 		ai_will_do = {
 			base = 0.5
 			modifier = {
-				factor = 2 #1 was the default weight before
+				factor = 50
 				original_tag = USA
 			}
 			modifier = {
@@ -4147,7 +4144,6 @@ prospect_for_resources = {
 						has_manpower < 10000
 						NOT = { has_idea = scraping_the_barrel }
 					}
-					has_political_power < 200
 				}
 			}
 			modifier = { #Running out of the stuff, need more!
@@ -10588,6 +10584,78 @@ prospect_for_resources = {
 				add_resource = {
 					type = coal
 					amount = 9
+				}
+			}
+		}
+	}
+
+	open_mae_moh_lignite_mine = {
+		icon = coal
+
+		allowed = {
+			
+		}
+
+		available = {
+			owns_state = 869
+			controls_state = 869
+			num_of_civilian_factories_available_for_projects > 2
+			OR = {
+				has_tech = excavation4
+				has_tech = excavation5
+			}
+
+			if = {
+				limit = {
+					has_dlc = "Thunder at Our Gates"
+					original_tag = SIA
+				}
+				has_completed_focus = SIA_domestic_tin_smelters
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 869
+			}
+		}
+
+		visible = {
+			owns_state = 869
+			controls_state = 869
+		} 
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		ai_will_do = {
+			base = 1
+			modifier = {  # Too low PP
+				factor = 0.5
+				has_political_power < 80
+			}
+			modifier = { #We have plenty of PP, avanti!
+				factor = 3
+				has_political_power > 200
+			}
+			modifier = { #Running out of the stuff, need more!
+				factor = 5
+				has_resources_in_country = {
+					resource = coal
+					amount < 1
+				}
+			}
+		}
+		remove_effect = {
+			869 = {
+				add_resource = {
+					type = coal
+					amount = 13
 				}
 			}
 		}

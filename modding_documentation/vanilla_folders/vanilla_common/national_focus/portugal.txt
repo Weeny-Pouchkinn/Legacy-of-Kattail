@@ -66,6 +66,9 @@ focus_tree = {
 		search_filters = {FOCUS_FILTER_MANPOWER}
 		completion_reward = {
 			add_ideas = POR_colonial_army
+
+			custom_effect_tooltip = generic_skip_one_line_tt
+
 			custom_effect_tooltip = available_political_advisor
 			show_ideas_tooltip = POR_francisco_craveiro_lopes
 		}
@@ -108,7 +111,7 @@ focus_tree = {
 		y = 2
 
 		relative_position_id = POR_colonial_assimilation_policy
-		cost = 10
+		cost = 5
 		search_filters = {FOCUS_FILTER_ANNEXATION}
 		completion_reward = {
 			unlock_decision_tooltip = POR_mozambique_overseas_territory
@@ -277,13 +280,223 @@ focus_tree = {
 	}
 
 	focus = {
+		id = POR_haven_of_neutrality_macau
+		available = {
+			has_war = no 
+			592 = {
+				OWNER = {
+					has_war = yes 
+				}
+			}
+			729 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
+			}
+		}
+
+		bypass = {		
+		}
+		prerequisite = { focus = POR_colonial_assimilation_policy }	
+			
+		icon = GFX_focus_ARG_defense_and_democracy
+		x = 3
+		y = 1
+
+		relative_position_id = POR_colonial_assimilation_policy
+
+		cost = 5
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = { 
+
+			729 = {
+
+				add_extra_state_shared_building_slots = 4
+				
+				IF = {
+					limit = {
+						729 = {
+							infrastructure < 4 
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+				ELSE_IF = {
+					limit = {
+						729 = {
+							infrastructure < 5 
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+
+				IF = {
+					limit = {
+						729 = {
+							free_building_slots = {
+								building = industrial_complex
+								size > 0
+								include_locked = yes
+							}	
+						}
+					}
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+					
+				add_manpower = 100000
+
+			}
+							
+		}
+
+	}
+
+	focus = {
+		id = POR_restart_investment_into_timor
+		available = {
+			721 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
+			}
+		}
+
+		bypass = {		
+		}
+		prerequisite = { focus = POR_colonial_assimilation_policy }	
+			
+		icon = GFX_focus_generic_welfare
+		x = 2
+		y = 0
+
+		relative_position_id = POR_limited_self_rule
+
+		cost = 5
+
+		search_filters = {FOCUS_FILTER_INDUSTRY}
+
+		completion_reward = { 
+
+			721 = {
+				
+				IF = {
+					limit = {
+						721 = {
+							infrastructure < 5 
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				IF = {
+					limit = {
+						721 = {
+							free_building_slots = {
+								building = industrial_complex
+								size > 0
+								include_locked = yes
+							}		
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+
+				add_resource = {
+					type = rubber
+					amount = 4
+				}
+
+			}
+							
+		}
+
+	}
+
+	focus = {
+		id = POR_revert_the_local_autonomy_policies
+		available = {
+			has_full_control_of_state = 721 # East Timor 
+		}
+
+		mutually_exclusive = { focus = POR_invest_in_sandalwood_and_coffee_production }
+
+		bypass = {		
+		}
+		prerequisite = { focus = POR_restart_investment_into_timor }	
+			
+		icon = GFX_focus_renounce_the_treaty_of_trianon
+		x = -1
+		y = 1
+
+		relative_position_id = POR_restart_investment_into_timor
+
+		cost = 5
+
+		search_filters = {FOCUS_FILTER_INDUSTRY}
+
+		completion_reward = { 
+
+			unlock_decision_tooltip = POR_timor_overseas_territory
+							
+		}
+
+	}
+
+	focus = {
+		id = POR_invest_in_sandalwood_and_coffee_production
+		available = {
+			721 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
+			}
+		}
+
+		mutually_exclusive = { focus = POR_revert_the_local_autonomy_policies }
+
+		bypass = {		
+		}
+		prerequisite = { focus = POR_restart_investment_into_timor }	
+			
+		icon = GFX_focus_generic_coffee
+		x = 1
+		y = 1
+
+		relative_position_id = POR_restart_investment_into_timor
+
+		cost = 10 
+
+		search_filters = {FOCUS_FILTER_INDUSTRY}
+
+		completion_reward = { 
+
+			add_ideas = POR_timorese_coffe_and_sandalwood_exports_idea 
+							
+		}
+
+	}
+
+	focus = {
 		id = POR_infrastructure_in_angola
 		available = {
-			OR = {
-				has_full_control_of_state = 796
-				796 = {
-					owner = { is_subject_of = ROOT }
-				}
+			796 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
 			}
 		}
 
@@ -292,7 +505,7 @@ focus_tree = {
 		prerequisite = { focus = POR_colonial_assimilation_policy }	
 			
 		icon = GFX_focus_generic_africa_infrastructure
-		x = 2
+		x = 5
 		y = 0
 
 		relative_position_id = POR_limited_self_rule
@@ -339,11 +552,8 @@ focus_tree = {
 	focus = {
 		id = POR_develop_north_angola
 		available = {	
-			OR = {
-				has_full_control_of_state = 796
-				796 = {
-					owner = { is_subject_of = ROOT }
-				}
+			796 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
 			}					
 		}
 
@@ -385,11 +595,8 @@ focus_tree = {
 	focus = {
 		id = POR_develop_south_angola
 		available = {
-			OR = {
-				has_full_control_of_state = 540
-				540 = {
-					owner = { is_subject_of = ROOT }
-				}
+			540 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
 			}
 		}
 
@@ -442,11 +649,8 @@ focus_tree = {
 	focus = {
 		id = POR_portuguese_oil
 		available = {
-			OR = {
-				has_full_control_of_state = 796
-				796 = {
-					owner = { is_subject_of = ROOT }
-				}
+			796 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
 			}
 		}
 
@@ -474,11 +678,8 @@ focus_tree = {
 	focus = {
 		id = POR_develop_mozambique
 		available = {
-			OR = {
-				has_full_control_of_state = 544
-				544 = {
-					owner = { is_subject_of = ROOT }
-				}
+			544 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
 			}
 		}
 
@@ -543,7 +744,7 @@ focus_tree = {
 		}
 			
 		icon = GFX_focus_generic_industry_2
-		x = 9
+		x = 12
 		y = 0
 
 		relative_position_id = POR_colonial_assimilation_policy
@@ -5800,9 +6001,15 @@ focus_tree = {
 		relative_position_id = POR_mapa_cor_de_rosa
 		cost = 10
 		completion_reward = { 
-			add_state_claim = 336 # Singapore
-			add_state_claim = 667 # Lesser Sunda
+			add_state_claim = 336 # Kuala Lampur
+			add_state_claim = 1060 #Johor
+			add_state_claim = 1021 #Singapore
+			add_state_claim = 667 # West Nusa
+			add_state_claim = 1053 #East Nusa
+			add_state_claim = 1054 #West Timor
+			add_state_claim = 1052 #Bali
 			add_state_claim = 673 # Sulawesi
+			add_state_claim = 1056 #Manado
 			add_state_claim = 668 # The Moluccas
 
 			hidden_effect = {

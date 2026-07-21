@@ -1,0 +1,65 @@
+scripted_gui = {
+	TAI_estates_scripted_gui = {
+		window_name = "TAI_estates_gui"
+		context_type = decision_category
+		parent_window_token = decision_tab
+
+		visible = {
+			has_country_flag = open_TAI_estates_gui
+		}
+
+		dirty = TAI_estates_scripted_gui_variable
+
+		dynamic_lists = {
+			parliament_diagram = {
+				array = TAI_estates_seat_x
+				change_scope = no
+				entry_container = TAI_estates_seat
+				index = seat_idx
+			}
+
+			TAI_unlocked_noble_houses_list = {
+				array = TAI_unlocked_noble_house_array
+				value = substate_id
+				index = i
+				change_scope = no
+				entry_container = TAI_unlocked_noble_house_gui
+			}
+
+			# TAI_antagonistic_noble_houses_list = {
+			# 	array = TAI_antagonistic_houses_array
+			# 	value = substate_id
+			# 	index = i
+			# 	change_scope = no
+			# 	entry_container = TAI_unlocked_noble_house_gui
+			# }
+		}
+
+		properties = {
+			parliament_dot_icon = {
+				x = TAI_estates_seat_x^seat_idx
+				y = TAI_estates_seat_y^seat_idx
+				frame = TAI_estates_seat_frame^seat_idx
+			}
+			noble_house_head_portrait = {
+				image = "[ROOT.GetNobleHouseLeaderGFX]"
+			}
+		}
+
+		effects = {
+			noble_house_bg_click = {
+				set_variable = { currently_managing_noble_house = substate_id }
+				add_to_variable = { TAI_estates_scripted_gui_variable = 1 }
+			}
+		}
+
+		triggers = {
+			no_friendly_houses_msg_visible = {
+				check_variable = { TAI_supportive_houses_array^num = 0 }
+			}
+			no_antagonistic_houses_msg_visible = {
+				check_variable = { TAI_antagonistic_houses_array^num = 0 }
+			}
+		}
+	}
+}

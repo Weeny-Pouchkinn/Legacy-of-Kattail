@@ -1,10 +1,13 @@
 characters = {
 
+	### COUNTRY LEADERS ###
+
 	SLO_jozef_tiso = {
 		name = SLO_jozef_tiso
 		portraits = {
 			civilian = {
 				large = GFX_portrait_Jozef_Tiso
+				small="GFX_idea_CZE_jozef_tiso"
 			}
 		}
 		country_leader = {
@@ -15,7 +18,131 @@ characters = {
 				SLO_vodca_trait 
 			}
 		}
+		country_leader = {
+			ideology = despotism
+			expire = "1965.1.1"
+			id = -1
+			traits  = {
+				SLO_nationalist_catholic_priest
+			}
+		}
+		advisor={
+			slot = political_advisor
+			idea_token = CZE_jozef_tiso
+			allowed  = {
+				original_tag  = SLO
+			}
+			available = {
+				is_country_leader = no
+				NOT = {
+					has_government = communism
+				}
+			}
+			visible = {
+			}
+			traits  = {
+				nationalist_catholic_priest
+			}
+			ai_will_do  = {
+				factor  = 0.000
+			}
+		}	
 	}
+
+	SLO_vojtech_tuka = { #Pfot/Mun Locked - Alt Fascist
+		name = CZE_vojtech_tuka
+		portraits = {
+			civilian = {
+				large = GFX_portrait_SLO_vojtech_tuka
+				small = GFX_portrait_SLO_vojtech_tuka_small
+			}
+		}
+		country_leader = {
+			ideology = gen_nazism
+			expire = "1965.1.1"
+			id = -1
+			traits  = {
+				SLO_head_of_the_radical_wing
+			}
+		}
+		advisor={
+			slot = political_advisor
+			idea_token = SLO_vojtech_tuka
+			allowed = {
+				original_tag = SLO
+				has_dlc = "Peace For Our Time"
+			}
+			available = {
+				is_country_leader = no
+				has_government = fascism
+				NOT = {
+					is_subject_of = CZE
+				}
+			}
+			ai_will_do = {
+				factor = 10
+			}
+			visible = {
+				NOT = {
+					is_subject_of = CZE
+				}
+			}
+			traits = {
+				SLO_head_of_the_radical_wing
+			}
+		}
+		field_marshal={
+			traits={ old_guard politically_connected harsh_leader militias_officer }
+			skill=1
+			attack_skill=1
+			defense_skill=1
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=-1
+			visible = {
+				has_country_flag = SLO_revenge_of_the_radical_wing_flag
+				#is_country_leader = yes
+			}
+		}
+	}
+
+	SLO_karol_smidke = { #Pfot/Mun Locked
+		name = SLO_karol_smidke
+		portraits = {
+			civilian = {
+				large = GFX_portrait_SLO_karol_smidke
+				small = GFX_portrait_SLO_karol_smidke_small
+			}
+		}
+		country_leader = {
+			ideology = stalinism
+			expire = "1965.1.1"
+			id = -1
+			traits  = {
+				veteran_communist
+			}
+		}
+	}
+
+	SLO_jan_ursiny = { #Pfot/Mun Locked
+		name = SLO_jan_ursiny
+		portraits = {
+			civilian = {
+				large = GFX_portrait_SLO_jan_ursiny
+				small = GFX_portrait_SLO_jan_ursiny_small
+			}
+		}
+		country_leader = {
+			ideology = conservatism
+			expire = "1965.1.1"
+			id = -1
+			traits  = {
+				agrarian_old_guard
+			}
+		}
+	}
+
+	### POLITCAL ADVISORS ###
 
 	SLO_jaroslav_kratochvil={
 		advisor={
@@ -28,7 +155,6 @@ characters = {
 					war_industrialist 
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
 		name="Jaroslav Kratochvil"
 		portraits={
 			army={
@@ -36,46 +162,7 @@ characters = {
 			}
 		}
 	}
-	SLO_vojtech_daubner={
-		advisor={
-			slot = theorist
-			idea_token = SLO_vojtech_daubner
-			ledger  = air 
-				allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					air_warfare_theorist 
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Vojtech Daubner"
-		portraits={
-			army={
-				small="GFX_idea_generic_air_europe_1"
-			}
-		}
-	}
-	SLO_jozef_hora={
-		advisor={
-			slot = theorist
-			idea_token = SLO_jozef_hora
-			ledger  = navy 
-				allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					naval_theorist 
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Jozef Hora"
-		portraits={
-			army={
-				small="GFX_idea_generic_political_advisor_europe_1"
-			}
-		}
-	}
+
 	SLO_frano_kral={
 		advisor={
 			slot = political_advisor
@@ -87,7 +174,6 @@ characters = {
 					popular_figurehead 
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
 		name="Frano Kral"
 		portraits={
 			army={
@@ -95,75 +181,7 @@ characters = {
 			}
 		}
 	}
-	SLO_jozef_snejdarek={
-		advisor={
-			slot = high_command
-			idea_token = SLO_jozef_snejdarek
-			ledger  = army 
-				allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					army_entrenchment_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Jozef Snejdarek"
-		portraits={
-			army={
-				small="GFX_idea_generic_army_europe_1"
-			}
-		}
-	}
-	SLO_fritz_gejza={
-		advisor={
-			slot = high_command
-			idea_token = SLO_fritz_gejza
-			ledger  = air 
-				allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					air_strategic_bombing_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Fritz Gejza"
-		portraits={
-			army={
-				small="GFX_idea_generic_air_europe_3"
-			}
-		}
-	}
-	SLO_frantisek_sadek={
-		advisor={
-			slot = high_command
-			idea_token = SLO_frantisek_sadek
-			ledger  = army 
-				allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					army_armored_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Frantisek Sadek"
-		portraits={
-			army={
-				small="GFX_idea_generic_army_europe_2"
-			}
-		}
-	}
+
 	SLO_stefan_tiso={
 		advisor={
 			slot = political_advisor
@@ -178,7 +196,6 @@ characters = {
 					factor  = 0.000
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
 		name="Stefan Tiso"
 		portraits={
 			army={
@@ -186,73 +203,7 @@ characters = {
 			}
 		}
 	}
-	SLO_cyril_kuchta={
-		advisor={
-			slot = high_command
-			idea_token = SLO_cyril_kuchta
-			ledger  = air 
-				allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					air_bomber_interception_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Cyril Kuchta"
-		portraits={
-			army={
-				small="GFX_idea_generic_air_europe_1"
-			}
-		}
-	}
-	SLO_jindrich_honzl={
-		advisor={
-			slot = navy_chief
-			idea_token = SLO_jindrich_honzl
-			allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					navy_chief_maneuver_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Jindrich Honzl"
-		portraits={
-			army={
-				small="GFX_idea_generic_navy_europe_3"
-			}
-		}
-	}
-	SLO_frantisek_straka={
-		advisor={
-			slot = air_chief
-			idea_token = SLO_frantisek_straka
-			allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					air_chief_safety_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Frantisek Straka"
-		portraits={
-			army={
-				small="GFX_idea_generic_air_europe_1"
-			}
-		}
-	}
+
 	SLO_karol_sidor={
 		advisor={
 			slot = political_advisor
@@ -264,7 +215,6 @@ characters = {
 					silent_workhorse 
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
 		name="Karol Sidor"
 		portraits={
 			army={
@@ -272,92 +222,8 @@ characters = {
 			}
 		}
 	}
-	SLO_emil_lendvay={
-		advisor={
-			slot = theorist
-			idea_token = SLO_emil_lendvay
-			ledger  = army 
-				allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					military_theorist 
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Emil Lendvay"
-		portraits={
-			army={
-				small="GFX_idea_generic_army_europe_6"
-			}
-		}
-	}
-	SLO_jozef_turanec={
-		advisor={
-			slot = navy_chief
-			idea_token = SLO_jozef_turanec
-			allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					navy_chief_reform_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Jozef Turanec"
-		portraits={
-			army={
-				small="GFX_idea_generic_navy_europe_1"
-			}
-		}
-	}
-	SLO_gustav_malar={
-		advisor={
-			slot = army_chief
-			idea_token = SLO_gustav_malar
-			allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					army_chief_maneuver_2 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Gustav Malar"
-		portraits={
-			army={
-				small="GFX_idea_generic_army_europe_3"
-			}
-		}
-	}
-	SLO_rudolf_viest={
-		advisor={
-			slot = army_chief
-			idea_token = SLO_rudolf_viest
-			allowed  = {
-					original_tag  = SLO
-				}
-				traits  = {
-					army_chief_offensive_3 
-				}
-				ai_will_do  = {
-					factor  = 1.000
-				}
-		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
-		name="Rudolf Viest"
-		portraits={
-			army={
-				small="GFX_idea_generic_army_europe_1"
-			}
-		}
-	}
+	
+	
 	SLO_janko_jesensky={
 		advisor={
 			slot = political_advisor
@@ -369,7 +235,6 @@ characters = {
 					compassionate_gentleman 
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
 		name="Janko Jesensky"
 		portraits={
 			army={
@@ -377,21 +242,321 @@ characters = {
 			}
 		}
 	}
-	SLO_ferdinand_catlos={
+
+	###GENERALS###
+
+	SLO_jozef_turanec={
+		instance = {
+			allowed = {
+				has_dlc = "Peace For Our Time"
+			}
+			name="Jozef Turanec"
+			portraits={
+				army={
+					large = GFX_portrait_SLO_jozef_turanec
+					small = GFX_portrait_SLO_jozef_turanec_small
+				}
+			}
+			corps_commander={
+				traits={ career_officer harsh_leader }
+				skill=3
+				attack_skill=3
+				defense_skill=3
+				planning_skill=2
+				logistics_skill=3
+				legacy_id=-1
+			}
+			advisor = {
+				slot = high_command
+				idea_token = SLO_jozef_turanec
+				ledger = army
+
+				allowed = {
+					original_tag = SLO
+				}
+
+				traits = {
+					army_artillery_2
+				}
+
+				cost = 100
+
+				ai_will_do = {
+					factor = 1.000
+				}
+			}
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Peace For Our Time"
+				}
+			}
+			name="Jozef Turanec"
+			portraits={
+				army={
+					large = GFX_Portrait_Europe_Generic_land_2
+					small = GFX_idea_europe_generic_land_2
+				}
+			}
+			advisor={
+				allowed  = {
+					original_tag  = SLO
+				}
+				cost = 150
+				slot = navy_chief
+				idea_token = SLO_jozef_turanec
+				traits  = {
+					navy_chief_reform_2 
+				}
+				cost = 150
+				ai_will_do  = {
+					factor  = 1.000
+				}
+			}
+			corps_commander = {
+				traits={ career_officer }
+				skill=1
+				attack_skill=1
+				defense_skill=1
+				planning_skill=1
+				logistics_skill=1
+				legacy_id=-1
+			}
+		}
+	}
+
+	SLO_stefan_jurech = { #Pfot/Mun Locked
+		name=SLO_stefan_jurech
+		portraits={
+			army={
+				large = GFX_portrait_SLO_stefan_jurech
+				small = GFX_portrait_SLO_stefan_jurech_small
+			}
+		}
+		field_marshal={
+			traits={ career_officer infantry_officer }
+			skill=2
+			attack_skill=1
+			defense_skill=1
+			planning_skill=3
+			logistics_skill=2
+			legacy_id=-1
+			visible = {
+				NOT = {
+					is_subject_of = CZE
+				}
+			}
+		}
+		advisor={
+			slot = high_command
+			idea_token = SLO_stefan_jurech
+			ledger = army
+			allowed = {
+				original_tag = SLO
+			}
+			available = {
+				NOT = {
+					is_subject_of = CZE
+				}
+			}
+			traits = {
+				army_infantry_2
+			}
+			cost = 150
+			ai_will_do = {
+				factor = 1.000
+			}
+		}
+	}
+
+	SLO_augustin_malar = { #Pfot/Mun Locked
+		name=SLO_augustin_malar
+		portraits={
+			army={
+				large=GFX_portrait_SLO_augustin_malar
+				small=GFX_portrait_SLO_augustin_malar_small
+			}
+		}
+		corps_commander={
+			traits={ infantry_officer trickster }
+			skill=2
+			attack_skill=2
+			defense_skill=3
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=-1
+		}
+		advisor = {
+			slot = high_command
+			idea_token = SLO_augustin_malar
+			ledger = army
+			allowed = {
+				original_tag = SLO
+			}
+			traits = {
+				surveyor
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1.000
+			}
+		}
+	}
+
+	SLO_rudolf_viest={
 		advisor={
 			slot = army_chief
-			idea_token = SLO_ferdinand_catlos
+			idea_token = SLO_rudolf_viest
 			allowed  = {
 					original_tag  = SLO
 				}
-				traits  = {
-					army_chief_organizational_2 
+				available = {
+					NOT = {
+						is_subject_of = CZE
+						has_government = fascism
+					}
 				}
+				traits  = {
+					army_chief_offensive_2
+				}
+				cost = 100
 				ai_will_do  = {
 					factor  = 1.000
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
+		name="Rudolf Viest"
+		portraits={
+			army={
+				small="GFX_idea_CZE_rudolf_viest"
+				large=GFX_portrait_CZE_rudolf_viest #Should only show up for DLC contexts
+			}
+		}
+		corps_commander={
+			traits={ career_officer organizer }
+			skill=3
+			attack_skill=4
+			defense_skill=2
+			planning_skill=3
+			logistics_skill=1
+			legacy_id=-1
+			visible = {
+				has_dlc = "Peace For Our Time"
+				CZE = {
+					OR = {
+						exists = no
+						is_subject_of = ROOT
+					}
+				}
+				NOT = {
+					has_government = fascism
+				}
+			}
+		}
+	}
+
+	### THEORISTS ###
+
+	SLO_vojtech_daubner={
+		advisor={
+			slot = theorist
+			idea_token = SLO_vojtech_daubner
+			ledger = air 
+				allowed = {
+					original_tag  = SLO
+				}
+				traits = {
+					air_warfare_theorist 
+				}
+		}
+		name="Vojtech Daubner"
+		portraits={
+			army={
+				small="GFX_idea_generic_air_europe_1"
+			}
+		}
+	}
+
+	SLO_jozef_hora={
+		advisor={
+			slot = theorist
+			idea_token = SLO_jozef_hora
+			ledger = navy 
+				allowed = {
+					original_tag  = SLO
+				}
+				traits  = {
+					naval_theorist 
+				}
+		}
+		name="Jozef Hora"
+		portraits={
+			army={
+				small="GFX_idea_generic_political_advisor_europe_1"
+			}
+		}
+	}
+
+	SLO_emil_lendvay={
+		advisor={
+			slot = theorist
+			idea_token = SLO_emil_lendvay
+			ledger = army 
+				allowed = {
+					original_tag  = SLO
+				}
+				traits  = {
+					military_theorist 
+				}
+		}
+		name="Emil Lendvay"
+		portraits={
+			army={
+				small="GFX_idea_generic_army_europe_6"
+			}
+		}
+	}
+
+	### ARMY CHIEFS ###
+
+		SLO_gustav_malar={
+		advisor={
+		slot = army_chief
+		idea_token = SLO_gustav_malar
+		allowed  = {
+				original_tag  = SLO
+			}
+			traits  = {
+				army_chief_maneuver_2 
+			}
+			cost = 150
+			ai_will_do  = {
+				factor  = 1.000
+			}
+		}
+		name="Gustav Malar"
+		portraits={
+			army={
+				small="GFX_idea_generic_army_europe_3"
+			}
+		}
+	}
+
+	SLO_ferdinand_catlos={
+		advisor={
+			slot = army_chief
+			idea_token = SLO_ferdinand_catlos
+			allowed = {
+				original_tag  = SLO
+			}
+			cost = 100
+			traits  = {
+				army_chief_organizational_2 
+			}
+			ai_will_do  = {
+				factor  = 1.000
+			}
+		}
 		name="Ferdinand Catlos"
 		portraits={
 			army={
@@ -399,6 +564,79 @@ characters = {
 			}
 		}
 	}
+
+	### NAVY CHIEFS ###
+
+	SLO_jindrich_honzl={
+		name="Jindrich Honzl"
+		portraits={
+			army={
+				small="GFX_idea_generic_navy_europe_2"
+			}
+		}
+		advisor={
+			slot = navy_chief
+			idea_token = SLO_jindrich_honzl
+			allowed = {
+				original_tag  = SLO
+			}
+			traits  = {
+				navy_chief_maneuver_2 
+			}
+			ai_will_do  = {
+				factor  = 1.000
+			}
+		}
+	}
+
+	SLO_julius_thorzo = {
+		name=SLO_julius_thorzo
+		portraits={
+			army={
+				small="GFX_idea_generic_navy_europe_3"
+			}
+		}
+		advisor={
+			slot = navy_chief
+			idea_token = SLO_julius_thorzo
+			allowed  = {
+				original_tag  = SLO
+			}
+			#cost = 150
+			traits  = {
+				navy_chief_reform_2 
+			}
+			ai_will_do  = {
+				factor  = 1.000
+			}
+		}
+	}
+
+	### AIR CHIEFS ###
+
+		SLO_frantisek_straka={
+		advisor={
+			slot = air_chief
+			idea_token = SLO_frantisek_straka
+			allowed  = {
+					original_tag  = SLO
+				}
+				cost = 150
+				traits  = {
+					air_chief_safety_2 
+				}
+				ai_will_do  = {
+					factor  = 1.000
+				}
+		}
+		name="Frantisek Straka"
+		portraits={
+			army={
+				small="GFX_idea_generic_air_europe_1"
+			}
+		}
+	}
+
 	SLO_anton_pulanick={
 		advisor={
 			slot = air_chief
@@ -409,15 +647,126 @@ characters = {
 				traits  = {
 					air_chief_ground_support_2 
 				}
+				cost = 150
 				ai_will_do  = {
 					factor  = 1.000
 				}
 		}
-# TODO[ PORTRAIT LARGE ]: Missing large portrait please check!
 		name="Anton Pulanick"
 		portraits={
 			army={
 				small="GFX_idea_generic_air_europe_2"
+			}
+		}
+	}
+
+	### MILITARY HIGH COMMAND ###
+
+	SLO_jozef_snejdarek={
+		advisor={
+			slot = high_command
+			idea_token = SLO_jozef_snejdarek
+			ledger = army 
+			allowed  = {
+				original_tag  = SLO
+			}
+			available = {
+				if = {
+					limit = {
+						has_dlc = "Peace For Our Time"
+					}
+					CZE = {
+						OR = {
+							exists = no
+							is_subject_of = ROOT
+						}
+					}
+				}
+			}
+			cost = 100
+			traits  = {
+				army_entrenchment_2 
+			}
+			ai_will_do  = {
+				factor  = 1.000
+			}
+		}
+		name=CZE_josef_shnejdarek
+		portraits={
+			army={
+				small=GFX_portrait_CZE_josef_shnejdarek_small
+			}
+		}
+	}
+
+	SLO_fritz_gejza={
+		advisor={
+			slot = high_command
+			idea_token = SLO_fritz_gejza
+			ledger = air 
+				allowed = {
+					original_tag  = SLO
+				}
+				cost = 100
+				traits = {
+					air_strategic_bombing_2 
+				}
+				ai_will_do  = {
+					factor  = 1.000
+				}
+		}
+		name="Fritz Gejza"
+		portraits={
+			army={
+				small="GFX_idea_generic_air_europe_3"
+			}
+		}
+	}
+
+	SLO_frantisek_sadek={
+		advisor={
+			slot = high_command
+			idea_token = SLO_frantisek_sadek
+			ledger = army 
+			allowed  = {
+				original_tag  = SLO
+			}
+			cost = 100
+			traits  = {
+				army_armored_2 
+			}
+			ai_will_do = {
+				factor = 1.000
+			}
+		}
+		name="Frantisek Sadek"
+		portraits={
+			army={
+				small="GFX_idea_generic_army_europe_2"
+			}
+		}
+	}
+
+	SLO_cyril_kuchta={
+		advisor={
+			slot = high_command
+			idea_token = SLO_cyril_kuchta
+			ledger  = air 
+				allowed  = {
+					original_tag  = SLO
+				}
+				cost = 150
+				traits  = {
+					air_bomber_interception_2 
+				}
+				ai_will_do  = {
+					factor  = 1.000
+				}
+		}
+		name="Cyril Kuchta"
+		portraits={
+			army={
+				small="GFX_idea_generic_air_europe_1"
 			}
 		}
 	}

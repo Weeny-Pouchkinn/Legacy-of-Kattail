@@ -3106,9 +3106,21 @@ news_event = {
 	major = yes
 	
 	trigger = {
-		446 = { is_controlled_by = GER }
-		446 = { is_owned_by = ENG }
-		GER = { has_war_with = ENG }
+		907 = { is_controlled_by = GER }
+		OR = {
+			AND = {
+				907 = { is_owned_by = ENG }
+				GER = { has_war_with = ENG }
+			}
+			AND = {
+				907 = { is_owned_by = EGY }
+				EGY = {
+					is_ally_with = ENG
+				}
+				GER = { has_war_with = ENG }
+				GER = { has_war_with = EGY }
+			}
+		}
 		NOT = { has_global_flag = fall_of_cairo }
 	}
 	
@@ -3277,10 +3289,22 @@ news_event = {
 	
 	major = yes
 	
-	trigger = {
-		446 = { is_controlled_by = ITA }
-		446 = { is_owned_by = ENG }
-		ITA = { has_war_with = ENG }
+	trigger = { 
+		907 = { is_controlled_by = ITA }
+		OR = {
+			AND = {
+				907 = { is_owned_by = ENG }
+				ITA = { has_war_with = ENG }
+			}
+			AND = {
+				907 = { is_owned_by = EGY }
+				EGY = {
+					is_ally_with = ENG
+				}
+				ITA = { has_war_with = ENG }
+				ITA = { has_war_with = EGY }
+			}
+		}
 		NOT = { has_global_flag = fall_of_cairo_ita }
 	}
 	
@@ -7674,7 +7698,7 @@ news_event = {
 		}
 	}
 
-	#Peace for our time?
+	#Peace For Our Time?
 	option = {
 		name = news.200.e
 		trigger = {

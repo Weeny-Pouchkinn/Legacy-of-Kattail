@@ -1,0 +1,126 @@
+technologies = {
+	land_multi_charge_large_caliber_gun_tech = {
+		allow = { always = no }
+		start_year = 100
+		enable_building = { building = mega_gun_emplacement level = 1 }
+	}
+
+	stronghold_network_tech = {
+		allow = { always = no }
+		start_year = 100
+		enable_building = { building = stronghold_network level = 1 }
+	}
+
+	isotope_separation_centrifugal = {
+		allow = { always = no }
+		start_year = 100
+		categories = { nuclear }
+		nuclear_production_factor = 0.5
+	}
+
+	sp_armored_engineer_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_land_military_engineering_vehicles } }
+		is_special_project_tech = yes
+		research_cost = 2
+		start_year = 104
+		folder = { name = support_folder position = { x = 1 y = 10 } }
+		categories = { support_tech engineers_tech }
+		dependencies = { tech_engineers2 = 1 }
+		enable_subunits = { armored_engineer }
+		path = { leads_to_tech = sp_autonomous_engineer_tech research_cost_coeff = 1 }
+	}
+
+	sp_armored_maintenance_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_land_military_engineering_vehicles } }
+		is_special_project_tech = yes
+		research_cost = 2
+		start_year = 104
+		folder = { name = support_folder position = { x = 7 y = 10 } }
+		categories = { support_tech maintenance_company_tech }
+		dependencies = { tech_maintenance_company2 = 1 }
+		enable_subunits = { armored_maintenance }
+		path = { leads_to_tech = sp_autonomous_maintenance_tech research_cost_coeff = 1 }
+	}
+
+	sp_armored_signal_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_land_military_engineering_vehicles } }
+		is_special_project_tech = yes
+		research_cost = 2
+		start_year = 104
+		folder = { name = support_folder position = { x = 13 y = 10 } }
+		categories = { support_tech signal_company_tech electronics }
+		dependencies = { tech_signal_company2 = 1 }
+		enable_subunits = { armored_signal }
+		path = { leads_to_tech = sp_autonomous_signal_tech research_cost_coeff = 1 }
+	}
+
+	sp_armored_motorized_military_police_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_land_military_engineering_vehicles } }
+		is_special_project_tech = yes
+		research_cost = 2
+		start_year = 104
+		folder = { name = support_folder position = { x = 5 y = 10 } }
+		categories = { support_tech military_police_tech }
+		dependencies = { tech_military_police2 = 1 }
+		enable_subunits = { motorized_military_police }
+		path = { leads_to_tech = sp_autonomous_motorized_military_police_tech research_cost_coeff = 1 }
+	}
+
+	sp_autonomous_engineer_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 2.5
+		start_year = 108
+		folder = { name = support_folder position = { x = 1 y = 14 } }
+		categories = { support_tech engineers_tech }
+		dependencies = { sp_armored_engineer_tech = 1 }
+		armored_engineer = {
+			manpower = -0.80
+			entrenchment = 0.25
+			fort = { attack = 0.05 defence = 0.05 }
+		}
+	}
+
+	sp_autonomous_maintenance_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 2.5
+		start_year = 108
+		folder = { name = support_folder position = { x = 7 y = 14 } }
+		categories = { support_tech maintenance_company_tech }
+		dependencies = { sp_armored_maintenance_tech = 1 }
+		armored_maintenance = {
+			manpower = -0.80
+			reliability_factor = 0.025
+			equipment_capture_factor = 0.025
+		}
+	}
+
+	sp_autonomous_signal_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 2.5
+		start_year = 108
+		folder = { name = support_folder position = { x = 13 y = 14 } }
+		categories = { support_tech signal_company_tech electronics }
+		dependencies = { sp_armored_signal_tech = 1 }
+		armored_signal = {
+			manpower = -0.80
+			initiative = 0.06
+		}
+	}
+
+	sp_autonomous_motorized_military_police_tech = {
+		allow = { ROOT = { is_special_project_completed = sp:sp_lok_autonomous_combat_assistance } }
+		is_special_project_tech = yes
+		research_cost = 2.5
+		start_year = 108
+		folder = { name = support_folder position = { x = 5 y = 14 } }
+		categories = { support_tech military_police_tech }
+		dependencies = { sp_armored_motorized_military_police_tech = 1 }
+		motorized_military_police = {
+			manpower = -0.80
+			suppression_factor = 0.05
+		}
+	}
+}

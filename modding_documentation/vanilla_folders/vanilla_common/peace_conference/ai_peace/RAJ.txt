@@ -1,0 +1,37 @@
+# Scripted AI desire for peace actions.
+# See documentation.info file for more detailed scripting information.
+
+peace_ai_desires = {
+
+    # Try to grab princely states in peace conferences 
+    RAJ_we_want_to_reannex_princely_states = {
+        peace_action_type = take_states
+        enable = {
+            FROM.FROM.FROM = {
+               OR = {
+                   is_in_array = { RAJ.owned_states_at_game_start = THIS }
+                   is_core_of = RAJ # Indian Core Territory
+               }
+            }
+            ROOT = { original_tag = RAJ }
+        }
+        ai_desire = 250 # 250 percent higher desire
+    }
+
+    # Try not to puppet etc in princely states in peace conferences 
+    RAJ_we_want_to_reannex_princely_states_2 = {
+        peace_action_type = { puppet liberate force_government }
+        enable = {
+            original_tag = RAJ  # Negotiatior is India
+            FROM.FROM.FROM = { 
+                OR = {
+                    is_in_array = { RAJ.owned_states_at_game_start = THIS }
+                    is_core_of = RAJ # Indian Core Territory
+                }
+            }  
+        }
+
+        ai_desire = -250  # 250 percent lower desire
+    }
+
+}

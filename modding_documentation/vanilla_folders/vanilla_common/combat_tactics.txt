@@ -944,6 +944,39 @@ tactic_masterful_blitz = { #Improved version of Blitz for Soviets
 }
 
 
+tactic_masterful_delay = { #Improved version of Delay for Czechs
+	only_show_for = CZE
+
+	is_attacker = no
+	trigger = {
+		is_attacker = no
+		phase = no
+		OR = {
+			skill > 2
+			has_trait = trickster
+			has_trait = fast_planner
+			has_trait = ambusher
+			NOT = {
+				has_trait = unyielding_defender
+			}
+			skill_advantage > 1
+		}
+	}
+	
+	active = no
+	
+	base =  {
+		factor = 4
+	}
+	picture = delay
+	countered_by = tactic_shock
+	
+	attacker_movement_speed = -0.30		#
+	attacker = -0.30
+	defender = -0.20
+}
+
+
 tactic_urban_defense = { 
 	is_attacker = no
 	trigger = {
@@ -1017,7 +1050,7 @@ tactic_sf_barrage = { #Slow moving assault using heavy artillery barrage and art
 		has_artillery_ratio > 0.1
 	}
 	
-	active = no
+	active = yes
 	display_phase = street_fighting
 	
 	base =  {
@@ -1133,7 +1166,7 @@ tactic_sf_ambush = { #countered by mouse holing
 		phase = street_fighting
 	}
 	
-	active = no
+	active = yes
 	display_phase = street_fighting
 	
 	base =  {

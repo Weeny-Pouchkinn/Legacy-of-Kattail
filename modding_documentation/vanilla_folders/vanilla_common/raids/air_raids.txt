@@ -848,12 +848,18 @@ types = {
 		}
 		# Raid Type is visible
 		visible = {
-
 		}
 		# Specific Target is visible
 		show_target = {
 			NOT = {
 				is_in_faction_with = FROM
+			}
+			NOT = {
+				AND = {
+					original_tag = INS
+					has_country_flag = { flag = INS_revolution_has_started }
+					has_dlc = "Thunder at Our Gates"
+				}
 			}
 		}
 

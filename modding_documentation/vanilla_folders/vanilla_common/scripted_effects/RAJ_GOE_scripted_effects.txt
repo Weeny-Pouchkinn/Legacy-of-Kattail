@@ -32,6 +32,7 @@ try_build_civ_in_core_otherwise_build_in_controlled = {
                 size > 0 # use < or >
                 include_locked = yes
             }
+            impassable = no
             is_controlled_by = ROOT
         }
         add_extra_state_shared_building_slots = 1
@@ -56,7 +57,8 @@ try_build_civ_in_core_otherwise_build_in_controlled = {
                     building = industrial_complex
                     size > 0 # use < or >
                     include_locked = yes
-                } 
+                }
+                impassable = no
             }
             add_extra_state_shared_building_slots = 1
             add_building_construction = {
@@ -87,6 +89,7 @@ try_build_dockyard_in_core_otherwise_build_in_controlled = {
                 size > 0 # use < or >
                 include_locked = yes
             }
+            impassable = no
             is_coastal = yes
             is_controlled_by = ROOT
         }
@@ -113,7 +116,8 @@ try_build_dockyard_in_core_otherwise_build_in_controlled = {
                     building = dockyard
                     size > 0 # use < or >
                     include_locked = yes
-                } 
+                }
+                impassable = no
             }
             add_extra_state_shared_building_slots = 1
             add_building_construction = {
@@ -143,6 +147,7 @@ try_build_infra_in_core_otherwise_build_in_controlled = {
         limit = {
             infrastructure < 5
             is_controlled_by = ROOT
+            impassable = no
         }
         add_building_construction = {
              type = infrastructure
@@ -162,6 +167,7 @@ try_build_infra_in_core_otherwise_build_in_controlled = {
         random_controlled_state = {
             limit = {
                 infrastructure < 5
+                impassable = no
             }
             add_building_construction = {
                  type = infrastructure
@@ -191,6 +197,7 @@ try_build_mil_in_core_otherwise_build_in_controlled = {
                 include_locked = yes
             }
             is_controlled_by = ROOT
+            impassable = no
         }
         add_extra_state_shared_building_slots = 1
         add_building_construction = {
@@ -215,6 +222,7 @@ try_build_mil_in_core_otherwise_build_in_controlled = {
                     size > 0 # use < or >
                     include_locked = yes
                 } 
+                impassable = no
             }
             add_extra_state_shared_building_slots = 1
             add_building_construction = {
@@ -288,7 +296,7 @@ upgrade_ordance_factories_no_aat = {
 
     if = {
         limit = { 
-            check_variable = { RAJ.khadi_level = 0 } 
+            check_variable = { global.khadi_level = 0 } 
             has_idea = idea_RAJ_ammunition_factory_khadki
         }
 
@@ -300,7 +308,7 @@ upgrade_ordance_factories_no_aat = {
     }
     else_if = {
         limit = {
-            check_variable = { RAJ.khadi_level = 0 } 
+            check_variable = { global.khadi_level = 0 } 
         }
         custom_effect_tooltip = upgrades_design_company
         effect_tooltip = {
@@ -313,7 +321,7 @@ upgrade_ordance_factories_no_aat = {
 
     if = {
         limit = {
-            check_variable = { RAJ.khadi_level = 1  }
+            check_variable = { global.khadi_level = 1  }
             has_idea = idea_RAJ_ammunition_factory_khadki_1
             
         }
@@ -325,7 +333,7 @@ upgrade_ordance_factories_no_aat = {
     }
     else_if = {
         limit = {
-            check_variable = { RAJ.khadi_level = 1 }
+            check_variable = { global.khadi_level = 1 }
         }
         custom_effect_tooltip = upgrades_design_company
         effect_tooltip = {
@@ -338,7 +346,7 @@ upgrade_ordance_factories_no_aat = {
 
     if = {
         limit = {
-            check_variable = { RAJ.khadi_level = 2  }
+            check_variable = { global.khadi_level = 2  }
             has_idea = idea_RAJ_ammunition_factory_khadki_2
             
         }
@@ -350,7 +358,7 @@ upgrade_ordance_factories_no_aat = {
     }
     else_if = {
         limit = {
-            check_variable = { RAJ.khadi_level = 2 }
+            check_variable = { global.khadi_level = 2 }
         }
         custom_effect_tooltip = upgrades_design_company
         effect_tooltip = {
@@ -363,12 +371,12 @@ upgrade_ordance_factories_no_aat = {
 
     if = {
         limit = {
-            check_variable = { RAJ.khadi_level = 3 }
+            check_variable = { global.khadi_level = 3 }
         }
         try_build_mil_in_core_otherwise_build_in_controlled = yes
     }
 
-    add_to_variable = { RAJ.khadi_level = 1 }
+    add_to_variable = { global.khadi_level = 1 }
 
 }
 
@@ -377,7 +385,7 @@ upgrade_ordance_factories_art_no_aat = {
 
     if = {
         limit = { 
-            check_variable = { RAJ.gun_and_shell_level = 0 } 
+            check_variable = { global.gun_and_shell_level = 0 } 
             has_idea = idea_gun_and_shell_factory_cossipore
         }
         swap_ideas = {
@@ -387,7 +395,7 @@ upgrade_ordance_factories_art_no_aat = {
     }
     else_if = {
         limit = {
-            check_variable = { RAJ.gun_and_shell_level = 0 } 
+            check_variable = { global.gun_and_shell_level = 0 } 
         }
         custom_effect_tooltip = upgrades_design_company
         effect_tooltip = {
@@ -401,7 +409,7 @@ upgrade_ordance_factories_art_no_aat = {
 
     if = {
         limit = {
-            check_variable = { RAJ.gun_and_shell_level = 1  }
+            check_variable = { global.gun_and_shell_level = 1  }
             has_idea = idea_RAJ_ammunition_factory_khadki_1
             
         }
@@ -413,7 +421,7 @@ upgrade_ordance_factories_art_no_aat = {
     }
     else_if = {
         limit = {
-            check_variable = { RAJ.gun_and_shell_level = 1 }
+            check_variable = { global.gun_and_shell_level = 1 }
         }
         custom_effect_tooltip = upgrades_design_company
         effect_tooltip = {
@@ -426,7 +434,7 @@ upgrade_ordance_factories_art_no_aat = {
 
     if = {
         limit = {
-            check_variable = { RAJ.gun_and_shell_level = 2  }
+            check_variable = { global.gun_and_shell_level = 2  }
             has_idea = idea_RAJ_ammunition_factory_khadki_2
             
         }
@@ -438,7 +446,7 @@ upgrade_ordance_factories_art_no_aat = {
     }
     else_if = {
         limit = {
-            check_variable = { RAJ.gun_and_shell_level = 2 }
+            check_variable = { global.gun_and_shell_level = 2 }
         }
         custom_effect_tooltip = upgrades_design_company
         effect_tooltip = {
@@ -451,7 +459,7 @@ upgrade_ordance_factories_art_no_aat = {
 
     if = {
         limit = {
-            check_variable = { RAJ.gun_and_shell_level = 3 }
+            check_variable = { global.gun_and_shell_level = 3 }
         }
         add_tech_bonus = {
             bonus = 0.5
@@ -461,7 +469,7 @@ upgrade_ordance_factories_art_no_aat = {
         }
     }
 
-    add_to_variable = { RAJ.gun_and_shell_level = 1 }
+    add_to_variable = { global.gun_and_shell_level = 1 }
 
 }
 
@@ -1018,7 +1026,7 @@ bathe_in_hellfire_thermonuclear = {
     }
 }
 
-was_raj_a_subject = {
+was_uk_dominion_a_subject = {
     if = {
         limit = {
             RAJ = {
@@ -1055,6 +1063,46 @@ was_raj_a_subject = {
                 
         set_global_flag = RAJ_was_a_subject_pre_cw_of_uk
     }
+    else_if = {
+        limit = {
+            ROOT = {
+                is_subject = yes
+                OR = {
+                    original_tag = CAN
+                    original_tag = SAF
+                    original_tag = AST
+                    original_tag = NZL
+                    original_tag = RAJ 
+                }
+            }
+        }
+        ROOT = {
+            set_variable = { saved_autonomy_ratio = autonomy_ratio }
+
+            set_variable = { saved_democratic_support = party_popularity_100@democratic }
+            set_variable = { saved_neutrality_support = party_popularity_100@neutrality }
+            set_variable = { saved_communism_support = party_popularity_100@communism }
+            set_variable = { saved_fascism_support = party_popularity_100@fascism }
+
+            if = {
+                limit = { has_government = communism }
+                set_country_flag = was_communist
+            }
+            else_if = {
+                limit = { has_government = fascism }
+                set_country_flag = was_fascist
+            }
+            else_if = {
+                limit = { has_government = neutrality }
+                set_country_flag = was_unaligned
+            }
+            else = {
+                set_country_flag = was_democratic
+            }
+
+        }
+    }
+
 }
 
 

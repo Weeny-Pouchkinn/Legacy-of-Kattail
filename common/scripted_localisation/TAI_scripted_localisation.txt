@@ -1,0 +1,199 @@
+# Returns the current description of the Reclamation depending on the stage
+defined_text = {
+	name = GetNobleHouse104Status
+	text = {
+		trigger = { has_country_flag = noble_house_104_unlocked }
+		localization_key = noble_house_104_status
+	}
+	text = {
+		localization_key = ROQ_reclamation_stage_inactive_desc
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseLeaderGFX
+	text = {
+		trigger = { check_variable = { substate_id = 101 } }
+		localization_key = "GFX_portrait_CLE_Mewry_von_Pawlissier"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 102 } }
+		localization_key = "GFX_portrait_CAT_Rex"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 103 } }
+		localization_key = "GFX_portrait_TAI_Klaus_Chameownix"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 104 } }
+		localization_key = "GFX_portrait_PRL_Kibbles"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 105 } }
+		localization_key = "GFX_portrait_SIL_Wilhelm_von_Kattensbach"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 106 } }
+		localization_key = "GFX_portrait_FRA_Frederick_Pawlliam"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 107 } }
+		localization_key = "GFX_portrait_STR_Rupritch_von_Bayarn"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 108 } }
+		localization_key = "GFX_portrait_PTQ_Katzbert_Ludenclaw"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 109 } }
+		localization_key = "GFX_portrait_TAI_Maximilian_Schwarz"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 110 } }
+		localization_key = "GFX_portrait_MEO_Tigerin_Highclaw"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 111 } }
+		localization_key = "GFX_portrait_KVK_Alice_Clatz"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 112 } }
+		localization_key = "GFX_portrait_LIO_Meorner"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 113 } }
+		localization_key = "GFX_portrait_TAI_King_Mewtail"
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseLeaderName
+	text = {
+		trigger = { check_variable = { substate_id = 101 } }
+		localization_key = "CLE_Mewry_von_Pawlissier"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 102 } }
+		localization_key = "CAT_Rex"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 103 } }
+		localization_key = "TAI_Klaus_Chameownix"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 104 } }
+		localization_key = "PRL_Kibbles"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 105 } }
+		localization_key = "SIL_Wilhelm_von_Kattensbach"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 106 } }
+		localization_key = "FRA_Frederick_Pawlliam"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 107 } }
+		localization_key = "STR_Rupritch_von_Bayarn"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 108 } }
+		localization_key = "PTQ_Katzbert_Ludenclaw"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 109 } }
+		localization_key = "TAI_Maximilian_Schwarz"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 110 } }
+		localization_key = "MEO_Tigerin_Highclaw"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 111 } }
+		localization_key = "KVK_Alice_Clatz"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 112 } }
+		localization_key = "LIO_Meorner"
+	}
+	text = {
+		trigger = { check_variable = { substate_id = 113 } }
+		localization_key = "TAI_King_Mewtail"
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseStateOwnershipSatisfaction
+	text = {
+		trigger = {
+			OR = {
+				check_variable = { noble_house_states_array^substate_id > noble_house_happy_states_array^substate_id }
+				check_variable = { noble_house_states_array^substate_id = noble_house_happy_states_array^substate_id }
+			}
+		}
+		localization_key = noble_house_happy_states
+	}
+	text = {
+		trigger = {
+			check_variable = { noble_house_states_array^substate_id < noble_house_expected_states_array^substate_id }
+		}
+		localization_key = noble_house_unhappy_states
+	}
+	text = {
+		trigger = {
+			OR = {
+				check_variable = { noble_house_states_array^substate_id < noble_house_happy_states_array^substate_id }
+				check_variable = { noble_house_states_array^substate_id > noble_house_expected_states_array^substate_id }
+				check_variable = { noble_house_states_array^substate_id = noble_house_expected_states_array^substate_id }
+			}
+		}
+		localization_key = noble_house_normal_states
+	}
+}
+
+defined_text = {
+	name = GetNobleHouseHappyOrNot
+	text = {
+		trigger = {
+			OR = {
+				check_variable = { noble_house_opinion_array^substate_id > 0 }
+				check_variable = { noble_house_opinion_array^substate_id = 0 }
+			}
+		}
+		localization_key = noble_house_happy
+	}
+	text = {
+		trigger = {
+			check_variable = { noble_house_opinion_array^substate_id < 0 }
+		}
+		localization_key = noble_house_unhappy
+	}
+}
+
+defined_text = {
+	name = GetCrownPowerThreshold
+	text = {
+		trigger = {
+			check_variable = { crown_land_power_perc > 0.75 }
+		}
+		localization_key = noble_house_opinion_crown_75
+	}
+	text = {
+		trigger = {
+			check_variable = { crown_land_power_perc > 0.5 }
+		}
+		localization_key = noble_house_opinion_crown_50
+	}
+	text = {
+		trigger = {
+			check_variable = { crown_land_power_perc > 0.25 }
+		}
+		localization_key = noble_house_opinion_crown_25
+	}
+	text = {
+		trigger = {
+			check_variable = { crown_land_power_perc > 0 }
+		}
+		localization_key = noble_house_opinion_crown_0
+	}
+}

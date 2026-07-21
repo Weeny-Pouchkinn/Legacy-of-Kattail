@@ -120,6 +120,27 @@ ENG_bomber_production = {
 	}
 }
 
+ENG_carrier_air_production = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		date > 1938.6.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = equipment_production_min_factories
+		id = cv_fighter
+		value = 1
+	}
+	ai_strategy = {
+		type = equipment_production_min_factories
+		id = cv_naval_bomber
+		value = 1
+	}
+}
+
 ENG_bba_air_prod_1 = {
 	# TODO BFW:
 	allowed = { original_tag = ENG }
@@ -994,7 +1015,7 @@ ENG_naval_role_ratios_historical = {
 	ai_strategy = {
 		type = role_ratio
 		id = naval_escort
-		value = 10
+		value = 30
 	}
 
 	ai_strategy = {
@@ -1006,19 +1027,19 @@ ENG_naval_role_ratios_historical = {
 	ai_strategy = {
 		type = role_ratio
 		id = naval_cruiser_heavy
-		value = 5
+		value = 25
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_mine_sweeper
-		value = 20
+		value = 5
 	}
 
 	ai_strategy = {
 		type = role_ratio
 		id = naval_mine_layer
-		value = 10
+		value = 5
 	}
 }
 
@@ -1075,7 +1096,7 @@ ENG_naval_role_ratios_anti_submarines = {
 	ai_strategy = {
 		type = role_ratio
 		id = naval_escort
-		value = 50
+		value = 200
 	}
 
 	ai_strategy = {
@@ -1091,6 +1112,45 @@ ENG_naval_role_ratios_anti_submarines = {
 	}
 }
 
+ENG_naval_role_ratios_screens_focus = {
+	allowed = { original_tag = ENG }
+	enable = {
+		date > 1940.6.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = role_ratio
+		id = naval_carrier
+		value = -8
+	}
+	ai_strategy = {
+		type = role_ratio
+		id = naval_carrier_light
+		value = -5
+	}
+	ai_strategy = {
+		type = role_ratio
+		id = naval_capital_bb
+		value = -5
+	}
+	ai_strategy = {
+		type = role_ratio
+		id = naval_cruiser_light
+		value = 50
+	}
+	ai_strategy = {
+		type = role_ratio
+		id = naval_screen
+		value = 200
+	}
+	ai_strategy = {
+		type = role_ratio
+		id = naval_escort
+		value = 15
+	}
+}
+
 ENG_the_adriatic_is_dangerous = {
 	allowed = { original_tag = ENG }
 	enable = {
@@ -1101,7 +1161,49 @@ ENG_the_adriatic_is_dangerous = {
 	ai_strategy = {
 		type = naval_avoid_region
 		id = 168 #adriatic
-		value = 75
+		value = 500
+	}
+}
+
+# Historical UK doctrine: prioritize Med invasions (Torch / Sicily / Italy) before opening other theatres.
+# 200 = 2.0x priority multiplier on the invasion-support objective for any invasion whose path crosses these regions.
+ENG_focus_naval_invasions_on_med = {
+	allowed = { original_tag = ENG }
+	enable = {
+		is_historical_focus_on = yes
+		date < 1943.6.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_invasion_support_priority
+		id = 29 # Central Mediterranean
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_invasion_support_priority
+		id = 68 # Western Mediterranean
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_invasion_support_priority
+		id = 69 # Eastern Mediterranean
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_invasion_support_priority
+		id = 169 # Tyrrhenian Sea
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_invasion_support_priority
+		id = 202 # Aegean Sea
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_invasion_support_priority
+		id = 84 # Bismarck Sea — keep ENG out of Pacific invasions while Med is the priority
+		value = 25
 	}
 }
 
@@ -1923,7 +2025,7 @@ ENG_defend_mediterranean = {
 	ai_strategy = {
 		type = theatre_distribution_demand_increase
 		id = 447
-		value = 10
+		value = 15
 	}
 
 	# Gibraltar
@@ -1938,6 +2040,65 @@ ENG_defend_mediterranean = {
 		type = theatre_distribution_demand_increase
 		id = 116
 		value = 4
+	}
+}
+
+ENG_defend_alexandria = {
+	allowed = { original_tag = ENG }
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = ITA
+		NOT = {
+			controls_state = 448 # Tripoli
+			controls_state = 451 # Tobruk
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_unit_request
+		area = north_east_africa
+		value = 25
+	}
+	ai_strategy = {
+		type = theatre_distribution_demand_increase
+		id = 447 # Alexandria
+		value = 10
+	}
+	ai_strategy = {
+		type = put_unit_buffers
+		ratio = 0.06
+		states = {
+			447 # Alexandria
+		}
+		subtract_invasions_from_need = no
+		subtract_fronts_from_need = no
+	}
+}
+
+ENG_defend_alexandria_reduced = {
+	allowed = { original_tag = ENG }
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = ITA
+		controls_state = 448 # Tripoli
+		controls_state = 451 # Tobruk
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_unit_request
+		area = north_east_africa
+		value = 10
+	}
+	ai_strategy = {
+		type = put_unit_buffers
+		ratio = 0.02
+		states = {
+			447 # Alexandria
+		}
+		subtract_invasions_from_need = no
+		subtract_fronts_from_need = no
 	}
 }
 
@@ -2049,7 +2210,7 @@ ENG_prepare_for_war_with_iraq = {
 	ai_strategy = {
 		type = put_unit_buffers
 
-		ratio = 0.05
+		ratio = 0.08
 
 		# you can specify an order id. ratio of same orders ids will be share same ratio
 		#order_id = 2
@@ -2060,6 +2221,11 @@ ENG_prepare_for_war_with_iraq = {
 
 		subtract_invasions_from_need = no
 		subtract_fronts_from_need = yes
+	}
+	ai_strategy = {
+		type = theatre_distribution_demand_increase
+		id = 656 # Kuwait
+		value = 5
 	}
 }
 
@@ -2557,6 +2723,35 @@ ENG_disregard_france_a_bit = {
 	}
 }
 
+ENG_air_support_north_africa = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		is_historical_focus_on = yes
+		has_war_with = ITA
+		date > 1941.6.1
+		ITA = { controls_state = 448 } # Italy still holds Tripoli
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 128 # Egypt
+		value = 5000
+	}
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 225 # Tripoli
+		value = 3000
+	}
+	ai_strategy = {
+		type = strategic_air_importance
+		id = 29 # Central Mediterranean Sea
+		value = 2000
+	}
+}
+
 ENG_dont_kick_russia_out_from_triple_entente_due_to_gobbling_up_breakaway_states = {
 	allowed = {
 		original_tag = ENG
@@ -2658,6 +2853,91 @@ ENG_chill_on_the_pacific = {
 		id = JAP
 		value = -500
 	}
+
+	# Let USA handle the Pacific — deprioritize naval dominance in deep Pacific
+	# Keep Malacca (72) and Gulf of Thailand (73) untouched for Singapore defense
+	ai_strategy = {
+		type = naval_dominance
+		id = 78 #Philippine Sea
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 79 #Sea of Japan
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 80 #Celebes Sea
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 84 #Bismarck Sea
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 90 #Coast of Japan
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 93 #Banda Sea
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 94 #Western Pacific
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 95 #Western Pacific 2
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 96 #North West Pacific
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 97 #South West Pacific
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 160 #Philippines
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 77 #Yellow Sea
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 75 #South China Sea
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 81 #Coral Sea
+		value = -100
+	}
+	ai_strategy = {
+		type = naval_dominance
+		id = 83 #Solomon Sea
+		value = -100
+	}
+
+	# Zero-out Bismarck so ENG won't commit invasion support to Pacific corridors.
+	ai_strategy = {
+		type = naval_invasion_support_priority
+		id = 84 # Bismarck Sea
+		value = -100
+	}
 }
 
 ENG_ethiopian_continuation_war = {
@@ -2699,53 +2979,31 @@ ENG_ethiopian_continuation_war = {
 	}
 }
 
-ENG_no_naval_landings_in_libya_yet = {
-	allowed = { original_tag = ENG }
-	enable = {
-		is_historical_focus_on = yes
-		date < 1942.1.1
-		has_war_with = ITA
-		# More complex conditions will already be handled by the AI planning system
-	}
-	abort_when_not_enabled = yes
-
-	ai_strategy = {
-		type = invasion_unit_request
-		area = north_africa
-		value = -100
-	}
-}
-
 ENG_to_tobruk = {
 	allowed = { original_tag = ENG }
 	enable = {
 		is_historical_focus_on = yes
 		date > 1940.12.1
-		date < 1943.6.1
+		date < 1943.3.1
 		ITA = { is_ai = yes }
 	}
 	abort_when_not_enabled = yes
 
+	# Land push toward Tobruk
 	ai_strategy = {
 		type = front_control
-
 		state = 451 #derna
-
 		ratio = 0.1
-
 		priority = 100
 		ordertype = front
 		execution_type = rush
 		execute_order = yes
 	}
-	
+
 	ai_strategy = {
 		type = front_control
-
 		state = 452 #matrouh
-
 		ratio = 0.1
-
 		priority = 100
 		ordertype = front
 		execution_type = rush_weak
@@ -2759,26 +3017,41 @@ ENG_to_tobruk = {
 	}
 
 	ai_strategy = {
-		type = invade
-		id = ITA
-		value = 550  # Counter-balances the ENG_ALLIES_careful_with_early_invasions strategy, so we get positive again
+		type = area_priority
+		id = italy
+		value = -50
 	}
 }
 
-ENG_navy_to_tobruk = {
+ENG_naval_landings_in_libya = {
 	allowed = { original_tag = ENG }
 	enable = {
 		is_historical_focus_on = yes
-		date > 1941.4.1 # We should have taken it by land route by now...
+		date > 1942.1.1
 		date < 1943.6.1
-		451 = { is_controlled_by = ITA }
+		has_war_with = ITA
 	}
 	abort_when_not_enabled = yes
 
+	# Open the invasion gate for ITA (counters -500 from ENG_ALLIES_careful_with_early_invasions)
+	ai_strategy = {
+		type = invade
+		id = ITA
+		value = 550
+	}
+
+	# Direct naval landings at Tobruk/Tripoli, not the Italian mainland
 	ai_strategy = {
 		type = invasion_unit_request
-		area = north_africa
+		state = 451 # Derna/Tobruk
+		state = 448 # Tripoli
 		value = 50
+	}
+
+	ai_strategy = {
+		type = invasion_unit_request
+		area = italy
+		value = -100
 	}
 }
 
@@ -2815,6 +3088,36 @@ ENG_supply_for_tobruk_push = {
 		target = 10061  # Marsa Matruh
 		# target = 9989  # Sidi Barrani
 		value = 500
+	}
+}
+
+# Continued naval-base buildup at Matrouh to sustain the wider Africa campaign once the initial push is underway.
+ENG_upgrade_matrouh_naval_base = {
+	allowed = { original_tag = ENG }
+	enable = {
+		is_historical_focus_on = yes
+		date > 1941.3.1
+		date < 1943.6.1
+		has_war_with = ITA
+		ITA = { is_ai = yes }
+
+		452 = {  # Matrouh
+			any_province_building_level = {
+				province = {
+					id = 10061  # Marsa Matruh
+				}
+				building = naval_base
+				level < 3
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = naval_base
+		target = 10061  # Marsa Matruh
+		value = 300
 	}
 }
 
@@ -3032,26 +3335,92 @@ ENG_develop_mediterranean_supremacy = {
 	allowed = {
 		original_tag = ENG
 	}
-	
+
+	# Phase 1: Italy still contests North Africa — supremacy along the supply lanes that feed it.
 	enable = {
-		OR = {
-			has_war_with = ITA
-			has_war_with = SOU
+		has_war_with = ITA
+		ITA = {
+			OR = {
+				controls_state = 448 # Tripoli
+				controls_state = 450 # Benghazi
+				controls_state = 451 # Tobruk
+			}
 		}
-		date > 1940.1.1
 	}
-	
+
 	abort_when_not_enabled = yes
-	
+
 	ai_strategy = {
 		type = naval_dominance
 		id = western_med_control_zone
-		value = 30
+		value = 80
 	}
-	
+
 	ai_strategy = {
 		type = naval_dominance
-		id = eastern_med_control_zone
-		value = 80
+		id = italy_med_control_zone
+		value = 150
+	}
+}
+
+ENG_med_invasion_phase = {
+	allowed = {
+		original_tag = ENG
+	}
+
+	# Phase 2: N. Africa cleared — pivot to the Med invasion corridor for landings on Italy itself.
+	enable = {
+		has_war_with = ITA
+		ENG = {
+			controls_state = 448 # Tripoli
+			controls_state = 450 # Benghazi
+			controls_state = 451 # Tobruk
+		}
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_dominance
+		id = med_invasion_zone
+		value = 150
+	}
+}
+
+# Modest standing synthetic capacity: Britain depends on imported rubber.
+ENG_synthetic_industry_baseline = {
+	allowed = { original_tag = ENG }
+	enable = { date > 1940.1.1 }
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = research_weight_factor
+		id = synth_oil_experiments
+		value = 100
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = rubber_processing
+		value = 100
+	}
+	ai_strategy = {
+		type = building_target
+		id = synthetic_refinery
+		value = 5
+	}
+}
+
+# Pacific war cuts off Malayan and East Indies rubber, so prioritise synthetics hard.
+ENG_synthetic_industry_pacific_war = {
+	allowed = { original_tag = ENG }
+	enable = {
+		has_war_with = JAP
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = building_target
+		id = synthetic_refinery
+		value = 12
 	}
 }

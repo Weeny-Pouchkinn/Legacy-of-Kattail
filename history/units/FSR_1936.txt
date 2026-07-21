@@ -1,4 +1,4 @@
-﻿##### Division Templates #####
+##### Division Templates #####
 division_template = { #The ideal Katzenartig Infantry
 	name = "Katzen-Schwereinfanterie"		
 	regiments = {
@@ -201,13 +201,28 @@ instant_effect = {
 		efficiency = 50
 	}
 
-	add_equipment_production = {
-		equipment = {
-			type = light_tank_equipment_1
-			creator = "FSR" 
-		}
-		requested_factories = 1
-		progress = 0.4
-		efficiency = 50
+	IF = {
+		limit = { has_dlc = "No Step Back" }
+			add_equipment_production = {
+				equipment = {
+					type = light_tank_chassis_1
+					creator = "FSR"
+						version_name = "Kaisertech IFV" 
+				}
+				requested_factories = 1
+				progress = 0.4
+				efficiency = 50
+			}
+	}
+	ELSE = {
+			add_equipment_production = {
+				equipment = {
+					type = light_tank_equipment_1
+					creator = "FSR" 
+				}
+				requested_factories = 1
+				progress = 0.4
+				efficiency = 50
+			}
 	}
 }

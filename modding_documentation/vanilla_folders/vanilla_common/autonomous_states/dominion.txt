@@ -9,7 +9,7 @@ autonomy_state = {
 		desc = "RULE_DESC_IS_A_SUBJECT"
 	
 		can_not_declare_war = yes
-		can_decline_call_to_war = no
+		can_decline_call_to_war = yes
 		can_be_spymaster = yes
 	}
 	
@@ -88,10 +88,21 @@ autonomy_state = {
 			limit = {
 				original_tag = AST
 			}
-			OR = {
-				has_completed_focus = AST_adopt_westminster
-				has_completed_focus = AST_abandon_the_westminster_system
-				has_completed_focus = AST_sever_ties_with_uk
+			IF = {
+				limit = {
+					has_dlc = "Thunder at Our Gates"
+				}
+				OR = {
+					has_completed_focus = AST_ratify_westminster_adoption_act
+					has_completed_focus = AST_refuse_british_wars
+				}
+			}
+			ELSE = {
+				OR = {
+					has_completed_focus = AST_adopt_westminster
+					has_completed_focus = AST_abandon_the_westminster_system
+					has_completed_focus = AST_sever_ties_with_uk
+				}
 			}
 		}
 		if = {
@@ -131,6 +142,14 @@ autonomy_state = {
 			has_completed_focus = RAJ_the_dominion_of_india
 			has_completed_focus = RAJ_keep_calm_and_carry_on
 			has_completed_focus = RAJ_holding_the_gates_of_india
+		}
+		if = {
+			limit = {
+				original_tag = INS
+			}
+			NOT = {
+				has_idea = idea_INS_netherlands_most_precious_jewel
+			}
 		}
 	}
 

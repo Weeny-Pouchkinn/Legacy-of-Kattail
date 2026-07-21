@@ -2,6 +2,97 @@ ideas = {
 
 	country = {
 
+		HOL_flag_will_fly = {
+			picture = generic_volunteer_expedition_bonus
+			allowed = {
+				original_tag = HOL
+				has_dlc = "Thunder at Our Gates"
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+
+			cancel = {
+				NOT = {
+					INS = {
+						has_country_flag = INS_revolution_has_started
+					}
+				}
+			}
+
+			targeted_modifier = {
+				tag = INS
+				attack_bonus_against = 0.2
+				defense_bonus_against = 0.2
+			}
+
+			modifier = {
+				training_time_factor = -0.4
+				production_speed_arms_factory_factor = 0.2
+			}
+
+		}
+
+		HOL_agricultural_taxes = {
+			picture = tur_etatism
+			allowed = {
+				original_tag = HOL
+				has_dlc = "Thunder at Our Gates"
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+
+			removal_cost = -1
+
+			modifier = {
+				consumer_goods_factor = -0.15
+				stability_factor = 0.1
+			}
+		}
+
+		HOL_internationally_controversial_aggression = {
+			picture = AUS_aggression
+			allowed = {
+				original_tag = HOL
+				has_dlc = "Thunder at Our Gates"
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+
+			removal_cost = -1
+
+			modifier = {
+				army_attack_factor = -0.25
+				stability_factor = -0.2
+				war_support_factor = -0.2
+			}
+		}
+
+		HOL_internationally_controversial_aggression_2 = {
+			picture = AUS_aggression
+			allowed = {
+				original_tag = HOL
+				has_dlc = "Thunder at Our Gates"
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+
+			removal_cost = -1
+
+			modifier = {
+				army_attack_factor = -0.1
+				stability_factor = -0.1
+				war_support_factor = -0.1
+			}
+		}
+
 		HOL_wilhelmina = {
 
 			picture = HOL_wilhelmina_ns
@@ -72,7 +163,7 @@ ideas = {
 			removal_cost = -1
 						
 			modifier = {
-				conscription_factor = -0.5
+				conscription_factor = -0.25
 				industrial_capacity_factory = -0.25
 				industrial_capacity_dockyard = -0.1
 			}
@@ -95,7 +186,7 @@ ideas = {
 			removal_cost = -1
 						
 			modifier = {
-				conscription_factor = -0.4
+				conscription_factor = -0.15
 				industrial_capacity_factory = -0.2
 				industrial_capacity_dockyard = -0.06
 			}
@@ -118,7 +209,7 @@ ideas = {
 			removal_cost = -1
 						
 			modifier = {
-				conscription_factor = -0.3
+				conscription_factor = -0.1
 				industrial_capacity_factory = -0.15
 				industrial_capacity_dockyard = -0.03
 			}
@@ -141,7 +232,6 @@ ideas = {
 			removal_cost = -1
 						
 			modifier = {
-				conscription_factor = -0.2
 				industrial_capacity_factory = -0.1
 			}
 		}
@@ -163,7 +253,6 @@ ideas = {
 			removal_cost = -1
 						
 			modifier = {
-				conscription_factor = -0.1
 				industrial_capacity_factory = -0.05
 			}
 		}
@@ -364,7 +453,7 @@ ideas = {
 			removal_cost = -1
 						
 			modifier = {
-				autonomy_gain = -2
+				autonomy_gain = -1.5
 			}
 		}
 
@@ -1910,6 +1999,45 @@ ideas = {
 
 		}
 
+		HOL_indonesian_cheap_labor = {
+			picture = ARG_public_works_investment
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+
+			removal_cost = -1
+
+			modifier = {
+				weekly_manpower = 1000
+			}
+		}
+
+		HOL_cheap_sugar = {
+			picture = INS_cheap_sugar
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+
+			removal_cost = -1
+
+			modifier = {
+				consumer_goods_factor = -0.1
+			}
+		}
+
+		HOL_cheap_lumber = {
+			picture = INS_cheap_lumber
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+
+			removal_cost = -1
+
+			modifier = {
+				consumer_goods_factor = -0.1
+			}
+		}
+
 	}
 
 	#TECHNOLOGUY
@@ -2114,7 +2242,18 @@ ideas = {
 		HOL_royal_dutch_shell = {
 
 			available = {
-				has_completed_focus = HOL_expand_curacao_oil_refineries
+				if = {
+					limit = {
+						has_dlc = "Thunder at Our Gates"
+					}
+					OR = {
+						has_completed_focus = HOL_expand_curacao_oil_refineries_taog
+						has_completed_focus = INSHOL_expand_shell
+					}
+				}
+				else = {
+					has_completed_focus = HOL_expand_curacao_oil_refineries
+				}
 			}
 			
 			allowed = {

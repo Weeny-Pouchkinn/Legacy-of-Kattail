@@ -973,7 +973,7 @@ focus_tree = {
                     set_politics = {
                         ruling_party = neutrality
                         elections_allowed = no
-                    }
+                    } 
                 }
 
                 hidden_effect = { #Note: the equipment is ACTUALLY ADDED further down in RAJ_mughal_uprising, if you want to change the amount, you need to do it here, up a few lines in this focus AND in RAJ_secure_weapons
@@ -1066,6 +1066,7 @@ focus_tree = {
                             is_character = RAJ_mughal_industrialist
                             is_character = RAJ_silent_mughal
                             is_character = RAJ_backroom_mughal
+                            is_character = RAJ_GOE_muhammad_musa
                         }
                     }
                     set_nationality = event_target:UK_INDIA
@@ -1082,6 +1083,16 @@ focus_tree = {
                 }
 
                 retire_country_leader = yes
+
+                add_country_leader_role = {
+                    character = RAJ_abdul_ghaffar_khan
+                    promote_leader = yes
+                    country_leader = {
+                        ideology = despotism
+                        expire = "1988.1.1.1"
+                        traits = { RAJ_khudai_khidmatgar_leader } 
+                    }
+                }  
 				
                 division_template = {
                     name = "Princely Personal Guard"
@@ -1300,17 +1311,12 @@ focus_tree = {
                 name = RAJ_forging_the_mughal_arsenal
                 bonus = 0.35
                 uses = 1
-                category = artillery # optional 
-                # technology  = technology_id # optional
+                category = artillery 
             }
 
             army_experience = 30
         }
     }
-
-#RAJ_reform_the_agricultural_system
-
-#RAJ_forging_the_mughal_arsenal
 
    focus = {
         id = RAJ_the_legacy_of_babur
@@ -4535,8 +4541,7 @@ focus_tree = {
                 name = RAJ_privatized_healthcare
                 bonus = 0.5
                 uses = 2
-                category = hospital_tech  # optional 
-                # technology  = technology_id # optional
+                category = hospital_tech  
             }
 
 
@@ -4554,8 +4559,7 @@ focus_tree = {
                     name = RAJ_privatized_healthcare
                     bonus = 0.35
                     uses = 1
-                    category = helicopter_tech # optional 
-                    # technology  = technology_id # optional
+                    category = helicopter_tech
                 }
             }
 
@@ -4825,8 +4829,7 @@ focus_tree = {
                     name = RAJ_take_in_british_naval_experts
                     bonus = 0.4
                     uses = 2
-                    category = ship_modules_tech # optional 
-                    # technology  = technology_id # optional
+                    category = ship_modules_tech 
                 }
             }
             else = {
@@ -4927,10 +4930,10 @@ focus_tree = {
         completion_reward = {
             add_stability = 0.03
             add_tech_bonus = {
+                name = RAJ_trade_protection
                 bonus = 1
                 uses = 1
-                category = dd_tech # optional 
-                # technology  = technology_id # optional
+                category = dd_tech
             }
 
             if = {
@@ -4939,10 +4942,10 @@ focus_tree = {
                 }
 
                 add_tech_bonus = {
+                    name = RAJ_trade_protection
                     bonus = 0.5
                     uses = 2
-                    category = asw_tech # optional 
-                # technology  = technology_id # optional
+                    category = asw_tech 
                 }
             }
 
@@ -5140,27 +5143,21 @@ focus_tree = {
 
         completion_reward = {
             add_tech_bonus = {
+                name = RAJ_procure_the_armor
                 bonus = 0.65
                 uses = 1
-                category = armor # optional 
-                # technology  = technology_id # optional
+                category = armor 
             }
 
             if = {
                 limit = {
-                    NOT = {
-                        has_idea = idea_RAJ_long_range_sea_operations
-                    }
+                    has_idea = idea_RAJ_long_range_sea_operations
                 }
-                add_ideas = idea_RAJ_long_range_sea_operations
-            }
-            else = {
                 swap_ideas = {
                     remove_idea = idea_RAJ_long_range_sea_operations
                     add_idea = idea_RAJ_long_range_sea_operations_2
                 }
             }
-
         }
     }
 
@@ -5265,10 +5262,24 @@ focus_tree = {
 
             }
             custom_effect_tooltip = SWE_nordljus_tt_2
-           swap_ideas = {
-               remove_idea = idea_RAJ_long_range_sea_operations_2
-               add_idea = idea_RAJ_long_range_sea_operations_3
-           }
+            if = {
+                limit = {
+                    has_idea = idea_RAJ_long_range_sea_operations_2
+                }
+                swap_ideas = {
+                    remove_idea = idea_RAJ_long_range_sea_operations_2
+                    add_idea = idea_RAJ_long_range_sea_operations_3
+                }
+            }
+            else_if = {
+                limit = {
+                    has_idea = idea_RAJ_long_range_sea_operations
+                }
+                swap_ideas = {
+                    remove_idea = idea_RAJ_long_range_sea_operations
+                    add_idea = idea_RAJ_long_range_sea_operations_3
+                }
+            }
         }
     }
 
@@ -5501,7 +5512,7 @@ focus_tree = {
                 limit = {
                     OR = {
                         controls_state = 429
-                        432 = {
+                        429 = {
                             owner = { is_subject_of = ROOT }
                         }
                     }
@@ -6951,8 +6962,7 @@ focus_tree = {
                 name = RAJ_land_grab
                 bonus = 2
                 uses = 2
-                category = excavation_tech  # optional 
-                # technology  = technology_id # optional
+                category = excavation_tech  
             }
 
             try_build_infra_in_core_otherwise_build_in_controlled = yes
@@ -7302,7 +7312,25 @@ focus_tree = {
         search_filters = {FOCUS_FILTER_POLITICAL}
 
         completion_reward = {
-              custom_effect_tooltip = RAJ_provincial_autonomy_occupation_law_tt
+
+            custom_effect_tooltip = RAJ_provincial_autonomy_occupation_law_tt
+
+            custom_effect_tooltip = generic_skip_one_line_tt
+
+            show_ideas_tooltip = independent_rule_occupation_law_fake_idea
+
+            custom_effect_tooltip = generic_skip_one_line_tt
+
+            show_ideas_tooltip = princely_subjugation_occupation_law_fake_idea
+
+            hidden_effect = {
+                IF = {
+                    limit = {
+                        is_ai = yes 
+                    }
+                    RAJ = { set_occupation_law_where_available = independent_rule } # Set law in all countries/states where it's available.
+                }
+            }
         }
     }
 
@@ -9509,7 +9537,7 @@ focus_tree = {
         continue_if_invalid = no
         available_if_capitulated = no
 
-        search_filters = {FOCUS_FILTER_POLITICAL}
+        search_filters = {FOCUS_FILTER_POLITICAL FOCUS_FILTER_POLITICAL_CHARACTER }
 
         completion_reward = {
             if = {
@@ -10079,7 +10107,7 @@ focus_tree = {
         continue_if_invalid = no
         available_if_capitulated = no
 
-        search_filters = { FOCUS_FILTER_INDUSTRY }
+        search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH FOCUS_FILTER_STABILITY}
 
         completion_reward = {
             add_dynamic_modifier = { modifier = idea_RAJ_five_year_plan }
@@ -10290,6 +10318,8 @@ focus_tree = {
 
         }
 
+        search_filters  = { FOCUS_FILTER_INDUSTRY }
+
         cancel_if_invalid = yes
         continue_if_invalid = no
         available_if_capitulated = no
@@ -10456,7 +10486,7 @@ focus_tree = {
         continue_if_invalid = no
         available_if_capitulated = no
 
-        search_filters = {FOCUS_FILTER_INDUSTRY}
+        search_filters = {FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
 
         completion_reward = {
             add_offsite_building = {
@@ -10649,7 +10679,7 @@ focus_tree = {
         continue_if_invalid = no
         available_if_capitulated = no
 
-        search_filters = {FOCUS_FILTER_INDUSTRY}
+        search_filters = {FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY}
         search_filters = {FOCUS_FILTER_RESEARCH}
 
         completion_reward = {
@@ -11091,7 +11121,7 @@ focus_tree = {
         continue_if_invalid = no
         available_if_capitulated = no
 
-        search_filters = {FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY}
+        search_filters = {FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
 
         completion_reward = {
             add_timed_idea = {
@@ -11579,7 +11609,7 @@ focus_tree = {
         continue_if_invalid = no
         available_if_capitulated = no
 
-        search_filters = {FOCUS_FILTER_STABILITY}
+        search_filters = {FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL}
 
         completion_reward = {
             add_stability = 0.1
@@ -15665,26 +15695,14 @@ focus_tree = {
     focus = {
         id = RAJ_tryst_with_destiny
         icon = {
-            trigger = {
+            GFX_focus_RAJ_tryst_with_destiny_BAN = {
                 tag = BAN
             }
-            value = GFX_focus_RAJ_tryst_with_destiny_BAN
-        }
-        icon = {
-            trigger = {
+            GFX_focus_RAJ_tryst_with_destiny_PAK = {
                 tag = PAK
             }
-            value = GFX_focus_RAJ_tryst_with_destiny_PAK
+            GFX_focus_RAJ_tryst_with_destiny = yes
         }
-        icon = {
-            trigger = {
-                NOT = {
-                    tag = PAK
-                    tag = BAN
-                }
-            }
-            value = GFX_focus_RAJ_tryst_with_destiny
-        } 
         prerequisite = { focus = RAJ_united_bengal focus = RAJ_eastern_pakistan focus = RAJ_a_secular_state }
         x = 2
         y = 1
@@ -15919,13 +15937,13 @@ focus_tree = {
 
             set_rule = { can_join_factions = yes }
             set_rule = { can_guarantee_other_ideologies = yes }
-            set_rule = { can_join_opposite_factions = yes }
             set_rule = { CAN_DECLARE_WAR_ON_SAME_IDEOLOGY = yes }
             set_rule = { can_only_justify_war_on_threat_country = no }
 
-
+            custom_effect_tooltip = generic_skip_one_line_tt
             
             add_ideas = idea_RAJ_kingmaker
+
             hidden_effect = {
                 every_country = {
                     limit = {
@@ -16803,257 +16821,78 @@ focus_tree = {
 
         completion_reward = {
             custom_effect_tooltip = RAJ_mixed_economy_tt
-            every_owned_state = {
-                limit = {
-                    has_resources_amount = { resource = steel amount > 6 }
-                    is_controlled_by = ROOT
-
-                    ROOT = { #To fix tooltip
-                        OR = {
-                            has_tech = excavation1
-                            has_tech = excavation2
-                            has_tech = excavation3
-                            has_tech = excavation4
-                            has_tech = excavation5
+            for_each_scope_loop = {
+                array = owned_states_at_game_start
+                if = {
+                    limit = {
+                        is_controlled_by = ROOT
+                        ROOT = {
+                            OR = {
+                                has_tech = excavation1
+                                has_tech = excavation2
+                                has_tech = excavation3
+                                has_tech = excavation4
+                                has_tech = excavation5
+                            }
                         }
                     }
-                }
 
-                if = {
-                    limit = { ROOT = { has_tech = excavation1 } } 
-
-                    add_resource = { type = steel amount = 3 }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation2 } } 
-                    add_resource = { type = steel amount = 3 }
-
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation3 } } 
-
-                    add_resource = { type = steel amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation4 } } 
-
-                      add_resource = { type = steel amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation5 } } 
-                      add_resource = { type = steel amount = 3 }
-                }
-            }
-
-            every_owned_state = {
-                limit = {
-                    has_resources_amount = { resource = oil amount > 6 }
-                    is_controlled_by = ROOT
-                    ROOT = { #To fix tooltip
-                        OR = {
-                            has_tech = excavation1
-                            has_tech = excavation2
-                            has_tech = excavation3
-                            has_tech = excavation4
-                            has_tech = excavation5
-                        }
+                    if = {
+                        limit = { has_resources_amount = { resource = steel amount > 6 } }
+                        if = { limit = { ROOT = { has_tech = excavation1 } } add_resource = { type = steel amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation2 } } add_resource = { type = steel amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation3 } } add_resource = { type = steel amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation4 } } add_resource = { type = steel amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation5 } } add_resource = { type = steel amount = 3 } }
                     }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation1 } } 
-
-                    add_resource = { type = oil amount = 3 }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation2 } } 
-                    add_resource = { type = oil amount = 3 }
-
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation3 } } 
-
-                    add_resource = { type = oil amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation4 } } 
-
-                      add_resource = { type = oil amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation5 } } 
-                      add_resource = { type = oil amount = 3 }
-                }
-            }
-
-            every_owned_state = {
-                limit = {
-                    has_resources_amount = { resource = chromium amount > 6 }
-                    is_controlled_by = ROOT
-                    ROOT = { #To fix tooltip
-                        OR = {
-                            has_tech = excavation1
-                            has_tech = excavation2
-                            has_tech = excavation3
-                            has_tech = excavation4
-                            has_tech = excavation5
-                        }
+                    if = {
+                        limit = { has_resources_amount = { resource = oil amount > 6 } }
+                        if = { limit = { ROOT = { has_tech = excavation1 } } add_resource = { type = oil amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation2 } } add_resource = { type = oil amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation3 } } add_resource = { type = oil amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation4 } } add_resource = { type = oil amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation5 } } add_resource = { type = oil amount = 3 } }
                     }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation1 } } 
-
-                    add_resource = { type = chromium amount = 3 }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation2 } } 
-                    add_resource = { type = chromium amount = 3 }
-
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation3 } } 
-
-                    add_resource = { type = chromium amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation4 } } 
-
-                      add_resource = { type = chromium amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation5 } } 
-                      add_resource = { type = chromium amount = 3 }
-                }
-            }
-
-            every_owned_state = {
-                limit = {
-                    has_resources_amount = { resource = rubber amount > 6 }
-                    is_controlled_by = ROOT
-                    ROOT = { #To fix tooltip
-                        OR = {
-                            has_tech = excavation1
-                            has_tech = excavation2
-                            has_tech = excavation3
-                            has_tech = excavation4
-                            has_tech = excavation5
-                        }
+                    if = {
+                        limit = { has_resources_amount = { resource = chromium amount > 6 } }
+                        if = { limit = { ROOT = { has_tech = excavation1 } } add_resource = { type = chromium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation2 } } add_resource = { type = chromium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation3 } } add_resource = { type = chromium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation4 } } add_resource = { type = chromium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation5 } } add_resource = { type = chromium amount = 3 } }
                     }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation1 } } 
-
-                    add_resource = { type = rubber amount = 3 }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation2 } } 
-                    add_resource = { type = rubber amount = 3 }
-
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation3 } } 
-
-                    add_resource = { type = rubber amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation4 } } 
-
-                      add_resource = { type = rubber amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation5 } } 
-                      add_resource = { type = rubber amount = 3 }
-                }
-            }
-
-            every_owned_state = {
-                limit = {
-                    has_resources_amount = { resource = tungsten amount > 6 }
-                    is_controlled_by = ROOT
-                    ROOT = { #To fix tooltip
-                        OR = {
-                            has_tech = excavation1
-                            has_tech = excavation2
-                            has_tech = excavation3
-                            has_tech = excavation4
-                            has_tech = excavation5
-                        }
+                    if = {
+                        limit = { has_resources_amount = { resource = rubber amount > 6 } }
+                        if = { limit = { ROOT = { has_tech = excavation1 } } add_resource = { type = rubber amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation2 } } add_resource = { type = rubber amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation3 } } add_resource = { type = rubber amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation4 } } add_resource = { type = rubber amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation5 } } add_resource = { type = rubber amount = 3 } }
                     }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation1 } } 
-
-                    add_resource = { type = tungsten amount = 3 }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation2 } } 
-                    add_resource = { type = tungsten amount = 3 }
-
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation3 } } 
-
-                    add_resource = { type = tungsten amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation4 } } 
-
-                      add_resource = { type = tungsten amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation5 } } 
-                      add_resource = { type = tungsten amount = 3 }
-                }
-            }
-
-            #
-            every_owned_state = {
-                limit = {
-                    has_resources_amount = { resource = aluminium amount > 6 }
-                    is_controlled_by = ROOT
-                    ROOT = { #To fix tooltip
-                        OR = {
-                            has_tech = excavation1
-                            has_tech = excavation2
-                            has_tech = excavation3
-                            has_tech = excavation4
-                            has_tech = excavation5
-                        }
+                    if = {
+                        limit = { has_resources_amount = { resource = tungsten amount > 6 } }
+                        if = { limit = { ROOT = { has_tech = excavation1 } } add_resource = { type = tungsten amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation2 } } add_resource = { type = tungsten amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation3 } } add_resource = { type = tungsten amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation4 } } add_resource = { type = tungsten amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation5 } } add_resource = { type = tungsten amount = 3 } }
                     }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation1 } } 
-
-                    add_resource = { type = aluminium amount = 3 }
-                }
-
-                if = {
-                    limit = { ROOT = { has_tech = excavation2 } } 
-                    add_resource = { type = aluminium amount = 3 }
-
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation3 } } 
-
-                    add_resource = { type = aluminium amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation4 } } 
-
-                      add_resource = { type = aluminium amount = 3 }
-                }
-                if = {
-                    limit = { ROOT = { has_tech = excavation5 } } 
-                      add_resource = { type = aluminium amount = 3 }
+                    if = {
+                        limit = { has_resources_amount = { resource = aluminium amount > 6 } }
+                        if = { limit = { ROOT = { has_tech = excavation1 } } add_resource = { type = aluminium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation2 } } add_resource = { type = aluminium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation3 } } add_resource = { type = aluminium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation4 } } add_resource = { type = aluminium amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation5 } } add_resource = { type = aluminium amount = 3 } }
+                    }
+                    if = {
+                        limit = { has_resources_amount = { resource = coal amount > 6 } }
+                        if = { limit = { ROOT = { has_tech = excavation1 } } add_resource = { type = coal amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation2 } } add_resource = { type = coal amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation3 } } add_resource = { type = coal amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation4 } } add_resource = { type = coal amount = 3 } }
+                        if = { limit = { ROOT = { has_tech = excavation5 } } add_resource = { type = coal amount = 3 } }
+                    }
                 }
             }
         }
@@ -18306,6 +18145,7 @@ focus = {
 		every_owned_state = {
 			limit = {
 				is_fully_controlled_by = ROOT
+				synthetic_refinery < 1
 				has_resources_amount = {
 					resource = oil
 					amount > 0
@@ -18436,6 +18276,7 @@ focus = {
 							resource = rubber
 							amount > 19
 						}
+						synthetic_refinery < 1
 					}
 					add_resource = {
 						type = rubber
@@ -20153,6 +19994,15 @@ focus = {
 				has_full_control_of_state = PREV
 			}
 		}
+        1021 = {
+            controller = {
+                OR = {
+                    original_tag = ROOT
+                    is_ally_with = ROOT
+                }
+                has_full_control_of_state = PREV
+            }
+        }
 		custom_override_tooltip = {
 			tooltip = {
 				localization_key = generic_requires_divs_in_state_tt
@@ -20165,6 +20015,18 @@ focus = {
 				#exclude = {  }
 			}
 		}
+        custom_override_tooltip = {
+            tooltip = {
+                localization_key = generic_requires_divs_in_state_tt
+                NUM_DIVISIONS = 0 #Needs to match "count" in num_divisions_in_states
+                STATE = [1021.GetName] #Needs to match "states" in num_divisions_in_states
+            }
+            num_divisions_in_states = {
+                count > 0
+                states = { 1021 }
+                #exclude = {  }
+            }
+        }
 	}
 
 	search_filters = { FOCUS_FILTER_TFV_AUTONOMY FOCUS_FILTER_ANNEXATION }
@@ -20996,10 +20858,25 @@ focus = {
 			}
 			add_doctrine_cost_reduction = {
 				name = RAJ_free_abyssinia
-				cost_reduction = 0.75
+				cost_reduction = 0.25
 				uses = 2
-				category = cat_marines_doctrine
+				category = special_forces_doctrine
 			}
+            custom_effect_tooltip = marine_subdoctrines_default_add_mastery_bonus_effect_tooltip
+            hidden_effect = {
+                add_mastery_bonus = {
+                    name = RAJ_free_abyssinia
+                    bonus = 0.1
+                    days = 240
+                    sub_doctrine = marines_1
+                }
+                add_mastery_bonus = {
+                    name = RAJ_free_abyssinia
+                    bonus = 0.1
+                    days = 240
+                    sub_doctrine = marines_2
+                }
+            }            
 		}
 
 		custom_effect_tooltip = generic_skip_one_line_tt
@@ -26181,7 +26058,7 @@ focus = {
         continue_if_invalid = no
         available_if_capitulated = no
 
-        search_filters = {FOCUS_FILTER_ANNEXATION}
+        search_filters = {}
 
         completion_reward = {
             if = {

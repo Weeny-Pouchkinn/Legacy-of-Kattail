@@ -910,3 +910,60 @@ country_event = {
 		}
 	}
 }
+
+# Choosing a Head of State
+country_event = {
+	id = KUS_event.100
+	title = KUS_event.100.t
+	desc = KUS_event.100.desc
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+
+	# A Council of Ministers shall lead us, like Roqualia!
+	option = {
+		name = KUS_event.100.a
+		trigger = {
+			NOT = { has_cosmetic_tag = KUS_FEDERATION }
+		}
+		activate_advisor = KUS_Council_of_Ministers
+	}
+
+	# Ambitious Roqualian Maurice Vorille knows what to do!
+	option = {
+		name = KUS_event.100.b
+		trigger = {
+			NOT = { has_cosmetic_tag = KUS_FEDERATION }
+			has_country_flag = KUS_embrace_roqual_heritage_done
+			has_country_flag = KUS_encourage_roqual_diasporas_done
+		}
+		activate_advisor = KUS_Maurice_Vorille
+	}
+
+	# Talvan Rahha has served us well, and will continue to do so!
+	option = {
+		name = KUS_event.100.c
+		activate_advisor = KUS_Talvan_Rahha
+	}
+
+	# Katzen ingenuity will get Kusnurk through all!
+	option = {
+		name = KUS_event.100.d
+		trigger = {
+			has_cosmetic_tag = KUS_FEDERATION
+			has_country_flag = KUS_feline_tolerance_done
+			has_country_flag = KUS_guarantee_language_done
+		}
+		activate_advisor = KUS_Dieter_Windlaufer
+	}
+
+	# Our government needs a powerful guiding hand. Jon Gemeetra will be his own head!
+	option = {
+		name = KUS_event.100.e
+		trigger = {
+			has_cosmetic_tag = KUS_FEDERATION
+		}
+		activate_advisor = KUS_Jon_Geemetra
+		add_stability = -0.10
+	}
+}

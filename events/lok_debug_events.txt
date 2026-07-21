@@ -486,12 +486,20 @@ country_event = { #species
 country_event = { #dynmod
 	id = lok_debug.14
 	immediate = {log = "[GetDateText]: [Root.GetName]: event lok_debug.1"}
-	is_triggered_only = yes
+	is_triggered_only = yes	
 	title = ""
-	desc = "[?218.country_color_red]"
+	desc = "[?noble_house_power_perc_array^104]"
 	
 	option = {
 		name = "hi"
+		every_owned_state = {
+			limit = {
+				is_core_of = PRL
+			}
+			set_temp_variable = { substate_id_temp = 104 }
+			assign_state_to_noble_house_and_core = yes
+		}
+		TAI = { calculate_noble_house_power = yes }
 	}
 }
 
@@ -570,3 +578,157 @@ country_event = {
 		name = "Done"
 	}
 }
+
+# Unlock All Noble Houses (adds IDs 101-112 to array, sets flags)
+country_event = {
+	id = lok_debug.19
+	hidden = yes
+	title = "Unlock All Noble Houses"
+	desc = "Adds all noble substate IDs (101-112) to TAI_unlocked_noble_house_array and sets their unlocked flags."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			TAI = {
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 101 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 101 }
+				}
+				set_country_flag = noble_house_101_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 102 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 102 }
+				}
+				set_country_flag = noble_house_102_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 103 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 103 }
+				}
+				set_country_flag = noble_house_103_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 104 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 104 }
+				}
+				set_country_flag = noble_house_104_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 105 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 105 }
+				}
+				set_country_flag = noble_house_105_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 106 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 106 }
+				}
+				set_country_flag = noble_house_106_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 107 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 107 }
+				}
+				set_country_flag = noble_house_107_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 108 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 108 }
+				}
+				set_country_flag = noble_house_108_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 109 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 109 }
+				}
+				set_country_flag = noble_house_109_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 110 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 110 }
+				}
+				set_country_flag = noble_house_110_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 111 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 111 }
+				}
+				set_country_flag = noble_house_111_unlocked
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 112 } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = 112 }
+				}
+				set_country_flag = noble_house_112_unlocked
+			}
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+
+# Lock All Noble Houses (clears array, clears flags)
+country_event = {
+	id = lok_debug.20
+	hidden = yes
+	title = "Lock All Noble Houses"
+	desc = "Clears TAI_unlocked_noble_house_array and clears all unlocked flags."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			TAI = {
+				clear_array = TAI_unlocked_noble_house_array
+				clr_country_flag = noble_house_101_unlocked
+				clr_country_flag = noble_house_102_unlocked
+				clr_country_flag = noble_house_103_unlocked
+				clr_country_flag = noble_house_104_unlocked
+				clr_country_flag = noble_house_105_unlocked
+				clr_country_flag = noble_house_106_unlocked
+				clr_country_flag = noble_house_107_unlocked
+				clr_country_flag = noble_house_108_unlocked
+				clr_country_flag = noble_house_109_unlocked
+				clr_country_flag = noble_house_110_unlocked
+				clr_country_flag = noble_house_111_unlocked
+				clr_country_flag = noble_house_112_unlocked
+				clr_country_flag = noble_house_113_unlocked
+			}
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+
+# Swap Noble House 8 for 15 and make Frederick Pawlliam Neutrality Leader
+country_event = {
+	id = lok_debug.21
+	hidden = yes
+	title = "Swap House 8 with 15 & Frederick Pawlliam Neutrality"
+	desc = "Removes House 8 from unlocked houses, adds 15, and sets Frederick Pawlliam as neutrality leader."
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			remove_from_array = { array = TAI_unlocked_noble_house_array value = 106 }
+			clr_country_flag = noble_house_106_unlocked
+			if = {
+				limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = 113 } } }
+				add_to_array = { array = TAI_unlocked_noble_house_array value = 113 }
+			}
+			set_country_flag = noble_house_113_unlocked
+			FRA = {
+				PUR_Frederick_Pawlliam = {
+					set_nationality = ROOT
+				}
+			}
+			PUR_Frederick_Pawlliam = {
+				add_country_leader_role = {
+					country_leader = {
+						expire = "1965.1.1.1"
+						ideology = despotism
+					}
+					promote_leader = yes
+				}
+			}
+		}
+	}
+
+	option = {
+		name = "Done"
+	}
+}
+

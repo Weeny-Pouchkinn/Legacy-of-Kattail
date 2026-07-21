@@ -1,19 +1,422 @@
 characters={
-	AST_john_curtin={
-		name=AST_john_curtin
+
+	#################
+	#### Leaders ####
+	#################
+
+	AST_joseph_lyons={
+		name=AST_joseph_lyons
 		portraits={
 			civilian={
-				large=GFX_portrait_AST_john_curtin
+				large = GFX_portrait_AST_joseph_lyons
 			}
 		}
 		country_leader={
+			traits = { conservative_grandee }
 			ideology=socialism
-			expire="1965.1.1.1"
+			expire="1989.1.1.1"
 			id=-1
 		}
 	}
 
-	AST_eric_campbell={
+	AST_john_curtin={
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_john_curtin
+			portraits={
+				civilian={
+					large=GFX_portrait_AST_john_curtin
+				}
+			}
+			#country_leader = {
+			#	ideology = socialism
+			#	expire = "1989.1.1.1"
+			#	id = -1
+			#}
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_john_curtin
+			portraits={
+				civilian={
+					large=GFX_portrait_AST_john_curtin
+				}
+			}
+			country_leader={
+				ideology=socialism
+				expire="1965.1.1.1"
+				id=-1
+			}
+		}
+	}
+
+	AST_robert_menzies={
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_robert_menzies
+			portraits={
+				civilian={
+					large = GFX_portrait_AST_robert_menzies
+				}
+			}
+			#country_leader = {
+			#	ideology = socialism
+			#	expire = "1989.1.1.1"
+			#	id = -1
+			#}
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_robert_menzies
+			portraits={
+				army={
+					small="GFX_idea_AST_robert_g_menzies" #small="GFX_idea_generic_political_advisor_europe_2" #namechange to robert_menzies
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_robert_menzies
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					backroom_backstabber 
+				}
+			}		
+		}
+	}
+
+	AST_billy_hughes={
+		name=AST_billy_hughes
+		portraits={
+			civilian={
+				large = GFX_portrait_AST_billy_hughes
+				small = GFX_portrait_AST_billy_hughes_small
+			}
+		}
+		#country_leader = {
+		#	ideology = socialism
+		#	expire = "1989.1.1.1"
+		#	id = -1
+		#}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_billy_hughes
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_wartime_soothsayer
+			}
+			always_show_on_actions_tooltip = yes
+			on_add = {
+               	add_to_variable = {
+               		var = AST_uap_votes_daily_var
+                    value = 0.01 
+               	}
+               	AST_votes_change_effect = yes
+			}
+			on_remove = {
+               	add_to_variable = {
+               		var = AST_uap_votes_daily_var
+                    value = -0.01 
+               	}
+               	AST_votes_change_effect = yes
+
+				owner = { 
+               		IF = {
+               			limit = {
+               				has_completed_focus = AST_war_is_coming
+               				has_country_leader = { 
+               					ruling_only = yes 
+               					character = AST_joseph_lyons 
+               				}
+               			}
+               			AST = { add_political_power = 35 }
+               		}
+               		ELSE_IF = {
+               			limit = {
+               				has_completed_focus = AST_war_is_coming
+               			}
+               			add_political_power = 50 
+               		}
+               	}
+			}
+			available = {
+				is_country_leader = no
+				OR = { 
+					AND = {
+						has_completed_focus = AST_war_is_coming
+						custom_trigger_tooltip = {
+							tooltip = AST_uap_advisor_tt
+							check_variable = {
+								var = AST_ruling_party
+								value = 0
+								compare = equals
+							}
+						}
+					}
+					has_completed_focus = AST_absorb_the_uap
+				}	
+			}
+		}
+	}
+
+	AST_ben_chifley={
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_ben_chifley
+			portraits={
+				civilian={
+				large = GFX_portrait_AST_ben_chifley
+				small = GFX_portrait_AST_ben_chifley_small
+				}
+			}
+			#country_leader = {
+			#	ideology = socialism
+			#	expire = "1989.1.1.1"
+			#	id = -1
+			#}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_ben_chifley
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					AST_war_funder
+				}
+				available = {
+					is_country_leader = no
+					custom_trigger_tooltip = {
+						tooltip = AST_alp_advisor_tt
+						check_variable = {
+							var = AST_ruling_party
+							value = 1
+							compare = equals
+						}
+					}
+				}
+				on_remove = {
+					owner = { 
+	               		IF = {
+	               			limit = {
+	               				has_completed_focus = AST_war_is_coming
+	               				has_country_leader = { 
+	               					ruling_only = yes 
+	               					character = AST_joseph_lyons 
+	               				}
+	               			}
+	               			AST = { add_political_power = 35 }
+	               		}
+	               		ELSE_IF = {
+	               			limit = {
+	               				has_completed_focus = AST_war_is_coming
+	               			}
+	               			add_political_power = 50 
+	               		}
+	               	}
+				}
+			}
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_ben_chifley
+			portraits={
+				army={
+					small="GFX_idea_AST_ben_chifley" #small="GFX_idea_generic_political_advisor_europe_3"
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_ben_chifley
+				allowed = {
+					original_tag = AST
+					has_dlc = "Together for Victory"
+				}
+				cost = 100.000
+				traits = {
+					smooth_talking_charmer 
+				}
+				available = {
+					has_completed_focus = AST_never_another_gallipoli 
+				}
+			}
+		}	
+	}
+
+	AST_jack_miles={
+		name=AST_jack_miles
+		portraits={
+			civilian={
+				large = GFX_portrait_AST_jack_miles
+			}
+		}
+		country_leader={
+			traits = { AST_dated_communist_leader } 
+			ideology=stalinism
+			expire="1989.1.1.1"
+			id=-1
+		}
+	}
+
+	AST_fred_paterson={
+		name=AST_fred_paterson
+		portraits={
+			civilian={
+				large = GFX_portrait_AST_fred_paterson
+			}
+		}
+		#country_leader={
+		#	ideology=stalinism
+		#	traits = {
+		#		AST_voice_of_workers
+		#	}
+		#	expire="1989.1.1.1"
+		#	id=-1
+		#}
+	}
+
+	AST_percy_stephensen={
+		name=AST_percy_stephensen
+		portraits={
+			civilian={
+				large = GFX_portrait_AST_percy_stephensen
+				small = GFX_portrait_AST_percy_stephensen_small
+			}
+		}
+		#country_leader={
+		#	ideology=fascism_ideology
+		#	traits = {
+		#		AST_motherland_advocate_leader
+		#	}
+		#	expire="1989.1.1.1"
+		#	id=-1
+		#}
+		advisor={
+			slot = political_advisor
+			idea_token = AST_percy_stephensen
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				AST_motherland_advocate_pa
+			}
+			available = {
+				is_country_leader = no
+				has_completed_focus = AST_in_from_the_cold
+			}
+		}
+	}
+
+	AST_adela_walsh={
+		name=AST_adela_walsh
+		portraits={
+			civilian={
+				large = GFX_portrait_AST_adela_walsh
+				small = GFX_portrait_AST_adela_walsh_small
+			}
+		}
+		#country_leader={
+		#	ideology=fascism_ideology
+		#	traits = {
+		#		AST_the_matriarch_leader
+		#	}
+		#	expire="1989.1.1.1"
+		#	id=-1
+		#}
+		advisor={
+			slot = political_advisor
+			idea_token = AST_adela_walsh
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				AST_the_matriarch_pa
+			}
+			available = {
+				is_country_leader = no
+				has_completed_focus = AST_in_from_the_cold
+			}
+		}
+	}
+
+	AST_alexander_hore_ruthven={
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_alexander_hore_ruthven
+			portraits={
+				civilian={
+					large = GFX_portrait_AST_alexander_hore_ruthven
+					small = GFX_portrait_AST_alexander_hore_ruthven_small
+				}
+			}
+			country_leader={
+				ideology=centrism
+				expire="1989.1.1.1"
+				id=-1
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_alexander_hore_ruthven
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					AST_governor_general
+				}
+				available = {
+					is_country_leader = no
+					is_subject_of = ENG
+				}
+			}
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_alexander_hore_ruthven
+			portraits={
+				army={
+					small="GFX_idea_AST_alexander_hore_ruthven" #small="GFX_idea_generic_political_advisor_europe_1"
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_alexander_hore_ruthven
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					quartermaster_general 
+				}
+			}
+		}		
+	}
+
+	AST_eric_campbell={ #BASEGAME ONLY
 		name=AST_eric_campbell
 		portraits={
 			civilian={
@@ -27,21 +430,7 @@ characters={
 		}
 	}
 
-	AST_richard_dixon={
-		name=AST_richard_dixon
-		portraits={
-			civilian={
-				large="GFX_AST_richard_dixon"
-			}
-		}
-		country_leader={
-			ideology=stalinism
-			expire="1965.1.1.1"
-			id=-1
-		}
-	}
-
-	AST_earle_page={
+	AST_earle_page={ #BASEGAME ONLY
 		name=AST_earle_page
 		portraits={
 			civilian={
@@ -55,7 +444,7 @@ characters={
 		}
 	}
 
-	AST_rod_hull={
+	AST_rod_hull={ #BASEGAME ONLY
 		name=AST_rod_hull
 		portraits={
 			civilian={
@@ -69,108 +458,719 @@ characters={
 		}
 	}
 
+	##################
+	#### Generals ####
+	##################
+
 	AST_leslie_morshead={
-		name=AST_leslie_morshead
-		portraits={
-			army={
-				large="GFX_AST_leslie_morshead"
-				small=GFX_portrait_AST_leslie_morshead_small
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_leslie_morshead
+			portraits={
+				army={
+					large = GFX_portrait_AST_leslie_morshead
+					small = GFX_portrait_AST_leslie_morshead_small
+				}
+			}
+
+			corps_commander={
+				traits = { inflexible_strategist infantry_leader }
+				skill=4
+				attack_skill=3
+				defense_skill=4
+				planning_skill=3
+				logistics_skill=3
+				legacy_id=-1
 			}
 		}
-		corps_commander={
-			skill=4
-			attack_skill=4
-			defense_skill=2
-			planning_skill=5
-			logistics_skill=2
-			legacy_id=-1
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_leslie_morshead
+			portraits={
+				army={
+					large="GFX_AST_leslie_morshead"
+					small=GFX_portrait_AST_leslie_morshead_small
+				}
+			}
+			corps_commander={
+				skill=4
+				attack_skill=4
+				defense_skill=2
+				planning_skill=5
+				logistics_skill=2
+				legacy_id=-1
+			}
 		}
+
 	}
 
 	AST_thomas_blamey={
-		name=AST_thomas_blamey
-		portraits={
-			army={
-				large="GFX_AST_thomas_blamey"
-				small=GFX_portrait_AST_thomas_blamey_small
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_thomas_blamey
+			portraits={
+				army={
+					large=GFX_portrait_AST_thomas_blamey
+					small=GFX_portrait_AST_thomas_blamey_small
+				}
+			}
+
+			field_marshal={
+				visible = {
+					NOT = {
+						has_character_flag = AST_army_chief_dead
+					}
+				}
+				traits = { organizer defensive_doctrine }
+				skill=3
+				attack_skill=1
+				defense_skill=3
+				planning_skill=2
+				logistics_skill=4
+				legacy_id=-1
+			}
+
+			advisor = {
+				slot = army_chief
+				cost = 100
+				idea_token = AST_thomas_blamey
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					army_chief_defensive_2
+				}
+			
+				ai_will_do = {
+					factor = 1
+				}				
+			}
+
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_thomas_blamey
+			portraits={
+				army={
+					large="GFX_AST_thomas_blamey"
+					small=GFX_portrait_AST_thomas_blamey_small
+				}
+			}
+			corps_commander={
+				skill=4
+				attack_skill=4
+				defense_skill=3
+				planning_skill=3
+				logistics_skill=3
+				legacy_id=-1
 			}
 		}
-		corps_commander={
-			skill=4
-			attack_skill=4
-			defense_skill=3
-			planning_skill=3
-			logistics_skill=3
-			legacy_id=-1
-		}
+
 	}
 
-	AST_henry_wynter={
-		name=AST_henry_wynter
-		portraits={
-			army={
-				large="GFX_AST_henry_wynter"
-				small=GFX_portrait_AST_henry_wynter_small
-			}
-		}
-		corps_commander={
-			skill=4
-			attack_skill=3
-			defense_skill=4
-			planning_skill=3
-			logistics_skill=3
-			legacy_id=-1
-		}
-	}
+	AST_gordon_bennett={
 
-	AST_alan_vasey={
-		name=AST_alan_vasey
-		portraits={
-			army={
-				large="GFX_AST_alan_vasey"
-				small=GFX_portrait_AST_alan_vasey_small
+		name=AST_gordon_bennett
+			portraits={
+				army={
+					large = GFX_portrait_AST_gordon_bennett
+					small = GFX_portrait_AST_gordon_bennett_small
+				}
 			}
-		}
+
 		corps_commander={
-			traits={ hill_fighter }
+			traits = { offensive_doctrine trait_reckless }
 			skill=3
+			attack_skill=4
+			defense_skill=1
+			planning_skill=2
+			logistics_skill=3
+			legacy_id=-1
+		}
+
+	}
+
+	AST_arthur_allen={
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_arthur_allen
+			portraits={
+				army={
+					large=GFX_portrait_AST_arthur_allen
+					small=GFX_portrait_AST_arthur_allen_small
+				}
+			}
+
+			corps_commander={
+				traits = { infantry_leader }
+				skill=2
+				attack_skill=2
+				defense_skill=3
+				planning_skill=1
+				logistics_skill=1
+				legacy_id=-1
+			}
+
+			advisor={		
+				slot = high_command
+				idea_token = AST_arthur_allen
+				ledger = army
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					army_infantry_1
+				}
+				cost = 50
+
+				ai_will_do = {
+					factor = 1
+				}
+			}
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}	
+			name=AST_arthur_allen
+			portraits={
+				army={
+					small="GFX_idea_AST_arthur_allen" #small="GFX_idea_generic_army_europe_2"
+				}
+			}
+			advisor={		
+				slot = high_command
+				idea_token = AST_arthur_allen
+				ledger = army
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					army_infantry_3
+				}
+				cost = 200
+				ai_will_do = {
+					factor = 1.000
+				}
+			}
+		}
+
+	}
+
+	AST_alan_vasey={ #George A. Vasey
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_alan_vasey
+			portraits={
+				army={
+					large = GFX_portrait_AST_alan_vasey
+					small = GFX_portrait_AST_alan_vasey_small
+				}
+			}
+
+			corps_commander={
+				visible = { 
+					has_completed_focus = AST_second_australian_imperial_force
+				}
+
+				traits={ infantry_leader adaptable expeditionary_leader_trait }
+				skill=3
+				attack_skill=3
+				defense_skill=2
+				planning_skill=3
+				logistics_skill=2
+				legacy_id=-1
+			}
+
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_alan_vasey
+			portraits={
+				army={
+					large="GFX_AST_alan_vasey"
+					small=GFX_portrait_AST_alan_vasey_small
+				}
+			}
+			corps_commander={
+				traits={ hill_fighter }
+				skill=3
+				attack_skill=2
+				defense_skill=4
+				planning_skill=3
+				logistics_skill=1
+				legacy_id=-1
+			}
+		}
+
+	}
+
+	AST_horace_robertson={
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_horace_robertson
+			portraits={
+				army={
+					large = GFX_portrait_AST_horace_robertson
+					small = GFX_portrait_AST_horace_robertson_small
+				}
+			}
+
+			corps_commander={ #Added in focus AST_overseas_loyalties
+				visible = { 
+					has_completed_focus = AST_overseas_loyalties
+				}
+
+				traits={ panzer_leader expeditionary_leader_trait }
+				skill=2
+				attack_skill=2
+				defense_skill=2
+				planning_skill=2
+				logistics_skill=1
+				legacy_id=-1
+			}
+
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_horace_robertson
+			portraits={
+				army={
+					large="GFX_AST_horace_robertson"
+					small=GFX_portrait_AST_horace_robertson_small
+				}
+			}
+			corps_commander={
+				traits={ desert_fox }
+				skill=3
+				attack_skill=3
+				defense_skill=1
+				planning_skill=3
+				logistics_skill=3
+				legacy_id=-1
+			}
+		}
+
+	}
+
+	AST_john_northcott={
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_john_northcott
+			portraits={
+				army={
+					large=GFX_portrait_AST_john_northcott
+					small=GFX_portrait_AST_john_northcott_small
+				}
+			}
+
+			corps_commander={
+				visible = {
+					NOT = {
+						has_character_flag = AST_army_chief_dead
+					}
+				}
+				traits={ organizer }
+				skill=3
+				attack_skill=2
+				defense_skill=2
+				planning_skill=3
+				logistics_skill=3
+				legacy_id=-1
+			}
+
+			advisor = {
+				slot = high_command
+				cost = 50
+				idea_token = AST_john_northcott
+				ledger = army
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					army_armored_1
+				}
+
+				ai_will_do = {
+					factor = 1
+				}
+			}
+
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_john_northcott
+			portraits={
+				army={
+					large="GFX_AST_john_northcott"
+					small=GFX_portrait_AST_john_northcott_small
+				}
+			}
+			corps_commander={
+				traits={ armor_officer }
+				skill=1
+				attack_skill=1
+				defense_skill=1
+				planning_skill=1
+				logistics_skill=1
+				legacy_id=-1
+			}
+		}
+	
+	}
+
+	AST_edward_milford={
+
+		name=AST_edward_milford
+			portraits={
+				army={
+					large = GFX_portrait_AST_edward_milford
+					small = GFX_portrait_AST_edward_milford_small
+				}
+			}
+
+		corps_commander={
+			traits = { jungle_rat }
+			skill=2
 			attack_skill=2
-			defense_skill=4
+			defense_skill=2
+			planning_skill=2
+			logistics_skill=1
+			legacy_id=-1
+		}
+
+		advisor = {
+			slot = high_command
+			cost = 100
+			idea_token = AST_edward_milford
+			ledger = army
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				army_artillery_2
+			}
+
+			ai_will_do = {
+				factor = 1
+			}
+		}
+
+	}
+
+	AST_herbert_lloyd={
+
+		name=AST_herbert_lloyd
+			portraits={
+				army={
+					large = GFX_portrait_AST_herbert_lloyd
+					small = GFX_portrait_AST_herbert_lloyd_small
+				}
+			}
+
+		corps_commander={
+			traits = { organizer }
+			skill=2
+			attack_skill=2
+			defense_skill=3
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=-1
+		}
+
+	}
+
+	AST_stanley_savige={
+
+		name=AST_stanley_savige
+			portraits={
+				army={
+					large = GFX_portrait_AST_stanley_savige
+					small = GFX_portrait_AST_stanley_savige_small
+				}
+			}
+
+		corps_commander={ #Added in focus AST_solidarity_by_the_empire
+			visible = { 
+				has_completed_focus = AST_solidarity_by_the_empire
+			}
+
+			traits = { brave expeditionary_leader_trait }
+			skill=2
+			attack_skill=2
+			defense_skill=1
 			planning_skill=3
 			logistics_skill=1
 			legacy_id=-1
 		}
+
 	}
 
-	AST_horace_robertson={
-		name=AST_horace_robertson
-		portraits={
-			army={
-				large="GFX_AST_horace_robertson"
-				small=GFX_portrait_AST_horace_robertson_small
+	AST_iven_mackay = { 
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_iven_mackay
+			portraits={
+				army={
+					large = GFX_portrait_AST_iven_mackay
+					small = GFX_portrait_AST_iven_mackay_small
+				}
+			}
+
+			corps_commander={
+
+				traits={ infantry_officer expeditionary_leader_trait }
+				skill=3
+				attack_skill=3
+				defense_skill=3
+				planning_skill=2
+				logistics_skill=2
+				legacy_id=-1
+			}
+		
+		}
+
+		instance = { #Empty character that can become unit leader later
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_iven_mackay
+			portraits={
+				army={
+					large="GFX_AST_iven_mackay"
+					small=GFX_portrait_AST_iven_mackay_small
+				}
 			}
 		}
+
+	}
+
+	AST_kenneth_eather={
+
+		name=AST_kenneth_eather
+			portraits={
+				army={
+					large=GFX_portrait_AST_kenneth_eather
+					small=GFX_portrait_AST_kenneth_eather_small
+				}
+			}
+
 		corps_commander={
-			traits={ desert_fox }
+			traits = { jungle_rat harsh_leader }
 			skill=3
 			attack_skill=3
-			defense_skill=1
-			planning_skill=3
-			logistics_skill=3
+			defense_skill=3
+			planning_skill=2
+			logistics_skill=2
 			legacy_id=-1
 		}
+
 	}
 
-	AST_john_northcott={
-		name=AST_john_northcott
-		portraits={
-			army={
-				large="GFX_AST_john_northcott"
-				small=GFX_portrait_AST_john_northcott_small
+	AST_edmund_herring={
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_edmund_herring
+			portraits={
+				army={
+					large = GFX_portrait_AST_edmund_herring
+					small = GFX_portrait_AST_edmund_herring_small
+				}
+			}
+
+			corps_commander={
+				traits = {  }
+				skill=2
+				attack_skill=2
+				defense_skill=2
+				planning_skill=1
+				logistics_skill=2
+				legacy_id=-1
+			}
+
+			advisor={		
+				slot = high_command
+				idea_token = AST_edmund_herring
+				ledger = army
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					army_artillery_1
+				}
+				cost = 50
+
+				ai_will_do = {
+					factor = 1
+				}
 			}
 		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}	
+			name=AST_edmund_herring
+			portraits={
+				army={
+					small="GFX_idea_AST_edmund_herring" #small="GFX_idea_generic_army_europe_1"
+				}
+			}
+			advisor={
+				slot = high_command
+				idea_token = AST_edmund_herring
+				ledger = army
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					army_artillery_2
+				}
+				cost = 100
+				ai_will_do = {
+					factor = 1.000
+				}
+			}
+		}		
+	}
+
+	AST_ivan_dougherty={
+
+		name=AST_ivan_dougherty
+			portraits={
+				army={
+					large=GFX_portrait_AST_ivan_dougherty
+					small=GFX_portrait_AST_ivan_dougherty_small
+				}
+			}
+
 		corps_commander={
-			traits={ armor_officer }
+			traits = {  }
+			skill=2
+			attack_skill=2
+			defense_skill=2
+			planning_skill=2
+			logistics_skill=1
+			legacy_id=-1
+		}
+
+	}
+
+	AST_frank_berryman={
+
+		name=AST_frank_berryman
+			portraits={
+				army={
+					large = GFX_portrait_AST_frank_berryman
+					small = GFX_portrait_AST_frank_berryman_small
+				}
+			}
+
+		corps_commander={
+			traits = { organizer }
+			skill=2
+			attack_skill=1
+			defense_skill=1
+			planning_skill=3
+			logistics_skill=2
+			legacy_id=-1
+		}
+
+	}
+
+	AST_george_wootten={
+
+		name=AST_george_wootten
+			portraits={
+				army={
+					large=GFX_portrait_AST_george_wootten
+					small=GFX_portrait_AST_george_wootten_small
+				}
+			}
+
+		corps_commander={
+			visible = { 
+				has_completed_focus = AST_second_australian_imperial_force
+			}
+
+			traits = { infantry_expert expeditionary_leader_trait }
+			skill=3
+			attack_skill=3
+			defense_skill=3
+			planning_skill=2
+			logistics_skill=2
+			legacy_id=-1
+		}
+
+	}
+
+	AST_gwynydd_meredith={
+
+		name=AST_gwynydd_meredith
+			portraits={
+				army={
+					large=GFX_portrait_AST_gwynydd_meredith
+					small=GFX_portrait_AST_gwynydd_meredith_small
+				}
+			}
+
+		corps_commander={
 			skill=1
 			attack_skill=1
 			defense_skill=1
@@ -178,6 +1178,105 @@ characters={
 			logistics_skill=1
 			legacy_id=-1
 		}
+
+	}
+
+	AST_reginald_saunders={
+
+		name=AST_reginald_saunders
+			portraits={
+				army={
+					large = GFX_portrait_AST_reginald_saunders
+					small = GFX_portrait_AST_reginald_saunders_small
+				}
+			}
+
+		corps_commander={
+#			traits = { career_officer infantry_leader } #unlock through focus
+			skill=1
+			attack_skill=1
+			defense_skill=1
+			planning_skill=1
+			logistics_skill=1
+			legacy_id=-1
+		}
+
+	}
+
+	#########################
+	#### Navy Commanders ####
+	#########################
+
+	AST_john_collins={
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_john_collins
+			portraits={
+				army={
+					large=GFX_portrait_AST_john_collins
+					small=GFX_portrait_AST_john_collins_small #OLD ONE: small="GFX_idea_AST_john_collins" 
+				}
+			}
+
+			navy_leader={ 
+				traits = { gunnery_expert }
+				skill=3
+				attack_skill=2
+				defense_skill=2
+				coordination_skill=5
+				maneuvering_skill=1
+				legacy_id=-1
+			}
+
+			advisor={
+				slot = high_command
+				idea_token = AST_john_collins
+				ledger = navy
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					navy_fleet_logistics_2
+				}
+				cost = 100
+
+				ai_will_do = {
+					factor = 1
+				}
+			}
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}	
+			name=AST_john_collins
+			portraits={
+				army={
+					small=GFX_portrait_AST_john_collins_small #OLD ONE: small="GFX_idea_AST_john_collins" 
+				}
+			}
+			advisor={
+				slot = high_command
+				idea_token = AST_john_collins
+				ledger = navy
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					navy_fleet_logistics_2
+				}
+				cost = 100
+				ai_will_do = {
+					factor = 1.000
+				}
+			}	
+		}	
 	}
 
 	AST_harold_farncomb={
@@ -188,50 +1287,298 @@ characters={
 				small=GFX_portrait_AST_harold_farncomb_small
 			}
 		}
-		navy_leader={
-			traits={ aviation_enthusiast naval_lineage }
-			skill=4
-			attack_skill=3
-			defense_skill=3
-			maneuvering_skill=3
-			coordination_skill=4
-			legacy_id=-1
-		}
-	}
 
-	AST_victor_crutchley={
-		name=AST_victor_crutchley
-		portraits={
-			army={
-				large="GFX_AST_victor_crutchley"
-				small=GFX_portrait_AST_victor_crutchley_small
-			}
-		}
 		navy_leader={
-			traits={ bold }
+			traits={ gunnery_expert navy_career_officer }
 			skill=3
 			attack_skill=3
 			defense_skill=2
-			maneuvering_skill=3
 			coordination_skill=2
+			maneuvering_skill=3
 			legacy_id=-1
 		}
+
 	}
 
-	AST_iven_mackay = { #Empty character that can become unit leader later
-		name=AST_iven_mackay
+	AST_joseph_burnett={
+		name=AST_joseph_burnett
 		portraits={
 			army={
-				large="GFX_AST_iven_mackay"
-				small=GFX_portrait_AST_iven_mackay_small
+				large=GFX_portrait_AST_joseph_burnett
+				small=GFX_portrait_AST_joseph_burnett_small 
+			}
+		}
+
+		navy_leader={
+			skill=3
+			attack_skill=2
+			defense_skill=3
+			coordination_skill=4
+			maneuvering_skill=1
+			legacy_id=-1
+		}
+
+	}
+
+	AST_eric_feldt={
+		name=AST_eric_feldt
+		portraits={
+			army={
+				large = GFX_portrait_AST_eric_feldt
+				small = GFX_portrait_AST_eric_feldt_small 
+			}
+		}
+
+		navy_leader={
+			traits={ spotter }
+			skill=2
+			attack_skill=1
+			defense_skill=2
+			coordination_skill=3
+			maneuvering_skill=1
+			legacy_id=-1
+		}
+		
+	}
+
+	AST_james_mcmanus={
+		name=AST_james_mcmanus
+		portraits={
+			army={
+				large=GFX_portrait_AST_james_mcmanus
+				small=GFX_portrait_AST_james_mcmanus_small 
+			}
+		}
+
+		navy_leader={
+			traits={ spotter }
+			skill=2
+			attack_skill=1
+			defense_skill=2
+			coordination_skill=3
+			maneuvering_skill=1
+			legacy_id=-1
+		}
+
+	}
+
+	AST_john_crace={
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_john_crace
+			portraits={
+				army={
+					large = GFX_portrait_AST_john_crace
+					small = GFX_portrait_AST_john_crace_small 
+				}
+			}
+
+#			navy_leader={  #Added in focus AST_british_pacific_fleet
+#				traits={ lancer }
+#				skill=4
+#				attack_skill=2
+#				defense_skill=3
+#				coordination_skill=6
+#				maneuvering_skill=2
+#				legacy_id=-1
+#			}
+
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}	
+			name=AST_john_crace
+			portraits={
+				army={
+					small="GFX_idea_AST_jack_crace" #small="GFX_idea_generic_navy_europe_1" #namechange to john from jack
+				}
+			}
+			advisor={
+				slot = navy_chief
+				idea_token = AST_john_crace
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					navy_chief_decisive_battle_2
+				}
+				cost = 100
+				ai_will_do = {
+					factor = 1.000
+				}
+			}	
+		}
+
+	}
+
+	AST_victor_crutchley={
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_victor_crutchley
+			portraits={
+				army={
+					large = GFX_portrait_AST_victor_crutchley
+					small = GFX_portrait_AST_victor_crutchley_small
+				}
+			}
+
+#			navy_leader={ #Added in focus AST_australian_command
+#				traits={ crisis_magician mine_craft }
+#				skill=3
+#				attack_skill=3
+#				defense_skill=2
+#				coordination_skill=1
+#				maneuvering_skill=4
+#				legacy_id=-1
+#			}
+
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}	
+			name=AST_victor_crutchley
+			portraits={
+				army={
+					large="GFX_AST_victor_crutchley"
+					small=GFX_portrait_AST_victor_crutchley_small
+				}
+			}
+			navy_leader={
+				traits={ bold }
+				skill=3
+				attack_skill=3
+				defense_skill=2
+				coordination_skill=2
+				maneuvering_skill=3
+				legacy_id=-1
+			}
+		}
+
+	}
+
+	#################
+	### THEORISTS ###
+	#################
+
+	AST_leighton_bracegirdle={
+		name=AST_leighton_bracegirdle
+		portraits={
+			army={
+				small=GFX_portrait_AST_leighton_bracegirdle_small 
+			}
+		}
+		advisor={
+			cost = 100
+			slot = theorist
+			idea_token = AST_leighton_bracegirdle
+			ledger = navy
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				naval_theorist
+			}
+
+			ai_will_do = {
+				factor = 1
 			}
 		}
 	}
 
+	AST_henry_wynter={
 
-	### THEORISTS ###
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_henry_wynter
+			portraits={
+				army={
+					small=GFX_portrait_AST_henry_wynter_small
+				}
+			}
 
-	AST_norman_makin={
+			advisor={
+				cost = 100
+				slot = theorist
+				idea_token = AST_henry_winter
+				ledger = army
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					military_theorist
+				}
+				ai_will_do = {
+					factor = 1
+				}
+			}
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_henry_wynter
+			portraits={
+				army={
+					large="GFX_AST_henry_wynter"
+					small=GFX_portrait_AST_henry_wynter_small
+				}
+			}
+			corps_commander={
+				skill=4
+				attack_skill=3
+				defense_skill=4
+				planning_skill=3
+				logistics_skill=3
+				legacy_id=-1
+			}
+		}
+	}
+
+	AST_james_fairbairn={
+		name=AST_james_fairbairn
+		portraits={
+			army={
+				small=GFX_portrait_AST_james_fairbairn_small #OLD ONE: small="GFX_idea_AST_james_fairbairn" 
+			}
+		}
+		advisor={
+			cost = 100
+			slot = theorist
+			idea_token = AST_james_fairbairn
+			ledger = air
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				air_warfare_theorist
+			}
+
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_norman_makin={ #BASEGAME ONLY
 		name=AST_norman_makin
 		portraits={
 			army={
@@ -253,35 +1600,49 @@ characters={
 		}		
 	}
 
-	AST_james_fairbairn={
-		name=AST_james_fairbairn
+	#######################
+	#### CHIEF OF ARMY ####
+	#######################
+
+	AST_brudenell_white={
+
+		name=AST_brudenell_white
 		portraits={
 			army={
-				small="GFX_idea_AST_james_fairbairn" #small="GFX_idea_generic_political_advisor_europe_2"
+				small=GFX_portrait_AST_brudenell_white_small
 			}
 		}
-		advisor={
+
+		advisor = {
+			slot = army_chief
 			cost = 100
-			slot = theorist
-			idea_token = AST_james_fairbairn
-			ledger = air
+			idea_token = AST_brudenell_white
 			allowed = {
 				original_tag = AST
 			}
-			
+			available = {
+				NOT = {
+					has_country_flag = AST_canberra_air_disaster_flag
+				}
+			}
 			traits = {
-				air_warfare_theorist
+				army_chief_organizational_1
+			}
+
+			can_be_fired = no
+
+			ai_will_do = {
+				factor = 1
 			}
 		}
-	}
 
-	### ARMY CHIEFS ###
+	}
 
 	AST_john_lavarack={
 		name=AST_john_lavarack
 		portraits={
 			army={
-				small="GFX_idea_AST_john_lavarack" #small="GFX_idea_generic_army_europe_5"
+				small=GFX_portrait_AST_john_lavarack_small #OLD ONE: small="GFX_idea_AST_john_lavarack"
 			}
 		}
 		advisor={
@@ -291,11 +1652,13 @@ characters={
 				original_tag = AST
 			}
 			traits = {
-				army_chief_defensive_2
+				army_chief_planning_2
 			}
 			cost = 100
+
 			ai_will_do = {
-				factor = 1.000
+
+				factor = 1
 			}
 		}
 	}
@@ -304,7 +1667,7 @@ characters={
 		name=AST_sydney_rowell
 		portraits={
 			army={
-				small="GFX_idea_AST_sydney_rowell" #small="GFX_idea_generic_army_europe_3"
+				small=GFX_portrait_AST_sydney_rowell_small #OLD ONE: small="GFX_idea_AST_sydney_rowell" 
 			}
 		}
 		advisor={
@@ -314,11 +1677,13 @@ characters={
 				original_tag = AST
 			}
 			traits = {
-				army_chief_organizational_2
+				army_chief_planning_1
 			}
-			cost = 100
+			cost = 50
+
 			ai_will_do = {
-				factor = 1.000
+
+				factor = 1
 			}
 		}
 	}
@@ -327,7 +1692,7 @@ characters={
 		name=AST_vernon_sturdee
 		portraits={
 			army={
-				small="GFX_idea_AST_vernon_sturdee" #small="GFX_idea_generic_army_europe_5"
+				small=GFX_portrait_AST_vernon_sturdee_small #OLD ONE: small="GFX_idea_AST_vernon_sturdee"
 			}
 		}
 		advisor={
@@ -337,23 +1702,77 @@ characters={
 				original_tag = AST
 			}
 			traits = {
-				army_chief_offensive_1
+				army_chief_defensive_1
 			}
 			cost =  50
+
 			ai_will_do = {
-				factor = 1.000
+
+				factor = 1
 			}
 		}
 	}
 
+	#######################
+	#### CHIEF OF NAVY ####
+	#######################
 
-	### NAVY CHIEFS ###
+	AST_percival_mcneil={
+		name=AST_percival_mcneil
+		portraits={
+			army={
+				small=GFX_portrait_AST_percival_mcneil_small
+			}
+		}
+		advisor={
+			slot = navy_chief
+			idea_token = AST_percival_mcneil
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				AST_naval_engineer
+			}
+			cost = 100
+
+			ai_will_do = {
+				factor = 2
+			}
+		}
+	}
+
+	AST_guy_royle={
+		name=AST_guy_royle
+		portraits={
+			army={
+				small=GFX_portrait_AST_guy_royle_small
+			}
+		}
+		advisor={
+			slot = navy_chief
+			idea_token = AST_guy_royle
+			allowed = {
+				original_tag = AST
+			}
+			available = {
+				has_completed_focus = AST_australian_command
+			}
+			traits = {
+				navy_chief_naval_aviation_2
+			}
+			cost = 100
+
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
 
 	AST_ragnar_colvin={
 		name=AST_ragnar_colvin
 		portraits={
 			army={
-				small="GFX_idea_AST_ragnar_colvin" #small="GFX_idea_generic_navy_europe_2"
+				small=GFX_portrait_AST_ragnar_colvin_small #OLD ONE: small="GFX_idea_AST_ragnar_colvin"
 			}
 		}
 		advisor={
@@ -366,43 +1785,101 @@ characters={
 				navy_chief_reform_2
 			}
 			cost = 100
+
 			ai_will_do = {
-				factor = 1.000
+
+				factor = 1
 			}
 		}
 	}
 
-	AST_jack_crace={
-		name=AST_jack_crace
+	######################
+	#### CHIEF OF AIR ####
+	######################
+
+	AST_george_jones={
+		name=AST_george_jones
 		portraits={
 			army={
-				small="GFX_idea_AST_jack_crace" #small="GFX_idea_generic_navy_europe_1"
+				small=GFX_portrait_AST_george_jones_small
 			}
 		}
+
 		advisor={
-			slot = navy_chief
-			idea_token = AST_jack_crace
+			slot = air_chief
+			idea_token = AST_george_jones
 			allowed = {
 				original_tag = AST
 			}
 			traits = {
-				navy_chief_decisive_battle_2
+				air_chief_safety_2
 			}
 			cost = 100
+
 			ai_will_do = {
-				factor = 1.000
+				factor = 2
 			}
-		}		
+		}	
+
 	}
 
+	AST_stanley_goble={
+		name=AST_stanley_goble
+		portraits={
+			army={
+				small=GFX_portrait_AST_stanley_goble_small
+			}
+		}
 
-	### AIR CHIEFS ###
+		advisor={
+			slot = high_command
+			idea_token = AST_stanley_goble
+			ledger = air
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				air_naval_strike_2
+			}
+			cost = 100
+
+			ai_will_do = {
+				factor = 1
+			}
+		}	
+
+	}
+
+	AST_george_mackinolty={
+		name=AST_george_mackinolty
+		portraits={
+			army={
+				small=GFX_portrait_AST_george_mackinolty_small
+			}
+		}
+
+		advisor={
+			slot = air_chief
+			idea_token = AST_george_mackinolty
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				air_chief_safety_1
+			}
+			cost = 50
+
+			ai_will_do = {
+				factor = 1.5
+			}
+		}	
+	}
 
 	AST_richard_williams={
 		name=AST_richard_williams
 		portraits={
 			army={
-				small="GFX_idea_AST_richard_williams" #small="GFX_idea_generic_air_europe_1"
+				small=GFX_portrait_AST_richard_williams_small #OLD ONE: small="GFX_idea_AST_richard_williams"
 			}
 		}
 		advisor={
@@ -412,66 +1889,137 @@ characters={
 				original_tag = AST
 			}
 			traits = {
-				air_chief_safety_3
+				air_chief_reform_3
 			}
 			cost = 200
+
 			ai_will_do = {
-				factor = 1.000
+
+				factor = 2
 			}
 		}		
 	}
 
 	AST_charles_burnett={
-		name=AST_charles_burnett
+
+		instance = {
+
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_charles_burnett
+			portraits={
+				army={
+					small="GFX_idea_AST_charles_burnett"
+				}
+			}
+
+			advisor={
+				slot = high_command
+				idea_token = AST_charles_burnett
+				ledger = air
+				allowed = {
+					original_tag = AST
+				}
+				available = {
+					has_completed_focus = AST_australian_command
+				}
+				traits = {
+					air_air_superiority_2
+				}
+				cost = 100
+
+				ai_will_do = {
+					factor = 1
+				}
+			}	
+		}
+
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_charles_burnett
+			portraits={
+				army={
+					small="GFX_idea_AST_charles_burnett" #small="GFX_idea_generic_air_europe_3"
+				}
+			}
+			advisor={
+				slot = air_chief
+				idea_token = AST_charles_burnett
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					air_air_combat_training_2
+				}
+				cost = 100
+				ai_will_do = {
+					factor = 1.000
+				}
+			}	
+		}
+
+	}
+
+	###############################
+	#### MILITARY HIGH COMMAND ####
+	###############################
+
+	AST_james_cannan={
+		name=AST_james_cannan
 		portraits={
 			army={
-				small="GFX_idea_AST_charles_burnett" #small="GFX_idea_generic_air_europe_3"
+				small=GFX_portrait_AST_james_cannan_small
 			}
 		}
 		advisor={
-			slot = air_chief
-			idea_token = AST_charles_burnett
-			allowed = {
-				original_tag = AST
-			}
-			traits = {
-				air_chief_reform_2
-			}
-			cost = 100
-			ai_will_do = {
-				factor = 1.000
-			}
-		}		
-	}
-
-
-	### MILITARY HIGH COMMAND ###
-
-	AST_arthur_allen={
-		name=AST_arthur_allen
-		portraits={
-			army={
-				small="GFX_idea_AST_arthur_allen" #small="GFX_idea_generic_army_europe_2"
-			}
-		}
-		advisor={		
 			slot = high_command
-			idea_token = AST_arthur_allen
+			idea_token = AST_james_cannan
 			ledger = army
 			allowed = {
 				original_tag = AST
 			}
 			traits = {
-				army_infantry_3
+				army_logistics_2
 			}
-			cost = 200
+			cost = 100
+
 			ai_will_do = {
-				factor = 1.000
+				factor = 1
+			}
+		}		
+	}
+
+	AST_peter_jeffrey={
+		name=AST_peter_jeffrey
+		portraits={
+			army={
+				small=GFX_portrait_AST_peter_jeffrey_small
 			}
 		}
+		advisor={
+			slot = high_command
+			idea_token = AST_peter_jeffrey
+			ledger = air
+			allowed = {
+				original_tag = AST
+			}
+			traits = {
+				air_pilot_training_2
+			}
+			cost = 100
+
+			ai_will_do = {
+				factor = 1
+			}
+		}		
 	}
-	
-	AST_clive_caldwell={
+
+	AST_clive_caldwell={ #BASEGAME ONLY
 		name=AST_clive_caldwell
 		portraits={
 			army={
@@ -494,57 +2042,8 @@ characters={
 			}
 		}
 	}
-	
-	
-	AST_john_collins={
-		name=AST_john_collins
-		portraits={
-			army={
-				small="GFX_idea_AST_john_collins" #small="GFX_idea_generic_navy_europe_1"
-			}
-		}
-		advisor={
-			slot = high_command
-			idea_token = AST_john_collins
-			ledger = navy
-			allowed = {
-				original_tag = AST
-			}
-			traits = {
-				navy_capital_ship_2
-			}
-			cost = 100
-			ai_will_do = {
-				factor = 1.000
-			}
-		}		
-	}
 
-	AST_edmund_herring={
-		name=AST_edmund_herring
-		portraits={
-			army={
-				small="GFX_idea_AST_edmund_herring" #small="GFX_idea_generic_army_europe_1"
-			}
-		}
-		advisor={
-			slot = high_command
-			idea_token = AST_edmund_herring
-			ledger = army
-			allowed = {
-				original_tag = AST
-			}
-			traits = {
-				army_artillery_2
-			}
-			cost = 100
-			ai_will_do = {
-				factor = 1.000
-			}
-		}		
-	}
-
-	AST_arthur_drakeford={
+	AST_arthur_drakeford={ #BASEGAME ONLY
 		name=AST_arthur_drakeford
 		portraits={
 			army={
@@ -566,7 +2065,7 @@ characters={
 		}		
 	}
 	
-	AST_cederic_hicks={
+	AST_cederic_hicks={ #BASEGAME ONLY
 		name=AST_cederic_hicks
 		portraits={
 			army={
@@ -595,140 +2094,818 @@ characters={
 		}		
 	}
 
+	############################
+	#### POLITICAL ADVISORS ####
+	############################
 
-	### POLITICAL ADVISORS ###
-
-	AST_alexander_hore_ruthven={
-		name=AST_alexander_hore_ruthven
+	AST_essington_lewis={
+		name=AST_essington_lewis
 		portraits={
-			army={
-				small="GFX_idea_AST_alexander_hore_ruthven" #small="GFX_idea_generic_political_advisor_europe_1"
+			civilian={
+				small=GFX_portrait_AST_essington_lewis_small
 			}
 		}
-		advisor={
+		advisor = {
 			slot = political_advisor
-			idea_token = AST_alexander_hore_ruthven
-			allowed = {
-				original_tag = AST
+			idea_token = AST_essington_lewis
+			allowed  = {
+				original_tag  = AST
 			}
-			traits = {
-				quartermaster_general 
-			}
-		}		
-	}
-	
-	AST_robert_g_menzies={
-		name=AST_robert_g_menzies
-		portraits={
-			army={
-				small="GFX_idea_AST_robert_g_menzies" #small="GFX_idea_generic_political_advisor_europe_2"
-			}
-		}
-		advisor={
-			slot = political_advisor
-			idea_token = AST_robert_g_menzies
-			allowed = {
-				original_tag = AST
-			}
-			traits = {
-				backroom_backstabber 
-			}
-		}		
-	}
-
-	AST_ben_chifley={
-		name=AST_ben_chifley
-		portraits={
-			army={
-				small="GFX_idea_AST_ben_chifley" #small="GFX_idea_generic_political_advisor_europe_3"
-			}
-		}
-		advisor={
-			slot = political_advisor
-			idea_token = AST_ben_chifley
-			allowed = {
-				original_tag = AST
-				has_dlc = "Together for Victory"
-			}
-			cost = 100.000
-			traits = {
-				smooth_talking_charmer 
+			traits  = {
+				AST_steelworks_businessman
 			}
 			available = {
-				has_completed_focus = AST_never_another_gallipoli 
+				has_completed_focus = AST_broken_hill_propietary_company
 			}
-		}		
-	}
-
-	AST_herbert_v_evatt={
-		name=AST_herbert_v_evatt
-		portraits={
-			army={
-				small="GFX_idea_AST_herbert_v_evatt" #small="GFX_idea_generic_political_advisor_europe_2"
+			ai_will_do = {
+				factor = 1
 			}
 		}
-		advisor={
-			slot = political_advisor
-			idea_token = AST_herbert_v_evatt
-			allowed = {
-				original_tag = AST
+	}
+
+	AST_jacob_vouza={
+		name=AST_jacob_vouza
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_jacob_vouza_small
 			}
-			cost = 100.000
-			traits = {
-				silent_workhorse 
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_jacob_vouza
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_indomitable_scout
 			}
 			available = {
-				if = {
-					limit = {
-						has_dlc = "Together for Victory"
+				has_completed_focus = AST_coast_watchers
+			}
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_geoffrey_street={
+		name=AST_geoffrey_street
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_geoffrey_street_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_geoffrey_street
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_military_expansionist
+			}
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_florence_v._mckenzie={
+		name=AST_florence_v._mckenzie
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_florence_v_mckenzie_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_florence_v._mckenzie
+			allowed  = {
+				original_tag  = AST
+			}
+			traits = {
+				AST_electrical_engineer 
+			}
+			on_add = {
+				hidden_effect = {
+					ROOT = {
+						add_ideas = {
+							AST_electrical_engineer_hidden_idea
+						}
 					}
-					has_completed_focus = AST_support_the_policy_of_appeasement 
 				}
 			}
-		}		
+			on_remove = {
+				hidden_effect = {
+					ROOT = {
+						remove_ideas = {
+							AST_electrical_engineer_hidden_idea
+						}
+					}
+				}
+			}
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_eric_l._lloyd={
+		name=AST_eric_l._lloyd
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_eric_l_lloyd_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_eric_l._lloyd
+			allowed  = {
+				original_tag  = AST
+			}
+			available = {
+				has_intelligence_agency = yes
+			}
+			traits  = {
+				AST_intelligence_director
+			}
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_jack_lang={
+		name=AST_jack_lang
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_jack_lang_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_jack_lang
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_industrial_populist
+			}
+			available = {
+				has_completed_focus = AST_lang_plan
+			}
+			ai_will_do = {
+				factor = 1
+				modifier = {
+					is_historical_focus_on = yes
+					factor = 0
+				}
+			}
+		}
+	}
+
+	AST_dorothy_tangney={
+		name=AST_dorothy_tangney
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_dorothy_tangney_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_dorothy_tangney
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_academic_proponent
+			}
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_arthur_fadden={
+		name=AST_arthur_fadden
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_arthur_fadden_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_arthur_fadden
+			allowed  = {
+				original_tag  = AST
+			}
+			traits = {
+				AST_political_stalwart
+			}
+			available = {
+				OR = {
+					AND = {
+						has_completed_focus = AST_british_war_cabinet
+						custom_trigger_tooltip = {
+							tooltip = AST_uap_advisor_tt
+							check_variable = {
+								var = AST_ruling_party
+								value = 0
+								compare = equals
+							}
+						}
+					}
+					has_completed_focus = AST_absorb_the_uap
+				}
+			}
+			on_remove = {
+				owner = { 
+               		IF = {
+               			limit = {
+               				has_completed_focus = AST_war_is_coming
+               				has_country_leader = { 
+               					ruling_only = yes 
+               					character = AST_joseph_lyons 
+               				}
+               			}
+               			AST = { add_political_power = 35 }
+               		}
+               		ELSE_IF = {
+               			limit = {
+               				has_completed_focus = AST_war_is_coming
+               			}
+               			add_political_power = 50 
+               		}
+               	}
+			}
+			ai_will_do = {
+				factor = 1
+				modifier = {
+					is_historical_focus_on = yes
+					factor = 5
+				}
+			}
+		}
+	}
+
+	AST_james_scullin={
+		name=AST_james_scullin
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_james_scullin_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_james_scullin
+			allowed  = {
+				original_tag  = AST
+			}
+			available = {
+				custom_trigger_tooltip = {
+					tooltip = AST_alp_advisor_tt
+					check_variable = {
+						var = AST_ruling_party
+						value = 1
+						compare = equals
+					}
+				}
+			}
+			traits  = {
+				AST_tax_reformer
+			}
+			always_show_on_actions_tooltip = yes
+			on_add = {
+               	add_to_variable = {
+               		var = AST_alp_votes_daily_var
+                    value = 0.01 
+               	}
+               	AST_votes_change_effect = yes
+			}
+			on_remove = {
+               	add_to_variable = {
+               		var = AST_alp_votes_daily_var
+                    value = -0.01 
+               	}
+               	AST_votes_change_effect = yes
+
+               	owner = { 
+               		IF = {
+               			limit = {
+               				has_completed_focus = AST_war_is_coming
+               				has_country_leader = { 
+               					ruling_only = yes 
+               					character = AST_joseph_lyons 
+               				}
+               			}
+               			AST = { add_political_power = 35 }
+               		}
+               		ELSE_IF = {
+               			limit = {
+               				has_completed_focus = AST_war_is_coming
+               			}
+               			add_political_power = 50 
+               		}
+               	}
+			}
+			cost = 100
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_maurice_blackburn={
+		name=AST_maurice_blackburn
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_maurice_blackburn_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_maurice_blackburn
+			allowed  = {
+				original_tag  = AST
+			}
+			cost = 75
+			on_add = {
+				IF = {
+					limit = {
+						ROOT = {
+							has_completed_focus = AST_war_is_coming
+							has_government = democratic
+						}
+						check_variable = {
+							var = AST_ruling_party
+							value = 0 #UAP
+							compare = equals
+						}
+					}
+					add_to_variable = {
+		               	var = AST_uap_votes_daily_var
+		                value = -0.01 
+		            }
+		            AST_votes_change_effect = yes
+	               	ELSE_IF = {
+	               		limit = {
+	               			ROOT = {
+								has_completed_focus = AST_war_is_coming
+								has_government = democratic
+							}
+							check_variable = {
+								var = AST_ruling_party
+								value = 1 #ALP
+								compare = equals
+							}
+						}
+						add_to_variable = {
+		               		var = AST_alp_votes_daily_var
+		                    value = -0.01 
+		               	}
+		               	AST_votes_change_effect = yes
+		            }
+				}	
+			}
+			on_remove = {
+				IF = {
+					limit = {
+						ROOT = {
+							has_completed_focus = AST_war_is_coming
+							has_government = democratic
+						}
+						check_variable = {
+							var = AST_ruling_party
+							value = 0 #UAP
+							compare = equals
+						}
+					}
+					add_to_variable = {
+	                    var = AST_uap_votes_daily_var
+	                    value = 0.01 
+	                }
+	                AST_votes_change_effect = yes
+
+	               	ELSE_IF = {
+	               		limit = {
+	               			ROOT = {
+								has_completed_focus = AST_war_is_coming
+								has_government = democratic
+							}
+							check_variable = {
+								var = AST_ruling_party
+								value = 1 #ALP
+								compare = equals
+							}
+						}
+						add_to_variable = {
+		                    var = AST_alp_votes_daily_var
+		                    value = 0.01 
+		                }
+		                AST_votes_change_effect = yes
+	               	}
+				}	
+			}
+			traits  = {
+				AST_irrepressible_freethinker
+			}
+			available = {
+				OR = {
+					has_completed_focus = AST_a_controversial_recruitment
+					has_completed_focus = AST_a_democratic_bulwark
+				}
+			}
+			ai_will_do = {
+				factor = 1
+				modifier = {
+					NOT = { has_completed_focus = AST_against_war_and_fascism }
+					factor = 0
+				}
+			}
+		}
+	}
+
+	AST_alexander_rud_mills={
+		name=AST_alexander_rud_mills
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_alexander_rud_mills_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_alexander_rud_mills
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_soldier_rights_promoter
+			}
+			available = {
+				has_completed_focus = AST_in_from_the_cold
+			}
+			ai_will_do = {
+				factor = 1
+				modifier = {
+					is_historical_focus_on = yes
+					factor = 0
+				}
+			}
+		}
+	}
+
+	AST_rex_ingamells={
+		name=AST_rex_ingamells
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_rex_ingamells_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_rex_ingamells
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_cultural_visionary
+			}
+			available = {
+				has_completed_focus = AST_in_from_the_cold
+			}
+			ai_will_do = {
+				factor = 1
+				modifier = {
+					is_historical_focus_on = yes
+					factor = 0
+				}
+			}
+		}
+	}
+
+	AST_clare_stevenson={
+		name=AST_clare_stevenson
+		portraits={
+			civilian={
+				small=GFX_portrait_AST_clare_stevenson_small
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = AST_clare_stevenson
+			allowed  = {
+				original_tag  = AST
+			}
+			traits  = {
+				AST_womens_services_director
+			}
+			available = {
+				has_completed_focus = AST_womens_armed_services
+			}
+			ai_will_do = {
+				factor = 1
+			}
+		}
+	}
+
+	AST_richard_dixon={
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_richard_dixon
+			portraits={
+				civilian={
+					small=GFX_portrait_AST_richard_dixon_small
+				}
+			}
+			advisor = {
+				slot = political_advisor
+				idea_token = AST_richard_dixon
+				allowed  = {
+					original_tag  = AST
+				}
+				available = {
+					NOT = { has_completed_focus = AST_australia_first }
+				}
+				traits  = {
+					AST_revolutionary_equalist
+				}
+				ai_will_do = {
+					factor = 1
+					modifier = {
+						NOT = { has_completed_focus = AST_against_war_and_fascism }
+						factor = 0
+
+					}
+				}
+			}
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_richard_dixon
+			portraits={
+				civilian={
+					large="GFX_AST_richard_dixon"
+				}
+			}
+			country_leader={
+				ideology=stalinism
+				expire="1965.1.1.1"
+				id=-1
+			}
+		}
+	}	
+
+	AST_herbert_v_evatt={
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_herbert_v_evatt
+			portraits={
+				civilian={
+					small=GFX_portrait_AST_herbert_v_evatt_small
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_herbert_v_evatt
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					AST_equitable_diplomat
+				}
+				ai_will_do = {
+					factor = 1
+				}
+			}
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_herbert_v_evatt
+			portraits={
+				army={
+					small="GFX_idea_AST_herbert_v_evatt" #small="GFX_idea_generic_political_advisor_europe_2"
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_herbert_v_evatt
+				allowed = {
+					original_tag = AST
+				}
+				cost = 100.000
+				traits = {
+					silent_workhorse 
+				}
+				available = {
+					if = {
+						limit = {
+							has_dlc = "Together for Victory"
+						}
+						has_completed_focus = AST_support_the_policy_of_appeasement 
+					}
+				}
+			}	
+		}	
 	}
 
 	AST_jack_beasley={
-		name=AST_jack_beasley
-		portraits={
-			army={
-				small="GFX_idea_AST_jack_beasley" #small="GFX_idea_generic_political_advisor_europe_3"
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_jack_beasley
+			portraits={
+				civilian={
+					small="GFX_idea_AST_jack_beasley"
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_jack_beasley
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					AST_supply_minister
+				}
+				ai_will_do = {
+					factor = 1
+				}
 			}
 		}
-		advisor={
-			slot = political_advisor
-			idea_token = AST_jack_beasley
+		instance = {
 			allowed = {
-				original_tag = AST
-				has_dlc = "Together for Victory"
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
 			}
-			traits = {
-				war_industrialist 
+			name=AST_jack_beasley
+			portraits={
+				army={
+					small="GFX_idea_AST_jack_beasley" #small="GFX_idea_generic_political_advisor_europe_3"
+				}
 			}
-		}		
+			advisor={
+				slot = political_advisor
+				idea_token = AST_jack_beasley
+				allowed = {
+					original_tag = AST
+					has_dlc = "Together for Victory"
+				}
+				traits = {
+					war_industrialist 
+				}
+			}		
+		}
 	}
 
 	AST_frank_forde={
-		name=AST_frank_forde
-		portraits={
-			army={
-				small="GFX_idea_generic_political_advisor_europe_3"
-			}
-		}
-		advisor={
-			slot = political_advisor
-			idea_token = AST_frank_forde
+		instance = {
 			allowed = {
-				original_tag = AST
-				has_dlc = "Together for Victory"
+				has_dlc = "Thunder at Our Gates"
 			}
-			traits = {
-				compassionate_gentleman 
+			name=AST_frank_forde
+			portraits={
+				civilian={
+					small=GFX_portrait_AST_frank_forde_small
+				}
 			}
-		}		
+			advisor={
+				slot = political_advisor
+				idea_token = AST_frank_forde
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					AST_paranoid_patriot
+				}
+				ai_will_do = {
+					factor = 1
+				}
+			}	
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_frank_forde
+			portraits={
+				army={
+					small=GFX_portrait_AST_frank_forde_small
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_frank_forde
+				allowed = {
+					original_tag = AST
+					has_dlc = "Together for Victory"
+				}
+				traits = {
+					compassionate_gentleman 
+				}
+			}	
+		}	
 	}
 
-	AST_generic_fascist_demagogue={
+	AST_lance_sharkey={
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates"
+			}
+			name=AST_lance_sharkey
+			portraits={
+				civilian={
+					small=GFX_portrait_AST_lance_sharkey_small
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_lance_sharkey
+				allowed = {
+					original_tag = AST
+				}
+				available = {
+					has_completed_focus = AST_against_war_and_fascism
+				}
+				traits = {
+					AST_orthodox_stalinist
+				}
+				ai_will_do = {
+
+					factor = 1
+					modifier = {
+						NOT = { has_completed_focus = AST_against_war_and_fascism }
+						factor = 0
+
+					}
+				}
+			}	
+		}
+		instance = {
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_lance_sharkey
+			portraits={
+				army={
+					small="GFX_idea_AST_lance_sharkey" #small="GFX_idea_generic_communist_revolutionary_western_european_2d"
+				}
+			}
+			advisor={
+				slot = political_advisor
+				idea_token = AST_lance_sharkey
+				allowed = {
+					original_tag = AST
+				}
+				available = {
+					if = {
+						limit = {
+							has_dlc = "Together for Victory"
+						}
+						has_completed_focus = AST_empower_the_workers 
+					}
+					if = {
+						limit = {
+							has_dlc = "Man the Guns"
+						}
+						NOT = {
+							has_autonomy_state = autonomy_supervised_state
+						}
+					}
+				}
+				traits = {
+					communist_revolutionary 
+				}
+				do_effect = {
+					NOT = {
+						has_government = communism 
+					}
+				}
+				ai_will_do = {
+					factor = 0.000
+				}
+			}	
+		}	
+	}
+
+	AST_generic_fascist_demagogue={ #BASEGAME ONLY
 		name=AST_generic_fascist_demagogue
 		portraits={
 			army={
@@ -770,51 +2947,8 @@ characters={
 			}
 		}		
 	}
-
-	AST_lance_sharkey={
-		name=AST_lance_sharkey
-		portraits={
-			army={
-				small="GFX_idea_AST_lance_sharkey" #small="GFX_idea_generic_communist_revolutionary_western_european_2d"
-			}
-		}
-		advisor={
-			slot = political_advisor
-			idea_token = AST_lance_sharkey
-			allowed = {
-				original_tag = AST
-			}
-			available = {
-				if = {
-					limit = {
-						has_dlc = "Together for Victory"
-					}
-					has_completed_focus = AST_empower_the_workers 
-				}
-				if = {
-					limit = {
-						has_dlc = "Man the Guns"
-					}
-					NOT = {
-						has_autonomy_state = autonomy_supervised_state
-					}
-				}
-			}
-			traits = {
-				communist_revolutionary 
-			}
-			do_effect = {
-				NOT = {
-					has_government = communism 
-				}
-			}
-			ai_will_do = {
-				factor = 0.000
-			}
-		}		
-	}
 	
-	AST_arthur_calwell={
+	AST_arthur_calwell={ #BASEGAME ONLY
 		name=AST_arthur_calwell
 		portraits={
 			army={
@@ -860,5 +2994,113 @@ characters={
 		}		
 	}
 
-	#Illusive Gentleman auto-generated
+	####################
+	#### SCIENTISTS ####
+	####################
+
+	AST_mark_oliphant = {
+		name = AST_mark_oliphant
+		portraits = {
+			army = {
+				large=GFX_portrait_AST_mark_oliphant
+			}
+		}
+
+		scientist = {
+			traits = { scientist_trait_nuclear_specialist }
+			skills = {
+				specialization_nuclear = 2
+			}
+		}
+
+	}
+
+	AST_jack_piddington = {
+
+		instance = {
+			allowed = {
+				has_dlc = "Thunder at Our Gates" 
+			}
+			name = AST_jack_piddington
+			portraits = {
+				army = {
+					large=GFX_portrait_AST_jack_piddington
+				}
+			}
+
+			scientist = {
+				traits = { scientist_trait_electronics_specialist } 
+				skills = {
+					specialization_air = 1
+				}
+				visible = {
+					owner = {
+						has_completed_focus = AST_council_for_scientific_and_industrial_research
+					}
+				}
+			}
+		}
+
+		instance = { #Moved from Industrial Concern to PA for basegame
+			allowed = {
+				NOT = {
+					has_dlc = "Thunder at Our Gates"
+				}
+			}
+			name=AST_jack_piddington
+			portraits={
+				civilian={
+					small=GFX_portrait_AST_jack_piddington_small
+				}
+			}
+
+			advisor={
+				slot = political_advisor
+				idea_token = AST_jack_piddington
+				allowed = {
+					original_tag = AST
+				}
+				traits = {
+					AST_electrical_engineer 
+				}
+				on_add = {
+					hidden_effect = {
+						ROOT = {
+							add_ideas = {
+								AST_electrical_engineer_hidden_idea
+							}
+						}
+					}
+				}
+				on_remove = {
+					hidden_effect = {
+						ROOT = {
+							remove_ideas = {
+								AST_electrical_engineer_hidden_idea
+							}
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	AST_lawrence_wackett = {
+		name = AST_lawrence_wackett
+		portraits = {
+			army = {
+				large = GFX_portrait_AST_lawrence_wackett
+			}
+		}
+
+		scientist = {
+			traits = { scientist_trait_aircraft_specialist } 
+			skills = {
+				specialization_air = 2
+			}
+		}
+
+	}
+
 }

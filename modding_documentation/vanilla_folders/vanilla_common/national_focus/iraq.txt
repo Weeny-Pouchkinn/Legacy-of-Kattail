@@ -418,16 +418,13 @@ focus_tree = {
 	focus = {
 		id = IRQ_found_the_iraqi_state_railways
 		icon = {
-		    trigger = { 
+		    GFX_focus_IRQ_found_the_iraqi_state_railways_alt = { 
 		    	OR = {
 		    		has_cosmetic_tag = IRQ_kurdistan_tag 
 		    		has_cosmetic_tag = greater_kurdistan 
 		    	}
 		    }
-		    value = GFX_focus_IRQ_found_the_iraqi_state_railways_alt
-		}
-		icon = {
-		    value = GFX_focus_IRQ_found_the_iraqi_state_railways
+		    GFX_focus_IRQ_found_the_iraqi_state_railways = yes
 		}
 		prerequisite = { focus = IRQ_decouple_from_the_pound }
 		#mutually_exclusive = { focus = }
@@ -685,16 +682,13 @@ focus_tree = {
 	focus = {
 		id = IRQ_found_the_state_company_for_iron_and_steel
 		icon = {
-		    trigger = { 
+		    GFX_focus_IRQ_found_the_state_company_for_iron_and_steel_alt = { 
 		    	OR = {
 		    		has_cosmetic_tag = IRQ_kurdistan_tag 
 		    		has_cosmetic_tag = greater_kurdistan 
 		    	}
 		    }
-		    value = GFX_focus_IRQ_found_the_state_company_for_iron_and_steel_alt
-		}
-		icon = {
-		    value = GFX_focus_IRQ_found_the_state_company_for_iron_and_steel
+			GFX_focus_IRQ_found_the_state_company_for_iron_and_steel = yes
 		}
 		dynamic = yes
 		prerequisite = { focus = IRQ_found_southern_steel_plants }
@@ -745,16 +739,13 @@ focus_tree = {
 	focus = {
 		id = IRQ_baghdad_colleges_of_engineering_and_education
 		icon = {
-		    trigger = { 
+		    GFX_focus_IRQ_baghdad_colleges_of_engineering_and_education_alt = { 
 		    	OR = {
 		    		has_cosmetic_tag = IRQ_kurdistan_tag 
 		    		has_cosmetic_tag = greater_kurdistan 
 		    	}
 		    }
-		    value = GFX_focus_IRQ_baghdad_colleges_of_engineering_and_education_alt
-		}
-		icon = {
-		    value = GFX_focus_IRQ_baghdad_colleges_of_engineering_and_education
+		    GFX_focus_IRQ_baghdad_colleges_of_engineering_and_education = yes
 		}
 		dynamic = yes
 		prerequisite = { focus = IRQ_decouple_from_the_pound }
@@ -1703,16 +1694,13 @@ focus_tree = {
 	focus = {
 		id = IRQ_royal_iraqi_army
 		icon = {
-		    trigger = { 
+		    GFX_focus_IRQ_royal_iraqi_army_alt = { 
 		    	OR = {
 		    		has_cosmetic_tag = IRQ_kurdistan_tag 
 		    		has_cosmetic_tag = greater_kurdistan 
 		    	}
 		    }
-		    value = GFX_focus_IRQ_royal_iraqi_army_alt
-		}
-		icon = {
-		    value = GFX_focus_IRQ_royal_iraqi_army
+		    GFX_focus_IRQ_royal_iraqi_army = yes
 		}
 		#prerequisite = { focus = }
 		#mutually_exclusive = { focus = }
@@ -3421,16 +3409,13 @@ focus_tree = {
 	focus = {
 		id = IRQ_establish_iraqi_coastal_defense_force
 		icon = {
-		    trigger = { 
+		    GFX_focus_IRQ_navy_alt = { 
 		    	OR = {
 		    		has_cosmetic_tag = IRQ_kurdistan_tag 
 		    		has_cosmetic_tag = greater_kurdistan 
 		    	}
 		    }
-		    value = GFX_focus_IRQ_navy_alt
-		}
-		icon = {
-		    value = GFX_focus_IRQ_navy
+		    GFX_focus_IRQ_navy = yes
 		}
 		prerequisite = { focus = IRQ_royal_iraqi_army }
 		#mutually_exclusive = { focus = }
@@ -5411,6 +5396,10 @@ focus_tree = {
 							original_tag = FRA
 						}
 					}
+					owner = {
+						original_tag = SYR
+						is_subject = no
+					}
 				}
 			} 
 			554 = {
@@ -5493,6 +5482,20 @@ focus_tree = {
 						target = SYR 
 						transfer_troops = yes
 					}	
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					SYR = {
+						exists = yes
+						is_subject = no
+					}
+				}
+				SYR = {
+					country_event = {
+						id = IRQ_political_events.44
+						hours = 1
+					}
 				}
 			}
 			ELSE = {
@@ -5579,6 +5582,23 @@ focus_tree = {
 			677 = { add_core_of = ROOT }
 			554 = { add_core_of = ROOT }
 			799 = { add_core_of = ROOT }
+			every_other_country = {
+				limit = {
+					is_subject_of = ROOT
+					is_ai = yes
+					OR = {
+						original_tag = SAU
+						original_tag = JOR
+						original_tag = KUW
+						original_tag = PAL
+						original_tag = SYR
+						original_tag = LEB
+					}
+				}
+				ROOT = {
+					annex_country = { target = PREV transfer_troops = yes }
+				}
+			}
 		}
 	}
 
@@ -10457,8 +10477,23 @@ focus_tree = {
 					name = IRQ_support_from_the_mountains
 					cost_reduction = 0.2
 					uses = 2
-					category = cat_mountaineers_doctrine
+					category = special_forces_doctrine
 				}
+				custom_effect_tooltip = mountaineer_subdoctrines_default_add_mastery_bonus_effect_tooltip
+				hidden_effect = {
+					add_mastery_bonus = {
+						name = IRQ_support_from_the_mountains
+						bonus = 0.1
+						days = 240
+						sub_doctrine = mountaineers_1
+					}
+					add_mastery_bonus = {
+						name = IRQ_support_from_the_mountains
+						bonus = 0.1
+						days = 240
+						sub_doctrine = mountaineers_2
+					}
+				}				
 			}
 
 			custom_effect_tooltip = generic_skip_one_line_tt

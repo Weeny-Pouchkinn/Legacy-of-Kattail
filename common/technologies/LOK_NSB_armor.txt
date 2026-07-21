@@ -1,0 +1,249 @@
+technologies = {
+
+	# Designer-side mirror of the non-NSB armor progression.  This file is only
+	# visible through nsb_armour_folder when No Step Back is active.
+	gwtank_chassis = {
+		show_equipment_icon = yes
+		enable_equipments = {
+			light_tank_chassis_0 medium_tank_chassis_0 heavy_tank_chassis_0
+			light_tank_destroyer_chassis_0 medium_tank_destroyer_chassis_0 heavy_tank_destroyer_chassis_0
+			light_tank_artillery_chassis_0 medium_tank_artillery_chassis_0 heavy_tank_artillery_chassis_0
+			light_tank_aa_chassis_0 medium_tank_aa_chassis_0 heavy_tank_aa_chassis_0
+		}
+		enable_equipment_modules = {
+			tank_gasoline_engine tank_diesel_engine tank_petrol_electric_engine
+			tank_riveted_armor tank_cast_armor
+			tank_torsion_bar_suspension tank_christie_suspension tank_bogie_suspension tank_interleaved_suspension
+			tank_wheeled_suspension tank_half_track_suspension
+			tank_light_one_man_tank_turret tank_light_two_man_tank_turret tank_light_three_man_tank_turret tank_light_fixed_superstructure_turret
+			tank_medium_one_man_tank_turret tank_medium_two_man_tank_turret tank_medium_three_man_tank_turret tank_medium_fixed_superstructure_turret
+			tank_heavy_two_man_tank_turret tank_heavy_three_man_tank_turret tank_heavy_fixed_superstructure_turret
+			tank_super_heavy_three_man_tank_turret tank_super_heavy_four_man_tank_turret tank_modern_tank_turret
+			tank_heavy_machine_gun
+			tank_radio_1 secondary_turret_hmg additional_machine_guns smoke_launchers expanded_fuel_tank
+		}
+		enable_subunits = { light_armor medium_armor heavy_armor }
+		path = { leads_to_tech = basic_light_tank_chassis research_cost_coeff = 1 }
+		path = { leads_to_tech = basic_medium_tank_chassis research_cost_coeff = 1 }
+		path = { leads_to_tech = basic_heavy_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 100
+		folder = { name = nsb_armour_folder position = { x = 0 y = 0 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+
+	basic_light_tank_chassis = {
+		enable_equipments = { light_tank_chassis_1 light_tank_destroyer_chassis_1 light_tank_artillery_chassis_1 light_tank_aa_chassis_1 }
+		enable_equipment_modules = { amphibious_drive armor_skirts dozer_blade extra_ammo_storage flamethrower }
+		path = { leads_to_tech = improved_light_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 100
+		folder = { name = nsb_armour_folder position = { x = -4 y = 2 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_light_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_light_armor_and_modules }
+	}
+
+	improved_light_tank_chassis = {
+		enable_equipments = { light_tank_chassis_2 light_tank_destroyer_chassis_2 light_tank_artillery_chassis_2 light_tank_aa_chassis_2 }
+		enable_equipment_modules = { advanced_flamethrower }
+		path = { leads_to_tech = advanced_light_tank_chassis research_cost_coeff = 1 }
+		path = { leads_to_tech = amphibious_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 104
+		folder = { name = nsb_armour_folder position = { x = -4 y = 6 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_light_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_light_armor_and_modules }
+	}
+
+	advanced_light_tank_chassis = {
+		enable_equipments = { light_tank_chassis_3 light_tank_destroyer_chassis_3 light_tank_artillery_chassis_3 light_tank_aa_chassis_3 }
+		enable_equipment_modules = { tank_radio_3 easy_maintenance }
+		path = { leads_to_tech = nuclear_light_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 108
+		folder = { name = nsb_armour_folder position = { x = -4 y = 10 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_light_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_light_armor_and_modules }
+	}
+
+	nuclear_light_tank_chassis = {
+		enable_equipments = { light_tank_chassis_4 light_tank_destroyer_chassis_4 light_tank_artillery_chassis_4 light_tank_aa_chassis_4 }
+		dependencies = { nuclear_miniaturization = 1 }
+		on_research_complete = { custom_effect_tooltip = LOK_MODULAR_REACTOR_CHASSIS_TT }
+		show_effect_as_desc = yes
+		research_cost = 2
+		start_year = 112
+		folder = { name = nsb_armour_folder position = { x = -4 y = 14 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_light_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_light_armor_and_modules }
+	}
+
+	basic_medium_tank_chassis = {
+		enable_equipments = { medium_tank_chassis_1 medium_tank_destroyer_chassis_1 medium_tank_artillery_chassis_1 medium_tank_aa_chassis_1 }
+		enable_equipment_modules = { stabilizer wet_ammo_storage squeezebore_adaptor }
+		path = { leads_to_tech = improved_medium_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 100
+		folder = { name = nsb_armour_folder position = { x = 0 y = 2 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_medium_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_medium_armor_and_modules }
+	}
+
+	improved_medium_tank_chassis = {
+		enable_equipments = { medium_tank_chassis_2 medium_tank_destroyer_chassis_2 medium_tank_artillery_chassis_2 medium_tank_aa_chassis_2 }
+		enable_equipment_modules = { tank_radio_2 }
+		path = { leads_to_tech = advanced_medium_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 104
+		folder = { name = nsb_armour_folder position = { x = 0 y = 6 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_medium_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_medium_armor_and_modules }
+	}
+
+	advanced_medium_tank_chassis = {
+		enable_equipments = { medium_tank_chassis_3 medium_tank_destroyer_chassis_3 medium_tank_artillery_chassis_3 medium_tank_aa_chassis_3 }
+		path = { leads_to_tech = nuclear_medium_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 108
+		folder = { name = nsb_armour_folder position = { x = 0 y = 10 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_medium_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_medium_armor_and_modules }
+	}
+
+	nuclear_medium_tank_chassis = {
+		enable_equipments = { medium_tank_chassis_4 medium_tank_destroyer_chassis_4 medium_tank_artillery_chassis_4 medium_tank_aa_chassis_4 }
+		dependencies = { nuclear_miniaturization = 1 }
+		on_research_complete = { custom_effect_tooltip = LOK_MODULAR_REACTOR_CHASSIS_TT }
+		show_effect_as_desc = yes
+		research_cost = 2
+		start_year = 112
+		folder = { name = nsb_armour_folder position = { x = 0 y = 14 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_medium_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_medium_armor_and_modules }
+	}
+
+	basic_heavy_tank_chassis = {
+		enable_equipments = { heavy_tank_chassis_1 heavy_tank_destroyer_chassis_1 heavy_tank_artillery_chassis_1 heavy_tank_aa_chassis_1 }
+		path = { leads_to_tech = improved_heavy_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 101
+		folder = { name = nsb_armour_folder position = { x = 4 y = 2 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_heavy_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_heavy_armor_and_modules }
+	}
+
+	improved_heavy_tank_chassis = {
+		enable_equipments = { heavy_tank_chassis_2 heavy_tank_destroyer_chassis_2 heavy_tank_artillery_chassis_2 heavy_tank_aa_chassis_2 }
+		path = { leads_to_tech = advanced_heavy_tank_chassis research_cost_coeff = 1 }
+		on_research_complete = { custom_effect_tooltip = LOK_NAVAL_REACTOR_CHASSIS_TT }
+		show_effect_as_desc = yes
+		research_cost = 2.5
+		start_year = 104
+		folder = { name = nsb_armour_folder position = { x = 4 y = 6 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_heavy_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_heavy_armor_and_modules }
+	}
+
+	advanced_heavy_tank_chassis = {
+		enable_equipments = { heavy_tank_chassis_3 heavy_tank_destroyer_chassis_3 heavy_tank_artillery_chassis_3 heavy_tank_aa_chassis_3 }
+		enable_equipment_modules = { tank_super_heavy_cannon }
+		on_research_complete = { custom_effect_tooltip = LOK_NAVAL_REACTOR_CHASSIS_TT }
+		show_effect_as_desc = yes
+		path = { leads_to_tech = advanced_2_heavy_tank_chassis research_cost_coeff = 1 }
+		research_cost = 2
+		start_year = 108
+		folder = { name = nsb_armour_folder position = { x = 4 y = 10 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_heavy_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_heavy_armor_and_modules }
+	}
+
+	advanced_2_heavy_tank_chassis = {
+		enable_equipments = { heavy_tank_chassis_4 heavy_tank_destroyer_chassis_4 heavy_tank_artillery_chassis_4 heavy_tank_aa_chassis_4 }
+		dependencies = { nuclear_miniaturization = 1 }
+		on_research_complete = { custom_effect_tooltip = LOK_ALL_REACTORS_CHASSIS_TT }
+		show_effect_as_desc = yes
+		research_cost = 2
+		start_year = 112
+		folder = { name = nsb_armour_folder position = { x = 4 y = 14 } }
+		ai_will_do = { base = 2 }
+		categories = { armor cat_heavy_armor mio_cat_tech_all_armor_and_modules mio_cat_tech_heavy_armor_and_modules }
+	}
+
+	amphibious_tank_chassis = {
+		enable_equipments = { amphibious_tank_chassis_1 }
+		research_cost = 2
+		start_year = 104
+		folder = { name = nsb_armour_folder position = { x = -7 y = 6 } }
+		ai_will_do = { base = 0.25 }
+		categories = { armor cat_light_armor mio_cat_tech_all_armor_and_modules }
+	}
+
+	armor_tech_1 = {
+		enable_equipment_modules = { tank_welded_armor }
+		path = { leads_to_tech = armor_tech_2 research_cost_coeff = 1 }
+		research_cost = 1
+		start_year = 100
+		folder = { name = nsb_armour_folder position = { x = -2 y = 2 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+	armor_tech_2 = {
+		enable_equipment_modules = { sloped_armor }
+		path = { leads_to_tech = armor_tech_3 research_cost_coeff = 1 }
+		research_cost = 1
+		start_year = 104
+		folder = { name = nsb_armour_folder position = { x = -2 y = 6 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+	armor_tech_3 = {
+		path = { leads_to_tech = armor_tech_4 research_cost_coeff = 1 }
+		enable_equipment_modules = { lc_armored_skirts }
+		research_cost = 1
+		start_year = 108
+		folder = { name = nsb_armour_folder position = { x = -2 y = 10 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+	armor_tech_4 = {
+		research_cost = 1
+		start_year = 112
+		folder = { name = nsb_armour_folder position = { x = -2 y = 14 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+
+	engine_tech_1 = {
+		path = { leads_to_tech = engine_tech_2 research_cost_coeff = 1 }
+		research_cost = 1
+		start_year = 100
+		folder = { name = nsb_armour_folder position = { x = 2 y = 2 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+	engine_tech_2 = {
+		path = { leads_to_tech = engine_tech_3 research_cost_coeff = 1 }
+		research_cost = 1
+		start_year = 104
+		folder = { name = nsb_armour_folder position = { x = 2 y = 6 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+	engine_tech_3 = {
+		enable_equipment_modules = { tank_gas_turbine_engine }
+		path = { leads_to_tech = engine_tech_4 research_cost_coeff = 1 }
+		research_cost = 1
+		start_year = 108
+		folder = { name = nsb_armour_folder position = { x = 2 y = 10 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+	engine_tech_4 = {
+		research_cost = 1
+		start_year = 112
+		folder = { name = nsb_armour_folder position = { x = 2 y = 14 } }
+		ai_will_do = { base = 2 }
+		categories = { armor mio_cat_tech_all_armor_and_modules }
+	}
+}

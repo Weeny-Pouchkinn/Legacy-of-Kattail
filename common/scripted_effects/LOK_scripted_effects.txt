@@ -2995,6 +2995,253 @@ clear_substate = {
 	}
 }
 
+TAI_ensure_noble_house_arrays = {
+	# Array elements must exist before they can be addressed by noble-house ID.
+	if = {
+		limit = { check_variable = { noble_house_power_array^num < 114 } }
+		resize_array = { array = noble_house_power_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_power_perc_array^num < 114 } }
+		resize_array = { array = noble_house_power_perc_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_power_friendly_array^num < 114 } }
+		resize_array = { array = noble_house_power_friendly_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_power_friendly_perc_array^num < 114 } }
+		resize_array = { array = noble_house_power_friendly_perc_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_states_array^num < 114 } }
+		resize_array = { array = noble_house_states_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_expected_states_array^num < 114 } }
+		resize_array = { array = noble_house_expected_states_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_happy_states_array^num < 114 } }
+		resize_array = { array = noble_house_happy_states_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { noble_house_opinion_array^num < 114 } }
+		resize_array = { array = noble_house_opinion_array value = 0 size = 114 }
+	}
+	if = {
+		limit = { check_variable = { TAI_estates_seats_array^num < 114 } }
+		resize_array = { array = TAI_estates_seats_array value = 0 size = 114 }
+	}
+}
+
+TAI_migrate_legacy_noble_house_ids = {
+	if = {
+		limit = { NOT = { has_country_flag = TAI_noble_house_ids_migrated_to_101 } }
+		TAI_ensure_noble_house_arrays = yes
+
+		set_temp_variable = { old_noble_house_id = 3 }
+		set_temp_variable = { new_noble_house_id = 101 }
+		while_loop_effect = {
+			limit = { check_variable = { old_noble_house_id < 16 } }
+			if = {
+				limit = {
+					OR = {
+						check_variable = { old_noble_house_id > 3 }
+						is_in_array = { array = TAI_unlocked_noble_house_array value = old_noble_house_id }
+					}
+				}
+				every_owned_state = {
+					limit = { check_variable = { substate_id = PREV.old_noble_house_id } }
+					set_variable = { substate_id = PREV.new_noble_house_id }
+				}
+			}
+			if = {
+				limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = old_noble_house_id } }
+
+				# Preserve the unlocked list, owned substates, and per-house data in old saves.
+				remove_from_array = { array = TAI_unlocked_noble_house_array value = old_noble_house_id }
+				if = {
+					limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = new_noble_house_id } } }
+					add_to_array = { array = TAI_unlocked_noble_house_array value = new_noble_house_id }
+				}
+				set_variable = { noble_house_power_array^new_noble_house_id = noble_house_power_array^old_noble_house_id }
+				set_variable = { noble_house_power_perc_array^new_noble_house_id = noble_house_power_perc_array^old_noble_house_id }
+				set_variable = { noble_house_power_friendly_array^new_noble_house_id = noble_house_power_friendly_array^old_noble_house_id }
+				set_variable = { noble_house_power_friendly_perc_array^new_noble_house_id = noble_house_power_friendly_perc_array^old_noble_house_id }
+				set_variable = { noble_house_states_array^new_noble_house_id = noble_house_states_array^old_noble_house_id }
+				set_variable = { noble_house_expected_states_array^new_noble_house_id = noble_house_expected_states_array^old_noble_house_id }
+				set_variable = { noble_house_happy_states_array^new_noble_house_id = noble_house_happy_states_array^old_noble_house_id }
+				set_variable = { noble_house_opinion_array^new_noble_house_id = noble_house_opinion_array^old_noble_house_id }
+			}
+			add_to_temp_variable = { old_noble_house_id = 1 }
+			add_to_temp_variable = { new_noble_house_id = 1 }
+		}
+		set_country_flag = TAI_noble_house_ids_migrated_to_101
+	}
+}
+
+raise_noble_house = {
+	custom_effect_tooltip = raise_noble_house_tooltip
+	hidden_effect = {
+		TAI_migrate_legacy_noble_house_ids = yes
+		TAI_ensure_noble_house_arrays = yes
+		if = {
+			limit = { NOT = { is_in_array = { array = TAI_unlocked_noble_house_array value = substate_id_temp } } }
+			add_to_array = { array = TAI_unlocked_noble_house_array value = substate_id_temp }
+		}
+		set_variable = { noble_house_expected_states_array^substate_id_temp = noble_house_expected_states_temp }
+		set_variable = { noble_house_opinion_array^substate_id_temp = noble_house_opinion_temp }
+		set_variable = { noble_house_expected_states_array^substate_id_temp = noble_house_expected_states_temp }
+		calculate_noble_house_power = yes
+	}
+}
+
+assign_state_to_noble_house_and_core = {
+	custom_effect_tooltip = assign_state_to_noble_house_tooltip
+	hidden_effect = {
+		add_core_of = TAI
+		set_variable = { substate_id = TAI.substate_id_temp }
+	}
+}
+
+calculate_noble_house_power = {
+	TAI_migrate_legacy_noble_house_ids = yes
+	TAI_ensure_noble_house_arrays = yes
+	set_variable = { kingdom_total_power = 0 }
+	set_variable = { noble_house_total_power = 0 }
+	set_variable = { friendly_total_power = 0 }
+	set_variable = { friendly_noble_house_total_power = 0 }
+	set_variable = { unfriendly_noble_house_total_power = 0 }
+
+	clear_array = TAI_supportive_houses_array
+	clear_array = TAI_antagonistic_houses_array
+
+	#Mewtail's power
+	set_variable = { crown_land_states = 0 }
+	set_variable = { crown_land_power = 0 }
+	every_owned_state = {
+		limit = { check_variable = { substate_id = 0 } }
+		add_to_variable = { PREV.crown_land_states = 1 }
+		add_to_variable = { PREV.crown_land_power = building_level@arms_factory }
+		add_to_variable = { PREV.crown_land_power = building_level@industrial_complex }
+		add_to_variable = { PREV.crown_land_power = building_level@dockyard }
+	}
+	add_to_variable = { kingdom_total_power = crown_land_power }
+
+	#calc all the noble house powers and stuff (IDs 101 to 113)
+	set_variable = { noble_house_id = 101 }
+	while_loop_effect = {
+		limit = { check_variable = { noble_house_id < 114 } }
+		if = {
+			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = noble_house_id } }
+
+			#happy states is 2x the states they want !
+			set_variable = { noble_house_happy_states_array^noble_house_id = noble_house_expected_states_array^noble_house_id }
+			multiply_variable = { noble_house_happy_states_array^noble_house_id = 2 }
+
+			#their power
+			set_variable = { noble_house_power_array^noble_house_id = 0 }
+			#their power that goes to us
+			set_variable = { noble_house_power_friendly_array^noble_house_id = 0 }
+
+			#count their states, and the power within those states
+			set_variable = { noble_house_states_array^noble_house_id = 0 }
+			every_owned_state = {
+				limit = { check_variable = { substate_id = PREV.noble_house_id } }
+				add_to_variable = { PREV.noble_house_states_array^substate_id = 1 }
+				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@arms_factory }
+				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@industrial_complex }
+				add_to_variable = { PREV.noble_house_power_array^substate_id = building_level@dockyard }
+			}
+
+			#opinion decays and fluctuations
+			if = { #twice as many states! yay!
+				limit = {
+					OR = {
+						check_variable = { noble_house_states_array^noble_house_id > noble_house_happy_states_array^noble_house_id }
+						check_variable = { noble_house_states_array^noble_house_id = noble_house_happy_states_array^noble_house_id }
+					}
+				}
+				add_to_variable = { noble_house_opinion_array^noble_house_id = 0.01 }
+			}
+			if = { #Not enough states!!!!! grrr!!!!
+				limit = { check_variable = { noble_house_states_array^noble_house_id < noble_house_expected_states_array^noble_house_id } }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 0.01 }
+			}
+			#opinion from big crown power
+			if = {
+				limit = { check_variable = { crown_land_power_perc > 0.75 } }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 0.02 }
+			}
+			else_if = {
+				limit = { check_variable = { crown_land_power_perc > 0.50 } }
+				subtract_from_variable = { noble_house_opinion_array^noble_house_id = 0.01 }
+			}
+			else_if = {
+				limit = { check_variable = { crown_land_power_perc < 0.25 } }
+				add_to_variable = { noble_house_opinion_array^noble_house_id = 0.02 }
+			}
+			clamp_variable = { var = noble_house_opinion_array^noble_house_id min = 0 max = 1 }
+
+			#friendly power is power x opinion
+			set_variable = { noble_house_power_friendly_array^noble_house_id = noble_house_power_array^noble_house_id }
+			multiply_variable = { noble_house_power_friendly_array^noble_house_id = noble_house_opinion_array^noble_house_id }
+
+			#the TOTAL power of all noble houses in the kingdom
+			add_to_variable = { noble_house_total_power = noble_house_power_array^noble_house_id }
+			#the TOTAL power in the entire kingdom
+			add_to_variable = { kingdom_total_power = noble_house_power_array^noble_house_id }
+			#the TOTAL power of all FRIENDLY houses in the kingdom
+			add_to_variable = { friendly_noble_house_total_power = noble_house_power_friendly_array^noble_house_id }
+
+			add_to_array = { array = TAI_supportive_houses_array value = noble_house_id }
+		}
+		add_to_variable = { noble_house_id = 1 }
+	}
+
+	set_variable = { unfriendly_noble_house_total_power = noble_house_total_power }
+	subtract_from_variable = { unfriendly_noble_house_total_power = friendly_noble_house_total_power }
+
+	#All the percs
+	set_variable = { crown_land_power_perc = crown_land_power }
+	divide_variable = { crown_land_power_perc = kingdom_total_power }
+
+	set_variable = { noble_house_total_power_perc = 1 }
+	subtract_from_variable = { noble_house_total_power_perc = crown_land_power_perc }
+	
+	set_variable = { friendly_noble_house_total_power_perc = friendly_noble_house_total_power }
+	divide_variable = { friendly_noble_house_total_power_perc = kingdom_total_power }
+
+	set_variable = { unfriendly_noble_house_total_power_perc = unfriendly_noble_house_total_power }
+	divide_variable = { unfriendly_noble_house_total_power_perc = kingdom_total_power }
+
+
+	set_variable = { noble_house_id = 101 }
+	while_loop_effect = {
+		limit = { check_variable = { noble_house_id < 114 } }
+		if = {
+			limit = { is_in_array = { array = TAI_unlocked_noble_house_array value = noble_house_id } }
+			#what perc their power represents
+			set_variable = { noble_house_power_perc_array^noble_house_id = noble_house_power_array^noble_house_id }
+			divide_variable = { noble_house_power_perc_array^noble_house_id = kingdom_total_power }
+
+			#what perc of their power is friendly
+			set_variable = { noble_house_power_friendly_perc_array^noble_house_id = noble_house_power_friendly_array^noble_house_id }
+			divide_variable = { noble_house_power_friendly_perc_array^noble_house_id = kingdom_total_power }
+		}
+		add_to_variable = { noble_house_id = 1 }
+	}
+	
+	#what % agrees with us
+	add_to_variable = { friendly_total_power = crown_land_power }
+	add_to_variable = { friendly_total_power = friendly_noble_house_total_power }
+	set_variable = { friendly_total_power_perc = friendly_total_power }
+	divide_variable = { friendly_total_power_perc = kingdom_total_power }
+	TAI_estates_init = yes
+	add_to_variable = { TAI_estates_scripted_gui_variable = 1 }
+}
+
 generate_generic_advisors = {
 	# If generating normal species,
 	### EXPECTED VARIABLES ###

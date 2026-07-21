@@ -2127,7 +2127,7 @@ country_event = {
 					}
 				}
 				country_event = {	#No Quezon death event so fire the election early instead
-					id = SEA_PHI_political_events.63
+					id = SEA_PHI_political_events.64
 					days = 1000
 				}
 			}
@@ -2261,10 +2261,11 @@ country_event = {
 		has_elections = yes
 	}
 
-	option = {	#Keep leader
-		name = SEA_PHI_political_events.63.keep_leader
+	option = {	#Formerly Keep leader #Osmena vice president. ID's kept for save compatability.
+		name = SEA_PHI_political_events.64.osmena
 		trigger = {
-			PHI_manuel_luis_quezon = {
+			has_character = PHI_sergio_osmena
+			PHI_manuel_roxas = {
 				is_country_leader = no
 			}
 		}
@@ -2275,7 +2276,24 @@ country_event = {
 			retire_character = PHI_manuel_luis_quezon
 			custom_effect_tooltip = generic_skip_one_line_tt
 		}
-		add_political_power = 25
+		PHI_sergio_osmena = {
+			if = {
+				limit = {
+					can_be_country_leader = yes
+				}
+				promote_character = yes
+			}
+			else = {
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						ideology = conservatism
+						expire = "1965.1.1.1"
+						traits = { steady_statesman }
+					}
+				}
+			}
+		}
 	}
 
 	option = {	#Roxas

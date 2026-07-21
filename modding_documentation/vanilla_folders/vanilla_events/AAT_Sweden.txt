@@ -1796,11 +1796,11 @@ country_event = {
 		SWE_per_albin_hansson = {
 			add_trait = {
 				trait = SWE_solidified_mandate
-				ideology = reformist_socialism
+				ideology = socialism
 			}
 			add_trait = {
 				trait = SWE_reluctant_towards_rearmament
-				ideology = reformist_socialism
+				ideology = socialism
 			}
 		}
 		set_party_name = {
@@ -1928,6 +1928,14 @@ country_event = {
 				long_name = SWE_aat_hogern_long
 			}		
 		}
+		else = {
+			SWE_gosta_bagge = {
+				remove_trait = {
+					trait = SWE_minor_opposition_party_in_power
+					ideology = liberalism
+				}
+			}
+		}
 	}
 
 	#Wigfors
@@ -1961,7 +1969,7 @@ country_event = {
 			SWE_ernst_wigforss = {
 			add_country_leader_role = {
 				country_leader = {
-					ideology = reformist_socialism
+					ideology = socialism
 					expire="1965.1.1.1"
 					traits = { captain_of_industry } 
 				}
@@ -2143,7 +2151,7 @@ country_event = {
 			add_country_leader_role = {
 				promote_leader = yes
 				country_leader = {
-					ideology = reformist_socialism
+					ideology = socialism
 				}
 			}
 		}
@@ -3198,10 +3206,26 @@ country_event = {
 		}
 		set_country_flag = SWE_has_rangers
 		add_doctrine_cost_reduction = {
+		 	name = SWE_special_forces
 		 	cost_reduction = 0.65
 		 	uses = 1
-		 	category = cat_mountaineers_doctrine
-		 } 
+		 	category = special_forces_doctrine
+		 }
+		custom_effect_tooltip = mountaineer_subdoctrines_default_add_mastery_bonus_effect_tooltip
+		hidden_effect = {
+			add_mastery_bonus = {
+				name = SWE_special_forces
+				bonus = 0.1
+				days = 240
+				sub_doctrine = mountaineers_1
+			}
+			add_mastery_bonus = {
+				name = SWE_special_forces
+				bonus = 0.1
+				days = 240
+				sub_doctrine = mountaineers_2
+			}
+		}	
 	}
 	# Marines
 	option = { 
@@ -3223,10 +3247,26 @@ country_event = {
 		}
 		set_country_flag = SWE_has_marines
 		add_doctrine_cost_reduction = {
+		 	name = SWE_special_forces
 		 	cost_reduction = 0.65
 		 	uses = 1
-		 	category = cat_marines_doctrine
-		 } 
+		 	category = special_forces_doctrine
+		 }
+		custom_effect_tooltip = mountaineer_subdoctrines_default_add_mastery_bonus_effect_tooltip
+		hidden_effect = {
+			add_mastery_bonus = {
+				name = SWE_special_forces
+				bonus = 0.1
+				days = 240
+				sub_doctrine = mountaineers_1
+			}
+			add_mastery_bonus = {
+				name = SWE_special_forces
+				bonus = 0.1
+				days = 240
+				sub_doctrine = mountaineers_2
+			}
+		}		  
 	}
 	# Paratroopers
 	option = { 
@@ -3248,10 +3288,26 @@ country_event = {
 		}
 		set_country_flag = SWE_has_paratroopers
 		add_doctrine_cost_reduction = {
+			name = SWE_special_forces
 			cost_reduction = 0.65
 			uses = 1
-			category = cat_paratroopers_doctrine
-		} 
+			category = special_forces_doctrine
+		}
+		custom_effect_tooltip = paratrooper_subdoctrines_default_add_mastery_bonus_effect_tooltip
+		hidden_effect = {
+			add_mastery_bonus = {
+				name = SWE_special_forces
+				bonus = 0.1
+				days = 240
+				sub_doctrine = paratroopers_1
+			}
+			add_mastery_bonus = {
+				name = SWE_special_forces
+				bonus = 0.1
+				days = 240
+				sub_doctrine = paratroopers_2
+			}
+		}		 
 	}
 }
 
@@ -4019,7 +4075,7 @@ country_event = { #yes
 				factor = 3
 				strength_ratio = {
 					tag = FROM
-					ratio < 0.7
+					ratio > 0.3 # previously implemented as 'ratio < 0.7', which was not the expected effect
 				}
 			}
 		}
@@ -6429,11 +6485,11 @@ country_event = {
 			SWE_per_albin_hansson = {
 				add_trait = {
 					trait = SWE_solidified_mandate
-					ideology = reformist_socialism
+					ideology = socialism
 				}
 				add_trait = {
 					trait = SWE_reluctant_towards_rearmament
-					ideology = reformist_socialism
+					ideology = socialism
 				}
 			}
 			set_party_name = {

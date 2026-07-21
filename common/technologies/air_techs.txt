@@ -180,7 +180,7 @@ technologies = {
 		start_year = 108
 	
 		path = {
-			leads_to_tech = attack_helicopter4
+			leads_to_tech = exotic_compound_rotorcraft
 			research_cost_coeff = 1
 		}
 
@@ -229,6 +229,40 @@ technologies = {
 		}
 	}
 
+	exotic_compound_rotorcraft = {
+		research_cost = 1
+		start_year = 112
+		allow = {
+			custom_trigger_tooltip = {
+				tooltip = LOK_TECH_UNLOCKED_BY_EXOTIC_ROTORCRAFT_TT
+				always = no
+			}
+		}
+
+		path = {
+			leads_to_tech = attack_helicopter4
+			research_cost_coeff = 1
+		}
+		path = {
+			leads_to_tech = transport_helicopter3
+			research_cost_coeff = 1
+		}
+
+		folder = {
+			name = air_techs_folder
+			position = { x = -2 y = 10 }
+		}
+
+		categories = {
+			helicopter
+			attack_helicopter
+			transport_helicopter
+			air_equipment
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+
 	attack_helicopter4 = {
 
 		enable_equipments = {
@@ -237,6 +271,7 @@ technologies = {
 		
 		research_cost = 2
 		start_year = 114
+		dependencies = { exotic_compound_rotorcraft = 1 }
 
 		folder = {
 			name = air_techs_folder
@@ -395,7 +430,7 @@ technologies = {
 		}
 	
 		path = {
-			leads_to_tech = transport_helicopter3
+			leads_to_tech = exotic_compound_rotorcraft
 			research_cost_coeff = 1
 		}
 				
@@ -499,6 +534,7 @@ technologies = {
 		
 		research_cost = 2
 		start_year = 116
+		dependencies = { exotic_compound_rotorcraft = 1 }
 
 		folder = {
 			name = air_techs_folder
@@ -851,6 +887,13 @@ technologies = {
 		
 		research_cost = 2
 		start_year = 114
+		dependencies = { jet_fighter1 = 1 }
+		allow = {
+			custom_trigger_tooltip = {
+				tooltip = LOK_TECH_REQUIRES_LOW_ORBITAL_HYPERSONIC_TT
+				ROOT = { is_special_project_completed = sp:sp_air_supersonic_jet }
+			}
+		}
 
 		folder = {
 			name = air_techs_folder
@@ -1364,6 +1407,13 @@ technologies = {
 
 		research_cost = 2
 		start_year = 116
+		dependencies = { jet_heavy_fighter1 = 1 }
+		allow = {
+			custom_trigger_tooltip = {
+				tooltip = LOK_TECH_REQUIRES_LOW_ORBITAL_HYPERSONIC_TT
+				ROOT = { is_special_project_completed = sp:sp_air_supersonic_jet }
+			}
+		}
 		folder = {
 			name = air_techs_folder
 			position = { x = -2 y = 12 }
@@ -1664,6 +1714,13 @@ technologies = {
 		
 		research_cost = 2
 		start_year = 116
+		dependencies = { jet_tactical_bomber1 = 1 }
+		allow = {
+			custom_trigger_tooltip = {
+				tooltip = LOK_TECH_REQUIRES_LOW_ORBITAL_HYPERSONIC_TT
+				ROOT = { is_special_project_completed = sp:sp_air_supersonic_jet }
+			}
+		}
 		folder = {
 			name = air_techs_folder
 			position = { x = 2 y = 12 }

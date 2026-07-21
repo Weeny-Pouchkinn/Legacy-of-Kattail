@@ -667,4 +667,35 @@ debug_decisions = {
 			}
 		}
 	}
+
+	lok_tai_debug_noble_house_opinion = {
+		icon = generic_political_actions
+
+		priority = 1000
+
+		available = {
+			is_ai = no
+			is_debug = yes
+		}
+
+		visible = {
+			is_ai = no
+			is_debug = yes
+			original_tag = TAI
+			has_global_flag = show_debug_decisions_flag
+		}
+
+		fire_only_once = no
+		cost = 0
+
+		complete_effect = {
+			add_to_variable = { noble_house_opinion_array^101 = 0.5 }
+			add_to_variable = { noble_house_opinion_array^102 = 0.5 }
+			add_to_variable = { noble_house_opinion_array^104 = 0.5 }
+			clamp_variable = { var = noble_house_opinion_array^101 min = -100 max = 100 }
+			clamp_variable = { var = noble_house_opinion_array^102 min = -100 max = 100 }
+			clamp_variable = { var = noble_house_opinion_array^104 min = -100 max = 100 }
+			calculate_noble_house_power = yes
+		}
+	}
 }
