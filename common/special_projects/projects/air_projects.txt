@@ -875,38 +875,15 @@ sp_air_jet_engine = {
 
 			option = {
 				token = sp_air_jet_engine_preference_fighter
-
 				iteration_output = {
 					country_effects = {
-						if = {
-							limit = { has_dlc = "By Blood Alone"}
-							add_tech_bonus = {
-								name = sp_air_light_air_tech_bonus
-								bonus = 0.5
-								uses = 1
-								category = light_air
-							}
-						}
-						else = {
-							add_equipment_bonus = {
-								name = sp_air_jet_engine_fighter
-								bonus = {
-									jet_tac_bomber_equipment = {
-										air_ground_attack = -0.05
-										air_range = -0.05
-										build_cost_ic = 0.05
-									}
-								}
-							}
-							add_equipment_bonus = {
-								name = sp_air_jet_engine_fighter
-								bonus = {
-									jet_fighter_equipment = {
-										maximum_speed = 0.05
-										air_agility = 0.05
-										build_cost_ic = -0.05
-									}
-								}
+						# BBA aircraft-designer branch disabled: fixed aircraft receive this reward directly.
+						# add_tech_bonus = { name = sp_air_light_air_tech_bonus bonus = 0.5 uses = 1 category = light_air }
+						add_equipment_bonus = {
+							name = sp_air_jet_engine_fighter
+							bonus = {
+								jet_tac_bomber_equipment = { air_ground_attack = -0.05 air_range = -0.05 build_cost_ic = 0.05 }
+								jet_fighter_equipment = { maximum_speed = 0.05 air_agility = 0.05 build_cost_ic = -0.05 }
 							}
 						}
 					}
@@ -919,33 +896,18 @@ sp_air_jet_engine = {
 				default = yes
 				iteration_output = {
 					country_effects = {
-						if = {
-							limit = { has_dlc = "By Blood Alone"}
-
-
-							add_tech_bonus = {
-								name = sp_air_air_equipment_tech_bonus
-								bonus = 0.25
-								uses = 2
-								category = air_equipment
+						# BBA aircraft-designer research bonus disabled.
+						# add_tech_bonus = { name = sp_air_air_equipment_tech_bonus bonus = 0.25 uses = 2 category = air_equipment }
+						add_equipment_bonus = {
+							name = sp_air_jet_engine_compromise
+							bonus = {
+								jet_tac_bomber_equipment = { reliability = 0.03 }
 							}
 						}
-						else = {
-							add_equipment_bonus = {
-								name = sp_air_jet_engine_compromise
-								bonus = {
-									jet_tac_bomber_equipment = {
-										reliability = 0.03
-									}
-								}
-							}
-							add_equipment_bonus = {
-								name = sp_air_jet_engine_compromise
-								bonus = {
-									jet_fighter_equipment = {
-										reliability = 0.03
-									}
-								}
+						add_equipment_bonus = {
+							name = sp_air_jet_engine_compromise
+							bonus = {
+								jet_fighter_equipment = { reliability = 0.03 }
 							}
 						}
 					}
@@ -957,34 +919,25 @@ sp_air_jet_engine = {
 
 				iteration_output = {
 					country_effects = {
-						if = {
-							limit = { has_dlc = "By Blood Alone"}
-							add_tech_bonus = {
-								name = sp_air_medium_air_tech_bonus
-								bonus = 0.5
-								uses = 1
-								category = medium_air
-							}
-						}
-						else = {
-							add_equipment_bonus = {
-								name = sp_air_jet_engine_bomber
-								bonus = {
-									jet_tac_bomber_equipment = {
-										air_ground_attack = 0.05
-										air_range = 0.05
-										build_cost_ic = -0.05
-									}
+						# BBA aircraft-designer research bonus disabled.
+						# add_tech_bonus = { name = sp_air_medium_air_tech_bonus bonus = 0.5 uses = 1 category = medium_air }
+						add_equipment_bonus = {
+							name = sp_air_jet_engine_bomber
+							bonus = {
+								jet_tac_bomber_equipment = {
+									air_ground_attack = 0.05
+									air_range = 0.05
+									build_cost_ic = -0.05
 								}
 							}
-							add_equipment_bonus = {
-								name = sp_air_jet_engine_bomber
-								bonus = {
-									jet_fighter_equipment = {
-										maximum_speed = -0.05
-										air_agility = -0.05
-										build_cost_ic = 0.05
-									}
+						}
+						add_equipment_bonus = {
+							name = sp_air_jet_engine_bomber
+							bonus = {
+								jet_fighter_equipment = {
+									maximum_speed = -0.05
+									air_agility = -0.05
+									build_cost_ic = 0.05
 								}
 							}
 						}
@@ -1358,31 +1311,14 @@ sp_air_supersonic_jet = {
 
 				iteration_output = {
 					country_effects = {
-						if = {
-							limit = { has_dlc = "By Blood Alone"}
-							add_equipment_bonus = {
-								name = sp_air_supersonic_jet_cost_reduction
-								bonus = {
-									small_plane_airframe_5 = {
-										air_range = -0.05
-										maximum_speed = -0.05
-										reliability = -0.1
-										build_cost_ic = -0.1
-									}
-								}
-							}
-						}
-						else = {
-							add_equipment_bonus = {
-								name = sp_air_supersonic_jet_cost_reduction
-								bonus = {
-									supersonic_fighter_equipment_1 = {
-										air_range = -0.05
-										maximum_speed = -0.05
-										reliability = -0.1
-										build_cost_ic = -0.1
-									}
-								}
+						# BBA aircraft-designer airframe bonus disabled.
+						# add_equipment_bonus = { bonus = { small_plane_airframe_5 = { build_cost_ic = -0.1 } } }
+						add_equipment_bonus = {
+							name = sp_air_supersonic_jet_cost_reduction
+							bonus = {
+								jet_fighter_equipment = { air_range = -0.05 maximum_speed = -0.05 reliability = -0.1 build_cost_ic = -0.1 }
+								jet_heavy_fighter_equipment = { air_range = -0.05 maximum_speed = -0.05 reliability = -0.1 build_cost_ic = -0.1 }
+								jet_tac_bomber_equipment = { air_range = -0.05 maximum_speed = -0.05 reliability = -0.1 build_cost_ic = -0.1 }
 							}
 						}
 					}
@@ -1395,25 +1331,14 @@ sp_air_supersonic_jet = {
 				default = yes
 				iteration_output = {
 					country_effects = {
-						if = {
-							limit = { has_dlc = "By Blood Alone"}
-							add_equipment_bonus = {
-								name = sp_air_supersonic_jet_compromise
-								bonus = {
-									small_plane_airframe_5 = {
-										reliability = 0.03
-									}
-								}
-							}
-						}
-						else = {
-							add_equipment_bonus = {
-								name = sp_air_supersonic_jet_compromise
-								bonus = {
-									supersonic_fighter_equipment_1 = {
-										reliability = 0.05
-									}
-								}
+						# BBA aircraft-designer airframe bonus disabled.
+						# add_equipment_bonus = { bonus = { small_plane_airframe_5 = { reliability = 0.03 } } }
+						add_equipment_bonus = {
+							name = sp_air_supersonic_jet_compromise
+							bonus = {
+								jet_fighter_equipment = { reliability = 0.05 }
+								jet_heavy_fighter_equipment = { reliability = 0.05 }
+								jet_tac_bomber_equipment = { reliability = 0.05 }
 							}
 						}
 					}
@@ -1425,31 +1350,14 @@ sp_air_supersonic_jet = {
 
 				iteration_output = {
 					country_effects = {
-						if = {
-							limit = { has_dlc = "By Blood Alone"}
-							add_equipment_bonus = {
-								name = sp_air_supersonic_jet_cost_increase
-								bonus = {
-									small_plane_airframe_5 = {
-										reliability = 0.05
-										build_cost_ic = 0.1
-										air_agility = 0.05
-										air_defence = 0.05
-									}
-								}
-							}
-						}
-						else = {
-							add_equipment_bonus = {
-								name = sp_air_supersonic_jet_cost_increase
-								bonus = {
-									supersonic_fighter_equipment_1 = {
-										reliability = 0.05
-										build_cost_ic = 0.1
-										air_agility = 0.05
-										air_defence = 0.05
-									}
-								}
+						# BBA aircraft-designer airframe bonus disabled.
+						# add_equipment_bonus = { bonus = { small_plane_airframe_5 = { reliability = 0.05 build_cost_ic = 0.1 } } }
+						add_equipment_bonus = {
+							name = sp_air_supersonic_jet_cost_increase
+							bonus = {
+								jet_fighter_equipment = { reliability = 0.05 build_cost_ic = 0.1 air_agility = 0.05 air_defence = 0.05 }
+								jet_heavy_fighter_equipment = { reliability = 0.05 build_cost_ic = 0.1 air_agility = 0.05 air_defence = 0.05 }
+								jet_tac_bomber_equipment = { reliability = 0.05 build_cost_ic = 0.1 air_agility = 0.05 air_defence = 0.05 }
 							}
 						}
 					}

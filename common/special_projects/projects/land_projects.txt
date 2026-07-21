@@ -39,16 +39,8 @@ sp_land_flamethrower_tank = {
 
 	project_output = {
 		country_effects = {
-			hidden_effect = { #Update tooltip in Italian focus if anything changes here!!! (maybe change focus effects too if Italy starts with Flamethrower Tank)
-				if = {
-					limit = {
-						has_dlc = "No Step Back"
-						original_tag = ITA
-						has_completed_focus = ITA_italian_tankettes
-					}
-					ITA_add_basic_light_flamethrower_template = yes
-				}
-			}
+			# Vanilla Italy-specific template effect disabled: the total conversion
+			# does not define ITA_italian_tankettes or ITA_add_basic_light_flamethrower_template.
 
 			add_design_template_bonus = {
 				name = sp_land_flamethrower_tank
@@ -150,12 +142,9 @@ sp_land_military_engineering_vehicles = {
 		}
 
 		country_effects = {
-			if = {
-				limit = {
-					has_dlc = "Gotterdammerung"
-				}
-				SP_create_variant_based_on_country_assault_engineer = yes
-			}
+			# Vanilla equipment-designer variant creation disabled: the fixed
+			# Autonomous Assault Engineer equipment is enabled directly above.
+			# SP_create_variant_based_on_country_assault_engineer = yes
 
 			custom_effect_tooltip = {
 				localization_key = SP_UNLOCK_TECH
@@ -1557,7 +1546,7 @@ sp_land_stronghold_network = {
 
 	available = {
 		FROM = {
-			has_tech = basic_fortification_tech
+			has_tech = tech_engineers
 		}
 	}
 
@@ -1694,7 +1683,6 @@ sp_land_stronghold_network = {
 							name = sp_land_reward_stronghold_network_underground_rail_systems
 							bonus = 0.1
 							uses = 1
-							category = cat_fortification
 							category = engineers_tech
 						}
 
@@ -1752,7 +1740,6 @@ sp_land_stronghold_network = {
 							name = sp_land_reward_stronghold_network_communication_system_overhaul
 							bonus = 0.25
 							uses = 1
-							category = cat_fortification
 							category = construction_tech
 						}
 					}
@@ -1849,7 +1836,6 @@ sp_land_stronghold_network = {
 							name = sp_land_reward_stronghold_network_breakthrough_in_concrete_reinforcement_01
 							bonus = 0.5
 							uses = 1
-							category = cat_fortification
 							category = construction_tech
 						}
 
@@ -1904,7 +1890,6 @@ sp_land_stronghold_network = {
 							name = sp_land_reward_stronghold_network_breakthrough_in_concrete_reinforcement_01 #Intentional 01
 							bonus = 0.75
 							uses = 1
-							category = cat_fortification
 							category = construction_tech
 						}
 
