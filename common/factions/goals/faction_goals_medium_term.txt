@@ -32,3 +32,115 @@ faction_goal_a_large_faction = {
 		base = 1
 	}
 }
+
+faction_goal_industrial_expansion = {
+	name = industrial_expansion_goal_name
+	description = industrial_expansion_goal_desc
+	category = medium_term
+	group = FOCUS_FILTER_INDUSTRY
+	visible = {
+		count_in_collection = {
+			collection = { input = game:scope operators = { faction_members } name = FACTION_NAME }
+			buildings = { industrial_complex }
+			size > 49
+		}
+	}
+	completed = {
+		count_in_collection = {
+			collection = { input = game:scope operators = { faction_members } name = FACTION_NAME }
+			buildings = { industrial_complex }
+			size > 149
+		}
+	}
+	complete_effect = {
+		add_faction_power_projection = 200
+		custom_effect_tooltip = generic_skip_one_line_tt
+		every_faction_member = {
+			tooltip = AT_LEAST_50_CIVS
+			visible_when_empty = yes
+			limit = { num_of_civilian_factories > 49 }
+			IF = {
+				limit = { NOT = { has_completed_goal = faction_goal_industrial_expansion } }
+				add_tech_bonus = { name = industrial_expansion_tech_bonus bonus = 0.5 uses = 2 category = industry }
+			}
+		}
+	}
+	ai_will_do = { base = 1 }
+}
+
+faction_goal_a_military_base = {
+	name = a_military_base_goal_name
+	description = a_military_base_goal_desc
+	category = medium_term
+	group = FOCUS_FILTER_INDUSTRY
+	visible = {
+		count_in_collection = {
+			collection = { input = game:scope operators = { faction_members } name = FACTION_NAME }
+			buildings = { arms_factory }
+			size > 49
+		}
+	}
+	completed = {
+		count_in_collection = {
+			collection = { input = game:scope operators = { faction_members } name = FACTION_NAME }
+			buildings = { arms_factory }
+			size > 149
+		}
+	}
+	complete_effect = {
+		add_faction_power_projection = 200
+		custom_effect_tooltip = generic_skip_one_line_tt
+		every_faction_member = {
+			tooltip = AT_LEAST_50_MILS
+			visible_when_empty = yes
+			limit = { num_of_military_factories > 49 }
+			IF = {
+				limit = { NOT = { has_completed_goal = faction_goal_a_military_base } }
+				add_tech_bonus = { name = a_military_base_tech_bonus bonus = 0.5 uses = 2 category = excavation_tech }
+			}
+		}
+	}
+	ai_will_do = { base = 0 modifier = { add = 1 date > 1938.1.1 } }
+}
+
+faction_goal_combined_general_staff = {
+	name = LOK_combined_general_staff_goal_name
+	description = LOK_combined_general_staff_goal_desc
+	category = medium_term
+	group = FOCUS_FILTER_ARMY_XP
+	completed = {
+		count_in_collection = {
+			collection = { input = game:scope operators = { faction_members } name = FACTION_NAME }
+			unit = infantry
+			size > 499
+		}
+	}
+	complete_effect = {
+		add_faction_power_projection = 250
+		custom_effect_tooltip = generic_skip_one_line_tt
+		custom_effect_tooltip = ALL_FACTION_MEMBERS
+		every_faction_member = { army_experience = 25 }
+	}
+	ai_will_do = { base = 1 }
+}
+
+faction_goal_herzlands_dominant_power = {
+	name = LOK_herzlands_dominant_power_goal_name
+	description = LOK_herzlands_dominant_power_goal_desc
+	category = medium_term
+	group = FOCUS_FILTER_ANNEXATION
+	visible = { ROOT = { is_herzlands_warlord = yes } }
+	auto_complete = yes
+	ratio_progress = {
+		total_amount_collection = collection:LOK_herzlands_states
+		completed_amount_collection = collection:LOK_faction_controlled_herzlands_states
+		range = { max = 0.50 }
+	}
+	complete_effect = {
+		add_faction_power_projection = 300
+		add_faction_initiative = 1
+		custom_effect_tooltip = LOK_HERZLANDS_GOAL_REWARD_MEDIUM
+		every_faction_member = { add_stability = 0.025 add_war_support = 0.025 }
+	}
+	ai_will_do = { base = 2 }
+}

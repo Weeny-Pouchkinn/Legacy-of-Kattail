@@ -540,7 +540,7 @@
  lok_starvation_deficit_modifier_desc:0 "Our people are starving! This will have a drastic effect on our nation and the population of our states will steadily drop as people starve to death until the shortage is resolved."
 
  LOK_private_sector_modifiers:0 "Private Sector Effects"
- lok_private_sector_desc_tooltip:0 "§YPrivate Sector Passive Effects§!\nConstruction Speed: [?ROOT.lok_ps_production_speed_buildings_factor|%2+=] (§Y[?ROOT.modifier@lok_ps_production_speed_buildings_factor|%2]§!)\nFactory Output: [?ROOT.lok_ps_industrial_capacity_factory|%2+=] (§Y[?ROOT.modifier@lok_ps_industrial_capacity_factory_factor|%2]§!)\nProduction Efficiency Cap: [?ROOT.lok_ps_production_factory_max_efficiency_factor|%2+=] (§Y[?ROOT.modifier@lok_ps_production_factory_max_efficiency_factor_factor|%2]§!)\n\n§YPrivate Sector Passive Growth§!\nYearly Industry Growth: §Y[?ROOT.lok_ps_growth_target_true|%2]§! (§Y[?ROOT.lok_ps_factory_growth_goal]§! factories)\n\n[GetPrivateSectorEffects]\n\n§LOur §YPrivate Sector§! represents the parts of our economy we do not have direct control over. These are mostly private companies and small local businesses, but also encompass 'unrecognized' branches of the economy such as black markets and underground trafficking networks.\n\nWhile its factories are not directly useable, they nonetheless provide a variety of boons to the economy, the nature of which depends on our government and policies. By default, these are equal to §Yhalf§! of our current private sector percentage, which is currently §Y[?ROOT.consumer_goods_perc|%2]§!.§!"
+ lok_private_sector_desc_tooltip:0 "§YPrivate Sector Passive Effects§!\nConstruction Speed: [?ROOT.lok_ps_production_speed_buildings_factor|%2+=] (§Y[?ROOT.modifier@lok_ps_production_speed_buildings_factor|%2]§!)\nFactory Output: [?ROOT.lok_ps_industrial_capacity_factory|%2+=] (§Y[?ROOT.modifier@lok_ps_industrial_capacity_factory_factor|%2]§!)\nProduction Efficiency Cap: [?ROOT.lok_ps_production_factory_max_efficiency_factor|%2+=] (§Y[?ROOT.modifier@lok_ps_production_factory_max_efficiency_factor_factor|%2]§!)\n\n§YPrivate Sector Passive Growth§!\nPrivate Sector Share: §Y[?ROOT.lok_ps_share_value|%0]§!\nYearly Industry Growth: §Y[?ROOT.lok_ps_growth_target_true|%2]§! (§Y[?ROOT.lok_ps_factory_growth_goal]§! factories)\nMilitarization: §Y[?ROOT.lok_ps_militarization_value|%0]§!\n\n[GetPrivateSectorEffects]\n\n§LOur §YPrivate Sector§! represents the parts of our economy we do not have direct control over. These are mostly private companies and small local businesses, but also encompass 'unrecognized' branches of the economy such as black markets and underground trafficking networks.\n\nWhile its factories are not directly useable, they nonetheless provide a variety of boons to the economy, the nature of which depends on our government and policies. Its share, militarization, and effectiveness are primarily determined by our §YEconomy Law§!.§!"
 
  lok_private_sector_effects:0 "All §YPrivate Sector Effects§! are scaled to §Y[?ROOT.modifier@lok_ps_productivity_factor|2]x§! due to our modifiers."
 
@@ -552,12 +552,47 @@
 
 
  LOK_private_sector.1.t:0 "Yearly Private Sector Growth Report"
- LOK_private_sector.1.d:0 "With this year coming to a close, we can now reap the fruits of our private sector's activities. They aimed for a growth of roughly [?ROOT.lok_ps_growth_target_true|%0]."
+ LOK_private_sector.1.d:0 "To the Office of National Economic Administration,\n\nThe annual survey of privately financed industrial development is complete. During the reporting period, private firms commissioned [?ROOT.lok_ps_civs_built_this_year|0] civilian industrial complexes and [?ROOT.lok_ps_mils_built_this_year|0] military factories. Required land and utility allotments have been entered into the national register.\n\nSubmitted for acknowledgment."
  LOK_private_sector.1.a:0 "Acknowledged."
- LOK_private_sector.1.a.tt:0 "Across our owned states, §Y[?lok_ps_factory_growth_goal]§! new §YIndustrial Complexes§! were built."
+ LOK_private_sector.1.a.tt:0 "The report records §Y[?ROOT.lok_ps_civs_built_this_year|0]§! new civilian factories and §Y[?ROOT.lok_ps_mils_built_this_year|0]§! new military factories."
 
 
  #nInfrastructure Growth Chance: §Y[?ROOT.lok_ps_infra_growth_odds_true|2]%§! per state
+
+ economy_laws:0 "Economy Laws"
+ lok_ps_share:0 "Private Sector Share"
+ lok_ps_militarization:0 "Private Sector Militarization"
+ lok_ps_economy_productivity_factor:0 "Private Sector Effectiveness"
+
+ lok_centrally_planned_economy:0 "Centrally Planned Economy"
+ lok_centrally_planned_economy_desc:0 "Nearly all major production is publicly owned and directed through binding national plans. The state can concentrate resources rapidly, but administrative mistakes affect the entire economy."
+
+ lok_decentralized_command_economy:0 "Decentralized Command Economy"
+ lok_decentralized_command_economy_desc:0 "Public enterprises remain subject to mandatory production targets, but regional governments, industrial ministries, and workplace organizations decide how those targets are fulfilled."
+
+ lok_decentralized_planned_economy:0 "Decentralized Planned Economy"
+ lok_decentralized_planned_economy_desc:0 "The government determines strategic priorities through credit controls, procurement, investment plans, and regional development programs rather than directly managing every enterprise."
+
+ lok_cybernetic_economy:0 "Cybernetic Economy"
+ lok_cybernetic_economy_desc:0 "Real-time economic data, predictive algorithms, and automated logistical systems coordinate production across the national economy."
+
+ lok_market_socialism:0 "Market Socialism"
+ lok_market_socialism_desc:0 "Enterprises operate through markets, but ownership is primarily public, municipal, cooperative, or worker-controlled. Investment remains shaped by social and political objectives."
+
+ lok_social_market_economy:0 "Social Market Economy"
+ lok_social_market_economy_desc:0 "Private enterprise operates within a strong regulatory system supported by collective bargaining, social insurance, public services, and long-term industrial coordination."
+
+ lok_mixed_economy:0 "Mixed Economy"
+ lok_mixed_economy_desc:0 "Public enterprises, regulated private firms, strategic state investment, and market competition coexist without any single institution dominating the economy."
+
+ lok_corporatist_economy:0 "Corporatist Economy"
+ lok_corporatist_economy_desc:0 "The government organizes major industries, labour organizations, financial institutions, and professional associations into officially recognized economic blocs. Private ownership continues, but production is subordinated to negotiated national objectives."
+
+ lok_laissez_faire_economy:0 "Laissez-Faire Economy"
+ lok_laissez_faire_economy_desc:0 "The government places few restrictions on ownership, investment, employment, or industrial organization. Private firms determine most production according to expected profitability."
+
+ lok_free_market_economy:0 "Free-Market Economy"
+ lok_free_market_economy_desc:0 "Production, finance, labour, and international trade are organized around open competition. The state concentrates on protecting contracts and market access rather than directing investment."
 
  ipf_resistance_idea_desc:0 "Dictators of the Herzlands are confronted with a continent-wide network of organized democrat terrorists plotting carbombs on military governors and shootings for rallies by fascist demagogues. They are notoriously hard to get rid of and find funding from the righteous and proud."
 

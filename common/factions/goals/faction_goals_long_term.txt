@@ -1,11 +1,11 @@
 
-faction_goal_a_medium_faction = {
-	name = a_medium_faction_goal_name
-	description = a_medium_faction_goal_desc
+faction_goal_continental_compact = {
+	name = LOK_continental_compact_goal_name
+	description = LOK_continental_compact_goal_desc
 	category = long_term
 	group = FOCUS_FILTER_POLITICAL_CHARACTER
 	visible = {
-		num_faction_members > 1
+		num_faction_members > 4
 	}
 	completed = {
 		num_faction_members > 10
@@ -19,4 +19,135 @@ faction_goal_a_medium_faction = {
 	ai_will_do = {
 		base = 1
 	}
+}
+
+faction_goal_industrial_domination = {
+	name = industrial_domination_goal_name
+	description = industrial_domination_goal_desc
+	category = long_term
+	group = FOCUS_FILTER_INDUSTRY
+	visible = {
+		count_in_collection = {
+			collection = { input = game:scope operators = { faction_members } name = FACTION_NAME }
+			buildings = { industrial_complex arms_factory dockyard }
+			size > 100
+		}
+	}
+	completed = {
+		count_in_collection = {
+			collection = { input = game:scope operators = { faction_members } name = FACTION_NAME }
+			buildings = { industrial_complex arms_factory dockyard }
+			size > 1000
+		}
+	}
+	complete_effect = {
+		add_faction_power_projection = 500
+		custom_effect_tooltip = generic_skip_one_line_tt
+		every_faction_member = {
+			tooltip = AT_LEAST_500_FACTORIES
+			visible_when_empty = yes
+			limit = { num_of_controlled_factories > 500 }
+			add_faction_initiative = 1
+		}
+	}
+	ai_will_do = { base = 1 }
+}
+
+faction_goal_great_offensive = {
+	name = great_offensive_goal_name
+	description = great_offensive_goal_desc
+	category = long_term
+	group = FOCUS_FILTER_ANNEXATION
+	visible = {
+		FROM = { has_war = yes }
+		collection_size = {
+			input = {
+				input = game:all_states
+				operators = {
+					limit = {
+						owner = { has_war_with = ROOT }
+						is_core_of = OWNER
+						is_controlled_by_ROOT_or_ally = yes
+					}
+				}
+				name = ENEMY_FACTION_CORE_STATES_CONTROLLED_BY_US
+			}
+			value < 1
+		}
+	}
+	completed = {
+		collection_size = {
+			input = {
+				input = game:all_states
+				operators = {
+					limit = {
+						owner = { has_war_with = ROOT }
+						is_core_of = OWNER
+						is_controlled_by_ROOT_or_ally = yes
+					}
+				}
+				name = ENEMY_FACTION_CORE_STATES_CONTROLLED_BY_US
+			}
+			value > 0
+		}
+	}
+	complete_effect = {
+		add_faction_power_projection = 300
+		custom_effect_tooltip = generic_skip_one_line_tt
+		custom_effect_tooltip = ALL_FACTION_MEMBERS
+		every_faction_member = {
+			IF = {
+				limit = { NOT = { has_completed_goal = faction_goal_great_offensive } }
+				add_war_support = 0.1
+			}
+		}
+	}
+	ai_will_do = { base = 0 modifier = { add = 1 has_war = yes } }
+}
+
+faction_goal_nuclear_deterrent = {
+	name = LOK_nuclear_deterrent_goal_name
+	description = LOK_nuclear_deterrent_goal_desc
+	category = long_term
+	group = FOCUS_FILTER_RESEARCH
+	visible = {
+		OR = {
+			has_tech = nukes
+			any_allied_country = { has_tech = nukes }
+		}
+	}
+	completed = {
+		OR = {
+			num_of_nukes > 4
+			any_allied_country = { num_of_nukes > 4 }
+		}
+	}
+	complete_effect = {
+		add_faction_power_projection = 500
+		add_faction_initiative = 1
+		custom_effect_tooltip = ALL_FACTION_MEMBERS
+		every_faction_member = { add_war_support = 0.05 }
+	}
+	ai_will_do = { base = 1 }
+}
+
+faction_goal_herzlands_reunification = {
+	name = LOK_herzlands_reunification_goal_name
+	description = LOK_herzlands_reunification_goal_desc
+	category = long_term
+	group = FOCUS_FILTER_ANNEXATION
+	visible = { ROOT = { is_herzlands_warlord = yes } }
+	auto_complete = yes
+	ratio_progress = {
+		total_amount_collection = collection:LOK_herzlands_states
+		completed_amount_collection = collection:LOK_faction_controlled_herzlands_states
+		range = { max = 1.00 }
+	}
+	complete_effect = {
+		add_faction_power_projection = 1000
+		add_faction_initiative = 2
+		custom_effect_tooltip = LOK_HERZLANDS_GOAL_REWARD_LONG
+		every_faction_member = { add_stability = 0.05 add_war_support = 0.05 }
+	}
+	ai_will_do = { base = 5 }
 }
