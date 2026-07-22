@@ -77,7 +77,10 @@ country_event = {
 				promote_leader = yes
 			}
 		}
-		set_politics = { ruling_party = neutrality }
+		if = {
+			limit = { NOT = { has_government = neutrality } }
+			set_politics = { ruling_party = neutrality }
+		}
 		add_popularity = { ideology = neutrality popularity = 0.50 }
 		country_event = { id = TAK_event.5 days = 2 }
 	}

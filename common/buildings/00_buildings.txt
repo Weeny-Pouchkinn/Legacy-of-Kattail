@@ -122,8 +122,7 @@ buildings = {
 	}
 
 	naval_facility = {
-		# Facility meshes can crash the map renderer when their province is brought into close-zoom view.
-		show_on_map = 0
+		show_on_map = 1
 		base_cost = 12000
 		per_controlled_building_extra_cost = 5000
 		damage_factor = 0 # This building can't be damaged by regular strat bombing
@@ -134,7 +133,8 @@ buildings = {
 		tags = { facility }
 		disabled_in_dmz = yes
 		need_supply = yes
-		need_detection = yes
+		# Avoid an engine access violation when a fogged province containing a facility is selected.
+		need_detection = no
 		detecting_intel_type = navy
 		only_display_if_exists = yes
 		special_icon = GFX_specialization_naval
@@ -414,8 +414,7 @@ buildings = {
 	# }
 
 	nuclear_facility = {
-		# Keep the facility functional, but do not instantiate its crash-prone 3D map entity.
-		show_on_map = 0
+		show_on_map = 1
 		base_cost = 15000
 		per_controlled_building_extra_cost = 5000
 		damage_factor = 0 # This building can't be damaged by regular strat bombing
@@ -424,7 +423,8 @@ buildings = {
 		spawn_point = special_project_facility_spawn
 		specialization = { specialization_nuclear }
 		need_supply = yes
-		need_detection = yes
+		# Avoid an engine access violation when a fogged province containing a facility is selected.
+		need_detection = no
 		tags = { facility }
 		disabled_in_dmz = yes
 		only_display_if_exists = yes
@@ -448,8 +448,7 @@ buildings = {
 	}
 
 	air_facility = {
-		# Keep the facility functional, but do not instantiate its crash-prone 3D map entity.
-		show_on_map = 0
+		show_on_map = 1
 		base_cost = 12000
 		per_controlled_building_extra_cost = 5000
 		damage_factor = 0 # This building can't be damaged by regular strat bombing
@@ -459,7 +458,8 @@ buildings = {
 		specialization = { specialization_air }
 		tags = { facility }
 		need_supply = yes
-		need_detection = yes
+		# Avoid an engine access violation when a fogged province containing a facility is selected.
+		need_detection = no
 		detecting_intel_type = airforce
 		disabled_in_dmz = yes
 		only_display_if_exists = yes
@@ -472,8 +472,7 @@ buildings = {
 	}
 
 	land_facility = {
-		# Keep the facility functional, but do not instantiate its crash-prone 3D map entity.
-		show_on_map = 0
+		show_on_map = 1
 		base_cost = 12000
 		per_controlled_building_extra_cost = 5000
 		damage_factor = 0 # This building can't be damaged by regular strat bombing
@@ -484,7 +483,8 @@ buildings = {
 		tags = { facility }
 		disabled_in_dmz = yes
 		need_supply = yes
-		need_detection = yes
+		# Avoid an engine access violation when a fogged province containing a facility is selected.
+		need_detection = no
 		detecting_intel_type = army
 		only_display_if_exists = yes
 		special_icon = GFX_specialization_land
