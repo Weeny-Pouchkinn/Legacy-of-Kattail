@@ -11,14 +11,19 @@ calculate_private_sector_factory_allocation = {
 	set_variable = { lok_ps_total_factory_count = num_of_civilian_factories }
 	add_to_variable = { lok_ps_total_factory_count = num_of_military_factories }
 
-	set_variable = { lok_ps_engine_cg_base = 0 }
+	# Build the next engine value away from the live dynamic-modifier variable.
+	# Mutating lok_ps_engine_cg_base step-by-step lets the UI render intermediate
+	# weekly values before the calculation finishes, producing a visible flicker.
+	set_temp_variable = { lok_ps_engine_cg_base_next = 0 }
 	if = {
 		limit = { check_variable = { lok_ps_total_factory_count > 0 } }
-		set_variable = { lok_ps_engine_cg_base = modifier@lok_ps_share_base }
-		multiply_variable = { lok_ps_engine_cg_base = lok_ps_civilian_factory_count }
-		divide_variable = { lok_ps_engine_cg_base = lok_ps_total_factory_count }
-		clamp_variable = { var = lok_ps_engine_cg_base min = 0 max = 1 }
+		set_temp_variable = { lok_ps_engine_cg_base_next = modifier@lok_ps_share_base }
+		multiply_temp_variable = { lok_ps_engine_cg_base_next = lok_ps_civilian_factory_count }
+		divide_temp_variable = { lok_ps_engine_cg_base_next = lok_ps_total_factory_count }
+		clamp_temp_variable = { var = lok_ps_engine_cg_base_next min = 0 max = 1 }
 	}
+	# Publish once so the dynamic modifier never observes a partial calculation.
+	set_variable = { lok_ps_engine_cg_base = lok_ps_engine_cg_base_next }
 
 	set_variable = { lok_ps_reserved_civilian_factories = lok_ps_civilian_factory_count }
 	multiply_variable = { lok_ps_reserved_civilian_factories = lok_ps_share_value }
