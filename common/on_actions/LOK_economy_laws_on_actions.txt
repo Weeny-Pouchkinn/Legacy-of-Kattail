@@ -1,0 +1,25 @@
+on_actions = {
+	on_weekly = {
+		effect = {
+			if = {
+				limit = {
+					is_non_playable_country = no
+					NOT = { has_government = gestalt }
+					NOT = {
+						tag = DUR
+						tag = NMI
+						tag = SLC
+						tag = MUN
+						tag = PLI
+						tag = WWW
+						tag = XEN
+						tag = ZZZ
+					}
+					NOT = { has_country_flag = lok_economy_law_selection_pending }
+					LOK_has_ideologically_compatible_economy_law = no
+				}
+				country_event = { id = LOK_economy_laws.1 }
+			}
+		}
+	}
+}

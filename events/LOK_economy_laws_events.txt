@@ -1,0 +1,215 @@
+add_namespace = LOK_economy_laws
+
+country_event = {
+	id = LOK_economy_laws.1
+	title = LOK_economy_laws.1.t
+	desc = LOK_economy_laws.1.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_government = gestalt }
+		LOK_has_ideologically_compatible_economy_law = no
+	}
+
+	immediate = {
+		# Prevent duplicate weekly popups; the timeout also recovers if an event is discarded externally.
+		set_country_flag = { flag = lok_economy_law_selection_pending days = 30 }
+	}
+
+	option = {
+		name = lok_centrally_planned_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = fascism
+			}
+		}
+		add_ideas = lok_centrally_planned_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 5 }
+	}
+
+	option = {
+		name = lok_decentralized_command_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = socialism
+			}
+		}
+		add_ideas = lok_decentralized_command_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 3 }
+	}
+
+	option = {
+		name = lok_decentralized_planned_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = authoritarian_democratic
+				has_government = neutrality
+				has_government = fascism
+			}
+		}
+		add_ideas = lok_decentralized_planned_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 4 }
+	}
+
+	option = {
+		name = lok_cybernetic_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = socialism
+			}
+			has_tech = advanced_computing_machine
+			num_of_civilian_factories > 15
+		}
+		add_ideas = lok_cybernetic_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 8 }
+	}
+
+	option = {
+		name = lok_market_socialism
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = socialism
+				has_government = social_democratic
+			}
+		}
+		add_ideas = lok_market_socialism
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 5 }
+	}
+
+	option = {
+		name = lok_social_market_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_democratic
+				has_government = social_liberal
+			}
+		}
+		add_ideas = lok_social_market_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 5 }
+	}
+
+	option = {
+		name = lok_mixed_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_democratic
+				has_government = social_liberal
+				has_government = democratic
+				has_government = social_conservative
+				has_government = authoritarian_democratic
+			}
+		}
+		add_ideas = lok_mixed_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 5 }
+	}
+
+	option = {
+		name = lok_corporatist_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_democratic
+				has_government = social_liberal
+				has_government = democratic
+				has_government = social_conservative
+				has_government = authoritarian_democratic
+				has_government = neutrality
+				has_government = fascism
+			}
+		}
+		add_ideas = lok_corporatist_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 5 }
+	}
+
+	option = {
+		name = lok_laissez_faire_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_liberal
+				has_government = democratic
+				has_government = social_conservative
+				has_government = authoritarian_democratic
+				has_government = neutrality
+			}
+		}
+		add_ideas = lok_laissez_faire_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 4 }
+	}
+
+	option = {
+		name = lok_free_market_economy
+		trigger = {
+			LOK_has_special_economy_lock = no
+			has_government = democratic
+		}
+		add_ideas = lok_free_market_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 4 }
+	}
+
+	option = {
+		name = lok_household_subsistence_economy
+		trigger = {
+			LOK_has_tribal_economy_lock = yes
+			LOK_has_paluush_economy_lock = no
+		}
+		add_ideas = lok_household_subsistence_economy
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 2 }
+	}
+
+	option = {
+		name = lok_tribal_tribute_workshops
+		trigger = {
+			LOK_has_tribal_economy_lock = yes
+			LOK_has_paluush_economy_lock = no
+		}
+		add_ideas = lok_tribal_tribute_workshops
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 3 }
+	}
+
+	option = {
+		name = lok_war_chief_requisitioning
+		trigger = {
+			LOK_has_tribal_economy_lock = yes
+			LOK_has_paluush_economy_lock = no
+		}
+		add_ideas = lok_war_chief_requisitioning
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 4 }
+	}
+
+	option = {
+		name = lok_mastery_sustained_agrarianism
+		trigger = {
+			LOK_has_paluush_economy_lock = yes
+		}
+		add_ideas = lok_mastery_sustained_agrarianism
+		clr_country_flag = lok_economy_law_selection_pending
+		ai_chance = { factor = 5 }
+	}
+}

@@ -1,0 +1,122 @@
+LOK_has_tribal_economy_lock = {
+	has_idea = lok_tribal_economy
+}
+
+LOK_has_paluush_economy_lock = {
+	has_idea = PLR_paluush_masteries
+}
+
+LOK_has_special_economy_lock = {
+	OR = {
+		LOK_has_tribal_economy_lock = yes
+		LOK_has_paluush_economy_lock = yes
+	}
+}
+
+LOK_has_ideologically_compatible_economy_law = {
+	OR = {
+		AND = {
+			has_idea = lok_centrally_planned_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = fascism
+			}
+		}
+		AND = {
+			has_idea = lok_decentralized_command_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = socialism
+			}
+		}
+		AND = {
+			has_idea = lok_decentralized_planned_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = authoritarian_democratic
+				has_government = neutrality
+				has_government = fascism
+			}
+		}
+		AND = {
+			has_idea = lok_cybernetic_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = socialism
+			}
+		}
+		AND = {
+			has_idea = lok_market_socialism
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = communism
+				has_government = socialism
+				has_government = social_democratic
+			}
+		}
+		AND = {
+			has_idea = lok_social_market_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_democratic
+				has_government = social_liberal
+			}
+		}
+		AND = {
+			has_idea = lok_mixed_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_democratic
+				has_government = social_liberal
+				has_government = democratic
+				has_government = social_conservative
+				has_government = authoritarian_democratic
+			}
+		}
+		AND = {
+			has_idea = lok_corporatist_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_democratic
+				has_government = social_liberal
+				has_government = democratic
+				has_government = social_conservative
+				has_government = authoritarian_democratic
+				has_government = neutrality
+				has_government = fascism
+			}
+		}
+		AND = {
+			has_idea = lok_laissez_faire_economy
+			LOK_has_special_economy_lock = no
+			OR = {
+				has_government = social_liberal
+				has_government = democratic
+				has_government = social_conservative
+				has_government = authoritarian_democratic
+				has_government = neutrality
+			}
+		}
+		AND = {
+			has_idea = lok_free_market_economy
+			LOK_has_special_economy_lock = no
+			has_government = democratic
+		}
+		AND = {
+			OR = {
+				has_idea = lok_household_subsistence_economy
+				has_idea = lok_tribal_tribute_workshops
+				has_idea = lok_war_chief_requisitioning
+			}
+			LOK_has_tribal_economy_lock = yes
+			LOK_has_paluush_economy_lock = no
+		}
+		AND = {
+			has_idea = lok_mastery_sustained_agrarianism
+			LOK_has_paluush_economy_lock = yes
+		}
+	}
+}

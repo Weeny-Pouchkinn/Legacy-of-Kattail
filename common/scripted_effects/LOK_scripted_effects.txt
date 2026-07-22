@@ -887,6 +887,140 @@ calculate_xenon_colonies_stats = {
 	}
 }
 
+# Splits about 90% of the Katzenseetruppen fleet equally among all extant
+# coastal Herzlands warlords. Ships are transferred hull-by-hull because
+# transfer_units_fraction rounds naval units/task forces and can consequently
+# leave recipients empty when the source fleet is concentrated in few fleets.
+# Integer division leaves the indivisible remainder with NAV for the conference.
+LOK_distribute_NAV_fleet = {
+	# Scripted effects retain the original ROOT. Save the current scope (NAV)
+	# explicitly so this works from both focus events and peace on-actions.
+	save_event_target_as = lok_nav_fleet_source
+	if = {
+		limit = { NOT = { has_country_flag = lok_nav_fleet_partitioned } }
+		log = "[GetDateText]: Beginning NAV fleet partition for [THIS.GetName]"
+		set_variable = { lok_nav_fleet_recipient_count = 0 }
+		every_country = {
+			limit = {
+				is_non_playable_country = no
+				NOT = { tag = NAV }
+				is_herzlands_warlord = yes
+				any_owned_state = { is_coastal = yes }
+			}
+			event_target:lok_nav_fleet_source = { add_to_variable = { lok_nav_fleet_recipient_count = 1 } }
+		}
+
+		if = {
+			limit = { check_variable = { lok_nav_fleet_recipient_count > 0 } }
+			set_country_flag = lok_nav_fleet_partitioned
+			set_variable = { lok_nav_fleet_initial_ship_count = num_ships }
+			set_variable = { lok_nav_fleet_ships_per_recipient = lok_nav_fleet_initial_ship_count }
+			multiply_variable = { lok_nav_fleet_ships_per_recipient = 0.90 }
+			divide_variable = { lok_nav_fleet_ships_per_recipient = lok_nav_fleet_recipient_count }
+			# floor(x): round(x - 0.499), preventing the total from exceeding 90%.
+			subtract_from_variable = { lok_nav_fleet_ships_per_recipient = 0.499 }
+			round_variable = lok_nav_fleet_ships_per_recipient
+			clamp_variable = { var = lok_nav_fleet_ships_per_recipient min = 0 }
+
+			every_country = {
+				limit = {
+					is_non_playable_country = no
+					NOT = { tag = NAV }
+					is_herzlands_warlord = yes
+					any_owned_state = { is_coastal = yes }
+				}
+				set_variable = { lok_nav_fleet_recipient_ships_before = num_ships }
+				save_event_target_as = lok_nav_fleet_recipient
+				event_target:lok_nav_fleet_source = {
+					for_loop_effect = {
+						end = lok_nav_fleet_ships_per_recipient
+						# Pick among classes still present. A zero base weight plus an
+						# availability modifier prevents attempts to transfer absent types.
+						random_list = {
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = destroyer size > 0 } }
+								transfer_ship = { type = destroyer target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = light_cruiser size > 0 } }
+								transfer_ship = { type = light_cruiser target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = heavy_cruiser size > 0 } }
+								transfer_ship = { type = heavy_cruiser target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = battle_cruiser size > 0 } }
+								transfer_ship = { type = battle_cruiser target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = battleship size > 0 } }
+								transfer_ship = { type = battleship target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = super_heavy_battleship size > 0 } }
+								transfer_ship = { type = super_heavy_battleship target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = carrier size > 0 } }
+								transfer_ship = { type = carrier target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = submarine size > 0 } }
+								transfer_ship = { type = submarine target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+							0 = {
+								modifier = { add = 1 has_navy_size = { unit = ballistic_submarine size > 0 } }
+								transfer_ship = { type = ballistic_submarine target = event_target:lok_nav_fleet_recipient exclude_refitting = no }
+							}
+						}
+					}
+				}
+				set_variable = { lok_nav_fleet_recipient_ships_after = num_ships }
+				country_event = { id = NAV_coalition.2 days = 5 }
+			}
+		}
+	}
+}
+
+# Recalculate both space regions in one controlled-state traversal. The legacy
+# region-specific effects remain available for decisions that update one region.
+calculate_all_space_colonies_stats = {
+	set_variable = { lok_muno_colonies_upkeep = 0 }
+	set_variable = { lok_muno_colonies_level = 0 }
+	set_variable = { lok_muno_colonies_pop = 0 }
+	set_variable = { lok_xenon_colonies_upkeep = 0 }
+	set_variable = { lok_xenon_colonies_level = 0 }
+	set_variable = { lok_xenon_colonies_pop = 0 }
+
+	every_controlled_state = {
+		if = {
+			limit = { is_on_continent = muno }
+			add_to_variable = { ROOT.lok_muno_colonies_level = space_colony_level }
+			add_to_variable = { ROOT.lok_muno_colonies_pop = state_population_k }
+			set_temp_variable = { state_colony_upkeep = space_colony_level }
+			multiply_temp_variable = { state_colony_upkeep = 50 }
+			add_to_variable = { ROOT.lok_muno_colonies_upkeep = state_colony_upkeep }
+			if = {
+				limit = { NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT } }
+				set_state_flag = lok_space_state_surveyed_by_@ROOT
+			}
+		}
+		else_if = {
+			limit = { is_on_continent = xenon }
+			add_to_variable = { ROOT.lok_xenon_colonies_level = space_colony_level }
+			add_to_variable = { ROOT.lok_xenon_colonies_pop = state_population_k }
+			set_temp_variable = { state_colony_upkeep = space_colony_level }
+			multiply_temp_variable = { state_colony_upkeep = 50 }
+			add_to_variable = { ROOT.lok_xenon_colonies_upkeep = state_colony_upkeep }
+			if = {
+				limit = { NOT = { has_state_flag = lok_space_state_surveyed_by_@ROOT } }
+				set_state_flag = lok_space_state_surveyed_by_@ROOT
+			}
+		}
+	}
+}
+
 attrition_space_rockets = {
 	if = {
 		limit = { check_variable = { lok_light_chemical_rocket_for_orbital_logistics > 0 } }
@@ -900,7 +1034,6 @@ attrition_space_rockets = {
 		multiply_temp_variable = { lok_heavy_chemical_rocket_for_orbital_logistics_removed = -1 }
 		add_equipment_to_stockpile = { type = lok_heavy_chemical_rocket amount = lok_heavy_chemical_rocket_for_orbital_logistics_removed }
 	}
-	calculate_orbital_logistics_capacity = yes
 }
 
 calculate_orbital_logistics_capacity = {
@@ -1853,7 +1986,7 @@ calculate_bonus_resources_from_modifiers = { #Example with +50%
 
 	#Calculate total bonuses for food
 	set_variable = { lok_total_extra_food_factor = 1 } #set to 1
-	set_variable = { lok_total_extra_food_factor = 1 } #set to 1
+	set_variable = { lok_total_extra_food = 0 } #reset the accumulator before summing controlled states
 	add_to_variable = { lok_total_extra_food_factor = modifier@lok_food_resources_factor }
 	#multiply_variable = { lok_total_extra_food_factor = global.lok_nuclear_soot_perc_negative } #Applied AFTER buffs, subtract nuclear soot
 	#For food we need to calc every state because otherwise it'll take into account negative food from consumption and multiply that
