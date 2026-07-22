@@ -1,9 +1,38 @@
+calculate_private_sector_factory_allocation = {
+	# Economy laws describe the private share of civilian industry. Vanilla
+	# consumer goods instead multiply their percentage by civilian + military
+	# factories, so translate our civilian-only share into an engine percentage.
+	set_variable = { lok_ps_share_value = modifier@consumer_goods_factor }
+	add_to_variable = { lok_ps_share_value = 1 }
+	multiply_variable = { lok_ps_share_value = modifier@lok_ps_share_base }
+	clamp_variable = { var = lok_ps_share_value min = 0 max = 1 }
+
+	set_variable = { lok_ps_civilian_factory_count = num_of_civilian_factories }
+	set_variable = { lok_ps_total_factory_count = num_of_civilian_factories }
+	add_to_variable = { lok_ps_total_factory_count = num_of_military_factories }
+
+	set_variable = { lok_ps_engine_cg_base = 0 }
+	if = {
+		limit = { check_variable = { lok_ps_total_factory_count > 0 } }
+		set_variable = { lok_ps_engine_cg_base = modifier@lok_ps_share_base }
+		multiply_variable = { lok_ps_engine_cg_base = lok_ps_civilian_factory_count }
+		divide_variable = { lok_ps_engine_cg_base = lok_ps_total_factory_count }
+		clamp_variable = { var = lok_ps_engine_cg_base min = 0 max = 1 }
+	}
+
+	set_variable = { lok_ps_reserved_civilian_factories = lok_ps_civilian_factory_count }
+	multiply_variable = { lok_ps_reserved_civilian_factories = lok_ps_share_value }
+	round_variable = lok_ps_reserved_civilian_factories
+
+	if = {
+		limit = { NOT = { has_dynamic_modifier = { modifier = LOK_private_sector_factory_allocation } } }
+		add_dynamic_modifier = { modifier = LOK_private_sector_factory_allocation }
+	}
+}
+
 calculate_private_sector_modifiers = {
-	set_variable = { consumer_goods_perc = modifier@consumer_goods_factor }
-	add_to_variable = { consumer_goods_perc = 1 }
-	multiply_variable = { consumer_goods_perc = modifier@consumer_goods_expected_value }
-	
-	clamp_variable = { var = consumer_goods_perc min = 0 max = 100 }
+	calculate_private_sector_factory_allocation = yes
+	set_variable = { consumer_goods_perc = lok_ps_share_value }
 
 	set_variable = { ps_modifiers = 0 }
 
@@ -30,9 +59,9 @@ calculate_private_sector_modifiers = {
 	set_variable = { lok_ps_growth_target_true = modifier@lok_ps_growth_target }
 	multiply_variable = { lok_ps_growth_target_true = modifier@lok_ps_productivity_factor }
 
-	#the absolute amount of factories to make each year
-	set_variable = { lok_ps_factory_growth_goal = num_of_military_factories }
-	add_to_variable = { lok_ps_factory_growth_goal = num_of_civilian_factories }
+	# The private sector occupies a share of civilian industry only; military
+	# factories therefore do not enlarge its annual investment base.
+	set_variable = { lok_ps_factory_growth_goal = num_of_civilian_factories }
 	multiply_variable = { lok_ps_factory_growth_goal = consumer_goods_perc }
 	multiply_variable = { lok_ps_factory_growth_goal = lok_ps_growth_target_true }
 	round_variable = lok_ps_factory_growth_goal
