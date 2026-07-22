@@ -22,7 +22,21 @@ calculate_private_sector_factory_allocation = {
 
 	set_variable = { lok_ps_reserved_civilian_factories = lok_ps_civilian_factory_count }
 	multiply_variable = { lok_ps_reserved_civilian_factories = lok_ps_share_value }
+	# Consumer-goods allocation truncates positive fractional factory counts.
+	# PDXScript has no floor_variable effect, so round(x - 0.499) emulates floor
+	# while preserving exact integers against floating-point imprecision.
+	subtract_from_variable = { lok_ps_reserved_civilian_factories = 0.499 }
 	round_variable = lok_ps_reserved_civilian_factories
+	clamp_variable = { var = lok_ps_reserved_civilian_factories min = 0 }
+	# Match NProduction.MINIMUM_NUMBER_OF_FACTORIES_TAKEN_BY_CONSUMER_GOODS_VALUE.
+	if = {
+		limit = {
+			check_variable = { lok_ps_share_value > 0 }
+			check_variable = { lok_ps_civilian_factory_count > 0 }
+			check_variable = { lok_ps_reserved_civilian_factories < 1 }
+		}
+		set_variable = { lok_ps_reserved_civilian_factories = 1 }
+	}
 
 	if = {
 		limit = { NOT = { has_dynamic_modifier = { modifier = LOK_private_sector_factory_allocation } } }
@@ -60,7 +74,7 @@ calculate_private_sector_modifiers = {
 	multiply_variable = { lok_ps_growth_target_true = modifier@lok_ps_productivity_factor }
 
 	# The private sector occupies a share of civilian industry only; military
-	# factories therefore do not enlarge its annual investment base.
+	# factories therefore do not enlarge its semiannual investment base.
 	set_variable = { lok_ps_factory_growth_goal = num_of_civilian_factories }
 	multiply_variable = { lok_ps_factory_growth_goal = consumer_goods_perc }
 	multiply_variable = { lok_ps_factory_growth_goal = lok_ps_growth_target_true }
@@ -3019,8 +3033,6 @@ dismantle_katlantropa_dam = {
 		}
 	}
 }
-
-
 
 #FROM EQUESTRIA AT WAR, USED WITH PERMISSION!!
 save_current_manpower = {

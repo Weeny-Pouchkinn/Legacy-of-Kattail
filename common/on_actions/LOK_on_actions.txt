@@ -4345,15 +4345,6 @@ on_actions = {
 		}
 	}
 
-	on_yearly = {
-		effect = {
-			if = {
-				limit = { is_non_playable_country = no }
-				country_event = { id = LOK_private_sector.1 }
-			}
-		}
-	}
-
 	on_weekly = {
 		effect = {
 			# Coalition weekly updates
@@ -5247,6 +5238,19 @@ on_actions = {
 
 	on_monthly = {
 		effect = {
+			# Private investment is surveyed twice per year without scaling down
+			# the per-cycle growth target. This deliberately doubles annualized
+			# private-sector growth compared with the former yearly pulse.
+			if = {
+				limit = { is_non_playable_country = no }
+				add_to_variable = { lok_ps_months_since_growth_report = 1 }
+				if = {
+					limit = { check_variable = { lok_ps_months_since_growth_report > 5 } }
+					subtract_from_variable = { lok_ps_months_since_growth_report = 6 }
+					country_event = { id = LOK_private_sector.1 }
+				}
+			}
+
 			#Check pop evolution and apply the productivity modifier
 			# every_controlled_state = {
 			# 	update_state_productivity_modifier = yes

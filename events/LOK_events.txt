@@ -246,8 +246,8 @@ country_event = { #
 	immediate = {
 		hidden_effect = {
 			calculate_private_sector_modifiers = yes
-			set_variable = { lok_ps_civs_built_this_year = 0 }
-			set_variable = { lok_ps_mils_built_this_year = 0 }
+			set_variable = { lok_ps_civs_built_this_half_year = 0 }
+			set_variable = { lok_ps_mils_built_this_half_year = 0 }
 			for_loop_effect = {
 				end = lok_ps_factory_growth_goal
 				random_owned_state = {
@@ -264,7 +264,7 @@ country_event = { #
 							instant_build = yes
 						}
 						clr_state_flag = lok_ps_build_military_factory
-						ROOT = { add_to_variable = { lok_ps_mils_built_this_year = 1 } }
+						ROOT = { add_to_variable = { lok_ps_mils_built_this_half_year = 1 } }
 					}
 					else = {
 						add_building_construction = {
@@ -272,7 +272,7 @@ country_event = { #
 							level = 1
 							instant_build = yes
 						}
-						ROOT = { add_to_variable = { lok_ps_civs_built_this_year = 1 } }
+						ROOT = { add_to_variable = { lok_ps_civs_built_this_half_year = 1 } }
 					}
 				}
 			}
@@ -1066,7 +1066,6 @@ country_event = {
 add_namespace = LOK_utility
 country_event = {
 	id = LOK_utility.1
-	immediate = {log = "[GetDateText]: [Root.GetName]: event utility.1"}
 	hidden = yes
 	is_triggered_only = yes
 	option = {
