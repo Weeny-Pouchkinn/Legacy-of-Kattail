@@ -110,59 +110,6 @@ faction_goal_unlock_military = {
 	}
 }
 
-# Generic logistical preparation goal adapted from vanilla.
-faction_goal_military_infrastructure = {
-	name = military_infrastructure_goal_name
-	description = military_infrastructure_goal_desc
-	category = short_term
-	group = FOCUS_FILTER_CONSOLIDATION
-	visible = {
-		collection_size = {
-			input = {
-				input = game:all_states
-				operators = {
-					limit = {
-						is_core_of = CONTROLLER
-						is_controlled_by_ROOT_or_ally = yes
-						any_neighbor_state = { controller = { NOT = { is_in_faction_with = ROOT } } }
-						infrastructure < 4
-					}
-				}
-				name = COLLECTION_FACTION_BORDER_STATES_FULL_INFRASTRUCTURE
-			}
-			value > 0
-		}
-	}
-	completed = {
-		collection_size = {
-			input = {
-				input = game:all_states
-				operators = {
-					limit = {
-						is_controlled_by_ROOT_or_ally = yes
-						any_neighbor_state = { controller = { NOT = { is_in_faction_with = ROOT } } }
-						infrastructure < 4
-					}
-				}
-				name = COLLECTION_FACTION_BORDER_STATES_FULL_INFRASTRUCTURE
-			}
-			value < 10
-		}
-	}
-	complete_effect = {
-		add_faction_power_projection = 100
-		custom_effect_tooltip = generic_skip_one_line_tt
-		custom_effect_tooltip = ALL_FACTION_MEMBERS
-		every_faction_member = {
-			IF = {
-				limit = { NOT = { has_completed_goal = faction_goal_military_infrastructure } }
-				army_experience = 50
-			}
-		}
-	}
-	ai_will_do = { base = 0 modifier = { add = 1 has_war = no } }
-}
-
 faction_goal_joint_intelligence_bureau = {
 	name = LOK_joint_intelligence_bureau_goal_name
 	description = LOK_joint_intelligence_bureau_goal_desc
@@ -185,25 +132,4 @@ faction_goal_joint_intelligence_bureau = {
 		add_faction_initiative = 1
 	}
 	ai_will_do = { base = 1 }
-}
-
-faction_goal_herzlands_foothold = {
-	name = LOK_herzlands_foothold_goal_name
-	description = LOK_herzlands_foothold_goal_desc
-	category = short_term
-	group = FOCUS_FILTER_ANNEXATION
-	visible = { ROOT = { is_herzlands_warlord = yes } }
-	auto_complete = yes
-	ratio_progress = {
-		total_amount_collection = collection:LOK_herzlands_states
-		completed_amount_collection = collection:LOK_faction_controlled_herzlands_states
-		range = { max = 0.15 }
-	}
-	complete_effect = {
-		add_faction_power_projection = 100
-		add_faction_initiative = 1
-		custom_effect_tooltip = LOK_HERZLANDS_GOAL_REWARD_SHORT
-		every_faction_member = { add_war_support = 0.025 }
-	}
-	ai_will_do = { base = 2 }
 }

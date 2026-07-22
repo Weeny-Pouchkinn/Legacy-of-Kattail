@@ -123,24 +123,3 @@ faction_goal_combined_general_staff = {
 	}
 	ai_will_do = { base = 1 }
 }
-
-faction_goal_herzlands_dominant_power = {
-	name = LOK_herzlands_dominant_power_goal_name
-	description = LOK_herzlands_dominant_power_goal_desc
-	category = medium_term
-	group = FOCUS_FILTER_ANNEXATION
-	visible = { ROOT = { is_herzlands_warlord = yes } }
-	auto_complete = yes
-	ratio_progress = {
-		total_amount_collection = collection:LOK_herzlands_states
-		completed_amount_collection = collection:LOK_faction_controlled_herzlands_states
-		range = { max = 0.50 }
-	}
-	complete_effect = {
-		add_faction_power_projection = 300
-		add_faction_initiative = 1
-		custom_effect_tooltip = LOK_HERZLANDS_GOAL_REWARD_MEDIUM
-		every_faction_member = { add_stability = 0.025 add_war_support = 0.025 }
-	}
-	ai_will_do = { base = 2 }
-}
