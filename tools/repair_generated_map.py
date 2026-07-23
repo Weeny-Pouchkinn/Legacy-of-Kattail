@@ -246,9 +246,10 @@ def repair_definition_and_coasts(province_map: np.ndarray) -> None:
             rows[int(fields[0])] = fields
 
     for donor, gap in DONOR_TO_GAP.items():
-        fields = rows.pop(donor)
-        fields[0] = str(gap)
-        rows[gap] = fields
+        if donor in rows:
+            fields = rows.pop(donor)
+            fields[0] = str(gap)
+            rows[gap] = fields
 
     packed = (
         province_map[:, :, 0].astype(np.uint32) << 16
@@ -459,10 +460,11 @@ def repair_x_crossings(province_map: np.ndarray) -> np.ndarray:
     )
     ys, xs = np.where(crossings)
 
-    # Extend the upper-left province one pixel diagonally. This turns the
-    # ambiguous four-corner junction into an unambiguous T junction.
+    # Extend the upper-right province downward by one pixel. This turns the
+    # ambiguous four-corner junction into a T junction while keeping the new
+    # pixel orthogonally connected to its province.
     for y, x in zip(ys, xs):
-        province_map[y + 1, x + 1] = province_map[y, x]
+        province_map[y + 1, x + 1] = province_map[y, x + 1]
     return province_map
 
 
