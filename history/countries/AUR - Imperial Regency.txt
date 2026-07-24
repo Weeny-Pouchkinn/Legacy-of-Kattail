@@ -1,18 +1,12 @@
-capital = 116
-
+capital = 1408
 set_oob = "AUR_1936"
 set_naval_oob = "AUR_1936_naval"
 set_air_oob = "AUR_1936_air"
-
 add_ideas = lok_corporatist_economy
-
 set_research_slots = 3
 set_stability = 0.4
 set_war_support = 0.7
-
 create_faction = "Neu-Katzpakt"
-
-# Starting tech
 set_technology = {
 	infantry_weapons = 1
 	solar_power_generation_tech = 1
@@ -42,7 +36,6 @@ set_technology = {
 	electronic_mechanical_engineering = 1
 	radio = 1
 	atomic_research = 1
-	
 	nukes = 1
 	nuclear_power_plant_tech = 1
 	naval_nuclear_power = 1
@@ -55,7 +48,6 @@ set_technology = {
 	wartime_train = 1
 	fighter1 = 1
 	amphibious_mechanized_infantry = 1
-
 	early_submarine = 1
 	early_destroyer = 1
 	early_light_cruiser = 1
@@ -70,10 +62,10 @@ set_technology = {
 	transport = 1
 	CAS1 = 1
 }
-
-# DLC-gated starting armor technologies: designer chassis or fixed equipment, never both.
 if = {
-	limit = { has_dlc = "No Step Back" }
+	limit = {
+		has_dlc = "No Step Back"
+	}
 	set_technology = {
 		basic_medium_tank_chassis = 1
 		gwtank_chassis = 1
@@ -82,16 +74,18 @@ if = {
 	LOK_create_starting_tank_variants = yes
 }
 if = {
-	limit = { NOT = { has_dlc = "No Step Back" } }
+	limit = {
+		NOT = {
+			has_dlc = "No Step Back"
+		}
+	}
 	set_technology = {
 		basic_medium_tank = 1
 		gwtank = 1
 		basic_light_tank = 1
 	}
 }
-
 set_convoys = 300
-
 add_ideas = {
 	herzlands_warlord_idea
 	extensive_conscription
@@ -99,23 +93,22 @@ add_ideas = {
 	AUR_mishandled_navy_airforce
 	AUR_split_auralia
 	limited_exports
-	#ipf_resistance_idea
-	#ksk_resistance_idea
 }
-
-add_dynamic_modifier = { modifier = AUR_the_kaiser_must_return }
-
-set_variable = { AUR_the_kaiser_must_return_war_support_factor = -0.15 }
-set_variable = { AUR_the_kaiser_must_return_stability_factor = -0.05 }
-
+add_dynamic_modifier = {
+	modifier = AUR_the_kaiser_must_return
+}
+set_variable = {
+	AUR_the_kaiser_must_return_war_support_factor = -0.15
+}
+set_variable = {
+	AUR_the_kaiser_must_return_stability_factor = -0.05
+}
 set_politics = {
 	ruling_party = fascism
 	last_election = "1932.5.1"
 	election_frequency = 48
 	elections_allowed = no
 }
-
-
 set_popularities = {
 	fascism = 51
 	neutrality = 20
@@ -127,8 +120,6 @@ set_popularities = {
 	social_conservative = 3
 	democratic = 2
 }
-
-
 recruit_character = AUR_Pawtton
 recruit_character = AUR_Hanz_Einaugig
 recruit_character = AUR_Herald
@@ -140,7 +131,6 @@ recruit_character = AUR_Markus_Languen
 recruit_character = AUR_Manuel_Elurr
 recruit_character = AUR_Barbara_Volgel
 recruit_character = AUR_Leors_Clawynch
-# Initial Exo-Atmospheric Ballistics package
 set_technology = {
 	experimental_rockets = 1
 	rocket_engines = 1

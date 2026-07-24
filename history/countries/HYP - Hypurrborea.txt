@@ -1,16 +1,11 @@
-capital = 7
-
+capital = 1467
 set_oob = "HYP_1936"
 set_naval_oob = "HYP_1936_naval"
 set_air_oob = "HYP_1936_air"
-
 add_ideas = lok_centrally_planned_economy
-
 set_research_slots = 3
 set_stability = 0.5
 set_war_support = 0.5
-
-# Starting tech
 set_technology = {
 	infantry_weapons = 1
 	solar_power_generation_tech = 1
@@ -40,7 +35,6 @@ set_technology = {
 	electronic_mechanical_engineering = 1
 	radio = 1
 	atomic_research = 1
-	
 	nukes = 1
 	nuclear_power_plant_tech = 1
 	naval_nuclear_power = 1
@@ -53,7 +47,6 @@ set_technology = {
 	wartime_train = 1
 	fighter1 = 1
 	amphibious_mechanized_infantry = 1
-
 	early_submarine = 1
 	early_destroyer = 1
 	early_light_cruiser = 1
@@ -64,14 +57,12 @@ set_technology = {
 	basic_heavy_cruiser = 1
 	heavy_submarine = 1
 	transport = 1
-
-
 	CAS1 = 1
 }
-
-# DLC-gated starting armor technologies: designer chassis or fixed equipment, never both.
 if = {
-	limit = { has_dlc = "No Step Back" }
+	limit = {
+		has_dlc = "No Step Back"
+	}
 	set_technology = {
 		basic_medium_tank_chassis = 1
 		gwtank_chassis = 1
@@ -80,7 +71,11 @@ if = {
 	LOK_create_starting_tank_variants = yes
 }
 if = {
-	limit = { NOT = { has_dlc = "No Step Back" } }
+	limit = {
+		NOT = {
+			has_dlc = "No Step Back"
+		}
+	}
 	set_technology = {
 		basic_medium_tank = 1
 		gwtank = 1
@@ -88,30 +83,18 @@ if = {
 	}
 }
 set_convoys = 300
-
-add_ideas = {
-	herzlands_warlord_idea
-	extensive_conscription
-	katzen_collapse_3
-	AUR_katzbots
-}
-
+add_ideas = { herzlands_warlord_idea extensive_conscription katzen_collapse_3 AUR_katzbots }
 set_politics = {
 	ruling_party = fascism
 	last_election = "1932.5.1"
 	election_frequency = 48
 	elections_allowed = no
 }
-
-
 set_popularities = {
 	fascism = 84
 	neutrality = 16
 }
-
-
 recruit_character = HYP_Ernest_Purrbor
-# Initial Exo-Atmospheric Ballistics package
 set_technology = {
 	experimental_rockets = 1
 	rocket_engines = 1
