@@ -1,0 +1,35 @@
+lok_journal_entries_cat = {
+	PLR_launch_the_santa_bunbunia = {
+		icon = GFX_decision_generic_survey
+
+		allowed = {
+			original_tag = PLR
+		}
+
+		visible = {
+			NOT = { has_country_flag = PLR_santa_bunbunia_launched }
+		}
+
+		available = {
+			date > "101.1.1"
+		}
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			custom_effect_tooltip = PLR_launch_the_santa_bunbunia_tt
+			hidden_effect = {
+				set_country_flag = PLR_santa_bunbunia_launched
+				set_country_flag = PLR_santa_bunbunia_expedition_active
+				set_variable = { PLR_santa_bunbunia_stage = 0 }
+				news_event = { id = PLR_expedition_news.1 hours = 6 }
+				country_event = { id = PLR_expedition.1 days = 15 }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}

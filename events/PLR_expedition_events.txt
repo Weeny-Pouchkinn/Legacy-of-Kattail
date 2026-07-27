@@ -1,0 +1,811 @@
+add_namespace = PLR_expedition
+
+# Hidden route dispatcher. It is scheduled after each encounter and checks the
+# next destination only when the Santa Bunbunia is due to arrive.
+country_event = {
+	id = PLR_expedition.1
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				has_country_flag = PLR_santa_bunbunia_expedition_active
+			}
+
+			# Solakean Sea
+			if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 0 } }
+				set_variable = { PLR_santa_bunbunia_stage = 1 }
+				if = {
+					limit = {
+						ALK = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					ALK = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 1 } }
+				set_variable = { PLR_santa_bunbunia_stage = 2 }
+				if = {
+					limit = {
+						VAS = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					VAS = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 2 } }
+				set_variable = { PLR_santa_bunbunia_stage = 3 }
+				if = {
+					limit = {
+						KEP = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					KEP = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 3 } }
+				set_variable = { PLR_santa_bunbunia_stage = 4 }
+				if = {
+					limit = {
+						CRE = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					CRE = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 4 } }
+				set_variable = { PLR_santa_bunbunia_stage = 5 }
+				if = {
+					limit = {
+						SLR = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					SLR = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 5 } }
+				set_variable = { PLR_santa_bunbunia_stage = 6 }
+				if = {
+					limit = {
+						ROQ = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					ROQ = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+
+			# Grand Canal
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 6 } }
+				set_variable = { PLR_santa_bunbunia_stage = 7 }
+				if = {
+					limit = {
+						293 = {
+							controller = {
+								exists = yes
+								NOT = { has_war_with = PLR }
+							}
+						}
+					}
+					293 = {
+						controller = {
+							country_event = { id = PLR_expedition.8 }
+						}
+					}
+				}
+				else = {
+					country_event = { id = PLR_expedition.1 days = 90 }
+				}
+			}
+
+			# Sun Sea and the route north
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 7 } }
+				set_variable = { PLR_santa_bunbunia_stage = 8 }
+				if = {
+					limit = {
+						KUS = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					KUS = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 8 } }
+				set_variable = { PLR_santa_bunbunia_stage = 9 }
+				if = {
+					limit = {
+						RST = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					RST = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 9 } }
+				set_variable = { PLR_santa_bunbunia_stage = 10 }
+				if = {
+					limit = {
+						SOB = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					SOB = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 10 } }
+				set_variable = { PLR_santa_bunbunia_stage = 11 }
+				if = {
+					limit = {
+						MER = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					MER = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+
+			# Terra Borealis
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 11 } }
+				set_variable = { PLR_santa_bunbunia_stage = 12 }
+				news_event = { id = PLR_expedition_news.4 hours = 6 }
+				country_event = { id = PLR_expedition.1 days = 15 }
+			}
+
+			# Boreal coast
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 12 } }
+				set_variable = { PLR_santa_bunbunia_stage = 13 }
+				if = {
+					limit = {
+						ZUS = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					ZUS = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 13 } }
+				set_variable = { PLR_santa_bunbunia_stage = 14 }
+				if = {
+					limit = {
+						NKC = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					NKC = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+
+			# Crabspian Sea canals
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 14 } }
+				set_variable = { PLR_santa_bunbunia_stage = 15 }
+				if = {
+					limit = {
+						ACR = {
+							exists = yes
+							has_war = no
+							NOT = { has_war_with = PLR }
+						}
+					}
+					ACR = { country_event = { id = PLR_expedition.11 } }
+				}
+				else = {
+					country_event = { id = PLR_expedition.1 days = 90 }
+				}
+			}
+
+			# Western and southern homeward route
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 15 } }
+				set_variable = { PLR_santa_bunbunia_stage = 16 }
+				if = {
+					limit = {
+						EUL = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					EUL = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 16 } }
+				set_variable = { PLR_santa_bunbunia_stage = 17 }
+				if = {
+					limit = {
+						UST = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					UST = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 17 } }
+				set_variable = { PLR_santa_bunbunia_stage = 18 }
+				if = {
+					limit = {
+						PGN = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					PGN = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 18 } }
+				set_variable = { PLR_santa_bunbunia_stage = 19 }
+				if = {
+					limit = {
+						KTN = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					KTN = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 19 } }
+				set_variable = { PLR_santa_bunbunia_stage = 20 }
+				if = {
+					limit = {
+						KAP = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					KAP = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 20 } }
+				set_variable = { PLR_santa_bunbunia_stage = 21 }
+				if = {
+					limit = {
+						PRC = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					PRC = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 21 } }
+				set_variable = { PLR_santa_bunbunia_stage = 22 }
+				if = {
+					limit = {
+						LTR = {
+							exists = yes
+							NOT = { has_war_with = PLR }
+						}
+					}
+					LTR = { country_event = { id = PLR_expedition.2 } }
+				}
+				else = { country_event = { id = PLR_expedition.1 hours = 1 } }
+			}
+
+			# Homecoming
+			else_if = {
+				limit = { check_variable = { PLR_santa_bunbunia_stage = 22 } }
+				clr_country_flag = PLR_santa_bunbunia_expedition_active
+				set_country_flag = PLR_santa_bunbunia_expedition_completed
+				clear_variable = PLR_santa_bunbunia_stage
+				country_event = { id = PLR_expedition.15 hours = 6 }
+				news_event = { id = PLR_expedition_news.6 hours = 6 }
+			}
+		}
+	}
+}
+
+# Generic foreign port call
+country_event = {
+	id = PLR_expedition.2
+	title = PLR_expedition.2.t
+	desc = PLR_expedition.2.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.2.a
+		custom_effect_tooltip = PLR_expedition_shoo_tt
+		hidden_effect = {
+			add_political_power = 25
+			add_opinion_modifier = {
+				target = PLR
+				modifier = PLR_santa_bunbunia_shooed
+			}
+			PLR = { country_event = { id = PLR_expedition.3 hours = 6 } }
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_fascist_gov_group = yes }
+			}
+		}
+	}
+
+	option = {
+		name = PLR_expedition.2.b
+		trigger = {
+			NOT = { has_fascist_gov_group = yes }
+		}
+		custom_effect_tooltip = PLR_expedition_welcome_tt
+		hidden_effect = {
+			add_opinion_modifier = {
+				target = PLR
+				modifier = PLR_santa_bunbunia_welcomed
+			}
+			PLR = { country_event = { id = PLR_expedition.4 hours = 6 } }
+		}
+		ai_chance = { base = 65 }
+	}
+
+	option = {
+		name = PLR_expedition.2.c
+		trigger = {
+			NOT = { has_fascist_gov_group = yes }
+		}
+		custom_effect_tooltip = PLR_expedition_tour_tt
+		hidden_effect = {
+			add_political_power = -25
+			add_stability = 0.025
+			add_opinion_modifier = {
+				target = PLR
+				modifier = PLR_santa_bunbunia_toured
+			}
+			PLR = { country_event = { id = PLR_expedition.5 hours = 6 } }
+		}
+		ai_chance = { base = 35 }
+	}
+
+	option = {
+		name = PLR_expedition.2.e
+		trigger = {
+			has_fascist_gov_group = yes
+		}
+		custom_effect_tooltip = PLR_expedition_attack_tt
+		hidden_effect = {
+			save_global_event_target_as = PLR_santa_bunbunia_attacker
+			add_war_support = 0.025
+			add_opinion_modifier = {
+				target = PLR
+				modifier = PLR_santa_bunbunia_attacked
+			}
+			random_list = {
+				80 = {
+					PLR = { country_event = { id = PLR_expedition.6 hours = 6 } }
+				}
+				20 = {
+					PLR = {
+						clr_country_flag = PLR_santa_bunbunia_expedition_active
+						set_country_flag = PLR_santa_bunbunia_sunk
+						clear_variable = PLR_santa_bunbunia_stage
+						country_event = { id = PLR_expedition.7 hours = 6 }
+						news_event = { id = PLR_expedition_news.2 hours = 6 }
+					}
+				}
+			}
+		}
+		ai_chance = { base = 50 }
+	}
+}
+
+# Reports to the Paluushian Realms
+country_event = {
+	id = PLR_expedition.3
+	title = PLR_expedition.3.t
+	desc = PLR_expedition.3.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.report_continue
+		hidden_effect = {
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+	}
+}
+
+country_event = {
+	id = PLR_expedition.4
+	title = PLR_expedition.4.t
+	desc = PLR_expedition.4.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	immediate = {
+		add_political_power = 10
+	}
+
+	option = {
+		name = PLR_expedition.request_embassy
+		custom_effect_tooltip = PLR_expedition.welcome_report_tt
+		custom_effect_tooltip = PLR_expedition_request_embassy_tt
+		hidden_effect = {
+			FROM = { country_event = { id = PLR_expedition.14 days = 60 } }
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+		ai_chance = { base = 50 }
+	}
+
+	option = {
+		name = PLR_expedition.no_embassy
+		custom_effect_tooltip = PLR_expedition.welcome_report_tt
+		hidden_effect = {
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				FROM = { is_ai = no }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = PLR_expedition.5
+	title = PLR_expedition.5.t
+	desc = PLR_expedition.5.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	immediate = {
+		add_political_power = 20
+	}
+
+	option = {
+		name = PLR_expedition.request_embassy
+		custom_effect_tooltip = PLR_expedition.tour_report_tt
+		custom_effect_tooltip = PLR_expedition_request_embassy_tt
+		hidden_effect = {
+			FROM = { country_event = { id = PLR_expedition.14 days = 60 } }
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+		ai_chance = { base = 50 }
+	}
+
+	option = {
+		name = PLR_expedition.no_embassy
+		custom_effect_tooltip = PLR_expedition.tour_report_tt
+		hidden_effect = {
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				FROM = { is_ai = no }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = PLR_expedition.6
+	title = PLR_expedition.6.t
+	desc = PLR_expedition.6.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.report_continue
+		hidden_effect = {
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+	}
+}
+
+country_event = {
+	id = PLR_expedition.7
+	title = PLR_expedition.7.t
+	desc = PLR_expedition.7.d
+	picture = GFX_report_event_rocket_explosion
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.7.a
+	}
+}
+
+# Grand Canal request and reports
+country_event = {
+	id = PLR_expedition.8
+	title = PLR_expedition.8.t
+	desc = PLR_expedition.8.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.8.a
+		custom_effect_tooltip = PLR_expedition_grand_canal_accept_tt
+		hidden_effect = {
+			PLR = { country_event = { id = PLR_expedition.9 hours = 6 } }
+		}
+		ai_chance = { base = 75 }
+	}
+
+	option = {
+		name = PLR_expedition.8.b
+		custom_effect_tooltip = PLR_expedition_canal_refuse_tt
+		hidden_effect = {
+			PLR = { country_event = { id = PLR_expedition.10 hours = 6 } }
+		}
+		ai_chance = { base = 25 }
+	}
+}
+
+country_event = {
+	id = PLR_expedition.9
+	title = PLR_expedition.9.t
+	desc = PLR_expedition.9.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.9.a
+		hidden_effect = {
+			news_event = { id = PLR_expedition_news.3 hours = 6 }
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+	}
+}
+
+country_event = {
+	id = PLR_expedition.10
+	title = PLR_expedition.10.t
+	desc = PLR_expedition.10.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.10.a
+		hidden_effect = {
+			country_event = { id = PLR_expedition.1 days = 90 }
+		}
+	}
+}
+
+# Crabspian canal request and reports
+country_event = {
+	id = PLR_expedition.11
+	title = PLR_expedition.11.t
+	desc = PLR_expedition.11.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.11.a
+		custom_effect_tooltip = PLR_expedition_crabspian_canal_accept_tt
+		hidden_effect = {
+			PLR = { country_event = { id = PLR_expedition.12 hours = 6 } }
+		}
+		ai_chance = { base = 75 }
+	}
+
+	option = {
+		name = PLR_expedition.11.b
+		custom_effect_tooltip = PLR_expedition_canal_refuse_tt
+		hidden_effect = {
+			PLR = { country_event = { id = PLR_expedition.13 hours = 6 } }
+		}
+		ai_chance = { base = 25 }
+	}
+}
+
+country_event = {
+	id = PLR_expedition.12
+	title = PLR_expedition.12.t
+	desc = PLR_expedition.12.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.12.a
+		hidden_effect = {
+			news_event = { id = PLR_expedition_news.5 hours = 6 }
+			country_event = { id = PLR_expedition.1 days = 15 }
+		}
+	}
+}
+
+country_event = {
+	id = PLR_expedition.13
+	title = PLR_expedition.13.t
+	desc = PLR_expedition.13.d
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.13.a
+		hidden_effect = {
+			country_event = { id = PLR_expedition.1 days = 90 }
+		}
+	}
+}
+
+# Embassy request, delivered two months after a friendly stop
+country_event = {
+	id = PLR_expedition.14
+	title = PLR_expedition.14.t
+	desc = PLR_expedition.14.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+	trigger = {
+		PLR = { exists = yes }
+		NOT = { has_war_with = PLR }
+	}
+
+	option = {
+		name = PLR_expedition.14.a
+		add_opinion_modifier = {
+			target = PLR
+			modifier = PLR_paluush_embassy_relations
+		}
+		diplomatic_relation = {
+			country = PLR
+			relation = non_aggression_pact
+		}
+		add_offsite_building = {
+			type = industrial_complex
+			level = 1
+		}
+		add_ideas = PLR_paluush_embassy
+		ai_chance = { base = 75 }
+	}
+
+	option = {
+		name = PLR_expedition.14.b
+		add_political_power = 5
+		ai_chance = { base = 25 }
+	}
+}
+
+# PLR homecoming
+country_event = {
+	id = PLR_expedition.15
+	title = PLR_expedition.15.t
+	desc = PLR_expedition.15.d
+	picture = GFX_report_event_celebration
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition.15.a
+	}
+}
+
+add_namespace = PLR_expedition_news
+
+news_event = {
+	id = PLR_expedition_news.1
+	title = PLR_expedition_news.1.t
+	desc = PLR_expedition_news.1.d
+	picture = GFX_news_event_colony_ship
+	major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition_news.1.a
+	}
+}
+
+news_event = {
+	id = PLR_expedition_news.2
+	title = PLR_expedition_news.2.t
+	desc = PLR_expedition_news.2.d
+	picture = GFX_news_event_exploding_ship
+	major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition_news.2.a
+	}
+}
+
+news_event = {
+	id = PLR_expedition_news.3
+	title = PLR_expedition_news.3.t
+	desc = PLR_expedition_news.3.d
+	picture = GFX_news_event_diplomacy
+	major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition_news.3.a
+	}
+}
+
+news_event = {
+	id = PLR_expedition_news.4
+	title = PLR_expedition_news.4.t
+	desc = PLR_expedition_news.4.d
+	picture = GFX_news_event_space_exploration
+	major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition_news.4.a
+	}
+}
+
+news_event = {
+	id = PLR_expedition_news.5
+	title = PLR_expedition_news.5.t
+	desc = PLR_expedition_news.5.d
+	picture = GFX_news_event_diplomacy
+	major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition_news.5.a
+	}
+}
+
+news_event = {
+	id = PLR_expedition_news.6
+	title = PLR_expedition_news.6.t
+	desc = PLR_expedition_news.6.d
+	picture = GFX_news_event_victory
+	major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = PLR_expedition_news.6.a
+	}
+}
