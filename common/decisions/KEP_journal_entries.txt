@@ -1,0 +1,468 @@
+lok_journal_entries_cat = {
+	# Quepler's attempt to finish the Plavetan colonial project.
+	KEP_finalize_plavetan_colonization = {
+		icon = GFX_decision_generic_military
+
+		allowed = {
+			original_tag = KEP
+		}
+
+		visible = {
+			has_government = democratic
+			NOT = { has_country_flag = KEP_plavetan_war_begun }
+			country_exists = PLA
+		}
+
+		available = {
+			date > "102.1.1"
+			is_subject = no
+			has_war = no
+		}
+
+		fire_only_once = yes
+		war_with_on_complete = PLA
+
+		complete_effect = {
+			custom_effect_tooltip = KEP_finalize_plavetan_colonization_tt
+			hidden_effect = {
+				set_country_flag = KEP_plavetan_war_begun
+				declare_war_on = {
+					target = PLA
+					type = annex_everything
+				}
+				activate_mission = KEP_conquer_plaveta_mission
+				news_event = { id = LOK_KEP.1 hours = 6 }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	KEP_conquer_plaveta_mission = {
+		icon = GFX_decision_generic_tank
+		days_mission_timeout = 90
+
+		activation = {
+			always = no
+		}
+
+		available = {
+			NOT = { country_exists = PLA }
+		}
+
+		complete_effect = {
+			custom_effect_tooltip = KEP_conquer_plaveta_mission_success_tt
+			hidden_effect = {
+				set_country_flag = KEP_defeated_plaveta_in_time
+				news_event = { id = LOK_KEP.2 hours = 6 }
+			}
+		}
+
+		timeout_effect = {
+			custom_effect_tooltip = KEP_conquer_plaveta_mission_failure_tt
+			hidden_effect = {
+				set_country_flag = KEP_failed_plavetan_war
+				white_peace = PLA
+
+				create_dynamic_country = {
+					original_tag = KEP
+					copy_tag = KEP
+					set_temp_variable = { KEP_fascist_country = this }
+
+					every_state = {
+						limit = { is_core_of = KEP }
+						add_core_of = var:KEP_fascist_country
+					}
+
+					1016 = { transfer_state_to = var:KEP_fascist_country }
+					1017 = { transfer_state_to = var:KEP_fascist_country }
+					1022 = { transfer_state_to = var:KEP_fascist_country }
+					1023 = { transfer_state_to = var:KEP_fascist_country }
+					1024 = { transfer_state_to = var:KEP_fascist_country }
+
+					KEP = {
+						transfer_units_fraction = {
+							target = var:KEP_fascist_country
+							stockpile_ratio = 0.40
+							army_ratio = 0.40
+							navy_ratio = 0.40
+							air_ratio = 0.40
+						}
+						set_country_flag = KEP_civil_war_original
+					}
+
+					var:KEP_fascist_country = {
+						save_global_event_target_as = KEP_fascist_splinter
+						set_country_flag = KEP_fascist_splinter
+						set_politics = {
+							ruling_party = fascism
+							elections_allowed = no
+						}
+						set_popularities = {
+							fascism = 100
+						}
+						set_capital = { state = 1023 }
+						declare_war_on = {
+							target = KEP
+							type = annex_everything
+						}
+					}
+				}
+
+				KEP = {
+					add_civil_war_target = event_target:KEP_fascist_splinter
+				}
+
+				# The peace is only an armistice: Plaveta now fights both Queplerian factions.
+				PLA = {
+					declare_war_on = {
+						target = KEP
+						type = annex_everything
+					}
+					declare_war_on = {
+						target = event_target:KEP_fascist_splinter
+						type = annex_everything
+					}
+					activate_mission = PLA_seize_queplerian_land_mission
+				}
+
+				news_event = { id = LOK_KEP.3 hours = 6 }
+			}
+		}
+	}
+
+	PLA_seize_queplerian_land_mission = {
+		icon = GFX_decision_generic_operation
+		is_good = yes
+		days_mission_timeout = 45
+
+		allowed = {
+			tag = PLA
+		}
+
+		activation = {
+			always = no
+		}
+
+		available = {
+			always = no
+		}
+
+		timeout_effect = {
+			custom_effect_tooltip = PLA_seize_queplerian_land_mission_tt
+			hidden_effect = {
+				every_state = {
+					limit = {
+						is_core_of = KEP
+						is_controlled_by = PLA
+					}
+					add_core_of = PLA
+					transfer_state_to = PLA
+				}
+				if = {
+					limit = { country_exists = KEP }
+					white_peace = KEP
+				}
+				if = {
+					limit = { event_target:KEP_fascist_splinter = { exists = yes } }
+					white_peace = event_target:KEP_fascist_splinter
+				}
+				set_country_flag = PLA_queplerian_land_grab_complete
+			}
+		}
+	}
+
+	# Post-civil-war expansion available only to the fascist splinter.
+	KEP_remilitarize = {
+		icon = GFX_decision_ger_military_buildup
+
+		allowed = {
+			original_tag = KEP
+		}
+
+		visible = {
+			has_country_flag = KEP_fascist_splinter
+			has_country_flag = KEP_civil_war_won
+			NOT = { has_country_flag = KEP_remilitarized }
+		}
+
+		available = {
+			date > "103.1.1"
+			has_war = no
+		}
+
+		fire_only_once = yes
+		days_remove = 180
+
+		complete_effect = {
+			custom_effect_tooltip = KEP_remilitarize_tt
+		}
+
+		remove_effect = {
+			hidden_effect = {
+				set_country_flag = KEP_remilitarized
+				add_offsite_building = {
+					type = arms_factory
+					level = 10
+				}
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Patrouille du Grand Lac\" start_experience_factor = 0.3 start_equipment_factor = 1"
+						count = 12
+						owner = ROOT
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	KEP_reconquer_plaveta = {
+		icon = GFX_decision_generic_tank
+
+		allowed = {
+			original_tag = KEP
+		}
+
+		visible = {
+			has_country_flag = KEP_fascist_splinter
+			has_country_flag = KEP_remilitarized
+			NOT = { has_country_flag = KEP_reconquered_plaveta_decision }
+			country_exists = PLA
+		}
+
+		available = {
+			date > "104.1.1"
+		}
+
+		fire_only_once = yes
+		days_remove = 15
+		war_with_on_remove = PLA
+
+		remove_effect = {
+			PLA = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+			declare_war_on = {
+				target = PLA
+				type = annex_everything
+			}
+			hidden_effect = {
+				set_country_flag = KEP_reconquered_plaveta_decision
+				news_event = { id = LOK_KEP.5 hours = 6 }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	KEP_invade_solstian_federation = {
+		icon = GFX_decision_generic_military
+
+		allowed = {
+			original_tag = KEP
+		}
+
+		visible = {
+			has_country_flag = KEP_fascist_splinter
+			has_country_flag = KEP_remilitarized
+			NOT = { has_country_flag = KEP_invaded_sof_decision }
+			country_exists = SOF
+		}
+
+		available = {
+			date > "105.1.1"
+			has_war = no
+			OR = {
+				NOT = { country_exists = PLA }
+				PLA = { is_subject_of = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+		days_remove = 15
+		war_with_on_remove = SOF
+
+		remove_effect = {
+			SOF = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+			declare_war_on = {
+				target = SOF
+				type = annex_everything
+			}
+			hidden_effect = {
+				set_country_flag = KEP_invaded_sof_decision
+				news_event = { id = LOK_KEP.6 hours = 6 }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	KEP_invade_vasmar = {
+		icon = GFX_decision_generic_tank
+
+		allowed = {
+			original_tag = KEP
+		}
+
+		visible = {
+			has_country_flag = KEP_fascist_splinter
+			has_country_flag = KEP_remilitarized
+			NOT = { has_country_flag = KEP_invaded_vas_decision }
+			country_exists = VAS
+		}
+
+		available = {
+			date > "106.1.1"
+			has_war = no
+			OR = {
+				NOT = { country_exists = SOF }
+				SOF = { is_subject_of = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+		days_remove = 15
+		war_with_on_remove = VAS
+
+		remove_effect = {
+			VAS = {
+				every_core_state = {
+					custom_effect_tooltip = state_core_threshold_set_40
+					set_state_flag = compliance_40_@ROOT
+					add_to_array = { array = ROOT.potential_cores_array }
+					add_claim_by = ROOT
+				}
+			}
+			declare_war_on = {
+				target = VAS
+				type = annex_everything
+			}
+			hidden_effect = {
+				set_country_flag = KEP_invaded_vas_decision
+				news_event = { id = LOK_KEP.7 hours = 6 }
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	KEP_integrate_plaveta = {
+		icon = GFX_decision_generic_nationalism
+
+		allowed = {
+			original_tag = KEP
+		}
+
+		visible = {
+			has_country_flag = KEP_defeated_plaveta_in_time
+			NOT = { has_country_flag = KEP_plaveta_pacified }
+		}
+
+		available = {
+			has_war = no
+			controls_state = 421
+			controls_state = 425
+			controls_state = 806
+			owns_state = 421
+			owns_state = 425
+			owns_state = 806
+		}
+
+		days_remove = 180
+		fixed_random_seed = no
+
+		cancel_trigger = {
+			OR = {
+				has_war = yes
+				NOT = { controls_state = 421 }
+				NOT = { controls_state = 425 }
+				NOT = { controls_state = 806 }
+				NOT = { owns_state = 421 }
+				NOT = { owns_state = 425 }
+				NOT = { owns_state = 806 }
+			}
+		}
+
+		complete_effect = {
+			custom_effect_tooltip = KEP_integrate_plaveta_tt
+		}
+
+		remove_effect = {
+			random_list = {
+				50 = {
+					hidden_effect = {
+						421 = {
+							add_core_of = ROOT
+							set_temp_variable = { species_temp = 3 }
+							change_state_minority_species = yes
+							set_temp_variable = { culture_temp = 58 }
+							add_state_culture = yes
+						}
+						425 = {
+							add_core_of = ROOT
+							set_temp_variable = { species_temp = 3 }
+							change_state_minority_species = yes
+							set_temp_variable = { culture_temp = 58 }
+							add_state_culture = yes
+						}
+						806 = {
+							add_core_of = ROOT
+							set_temp_variable = { species_temp = 3 }
+							change_state_minority_species = yes
+							set_temp_variable = { culture_temp = 58 }
+							add_state_culture = yes
+						}
+						set_country_flag = KEP_plaveta_pacified
+						news_event = { id = LOK_KEP.8 hours = 6 }
+					}
+				}
+				50 = {
+					hidden_effect = {
+						release = PLA
+						random_list = {
+							1 = { 421 = { transfer_state_to = ROOT } }
+							1 = { 425 = { transfer_state_to = ROOT } }
+							1 = { 806 = { transfer_state_to = ROOT } }
+						}
+						PLA = {
+							declare_war_on = {
+								target = ROOT
+								type = annex_everything
+							}
+						}
+						activate_mission = KEP_conquer_plaveta_mission
+						news_event = { id = LOK_KEP.9 hours = 6 }
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}

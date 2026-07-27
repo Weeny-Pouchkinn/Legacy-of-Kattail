@@ -1,0 +1,42 @@
+on_actions = {
+	# ROOT is the capitulated country. Detect the defeated Queplerian splinter
+	# directly, since PLA may have delivered the final blow in the three-way war.
+	on_capitulation_immediate = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = {
+						has_country_flag = KEP_civil_war_original
+					}
+					event_target:KEP_fascist_splinter = {
+						exists = yes
+						has_capitulated = no
+						has_country_flag = KEP_fascist_splinter
+						NOT = { has_country_flag = KEP_civil_war_won }
+					}
+				}
+				event_target:KEP_fascist_splinter = {
+					set_country_flag = KEP_civil_war_won
+					news_event = { id = LOK_KEP.4 hours = 6 }
+				}
+			}
+			else_if = {
+				limit = {
+					ROOT = {
+						has_country_flag = KEP_fascist_splinter
+					}
+					KEP = {
+						exists = yes
+						has_capitulated = no
+						has_country_flag = KEP_civil_war_original
+						NOT = { has_country_flag = KEP_civil_war_won }
+					}
+				}
+				KEP = {
+					set_country_flag = KEP_civil_war_won
+					news_event = { id = LOK_KEP.4 hours = 6 }
+				}
+			}
+		}
+	}
+}
