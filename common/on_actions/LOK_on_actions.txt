@@ -3580,8 +3580,8 @@ on_actions = {
 			# make passive roqualian the only culture in state 207
 			207 = { clear_array = state_cultures add_to_array = { array = state_cultures value = 7 } }
 
-			# make chalsacian the only culture in states 1556
-			1556 = { clear_array = state_cultures add_to_array = { array = state_cultures value = 20 } }
+			# make chalsacian and active roqualian the cultures in state 1556
+			1556 = { clear_array = state_cultures add_to_array = { array = state_cultures value = 20 } add_to_array = { array = state_cultures value = 6 } }
 
 			# make meridional roqualian the only culture in state 1559
 			1559 = { clear_array = state_cultures add_to_array = { array = state_cultures value = 58 } }
@@ -3605,7 +3605,7 @@ on_actions = {
 			every_state = {
 				limit = {
 					is_owned_by = ACR
-					is_core_of = KFN
+					is_core_of = KRO
 				}
 				clear_array = state_cultures
 				add_to_array = { array = state_cultures value = 15 }
@@ -3656,6 +3656,66 @@ on_actions = {
 				add_to_array = { array = state_cultures value = 3 }
 				add_to_array = { array = state_cultures value = 42 }
 			}
+
+			# federalisches and continental amphibian in state 611
+			611 = {
+				clear_array = state_cultures
+				add_to_array = { array = state_cultures value = 81 }
+				add_to_array = { array = state_cultures value = 15 }
+			}
+
+			# --- AI Generated Species Fixes ---
+			# make katlantropic only culture in state 1321
+			1321 = { clear_array = state_cultures add_to_array = { array = state_cultures value = 83 } }
+
+			# overwrite any existing species for these states with:
+			# make roqualian the only species in state 219
+			219 = { set_variable = { species = 3 } set_variable = { minority = 0 } }
+			
+			# make cloudstrider only species in state 96
+			96 = { set_variable = { species = 13 } set_variable = { minority = 0 } }
+			
+			# remove all species in states 1040
+			1040 = { set_variable = { species = 0 } set_variable = { minority = 0 } }
+			
+			# make katzen with kronk minority the species in every core state of KKN
+			every_state = {
+				limit = { is_core_of = KKN }
+				set_variable = { species = 1 }
+				set_variable = { minority = 7 }
+			}
+
+			# make yinjite with katzen minority the species in every core state of YIN (regardless of owner). except states 1519, 1518, 1313, 1508, these should be katzen majority with yinjite minority
+			every_state = {
+				limit = { is_core_of = YIN }
+				set_variable = { species = 24 }
+				set_variable = { minority = 1 }
+			}
+			1519 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
+			1518 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
+			1313 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
+			1508 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
+
+			# make kronk with katzen minority the species in every core state of KRO (except those with Katlantropic culture)
+			every_state = {
+				limit = {
+					is_core_of = KRO
+					NOT = { is_core_of = KKN }
+					NOT = { is_in_array = { array = state_cultures value = 83 } }
+				}
+				set_variable = { species = 7 }
+				set_variable = { minority = 1 }
+			}
+			
+			# make katzen with yinjite minority the species in states 1321 1319 1320
+			1321 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
+			1319 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
+			1320 = { set_variable = { species = 1 } set_variable = { minority = 24 } }
+			
+			# make katzen with kronk minority the species in states 1499 1497 1498
+			1499 = { set_variable = { species = 1 } set_variable = { minority = 7 } }
+			1497 = { set_variable = { species = 1 } set_variable = { minority = 7 } }
+			1498 = { set_variable = { species = 1 } set_variable = { minority = 7 } }
 
 
 			#People hate the Regent
