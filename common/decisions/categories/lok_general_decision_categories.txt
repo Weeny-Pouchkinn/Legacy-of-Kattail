@@ -1,6 +1,8 @@
 herzlands_unification_cat = {
 	icon = GFX_decision_herzlands
-	visible = { is_herzlands_warlord = yes }
+	visible = {
+		NOT = { has_country_flag = nation_content_ended }
+		is_herzlands_warlord = yes }
 	allowed = { is_herzlands_warlord = yes }
 	visible_when_empty = yes
 
@@ -18,6 +20,9 @@ herzlands_unification_cat = {
 
 
 lok_power_grid_management_cat = {
+	visible = {
+		NOT = { has_country_flag = nation_content_ended }
+	}
 	icon = GFX_decision_category_generic_industry
 	priority = 150
 	visible_when_empty = yes
@@ -35,6 +40,9 @@ lok_power_grid_management_cat = {
 
 
 lok_peace_decisions_cat = {
+	visible = {
+		NOT = { has_country_flag = nation_content_ended }
+	}
 	icon = GFX_decision_category_saf_anti_colonialist_crusade
 	priority = 200
 	visible_when_empty = yes
@@ -53,6 +61,7 @@ lok_IPF_KSK_cat = {
 	allowed = { is_herzlands_warlord = yes }
 	priority = 800
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		is_herzlands_warlord = yes    
 	}
 	scripted_gui = lok_ipf_ksk_decision_gui
@@ -64,6 +73,7 @@ lok_space_program_cat = {
 	priority = 2000
 	visible_when_empty = yes
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		is_special_project_completed = sp:sp_lok_exo_atmospheric_ballistics
 	}
 }
@@ -72,6 +82,7 @@ lok_katzen_high_command_cat = {
 	icon = GFX_decision_katzen_high_command
 	priority = 2000
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_country_flag = katzen_high_command_decision_active
 	}
 	visible_when_empty = yes
@@ -83,6 +94,7 @@ lok_journal_entries_cat = {
 	priority = 3000
 	visible_when_empty = yes
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		OR = {
 			has_focus_tree = generic_focus
 			has_focus_tree = KTZ_TREE
@@ -95,7 +107,9 @@ lok_journal_entries_cat = {
 AUR_industrialization_cat = {
 	icon = GFX_decision_category_generic_industry
 	allowed = { tag = AUR }
-	visible = { has_completed_focus = AUR_dreijahrige NOT = { has_country_flag = failed_dreijahrige } }
+	visible = {
+		NOT = { has_country_flag = nation_content_ended }
+		has_completed_focus = AUR_dreijahrige NOT = { has_country_flag = failed_dreijahrige } }
 	priority = 900
 	visible_when_empty = no
 }
@@ -103,7 +117,9 @@ AUR_industrialization_cat = {
 AUR_commissars_cat = {
 	icon = GFX_decision_katzen_police
 	allowed = { tag = AUR }
-	visible = { has_completed_focus = AUR_katzkommissars }
+	visible = {
+		NOT = { has_country_flag = nation_content_ended }
+		has_completed_focus = AUR_katzkommissars }
 	priority = 2500
 	visible_when_empty = yes
 }
@@ -111,7 +127,9 @@ AUR_commissars_cat = {
 AUR_chew_slowly_cat = {
 	icon = GFX_decision_katzen_police
 	allowed = { tag = AUR }
-	visible = { has_country_flag = AUR_herald_sanity_active }
+	visible = {
+		NOT = { has_country_flag = nation_content_ended }
+		has_country_flag = AUR_herald_sanity_active }
 	priority = 2500
 	visible_when_empty = yes
 }
@@ -131,6 +149,7 @@ AUR_chew_slowly_cat = {
 CKG_politics_cat = {
 	icon = GFX_decision_category_generic_monarchism
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		OR = {
 			has_focus_tree = CAT_KINGDOM_TREE 
 			has_completed_focus = TAI_the_legitimate_heir
@@ -145,7 +164,9 @@ CKG_politics_cat = {
 #Elwin
 SIL_politics_cat = {
 	icon = GFX_decision_spr_political_assassination
-	visible = { tag = SIL NOT = { has_global_flag = elwin_collapse_occured } }
+	visible = {
+		NOT = { has_country_flag = nation_content_ended }
+		tag = SIL NOT = { has_global_flag = elwin_collapse_occured } }
 	priority = 1100
 	visible_when_empty = yes
 }
@@ -162,6 +183,7 @@ SIL_politics_cat = {
 TAK_painting_cat = {
 	icon = GFX_decision_category_generic_monarchism
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_focus_tree = TAK_CHARLES_TREE 
 		has_completed_focus = TAK_figure_it_out
 	}
@@ -172,6 +194,7 @@ TAK_painting_cat = {
 TAK_automata_cat = {
 	icon = GFX_decision_category_generic_monarchism
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_focus_tree = TAK_CHARLES_TREE 
 		has_completed_focus = TAK_automaton_department
 	}
@@ -184,6 +207,7 @@ KUS_vao_extraction_decisions = {
 	icon = GFX_decision_category_generic_industry
 	allowed = { tag = KUS }
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_completed_focus = KUS_expand_vao_extraction
 	}
 	priority = 900
@@ -194,6 +218,7 @@ KUS_flusiobalkans_union_cat = {
 	icon = GFX_decision_category_generic_diplomacy
 	allowed = { tag = KUS }
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_completed_focus = KUS_union_of_our_own
 	}
 	priority = 800
@@ -204,6 +229,7 @@ KUS_cybernetics_cat = {
 	icon = GFX_decision_category_generic_industry
 	allowed = { tag = KUS }
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_completed_focus = KUS_mass_cybernetics_program
 	}
 	priority = 850
@@ -215,6 +241,7 @@ ROQ_reclamation_cat = {
 	priority = 2001
 	visible_when_empty = yes
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		is_non_playable_country = no
 		has_global_flag = ROQ_reclamation_active
 	}
@@ -225,6 +252,7 @@ KUS_NEK_war_mediation_cat = {
 	priority = 1500
 	visible_when_empty = no
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_global_flag = KUS_NEK_war_active
 		OR = {
 			tag = KUS
@@ -239,6 +267,7 @@ KUS_basilisk_cat = {
 	icon = GFX_decision_category_generic_diplomacy
 	allowed = { tag = KUS }
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_country_flag = KUS_basilisk_took_over
 	}
 	priority = 800
@@ -249,6 +278,7 @@ KUS_katzenursk_decisions = {
 	icon = GFX_decision_category_generic_diplomacy
 	allowed = { original_tag = KUS }
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_completed_focus = KUS_mandate_bilingualism
 	}
 	priority = 850
@@ -260,6 +290,7 @@ KTW_katown_struggle  = {
 	icon = GFX_decision_category_generic_industry
 	allowed = { tag = KTW }
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		has_country_flag = ktw_katown_struggle_active
 	}
 	priority = 900
@@ -278,6 +309,7 @@ FRA_remnant_alliance = {
 		}
     }
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		FRA = {
 			is_in_faction_with = NAV
 		}
@@ -290,6 +322,7 @@ FRA_three_civil_war = {
 		tag = FRA
 	}
 	visible = {
+		NOT = { has_country_flag = nation_content_ended }
 		OR = {
 			country_exists = PUR
 			country_exists = PSR

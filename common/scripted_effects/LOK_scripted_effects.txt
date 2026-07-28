@@ -49,6 +49,485 @@ calculate_private_sector_factory_allocation = {
 	}
 }
 
+# Creates a contentless dynamic puppet using ROOT.lok_peace_puppet_source_country
+# as its national identity. ROOT is the releasing country and
+# ROOT.lok_release_mode determines which eligible states are retained.
+lok_create_blank_occupation_puppet = {
+	set_temp_variable = {
+		lok_puppet_source_country = var:lok_peace_puppet_source_country
+	}
+	create_dynamic_country = {
+		original_tag = lok_puppet_source_country
+		copy_tag = BPT
+		set_temp_variable = { lok_new_occupation_puppet = THIS }
+
+		set_country_flag = nation_content_ended
+		set_country_flag = dynamic_puppet_country
+		set_variable = { dynamic_puppet_original_country = lok_puppet_source_country }
+		drop_cosmetic_tag = yes
+		remove_ideas = {
+			LOK_base_modifier_definitions
+			specialty_nothing
+			var_species_0
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_noncore_stab_ws_impact } }
+			remove_dynamic_modifier = { modifier = lok_noncore_stab_ws_impact }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = LOK_food_consumption_modifier } }
+			remove_dynamic_modifier = { modifier = LOK_food_consumption_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = LOK_extra_resources_modifier } }
+			remove_dynamic_modifier = { modifier = LOK_extra_resources_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = lok_wonder_modifier } }
+			remove_dynamic_modifier = { modifier = lok_wonder_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = LOK_private_sector_factory_allocation } }
+			remove_dynamic_modifier = { modifier = LOK_private_sector_factory_allocation }
+		}
+		load_focus_tree = {
+			tree = LOK_blank_occupation_puppet_focus
+			keep_completed = no
+		}
+
+		lok_puppet_source_country = {
+			every_core_state = {
+				add_core_of = var:lok_new_occupation_puppet
+			}
+		}
+
+		ROOT = {
+			if = {
+				limit = {
+					check_variable = { lok_release_mode = 0 }
+				}
+				every_owned_state = {
+					limit = {
+						is_core_of = lok_puppet_source_country
+						NOT = { is_core_of = ROOT }
+						NOT = { is_claimed_by = ROOT }
+					}
+					transfer_state_to = var:lok_new_occupation_puppet
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { lok_release_mode = 1 }
+				}
+				every_owned_state = {
+					limit = {
+						is_core_of = lok_puppet_source_country
+						NOT = { is_core_of = ROOT }
+						NOT = { is_claimed_by = ROOT }
+						NOT = {
+							is_in_array = {
+								array = ROOT.potential_cores_array
+								value = THIS
+							}
+						}
+					}
+					transfer_state_to = var:lok_new_occupation_puppet
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { lok_release_mode = 2 }
+				}
+				every_owned_state = {
+					limit = {
+						is_core_of = lok_puppet_source_country
+						NOT = { is_core_of = ROOT }
+						NOT = { is_claimed_by = ROOT }
+						NOT = {
+							is_in_array = {
+								array = ROOT.potential_cores_array
+								value = THIS
+							}
+						}
+						NOT = {
+							any_neighbor_state = {
+								OR = {
+									is_core_of = ROOT
+									is_claimed_by = ROOT
+									is_in_array = {
+										array = ROOT.potential_cores_array
+										value = THIS
+									}
+								}
+							}
+						}
+					}
+					transfer_state_to = var:lok_new_occupation_puppet
+				}
+			}
+
+			if = {
+				limit = { NOT = { tag = ROQ } }
+				set_autonomy = {
+					target = var:lok_new_occupation_puppet
+					autonomy_state = autonomy_puppet
+				}
+			}
+			else = {
+				set_autonomy = {
+					target = var:lok_new_occupation_puppet
+					autonomy_state = autonomy_roqualian_puppet
+				}
+			}
+		}
+	}
+}
+
+lok_set_dynamic_puppet_autonomy_rank = {
+	set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 100 }
+	if = {
+		limit = {
+			OR = {
+				has_autonomy_state = autonomy_collaboration_government
+				has_autonomy_state = autonomy_personal_union
+				has_autonomy_state = autonomy_aat_defense_council_member
+			}
+		}
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 0 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_autonomy_state = autonomy_integrated_puppet
+				has_autonomy_state = autonomy_reichskommissariat
+				has_autonomy_state = autonomy_wtt_imperial_protectorate
+			}
+		}
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 20 }
+	}
+	else_if = {
+		limit = { has_autonomy_state = autonomy_puppet }
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 40 }
+	}
+	else_if = {
+		limit = { has_autonomy_state = autonomy_reichsprotectorate }
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 50 }
+	}
+	else_if = {
+		limit = { has_autonomy_state = autonomy_colony }
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 60 }
+	}
+	else_if = {
+		limit = { has_autonomy_state = autonomy_wtt_imperial_associate }
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 70 }
+	}
+	else_if = {
+		limit = { has_autonomy_state = autonomy_supervised_state }
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 75 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_autonomy_state = autonomy_dominion
+				has_autonomy_state = autonomy_outer_mayorland
+				has_autonomy_state = autonomy_roqualian_puppet
+				has_autonomy_state = autonomy_satellite
+				has_autonomy_state = autonomy_wtt_imperial_subject
+			}
+		}
+		set_temp_variable = { lok_dynamic_puppet_autonomy_rank = 80 }
+	}
+}
+
+# Uses the two global event targets selected by the monthly dispatcher.
+lok_merge_selected_dynamic_puppets = {
+	event_target:lok_dynamic_puppet_merge_loser = {
+		every_core_state = {
+			add_core_of = event_target:lok_dynamic_puppet_merge_survivor
+		}
+	}
+	if = {
+		limit = {
+			event_target:lok_dynamic_puppet_merge_loser = { is_ai = no }
+			event_target:lok_dynamic_puppet_merge_survivor = { is_ai = yes }
+		}
+		event_target:lok_dynamic_puppet_merge_survivor = {
+			change_tag_from = event_target:lok_dynamic_puppet_merge_loser
+		}
+	}
+	event_target:lok_dynamic_puppet_merge_survivor = {
+		annex_country = {
+			target = event_target:lok_dynamic_puppet_merge_loser
+			transfer_troops = yes
+		}
+	}
+}
+
+lok_check_dynamic_puppet_reunifications = {
+	# Backfill occupation puppets created by saves from before the dedicated flag existed.
+	every_country = {
+		limit = {
+			is_dynamic_country = yes
+			has_country_flag = nation_content_ended
+			NOT = { has_country_flag = unique_puppet_country }
+			NOT = { has_country_flag = dynamic_puppet_country }
+		}
+		set_country_flag = dynamic_puppet_country
+		set_variable = { dynamic_puppet_original_country = var:original_tag }
+	}
+
+	clr_global_flag = lok_found_independent_dynamic_puppet_pair
+	every_country = {
+		limit = {
+			has_country_flag = dynamic_puppet_country
+			is_subject = no
+			has_variable = dynamic_puppet_original_country
+			NOT = { has_global_flag = lok_found_independent_dynamic_puppet_pair }
+		}
+		save_global_event_target_as = lok_dynamic_puppet_first
+		var:dynamic_puppet_original_country = {
+			save_global_event_target_as = lok_dynamic_puppet_source_tag
+		}
+		if = {
+			limit = {
+				any_country = {
+					has_country_flag = dynamic_puppet_country
+					is_subject = no
+					NOT = { tag = event_target:lok_dynamic_puppet_first }
+					original_tag = event_target:lok_dynamic_puppet_source_tag
+				}
+			}
+			set_global_flag = lok_found_independent_dynamic_puppet_pair
+			random_country = {
+				limit = {
+					has_country_flag = dynamic_puppet_country
+					is_subject = no
+					NOT = { tag = event_target:lok_dynamic_puppet_first }
+					original_tag = event_target:lok_dynamic_puppet_source_tag
+				}
+				save_global_event_target_as = lok_dynamic_puppet_second
+			}
+			if = {
+				limit = {
+					event_target:lok_dynamic_puppet_first = { is_ai = yes }
+					event_target:lok_dynamic_puppet_second = { is_ai = no }
+				}
+				event_target:lok_dynamic_puppet_second = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_survivor
+				}
+				event_target:lok_dynamic_puppet_first = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_loser
+				}
+			}
+			else = {
+				event_target:lok_dynamic_puppet_first = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_survivor
+				}
+				event_target:lok_dynamic_puppet_second = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_loser
+				}
+			}
+			lok_merge_selected_dynamic_puppets = yes
+			event_target:lok_dynamic_puppet_merge_survivor = {
+				news_event = { id = lok_puppet_management.1 }
+			}
+		}
+	}
+	clr_global_flag = lok_found_independent_dynamic_puppet_pair
+
+	clr_global_flag = lok_found_subject_dynamic_puppet_pair
+	every_country = {
+		limit = {
+			has_country_flag = dynamic_puppet_country
+			is_subject = yes
+			has_variable = dynamic_puppet_original_country
+			NOT = { has_global_flag = lok_found_subject_dynamic_puppet_pair }
+		}
+		save_global_event_target_as = lok_dynamic_puppet_first
+		var:dynamic_puppet_original_country = {
+			save_global_event_target_as = lok_dynamic_puppet_source_tag
+		}
+		var:overlord = {
+			save_global_event_target_as = lok_dynamic_puppet_common_overlord
+		}
+		if = {
+			limit = {
+				any_country = {
+					has_country_flag = dynamic_puppet_country
+					is_subject_of = event_target:lok_dynamic_puppet_common_overlord
+					NOT = { tag = event_target:lok_dynamic_puppet_first }
+					original_tag = event_target:lok_dynamic_puppet_source_tag
+				}
+			}
+			set_global_flag = lok_found_subject_dynamic_puppet_pair
+			random_country = {
+				limit = {
+					has_country_flag = dynamic_puppet_country
+					is_subject_of = event_target:lok_dynamic_puppet_common_overlord
+					NOT = { tag = event_target:lok_dynamic_puppet_first }
+					original_tag = event_target:lok_dynamic_puppet_source_tag
+				}
+				save_global_event_target_as = lok_dynamic_puppet_second
+			}
+			event_target:lok_dynamic_puppet_first = {
+				lok_set_dynamic_puppet_autonomy_rank = yes
+			}
+			event_target:lok_dynamic_puppet_second = {
+				lok_set_dynamic_puppet_autonomy_rank = yes
+			}
+			if = {
+				limit = {
+					event_target:lok_dynamic_puppet_first = {
+						check_variable = {
+							lok_dynamic_puppet_autonomy_rank > event_target:lok_dynamic_puppet_second.lok_dynamic_puppet_autonomy_rank
+						}
+					}
+				}
+				event_target:lok_dynamic_puppet_second = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_survivor
+				}
+				event_target:lok_dynamic_puppet_first = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_loser
+				}
+			}
+			else = {
+				event_target:lok_dynamic_puppet_first = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_survivor
+				}
+				event_target:lok_dynamic_puppet_second = {
+					save_global_event_target_as = lok_dynamic_puppet_merge_loser
+				}
+			}
+			lok_merge_selected_dynamic_puppets = yes
+			event_target:lok_dynamic_puppet_common_overlord = {
+				country_event = { id = lok_puppet_management.2 }
+			}
+		}
+	}
+	clr_global_flag = lok_found_subject_dynamic_puppet_pair
+	clear_global_event_target = lok_dynamic_puppet_first
+	clear_global_event_target = lok_dynamic_puppet_second
+	clear_global_event_target = lok_dynamic_puppet_source_tag
+	clear_global_event_target = lok_dynamic_puppet_common_overlord
+	clear_global_event_target = lok_dynamic_puppet_merge_survivor
+	clear_global_event_target = lok_dynamic_puppet_merge_loser
+}
+
+lok_check_orphaned_unique_puppets = {
+	# Backfill older saves by recognizing the bespoke identities assigned by AUR,
+	# TAI's Katzen Kingdom path and TAK's custom domains.
+	every_country = {
+		limit = {
+			NOT = { has_country_flag = unique_puppet_country }
+			OR = {
+				has_cosmetic_tag = AUR_SOUTH_HERZ_2_REGION
+				has_cosmetic_tag = AUR_SOUTH_HERZ_1_REGION
+				has_cosmetic_tag = AUR_EAST_HERZ_1_REGION
+				has_cosmetic_tag = AUR_EAST_HERZ_2_REGION
+				has_cosmetic_tag = AUR_NORTH_HERZ_1_REGION
+				has_cosmetic_tag = AUR_NORTH_HERZ_2_REGION
+				has_cosmetic_tag = AUR_CENTRAL_HERZ_1_REGION
+				has_cosmetic_tag = AUR_CENTRAL_HERZ_2_REGION
+			}
+		}
+		set_country_flag = unique_puppet_country
+		set_variable = { unique_puppet_former_overlord = AUR }
+	}
+	every_country = {
+		limit = {
+			NOT = { has_country_flag = unique_puppet_country }
+			is_subject_of = AUR
+			OR = {
+				has_country_flag = AUR_northern_pawn
+				has_country_flag = AUR_eastern_pawn
+				has_country_flag = AUR_central_pawn
+			}
+		}
+		set_country_flag = unique_puppet_country
+		set_variable = { unique_puppet_former_overlord = AUR }
+	}
+	every_country = {
+		limit = {
+			NOT = { has_country_flag = unique_puppet_country }
+			OR = {
+				has_cosmetic_tag = TAK_KEP_PUPPET
+				has_cosmetic_tag = TAK_SALT_PUPPET
+				has_cosmetic_tag = TAK_SOUTH_SOLARIA_PUPPET
+				has_cosmetic_tag = TAK_NORTH_SOLARIA_PUPPET
+				has_cosmetic_tag = TAK_MIDI_PUPPET
+				has_cosmetic_tag = TAK_ROQUAL_FRONTIER_PUPPET
+				has_cosmetic_tag = TAK_LUTECIE_PUPPET
+				has_cosmetic_tag = TAK_BOCERIE_PUPPET
+				has_cosmetic_tag = TAK_KATZEN_PUPPET
+			}
+		}
+		set_country_flag = unique_puppet_country
+		set_variable = { unique_puppet_former_overlord = TAK }
+	}
+	every_country = {
+		limit = {
+			NOT = { has_country_flag = unique_puppet_country }
+			OR = {
+				has_cosmetic_tag = PTQ_ZUSPRI
+				has_cosmetic_tag = IMF_ZUSPRI
+			}
+		}
+		set_country_flag = unique_puppet_country
+		set_variable = { unique_puppet_former_overlord = TAI }
+	}
+	if = {
+		limit = { event_target:cat_kingdom_meon = { exists = yes } }
+		event_target:cat_kingdom_meon = {
+			if = {
+				limit = { NOT = { has_country_flag = unique_puppet_country } }
+				set_country_flag = unique_puppet_country
+				set_variable = { unique_puppet_former_overlord = TAI }
+			}
+		}
+	}
+	if = {
+		limit = { event_target:cat_kingdom_struken = { exists = yes } }
+		event_target:cat_kingdom_struken = {
+			if = {
+				limit = { NOT = { has_country_flag = unique_puppet_country } }
+				set_country_flag = unique_puppet_country
+				set_variable = { unique_puppet_former_overlord = TAI }
+			}
+		}
+	}
+
+	every_country = {
+		limit = {
+			has_country_flag = unique_puppet_country
+			NOT = { has_country_flag = unique_puppet_independence_processed }
+			is_subject = no
+			has_variable = unique_puppet_former_overlord
+			OR = {
+				var:unique_puppet_former_overlord = { exists = no }
+				NOT = {
+					is_in_faction_with = var:unique_puppet_former_overlord
+				}
+			}
+		}
+		set_country_flag = unique_puppet_independence_processed
+		set_country_flag = nation_content_ended
+		drop_cosmetic_tag = yes
+		load_focus_tree = {
+			tree = generic_focus
+			keep_completed = no
+		}
+		if = {
+			limit = { has_idea = TAK_charlesling_domain }
+			remove_ideas = TAK_charlesling_domain
+		}
+		clr_country_flag = become_aur_katzregion
+		clr_country_flag = AUR_northern_pawn
+		clr_country_flag = AUR_eastern_pawn
+		clr_country_flag = AUR_central_pawn
+		news_event = { id = lok_puppet_management.3 }
+	}
+}
+
 calculate_private_sector_modifiers = {
 	calculate_private_sector_factory_allocation = yes
 	set_variable = { consumer_goods_perc = lok_ps_share_value }
