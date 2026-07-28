@@ -1100,7 +1100,9 @@ country_event = {
 add_namespace = lok_peace
 country_event = {
 	id = lok_peace.1
-	immediate = { log = "[GetDateText]: [Root.GetName]: event LOK_peace.1"}
+	immediate = {
+		log = "[GetDateText]: [Root.GetName]: event LOK_peace.1"
+	}
 	title = "lok_peace.1.t"
 	desc = "lok_peace.1.desc"
 
@@ -1109,180 +1111,30 @@ country_event = {
 	#Release friendly puppet EVERYWHERE
 	option = {
 		name = "lok_peace.1.a"
-		every_owned_state = {
-			limit = {
-				is_core_of = event_target:peace_puppet_country
-				NOT = { is_core_of = ROOT is_claimed_by = ROOT }
-			}
-			event_target:peace_puppet_country = { transfer_state = PREV }
-		}
-		puppet = event_target:peace_puppet_country
-		if = {
-			limit = { NOT = { tag = ROQ } }
-			set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
-		}
-		else_if = {
-			limit = { tag = ROQ }
-			set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_roqualian_puppet }
-		}
-		ai_chance = {
-			base = 1
-			modifier = { #USSF makes puppets
-				factor = 1000
-				tag = event_target:ussf_leader
-				NOT = { has_country_flag = usf_formed }
-			}
-			modifier = {
-				factor = 0 #If we can just annex more stuff then do that instead
-				NOT = { tag = event_target:ussf_leader }
-				event_target:peace_puppet_country = {
-					any_core_state = {
-						OR = {
-							is_core_of = ROOT
-							is_claimed_by = ROOT
-							is_in_array = { ROOT.potential_cores_array = THIS }
-							any_neighbor_state = { is_core_of = ROOT }
-							any_neighbor_state = { is_claimed_by = ROOT } 
-							any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
-						}
-					}
-				}
-			}
-		}
-		hidden_effect = {
-			clr_country_flag = deciding_nation_fate
-		}
-	}
-
-	#Release friendly puppet + annex cores and coreable regions
-	option = {
-		name = "lok_peace.1.b"
 		trigger = {
-			event_target:peace_puppet_country = {
-				any_core_state = {
-					OR = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-						is_in_array = { ROOT.potential_cores_array = THIS }
-						#Roqualia
-						is_in_array = { ROOT.departments_array = THIS } 
-					}
-				}
+			event_target:country_pending_release = {
+				is_dynamic_country = no
+				NOT = { tag = ROOT }
 			}
-		}
-		every_owned_state = {
-			limit = {
-				is_core_of = event_target:peace_puppet_country
+			any_owned_state = {
+				is_core_of = event_target:country_pending_release
 				NOT = {
 					is_core_of = ROOT
 					is_claimed_by = ROOT
-					is_in_array = { ROOT.potential_cores_array = THIS } 
+					is_in_array = { array = ROOT.potential_cores_array value = THIS }
 				}
 			}
-			event_target:peace_puppet_country = { transfer_state = PREV }
 		}
-		if = {
-			limit = { country_exists = event_target:peace_puppet_country }
-			puppet = event_target:peace_puppet_country
-			if = {
-				limit = { NOT = { tag = ROQ } }
-				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
-			}
-			else_if = {
-				limit = { tag = ROQ }
-				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_roqualian_puppet }
-			}
+		custom_effect_tooltip = lok_peace_create_blank_puppet_tt
+		hidden_effect = {
+			lok_create_blank_occupation_puppet = yes
+			clr_country_flag = deciding_nation_fate
 		}
 		ai_chance = {
-			base = 1
-			modifier = {
-				factor = 1000
-				tag = ROQ
-				has_fascist_gov_group = yes
-			}
-			modifier = { #USSF makes puppets
-				factor = 0
-				tag = event_target:ussf_leader
-				NOT = { has_country_flag = usf_formed }
-			}
-			# modifier = { #If we CAN annex more stuff then do it
-			# 	factor = 0
-			# 	NOT = {
-			# 		tag = ROQ
-			# 		has_fascist_gov_group = yes
-			# 	}
-			# 	event_target:peace_puppet_country = {
-			# 		OR = {
-			# 			any_neighbor_state = { is_core_of = ROOT }
-			# 			any_neighbor_state = { is_claimed_by = ROOT } 
-			# 			any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
-			# 		}
-			# 	}
-			# }
-		}
-		hidden_effect = {
-			clr_country_flag = deciding_nation_fate
+			base = 100
 		}
 	}
 
-	#Release friendly puppet + annex cores and coreable regions, and then go one state beyond that
-	option = {
-		name = "lok_peace.1.c"
-		trigger = {
-			event_target:peace_puppet_country = {
-				any_core_state = {
-					any_neighbor_state = {
-						OR = {
-							is_core_of = ROOT
-							is_claimed_by = ROOT
-							is_in_array = { ROOT.potential_cores_array = THIS } 
-						}
-					}
-				}
-			}
-		}
-		every_owned_state = {
-			limit = {
-				is_core_of = event_target:peace_puppet_country
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-					is_in_array = { ROOT.potential_cores_array = THIS } 
-					any_neighbor_state = { is_core_of = ROOT }
-					any_neighbor_state = { is_claimed_by = ROOT } 
-					any_neighbor_state = { is_in_array = { ROOT.potential_cores_array = THIS } }
-				}
-			}
-			event_target:peace_puppet_country = { transfer_state = PREV }
-		}
-		if = {
-			limit = { country_exists = event_target:peace_puppet_country }
-			puppet = event_target:peace_puppet_country
-			if = {
-				limit = { NOT = { tag = ROQ } }
-				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_puppet }
-			}
-			else_if = {
-				limit = { tag = ROQ }
-				set_autonomy = { target = event_target:peace_puppet_country autonomy_state = autonomy_roqualian_puppet }
-			}
-		}
-		ai_chance = {
-			base = 10
-			modifier = { #USSF makes puppets
-				factor = 0
-				tag = event_target:ussf_leader
-				NOT = { has_country_flag = usf_formed }
-			}
-			modifier = {
- 				factor = 0
-				tag = ROQ
-			}
-		}
-		hidden_effect = {
-			clr_country_flag = deciding_nation_fate
-		}
-	}
 	#Just annex
 	option = {
 		name = "lok_peace.1.d"
@@ -1290,6 +1142,7 @@ country_event = {
 			base = 0
 		}
 		hidden_effect = {
+			clear_array = lok_pending_occupation_puppet_states
 			clr_country_flag = deciding_nation_fate
 		}
 	}
