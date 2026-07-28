@@ -49,21 +49,17 @@ calculate_private_sector_factory_allocation = {
 	}
 }
 
-# Creates a contentless dynamic puppet using ROOT.lok_peace_puppet_source_country
-# as its national identity. ROOT is the releasing country and
-# ROOT.lok_release_mode determines which eligible states are retained.
+# Creates and finishes the contentless occupation puppet in one atomic effect.
+# In lok_peace.1, ROOT is the occupier and FROM is the real source country.
 lok_create_blank_occupation_puppet = {
-	set_temp_variable = {
-		lok_puppet_source_country = var:lok_peace_puppet_source_country
-	}
 	create_dynamic_country = {
-		original_tag = lok_puppet_source_country
+		original_tag = event_target:country_pending_release
 		copy_tag = BPT
 		set_temp_variable = { lok_new_occupation_puppet = THIS }
 
 		set_country_flag = nation_content_ended
 		set_country_flag = dynamic_puppet_country
-		set_variable = { dynamic_puppet_original_country = lok_puppet_source_country }
+		set_variable = { dynamic_puppet_original_country = FROM }
 		drop_cosmetic_tag = yes
 		remove_ideas = {
 			LOK_base_modifier_definitions
@@ -95,77 +91,18 @@ lok_create_blank_occupation_puppet = {
 			keep_completed = no
 		}
 
-		lok_puppet_source_country = {
+		FROM = {
 			every_core_state = {
 				add_core_of = var:lok_new_occupation_puppet
 			}
 		}
 
-		ROOT = {
-			if = {
-				limit = {
-					check_variable = { lok_release_mode = 0 }
-				}
-				every_owned_state = {
-					limit = {
-						is_core_of = lok_puppet_source_country
-						NOT = { is_core_of = ROOT }
-						NOT = { is_claimed_by = ROOT }
-					}
-					transfer_state_to = var:lok_new_occupation_puppet
-				}
-			}
-			else_if = {
-				limit = {
-					check_variable = { lok_release_mode = 1 }
-				}
-				every_owned_state = {
-					limit = {
-						is_core_of = lok_puppet_source_country
-						NOT = { is_core_of = ROOT }
-						NOT = { is_claimed_by = ROOT }
-						NOT = {
-							is_in_array = {
-								array = ROOT.potential_cores_array
-								value = THIS
-							}
-						}
-					}
-					transfer_state_to = var:lok_new_occupation_puppet
-				}
-			}
-			else_if = {
-				limit = {
-					check_variable = { lok_release_mode = 2 }
-				}
-				every_owned_state = {
-					limit = {
-						is_core_of = lok_puppet_source_country
-						NOT = { is_core_of = ROOT }
-						NOT = { is_claimed_by = ROOT }
-						NOT = {
-							is_in_array = {
-								array = ROOT.potential_cores_array
-								value = THIS
-							}
-						}
-						NOT = {
-							any_neighbor_state = {
-								OR = {
-									is_core_of = ROOT
-									is_claimed_by = ROOT
-									is_in_array = {
-										array = ROOT.potential_cores_array
-										value = THIS
-									}
-								}
-							}
-						}
-					}
-					transfer_state_to = var:lok_new_occupation_puppet
-				}
-			}
+		for_each_scope_loop = {
+			array = ROOT.lok_pending_occupation_puppet_states
+			transfer_state_to = var:lok_new_occupation_puppet
+		}
 
+		ROOT = {
 			if = {
 				limit = { NOT = { tag = ROQ } }
 				set_autonomy = {
@@ -181,6 +118,9 @@ lok_create_blank_occupation_puppet = {
 			}
 		}
 	}
+
+	clr_country_flag = lok_has_releasable_puppet_states
+	clear_array = lok_pending_occupation_puppet_states
 }
 
 lok_set_dynamic_puppet_autonomy_rank = {
@@ -2083,6 +2023,23 @@ kill_meowrius = {
 }
 
 calculate_ipf_ksk_resistance = {
+	if = {
+		limit = { NOT = { has_variable = ksk_strength } }
+		set_variable = { ksk_strength = 0 }
+	}
+	if = {
+		limit = { NOT = { has_variable = ipf_strength } }
+		set_variable = { ipf_strength = 0 }
+	}
+	if = {
+		limit = { NOT = { has_variable = ipf_opinion } }
+		set_variable = { ipf_opinion = 0 }
+	}
+	if = {
+		limit = { NOT = { has_variable = ksk_opinion } }
+		set_variable = { ksk_opinion = 0 }
+	}
+
 	if = {
 		limit = { has_global_flag = katlinin_dead }
 		clamp_variable = { var = ksk_strength min = 0 max = 3 }

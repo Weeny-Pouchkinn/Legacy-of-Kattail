@@ -137,13 +137,29 @@ lok_peace_decisions_cat = {
 
 		days_remove = 0
 
+		target_trigger = {
+			FROM = {
+				is_dynamic_country = no
+				tag = var:original_tag
+			}
+		}
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = deciding_nation_fate }
+			}
+		}
+
 		visible = {
 			is_non_playable_country = no
+			is_subject = no
 			NOT = { tag = AAA }
 			NOT = { has_country_flag = nation_content_ended }
-			NOT = { has_country_flag = decided_fate_of_@FROM }
+			hidden_trigger = {
+				NOT = { has_country_flag = decided_fate_of_@FROM }
+			}
 			FROM = {
-				NOT = { country_exists = THIS }
+				NOT = { tag = ROOT }
 				NOT = { tag = NMI } #hiveminds do be iffy
 				any_core_state = {
 					is_owned_by = ROOT
@@ -155,54 +171,32 @@ lok_peace_decisions_cat = {
 			}
 		}
 
-		remove_effect = {
+		complete_effect = {
 			custom_effect_tooltip = decide_fate_of_nation_tt
 			hidden_effect = {
+				set_country_flag = deciding_nation_fate
 				set_country_flag = decided_fate_of_@FROM
-				set_variable = { lok_peace_puppet_source_country = FROM }
-				country_event = { id = lok_peace.1 }
-			}
-		}
-
-		ai_will_do = {
-			factor = 200
-		}
-	}
-
-	decide_fate_of_existing_nation = {
-		icon = GFX_decision_generic_nationalism
-		days_remove = 0
-
-		target_trigger = {
-			FROM = {
-				exists = yes
-				is_dynamic_country = no
-				NOT = { tag = ROOT }
-				NOT = { tag = NMI }
-				NOT = { tag = DUR }
-				NOT = { tag = SLC }
-				NOT = { is_subject_of = ROOT }
-				any_core_state = {
-					is_owned_by = ROOT
-					NOT = { is_core_of = ROOT }
-					NOT = { is_claimed_by = ROOT }
+				clear_array = lok_pending_occupation_puppet_states
+				FROM = {
+					save_global_event_target_as = country_pending_release
+					every_core_state = {
+						limit = {
+							is_owned_by = ROOT
+							NOT = { is_core_of = ROOT }
+							NOT = { is_claimed_by = ROOT }
+							NOT = {
+								is_in_array = {
+									array = ROOT.potential_cores_array
+									value = THIS
+								}
+							}
+						}
+						add_to_array = { array = ROOT.lok_pending_occupation_puppet_states }
+					}
 				}
-			}
-		}
-
-		visible = {
-			is_non_playable_country = no
-			NOT = { tag = AAA }
-			NOT = { has_country_flag = nation_content_ended }
-			NOT = { has_country_flag = decided_fate_of_@FROM }
-		}
-
-		remove_effect = {
-			custom_effect_tooltip = decide_fate_of_nation_tt
-			hidden_effect = {
-				set_country_flag = decided_fate_of_@FROM
-				set_variable = { lok_peace_puppet_source_country = FROM }
-				country_event = { id = lok_peace.1 }
+				ROOT = {
+					country_event = { id = lok_peace.1 }
+				}
 			}
 		}
 
@@ -230,36 +224,15 @@ lok_peace_decisions_cat = {
 			is_non_playable_country = no
 			NOT = { has_country_flag = nation_content_ended }
 			FROM = {
-				OR = {
-					AND = {
-						has_variable = dynamic_puppet_original_country
-						var:dynamic_puppet_original_country = {
-							any_core_state = {
-								is_owned_by = ROOT
-								NOT = { is_core_of = ROOT }
-								NOT = { is_claimed_by = ROOT }
-								NOT = {
-									is_in_array = {
-										array = ROOT.potential_cores_array
-										value = THIS
-									}
-								}
-							}
-						}
-					}
-					AND = {
-						NOT = { has_variable = dynamic_puppet_original_country }
-						var:original_tag = {
-							any_core_state = {
-								is_owned_by = ROOT
-								NOT = { is_core_of = ROOT }
-								NOT = { is_claimed_by = ROOT }
-								NOT = {
-									is_in_array = {
-										array = ROOT.potential_cores_array
-										value = THIS
-									}
-								}
+				var:original_tag = {
+					any_core_state = {
+						is_owned_by = ROOT
+						NOT = { is_core_of = ROOT }
+						NOT = { is_claimed_by = ROOT }
+						NOT = {
+							is_in_array = {
+								array = ROOT.potential_cores_array
+								value = THIS
 							}
 						}
 					}
@@ -269,15 +242,10 @@ lok_peace_decisions_cat = {
 
 		remove_effect = {
 			FROM = {
-				if = {
-					limit = {
-						NOT = { has_variable = dynamic_puppet_original_country }
+				var:original_tag = {
+					every_core_state = {
+						add_core_of = FROM
 					}
-					set_variable = {
-						dynamic_puppet_original_country = var:original_tag
-					}
-				}
-				var:dynamic_puppet_original_country = {
 					every_core_state = {
 						limit = {
 							is_owned_by = ROOT
