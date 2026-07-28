@@ -1,0 +1,482 @@
+add_namespace = KUS_katzenursk
+
+country_event = {
+	id = KUS_katzenursk.1
+	title = KUS_katzenursk.1.t
+	desc = KUS_katzenursk.1.d
+	picture = GFX_report_event_ITA_italian_civil_war
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_katzenursk.1.a
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			set_country_flag = KUS_katzenursk_civil_war_jon_side
+			save_global_event_target_as = KUS_jon_country
+			create_dynamic_country = {
+				original_tag = KUS
+				copy_tag = KUS
+				set_temp_variable = { KUS_katzenursk_rebels = this }
+
+				every_state = {
+					limit = { is_core_of = KUS }
+					add_core_of = var:KUS_katzenursk_rebels
+				}
+
+				225 = { transfer_state_to = var:KUS_katzenursk_rebels }
+				231 = { transfer_state_to = var:KUS_katzenursk_rebels }
+				716 = { transfer_state_to = var:KUS_katzenursk_rebels }
+
+				KUS = {
+					transfer_units_fraction = {
+						target = var:KUS_katzenursk_rebels
+						stockpile_ratio = 0.45
+						army_ratio = 0.45
+						navy_ratio = 0.45
+						air_ratio = 0.45
+					}
+					every_unit_leader = {
+						random = {
+							chance = 25
+							set_nationality = var:KUS_katzenursk_rebels
+						}
+					}
+					KUS_Dieter_Windlaufer = {
+						set_nationality = var:KUS_katzenursk_rebels
+					}
+				}
+
+				var:KUS_katzenursk_rebels = {
+					save_global_event_target_as = KUS_katzenursk_country
+					set_country_flag = KUS_katzenursk_path
+					set_country_flag = KUS_katzenursk_civil_war_katzenursk_side
+					set_cosmetic_tag = KUS_KATZENURSK
+					set_politics = {
+						ruling_party = fascism
+						elections_allowed = no
+					}
+					set_party_name = {
+						ideology = fascism
+						long_name = KUS_katzenursk_national_council_long
+						name = KUS_katzenursk_national_council
+					}
+					set_popularities = {
+						fascism = 75
+						social_liberal = 10
+						communism = 10
+						authoritarian_democratic = 5
+					}
+					promote_character = KUS_Dieter_Windlaufer
+					set_capital = { state = 225 }
+					declare_war_on = {
+						target = KUS
+						type = annex_everything
+					}
+				}
+			}
+			add_civil_war_target = event_target:KUS_katzenursk_country
+			news_event = { id = KUS_katzenursk_news.1 hours = 6 }
+		}
+	}
+
+	option = {
+		name = KUS_katzenursk.1.b
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			create_dynamic_country = {
+				original_tag = KUS
+				copy_tag = KUS
+				set_temp_variable = { KUS_jon_rebels = this }
+
+				every_state = {
+					limit = { is_core_of = KUS }
+					add_core_of = var:KUS_jon_rebels
+				}
+
+				KUS = {
+					every_owned_state = {
+						limit = {
+							NOT = {
+								OR = {
+									state = 225
+									state = 231
+									state = 716
+								}
+							}
+						}
+						transfer_state_to = var:KUS_jon_rebels
+					}
+					transfer_units_fraction = {
+						target = var:KUS_jon_rebels
+						stockpile_ratio = 0.55
+						army_ratio = 0.55
+						navy_ratio = 0.55
+						air_ratio = 0.55
+					}
+					every_unit_leader = {
+						random = {
+							chance = 25
+							set_nationality = var:KUS_jon_rebels
+						}
+					}
+					KUS_Jon_Geemetra = {
+						set_nationality = var:KUS_jon_rebels
+					}
+				}
+
+				var:KUS_jon_rebels = {
+					save_global_event_target_as = KUS_jon_country
+					set_country_flag = KUS_katzenursk_civil_war_jon_side
+					set_cosmetic_tag = KUS_FEDERATION
+					set_politics = {
+						ruling_party = social_liberal
+						elections_allowed = yes
+					}
+					set_popularities = {
+						social_liberal = 55
+						social_conservative = 20
+						communism = 10
+						authoritarian_democratic = 10
+						fascism = 5
+					}
+					promote_character = KUS_Jon_Geemetra
+					declare_war_on = {
+						target = KUS
+						type = annex_everything
+					}
+				}
+			}
+
+			set_country_flag = KUS_katzenursk_path
+			set_country_flag = KUS_katzenursk_civil_war_katzenursk_side
+			save_global_event_target_as = KUS_katzenursk_country
+			set_cosmetic_tag = KUS_KATZENURSK
+			set_politics = {
+				ruling_party = fascism
+				elections_allowed = no
+			}
+			set_party_name = {
+				ideology = fascism
+				long_name = KUS_katzenursk_national_council_long
+				name = KUS_katzenursk_national_council
+			}
+			set_popularities = {
+				fascism = 75
+				social_liberal = 10
+				communism = 10
+				authoritarian_democratic = 5
+			}
+			promote_character = KUS_Dieter_Windlaufer
+			set_capital = { state = 225 }
+			add_civil_war_target = event_target:KUS_jon_country
+			news_event = { id = KUS_katzenursk_news.1 hours = 6 }
+		}
+	}
+}
+
+country_event = {
+	id = KUS_katzenursk.3
+	title = KUS_katzenursk.3.t
+	desc = KUS_katzenursk.3.d
+	picture = GFX_report_event_generic_parliament
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_katzenursk.3.a
+		set_cosmetic_tag = KUS_UNITARY_STATE
+		set_politics = {
+			ruling_party = authoritarian_democratic
+			elections_allowed = yes
+		}
+		set_party_name = {
+			ideology = authoritarian_democratic
+			long_name = KUS_unitary_nationalists_long
+			name = KUS_unitary_nationalists
+		}
+		set_popularities = {
+			authoritarian_democratic = 65
+			social_liberal = 25
+			communism = 5
+			fascism = 5
+		}
+		create_country_leader = {
+			name = "Estalai National Directorate"
+			picture = "GFX_portrait_Fallen_Government"
+			expire = "1965.1.1"
+			ideology = authoritarian_democracy
+		}
+		set_country_flag = KUS_unitary_state_path
+		news_event = { id = KUS_katzenursk_news.2 hours = 6 }
+		ai_chance = { base = 70 }
+	}
+	option = {
+		name = KUS_katzenursk.3.b
+		set_country_flag = KUS_unitary_civil_war_original
+		hidden_effect = {
+			create_dynamic_country = {
+				original_tag = KUS
+				copy_tag = KUS
+				set_temp_variable = { KUS_unitary_rebels = this }
+				every_state = {
+					limit = { is_core_of = KUS }
+					add_core_of = var:KUS_unitary_rebels
+				}
+				225 = { transfer_state_to = var:KUS_unitary_rebels }
+				231 = { transfer_state_to = var:KUS_unitary_rebels }
+				716 = { transfer_state_to = var:KUS_unitary_rebels }
+				KUS = {
+					transfer_units_fraction = {
+						target = var:KUS_unitary_rebels
+						stockpile_ratio = 0.45
+						army_ratio = 0.45
+						navy_ratio = 0.45
+						air_ratio = 0.45
+					}
+				}
+				var:KUS_unitary_rebels = {
+					save_global_event_target_as = KUS_unitary_country
+					set_country_flag = KUS_unitary_civil_war_rebel
+					set_cosmetic_tag = KUS_UNITARY_STATE
+					set_politics = {
+						ruling_party = authoritarian_democratic
+						elections_allowed = yes
+					}
+					set_popularities = {
+						authoritarian_democratic = 75
+						social_liberal = 15
+						communism = 5
+						fascism = 5
+					}
+					create_country_leader = {
+						name = "Estalai National Directorate"
+						picture = "GFX_portrait_Fallen_Government"
+						expire = "1965.1.1"
+						ideology = authoritarian_democracy
+					}
+					set_capital = { state = 225 }
+					declare_war_on = {
+						target = KUS
+						type = annex_everything
+					}
+				}
+			}
+			add_civil_war_target = event_target:KUS_unitary_country
+		}
+		ai_chance = { base = 30 }
+	}
+}
+
+# Freistaat receives the Katzenursk merger proposal.
+country_event = {
+	id = KUS_katzenursk.10
+	title = KUS_katzenursk.10.t
+	desc = KUS_katzenursk.10.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_katzenursk.10.a
+		ai_chance = { base = 100 }
+		hidden_effect = {
+			every_core_state = { add_core_of = event_target:KUS_katzenursk_country }
+			if = {
+				limit = { is_ai = no }
+				event_target:KUS_katzenursk_country = { change_tag_from = ROOT }
+			}
+			if = {
+				limit = { has_war_with = ROQ }
+				event_target:KUS_katzenursk_country = {
+					if = {
+						limit = { NOT = { has_war_with = ROQ } }
+						declare_war_on = { target = ROQ type = annex_everything }
+					}
+				}
+			}
+			event_target:KUS_katzenursk_country = {
+				annex_country = { target = ROOT transfer_troops = yes }
+				country_event = { id = KUS_katzenursk.12 hours = 6 }
+			}
+		}
+	}
+	option = {
+		name = KUS_katzenursk.10.b
+		ai_chance = { base = 0 }
+		hidden_effect = {
+			every_core_state = { add_core_of = event_target:KUS_katzenursk_country }
+			if = {
+				limit = { is_ai = no }
+				event_target:KUS_katzenursk_country = { change_tag_from = ROOT }
+			}
+			if = {
+				limit = { has_war_with = ROQ }
+				event_target:KUS_katzenursk_country = {
+					if = {
+						limit = { NOT = { has_war_with = ROQ } }
+						declare_war_on = { target = ROQ type = annex_everything }
+					}
+				}
+			}
+			event_target:KUS_katzenursk_country = {
+				annex_country = { target = ROOT transfer_troops = yes }
+				set_capital = { state = 730 }
+				add_political_power = -250
+				country_event = { id = KUS_katzenursk.13 hours = 6 }
+			}
+		}
+	}
+	option = {
+		name = KUS_katzenursk.10.c
+		ai_chance = { base = 0 }
+		hidden_effect = {
+			every_core_state = { add_core_of = event_target:KUS_katzenursk_country }
+			event_target:KUS_katzenursk_country = {
+				create_wargoal = { type = annex_everything target = ROOT }
+				country_event = { id = KUS_katzenursk.14 hours = 6 }
+			}
+		}
+	}
+}
+
+# Dominion receives the Katzenursk merger proposal.
+country_event = {
+	id = KUS_katzenursk.11
+	title = KUS_katzenursk.11.t
+	desc = KUS_katzenursk.11.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_katzenursk.11.a
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			every_core_state = { add_core_of = event_target:KUS_katzenursk_country }
+			if = {
+				limit = { is_ai = no }
+				event_target:KUS_katzenursk_country = { change_tag_from = ROOT }
+			}
+			if = {
+				limit = { has_war_with = ROQ }
+				event_target:KUS_katzenursk_country = {
+					if = {
+						limit = { NOT = { has_war_with = ROQ } }
+						declare_war_on = { target = ROQ type = annex_everything }
+					}
+				}
+			}
+			event_target:KUS_katzenursk_country = {
+				annex_country = { target = ROOT transfer_troops = yes }
+				country_event = { id = KUS_katzenursk.12 hours = 6 }
+			}
+		}
+	}
+	option = {
+		name = KUS_katzenursk.11.b
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			every_core_state = { add_core_of = event_target:KUS_katzenursk_country }
+			if = {
+				limit = { is_ai = no }
+				event_target:KUS_katzenursk_country = { change_tag_from = ROOT }
+			}
+			if = {
+				limit = { has_war_with = ROQ }
+				event_target:KUS_katzenursk_country = {
+					if = {
+						limit = { NOT = { has_war_with = ROQ } }
+						declare_war_on = { target = ROQ type = annex_everything }
+					}
+				}
+			}
+			event_target:KUS_katzenursk_country = {
+				annex_country = { target = ROOT transfer_troops = yes }
+				set_capital = { state = 242 }
+				add_political_power = -250
+				country_event = { id = KUS_katzenursk.13 hours = 6 }
+			}
+		}
+	}
+	option = {
+		name = KUS_katzenursk.11.c
+		ai_chance = { base = 0 }
+		hidden_effect = {
+			every_core_state = { add_core_of = event_target:KUS_katzenursk_country }
+			event_target:KUS_katzenursk_country = {
+				create_wargoal = { type = annex_everything target = ROOT }
+				country_event = { id = KUS_katzenursk.14 hours = 6 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = KUS_katzenursk.12
+	title = KUS_katzenursk.12.t
+	desc = KUS_katzenursk.12.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+	option = { name = KUS_katzenursk.12.a }
+}
+
+country_event = {
+	id = KUS_katzenursk.13
+	title = KUS_katzenursk.13.t
+	desc = KUS_katzenursk.13.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+	option = { name = KUS_katzenursk.13.a }
+}
+
+country_event = {
+	id = KUS_katzenursk.14
+	title = KUS_katzenursk.14.t
+	desc = KUS_katzenursk.14.d
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+	option = { name = KUS_katzenursk.14.a }
+}
+
+add_namespace = KUS_katzenursk_news
+
+news_event = {
+	id = KUS_katzenursk_news.1
+	title = KUS_katzenursk_news.1.t
+	desc = KUS_katzenursk_news.1.d
+	picture = GFX_news_event_combat
+	major = yes
+	is_triggered_only = yes
+	option = { name = KUS_katzenursk_news.1.a }
+}
+
+news_event = {
+	id = KUS_katzenursk_news.2
+	title = KUS_katzenursk_news.2.t
+	desc = {
+		trigger = { has_country_flag = KUS_unitary_civil_war_rebel }
+		text = KUS_katzenursk_news.2.d.war
+	}
+	desc = {
+		trigger = { NOT = { has_country_flag = KUS_unitary_civil_war_rebel } }
+		text = KUS_katzenursk_news.2.d
+	}
+	picture = GFX_news_event_signing
+	major = yes
+	is_triggered_only = yes
+	option = { name = KUS_katzenursk_news.2.a }
+}
+
+news_event = {
+	id = KUS_katzenursk_news.3
+	title = KUS_katzenursk_news.3.t
+	desc = {
+		trigger = { has_country_flag = KUS_katzenursk_path }
+		text = KUS_katzenursk_news.3.d.katzenursk
+	}
+	desc = {
+		trigger = { NOT = { has_country_flag = KUS_katzenursk_path } }
+		text = KUS_katzenursk_news.3.d.federal
+	}
+	picture = GFX_news_event_victory
+	major = yes
+	is_triggered_only = yes
+	option = { name = KUS_katzenursk_news.3.a }
+}

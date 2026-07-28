@@ -2358,6 +2358,10 @@ fire_thermonuclear_salvo = {
 			100 = {
 				launch_nuke = { state = event_target:lok_thermonuclear_salvo_state use_nuke = no }
 				event_target:lok_thermonuclear_salvo_state = {
+					if = {
+						limit = { ROOT = { tag = KUS has_completed_focus = KUS_mandate_bilingualism } }
+						set_state_flag = KUS_nuked_state
+					}
 					if = { #Fission
 						limit = { ROOT = { check_variable = { current_nuke_type = 1 } } }
 						set_variable = { lok_added_radiation_level = 1 }
@@ -2480,6 +2484,13 @@ fire_thermonuclear_salvo = {
 						else_if = { #Sturmer - 10% death
 							limit = { ROOT = { check_variable = { current_nuke_type = 5 } } }
 							multiply_temp_variable = { lok_nuke_casualties = 2 }
+						}
+						set_temp_variable = { lok_nuclear_blast_protection_factor = 1 }
+						add_to_temp_variable = {
+							lok_nuclear_blast_protection_factor = var:controller.modifier@lok_country_nuclear_blast_casualties_factor
+						}
+						multiply_temp_variable = {
+							lok_nuke_casualties = lok_nuclear_blast_protection_factor
 						}
 						if = { #Katown Pyramid protects!
 							limit = { check_variable = { wonder = 1 } }
@@ -2614,7 +2625,11 @@ apply_radiation_effects = {
 
 		#THIS IS THE "CASUALTIES FROM RADIATION" TRAIT
 		multiply_variable = { lok_radiation_death_percent = modifier@lok_species_radiation_casualties_factor }
-		#multiply_variable = { lok_radiation_death_percent = CONTROLLER.modifier@lok_country_radiation_casualties_factor } #FIX LATER
+		set_temp_variable = { lok_country_radiation_protection_factor = 1 }
+		add_to_temp_variable = {
+			lok_country_radiation_protection_factor = var:CONTROLLER.modifier@lok_country_radiation_casualties_factor
+		}
+		multiply_variable = { lok_radiation_death_percent = lok_country_radiation_protection_factor }
 
 		set_variable = { lok_radiation_death_count = state_population_k }
 		multiply_variable = { lok_radiation_death_count = lok_radiation_death_percent }

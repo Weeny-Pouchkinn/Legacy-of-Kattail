@@ -1,0 +1,155 @@
+KUS_katzenursk_decisions = {
+	KUS_mandate_bilingualism_in_state = {
+		icon = GFX_decision_generic_improve_relations
+		allowed = { original_tag = KUS }
+		state_target = yes
+		on_map_mode = map_only
+		target_array = ROOT.core_states
+		visible = {
+			has_completed_focus = KUS_mandate_bilingualism
+			FROM = {
+				is_owned_by = ROOT
+				is_core_of = ROOT
+				NOT = { has_state_flag = KUS_chalsacian_bilingualism }
+			}
+		}
+		available = { FROM = { is_controlled_by = ROOT } }
+		cancel_trigger = { FROM = { NOT = { is_controlled_by = ROOT } } }
+		cost = 50
+		days_remove = 120
+		remove_effect = {
+			FROM = {
+				set_temp_variable = { culture_temp = 20 }
+				add_state_culture = yes
+				set_temp_variable = { state_prod_change = 0.10 }
+				increase_state_productivity = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+				set_state_flag = KUS_chalsacian_bilingualism
+			}
+		}
+		ai_will_do = { base = 100 }
+	}
+
+	KUS_katzenify_nekaston_state = {
+		icon = GFX_decision_generic_form_nation
+		allowed = { original_tag = KUS }
+		state_target = yes
+		on_map_mode = map_only
+		target_array = ROOT.owned_states
+		visible = {
+			has_completed_focus = KUS_unification_of_solakean_felines
+			FROM = {
+				NOT = { is_core_of = ROOT }
+				is_owned_by = ROOT
+				is_core_of = NEK
+				NOT = { has_state_flag = KUS_nekaston_katzenified }
+			}
+		}
+		available = { FROM = { is_controlled_by = ROOT } }
+		cancel_trigger = { FROM = { NOT = { is_controlled_by = ROOT } } }
+		cost = 50
+		days_remove = 120
+		remove_effect = {
+			FROM = {
+				add_core_of = ROOT
+				set_temp_variable = { culture_temp = 20 }
+				add_state_culture = yes
+				set_state_flag = KUS_nekaston_katzenified
+			}
+		}
+		ai_will_do = { base = 100 }
+	}
+
+	KUS_settle_roqualian_marches = {
+		icon = GFX_decision_generic_form_nation
+		allowed = { original_tag = KUS }
+		state_target = yes
+		on_map_mode = map_only
+		target_array = ROOT.owned_states
+		visible = {
+			has_completed_focus = KUS_our_pioneers_advance
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+				OR = { is_core_of = LMB is_core_of = RQA }
+				NOT = { has_state_flag = KUS_roqualian_march_settled }
+			}
+		}
+		available = {
+			FROM = {
+				is_controlled_by = ROOT
+				custom_trigger_tooltip = {
+					tooltip = KUS_settle_roqualian_marches_state_nuked
+					has_state_flag = KUS_nuked_state
+				}
+			}
+		}
+		cancel_trigger = { FROM = { NOT = { is_controlled_by = ROOT } } }
+		cost = 50
+		days_remove = 120
+		remove_effect = {
+			FROM = {
+				custom_effect_tooltip = state_core_threshold_set_60
+				set_state_flag = compliance_60_@ROOT
+				add_to_array = { array = ROOT.potential_cores_array }
+				add_compliance = 20
+				rename_state_katzen = yes
+				random_list= {
+					1 = {
+						set_temp_variable = { culture_temp = 20 }
+						add_state_culture = yes
+						set_temp_variable = { species_temp = 1 }
+						change_state_majority_species = yes
+						set_temp_variable = { species_temp = 3 }
+						change_state_minority_species = yes
+					}
+					1 = {
+						set_temp_variable = { culture_temp = 48 }
+						add_state_culture = yes
+						set_temp_variable = { species_temp = 12 }
+						change_state_majority_species = yes
+						set_temp_variable = { species_temp = 3 }
+						change_state_minority_species = yes
+					}
+				}
+				set_state_flag = KUS_roqualian_march_settled
+			}
+		}
+		ai_will_do = { base = 100 }
+	}
+
+	KUS_forge_katzenurkisch_state = {
+		icon = GFX_decision_generic_form_nation
+		allowed = { original_tag = KUS }
+		state_target = yes
+		on_map_mode = map_only
+		target_array = ROOT.owned_states
+		visible = {
+			has_completed_focus = KUS_two_species_united_as_one
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = KUS_katzenurkisch_culture }
+			}
+		}
+		available = { FROM = { is_controlled_by = ROOT is_core_of = ROOT } }
+		cancel_trigger = { FROM = { NOT = { is_controlled_by = ROOT } } }
+		cost = 50
+		days_remove = 120
+		remove_effect = {
+			FROM = {
+				set_temp_variable = { culture_temp = 102 }
+				set_state_culture = yes
+				set_temp_variable = { state_prod_change = 0.10 }
+				increase_state_productivity = yes
+				set_state_flag = KUS_katzenurkisch_culture
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+		}
+		ai_will_do = { base = 100 }
+	}
+}

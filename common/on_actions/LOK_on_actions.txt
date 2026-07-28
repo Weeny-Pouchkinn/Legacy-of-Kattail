@@ -318,6 +318,7 @@ on_actions = {
 			add_to_array = { array = global.culture_group_1_array value = 43 }
 			add_to_array = { array = global.culture_group_1_array value = 44 }
 			add_to_array = { array = global.culture_group_1_array value = 45 }
+			add_to_array = { array = global.culture_group_1_array value = 102 }
 			add_to_array = { array = global.culture_group_1_array value = 60 }
 			add_to_array = { array = global.culture_group_1_array value = 75 }
 			add_to_array = { array = global.culture_group_1_array value = 101 }
@@ -5752,6 +5753,40 @@ on_actions = {
 
 	on_capitulation_immediate = {
 		effect = {
+			# Katzenursk civil war resolution. Capitulation itself is the only check.
+			if = {
+				limit = {
+					ROOT = { has_country_flag = KUS_katzenursk_civil_war_katzenursk_side }
+					event_target:KUS_jon_country = { exists = yes }
+				}
+				event_target:KUS_jon_country = {
+					set_country_flag = KUS_katzenursk_civil_war_won_by_federation
+					news_event = { id = KUS_katzenursk_news.3 hours = 6 }
+				}
+			}
+			if = {
+				limit = {
+					ROOT = { has_country_flag = KUS_katzenursk_civil_war_jon_side }
+					event_target:KUS_katzenursk_country = { exists = yes }
+				}
+				event_target:KUS_katzenursk_country = {
+					set_country_flag = KUS_katzenursk_civil_war_won
+					set_country_flag = KUS_katzenursk_path
+					set_cosmetic_tag = KUS_KATZENURSK
+					news_event = { id = KUS_katzenursk_news.3 hours = 6 }
+				}
+			}
+			if = {
+				limit = {
+					ROOT = { has_country_flag = KUS_unitary_civil_war_original }
+					event_target:KUS_unitary_country = { exists = yes }
+				}
+				event_target:KUS_unitary_country = {
+					set_country_flag = KUS_unitary_state_path
+					set_cosmetic_tag = KUS_UNITARY_STATE
+					news_event = { id = KUS_katzenursk_news.2 hours = 6 }
+				}
+			}
 			if = {
 				limit = {
 					OR = {
