@@ -1,0 +1,1274 @@
+# Public API. Scope: prospective host country.
+# Clears only staged configuration; it never touches a live Great Game.
+lok_begin_great_game_configuration = {
+	for_each_scope_loop = {
+		array = lok_gg_setup_participants
+		clr_country_flag = lok_gg_setup_main_claimant
+		clr_country_flag = lok_gg_setup_seen_validation
+		clear_variable = lok_gg_setup_alignment
+		clear_variable = lok_gg_setup_multiplier
+		clear_variable = lok_gg_setup_actions
+	}
+	clear_array = lok_gg_setup_participants
+	clr_country_flag = lok_gg_setup_doomed
+	clr_country_flag = lok_gg_setup_invalid
+	clear_variable = lok_gg_setup_round_limit
+	clear_variable = lok_gg_setup_host_multiplier
+	clear_variable = lok_gg_setup_host_actions
+	clear_variable = lok_gg_setup_positive_claimants
+	clear_variable = lok_gg_setup_negative_claimants
+	clear_variable = lok_gg_setup_negative_supporters
+	clear_variable = lok_gg_setup_participant_count
+}
+
+# Internal. Scope: prospective host. Normalises defaults and validates all staged data.
+# A failed validation sets lok_gg_setup_invalid and retains staging for inspection.
+lok_prepare_great_game_setup = {
+	clr_country_flag = lok_gg_setup_invalid
+	set_variable = { lok_gg_setup_positive_claimants = 0 }
+	set_variable = { lok_gg_setup_negative_claimants = 0 }
+	set_variable = { lok_gg_setup_negative_supporters = 0 }
+	set_variable = { lok_gg_setup_participant_count = 0 }
+
+	if = {
+		limit = { NOT = { has_variable = lok_gg_setup_round_limit } }
+		set_variable = { lok_gg_setup_round_limit = constant:lok_great_game.default_round_limit }
+	}
+	if = {
+		limit = { NOT = { has_variable = lok_gg_setup_host_multiplier } }
+		set_variable = { lok_gg_setup_host_multiplier = constant:lok_great_game.default_multiplier }
+	}
+	if = {
+		limit = { NOT = { has_variable = lok_gg_setup_host_actions } }
+		set_variable = { lok_gg_setup_host_actions = constant:lok_great_game.default_actions }
+	}
+	round_variable = lok_gg_setup_round_limit
+	round_variable = lok_gg_setup_host_actions
+
+	if = {
+		limit = {
+			OR = {
+				has_country_flag = lok_gg_in_game
+				check_variable = { lok_gg_setup_round_limit < 1 }
+				check_variable = { lok_gg_setup_round_limit > 200 }
+				check_variable = { lok_gg_setup_host_multiplier < 0 }
+				check_variable = { lok_gg_setup_host_actions < 0 }
+				check_variable = { lok_gg_setup_host_actions > 20 }
+				NOT = { any_owned_state = { always = yes } }
+			}
+		}
+		set_country_flag = lok_gg_setup_invalid
+	}
+
+	for_each_scope_loop = {
+		array = lok_gg_setup_participants
+		clr_country_flag = lok_gg_setup_seen_validation
+	}
+
+	for_each_scope_loop = {
+		array = lok_gg_setup_participants
+		PREV = {
+			add_to_variable = { lok_gg_setup_participant_count = 1 }
+		}
+		if = {
+			limit = { NOT = { has_variable = lok_gg_setup_multiplier } }
+			set_variable = { lok_gg_setup_multiplier = constant:lok_great_game.default_multiplier }
+		}
+		if = {
+			limit = { NOT = { has_variable = lok_gg_setup_actions } }
+			set_variable = { lok_gg_setup_actions = constant:lok_great_game.default_actions }
+		}
+		round_variable = lok_gg_setup_actions
+		if = {
+			limit = {
+				OR = {
+					has_country_flag = lok_gg_setup_seen_validation
+					NOT = { lok_is_valid_great_game_setup_participant = yes }
+					check_variable = { THIS = PREV }
+				}
+			}
+			PREV = { set_country_flag = lok_gg_setup_invalid }
+		}
+		set_country_flag = lok_gg_setup_seen_validation
+
+		if = {
+			limit = {
+				has_country_flag = lok_gg_setup_main_claimant
+				check_variable = { lok_gg_setup_alignment = 1 }
+			}
+			PREV = { add_to_variable = { lok_gg_setup_positive_claimants = 1 } }
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lok_gg_setup_main_claimant
+				check_variable = { lok_gg_setup_alignment = -1 }
+			}
+			PREV = { add_to_variable = { lok_gg_setup_negative_claimants = 1 } }
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lok_gg_setup_main_claimant
+				NOT = { check_variable = { lok_gg_setup_alignment = 1 } }
+				NOT = { check_variable = { lok_gg_setup_alignment = -1 } }
+			}
+			PREV = { set_country_flag = lok_gg_setup_invalid }
+		}
+		else_if = {
+			limit = { check_variable = { lok_gg_setup_alignment = -1 } }
+			PREV = { add_to_variable = { lok_gg_setup_negative_supporters = 1 } }
+		}
+	}
+
+	for_each_scope_loop = {
+		array = lok_gg_setup_participants
+		clr_country_flag = lok_gg_setup_seen_validation
+	}
+
+	if = {
+		limit = {
+			OR = {
+				NOT = { check_variable = { lok_gg_setup_positive_claimants = 1 } }
+				check_variable = { lok_gg_setup_negative_claimants > 1 }
+				check_variable = { lok_gg_setup_participant_count < 1 }
+				check_variable = { lok_gg_setup_participant_count > 50 }
+				AND = {
+					check_variable = { lok_gg_setup_negative_claimants = 0 }
+					check_variable = { lok_gg_setup_negative_supporters > 0 }
+				}
+				AND = {
+					has_country_flag = lok_gg_setup_doomed
+					check_variable = { lok_gg_setup_negative_claimants = 0 }
+				}
+			}
+		}
+		set_country_flag = lok_gg_setup_invalid
+	}
+}
+
+# Public API. Scope: configured host country.
+# Starts atomically after validation; failure leaves only staged data plus invalid flag.
+lok_start_great_game = {
+	custom_effect_tooltip = lok_start_great_game_tt
+	lok_prepare_great_game_setup = yes
+	if = {
+		limit = { lok_can_start_great_game = yes }
+		lok_initialize_great_game = yes
+	}
+}
+
+# Internal. Scope: validated host country.
+lok_initialize_great_game = {
+	set_country_flag = lok_gg_in_game
+	set_country_flag = lok_gg_role_host
+	set_country_flag = lok_gg_active
+	if = {
+		limit = { check_variable = { lok_gg_setup_negative_claimants = 1 } }
+		set_country_flag = lok_gg_two_sided
+	}
+	if = {
+		limit = { has_country_flag = lok_gg_setup_doomed }
+		set_country_flag = lok_gg_doomed
+	}
+
+	set_variable = { lok_gg_round = 1 }
+	set_variable = { lok_gg_round_limit = lok_gg_setup_round_limit }
+	set_variable = { lok_gg_round_days = constant:lok_great_game.default_round_days }
+	set_variable = { lok_gg_days_remaining = constant:lok_great_game.default_round_days }
+	set_variable = { lok_gg_alignment = 0 }
+	set_variable = { lok_gg_multiplier = lok_gg_setup_host_multiplier }
+	set_variable = { lok_gg_actions_per_round = lok_gg_setup_host_actions }
+	set_variable = { lok_gg_actions_remaining = lok_gg_setup_host_actions }
+	set_variable = { lok_gg_host_ref = THIS }
+	set_variable = { lok_gg_beneficiary_ref = THIS }
+
+	clear_array = lok_gg_participants
+	clear_array = lok_gg_states
+	clear_array = lok_gg_target_states
+	add_to_array = { lok_gg_participants = THIS }
+
+	every_owned_state = {
+		set_state_flag = lok_gg_disputed_state
+		set_variable = { lok_gg_influence = 0 }
+		set_variable = { lok_gg_pending_positive = 0 }
+		set_variable = { lok_gg_pending_negative = 0 }
+		set_variable = { lok_gg_positive_source_count = 0 }
+		set_variable = { lok_gg_negative_source_count = 0 }
+		set_variable = { lok_gg_positive_targeted_round = 0 }
+		set_variable = { lok_gg_negative_targeted_round = 0 }
+		add_to_array = { PREV.lok_gg_states = THIS }
+		add_to_array = { PREV.lok_gg_target_states = THIS }
+		if = {
+			limit = { is_capital = yes }
+			set_state_flag = lok_gg_was_host_capital
+		}
+	}
+
+	for_each_scope_loop = {
+		array = lok_gg_setup_participants
+		add_to_array = { PREV.lok_gg_participants = THIS }
+		set_country_flag = lok_gg_in_game
+		set_variable = { lok_gg_host_ref = PREV }
+		set_variable = { lok_gg_positive_side_ref = PREV.lok_gg_positive_side_ref }
+		set_variable = { lok_gg_negative_side_ref = PREV.lok_gg_negative_side_ref }
+		set_variable = { lok_gg_alignment = lok_gg_setup_alignment }
+		set_variable = { lok_gg_multiplier = lok_gg_setup_multiplier }
+		set_variable = { lok_gg_actions_per_round = lok_gg_setup_actions }
+		set_variable = { lok_gg_actions_remaining = lok_gg_setup_actions }
+
+		if = {
+			limit = {
+				has_country_flag = lok_gg_setup_main_claimant
+				check_variable = { lok_gg_setup_alignment = 1 }
+			}
+			set_country_flag = lok_gg_role_positive_claimant
+			set_variable = { lok_gg_beneficiary_ref = THIS }
+			set_variable = { PREV.lok_gg_positive_side_ref = THIS }
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lok_gg_setup_main_claimant
+				check_variable = { lok_gg_setup_alignment = -1 }
+			}
+			set_country_flag = lok_gg_role_negative_claimant
+			set_variable = { lok_gg_beneficiary_ref = THIS }
+			set_variable = { PREV.lok_gg_negative_side_ref = THIS }
+		}
+		else_if = {
+			limit = { check_variable = { lok_gg_setup_alignment = 1 } }
+			set_country_flag = lok_gg_role_positive_supporter
+		}
+		else_if = {
+			limit = { check_variable = { lok_gg_setup_alignment = -1 } }
+			set_country_flag = lok_gg_role_negative_supporter
+		}
+		else = {
+			set_country_flag = lok_gg_role_host_supporter
+			set_variable = { lok_gg_beneficiary_ref = PREV }
+		}
+
+		clear_array = lok_gg_target_states
+		for_each_scope_loop = {
+			array = PREV.lok_gg_states
+			add_to_array = { PREV.lok_gg_target_states = THIS }
+		}
+	}
+
+	# The principals were discovered while participant metadata was copied.
+	for_each_scope_loop = {
+		array = lok_gg_participants
+		set_variable = { lok_gg_host_ref = PREV }
+		set_variable = { lok_gg_positive_side_ref = PREV.lok_gg_positive_side_ref }
+		if = {
+			limit = { PREV = { has_country_flag = lok_gg_two_sided } }
+			set_variable = { lok_gg_negative_side_ref = PREV.lok_gg_negative_side_ref }
+		}
+		if = {
+			limit = { has_country_flag = lok_gg_role_positive_supporter }
+			set_variable = { lok_gg_beneficiary_ref = PREV.lok_gg_positive_side_ref }
+		}
+		else_if = {
+			limit = { has_country_flag = lok_gg_role_negative_supporter }
+			set_variable = { lok_gg_beneficiary_ref = PREV.lok_gg_negative_side_ref }
+		}
+	}
+
+	lok_mirror_great_game_ui_data = yes
+	lok_reset_great_game_actions = yes
+	lok_run_great_game_ai_actions = yes
+
+	for_each_scope_loop = {
+		array = lok_gg_participants
+		if = {
+			limit = { NOT = { has_country_flag = lok_gg_role_host } }
+			country_event = { id = lok_great_game.2 }
+		}
+	}
+	country_event = { id = lok_great_game.3 }
+	country_event = { id = lok_great_game.1 days = 1 }
+	lok_clear_great_game_setup = yes
+}
+
+# Internal. Scope: live host. Copies countdown and side references to local participant variables.
+lok_mirror_great_game_ui_data = {
+	for_each_scope_loop = {
+		array = lok_gg_participants
+		set_variable = { lok_gg_ui_round = PREV.lok_gg_round }
+		set_variable = { lok_gg_ui_round_limit = PREV.lok_gg_round_limit }
+		set_variable = { lok_gg_ui_days_remaining = PREV.lok_gg_days_remaining }
+		set_variable = { lok_gg_ui_round_days = PREV.lok_gg_round_days }
+		set_variable = { lok_gg_host_ref = PREV }
+		set_variable = { lok_gg_positive_side_ref = PREV.lok_gg_positive_side_ref }
+		if = {
+			limit = { PREV = { has_country_flag = lok_gg_two_sided } }
+			set_variable = { lok_gg_negative_side_ref = PREV.lok_gg_negative_side_ref }
+		}
+	}
+}
+
+# Internal. Scope: live host.
+lok_reset_great_game_actions = {
+	for_each_scope_loop = {
+		array = lok_gg_participants
+		set_variable = { lok_gg_actions_remaining = lok_gg_actions_per_round }
+	}
+}
+
+# Internal. Scope: live host. Runs once per scheduled daily event.
+lok_process_great_game_daily_tick = {
+	lok_validate_active_great_game = yes
+	if = {
+		limit = {
+			has_country_flag = lok_gg_active
+			NOT = { has_country_flag = lok_gg_resolving }
+		}
+		subtract_from_variable = { lok_gg_days_remaining = 1 }
+		if = {
+			limit = { check_variable = { lok_gg_days_remaining < 0 } }
+			set_variable = { lok_gg_days_remaining = 0 }
+		}
+		lok_mirror_great_game_ui_data = yes
+		if = {
+			limit = { check_variable = { lok_gg_days_remaining > 0 } }
+			country_event = { id = lok_great_game.1 days = 1 }
+		}
+		else = {
+			lok_process_great_game_round_end = yes
+		}
+	}
+}
+
+# Internal. Scope: live host at the end of a round.
+lok_process_great_game_round_end = {
+	set_country_flag = lok_gg_resolving
+	lok_clear_great_game_spill = yes
+	lok_calculate_great_game_spill = yes
+	lok_apply_great_game_spill = yes
+	lok_apply_great_game_isolation = yes
+
+	if = {
+		limit = { check_variable = { lok_gg_round < lok_gg_round_limit } }
+		add_to_variable = { lok_gg_round = 1 }
+		set_variable = { lok_gg_days_remaining = lok_gg_round_days }
+		for_each_scope_loop = {
+			array = lok_gg_states
+			set_variable = { lok_gg_positive_targeted_round = 0 }
+			set_variable = { lok_gg_negative_targeted_round = 0 }
+		}
+		lok_reset_great_game_actions = yes
+		clr_country_flag = lok_gg_resolving
+		lok_run_great_game_ai_actions = yes
+		lok_mirror_great_game_ui_data = yes
+		country_event = { id = lok_great_game.1 days = 1 }
+	}
+	else = {
+		lok_resolve_great_game = yes
+	}
+}
+
+# Internal. Scope: participant country. Applies a direct action to lok_gg_action_state.
+lok_apply_great_game_action = {
+	if = {
+		limit = {
+			lok_can_take_great_game_action = yes
+			check_variable = { lok_gg_host_ref = event_target:lok_gg_action_host }
+			event_target:lok_gg_action_state = {
+				lok_is_valid_great_game_state = yes
+			}
+		}
+		lok_roll_great_game_action = yes
+		lok_calculate_great_game_cohesion_bonus = yes
+		add_to_variable = { lok_gg_action_value = lok_gg_cohesion_bonus }
+		multiply_variable = { lok_gg_action_value = lok_gg_multiplier }
+		round_variable = lok_gg_action_value
+		if = {
+			limit = {
+				check_variable = { lok_gg_multiplier > 0 }
+				check_variable = { lok_gg_action_value < 1 }
+			}
+			set_variable = { lok_gg_action_value = 1 }
+		}
+
+		event_target:lok_gg_action_state = {
+			if = {
+				limit = { PREV = { check_variable = { lok_gg_alignment = 1 } } }
+				add_to_variable = { lok_gg_influence = PREV.lok_gg_action_value }
+				set_variable = { lok_gg_positive_targeted_round = 1 }
+			}
+			else_if = {
+				limit = { PREV = { check_variable = { lok_gg_alignment = -1 } } }
+				subtract_from_variable = { lok_gg_influence = PREV.lok_gg_action_value }
+				set_variable = { lok_gg_negative_targeted_round = 1 }
+			}
+			else_if = {
+				limit = { check_variable = { lok_gg_influence > 0 } }
+				subtract_from_variable = { lok_gg_influence = PREV.lok_gg_action_value }
+				if = {
+					limit = { check_variable = { lok_gg_influence < 0 } }
+					set_variable = { lok_gg_influence = 0 }
+				}
+			}
+			else_if = {
+				limit = { check_variable = { lok_gg_influence < 0 } }
+				add_to_variable = { lok_gg_influence = PREV.lok_gg_action_value }
+				if = {
+					limit = { check_variable = { lok_gg_influence > 0 } }
+					set_variable = { lok_gg_influence = 0 }
+				}
+			}
+			clamp_variable = {
+				var = lok_gg_influence
+				min = -100
+				max = 100
+			}
+			if = {
+				limit = {
+					PREV.var:lok_gg_host_ref = {
+						NOT = { has_country_flag = lok_gg_two_sided }
+					}
+					check_variable = { lok_gg_influence < 0 }
+				}
+				set_variable = { lok_gg_influence = 0 }
+			}
+		}
+		subtract_from_variable = { lok_gg_actions_remaining = 1 }
+		if = {
+			limit = { check_variable = { lok_gg_actions_remaining < 0 } }
+			set_variable = { lok_gg_actions_remaining = 0 }
+		}
+	}
+}
+
+# Internal. Scope: acting participant.
+lok_roll_great_game_action = {
+	random_list = {
+		20 = { set_variable = { lok_gg_action_value = 5 } }
+		20 = { set_variable = { lok_gg_action_value = 10 } }
+		20 = { set_variable = { lok_gg_action_value = 15 } }
+		20 = { set_variable = { lok_gg_action_value = 20 } }
+		20 = { set_variable = { lok_gg_action_value = 25 } }
+	}
+}
+
+# Internal. Scope: acting participant. Cohesion applies only to principal claimants.
+lok_calculate_great_game_cohesion_bonus = {
+	set_variable = { lok_gg_cohesion_bonus = 0 }
+	save_event_target_as = lok_gg_cohesion_actor
+	if = {
+		limit = {
+			OR = {
+				has_country_flag = lok_gg_role_positive_claimant
+				has_country_flag = lok_gg_role_negative_claimant
+			}
+		}
+		var:lok_gg_beneficiary_ref = {
+			save_event_target_as = lok_gg_cohesion_beneficiary
+		}
+		event_target:lok_gg_action_state = {
+			set_variable = { lok_gg_temp_adjacent_footholds = 0 }
+			every_neighbor_state = {
+				limit = {
+					has_state_flag = lok_gg_disputed_state
+					OR = {
+						AND = {
+							event_target:lok_gg_cohesion_actor = {
+								has_country_flag = lok_gg_role_positive_claimant
+							}
+							lok_is_positive_great_game_foothold = yes
+						}
+						AND = {
+							event_target:lok_gg_cohesion_actor = {
+								has_country_flag = lok_gg_role_negative_claimant
+							}
+							lok_is_negative_great_game_foothold = yes
+						}
+					}
+				}
+				PREV = { add_to_variable = { lok_gg_temp_adjacent_footholds = 1 } }
+			}
+			if = {
+				limit = { check_variable = { lok_gg_temp_adjacent_footholds > 6 } }
+				set_variable = { lok_gg_temp_adjacent_footholds = 6 }
+			}
+			event_target:lok_gg_cohesion_actor = {
+				set_variable = { lok_gg_cohesion_bonus = event_target:lok_gg_action_state.lok_gg_temp_adjacent_footholds }
+				multiply_variable = { lok_gg_cohesion_bonus = 2 }
+			}
+			clear_variable = lok_gg_temp_adjacent_footholds
+		}
+		if = {
+			limit = {
+				event_target:lok_gg_action_state = {
+					any_neighbor_state = {
+						is_owned_by = event_target:lok_gg_cohesion_beneficiary
+					}
+				}
+			}
+			add_to_variable = { lok_gg_cohesion_bonus = 2 }
+		}
+		if = {
+			limit = { check_variable = { lok_gg_cohesion_bonus > 6 } }
+			set_variable = { lok_gg_cohesion_bonus = 6 }
+		}
+	}
+}
+
+# Internal. Scope: live host. AI countries spend all locally available actions.
+lok_run_great_game_ai_actions = {
+	for_each_scope_loop = {
+		array = lok_gg_participants
+		if = {
+			limit = {
+				is_ai = yes
+				check_variable = { lok_gg_actions_remaining > 0 }
+			}
+			while_loop_effect = {
+				limit = {
+					check_variable = { lok_gg_actions_remaining > 0 }
+					var:lok_gg_host_ref = {
+						has_country_flag = lok_gg_active
+					}
+				}
+				lok_select_great_game_ai_target = yes
+				if = {
+					limit = { has_country_flag = lok_gg_ai_target_found }
+					lok_apply_great_game_action = yes
+					clr_country_flag = lok_gg_ai_target_found
+				}
+				else = {
+					set_variable = { lok_gg_actions_remaining = 0 }
+				}
+			}
+		}
+	}
+}
+
+# Internal. Scope: AI participant. Builds fresh priority and fallback arrays for one action.
+lok_select_great_game_ai_target = {
+	clr_country_flag = lok_gg_ai_target_found
+	clear_array = lok_gg_ai_priority_targets
+	clear_array = lok_gg_ai_fallback_targets
+	var:lok_gg_beneficiary_ref = {
+		save_event_target_as = lok_gg_ai_beneficiary
+	}
+	for_each_scope_loop = {
+		array = lok_gg_target_states
+		if = {
+			limit = { lok_is_valid_great_game_state = yes }
+			add_to_array = { PREV.lok_gg_ai_fallback_targets = THIS }
+			if = {
+				limit = {
+					OR = {
+						has_state_flag = lok_gg_was_host_capital
+						AND = {
+							PREV = { check_variable = { lok_gg_alignment = 1 } }
+							OR = {
+								check_variable = { lok_gg_influence > 39 }
+								any_neighbor_state = { lok_is_positive_great_game_foothold = yes }
+								any_neighbor_state = { is_owned_by = event_target:lok_gg_ai_beneficiary }
+								check_variable = { lok_gg_influence < 0 }
+							}
+							check_variable = { lok_gg_influence < 91 }
+						}
+						AND = {
+							PREV = { check_variable = { lok_gg_alignment = -1 } }
+							OR = {
+								check_variable = { lok_gg_influence < -39 }
+								any_neighbor_state = { lok_is_negative_great_game_foothold = yes }
+								any_neighbor_state = { is_owned_by = event_target:lok_gg_ai_beneficiary }
+								check_variable = { lok_gg_influence > 0 }
+							}
+							check_variable = { lok_gg_influence > -91 }
+						}
+						AND = {
+							PREV = { check_variable = { lok_gg_alignment = 0 } }
+							OR = {
+								check_variable = { lok_gg_influence > 39 }
+								check_variable = { lok_gg_influence < -39 }
+								check_variable = { lok_gg_positive_source_count > 1 }
+								check_variable = { lok_gg_negative_source_count > 1 }
+							}
+						}
+					}
+				}
+				add_to_array = { PREV.lok_gg_ai_priority_targets = THIS }
+			}
+		}
+	}
+	if = {
+		limit = { check_variable = { lok_gg_ai_priority_targets^num > 0 } }
+		random_scope_in_array = {
+			array = lok_gg_ai_priority_targets
+			save_event_target_as = lok_gg_action_state
+			owner = {
+				save_event_target_as = lok_gg_action_host
+			}
+			PREV = {
+				save_event_target_as = lok_gg_action_actor
+				set_country_flag = lok_gg_ai_target_found
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { lok_gg_ai_fallback_targets^num > 0 } }
+		random_scope_in_array = {
+			array = lok_gg_ai_fallback_targets
+			save_event_target_as = lok_gg_action_state
+			owner = {
+				save_event_target_as = lok_gg_action_host
+			}
+			PREV = {
+				save_event_target_as = lok_gg_action_actor
+				set_country_flag = lok_gg_ai_target_found
+			}
+		}
+	}
+	clear_array = lok_gg_ai_priority_targets
+	clear_array = lok_gg_ai_fallback_targets
+}
+
+# Internal. Scope: live host. Clears snapshot accumulators before passive spill.
+lok_clear_great_game_spill = {
+	for_each_scope_loop = {
+		array = lok_gg_states
+		set_variable = { lok_gg_pending_positive = 0 }
+		set_variable = { lok_gg_pending_negative = 0 }
+		set_variable = { lok_gg_positive_source_count = 0 }
+		set_variable = { lok_gg_negative_source_count = 0 }
+	}
+}
+
+# Internal. Scope: live host. Calculates positive and negative spill without mutating influence.
+lok_calculate_great_game_spill = {
+	var:lok_gg_positive_side_ref = {
+		save_event_target_as = lok_gg_positive_country
+	}
+	if = {
+		limit = { has_country_flag = lok_gg_two_sided }
+		var:lok_gg_negative_side_ref = {
+			save_event_target_as = lok_gg_negative_country
+		}
+	}
+
+	for_each_scope_loop = {
+		array = lok_gg_states
+		if = {
+			limit = { has_state_flag = lok_gg_disputed_state }
+			set_variable = { lok_gg_disputed_neighbor_count = 0 }
+			set_variable = { lok_gg_positive_neighbor_count = 0 }
+			set_variable = { lok_gg_negative_neighbor_count = 0 }
+
+			every_neighbor_state = {
+				limit = { has_state_flag = lok_gg_disputed_state }
+				PREV = { add_to_variable = { lok_gg_disputed_neighbor_count = 1 } }
+				if = {
+					limit = { lok_is_positive_great_game_foothold = yes }
+					PREV = {
+						add_to_variable = { lok_gg_positive_source_count = 1 }
+						add_to_variable = { lok_gg_positive_neighbor_count = 1 }
+					}
+					if = {
+						limit = { check_variable = { lok_gg_influence > 74 } }
+						PREV = { add_to_variable = { lok_gg_pending_positive = 3 } }
+					}
+					else_if = {
+						limit = { check_variable = { lok_gg_influence > 49 } }
+						PREV = { add_to_variable = { lok_gg_pending_positive = 2 } }
+					}
+					else = {
+						PREV = { add_to_variable = { lok_gg_pending_positive = 1 } }
+					}
+				}
+				if = {
+					limit = { lok_is_negative_great_game_foothold = yes }
+					PREV = {
+						add_to_variable = { lok_gg_negative_source_count = 1 }
+						add_to_variable = { lok_gg_negative_neighbor_count = 1 }
+					}
+					if = {
+						limit = { check_variable = { lok_gg_influence < -74 } }
+						PREV = { add_to_variable = { lok_gg_pending_negative = 3 } }
+					}
+					else_if = {
+						limit = { check_variable = { lok_gg_influence < -49 } }
+						PREV = { add_to_variable = { lok_gg_pending_negative = 2 } }
+					}
+					else = {
+						PREV = { add_to_variable = { lok_gg_pending_negative = 1 } }
+					}
+				}
+			}
+
+			if = {
+				limit = { check_variable = { lok_gg_positive_source_count > 1 } }
+				add_to_variable = { lok_gg_pending_positive = 1 }
+			}
+			if = {
+				limit = { check_variable = { lok_gg_positive_source_count > 2 } }
+				add_to_variable = { lok_gg_pending_positive = 1 }
+			}
+			if = {
+				limit = {
+					check_variable = { lok_gg_disputed_neighbor_count > 1 }
+					check_variable = { lok_gg_positive_neighbor_count = lok_gg_disputed_neighbor_count }
+				}
+				add_to_variable = { lok_gg_pending_positive = 2 }
+			}
+			if = {
+				limit = {
+					any_neighbor_state = {
+						is_owned_by = event_target:lok_gg_positive_country
+					}
+				}
+				add_to_variable = { lok_gg_pending_positive = 2 }
+			}
+
+			if = {
+				limit = { check_variable = { lok_gg_negative_source_count > 1 } }
+				add_to_variable = { lok_gg_pending_negative = 1 }
+			}
+			if = {
+				limit = { check_variable = { lok_gg_negative_source_count > 2 } }
+				add_to_variable = { lok_gg_pending_negative = 1 }
+			}
+			if = {
+				limit = {
+					check_variable = { lok_gg_disputed_neighbor_count > 1 }
+					check_variable = { lok_gg_negative_neighbor_count = lok_gg_disputed_neighbor_count }
+				}
+				add_to_variable = { lok_gg_pending_negative = 2 }
+			}
+			if = {
+				limit = {
+					PREV = { has_country_flag = lok_gg_two_sided }
+					any_neighbor_state = {
+						is_owned_by = event_target:lok_gg_negative_country
+					}
+				}
+				add_to_variable = { lok_gg_pending_negative = 2 }
+			}
+
+			clamp_variable = {
+				var = lok_gg_pending_positive
+				min = 0
+				max = 8
+			}
+			clamp_variable = {
+				var = lok_gg_pending_negative
+				min = 0
+				max = 8
+			}
+			clear_variable = lok_gg_disputed_neighbor_count
+			clear_variable = lok_gg_positive_neighbor_count
+			clear_variable = lok_gg_negative_neighbor_count
+		}
+	}
+}
+
+# Internal. Scope: live host. Applies the already-snapshotted net spill simultaneously.
+lok_apply_great_game_spill = {
+	for_each_scope_loop = {
+		array = lok_gg_states
+		if = {
+			limit = { has_state_flag = lok_gg_disputed_state }
+			add_to_variable = { lok_gg_influence = lok_gg_pending_positive }
+			subtract_from_variable = { lok_gg_influence = lok_gg_pending_negative }
+			clamp_variable = {
+				var = lok_gg_influence
+				min = -100
+				max = 100
+			}
+			if = {
+				limit = {
+					PREV = { NOT = { has_country_flag = lok_gg_two_sided } }
+					check_variable = { lok_gg_influence < 0 }
+				}
+				set_variable = { lok_gg_influence = 0 }
+			}
+		}
+	}
+}
+
+# Internal. Scope: live host. Unsupported influence decays toward zero without crossing.
+lok_apply_great_game_isolation = {
+	var:lok_gg_positive_side_ref = {
+		save_event_target_as = lok_gg_positive_country
+	}
+	if = {
+		limit = { has_country_flag = lok_gg_two_sided }
+		var:lok_gg_negative_side_ref = {
+			save_event_target_as = lok_gg_negative_country
+		}
+	}
+	for_each_scope_loop = {
+		array = lok_gg_states
+		if = {
+			limit = {
+				has_state_flag = lok_gg_disputed_state
+				check_variable = { lok_gg_influence > 0 }
+				NOT = { check_variable = { lok_gg_positive_targeted_round > 0 } }
+				NOT = {
+					any_neighbor_state = {
+						OR = {
+							lok_is_positive_great_game_foothold = yes
+							is_owned_by = event_target:lok_gg_positive_country
+						}
+					}
+				}
+			}
+			if = {
+				limit = { check_variable = { lok_gg_influence > 29 } }
+				subtract_from_variable = { lok_gg_influence = 2 }
+			}
+			else = {
+				subtract_from_variable = { lok_gg_influence = 1 }
+			}
+			if = {
+				limit = { check_variable = { lok_gg_influence < 0 } }
+				set_variable = { lok_gg_influence = 0 }
+			}
+		}
+		else_if = {
+			limit = {
+				PREV = { has_country_flag = lok_gg_two_sided }
+				check_variable = { lok_gg_influence < 0 }
+				NOT = { check_variable = { lok_gg_negative_targeted_round > 0 } }
+				NOT = {
+					any_neighbor_state = {
+						OR = {
+							lok_is_negative_great_game_foothold = yes
+							is_owned_by = event_target:lok_gg_negative_country
+						}
+					}
+				}
+			}
+			if = {
+				limit = { check_variable = { lok_gg_influence < -29 } }
+				add_to_variable = { lok_gg_influence = 2 }
+			}
+			else = {
+				add_to_variable = { lok_gg_influence = 1 }
+			}
+			if = {
+				limit = { check_variable = { lok_gg_influence > 0 } }
+				set_variable = { lok_gg_influence = 0 }
+			}
+		}
+	}
+}
+
+# Internal. Scope: live host. Removes invalid states and handles country invalidation.
+lok_validate_active_great_game = {
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_country_flag = lok_gg_active }
+				NOT = { any_owned_state = { always = yes } }
+				var:lok_gg_positive_side_ref = { NOT = { exists = yes } }
+			}
+		}
+		lok_abort_great_game = yes
+	}
+	else = {
+		clear_array = lok_gg_removed_participants
+		for_each_scope_loop = {
+			array = lok_gg_participants
+			if = {
+				limit = {
+					NOT = { exists = yes }
+					NOT = { check_variable = { THIS = PREV.lok_gg_positive_side_ref } }
+					NOT = { check_variable = { THIS = PREV.lok_gg_negative_side_ref } }
+					NOT = { check_variable = { THIS = PREV } }
+				}
+				add_to_array = { PREV.lok_gg_removed_participants = THIS }
+			}
+		}
+		for_each_scope_loop = {
+			array = lok_gg_removed_participants
+			lok_remove_great_game_participant = yes
+		}
+		clear_array = lok_gg_removed_participants
+
+		clear_array = lok_gg_removed_states
+		for_each_scope_loop = {
+			array = lok_gg_states
+			if = {
+				limit = {
+					NOT = { is_owned_by = PREV }
+				}
+				clr_state_flag = lok_gg_disputed_state
+				add_to_array = { PREV.lok_gg_removed_states = THIS }
+			}
+		}
+		for_each_scope_loop = {
+			array = lok_gg_removed_states
+			save_event_target_as = lok_gg_state_being_removed
+			remove_from_array = { array = PREV.lok_gg_states value = event_target:lok_gg_state_being_removed }
+			for_each_scope_loop = {
+				array = PREV.lok_gg_participants
+				remove_from_array = { array = lok_gg_target_states value = event_target:lok_gg_state_being_removed }
+			}
+		}
+		clear_array = lok_gg_removed_states
+
+		if = {
+			limit = {
+				has_country_flag = lok_gg_two_sided
+				var:lok_gg_negative_side_ref = { NOT = { exists = yes } }
+			}
+			if = {
+				limit = { has_country_flag = lok_gg_doomed }
+				lok_abort_great_game = yes
+			}
+			else = {
+				clr_country_flag = lok_gg_two_sided
+				clear_variable = lok_gg_negative_side_ref
+				clear_array = lok_gg_removed_participants
+				for_each_scope_loop = {
+					array = lok_gg_participants
+					if = {
+						limit = {
+							OR = {
+								has_country_flag = lok_gg_role_negative_claimant
+								has_country_flag = lok_gg_role_negative_supporter
+							}
+						}
+						add_to_array = { PREV.lok_gg_removed_participants = THIS }
+					}
+				}
+				for_each_scope_loop = {
+					array = lok_gg_removed_participants
+					lok_remove_great_game_participant = yes
+				}
+				clear_array = lok_gg_removed_participants
+			}
+		}
+	}
+}
+
+# Internal/public repair helper. Scope: participant country.
+lok_remove_great_game_participant = {
+	if = {
+		limit = { has_variable = lok_gg_host_ref }
+		var:lok_gg_host_ref = {
+			remove_from_array = { array = lok_gg_participants value = PREV }
+		}
+	}
+	lok_clear_great_game_participant_data = yes
+}
+
+# Internal repair helper. Scope: state.
+lok_remove_great_game_state = {
+	save_event_target_as = lok_gg_state_being_removed
+	if = {
+		limit = { owner = { has_country_flag = lok_gg_active } }
+		owner = {
+			remove_from_array = { array = lok_gg_states value = event_target:lok_gg_state_being_removed }
+			for_each_scope_loop = {
+				array = lok_gg_participants
+				remove_from_array = { array = lok_gg_target_states value = event_target:lok_gg_state_being_removed }
+			}
+		}
+	}
+	clr_state_flag = lok_gg_disputed_state
+}
+
+# Internal. Scope: live host. Snapshots the complete settlement before transfers.
+lok_resolve_great_game = {
+	set_country_flag = lok_gg_resolving
+	var:lok_gg_positive_side_ref = {
+		save_event_target_as = lok_gg_positive_country
+	}
+	if = {
+		limit = { has_country_flag = lok_gg_two_sided }
+		var:lok_gg_negative_side_ref = {
+			save_event_target_as = lok_gg_negative_country
+		}
+	}
+	for_each_scope_loop = {
+		array = lok_gg_states
+		if = {
+			limit = { has_state_flag = lok_gg_disputed_state }
+			lok_calculate_great_game_state_resolution = yes
+		}
+	}
+	lok_apply_great_game_state_transfers = yes
+
+	for_each_scope_loop = {
+		array = lok_gg_participants
+		if = {
+			limit = { NOT = { has_country_flag = lok_gg_role_host } }
+			country_event = { id = lok_great_game.4 }
+		}
+	}
+	country_event = { id = lok_great_game.5 }
+	lok_cleanup_great_game = yes
+}
+
+# Internal. Scope: disputed state. Stores winner alignment and absolute compliance.
+lok_calculate_great_game_state_resolution = {
+	set_variable = { lok_gg_resolution_alignment = 0 }
+	set_variable = { lok_gg_resolution_compliance = lok_gg_influence }
+	if = {
+		limit = { check_variable = { lok_gg_resolution_compliance < 0 } }
+		multiply_variable = { lok_gg_resolution_compliance = -1 }
+	}
+	clamp_variable = {
+		var = lok_gg_resolution_compliance
+		min = 0
+		max = 100
+	}
+
+	if = {
+		limit = { owner = { has_country_flag = lok_gg_doomed } }
+		if = {
+			limit = { check_variable = { lok_gg_influence > 0 } }
+			set_variable = { lok_gg_resolution_alignment = 1 }
+		}
+		else_if = {
+			limit = { check_variable = { lok_gg_influence < 0 } }
+			set_variable = { lok_gg_resolution_alignment = -1 }
+		}
+		else = {
+			set_variable = { lok_gg_tie_positive_footholds = 0 }
+			set_variable = { lok_gg_tie_negative_footholds = 0 }
+			every_neighbor_state = {
+				limit = { has_state_flag = lok_gg_disputed_state }
+				if = {
+					limit = { lok_is_positive_great_game_foothold = yes }
+					PREV = { add_to_variable = { lok_gg_tie_positive_footholds = 1 } }
+				}
+				if = {
+					limit = { lok_is_negative_great_game_foothold = yes }
+					PREV = { add_to_variable = { lok_gg_tie_negative_footholds = 1 } }
+				}
+			}
+			if = {
+				limit = { check_variable = { lok_gg_tie_positive_footholds > lok_gg_tie_negative_footholds } }
+				set_variable = { lok_gg_resolution_alignment = 1 }
+			}
+			else_if = {
+				limit = { check_variable = { lok_gg_tie_negative_footholds > lok_gg_tie_positive_footholds } }
+				set_variable = { lok_gg_resolution_alignment = -1 }
+			}
+			else_if = {
+				limit = { any_neighbor_state = { is_owned_by = event_target:lok_gg_positive_country } }
+				set_variable = { lok_gg_resolution_alignment = 1 }
+			}
+			else_if = {
+				limit = { any_neighbor_state = { is_owned_by = event_target:lok_gg_negative_country } }
+				set_variable = { lok_gg_resolution_alignment = -1 }
+			}
+			else = {
+				random_list = {
+					50 = { set_variable = { lok_gg_resolution_alignment = 1 } }
+					50 = { set_variable = { lok_gg_resolution_alignment = -1 } }
+				}
+			}
+			clear_variable = lok_gg_tie_positive_footholds
+			clear_variable = lok_gg_tie_negative_footholds
+		}
+		if = {
+			limit = { check_variable = { lok_gg_resolution_compliance < 10 } }
+			set_variable = { lok_gg_resolution_compliance = 10 }
+		}
+	}
+	else = {
+		if = {
+			limit = { check_variable = { lok_gg_influence > 50 } }
+			set_variable = { lok_gg_resolution_alignment = 1 }
+		}
+		else_if = {
+			limit = {
+				owner = { has_country_flag = lok_gg_two_sided }
+				check_variable = { lok_gg_influence < -50 }
+			}
+			set_variable = { lok_gg_resolution_alignment = -1 }
+		}
+	}
+}
+
+# Internal. Scope: live host. Transfers non-capitals, then the former capital.
+lok_apply_great_game_state_transfers = {
+	save_event_target_as = lok_gg_resolved_host
+	for_each_scope_loop = {
+		array = lok_gg_states
+		if = {
+			limit = {
+				has_state_flag = lok_gg_disputed_state
+				NOT = { has_state_flag = lok_gg_was_host_capital }
+				NOT = { check_variable = { lok_gg_resolution_alignment = 0 } }
+			}
+			if = {
+				limit = { check_variable = { lok_gg_resolution_alignment = 1 } }
+				transfer_state_to = event_target:lok_gg_positive_country
+				set_compliance = lok_gg_resolution_compliance
+			}
+			else = {
+				transfer_state_to = event_target:lok_gg_negative_country
+				set_compliance = lok_gg_resolution_compliance
+			}
+		}
+	}
+	for_each_scope_loop = {
+		array = lok_gg_states
+		if = {
+			limit = {
+				has_state_flag = lok_gg_disputed_state
+				has_state_flag = lok_gg_was_host_capital
+				NOT = { check_variable = { lok_gg_resolution_alignment = 0 } }
+			}
+			if = {
+				limit = { check_variable = { lok_gg_resolution_alignment = 1 } }
+				transfer_state_to = event_target:lok_gg_positive_country
+				set_compliance = lok_gg_resolution_compliance
+			}
+			else = {
+				transfer_state_to = event_target:lok_gg_negative_country
+				set_compliance = lok_gg_resolution_compliance
+			}
+		}
+	}
+
+	# A landless host is annexed by the recipient of its former capital. State
+	# distribution has already completed, so annexation cannot reassign other states.
+	if = {
+		limit = { NOT = { any_owned_state = { always = yes } } }
+		for_each_scope_loop = {
+			array = lok_gg_states
+			if = {
+				limit = { has_state_flag = lok_gg_was_host_capital }
+				if = {
+					limit = { check_variable = { lok_gg_resolution_alignment = 1 } }
+					event_target:lok_gg_positive_country = {
+						annex_country = {
+							target = event_target:lok_gg_resolved_host
+							transfer_troops = yes
+						}
+					}
+				}
+				else = {
+					event_target:lok_gg_negative_country = {
+						annex_country = {
+							target = event_target:lok_gg_resolved_host
+							transfer_troops = yes
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# Public API. Scope: live host or participant. Aborts without territorial settlement.
+lok_abort_great_game = {
+	if = {
+		limit = { has_country_flag = lok_gg_role_host }
+		for_each_scope_loop = {
+			array = lok_gg_participants
+			country_event = { id = lok_great_game.6 }
+		}
+		lok_cleanup_great_game = yes
+	}
+	else_if = {
+		limit = { has_variable = lok_gg_host_ref }
+		var:lok_gg_host_ref = {
+			for_each_scope_loop = {
+				array = lok_gg_participants
+				country_event = { id = lok_great_game.6 }
+			}
+			lok_cleanup_great_game = yes
+		}
+	}
+}
+
+# Internal. Scope: live host. Idempotently clears all live state and participant data.
+lok_cleanup_great_game = {
+	for_each_scope_loop = {
+		array = lok_gg_states
+		clr_state_flag = lok_gg_disputed_state
+		clr_state_flag = lok_gg_was_host_capital
+		clear_variable = lok_gg_influence
+		clear_variable = lok_gg_pending_positive
+		clear_variable = lok_gg_pending_negative
+		clear_variable = lok_gg_positive_source_count
+		clear_variable = lok_gg_negative_source_count
+		clear_variable = lok_gg_positive_targeted_round
+		clear_variable = lok_gg_negative_targeted_round
+		clear_variable = lok_gg_resolution_alignment
+		clear_variable = lok_gg_resolution_compliance
+	}
+	for_each_scope_loop = {
+		array = lok_gg_participants
+		lok_clear_great_game_participant_data = yes
+	}
+	clear_array = lok_gg_participants
+	clear_array = lok_gg_states
+	clear_array = lok_gg_target_states
+	clear_array = lok_gg_removed_states
+	clear_array = lok_gg_removed_participants
+	lok_clear_great_game_host_data = yes
+}
+
+# Internal. Scope: any participant country.
+lok_clear_great_game_participant_data = {
+	clr_country_flag = lok_gg_in_game
+	clr_country_flag = lok_gg_role_host
+	clr_country_flag = lok_gg_role_positive_claimant
+	clr_country_flag = lok_gg_role_negative_claimant
+	clr_country_flag = lok_gg_role_positive_supporter
+	clr_country_flag = lok_gg_role_negative_supporter
+	clr_country_flag = lok_gg_role_host_supporter
+	clr_country_flag = lok_gg_ai_target_found
+	clear_variable = lok_gg_alignment
+	clear_variable = lok_gg_multiplier
+	clear_variable = lok_gg_actions_per_round
+	clear_variable = lok_gg_actions_remaining
+	clear_variable = lok_gg_ui_round
+	clear_variable = lok_gg_ui_round_limit
+	clear_variable = lok_gg_ui_days_remaining
+	clear_variable = lok_gg_ui_round_days
+	clear_variable = lok_gg_host_ref
+	clear_variable = lok_gg_beneficiary_ref
+	clear_variable = lok_gg_positive_side_ref
+	clear_variable = lok_gg_negative_side_ref
+	clear_variable = lok_gg_action_value
+	clear_variable = lok_gg_cohesion_bonus
+	clear_array = lok_gg_target_states
+	clear_array = lok_gg_ai_priority_targets
+	clear_array = lok_gg_ai_fallback_targets
+}
+
+# Internal. Scope: host country after participant cleanup.
+lok_clear_great_game_host_data = {
+	clr_country_flag = lok_gg_active
+	clr_country_flag = lok_gg_two_sided
+	clr_country_flag = lok_gg_doomed
+	clr_country_flag = lok_gg_resolving
+	clear_variable = lok_gg_round
+	clear_variable = lok_gg_round_limit
+	clear_variable = lok_gg_round_days
+	clear_variable = lok_gg_days_remaining
+	lok_clear_great_game_setup = yes
+}
+
+# Internal. Scope: host. Clears all staged inputs after start or final cleanup.
+lok_clear_great_game_setup = {
+	for_each_scope_loop = {
+		array = lok_gg_setup_participants
+		clr_country_flag = lok_gg_setup_main_claimant
+		clr_country_flag = lok_gg_setup_seen_validation
+		clear_variable = lok_gg_setup_alignment
+		clear_variable = lok_gg_setup_multiplier
+		clear_variable = lok_gg_setup_actions
+	}
+	clear_array = lok_gg_setup_participants
+	clr_country_flag = lok_gg_setup_doomed
+	clr_country_flag = lok_gg_setup_invalid
+	clear_variable = lok_gg_setup_round_limit
+	clear_variable = lok_gg_setup_host_multiplier
+	clear_variable = lok_gg_setup_host_actions
+	clear_variable = lok_gg_setup_positive_claimants
+	clear_variable = lok_gg_setup_negative_claimants
+	clear_variable = lok_gg_setup_negative_supporters
+	clear_variable = lok_gg_setup_participant_count
+}

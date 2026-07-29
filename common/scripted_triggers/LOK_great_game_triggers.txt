@@ -1,0 +1,84 @@
+# Scope: country. True for any country currently registered in a Great Game.
+lok_is_great_game_participant = {
+	has_country_flag = lok_gg_in_game
+}
+
+# Scope: country. Validates the staged participant values supplied by content.
+lok_is_valid_great_game_setup_participant = {
+	exists = yes
+	NOT = { has_country_flag = lok_gg_in_game }
+	has_variable = lok_gg_setup_alignment
+	OR = {
+		check_variable = { lok_gg_setup_alignment = -1 }
+		check_variable = { lok_gg_setup_alignment = 0 }
+		check_variable = { lok_gg_setup_alignment = 1 }
+	}
+	check_variable = { lok_gg_setup_multiplier > -0.01 }
+	check_variable = { lok_gg_setup_actions > -1 }
+	check_variable = { lok_gg_setup_actions < 21 }
+}
+
+# Scope: host country after lok_prepare_great_game_setup has run.
+lok_can_start_great_game = {
+	NOT = { has_country_flag = lok_gg_in_game }
+	NOT = { has_country_flag = lok_gg_setup_invalid }
+	check_variable = { lok_gg_setup_positive_claimants = 1 }
+	check_variable = { lok_gg_setup_negative_claimants < 2 }
+	check_variable = { lok_gg_setup_participant_count > 0 }
+	check_variable = { lok_gg_setup_participant_count < 51 }
+	check_variable = { lok_gg_setup_round_limit > 0 }
+	check_variable = { lok_gg_setup_round_limit < 201 }
+	any_owned_state = { always = yes }
+}
+
+# Scope: participant country. Tests local action allowance and live host reference.
+lok_can_take_great_game_action = {
+	has_country_flag = lok_gg_in_game
+	check_variable = { lok_gg_actions_remaining > 0 }
+	var:lok_gg_host_ref = {
+		has_country_flag = lok_gg_active
+		NOT = { has_country_flag = lok_gg_resolving }
+	}
+}
+
+# Scope: disputed state.
+lok_is_positive_great_game_foothold = {
+	has_state_flag = lok_gg_disputed_state
+	check_variable = { lok_gg_influence > 29 }
+}
+
+# Scope: disputed state.
+lok_is_negative_great_game_foothold = {
+	has_state_flag = lok_gg_disputed_state
+	check_variable = { lok_gg_influence < -29 }
+}
+
+# Scope: disputed state. Tests local positive support markers.
+# External claimant borders are checked in host effects after saving claimant scopes.
+lok_has_positive_great_game_support = {
+	OR = {
+		any_neighbor_state = {
+			lok_is_positive_great_game_foothold = yes
+		}
+		check_variable = { lok_gg_positive_targeted_round > 0 }
+	}
+}
+
+# Scope: disputed state. Tests local negative support markers.
+# External claimant borders are checked in host effects after saving claimant scopes.
+lok_has_negative_great_game_support = {
+	OR = {
+		any_neighbor_state = {
+			lok_is_negative_great_game_foothold = yes
+		}
+		check_variable = { lok_gg_negative_targeted_round > 0 }
+	}
+}
+
+# Scope: state. A valid state remains owned by the live host.
+lok_is_valid_great_game_state = {
+	has_state_flag = lok_gg_disputed_state
+	owner = {
+		has_country_flag = lok_gg_active
+	}
+}

@@ -1,0 +1,177 @@
+defined_text = {
+	name = lok_gg_role_text
+	text = {
+		trigger = { has_country_flag = lok_gg_role_host }
+		localization_key = lok_gg_role_host_text
+	}
+	text = {
+		trigger = { has_country_flag = lok_gg_role_positive_claimant }
+		localization_key = lok_gg_role_positive_claimant_text
+	}
+	text = {
+		trigger = { has_country_flag = lok_gg_role_negative_claimant }
+		localization_key = lok_gg_role_negative_claimant_text
+	}
+	text = {
+		trigger = { has_country_flag = lok_gg_role_positive_supporter }
+		localization_key = lok_gg_role_positive_supporter_text
+	}
+	text = {
+		trigger = { has_country_flag = lok_gg_role_negative_supporter }
+		localization_key = lok_gg_role_negative_supporter_text
+	}
+	text = {
+		trigger = { has_country_flag = lok_gg_role_host_supporter }
+		localization_key = lok_gg_role_host_supporter_text
+	}
+}
+
+defined_text = {
+	name = lok_gg_beneficiary_name
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_beneficiary_dynamic
+	}
+}
+
+defined_text = {
+	name = lok_gg_host_name
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_host_dynamic
+	}
+}
+
+defined_text = {
+	name = lok_gg_positive_side_name
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_positive_dynamic
+	}
+}
+
+defined_text = {
+	name = lok_gg_negative_side_name
+	text = {
+		trigger = { has_variable = lok_gg_negative_side_ref }
+		localization_key = lok_gg_negative_dynamic
+	}
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_no_negative_claimant
+	}
+}
+
+defined_text = {
+	name = lok_gg_alignment_text
+	text = {
+		trigger = { check_variable = { lok_gg_alignment = 1 } }
+		localization_key = lok_gg_alignment_positive_text
+	}
+	text = {
+		trigger = { check_variable = { lok_gg_alignment = -1 } }
+		localization_key = lok_gg_alignment_negative_text
+	}
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_alignment_host_text
+	}
+}
+
+defined_text = {
+	name = lok_gg_mode_text
+	text = {
+		trigger = {
+			var:lok_gg_host_ref = {
+				has_country_flag = lok_gg_doomed
+			}
+		}
+		localization_key = lok_gg_mode_doomed_text
+	}
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_mode_normal_text
+	}
+}
+
+defined_text = {
+	name = lok_gg_projected_owner
+	text = {
+		trigger = {
+			FROM = { check_variable = { lok_gg_influence > 50 } }
+		}
+		localization_key = lok_gg_projected_positive
+	}
+	text = {
+		trigger = {
+			var:lok_gg_host_ref = { has_country_flag = lok_gg_two_sided }
+			FROM = { check_variable = { lok_gg_influence < -50 } }
+		}
+		localization_key = lok_gg_projected_negative
+	}
+	text = {
+		trigger = {
+			var:lok_gg_host_ref = { has_country_flag = lok_gg_doomed }
+			FROM = { check_variable = { lok_gg_influence = 0 } }
+		}
+		localization_key = lok_gg_projected_tie
+	}
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_projected_host
+	}
+}
+
+defined_text = {
+	name = lok_gg_state_support_text
+	text = {
+		trigger = {
+			FROM = {
+				check_variable = { lok_gg_influence > 0 }
+				OR = {
+					check_variable = { lok_gg_positive_targeted_round > 0 }
+					any_neighbor_state = { lok_is_positive_great_game_foothold = yes }
+				}
+			}
+		}
+		localization_key = lok_gg_state_supported_positive
+	}
+	text = {
+		trigger = {
+			FROM = {
+				check_variable = { lok_gg_influence < 0 }
+				OR = {
+					check_variable = { lok_gg_negative_targeted_round > 0 }
+					any_neighbor_state = { lok_is_negative_great_game_foothold = yes }
+				}
+			}
+		}
+		localization_key = lok_gg_state_supported_negative
+	}
+	text = {
+		trigger = { FROM = { check_variable = { lok_gg_influence > 0 } } }
+		localization_key = lok_gg_state_isolated_positive
+	}
+	text = {
+		trigger = { FROM = { check_variable = { lok_gg_influence < 0 } } }
+		localization_key = lok_gg_state_isolated_negative
+	}
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_state_neutral
+	}
+}
+
+defined_text = {
+	name = lok_gg_state_axis
+	text = {
+		trigger = {
+			var:lok_gg_host_ref = { has_country_flag = lok_gg_two_sided }
+		}
+		localization_key = lok_gg_axis_two_sided
+	}
+	text = {
+		trigger = { always = yes }
+		localization_key = lok_gg_axis_one_sided
+	}
+}

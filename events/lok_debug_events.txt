@@ -695,3 +695,40 @@ country_event = {
 	}
 }
 
+# Start a two-sided Great Game over WPR between PRL (+) and MEW (-).
+country_event = {
+	id = lok_debug.22
+	hidden = yes
+	title = "Start PRL-MEW Great Game over WPR"
+	desc = "Uses the public signed-axis Great Game setup API."
+	is_triggered_only = yes
+
+	option = {
+		name = "Done"
+		PRL = { save_global_event_target_as = lok_gg_participant_1_display }
+		MEW = { save_global_event_target_as = lok_gg_participant_2_display }
+		WPR = {
+			lok_begin_great_game_configuration = yes
+			set_variable = { lok_gg_setup_round_limit = 20 }	
+
+			PRL = {
+				set_variable = { lok_gg_setup_alignment = 1 }
+				set_variable = { lok_gg_setup_multiplier = 1.5 }
+				set_variable = { lok_gg_setup_actions = 2 }
+				set_country_flag = lok_gg_setup_main_claimant
+			}
+			add_to_array = { lok_gg_setup_participants = PRL }
+
+			MEW = {
+				set_variable = { lok_gg_setup_alignment = -1 }
+				set_variable = { lok_gg_setup_multiplier = 1 }
+				set_variable = { lok_gg_setup_actions = 1 }
+				set_country_flag = lok_gg_setup_main_claimant
+			}
+			add_to_array = { lok_gg_setup_participants = MEW }
+
+			lok_start_great_game = yes
+		}
+	}
+}
+

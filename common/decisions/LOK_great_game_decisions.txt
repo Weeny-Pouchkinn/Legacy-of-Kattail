@@ -1,0 +1,64 @@
+lok_great_game_category = {
+	lok_great_game_influence_state = {
+		icon = GFX_decision_generic_political_discourse
+		state_target = yes
+		target_array = lok_gg_target_states
+
+		on_map_mode = map_only
+
+		visible = {
+			has_country_flag = lok_gg_in_game
+			FROM = {
+				has_state_flag = lok_gg_disputed_state
+			}
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = lok_gg_actor_no_longer_valid_tt
+				has_country_flag = lok_gg_in_game
+				var:lok_gg_host_ref = {
+					has_country_flag = lok_gg_active
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = lok_gg_round_resolving_tt
+				var:lok_gg_host_ref = {
+					NOT = { has_country_flag = lok_gg_resolving }
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = lok_gg_no_actions_remaining_tt
+				check_variable = { lok_gg_actions_remaining > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = lok_gg_state_no_longer_eligible_tt
+				FROM = {
+					lok_is_valid_great_game_state = yes
+					is_owned_by = var:ROOT.lok_gg_host_ref
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 0
+		fire_only_once = no
+
+		complete_effect = {
+			FROM = {
+				save_event_target_as = lok_gg_action_state
+				owner = {
+					save_event_target_as = lok_gg_action_host
+				}
+			}
+			ROOT = {
+				save_event_target_as = lok_gg_action_actor
+				lok_apply_great_game_action = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+		}
+	}
+}
