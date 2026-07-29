@@ -474,6 +474,7 @@ country_event = {
 		name = KUS_event.50.a
 		KUS = {
 			add_to_faction = ROOT
+			KUS_sync_flusiobalkan_integration = yes
 			country_event = { id = KUS_event.51 days = 3 }
 		}
 		ai_chance = {
@@ -820,6 +821,7 @@ country_event = {
 		name = KUS_event.80.a
 		KUS = {
 			add_to_faction = ROOT
+			KUS_sync_flusiobalkan_integration = yes
 			country_event = { id = KUS_event.81 days = 3 }
 		}
 		hidden_effect = {
@@ -967,5 +969,352 @@ country_event = {
 		}
 		activate_advisor = KUS_Jon_Geemetra
 		add_stability = -0.10
+	}
+}
+
+# The democratic settlement favors a federation of equal states
+country_event = {
+	id = KUS_event.101
+	title = KUS_event.101.t
+	desc = KUS_event.101.desc
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.101.a
+		set_country_flag = KUS_federal_path
+		set_cosmetic_tag = KUS_FEDERATION
+		every_owned_state = {
+			set_temp_variable = {
+				substate_id_temp = 1
+			}
+			set_substate = yes
+		}
+		set_temp_variable = {
+			ideology_temp = 5
+		}
+		add_ideology_to_coalition = yes
+	}
+}
+
+# The democratic settlement preserves the confederal structure
+country_event = {
+	id = KUS_event.102
+	title = KUS_event.102.t
+	desc = KUS_event.102.desc
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.102.a
+		set_country_flag = KUS_confederal_path
+		set_temp_variable = {
+			ideology_temp = 4
+		}
+		add_ideology_to_coalition = yes
+	}
+}
+
+# Select a working language for the Flusiobalkan Union
+country_event = {
+	id = KUS_event.103
+	title = KUS_event.103.t
+	desc = KUS_event.103.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.103.a
+		add_political_power = -25
+		custom_effect_tooltip = KUS_working_language_katzen_tt
+		hidden_effect = {
+			add_to_variable = {
+				KUS_flusiobalkan_army_attack = 0.05
+			}
+			add_to_variable = {
+				KUS_flusiobalkan_army_defence = 0.05
+			}
+			KUS_sync_flusiobalkan_integration = yes
+		}
+		ai_chance = {
+			base = 35
+		}
+	}
+
+	option = {
+		name = KUS_event.103.b
+		add_political_power = 50
+		custom_effect_tooltip = KUS_working_language_estalai_tt
+		hidden_effect = {
+			add_to_variable = {
+				KUS_flusiobalkan_factory_output = 0.05
+			}
+			add_to_variable = {
+				KUS_flusiobalkan_political_power_gain = 0.05
+			}
+			KUS_sync_flusiobalkan_integration = yes
+		}
+		ai_chance = {
+			base = 45
+		}
+	}
+
+	option = {
+		name = KUS_event.103.c
+		add_political_power = -50
+		custom_effect_tooltip = KUS_working_language_roqualian_tt
+		hidden_effect = {
+			add_to_variable = {
+				KUS_flusiobalkan_research_speed = 0.05
+			}
+			KUS_sync_flusiobalkan_integration = yes
+		}
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# The reformed western and eastern dominions complete their democratic transition
+country_event = {
+	id = KUS_event.104
+	title = KUS_event.104.t
+	desc = KUS_event.104.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.104.a
+		if = {
+			limit = {
+				event_target:KUS_chalsace_mewraine_country = {
+					exists = yes
+					is_subject_of = KUS
+				}
+			}
+			set_autonomy = {
+				target = event_target:KUS_chalsace_mewraine_country
+				autonomy_state = autonomy_free
+			}
+		}
+		if = {
+			limit = {
+				event_target:KUS_solakatzen_maritime_country = {
+					exists = yes
+					is_subject_of = KUS
+				}
+			}
+			set_autonomy = {
+				target = event_target:KUS_solakatzen_maritime_country
+				autonomy_state = autonomy_free
+			}
+		}
+		add_political_power = 300
+		add_stability = 0.10
+		hidden_effect = {
+			KUS_sync_flusiobalkan_integration = yes
+		}
+	}
+}
+
+# Invitation to become a Flusiobalkan Associate
+country_event = {
+	id = KUS_event.105
+	title = KUS_event.105.t
+	desc = KUS_event.105.desc
+	picture = GFX_report_event_generic_diplomacy
+
+	is_triggered_only = yes
+	trigger = {
+		KUS = {
+			exists = yes
+			has_completed_focus = KUS_flusiobalkan_associates
+		}
+		is_subject = no
+		NOT = { has_war_with = KUS }
+	}
+
+	option = {
+		name = KUS_event.105.a
+		custom_effect_tooltip = KUS_associate_accept_effects_tt
+		hidden_effect = {
+			KUS_establish_flusiobalkan_associate = yes
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_opinion = { target = KUS value > 75 }
+			}
+			modifier = {
+				factor = 1.5
+				has_opinion = { target = KUS value > 25 }
+			}
+			modifier = {
+				factor = 2
+				has_democratic_gov_group = yes
+			}
+			modifier = {
+				factor = 1.25
+				has_communist_gov_group = yes
+			}
+			modifier = {
+				factor = 0.5
+				has_neutrality_gov_group = yes
+			}
+			modifier = {
+				factor = 0.15
+				has_fascist_gov_group = yes
+			}
+		}
+	}
+
+	option = {
+		name = KUS_event.105.b
+		KUS = {
+			country_event = {
+				id = KUS_event.110
+				hours = 6
+			}
+			KUS_refresh_solakean_associate_targets = yes
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_opinion = { target = KUS value < -50 }
+			}
+			modifier = {
+				factor = 1.5
+				has_opinion = { target = KUS value < 0 }
+			}
+			modifier = {
+				factor = 0.5
+				has_democratic_gov_group = yes
+			}
+			modifier = {
+				factor = 0.8
+				has_communist_gov_group = yes
+			}
+			modifier = {
+				factor = 2
+				has_neutrality_gov_group = yes
+			}
+			modifier = {
+				factor = 6
+				has_fascist_gov_group = yes
+			}
+		}
+	}
+}
+
+# Associate accepted
+country_event = {
+	id = KUS_event.106
+	title = KUS_event.106.t
+	desc = KUS_event.106.desc
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.106.a
+	}
+}
+
+# Demand for the Solakean Strait
+country_event = {
+	id = KUS_event.107
+	title = KUS_event.107.t
+	desc = KUS_event.107.desc
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+	trigger = {
+		KUS = { exists = yes }
+		OR = {
+			334 = { is_owned_by = ROOT }
+			343 = { is_owned_by = ROOT }
+		}
+	}
+
+	option = {
+		name = KUS_event.107.a
+		334 = {
+			if = {
+				limit = { is_owned_by = ROOT }
+				transfer_state_to = KUS
+			}
+		}
+		343 = {
+			if = {
+				limit = { is_owned_by = ROOT }
+				transfer_state_to = KUS
+			}
+		}
+		KUS = {
+			KUS_finalize_solakean_strait = yes
+			country_event = {
+				id = KUS_event.108
+				hours = 6
+			}
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+
+	option = {
+		name = KUS_event.107.b
+		KUS = {
+			country_event = {
+				id = KUS_event.109
+				hours = 6
+			}
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+# Strait demand accepted
+country_event = {
+	id = KUS_event.108
+	title = KUS_event.108.t
+	desc = KUS_event.108.desc
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.108.a
+	}
+}
+
+# Strait demand refused
+country_event = {
+	id = KUS_event.109
+	title = KUS_event.109.t
+	desc = KUS_event.109.desc
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.109.a
+	}
+}
+
+# Associate invitation refused
+country_event = {
+	id = KUS_event.110
+	title = KUS_event.110.t
+	desc = KUS_event.110.desc
+	picture = GFX_report_event_generic_diplomacy
+	is_triggered_only = yes
+
+	option = {
+		name = KUS_event.110.a
 	}
 }

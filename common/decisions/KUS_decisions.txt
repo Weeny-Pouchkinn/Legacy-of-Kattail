@@ -1230,6 +1230,193 @@ KUS_basilisk_cat = {
 # ==========================================
 KUS_flusiobalkans_union_cat = {
 
+	KUS_integrate_flusiobalkan_economy = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = KUS }
+
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = KUS
+				NOT = { tag = KUS }
+				NOT = { has_country_flag = KUS_flusiobalkan_economy_integrated }
+			}
+		}
+
+		targets = { FSR DOM NEK VIX MCF TEN KHA SLR IZW FST }
+		target_root_trigger = {
+			has_completed_focus = KUS_pan_flusiobalkan_bank
+			is_faction_leader = yes
+			OR = {
+				has_country_flag = KUS_federal_path
+				has_country_flag = KUS_confederal_path
+			}
+		}
+
+		cost = 50
+		days_remove = 60
+
+		cancel_trigger = {
+			FROM = {
+				NOT = {
+					is_in_faction_with = KUS
+				}
+			}
+		}
+
+		remove_effect = {
+			hidden_effect = {
+				FROM = {
+					set_country_flag = KUS_flusiobalkan_economy_integrated
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = KUS_federal_path
+				}
+				custom_effect_tooltip = KUS_integrate_flusiobalkan_economy_federal_tt
+				hidden_effect = {
+					add_to_variable = {
+						KUS_flusiobalkan_factory_output = 0.05
+					}
+					add_to_variable = {
+						KUS_flusiobalkan_private_sector_efficiency = 0.05
+					}
+					add_to_variable = {
+						KUS_flusiobalkan_build_speed = 0.05
+					}
+					KUS_sync_flusiobalkan_integration = yes
+				}
+			}
+			else_if = {
+				limit = {
+					has_country_flag = KUS_confederal_path
+				}
+				add_offsite_building = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	KUS_integrate_flusiobalkan_military = {
+		icon = GFX_decision_generic_military
+
+		allowed = { tag = KUS }
+
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = KUS
+				NOT = { tag = KUS }
+				NOT = { has_country_flag = KUS_flusiobalkan_military_integrated }
+			}
+		}
+
+		targets = { FSR DOM NEK VIX MCF TEN KHA SLR IZW FST }
+		target_root_trigger = {
+			has_completed_focus = KUS_flusiobalkan_defence_army
+			is_faction_leader = yes
+			OR = {
+				has_country_flag = KUS_federal_path
+				has_country_flag = KUS_confederal_path
+			}
+		}
+
+		cost = 50
+		days_remove = 60
+
+		cancel_trigger = {
+			FROM = {
+				NOT = {
+					is_in_faction_with = KUS
+				}
+			}
+		}
+
+		remove_effect = {
+			hidden_effect = {
+				FROM = {
+					set_country_flag = KUS_flusiobalkan_military_integrated
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = KUS_federal_path
+				}
+				custom_effect_tooltip = KUS_integrate_flusiobalkan_military_federal_tt
+				hidden_effect = {
+					add_to_variable = {
+						KUS_flusiobalkan_production_efficiency_cap = 0.05
+					}
+					add_to_variable = {
+						KUS_flusiobalkan_recruitable_population = 0.05
+					}
+					KUS_sync_flusiobalkan_integration = yes
+				}
+			}
+			else_if = {
+				limit = {
+					has_country_flag = KUS_confederal_path
+				}
+				add_offsite_building = {
+					type = arms_factory
+					level = 2
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	KUS_invite_flusiobalkan_associate = {
+		icon = GFX_decision_generic_form_nation
+
+		allowed = { tag = KUS }
+
+		target_array = KUS.KUS_solakean_associate_targets
+
+		target_trigger = {
+			FROM = {
+				exists = yes
+				is_subject = no
+				is_solakean_tag = yes
+				NOT = { tag = KUS }
+				NOT = { original_tag = ROQ }
+				NOT = { is_in_faction_with = KUS }
+				NOT = { has_country_flag = KUS_flusiobalkan_associate }
+				NOT = { has_war_with = KUS }
+			}
+		}
+
+		target_root_trigger = {
+			has_completed_focus = KUS_flusiobalkan_associates
+			is_faction_leader = yes
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		complete_effect = {
+			FROM = {
+				country_event = {
+					id = KUS_event.105
+					days = 3
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+
 	# Puppet a faction member (United Flusiobalkans)
 	KUS_propose_dominion_status = {
 		icon = GFX_decision_generic_form_nation
@@ -1336,8 +1523,22 @@ KUS_flusiobalkans_union_cat = {
 		fire_only_once = yes
 
 		cost = 100
+		days_remove = 180
 
-		complete_effect = {
+		modifier = {
+			industrial_capacity_factory = -0.15
+			political_power_factor = -0.15
+			production_speed_buildings_factor = -0.15
+			stability_factor = -0.10
+		}
+
+		cancel_trigger = {
+			FROM = {
+				NOT = { is_subject_of = KUS }
+			}
+		}
+
+		remove_effect = {
 			FROM = {
 				country_event = { id = KUS_event.70 days = 3 }
 			}

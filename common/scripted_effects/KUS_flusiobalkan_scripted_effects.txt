@@ -1,0 +1,630 @@
+# Synchronizes the Flusiobalkans Integration dynamic modifier across the
+# current members of Kusnurk's faction. Call from KUS country scope.
+KUS_sync_flusiobalkan_integration = {
+	if = {
+		limit = {
+			has_completed_focus = KUS_flusiobalkan_economic_region
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_factory_output
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_factory_output = 0.05
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_private_sector_efficiency
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_private_sector_efficiency = 0.05
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_build_speed
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_build_speed = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_production_efficiency_cap
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_production_efficiency_cap = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_recruitable_population
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_recruitable_population = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_army_attack
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_army_attack = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_army_defence
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_army_defence = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_political_power_gain
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_political_power_gain = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_research_speed
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_research_speed = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_volunteer_size
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_volunteer_size = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_volunteer_factor
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_volunteer_factor = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_core_defence
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_core_defence = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_trade_opinion
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_trade_opinion = 0
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_variable = KUS_flusiobalkan_building_slots
+				}
+			}
+			set_variable = {
+				KUS_flusiobalkan_building_slots = 0
+			}
+		}
+		every_country = {
+			if = {
+				limit = {
+					OR = {
+						tag = KUS
+						is_in_faction_with = KUS
+					}
+				}
+				set_variable = {
+					KUS_flusiobalkan_factory_output = KUS.KUS_flusiobalkan_factory_output
+				}
+				set_variable = {
+					KUS_flusiobalkan_private_sector_efficiency = KUS.KUS_flusiobalkan_private_sector_efficiency
+				}
+				set_variable = {
+					KUS_flusiobalkan_build_speed = KUS.KUS_flusiobalkan_build_speed
+				}
+				set_variable = {
+					KUS_flusiobalkan_production_efficiency_cap = KUS.KUS_flusiobalkan_production_efficiency_cap
+				}
+				set_variable = {
+					KUS_flusiobalkan_recruitable_population = KUS.KUS_flusiobalkan_recruitable_population
+				}
+				set_variable = {
+					KUS_flusiobalkan_army_attack = KUS.KUS_flusiobalkan_army_attack
+				}
+				set_variable = {
+					KUS_flusiobalkan_army_defence = KUS.KUS_flusiobalkan_army_defence
+				}
+				set_variable = {
+					KUS_flusiobalkan_political_power_gain = KUS.KUS_flusiobalkan_political_power_gain
+				}
+				set_variable = {
+					KUS_flusiobalkan_research_speed = KUS.KUS_flusiobalkan_research_speed
+				}
+				set_variable = {
+					KUS_flusiobalkan_volunteer_size = KUS.KUS_flusiobalkan_volunteer_size
+				}
+				set_variable = {
+					KUS_flusiobalkan_volunteer_factor = KUS.KUS_flusiobalkan_volunteer_factor
+				}
+				set_variable = {
+					KUS_flusiobalkan_core_defence = KUS.KUS_flusiobalkan_core_defence
+				}
+				set_variable = {
+					KUS_flusiobalkan_trade_opinion = KUS.KUS_flusiobalkan_trade_opinion
+				}
+				set_variable = {
+					KUS_flusiobalkan_building_slots = KUS.KUS_flusiobalkan_building_slots
+				}
+				if = {
+					limit = {
+						NOT = {
+							has_dynamic_modifier = {
+								modifier = KUS_flusiobalkans_integration
+							}
+						}
+					}
+					add_dynamic_modifier = {
+						modifier = KUS_flusiobalkans_integration
+					}
+				}
+				if = {
+					limit = {
+						has_idea = KUS_flusiobalkan_economic_region
+					}
+					remove_ideas = KUS_flusiobalkan_economic_region
+				}
+				if = {
+					limit = {
+						has_idea = KUS_flusiobalkan_economic_region_2
+					}
+					remove_ideas = KUS_flusiobalkan_economic_region_2
+				}
+				if = {
+					limit = {
+						has_idea = KUS_fbda
+					}
+					remove_ideas = KUS_fbda
+				}
+				if = {
+					limit = {
+						has_idea = KUS_solabalkan_union
+					}
+					remove_ideas = KUS_solabalkan_union
+				}
+				if = {
+					limit = {
+						has_idea = KUS_flusiobalkan_associate_idea
+					}
+					remove_ideas = KUS_flusiobalkan_associate_idea
+					clr_country_flag = KUS_flusiobalkan_associate
+				}
+			}
+			else_if = {
+				limit = {
+					has_dynamic_modifier = {
+						modifier = KUS_flusiobalkans_integration
+					}
+				}
+				remove_dynamic_modifier = {
+					modifier = KUS_flusiobalkans_integration
+				}
+			}
+		}
+	}
+}
+
+# Rebuilds the target list for the Flusiobalkan Associate decision.
+# Call from KUS country scope.
+KUS_refresh_solakean_associate_targets = {
+	clear_array = KUS_solakean_associate_targets
+	every_country = {
+		limit = {
+			exists = yes
+			is_subject = no
+			is_solakean_tag = yes
+			NOT = { tag = KUS }
+			NOT = { original_tag = ROQ }
+			NOT = { is_in_faction_with = KUS }
+			NOT = { has_country_flag = KUS_flusiobalkan_associate }
+			NOT = { has_war_with = KUS }
+		}
+		add_to_array = {
+			KUS.KUS_solakean_associate_targets = THIS
+		}
+	}
+}
+
+# Establishes an associate's access arrangements with all current members.
+# Call from the associate's scope.
+KUS_apply_flusiobalkan_associate_relations = {
+	every_country = {
+		limit = {
+			OR = {
+				tag = KUS
+				is_in_faction_with = KUS
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_non_aggression_pact_with = ROOT
+				}
+			}
+			diplomatic_relation = {
+				country = ROOT
+				relation = non_aggression_pact
+				active = yes
+			}
+		}
+		diplomatic_relation = {
+			country = ROOT
+			relation = docking_rights
+			active = yes
+		}
+		if = {
+			limit = {
+				ROOT = {
+					NOT = {
+						has_military_access_to = PREV
+					}
+				}
+			}
+			give_military_access = ROOT
+		}
+		ROOT = {
+			diplomatic_relation = {
+				country = PREV
+				relation = docking_rights
+				active = yes
+			}
+			if = {
+				limit = {
+					PREV = {
+						NOT = {
+							has_military_access_to = ROOT
+						}
+					}
+				}
+				give_military_access = PREV
+			}
+		}
+	}
+}
+
+# Refreshes access arrangements when the Union's membership changes.
+# Call from KUS country scope.
+KUS_refresh_flusiobalkan_associate_relations = {
+	every_country = {
+		limit = {
+			has_country_flag = KUS_flusiobalkan_associate
+			has_idea = KUS_flusiobalkan_associate_idea
+			NOT = { has_war_with = KUS }
+		}
+		KUS_apply_flusiobalkan_associate_relations = yes
+	}
+}
+
+# Establishes the bilateral access network between an associate and every
+# current member of the Flusiobalkan Union. Call from the associate's scope.
+KUS_establish_flusiobalkan_associate = {
+	set_country_flag = KUS_flusiobalkan_associate
+	add_ideas = KUS_flusiobalkan_associate_idea
+	KUS_apply_flusiobalkan_associate_relations = yes
+	KUS = {
+		country_event = {
+			id = KUS_event.106
+			hours = 6
+		}
+		KUS_refresh_solakean_associate_targets = yes
+	}
+}
+
+# Makes RSA the Kusnurkite puppet administering any strait states that have
+# already been handed over. Call from KUS country scope.
+KUS_finalize_solakean_strait = {
+	if = {
+		limit = {
+			NOT = { country_exists = RSA }
+			OR = {
+				334 = { is_owned_by = KUS }
+				343 = { is_owned_by = KUS }
+			}
+		}
+		release = RSA
+	}
+	if = {
+		limit = {
+			country_exists = RSA
+			OR = {
+				RSA = {
+					OR = {
+						owns_state = 334
+						owns_state = 343
+					}
+				}
+				334 = {
+					is_owned_by = KUS
+				}
+				343 = {
+					is_owned_by = KUS
+				}
+			}
+		}
+		334 = {
+			if = {
+				limit = { is_owned_by = KUS }
+				transfer_state_to = RSA
+			}
+		}
+		343 = {
+			if = {
+				limit = { is_owned_by = KUS }
+				transfer_state_to = RSA
+			}
+		}
+		RSA = {
+			if = {
+				limit = {
+					is_subject = yes
+					NOT = { is_subject_of = KUS }
+				}
+				OVERLORD = {
+					set_autonomy = {
+						target = RSA
+						autonomy_state = autonomy_free
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = KUS }
+				}
+				leave_faction = yes
+			}
+		}
+		if = {
+			limit = {
+				RSA = {
+					NOT = { is_subject_of = KUS }
+				}
+			}
+			set_autonomy = {
+				target = RSA
+				autonomy_state = autonomy_puppet
+			}
+		}
+	}
+}
+
+# Sends one demand per distinct foreign owner of the two Solakean Strait
+# states, then handles any state already held by KUS or RSA.
+KUS_demand_solakean_strait = {
+	334 = {
+		owner = {
+			save_global_event_target_as = KUS_northern_strait_owner
+		}
+	}
+	343 = {
+		owner = {
+			save_global_event_target_as = KUS_southern_strait_owner
+		}
+	}
+	if = {
+		limit = {
+			event_target:KUS_northern_strait_owner = {
+				NOT = { tag = KUS }
+				NOT = { tag = RSA }
+			}
+		}
+		event_target:KUS_northern_strait_owner = {
+			country_event = {
+				id = KUS_event.107
+				hours = 6
+			}
+		}
+	}
+	if = {
+		limit = {
+			event_target:KUS_southern_strait_owner = {
+				NOT = { tag = KUS }
+				NOT = { tag = RSA }
+				NOT = { tag = event_target:KUS_northern_strait_owner }
+			}
+		}
+		event_target:KUS_southern_strait_owner = {
+			country_event = {
+				id = KUS_event.107
+				hours = 6
+			}
+		}
+	}
+	KUS_finalize_solakean_strait = yes
+}
+
+# Releases the conquered western and eastern neighbors as temporary
+# democratic dominions. Call from KUS country scope.
+KUS_release_reformed_neighbors = {
+	clr_global_flag = KUS_reformed_neighbors_independence_event_fired
+
+	create_dynamic_country = {
+		original_tag = FSR
+		copy_tag = FSR
+		set_temp_variable = {
+			KUS_chalsace_mewraine_country = this
+		}
+
+		every_state = {
+			limit = {
+				OR = {
+					is_core_of = FSR
+					is_core_of = DOM
+				}
+			}
+			add_core_of = var:KUS_chalsace_mewraine_country
+			if = {
+				limit = {
+					is_owned_by = KUS
+				}
+				transfer_state_to = var:KUS_chalsace_mewraine_country
+			}
+		}
+
+		var:KUS_chalsace_mewraine_country = {
+			save_global_event_target_as = KUS_chalsace_mewraine_country
+			set_cosmetic_tag = KUS_CHALSACE_MEWRAINE
+			set_politics = {
+				ruling_party = social_conservative
+				elections_allowed = yes
+			}
+			set_popularities = {
+				social_conservative = 70
+				social_liberal = 15
+				democratic = 10
+				authoritarian_democratic = 5
+			}
+			if = {
+				limit = {
+					owns_state = 730
+				}
+				set_capital = {
+					state = 730
+				}
+			}
+			else_if = {
+				limit = {
+					owns_state = 242
+				}
+				set_capital = {
+					state = 242
+				}
+			}
+		}
+	}
+
+	create_dynamic_country = {
+		original_tag = NEK
+		copy_tag = NEK
+		set_temp_variable = {
+			KUS_solakatzen_maritime_country = this
+		}
+
+		every_state = {
+			limit = {
+				is_core_of = NEK
+			}
+			add_core_of = var:KUS_solakatzen_maritime_country
+			if = {
+				limit = {
+					is_owned_by = KUS
+				}
+				transfer_state_to = var:KUS_solakatzen_maritime_country
+			}
+		}
+
+		var:KUS_solakatzen_maritime_country = {
+			save_global_event_target_as = KUS_solakatzen_maritime_country
+			set_cosmetic_tag = KUS_SOLAKATZEN_MARITIME_REPUBLIC
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = yes
+			}
+			set_popularities = {
+				democratic = 70
+				social_liberal = 15
+				social_conservative = 10
+				communism = 5
+			}
+			if = {
+				limit = {
+					owns_state = 275
+				}
+				set_capital = {
+					state = 275
+				}
+			}
+		}
+	}
+
+	set_autonomy = {
+		target = event_target:KUS_chalsace_mewraine_country
+		autonomy_state = autonomy_dominion
+	}
+	set_autonomy = {
+		target = event_target:KUS_solakatzen_maritime_country
+		autonomy_state = autonomy_dominion
+	}
+	event_target:KUS_chalsace_mewraine_country = {
+		add_timed_idea = {
+			idea = KUS_reintroducing_democratic_principles
+			days = 365
+		}
+	}
+	event_target:KUS_solakatzen_maritime_country = {
+		add_timed_idea = {
+			idea = KUS_reintroducing_democratic_principles
+			days = 365
+		}
+	}
+	if = {
+		limit = {
+			event_target:KUS_chalsace_mewraine_country = {
+				NOT = {
+					is_in_faction_with = KUS
+				}
+			}
+		}
+		add_to_faction = event_target:KUS_chalsace_mewraine_country
+	}
+	if = {
+		limit = {
+			event_target:KUS_solakatzen_maritime_country = {
+				NOT = {
+					is_in_faction_with = KUS
+				}
+			}
+		}
+		add_to_faction = event_target:KUS_solakatzen_maritime_country
+	}
+	KUS_sync_flusiobalkan_integration = yes
+}

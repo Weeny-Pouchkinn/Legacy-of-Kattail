@@ -104,6 +104,15 @@ lok_create_blank_occupation_puppet = {
 
 		ROOT = {
 			if = {
+				limit = {
+					tag = KUS
+					has_country_flag = KUS_federal_path
+					is_faction_leader = yes
+				}
+				add_to_faction = var:lok_new_occupation_puppet
+				KUS_sync_flusiobalkan_integration = yes
+			}
+			else_if = {
 				limit = { NOT = { tag = ROQ } }
 				set_autonomy = {
 					target = var:lok_new_occupation_puppet

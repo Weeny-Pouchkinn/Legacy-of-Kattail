@@ -155,6 +155,18 @@ on_actions = {
     # FROM is the faction Leader, ROOT is the country leaving the faction
     on_leave_faction = {
         effect = {
+            ROOT = {
+                if = {
+                    limit = {
+                        has_dynamic_modifier = {
+                            modifier = KUS_flusiobalkans_integration
+                        }
+                    }
+                    remove_dynamic_modifier = {
+                        modifier = KUS_flusiobalkans_integration
+                    }
+                }
+            }
             IF = {
                 limit = {
                     NOT = {
@@ -197,6 +209,20 @@ on_actions = {
     #FROM is faction leader on join faction requests. THIS DOES NOT FIRE ON ADD_TO_FACTION EFFECT! USE ON_OFFER_JOIN_FACTION!
     on_join_faction = {
         effect = {
+            if = {
+                limit = {
+                    KUS = {
+                        exists = yes
+                        has_completed_focus = KUS_flusiobalkan_economic_region
+                    }
+                    ROOT = {
+                        is_in_faction_with = KUS
+                    }
+                }
+                KUS = {
+                    KUS_sync_flusiobalkan_integration = yes
+                }
+            }
         }
     }
 
