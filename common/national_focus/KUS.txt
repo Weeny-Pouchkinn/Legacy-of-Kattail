@@ -4788,6 +4788,212 @@ focus_tree = {
 		}
 	}
 	focus = {
+		id = KUS_flusiobalkans_look_outwards
+		icon = GFX_focus_generic_diplomatic_treaty
+		relative_position_id = KUS_a_working_language
+		x = -2
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_a_working_language
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			has_country_flag = KUS_federal_path
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_flusiobalkans_look_outwards_tt
+			hidden_effect = {
+				add_to_variable = {
+					KUS_flusiobalkan_volunteer_size = 2
+				}
+				add_to_variable = {
+					KUS_flusiobalkan_volunteer_factor = 0.25
+				}
+				KUS_sync_flusiobalkan_integration = yes
+			}
+		}
+	}
+	focus = {
+		id = KUS_national_defence_protocols
+		icon = GFX_focus_generic_home_defense
+		relative_position_id = KUS_flusiobalkans_look_outwards
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_flusiobalkans_look_outwards
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			has_country_flag = KUS_federal_path
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_national_defence_protocols_tt
+			hidden_effect = {
+				add_to_variable = {
+					KUS_flusiobalkan_core_defence = 0.10
+				}
+				KUS_sync_flusiobalkan_integration = yes
+			}
+		}
+	}
+	focus = {
+		id = KUS_flusiobalkan_associates
+		icon = GFX_focus_generic_diplomatic_treaty
+		relative_position_id = KUS_a_working_language
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_a_working_language
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			OR = {
+				has_country_flag = KUS_federal_path
+				has_country_flag = KUS_confederal_path
+			}
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_flusiobalkan_associates_unlock_tt
+			custom_effect_tooltip = KUS_flusiobalkan_associates_modifier_tt
+			hidden_effect = {
+				add_to_variable = {
+					KUS_flusiobalkan_trade_opinion = 0.10
+				}
+				add_to_variable = {
+					KUS_flusiobalkan_building_slots = 0.05
+				}
+				KUS_sync_flusiobalkan_integration = yes
+				KUS_refresh_solakean_associate_targets = yes
+			}
+		}
+	}
+	focus = {
+		id = KUS_wrestle_the_solakean_strait
+		icon = GFX_focus_generic_navy_battleship2
+		relative_position_id = KUS_flusiobalkan_associates
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_flusiobalkan_associates
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			OR = {
+				any_country = {
+					OR = {
+						original_tag = KEP
+						original_tag = VAS
+						original_tag = TAK
+						original_tag = SOF
+						original_tag = CRE
+					}
+					has_country_flag = KUS_flusiobalkan_associate
+				}
+				any_country = {
+					OR = {
+						original_tag = KEP
+						original_tag = VAS
+						original_tag = TAK
+						original_tag = SOF
+						original_tag = CRE
+					}
+					is_subject_of = KUS
+				}
+				any_owned_state = {
+					OR = {
+						is_core_of = KEP
+						is_core_of = VAS
+						is_core_of = TAK
+						is_core_of = SOF
+						is_core_of = CRE
+					}
+				}
+			}
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_wrestle_the_solakean_strait_tt
+			hidden_effect = {
+				KUS_demand_solakean_strait = yes
+			}
+		}
+	}
+	focus = {
+		id = KUS_safeguard_solakea_from_tyranny
+		icon = GFX_focus_generic_strike_at_democracy1
+		relative_position_id = KUS_a_working_language
+		x = 4
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_a_working_language
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			OR = {
+				has_country_flag = KUS_federal_path
+				has_country_flag = KUS_confederal_path
+			}
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			if = {
+				limit = {
+					any_country = {
+						exists = yes
+						is_solakean_tag = yes
+						has_fascist_gov_group = yes
+						NOT = { tag = KUS }
+					}
+				}
+				custom_effect_tooltip = KUS_safeguard_solakea_wargoals_tt
+				hidden_effect = {
+					every_country = {
+						limit = {
+							exists = yes
+							is_solakean_tag = yes
+							has_fascist_gov_group = yes
+							NOT = { tag = KUS }
+						}
+						KUS = {
+							create_wargoal = {
+								type = topple_government
+								target = PREV
+							}
+						}
+					}
+				}
+			}
+			else = {
+				custom_effect_tooltip = KUS_safeguard_solakea_peaceful_tt
+				hidden_effect = {
+					every_country = {
+						limit = {
+							OR = {
+								tag = KUS
+								is_in_faction_with = KUS
+							}
+						}
+						add_stability = 0.10
+						add_political_power = 150
+					}
+				}
+			}
+		}
+	}
+	focus = {
 		id = KUS_united_flusiobalkans
 		icon = KUS_united_flusiobalkans
 		relative_position_id = KUS_a_working_language
