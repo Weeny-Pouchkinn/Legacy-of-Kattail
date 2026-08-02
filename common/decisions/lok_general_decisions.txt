@@ -172,7 +172,17 @@ lok_peace_decisions_cat = {
 		}
 
 		complete_effect = {
-			custom_effect_tooltip = decide_fate_of_nation_tt
+			if = {
+				limit = {
+					tag = KUS
+					has_country_flag = KUS_federal_path
+					is_faction_leader = yes
+				}
+				custom_effect_tooltip = KUS_decide_federal_fate_of_nation_tt
+			}
+			else = {
+				custom_effect_tooltip = decide_fate_of_nation_tt
+			}
 			hidden_effect = {
 				set_country_flag = deciding_nation_fate
 				set_country_flag = decided_fate_of_@FROM

@@ -14,7 +14,7 @@ focus_tree = {
 	focus = {
 		id = KUS_get_off_the_ground
 		icon = KUS_get_off_the_ground
-		x = 4
+		x = -11
 		y = 0
 		cost = 5
 		mutually_exclusive = {
@@ -44,7 +44,7 @@ focus_tree = {
 	focus = {
 		id = KUS_lay_a_foundation
 		icon = KUS_lay_a_foundation
-		x = 4
+		x = 5
 		y = 0
 		cost = 5
 		relative_position_id = KUS_get_off_the_ground
@@ -258,7 +258,7 @@ focus_tree = {
 	focus = {
 		id = KUS_retool_military_industry
 		icon = KUS_retool_military_industry
-		x = 2
+		x = 3
 		y = 1
 		cost = 5
 		relative_position_id = KUS_military_contracts
@@ -991,7 +991,7 @@ focus_tree = {
 	focus = {
 		id = KUS_kua_reborn
 		icon = KUS_kua_reborn
-		x = -19
+		x = 38
 		y = 0
 		cost = 5
 		available = {
@@ -2554,7 +2554,7 @@ focus_tree = {
 	focus = {
 		id = KUS_finalize_airforce
 		icon = KTZ_blot_out_sun
-		x = 0
+		x = -1
 		y = 1
 		cost = 5
 		relative_position_id = KUS_ghosts_of_flusion
@@ -2595,7 +2595,7 @@ focus_tree = {
 	focus = {
 		id = KUS_taskforce_y
 		icon = KUS_taskforce_y
-		x = 8
+		x = 7
 		y = 1
 		cost = 5
 		relative_position_id = KUS_finalize_navy
@@ -2773,7 +2773,7 @@ focus_tree = {
 			has_democratic_gov_group = yes
 		}
 		icon = KUS_a_loyal_friend
-		x = 16
+		x = 4
 		y = 0
 		cost = 3
 		ai_will_do = {
@@ -4131,23 +4131,16 @@ focus_tree = {
 								sc_pop > party_popularity@democratic
 							}
 						}
-						set_cosmetic_tag = KUS_FEDERATION
-						every_owned_state = {
-							set_temp_variable = {
-								substate_id_temp = 1
-							}
-							set_substate = yes
+						country_event = {
+							id = KUS_event.101
+							hours = 6
 						}
-						set_temp_variable = {
-							ideology_temp = 5
-						}
-						add_ideology_to_coalition = yes
 					}
 					else = {
-						set_temp_variable = {
-							ideology_temp = 4
+						country_event = {
+							id = KUS_event.102
+							hours = 6
 						}
-						add_ideology_to_coalition = yes
 					}
 				}
 			}
@@ -4193,31 +4186,9 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			add_opinion_modifier = {
-				target = ROQ
-				modifier = large_increase
-			}
-			add_opinion_modifier = {
-				target = LMB
-				modifier = large_increase
-			}
-			add_opinion_modifier = {
-				target = RQA
-				modifier = large_increase
-			}
-			add_opinion_modifier = {
-				target = PER
-				modifier = large_increase
-			}
-			if = {
-				limit = {
-					country_exists = ROQ
-				}
-				ROQ = {
-					country_event = {
-						id = KUS_event.30
-					}
-				}
+			add_timed_idea = {
+				idea = KUS_eyes_towards_roqualian_sphere
+				days = 365
 			}
 		}
 	}
@@ -4257,6 +4228,16 @@ focus_tree = {
 					}
 				}
 			}
+			1564 = {
+				add_building_construction = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = {
+						all_provinces = yes
+					}
+				}
+			}
 		}
 	}
 	focus = {
@@ -4282,6 +4263,11 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
+			NEK = {
+				every_core_state = {
+					add_claim_by = KUS
+				}
+			}
 			if = {
 				limit = {
 					NEK = {
@@ -4324,6 +4310,11 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
+			DOM = {
+				every_core_state = {
+					add_claim_by = KUS
+				}
+			}
 			if = {
 				limit = {
 					DOM = {
@@ -4366,6 +4357,11 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
+			FSR = {
+				every_core_state = {
+					add_claim_by = KUS
+				}
+			}
 			if = {
 				limit = {
 					FSR = {
@@ -4389,13 +4385,11 @@ focus_tree = {
 		id = KUS_integrating_the_frontier
 		icon = KUS_integrating_the_frontier
 		relative_position_id = KUS_proclaim_new_kusnurk
-		x = 2
-		y = 3
+		x = -1
+		y = 4
 		cost = 10
-		prerequisite = {
-			focus = KUS_operation_unified_freistaat
-			focus = KUS_operation_riesieger_down
-			focus = KUS_operation_nekastoni_freedom
+		mutually_exclusive = {
+			focus = KUS_reforming_our_neighbors
 		}
 		available = {
 			any_owned_state = {
@@ -4409,6 +4403,7 @@ focus_tree = {
 				}
 			}
 			has_democratic_gov_group = yes
+			has_country_flag = KUS_confederal_path
 		}
 		ai_will_do = {
 			factor = 1
@@ -4446,6 +4441,48 @@ focus_tree = {
 						}
 					}
 				}
+			}
+		}
+		prerequisite = {
+			focus = KUS_union_of_our_own
+		}
+	}
+	focus = {
+		id = KUS_reforming_our_neighbors
+		icon = GFX_focus_generic_diplomatic_treaty
+		relative_position_id = KUS_union_of_our_own
+		x = 1
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_union_of_our_own
+		}
+		mutually_exclusive = {
+			focus = KUS_integrating_the_frontier
+		}
+		available = {
+			has_democratic_gov_group = yes
+			has_country_flag = KUS_federal_path
+			is_faction_leader = yes
+			any_owned_state = {
+				OR = {
+					is_core_of = FSR
+					is_core_of = DOM
+				}
+			}
+			any_owned_state = {
+				is_core_of = NEK
+			}
+		}
+		cancel_if_invalid = yes
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = -50
+			custom_effect_tooltip = KUS_reforming_our_neighbors_tt
+			hidden_effect = {
+				KUS_release_reformed_neighbors = yes
 			}
 		}
 	}
@@ -4545,7 +4582,7 @@ focus_tree = {
 		icon = KUS_secure_flusiobalkans_dominance
 		relative_position_id = KUS_union_of_our_own
 		x = -2
-		y = 1
+		y = 2
 		cost = 10
 		prerequisite = {
 			focus = KUS_union_of_our_own
@@ -4564,17 +4601,17 @@ focus_tree = {
 		}
 		icon = KUS_pressure_flusiobalkan_influence
 		relative_position_id = KUS_union_of_our_own
-		x = -4
-		y = 1
+		x = 2
+		y = 2
 		cost = 10
-		prerequisite = {
-			focus = KUS_union_of_our_own
-		}
 		ai_will_do = {
 			factor = 1
 		}
 		completion_reward = {
 			custom_effect_tooltip = KUS_pressure_influence_decisions_tt
+		}
+		prerequisite = {
+			focus = KUS_union_of_our_own
 		}
 	}
 	focus = {
@@ -4584,11 +4621,11 @@ focus_tree = {
 		}
 		icon = KUS_joint_technology_board
 		relative_position_id = KUS_union_of_our_own
-		x = 2
-		y = 1
+		x = 0
+		y = 3
 		cost = 5
 		prerequisite = {
-			focus = KUS_union_of_our_own
+			focus = KUS_flusiobalkan_economic_region
 		}
 		ai_will_do = {
 			factor = 1
@@ -4613,7 +4650,7 @@ focus_tree = {
 		icon = KUS_flusiobalkan_economic_region
 		relative_position_id = KUS_union_of_our_own
 		x = 0
-		y = 1
+		y = 2
 		cost = 10
 		prerequisite = {
 			focus = KUS_union_of_our_own
@@ -4633,23 +4670,44 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			every_country = {
-				limit = {
-					is_in_faction_with = KUS
+			custom_effect_tooltip = KUS_flusiobalkan_economic_region_tt
+			hidden_effect = {
+				set_variable = {
+					KUS_flusiobalkan_factory_output = 0.05
 				}
-				add_offsite_building = {
-					type = industrial_complex
-					level = 2
+				set_variable = {
+					KUS_flusiobalkan_private_sector_efficiency = 0.05
 				}
+				set_variable = {
+					KUS_flusiobalkan_build_speed = 0
+				}
+				set_variable = {
+					KUS_flusiobalkan_production_efficiency_cap = 0
+				}
+				set_variable = {
+					KUS_flusiobalkan_recruitable_population = 0
+				}
+				set_variable = {
+					KUS_flusiobalkan_army_attack = 0
+				}
+				set_variable = {
+					KUS_flusiobalkan_army_defence = 0
+				}
+				set_variable = {
+					KUS_flusiobalkan_political_power_gain = 0
+				}
+				set_variable = {
+					KUS_flusiobalkan_research_speed = 0
+				}
+				KUS_sync_flusiobalkan_integration = yes
 			}
-			add_ideas = KUS_flusiobalkan_economic_region
 		}
 	}
 	focus = {
 		id = KUS_pan_flusiobalkan_bank
 		icon = KUS_pan_flusiobalkan_bank
 		relative_position_id = KUS_flusiobalkan_economic_region
-		x = -1
+		x = -2
 		y = 1
 		cost = 10
 		prerequisite = {
@@ -4670,22 +4728,14 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			if = {
-				limit = {
-					has_idea = KUS_flusiobalkan_economic_region
-				}
-				swap_ideas = {
-					remove_idea = KUS_flusiobalkan_economic_region
-					add_idea = KUS_flusiobalkan_economic_region_2
-				}
-			}
+			custom_effect_tooltip = KUS_pan_flusiobalkan_bank_tt
 		}
 	}
 	focus = {
 		id = KUS_flusiobalkan_defence_army
 		icon = KUS_flusiobalkan_defence_army
 		relative_position_id = KUS_flusiobalkan_economic_region
-		x = 1
+		x = 2
 		y = 1
 		cost = 10
 		prerequisite = {
@@ -4706,30 +4756,21 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			every_country = {
-				limit = {
-					is_in_faction_with = KUS
-				}
-				add_offsite_building = {
-					type = arms_factory
-					level = 2
-				}
-				add_ideas = KUS_fbda
-			}
+			custom_effect_tooltip = KUS_flusiobalkan_defence_army_tt
 		}
 	}
 	focus = {
-		id = KUS_united_flusiobalkans
-		icon = KUS_united_flusiobalkans
+		id = KUS_a_working_language
+		icon = GFX_focus_generic_diplomatic_treaty
 		relative_position_id = KUS_flusiobalkan_economic_region
 		x = 0
 		y = 2
 		cost = 10
 		prerequisite = {
-			focus = KUS_flusiobalkan_defence_army
+			focus = KUS_pan_flusiobalkan_bank
 		}
 		prerequisite = {
-			focus = KUS_pan_flusiobalkan_bank
+			focus = KUS_flusiobalkan_defence_army
 		}
 		available = {
 			is_faction_leader = yes
@@ -4740,27 +4781,242 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			every_country = {
-				limit = {
-					is_in_faction_with = KUS
-					NOT = {
-						tag = KUS
-					}
-				}
-				if = {
-					limit = {
-						has_idea = KUS_flusiobalkan_economic_region_2
-					}
-					remove_ideas = KUS_flusiobalkan_economic_region_2
-				}
-				if = {
-					limit = {
-						has_idea = KUS_fbda
-					}
-					remove_ideas = KUS_fbda
-				}
-				add_ideas = KUS_solabalkan_union
+			country_event = {
+				id = KUS_event.103
+				hours = 6
 			}
+		}
+	}
+	focus = {
+		id = KUS_flusiobalkans_look_outwards
+		icon = GFX_focus_generic_diplomatic_treaty
+		relative_position_id = KUS_a_working_language
+		x = 1
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_a_working_language
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			has_country_flag = KUS_federal_path
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_flusiobalkans_look_outwards_tt
+			hidden_effect = {
+				add_to_variable = {
+					KUS_flusiobalkan_volunteer_size = 2
+				}
+				add_to_variable = {
+					KUS_flusiobalkan_volunteer_factor = 0.25
+				}
+				KUS_sync_flusiobalkan_integration = yes
+			}
+		}
+	}
+	focus = {
+		id = KUS_national_defence_protocols
+		icon = GFX_focus_generic_home_defense
+		relative_position_id = KUS_flusiobalkans_look_outwards
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_flusiobalkans_look_outwards
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			has_country_flag = KUS_federal_path
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_national_defence_protocols_tt
+			hidden_effect = {
+				add_to_variable = {
+					KUS_flusiobalkan_core_defence = 0.10
+				}
+				KUS_sync_flusiobalkan_integration = yes
+			}
+		}
+	}
+	focus = {
+		id = KUS_flusiobalkan_associates
+		icon = GFX_focus_generic_diplomatic_treaty
+		relative_position_id = KUS_a_working_language
+		x = 2
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = KUS_true_union
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			OR = {
+				has_country_flag = KUS_federal_path
+				has_country_flag = KUS_confederal_path
+			}
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_flusiobalkan_associates_unlock_tt
+			custom_effect_tooltip = KUS_flusiobalkan_associates_modifier_tt
+			hidden_effect = {
+				add_to_variable = {
+					KUS_flusiobalkan_trade_opinion = 0.10
+				}
+				add_to_variable = {
+					KUS_flusiobalkan_building_slots = 0.05
+				}
+				KUS_sync_flusiobalkan_integration = yes
+				KUS_refresh_solakean_associate_targets = yes
+			}
+		}
+	}
+	focus = {
+		id = KUS_wrestle_the_solakean_strait
+		icon = GFX_focus_generic_navy_battleship2
+		relative_position_id = KUS_flusiobalkan_associates
+		x = -4
+		y = 0
+		cost = 10
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			OR = {
+				any_country = {
+					OR = {
+						original_tag = KEP
+						original_tag = VAS
+						original_tag = TAK
+						original_tag = SOF
+						original_tag = CRE
+					}
+					has_country_flag = KUS_flusiobalkan_associate
+				}
+				any_country = {
+					OR = {
+						original_tag = KEP
+						original_tag = VAS
+						original_tag = TAK
+						original_tag = SOF
+						original_tag = CRE
+					}
+					is_subject_of = KUS
+				}
+				any_owned_state = {
+					OR = {
+						is_core_of = KEP
+						is_core_of = VAS
+						is_core_of = TAK
+						is_core_of = SOF
+						is_core_of = CRE
+					}
+				}
+			}
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = KUS_wrestle_the_solakean_strait_tt
+			hidden_effect = {
+				KUS_demand_solakean_strait = yes
+			}
+		}
+		prerequisite = {
+			focus = KUS_true_union
+		}
+	}
+	focus = {
+		id = KUS_safeguard_solakea_from_tyranny
+		icon = GFX_focus_generic_strike_at_democracy1
+		relative_position_id = KUS_a_working_language
+		x = 0
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = KUS_true_union
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			OR = {
+				has_country_flag = KUS_federal_path
+				has_country_flag = KUS_confederal_path
+			}
+		}
+		cancel_if_invalid = yes
+		completion_reward = {
+			if = {
+				limit = {
+					any_country = {
+						exists = yes
+						is_solakean_tag = yes
+						has_fascist_gov_group = yes
+						NOT = {
+							tag = KUS
+						}
+					}
+				}
+				custom_effect_tooltip = KUS_safeguard_solakea_wargoals_tt
+				hidden_effect = {
+					every_country = {
+						limit = {
+							exists = yes
+							is_solakean_tag = yes
+							has_fascist_gov_group = yes
+							NOT = {
+								tag = KUS
+							}
+						}
+						KUS = {
+							create_wargoal = {
+								type = topple_government
+								target = PREV
+							}
+						}
+					}
+				}
+			}
+			else = {
+				custom_effect_tooltip = KUS_safeguard_solakea_peaceful_tt
+				hidden_effect = {
+					every_country = {
+						limit = {
+							OR = {
+								tag = KUS
+								is_in_faction_with = KUS
+							}
+						}
+						add_stability = 0.10
+						add_political_power = 150
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = KUS_united_flusiobalkans
+		icon = KUS_united_flusiobalkans
+		relative_position_id = KUS_a_working_language
+		x = -1
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_a_working_language
+		}
+		available = {
+			is_faction_leader = yes
+			has_democratic_gov_group = yes
+			has_country_flag = KUS_confederal_path
+		}
+		cancel_if_invalid = yes
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
 			custom_effect_tooltip = KUS_united_flusiobalkans_puppet_decisions_tt
 		}
 	}
@@ -4793,6 +5049,7 @@ focus_tree = {
 				}
 			}
 			has_democratic_gov_group = yes
+			has_country_flag = KUS_confederal_path
 		}
 		cancel_if_invalid = yes
 		ai_will_do = {
@@ -4806,7 +5063,7 @@ focus_tree = {
 	focus = {
 		id = KUS_subdue_jarvalin
 		icon = KUS_subdue_jarvalin
-		x = 24
+		x = 13
 		y = 0
 		cost = 5
 		available = {
@@ -5709,7 +5966,9 @@ focus_tree = {
 						any_of = {
 							array = state_cultures
 							value = v
-							check_variable = { v = 20 }
+							check_variable = {
+								v = 20
+							}
 						}
 					}
 					set_state_flag = KUS_chalsacian_bilingualism
@@ -5721,7 +5980,7 @@ focus_tree = {
 		id = KUS_our_feline_brethren
 		icon = GFX_focus_generic_diplomatic_treaty
 		relative_position_id = KUS_mandate_bilingualism
-		x = 2
+		x = 1
 		y = 1
 		cost = 10
 		prerequisite = {
@@ -5748,9 +6007,21 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = KUS_our_feline_brethren_tt
-			RQA = { every_core_state = { add_core_of = ROOT } }
-			DOM = { every_core_state = { add_core_of = ROOT } }
-			FSR = { every_core_state = { add_core_of = ROOT } }
+			RQA = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+			}
+			DOM = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+			}
+			FSR = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+			}
 			hidden_effect = {
 				save_global_event_target_as = KUS_katzenursk_country
 				if = {
@@ -5838,7 +6109,7 @@ focus_tree = {
 		id = KUS_renormalize_clipping
 		icon = GFX_focus_generic_fascist_propaganda
 		relative_position_id = KUS_mandate_bilingualism
-		x = 0
+		x = 3
 		y = 1
 		cost = 10
 		prerequisite = {
@@ -5971,7 +6242,7 @@ focus_tree = {
 		icon = GFX_focus_wonderweapons
 		relative_position_id = KUS_the_east_is_feline_too
 		x = -1
-		y = 2
+		y = 3
 		cost = 10
 		prerequisite = {
 			focus = KUS_we_can_learn_from_them

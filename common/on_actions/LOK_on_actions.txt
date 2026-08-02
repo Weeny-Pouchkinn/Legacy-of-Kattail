@@ -4393,6 +4393,20 @@ on_actions = {
 
 	on_weekly_KUS = {
 		effect = {
+			if = {
+				limit = {
+					has_completed_focus = KUS_flusiobalkan_economic_region
+				}
+				KUS_sync_flusiobalkan_integration = yes
+			}
+			if = {
+				limit = {
+					has_completed_focus = KUS_flusiobalkan_associates
+				}
+				KUS_refresh_solakean_associate_targets = yes
+				KUS_refresh_flusiobalkan_associate_relations = yes
+			}
+
 			if = { # basilisk kills ppl
 				limit = { has_country_flag = KUS_basilisk_took_over }
 				if = {
