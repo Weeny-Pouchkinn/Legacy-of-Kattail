@@ -4375,6 +4375,15 @@ on_actions = {
 			clear_variable = navy
 			clear_variable = air
 			set_temp_variable = { generating_roqualian_species = 0 }
+			every_possible_country = {
+				every_core_state = {
+					force_enable_resistance = PREV
+					start_resistance = PREV
+
+					set_resistance = 0
+					set_compliance = 0
+				}
+			}
 		}
 	}
 
@@ -4747,73 +4756,73 @@ on_actions = {
 				}
 
 				#Checking if cores are met
-				for_each_scope_loop = {
-					array = potential_cores_array
-					break = break
-					if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_100_@ROOT }
-						if = {
-							limit = { check_variable = { var = compliance value = 100 compare = greater_than_or_equals } }
-							add_core_of = ROOT
-						}
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_90_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 90 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_80_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 80 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_70_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 70 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_60_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 60 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_50_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 50 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_40_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 40 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_30_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 30 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_20_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 20 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_10_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 10 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					else_if = {
-						limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_0_@ROOT }
-						if = { limit = { check_variable = { var = compliance value = 0 compare = greater_than_or_equals } } add_core_of = ROOT }
-					}
-					#Is it a core now? Let's add culture!
-					if = {
-						limit = {
-							is_core_of = ROOT
-							ROOT = { tag = TAK }
-							NOT = {
-								any_of = {
-									array = state_cultures
-									value = v
-									check_variable = { v = 36 }
-								}
-							}
-						}
-						set_temp_variable = { culture_temp = 36 }
-						add_state_culture = yes
-					}
-				}
+				# for_each_scope_loop = {
+				# 	array = potential_cores_array
+				# 	break = break
+				# 	if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_100_@ROOT }
+				# 		if = {
+				# 			limit = { check_variable = { var = compliance value = 100 compare = greater_than_or_equals } }
+				# 			add_core_of = ROOT
+				# 		}
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_90_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 90 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_80_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 80 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_70_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 70 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_60_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 60 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_50_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 50 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_40_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 40 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_30_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 30 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_20_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 20 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_10_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 10 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	else_if = {
+				# 		limit = { is_controlled_by = ROOT NOT = { is_core_of = ROOT } has_state_flag = compliance_0_@ROOT }
+				# 		if = { limit = { check_variable = { var = compliance value = 0 compare = greater_than_or_equals } } add_core_of = ROOT }
+				# 	}
+				# 	#Is it a core now? Let's add culture!
+				# 	if = {
+				# 		limit = {
+				# 			is_core_of = ROOT
+				# 			ROOT = { tag = TAK }
+				# 			NOT = {
+				# 				any_of = {
+				# 					array = state_cultures
+				# 					value = v
+				# 					check_variable = { v = 36 }
+				# 				}
+				# 			}
+				# 		}
+				# 		set_temp_variable = { culture_temp = 36 }
+				# 		add_state_culture = yes
+				# 	}
+				# }
 
 				#Fire nukes
 				if = {
