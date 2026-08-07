@@ -4382,6 +4382,94 @@ focus_tree = {
 		}
 	}
 	focus = {
+		id = KUS_union_of_our_own
+		available = {
+			has_democratic_gov_group = yes
+		}
+		icon = KUS_union_of_our_own
+		relative_position_id = KUS_operation_unified_freistaat
+		x = 2
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_operation_riesieger_down
+		}
+		prerequisite = {
+			focus = KUS_operation_unified_freistaat
+		}
+		prerequisite = {
+			focus = KUS_operation_nekastoni_freedom
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					is_in_faction = no
+				}
+				create_faction = "Flusiobalkan Union"
+			}
+			custom_effect_tooltip = KUS_union_of_our_own_invite_tt
+			hidden_effect = {
+				every_country = {
+					limit = {
+						NOT = {
+							tag = KUS
+						}
+						is_flusiobalkan = yes
+						has_democratic_gov_group = yes
+						is_in_faction = no
+						has_war = no
+					}
+					country_event = {
+						id = KUS_event.50
+						days = 3
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = KUS_reforming_our_neighbors
+		icon = GFX_focus_generic_diplomatic_treaty
+		relative_position_id = KUS_union_of_our_own
+		x = 1
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = KUS_union_of_our_own
+		}
+		mutually_exclusive = {
+			focus = KUS_integrating_the_frontier
+		}
+		available = {
+			has_democratic_gov_group = yes
+			has_country_flag = KUS_federal_path
+			is_faction_leader = yes
+			any_owned_state = {
+				OR = {
+					is_core_of = FSR
+					is_core_of = DOM
+				}
+			}
+			any_owned_state = {
+				is_core_of = NEK
+			}
+		}
+		cancel_if_invalid = yes
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = -50
+			custom_effect_tooltip = KUS_reforming_our_neighbors_tt
+			hidden_effect = {
+				KUS_release_reformed_neighbors = yes
+			}
+		}
+	}
+	focus = {
 		id = KUS_integrating_the_frontier
 		icon = KUS_integrating_the_frontier
 		relative_position_id = KUS_proclaim_new_kusnurk
@@ -4448,45 +4536,6 @@ focus_tree = {
 		}
 	}
 	focus = {
-		id = KUS_reforming_our_neighbors
-		icon = GFX_focus_generic_diplomatic_treaty
-		relative_position_id = KUS_union_of_our_own
-		x = 1
-		y = 1
-		cost = 10
-		prerequisite = {
-			focus = KUS_union_of_our_own
-		}
-		mutually_exclusive = {
-			focus = KUS_integrating_the_frontier
-		}
-		available = {
-			has_democratic_gov_group = yes
-			has_country_flag = KUS_federal_path
-			is_faction_leader = yes
-			any_owned_state = {
-				OR = {
-					is_core_of = FSR
-					is_core_of = DOM
-				}
-			}
-			any_owned_state = {
-				is_core_of = NEK
-			}
-		}
-		cancel_if_invalid = yes
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			add_political_power = -50
-			custom_effect_tooltip = KUS_reforming_our_neighbors_tt
-			hidden_effect = {
-				KUS_release_reformed_neighbors = yes
-			}
-		}
-	}
-	focus = {
 		id = KUS_appease_roqualian_titan
 		icon = KUS_appease_roqualian_titan
 		relative_position_id = KUS_operation_unified_freistaat
@@ -4525,55 +4574,7 @@ focus_tree = {
 			}
 		}
 	}
-	focus = {
-		id = KUS_union_of_our_own
-		available = {
-			has_democratic_gov_group = yes
-		}
-		icon = KUS_union_of_our_own
-		relative_position_id = KUS_operation_unified_freistaat
-		x = 2
-		y = 1
-		cost = 10
-		prerequisite = {
-			focus = KUS_operation_riesieger_down
-		}
-		prerequisite = {
-			focus = KUS_operation_unified_freistaat
-		}
-		prerequisite = {
-			focus = KUS_operation_nekastoni_freedom
-		}
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			if = {
-				limit = {
-					is_in_faction = no
-				}
-				create_faction = "Flusiobalkan Union"
-			}
-			custom_effect_tooltip = KUS_union_of_our_own_invite_tt
-			hidden_effect = {
-				every_country = {
-					limit = {
-						NOT = {
-							tag = KUS
-						}
-						is_flusiobalkan = yes
-						has_democratic_gov_group = yes
-						is_in_faction = no
-						has_war = no
-					}
-					country_event = {
-						id = KUS_event.50
-						days = 3
-					}
-				}
-			}
-		}
-	}
+
 	focus = {
 		id = KUS_secure_flusiobalkans_dominance
 		available = {
@@ -5479,6 +5480,8 @@ focus_tree = {
 			NOT = {
 				has_country_flag = KUS_leap_cooldown
 			}
+			controls_state = 229
+			controls_state = 213
 			has_government = neutrality
 		}
 		ai_will_do = {
