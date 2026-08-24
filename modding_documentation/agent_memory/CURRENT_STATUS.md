@@ -71,6 +71,12 @@ The geographic-support scripted triggers were also stripped of an invalid `var:o
 
 Existing saves in which the broken event already ran contain corrupted persistent arrays and a scheduled host tick. Retesting requires a save from before `lok_debug.22` was fired or a new game.
 
+### Government Budgets + Fiscal Capacity — 2026-08-24
+
+Implemented a first-pass six-slot Government Budgets system with seven levels per slot. Each level contributes to the aggregate `lok_fiscal_capacity_usage` modifier; `lok_base_fiscal_capacity` provides 100 capacity. `LOK_update_fiscal_capacity` mirrors authoritative modifier totals into display variables, calculates remaining capacity, overage, and the political-power penalty, and refreshes `lok_fiscal_capacity_overextension_modifier`.
+
+Initialization is wired into the existing startup country loop, with lifecycle hooks for puppets, releases, and civil-war endings plus the requested monthly fallback. No reliable generic country-created on-action was found in the current repository, so dynamically created countries are guaranteed to converge on the next monthly pulse rather than necessarily receiving budgets immediately. Static validation passed for 6 roots, 42 levels, cost mappings, initializer coverage, localization coverage, UTF-8 BOM, braces, and `git diff --check`. A fresh game launch and runtime error-log review remain outstanding.
+
 ### Runtime decision-target and cohesion-scope correction — 2026-07-29
 
 The next in-game run exposed two additional runtime-only scope failures:

@@ -23,3 +23,19 @@ Decision: failed setup retains staged inputs and sets `lok_gg_setup_invalid`; su
 Rationale: retained staging is inspectable during content debugging, while post-transfer annexation provides an explicit unit/country cleanup path without letting annexation decide the multi-recipient state distribution.
 
 Consequences: content should call `lok_begin_great_game_configuration` before retrying. Landless annexation semantics remain an explicitly documented in-game validation requirement.
+
+## 2026-08-24 — Aggregate fiscal-capacity authority
+
+Decision: represent the six independent government budget slots with shared `lok_fiscal_capacity_usage` modifier contributions, use `lok_base_fiscal_capacity` for the 100-point base, and keep variables as display/dynamic-effect mirrors rather than a second authority.
+
+Rationale: this avoids six manually maintained usage variables while allowing any law add/remove to recalculate from current modifier totals. The overextension modifier reads the calculated penalty variable and applies only the requested political-power effect.
+
+Consequences: changing a budget law triggers `LOK_update_fiscal_capacity`; the monthly fallback repairs or initializes missing slots. The first-pass system has no economy, money, debt, taxes, or prosperity layer.
+
+## 2026-08-24 — Fiscal-capacity initialization fallback
+
+Decision: initialize countries through the existing startup `every_possible_country` loop, known country-lifecycle hooks, and a monthly fallback because the current repository does not expose a verified generic country-created on-action.
+
+Rationale: this covers scenario-start countries and the repository's known creation paths without inventing an unsupported on-action. The monthly pulse is explicitly requested and provides eventual coverage for other dynamically generated countries.
+
+Consequences: a country created through an unrecognized path may lack the system until the next monthly pulse; this requires runtime testing against the declared game version.

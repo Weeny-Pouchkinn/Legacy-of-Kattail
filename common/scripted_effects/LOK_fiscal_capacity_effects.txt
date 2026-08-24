@@ -1,0 +1,148 @@
+# Fiscal Capacity calculation and initialization.
+# Modifier totals remain authoritative; variables mirror them for display and dynamic effects.
+
+LOK_update_fiscal_capacity = {
+	set_variable = { lok_fiscal_capacity_value = modifier@lok_fiscal_capacity }
+	set_variable = { lok_fiscal_capacity_used = modifier@lok_fiscal_capacity_usage }
+
+	set_variable = { lok_fiscal_capacity_remaining = lok_fiscal_capacity_value }
+	subtract_from_variable = { lok_fiscal_capacity_remaining = lok_fiscal_capacity_used }
+
+	set_variable = { lok_fiscal_capacity_overage = lok_fiscal_capacity_used }
+	subtract_from_variable = { lok_fiscal_capacity_overage = lok_fiscal_capacity_value }
+	clamp_variable = {
+		var = lok_fiscal_capacity_overage
+		min = 0
+	}
+
+	set_variable = { lok_fiscal_capacity_pp_penalty = lok_fiscal_capacity_overage }
+	multiply_variable = { lok_fiscal_capacity_pp_penalty = -0.01 }
+
+	if = {
+		limit = {
+			NOT = {
+				has_dynamic_modifier = {
+					modifier = lok_fiscal_capacity_overextension_modifier
+				}
+			}
+		}
+		add_dynamic_modifier = {
+			modifier = lok_fiscal_capacity_overextension_modifier
+		}
+	}
+	force_update_dynamic_modifier = yes
+}
+
+LOK_initialize_fiscal_capacity_country = {
+	# Fill only missing budget slots so existing laws are not duplicated or overwritten.
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_idea = lok_defence_budget_1
+					has_idea = lok_defence_budget_2
+					has_idea = lok_defence_budget_3
+					has_idea = lok_defence_budget_4
+					has_idea = lok_defence_budget_5
+					has_idea = lok_defence_budget_6
+					has_idea = lok_defence_budget_7
+				}
+			}
+		}
+		add_ideas = lok_defence_budget_4
+	}
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_idea = lok_education_research_budget_1
+					has_idea = lok_education_research_budget_2
+					has_idea = lok_education_research_budget_3
+					has_idea = lok_education_research_budget_4
+					has_idea = lok_education_research_budget_5
+					has_idea = lok_education_research_budget_6
+					has_idea = lok_education_research_budget_7
+				}
+			}
+		}
+		add_ideas = lok_education_research_budget_4
+	}
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_idea = lok_healthcare_budget_1
+					has_idea = lok_healthcare_budget_2
+					has_idea = lok_healthcare_budget_3
+					has_idea = lok_healthcare_budget_4
+					has_idea = lok_healthcare_budget_5
+					has_idea = lok_healthcare_budget_6
+					has_idea = lok_healthcare_budget_7
+				}
+			}
+		}
+		add_ideas = lok_healthcare_budget_4
+	}
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_idea = lok_social_protection_budget_1
+					has_idea = lok_social_protection_budget_2
+					has_idea = lok_social_protection_budget_3
+					has_idea = lok_social_protection_budget_4
+					has_idea = lok_social_protection_budget_5
+					has_idea = lok_social_protection_budget_6
+					has_idea = lok_social_protection_budget_7
+				}
+			}
+		}
+		add_ideas = lok_social_protection_budget_4
+	}
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_idea = lok_infrastructure_development_budget_1
+					has_idea = lok_infrastructure_development_budget_2
+					has_idea = lok_infrastructure_development_budget_3
+					has_idea = lok_infrastructure_development_budget_4
+					has_idea = lok_infrastructure_development_budget_5
+					has_idea = lok_infrastructure_development_budget_6
+					has_idea = lok_infrastructure_development_budget_7
+				}
+			}
+		}
+		add_ideas = lok_infrastructure_development_budget_4
+	}
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_idea = lok_administration_internal_affairs_budget_1
+					has_idea = lok_administration_internal_affairs_budget_2
+					has_idea = lok_administration_internal_affairs_budget_3
+					has_idea = lok_administration_internal_affairs_budget_4
+					has_idea = lok_administration_internal_affairs_budget_5
+					has_idea = lok_administration_internal_affairs_budget_6
+					has_idea = lok_administration_internal_affairs_budget_7
+				}
+			}
+		}
+		add_ideas = lok_administration_internal_affairs_budget_4
+	}
+	if = {
+		limit = {
+			NOT = {
+				has_dynamic_modifier = {
+					modifier = lok_fiscal_capacity_overextension_modifier
+				}
+			}
+		}
+		add_dynamic_modifier = {
+			modifier = lok_fiscal_capacity_overextension_modifier
+		}
+	}
+	LOK_update_fiscal_capacity = yes
+}
+
