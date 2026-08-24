@@ -33,6 +33,22 @@ Unverified:
 
 Next concrete action: launch the declared-compatible game environment, run `event lok_debug.22`, exercise at least one complete two-sided game, then test save/reload and settlement edge cases while checking a fresh `error.log`.
 
+### Generic Parliament — 2026-08-24
+
+Implemented a first-pass universal informational Parliament category and reusable `hold_parliament_election = yes` effect in the current `global-rework` workspace. The requested repository branch was `great-game-test`, but this worktree was already on `global-rework`; no branch switch was performed.
+
+Completed:
+
+- yearly and startup election hooks, plus existing coup/civil-war/puppet lifecycle hooks;
+- owned-state population summation using `state_population_k`, one seat per 500 population-k, minimum 20 seats, and modulo-based flooring;
+- persistent popularity snapshots and elected-seat variables for the nine non-Gestalt ideologies;
+- hostile-party exclusion and eligible-popularity renormalisation using the existing `pol_party_array` values;
+- scripted-localisation live effective seats, current status, supporting seats, seat shares, and government approval;
+- dynamic category title (`ROQ` → `Assemblée Nationale`, otherwise `Parliament`), ideology labels/colours, and existing canonical `TAG_ideology_party` lookup;
+- no custom GUI or new graphical assets.
+
+Static validation passed for balanced braces, localisation BOM/header, identifier/reference audits, requested arithmetic cases, and `git diff --check`. CWTools and an actual game session were unavailable for this task. The repository has no verified localisation-key-existence trigger, so canonical party-key fallback behavior for countries relying on base-game or dynamically assigned party names remains a runtime verification item rather than an invented script construct.
+
 ### Runtime parser correction — 2026-07-29
 
 An in-game parser run exposed trigger/effect argument forms that CWTools 0.10.31 had accepted incorrectly:

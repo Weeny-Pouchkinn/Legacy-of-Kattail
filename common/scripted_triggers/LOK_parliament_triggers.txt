@@ -1,0 +1,435 @@
+# Parliament status helpers. The existing politics system uses 1=neutral, 2=coalition, 3=hostile.
+LOK_parliament_party_is_hostile = {
+	check_variable = { pol_party_array^lok_parliament_party_index = 3 }
+}
+
+LOK_parliament_party_is_coalition = {
+	check_variable = { pol_party_array^lok_parliament_party_index = 2 }
+}
+
+LOK_parliament_party_is_ruling = {
+	OR = {
+			AND = {
+				check_variable = { lok_parliament_party_index = 0 }
+				has_government = communism
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 1 }
+				has_government = socialism
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 2 }
+				has_government = social_democratic
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 3 }
+				has_government = social_liberal
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 4 }
+				has_government = democratic
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 5 }
+				has_government = social_conservative
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 6 }
+				has_government = authoritarian_democratic
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 7 }
+				has_government = neutrality
+			}
+			AND = {
+				check_variable = { lok_parliament_party_index = 8 }
+				has_government = fascism
+			}
+	}
+}
+
+LOK_prepare_parliament_display = {
+	set_temp_variable = { lok_parliament_display_total_seats = lok_parliament_total_seats }
+	set_temp_variable = { lok_parliament_display_approved_seats = 0 }
+
+	set_temp_variable = { lok_parliament_party_index = 0 }
+	set_temp_variable = { lok_parliament_display_communism_effective_seats = lok_parliament_communism_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_communism_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_communism_seat_share = lok_parliament_display_communism_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_communism_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_communism_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_communism_seat_share_remainder = lok_parliament_display_communism_seat_share }
+		modulo_temp_variable = { lok_parliament_display_communism_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_communism_seat_share = lok_parliament_display_communism_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_communism_supporting_seats = lok_parliament_display_communism_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_communism_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_communism_supporting_seats_remainder = lok_parliament_display_communism_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_communism_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_communism_supporting_seats = lok_parliament_display_communism_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_communism_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_communism_supporting_seats_remainder = lok_parliament_display_communism_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_communism_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_communism_supporting_seats = lok_parliament_display_communism_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_communism_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 1 }
+	set_temp_variable = { lok_parliament_display_socialism_effective_seats = lok_parliament_socialism_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_socialism_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_socialism_seat_share = lok_parliament_display_socialism_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_socialism_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_socialism_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_socialism_seat_share_remainder = lok_parliament_display_socialism_seat_share }
+		modulo_temp_variable = { lok_parliament_display_socialism_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_socialism_seat_share = lok_parliament_display_socialism_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_socialism_supporting_seats = lok_parliament_display_socialism_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_socialism_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_socialism_supporting_seats_remainder = lok_parliament_display_socialism_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_socialism_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_socialism_supporting_seats = lok_parliament_display_socialism_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_socialism_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_socialism_supporting_seats_remainder = lok_parliament_display_socialism_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_socialism_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_socialism_supporting_seats = lok_parliament_display_socialism_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_socialism_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 2 }
+	set_temp_variable = { lok_parliament_display_social_democratic_effective_seats = lok_parliament_social_democratic_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_social_democratic_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_social_democratic_seat_share = lok_parliament_display_social_democratic_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_social_democratic_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_social_democratic_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_social_democratic_seat_share_remainder = lok_parliament_display_social_democratic_seat_share }
+		modulo_temp_variable = { lok_parliament_display_social_democratic_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_social_democratic_seat_share = lok_parliament_display_social_democratic_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_social_democratic_supporting_seats = lok_parliament_display_social_democratic_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_social_democratic_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_social_democratic_supporting_seats_remainder = lok_parliament_display_social_democratic_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_social_democratic_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_social_democratic_supporting_seats = lok_parliament_display_social_democratic_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_social_democratic_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_social_democratic_supporting_seats_remainder = lok_parliament_display_social_democratic_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_social_democratic_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_social_democratic_supporting_seats = lok_parliament_display_social_democratic_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_social_democratic_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 3 }
+	set_temp_variable = { lok_parliament_display_social_liberal_effective_seats = lok_parliament_social_liberal_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_social_liberal_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_social_liberal_seat_share = lok_parliament_display_social_liberal_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_social_liberal_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_social_liberal_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_social_liberal_seat_share_remainder = lok_parliament_display_social_liberal_seat_share }
+		modulo_temp_variable = { lok_parliament_display_social_liberal_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_social_liberal_seat_share = lok_parliament_display_social_liberal_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_social_liberal_supporting_seats = lok_parliament_display_social_liberal_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_social_liberal_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_social_liberal_supporting_seats_remainder = lok_parliament_display_social_liberal_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_social_liberal_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_social_liberal_supporting_seats = lok_parliament_display_social_liberal_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_social_liberal_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_social_liberal_supporting_seats_remainder = lok_parliament_display_social_liberal_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_social_liberal_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_social_liberal_supporting_seats = lok_parliament_display_social_liberal_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_social_liberal_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 4 }
+	set_temp_variable = { lok_parliament_display_democratic_effective_seats = lok_parliament_democratic_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_democratic_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_democratic_seat_share = lok_parliament_display_democratic_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_democratic_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_democratic_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_democratic_seat_share_remainder = lok_parliament_display_democratic_seat_share }
+		modulo_temp_variable = { lok_parliament_display_democratic_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_democratic_seat_share = lok_parliament_display_democratic_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_democratic_supporting_seats = lok_parliament_display_democratic_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_democratic_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_democratic_supporting_seats_remainder = lok_parliament_display_democratic_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_democratic_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_democratic_supporting_seats = lok_parliament_display_democratic_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_democratic_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_democratic_supporting_seats_remainder = lok_parliament_display_democratic_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_democratic_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_democratic_supporting_seats = lok_parliament_display_democratic_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_democratic_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 5 }
+	set_temp_variable = { lok_parliament_display_social_conservative_effective_seats = lok_parliament_social_conservative_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_social_conservative_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_social_conservative_seat_share = lok_parliament_display_social_conservative_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_social_conservative_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_social_conservative_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_social_conservative_seat_share_remainder = lok_parliament_display_social_conservative_seat_share }
+		modulo_temp_variable = { lok_parliament_display_social_conservative_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_social_conservative_seat_share = lok_parliament_display_social_conservative_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_social_conservative_supporting_seats = lok_parliament_display_social_conservative_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_social_conservative_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_social_conservative_supporting_seats_remainder = lok_parliament_display_social_conservative_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_social_conservative_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_social_conservative_supporting_seats = lok_parliament_display_social_conservative_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_social_conservative_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_social_conservative_supporting_seats_remainder = lok_parliament_display_social_conservative_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_social_conservative_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_social_conservative_supporting_seats = lok_parliament_display_social_conservative_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_social_conservative_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 6 }
+	set_temp_variable = { lok_parliament_display_authoritarian_democratic_effective_seats = lok_parliament_authoritarian_democratic_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_authoritarian_democratic_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_authoritarian_democratic_seat_share = lok_parliament_display_authoritarian_democratic_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_authoritarian_democratic_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_authoritarian_democratic_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_authoritarian_democratic_seat_share_remainder = lok_parliament_display_authoritarian_democratic_seat_share }
+		modulo_temp_variable = { lok_parliament_display_authoritarian_democratic_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_authoritarian_democratic_seat_share = lok_parliament_display_authoritarian_democratic_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats = lok_parliament_display_authoritarian_democratic_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats_remainder = lok_parliament_display_authoritarian_democratic_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats = lok_parliament_display_authoritarian_democratic_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats_remainder = lok_parliament_display_authoritarian_democratic_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_authoritarian_democratic_supporting_seats = lok_parliament_display_authoritarian_democratic_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_authoritarian_democratic_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 7 }
+	set_temp_variable = { lok_parliament_display_neutrality_effective_seats = lok_parliament_neutrality_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_neutrality_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_neutrality_seat_share = lok_parliament_display_neutrality_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_neutrality_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_neutrality_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_neutrality_seat_share_remainder = lok_parliament_display_neutrality_seat_share }
+		modulo_temp_variable = { lok_parliament_display_neutrality_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_neutrality_seat_share = lok_parliament_display_neutrality_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_neutrality_supporting_seats = lok_parliament_display_neutrality_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_neutrality_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_neutrality_supporting_seats_remainder = lok_parliament_display_neutrality_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_neutrality_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_neutrality_supporting_seats = lok_parliament_display_neutrality_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_neutrality_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_neutrality_supporting_seats_remainder = lok_parliament_display_neutrality_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_neutrality_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_neutrality_supporting_seats = lok_parliament_display_neutrality_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_neutrality_supporting_seats }
+
+	set_temp_variable = { lok_parliament_party_index = 8 }
+	set_temp_variable = { lok_parliament_display_fascism_effective_seats = lok_parliament_fascism_elected_seats }
+	if = {
+		limit = { LOK_parliament_party_is_hostile = yes }
+		set_temp_variable = { lok_parliament_display_fascism_effective_seats = 0 }
+	}
+
+	set_temp_variable = { lok_parliament_display_fascism_seat_share = lok_parliament_display_fascism_effective_seats }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		multiply_temp_variable = { lok_parliament_display_fascism_seat_share = 100 }
+		divide_temp_variable = { lok_parliament_display_fascism_seat_share = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_fascism_seat_share_remainder = lok_parliament_display_fascism_seat_share }
+		modulo_temp_variable = { lok_parliament_display_fascism_seat_share_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_fascism_seat_share = lok_parliament_display_fascism_seat_share_remainder }
+	}
+
+	set_temp_variable = { lok_parliament_display_fascism_supporting_seats = lok_parliament_display_fascism_effective_seats }
+	if = {
+		limit = {
+			NOT = { LOK_parliament_party_is_hostile = yes }
+		}
+		if = {
+			limit = { LOK_parliament_party_is_ruling = yes }
+		}
+		else_if = {
+			limit = { LOK_parliament_party_is_coalition = yes }
+			multiply_temp_variable = { lok_parliament_display_fascism_supporting_seats = 0.5 }
+			set_temp_variable = { lok_parliament_display_fascism_supporting_seats_remainder = lok_parliament_display_fascism_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_fascism_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_fascism_supporting_seats = lok_parliament_display_fascism_supporting_seats_remainder }
+		}
+		else = {
+			multiply_temp_variable = { lok_parliament_display_fascism_supporting_seats = 0.1 }
+			set_temp_variable = { lok_parliament_display_fascism_supporting_seats_remainder = lok_parliament_display_fascism_supporting_seats }
+			modulo_temp_variable = { lok_parliament_display_fascism_supporting_seats_remainder = 1 }
+			subtract_from_temp_variable = { lok_parliament_display_fascism_supporting_seats = lok_parliament_display_fascism_supporting_seats_remainder }
+		}
+	}
+	add_to_temp_variable = { lok_parliament_display_approved_seats = lok_parliament_display_fascism_supporting_seats }
+
+	set_temp_variable = { lok_parliament_display_approval_percent = 0 }
+	if = {
+		limit = { check_variable = { lok_parliament_display_total_seats > 0 } }
+		set_temp_variable = { lok_parliament_display_approval_percent = lok_parliament_display_approved_seats }
+		multiply_temp_variable = { lok_parliament_display_approval_percent = 100 }
+		divide_temp_variable = { lok_parliament_display_approval_percent = lok_parliament_display_total_seats }
+		set_temp_variable = { lok_parliament_display_approval_remainder = lok_parliament_display_approval_percent }
+		modulo_temp_variable = { lok_parliament_display_approval_remainder = 1 }
+		subtract_from_temp_variable = { lok_parliament_display_approval_percent = lok_parliament_display_approval_remainder }
+	}
+	always = yes
+}

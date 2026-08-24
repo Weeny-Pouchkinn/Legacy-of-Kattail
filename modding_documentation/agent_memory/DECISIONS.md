@@ -39,3 +39,11 @@ Decision: initialize countries through the existing startup `every_possible_coun
 Rationale: this covers scenario-start countries and the repository's known creation paths without inventing an unsupported on-action. The monthly pulse is explicitly requested and provides eventual coverage for other dynamically generated countries.
 
 Consequences: a country created through an unrecognized path may lack the system until the next monthly pulse; this requires runtime testing against the declared game version.
+
+## 2026-08-24 — Parliament consumes existing politics and freezes only election data
+
+Decision: use the inspected ideology indices and tokens directly: `pol_party_array^0..^8` map to `communism`, `socialism`, `social_democratic`, `social_liberal`, `democratic`, `social_conservative`, `authoritarian_democratic`, `neutrality`, and `fascism`; `gestalt` is excluded completely. Treat `3` as hostile, `2` as coalition, and `1` as neutral, while detecting the ruling party through `has_government`.
+
+Rationale: Parliament must observe the existing political system rather than create a second relation model. Persistent variables hold only election-time population, popularity snapshots, eligible popularity, total seats, and elected seats. Current hostility and government approval are calculated dynamically in scripted localisation.
+
+Consequences: annual elections preserve frozen seat results between pulses; current bans and coalition/ruling changes immediately affect effective/supporting seats and approval. Party names are resolved from canonical dynamic `TAG_ideology_party` keys. The repository exposes no documented key-existence trigger, so a universal static fallback for missing party keys cannot be safely selected without runtime verification.
