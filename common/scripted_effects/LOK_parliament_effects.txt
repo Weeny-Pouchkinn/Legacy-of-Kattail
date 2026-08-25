@@ -1,3 +1,38 @@
+LOK_initialize_actor_demands = {
+	#For each party, there is an array, containing numbers, that represent their demands.
+	#As a debug, socialists will want Welfare, Fascists will want war.
+	clear_array = lok_party_1_demands_array
+	add_to_array = {
+		array = ROOT.lok_party_1_demands_array
+		value = 1
+	}
+	add_to_array = {
+		array = ROOT.lok_party_1_demands_array
+		value = 2
+	}
+	#LIST OF DEMANDS
+	#1 = Welfare Increase. Increasing Welfare will permanently please this Actor. Decreasing it will displease it.
+	#2 = Bellicose. Going to war will please this Actor.
+}
+
+LOK_impact_actor_demands = {
+	custom_effect_tooltip = LOK_impact_actor_demands_tt
+	LOK_initialize_actor_demands = yes
+	hidden_effect = {
+		if = {
+			limit = {
+				is_in_array = {
+					array = lok_party_1_demands_array
+					value = actor_demand_id
+				}
+			}
+			add_to_variable = { lok_parliament_party_approval_array^1 = actor_demand_approval }
+			add_to_variable = { lok_parliament_party_approval_target_array^1 = actor_demand_approval_target }
+		}
+	}
+}
+
+
 LOK_initialize_parliament = {
 	#Done ONCE per country.
 	#Approval Target is what it will drift towards naturally, at a rate of 1% per week.
@@ -7,7 +42,7 @@ LOK_initialize_parliament = {
 	if = {
 		limit = { NOT = { has_country_flag = lok_parliament_initialized } }
 		for_loop_effect = {
-			end = 8
+			end = 9
 			value = party_id
 			set_variable = { lok_parliament_party_approval_target_array^party_id = 0.25 }
 			if = {
@@ -25,7 +60,7 @@ LOK_update_parliament_approval = {
 	#Approval is what the approval is at rn.
 	set_variable = { lok_parliament_government_support = 0 }
 	for_loop_effect = {
-		end = 8
+		end = 9
 		value = party_id
 		set_variable = { lok_parliament_party_gov_array^party_id = lok_parliament_party_share_array^party_id }
 		if = {
@@ -54,11 +89,11 @@ LOK_hold_parliament_election = {
 		#Like if the sum is 85, we do 100/85 = 1.18. Then we multiply the popularities by 1.18 to "fill" the gaps.
 		set_variable = { lok_parliament_party_share_non_banned = 0 }
 		for_loop_effect = {
-			end = 8
+			end = 9
 			value = party_id
 			if = {
 				limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
-				add_to_temp_variable = { lok_parliament_party_share_non_banned = lok_parliament_party_share_array^party_id }
+				add_to_variable = { lok_parliament_party_share_non_banned = lok_parliament_party_share_array^party_id }
 			}
 		}
 		#We determine the sum of all non-banned parties. See how it relates to 100.
@@ -66,11 +101,14 @@ LOK_hold_parliament_election = {
 		set_variable = { lok_parliament_party_share_multiplier = 1 }
 		divide_variable = { lok_parliament_party_share_multiplier = lok_parliament_party_share_non_banned }
 		for_loop_effect = {
-			end = 8
+			end = 9
 			value = party_id
 			if = {
 				limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
 				multiply_variable = { lok_parliament_party_share_array^party_id = lok_parliament_party_share_multiplier }
+			}
+			else = {
+				set_variable = { lok_parliament_party_share_array^party_id = 0 }
 			}
 		}
 		LOK_update_parliament_approval = yes

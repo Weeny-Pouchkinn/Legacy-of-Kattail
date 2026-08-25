@@ -368,8 +368,12 @@ ideas = {
 			modifier = {
 				lok_fiscal_capacity_usage = 5
 			}
-			on_add = { LOK_update_fiscal_capacity = yes }
-			on_remove = { LOK_update_fiscal_capacity = yes }
+			on_add = {
+				LOK_update_fiscal_capacity = yes
+			}
+			on_remove = {
+				LOK_update_fiscal_capacity = yes
+			}
 			ai_will_do = { factor = 0.1 }
 		}
 
@@ -384,7 +388,13 @@ ideas = {
 			modifier = {
 				lok_fiscal_capacity_usage = 10
 			}
-			on_add = { LOK_update_fiscal_capacity = yes }
+			on_add = {
+				LOK_update_fiscal_capacity = yes
+				set_temp_variable = { actor_demand_id = 1 }
+				set_temp_variable = { actor_demand_approval = 0.05 }
+				set_temp_variable = { actor_demand_approval_target = 0.05 }
+				LOK_impact_actor_demands = yes
+			}
 			on_remove = { LOK_update_fiscal_capacity = yes }
 			ai_will_do = { factor = 0.1 }
 		}
