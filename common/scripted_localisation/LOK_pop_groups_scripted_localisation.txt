@@ -1,0 +1,56 @@
+# Dynamic row names. These deliberately build the existing LoK localization
+# keys from the numeric IDs stored in the parallel arrays.
+
+defined_text = {
+    name = LOK_GetPopSpeciesName
+    text = {
+        localization_key = "var_species_[?lok_pop_species_array^pop_index]"
+    }
+}
+
+defined_text = {
+    name = LOK_GetPopCultureName
+    text = {
+        localization_key = "culture_[?lok_pop_culture_array^pop_index]_name"
+    }
+}
+
+defined_text = {
+    name = LOK_GetPopPoliticsName
+    text = {
+        localization_key = "LOK_pop_politics_[?lok_pop_politics_array^pop_index]"
+    }
+}
+
+defined_text = {
+    name = LOK_GetPopFilterSpeciesName
+    text = {
+        trigger = { check_variable = { lok_pop_filter_species = -1 } }
+        localization_key = LOK_pop_any
+    }
+    text = {
+        localization_key = "var_species_[?lok_pop_filter_species]"
+    }
+}
+
+defined_text = {
+    name = LOK_GetPopFilterCultureName
+    text = {
+        trigger = { check_variable = { lok_pop_filter_culture = -1 } }
+        localization_key = LOK_pop_any
+    }
+    text = {
+        localization_key = "culture_[?lok_pop_filter_culture]_name"
+    }
+}
+
+defined_text = {
+    name = LOK_GetPopFilterPoliticsName
+    text = {
+        trigger = { check_variable = { lok_pop_filter_politics = -1 } }
+        localization_key = LOK_pop_any
+    }
+    text = {
+        localization_key = "LOK_pop_politics_[?lok_pop_filter_politics]"
+    }
+}

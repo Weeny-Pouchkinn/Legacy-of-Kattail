@@ -1,0 +1,21 @@
+add_namespace = LOK_pop_groups
+
+# Six-month duplicate-group cleanup. Each playable country schedules its own copy.
+country_event = {
+    id = LOK_pop_groups.1
+    hidden = yes
+    is_triggered_only = yes
+
+    immediate = {
+        if = {
+            limit = { is_non_playable_country = no }
+
+            every_owned_state = {
+                limit = { check_variable = { lok_pop_amount_array^num > 1 } }
+                LOK_merge_identical_pop_groups = yes
+            }
+
+            country_event = { id = LOK_pop_groups.1 days = 180 }
+        }
+    }
+}

@@ -1,0 +1,24 @@
+scripted_gui = {
+    LOK_pop_groups_state_gui = {
+        context_type = selected_state_context
+        window_name = "LOK_pop_groups_state_window"
+        parent_window_token = selected_state_view
+        dirty = lok_pop_gui_dirty
+
+        visible = {
+            is_space_state = no
+            controller = { is_non_playable_country = no }
+            check_variable = { lok_pop_amount_array^num > 0 }
+        }
+
+        dynamic_lists = {
+            LOK_pop_group_list = {
+                array = lok_pop_amount_array
+                value = pop_amount
+                index = pop_index
+                change_scope = no
+                entry_container = "LOK_pop_group_entry"
+            }
+        }
+    }
+}
