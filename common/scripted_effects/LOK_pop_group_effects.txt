@@ -1,16 +1,33 @@
-# Legacy of Kattail - population group first pass
-# STATE SCOPE unless otherwise noted.
+# ============================================================================
+# LEGACY OF KATTAIL - POPULATION GROUP TOOLKIT
+# ============================================================================
+# STATE SCOPE unless a comment says otherwise.
 #
-# One pop group is the same index in these five arrays:
+# AUTHORITATIVE DATA
+# ------------------
+# A population group is one row spread across five parallel state arrays.
+# The same index in all five arrays is the same population group:
+#
 #   lok_pop_species_array
 #   lok_pop_culture_array
 #   lok_pop_politics_array
-#   lok_pop_amount_array      # thousands of people
-#   lok_pop_reserved_array    # reserved, always 0 for now
+#   lok_pop_amount_array       # thousands of people
+#   lok_pop_reserved_array     # fifth field, reserved; always 0 for now
+#
+# IMPORTANT SCRIPTING RULE
+# ------------------------
+# LoK does NOT use pseudo-parameter calls such as:
+#
+#   LOK_add_pop_group = { SPECIES = 1 CULTURE = 5 ... }
+#
+# Callers must set the documented TEMP variables immediately before calling the
+# effect with '= yes'.  Examples are included below.
+# ============================================================================
 
-# -----------------------------------------------------------------------------
-# LOW LEVEL: delete one row. Caller must provide a valid lok_pop_remove_index.
-# -----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# LOW LEVEL - delete the row at lok_pop_remove_index.
+# ----------------------------------------------------------------------------
 LOK_remove_pop_group_at_index = {
     remove_from_array = { array = lok_pop_species_array index = lok_pop_remove_index }
     remove_from_array = { array = lok_pop_culture_array index = lok_pop_remove_index }
@@ -19,9 +36,18 @@ LOK_remove_pop_group_at_index = {
     remove_from_array = { array = lok_pop_reserved_array index = lok_pop_remove_index }
 }
 
-# -----------------------------------------------------------------------------
-# LOW LEVEL: add the group in lok_pop_input_* or merge it into an exact match.
-# -----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# LOW LEVEL - add the group stored in lok_pop_input_* or merge it into an exact
+# existing match.
+#
+# Expected TEMP variables:
+#   lok_pop_input_species
+#   lok_pop_input_culture
+#   lok_pop_input_politics
+#   lok_pop_input_amount
+#   lok_pop_input_reserved
+# ----------------------------------------------------------------------------
 LOK_add_or_merge_pop_group_internal = {
     if = {
         limit = { check_variable = { lok_pop_input_amount > 0 } }
@@ -68,18 +94,30 @@ LOK_add_or_merge_pop_group_internal = {
     }
 }
 
-# Public exact-group add helper.
-# Example:
-# LOK_add_pop_group = { SPECIES = 1 CULTURE = 5 POLITICS = 1 AMOUNT = 250 }
-LOK_add_pop_group = {
+
+# ----------------------------------------------------------------------------
+# PUBLIC - add one exact group, using TEMP variables prepared by the caller.
+# Reserved is forced to 0 in this first pass.
+#
+# Example, in STATE scope:
+#
+#   set_temp_variable = { lok_pop_input_species = 1 }
+#   set_temp_variable = { lok_pop_input_culture = 5 }
+#   set_temp_variable = { lok_pop_input_politics = 1 }
+#   set_temp_variable = { lok_pop_input_amount = 250 }
+#   LOK_add_prepared_pop_group = yes
+# ----------------------------------------------------------------------------
+LOK_add_prepared_pop_group = {
+    set_temp_variable = { lok_pop_input_reserved = 0 }
     LOK_add_or_merge_pop_group_internal = yes
     LOK_prune_empty_pop_groups = yes
     LOK_rebuild_pop_caches = yes
 }
 
-# -----------------------------------------------------------------------------
-# Remove groups that are effectively empty.
-# -----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Remove groups which have effectively reached zero.
+# ----------------------------------------------------------------------------
 LOK_prune_empty_pop_groups = {
     set_temp_variable = { lok_pop_prune_i = 0 }
 
@@ -92,7 +130,7 @@ LOK_prune_empty_pop_groups = {
             limit = { check_variable = { lok_pop_prune_amount < 0.0005 } }
             set_temp_variable = { lok_pop_remove_index = lok_pop_prune_i }
             LOK_remove_pop_group_at_index = yes
-            # do not increment; next element has shifted into the same index
+            # Do NOT increment. The next row shifted into the same index.
         }
         else = {
             add_to_temp_variable = { lok_pop_prune_i = 1 }
@@ -100,9 +138,10 @@ LOK_prune_empty_pop_groups = {
     }
 }
 
-# -----------------------------------------------------------------------------
-# Merge all identical five-field rows in the state.
-# -----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Merge every identical five-field row in the state.
+# ----------------------------------------------------------------------------
 LOK_merge_identical_pop_groups = {
     LOK_prune_empty_pop_groups = yes
 
@@ -139,7 +178,7 @@ LOK_merge_identical_pop_groups = {
                 add_to_variable = { lok_pop_amount_array^lok_pop_merge_i = lok_pop_merge_j_amount }
                 set_temp_variable = { lok_pop_remove_index = lok_pop_merge_j }
                 LOK_remove_pop_group_at_index = yes
-                # do not increment j; next group shifted into j
+                # Do NOT increment j. The next row shifted into j.
             }
             else = {
                 add_to_temp_variable = { lok_pop_merge_j = 1 }
@@ -152,28 +191,120 @@ LOK_merge_identical_pop_groups = {
     LOK_rebuild_pop_caches = yes
 }
 
-# -----------------------------------------------------------------------------
-# Rebuild state caches from authoritative pop groups.
-# Politics becomes a normalized 10-entry distribution.
-# -----------------------------------------------------------------------------
+
+# ============================================================================
+# AGGREGATE TOTALS
+# ============================================================================
+# These are DERIVED caches. Pop-group arrays above remain authoritative.
+#
+# Species and cultures use sparse ID/amount pairs because IDs are not compact:
+#   lok_state_species_total_ids_array
+#   lok_state_species_total_amount_array
+#   lok_state_culture_total_ids_array
+#   lok_state_culture_total_amount_array
+#
+# Politics has exactly ten entries, therefore:
+#   lok_state_parties_array^0..9
+# stores RAW population amounts (in thousands) by ideology.
+#
+# LOK_rebuild_state_political_pie is then called. That effect normalizes these
+# raw totals into the state political pie/map-mode distribution.
+# ============================================================================
+
+LOK_add_current_pop_to_species_total = {
+    set_temp_variable = { lok_pop_cache_found = -1 }
+    set_temp_variable = { lok_pop_cache_scan = 0 }
+
+    while_loop_effect = {
+        limit = {
+            check_variable = { lok_pop_cache_scan < lok_state_species_total_ids_array^num }
+            check_variable = { lok_pop_cache_found = -1 }
+        }
+
+        set_temp_variable = { lok_pop_cache_scan_id = lok_state_species_total_ids_array^lok_pop_cache_scan }
+
+        if = {
+            limit = { check_variable = { lok_pop_cache_scan_id = lok_pop_cache_species } }
+            set_temp_variable = { lok_pop_cache_found = lok_pop_cache_scan }
+        }
+        else = {
+            add_to_temp_variable = { lok_pop_cache_scan = 1 }
+        }
+    }
+
+    if = {
+        limit = { check_variable = { lok_pop_cache_found > -1 } }
+        add_to_variable = { lok_state_species_total_amount_array^lok_pop_cache_found = lok_pop_cache_amount }
+    }
+    else = {
+        add_to_array = { array = lok_state_species_total_ids_array value = lok_pop_cache_species }
+        add_to_array = { array = lok_state_species_total_amount_array value = lok_pop_cache_amount }
+    }
+}
+
+LOK_add_current_pop_to_culture_total = {
+    set_temp_variable = { lok_pop_cache_found = -1 }
+    set_temp_variable = { lok_pop_cache_scan = 0 }
+
+    while_loop_effect = {
+        limit = {
+            check_variable = { lok_pop_cache_scan < lok_state_culture_total_ids_array^num }
+            check_variable = { lok_pop_cache_found = -1 }
+        }
+
+        set_temp_variable = { lok_pop_cache_scan_id = lok_state_culture_total_ids_array^lok_pop_cache_scan }
+
+        if = {
+            limit = { check_variable = { lok_pop_cache_scan_id = lok_pop_cache_culture } }
+            set_temp_variable = { lok_pop_cache_found = lok_pop_cache_scan }
+        }
+        else = {
+            add_to_temp_variable = { lok_pop_cache_scan = 1 }
+        }
+    }
+
+    if = {
+        limit = { check_variable = { lok_pop_cache_found > -1 } }
+        add_to_variable = { lok_state_culture_total_amount_array^lok_pop_cache_found = lok_pop_cache_amount }
+    }
+    else = {
+        add_to_array = { array = lok_state_culture_total_ids_array value = lok_pop_cache_culture }
+        add_to_array = { array = lok_state_culture_total_amount_array value = lok_pop_cache_amount }
+    }
+}
+
 LOK_rebuild_pop_caches = {
     set_variable = { lok_pop_total_k = 0 }
     set_variable = { lok_pop_group_count = 0 }
+
+    clear_array = lok_state_species_total_ids_array
+    clear_array = lok_state_species_total_amount_array
+    clear_array = lok_state_culture_total_ids_array
+    clear_array = lok_state_culture_total_amount_array
 
     clear_array = lok_state_parties_array
     resize_array = { array = lok_state_parties_array value = 0 size = 10 }
 
     set_temp_variable = { lok_pop_cache_i = 0 }
+
     while_loop_effect = {
         limit = { check_variable = { lok_pop_cache_i < lok_pop_amount_array^num } }
 
         set_temp_variable = { lok_pop_cache_amount = lok_pop_amount_array^lok_pop_cache_i }
+
         if = {
             limit = { check_variable = { lok_pop_cache_amount > 0 } }
+
             add_to_variable = { lok_pop_total_k = lok_pop_cache_amount }
             add_to_variable = { lok_pop_group_count = 1 }
 
+            set_temp_variable = { lok_pop_cache_species = lok_pop_species_array^lok_pop_cache_i }
+            set_temp_variable = { lok_pop_cache_culture = lok_pop_culture_array^lok_pop_cache_i }
             set_temp_variable = { lok_pop_cache_politics = lok_pop_politics_array^lok_pop_cache_i }
+
+            LOK_add_current_pop_to_species_total = yes
+            LOK_add_current_pop_to_culture_total = yes
+
             if = {
                 limit = {
                     check_variable = { lok_pop_cache_politics > -1 }
@@ -186,27 +317,32 @@ LOK_rebuild_pop_caches = {
         add_to_temp_variable = { lok_pop_cache_i = 1 }
     }
 
-    if = {
-        limit = { check_variable = { lok_pop_total_k > 0 } }
-        set_temp_variable = { lok_pop_cache_p = 0 }
-        while_loop_effect = {
-            limit = { check_variable = { lok_pop_cache_p < 10 } }
-            divide_variable = { lok_state_parties_array^lok_pop_cache_p = lok_pop_total_k }
-            add_to_temp_variable = { lok_pop_cache_p = 1 }
-        }
-    }
-    else = {
-        set_variable = { lok_state_parties_array^9 = 1 }
-    }
+    # The political pie/map mode is a projection of the real pop groups.
+    LOK_rebuild_state_political_pie = yes
 
     add_to_variable = { lok_pop_gui_dirty = 1 }
 }
 
-# -----------------------------------------------------------------------------
-# Filter matcher for current lok_pop_change_i.
-# Sets lok_pop_matches_current to 1/0.
-# -1 in a filter means ANY.
-# -----------------------------------------------------------------------------
+
+# ============================================================================
+# FILTERED POPULATION CHANGE TOOLKIT
+# ============================================================================
+# -1 means ANY for each filter.
+# Amount is in thousands. Negative removes, positive adds.
+# Matching groups are changed proportionally.
+# If removal asks for more than exists, all matching pops are removed.
+# If addition finds no matching groups, a new group is created ONLY if species,
+# culture and politics are all specified rather than -1.
+#
+# Example: remove one million Katzen Socialists of any culture:
+#
+#   set_temp_variable = { lok_pop_change_amount = -1000 }
+#   set_temp_variable = { lok_pop_filter_species = 1 }
+#   set_temp_variable = { lok_pop_filter_culture = -1 }
+#   set_temp_variable = { lok_pop_filter_politics = 1 }
+#   LOK_change_state_population = yes
+# ============================================================================
+
 LOK_test_current_pop_group_filters = {
     set_temp_variable = { lok_pop_matches_current = 1 }
 
@@ -239,29 +375,9 @@ LOK_test_current_pop_group_filters = {
     }
 }
 
-# -----------------------------------------------------------------------------
-# PUBLIC TOOLKIT
-#
-# Example:
-# LOK_change_state_population = {
-#     AMOUNT = -1000
-#     SPECIES = 1
-#     CULTURE = -1
-#     POLITICS = 1
-# }
-#
-# Amount is in thousands. Negative removes, positive adds.
-# Existing matching groups are changed proportionally.
-# If removing more than exists, all matching pops are removed.
-# If adding and no matching group exists, an exact group is created only when
-# all three filters are specified (none is -1); otherwise nothing is invented.
-# -----------------------------------------------------------------------------
 LOK_change_state_population = {
-    set_temp_variable = { lok_pop_change_amount = $AMOUNT$ }
-    set_temp_variable = { lok_pop_filter_species = $SPECIES$ }
-    set_temp_variable = { lok_pop_filter_culture = $CULTURE$ }
-    set_temp_variable = { lok_pop_filter_politics = $POLITICS$ }
-
+    # Caller's temp variables are intentionally used directly. Do not convert
+    # this back into a pseudo-parameterized scripted effect.
     custom_effect_tooltip = LOK_change_state_population_tt
 
     hidden_effect = {
@@ -274,14 +390,17 @@ LOK_change_state_population_internal = {
     set_temp_variable = { lok_pop_actual_change = 0 }
     set_temp_variable = { lok_pop_change_i = 0 }
 
-    # Pass 1: matching population total.
+    # Pass 1: sum matching population.
     while_loop_effect = {
         limit = { check_variable = { lok_pop_change_i < lok_pop_amount_array^num } }
 
         LOK_test_current_pop_group_filters = yes
+
         if = {
             limit = { check_variable = { lok_pop_matches_current = 1 } }
+
             set_temp_variable = { lok_pop_current_amount = lok_pop_amount_array^lok_pop_change_i }
+
             if = {
                 limit = { check_variable = { lok_pop_current_amount > 0 } }
                 add_to_temp_variable = { lok_pop_matching_total = lok_pop_current_amount }
@@ -310,10 +429,12 @@ LOK_change_state_population_internal = {
         multiply_temp_variable = { lok_pop_actual_change = -1 }
 
         set_temp_variable = { lok_pop_change_i = 0 }
+
         while_loop_effect = {
             limit = { check_variable = { lok_pop_change_i < lok_pop_amount_array^num } }
 
             LOK_test_current_pop_group_filters = yes
+
             if = {
                 limit = { check_variable = { lok_pop_matches_current = 1 } }
 
@@ -342,6 +463,7 @@ LOK_change_state_population_internal = {
                 limit = { check_variable = { lok_pop_change_i < lok_pop_amount_array^num } }
 
                 LOK_test_current_pop_group_filters = yes
+
                 if = {
                     limit = { check_variable = { lok_pop_matches_current = 1 } }
 
@@ -367,14 +489,16 @@ LOK_change_state_population_internal = {
             set_temp_variable = { lok_pop_input_politics = lok_pop_filter_politics }
             set_temp_variable = { lok_pop_input_amount = lok_pop_change_amount }
             set_temp_variable = { lok_pop_input_reserved = 0 }
+
             LOK_add_or_merge_pop_group_internal = yes
             set_temp_variable = { lok_pop_actual_change = lok_pop_change_amount }
         }
     }
 
-    # Keep vanilla state population in step with the simulated amount.
+    # Keep vanilla state population synchronized with the simulated groups.
     if = {
         limit = { NOT = { check_variable = { lok_pop_actual_change = 0 } } }
+
         set_temp_variable = { lok_pop_actual_change_people = lok_pop_actual_change }
         multiply_temp_variable = { lok_pop_actual_change_people = 1000 }
         round_temp_variable = lok_pop_actual_change_people
@@ -383,131 +507,4 @@ LOK_change_state_population_internal = {
 
     LOK_prune_empty_pop_groups = yes
     LOK_rebuild_pop_caches = yes
-}
-
-# -----------------------------------------------------------------------------
-# STARTING GROUP HELPERS
-# -----------------------------------------------------------------------------
-LOK_initialize_starting_pop_group = {
-    set_temp_variable = { lok_pop_input_species = lok_pop_init_species }
-    set_temp_variable = { lok_pop_input_culture = lok_pop_init_culture }
-    set_temp_variable = { lok_pop_input_politics = lok_pop_init_politics }
-    set_temp_variable = { lok_pop_input_amount = lok_pop_init_amount }
-    set_temp_variable = { lok_pop_input_reserved = 0 }
-    LOK_add_or_merge_pop_group_internal = yes
-}
-
-# Determine one starting political field without fragmenting the demographic
-# initialization. Uses cached dominant ideology if present; otherwise Apolitical.
-LOK_pick_starting_pop_politics = {
-    set_temp_variable = { lok_pop_init_politics = 9 }
-
-    if = {
-        limit = {
-            has_variable = lok_state_dominant_ideology
-            check_variable = { lok_state_dominant_ideology > -1 }
-            check_variable = { lok_state_dominant_ideology < 10 }
-        }
-        set_temp_variable = { lok_pop_init_politics = lok_state_dominant_ideology }
-    }
-}
-
-# Initialize one state from the existing species/minority/culture setup.
-LOK_initialize_state_pop_groups = {
-    clear_array = lok_pop_species_array
-    clear_array = lok_pop_culture_array
-    clear_array = lok_pop_politics_array
-    clear_array = lok_pop_amount_array
-    clear_array = lok_pop_reserved_array
-
-    LOK_pick_starting_pop_politics = yes
-    set_temp_variable = { lok_pop_init_total = state_population_k }
-
-    if = {
-        limit = {
-            check_variable = { lok_pop_init_total > 0 }
-            has_variable = species
-            NOT = { check_variable = { species = 1000 } }
-            check_variable = { state_cultures^num > 0 }
-        }
-
-        # Has a minority species.
-        if = {
-            limit = {
-                has_variable = minority
-                NOT = { check_variable = { minority = 1000 } }
-            }
-
-            # Two cultures: requested 45/45/15/15 weights total 120, so normalize
-            # them to 37.5/37.5/12.5/12.5 to preserve the state's population.
-            if = {
-                limit = { check_variable = { state_cultures^num > 1 } }
-
-                set_temp_variable = { lok_pop_init_species = species }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^0 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.375 }
-                LOK_initialize_starting_pop_group = yes
-
-                set_temp_variable = { lok_pop_init_species = species }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^1 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.375 }
-                LOK_initialize_starting_pop_group = yes
-
-                set_temp_variable = { lok_pop_init_species = minority }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^0 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.125 }
-                LOK_initialize_starting_pop_group = yes
-
-                set_temp_variable = { lok_pop_init_species = minority }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^1 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.125 }
-                LOK_initialize_starting_pop_group = yes
-            }
-            else = {
-                # One culture: 70% majority species / 30% minority species.
-                set_temp_variable = { lok_pop_init_species = species }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^0 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.70 }
-                LOK_initialize_starting_pop_group = yes
-
-                set_temp_variable = { lok_pop_init_species = minority }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^0 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.30 }
-                LOK_initialize_starting_pop_group = yes
-            }
-        }
-        else = {
-            # No minority. If two cultures exist, first-pass split is 50/50.
-            if = {
-                limit = { check_variable = { state_cultures^num > 1 } }
-
-                set_temp_variable = { lok_pop_init_species = species }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^0 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.50 }
-                LOK_initialize_starting_pop_group = yes
-
-                set_temp_variable = { lok_pop_init_species = species }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^1 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                multiply_temp_variable = { lok_pop_init_amount = 0.50 }
-                LOK_initialize_starting_pop_group = yes
-            }
-            else = {
-                # One species + one culture = exactly one initial group.
-                set_temp_variable = { lok_pop_init_species = species }
-                set_temp_variable = { lok_pop_init_culture = state_cultures^0 }
-                set_temp_variable = { lok_pop_init_amount = lok_pop_init_total }
-                LOK_initialize_starting_pop_group = yes
-            }
-        }
-    }
-
-    LOK_merge_identical_pop_groups = yes
 }

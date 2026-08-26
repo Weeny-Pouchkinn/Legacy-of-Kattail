@@ -1,18 +1,15 @@
 on_actions = {
-    # on_startup has no country scope, so explicitly enter every country.
+    # Pop groups themselves are now static HISTORY data generated into each
+    # playable country's state file. Startup only derives totals/caches and
+    # schedules duplicate cleanup; it does NOT invent demographic data.
     on_startup = {
         effect = {
             every_country = {
                 limit = { is_non_playable_country = no }
 
                 every_owned_state = {
-                    limit = {
-                        is_space_state = no
-                        check_variable = { state_population_k > 0 }
-                        has_variable = species
-                        check_variable = { state_cultures^num > 0 }
-                    }
-                    LOK_initialize_state_pop_groups = yes
+                    limit = { check_variable = { lok_pop_amount_array^num > 0 } }
+                    LOK_rebuild_pop_caches = yes
                 }
 
                 country_event = { id = LOK_pop_groups.1 days = 180 }

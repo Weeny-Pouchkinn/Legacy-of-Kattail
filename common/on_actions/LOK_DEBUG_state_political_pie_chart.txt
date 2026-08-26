@@ -1,21 +1,12 @@
-# DEBUG ONLY. Remove this file once real state-political initialization exists.
+# Legacy of Kattail - state politics debug initializer DISABLED.
 #
-# Initializes on a fresh game via on_startup AND, for convenience while developing,
-# also on the first daily pulse of an existing save that does not yet have the v3 flag.
+# State politics now comes from the explicit population-group rows stored in
+# history/states/*.txt. LOK_pop_groups_on_actions.txt sums those history rows at
+# startup and calls LOK_rebuild_state_political_pie.
+#
+# Keep this file at the same path/name so it replaces the old debug on_action,
+# which randomized lok_state_parties_array and would overwrite real pop-derived
+# politics.
 
 on_actions = {
-    on_startup = {
-        effect = {
-            LOK_DEBUG_initialize_state_politics_v3 = yes
-        }
-    }
-
-    on_daily = {
-        effect = {
-            if = {
-                limit = { NOT = { has_global_flag = LOK_debug_state_politics_v3_initialized } }
-                LOK_DEBUG_initialize_state_politics_v3 = yes
-            }
-        }
-    }
 }
