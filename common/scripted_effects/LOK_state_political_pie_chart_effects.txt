@@ -164,6 +164,164 @@ LOK_rebuild_state_political_pie = {
         resize_array = { array = lok_state_pie_chart_array value = 10 size = 50 }
     }
 
+
+    # ============================================================
+    # Cache the two highest normalized ideologies for the map mode.
+    # Ties resolve toward the lower array index (left-to-right ideology order).
+    # ============================================================
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^1 > lok_state_parties_normalized_array^0 }
+        }
+        set_variable = { lok_state_dominant_ideology = 1 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^1 }
+        set_variable = { lok_state_second_ideology = 0 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^0 }
+    }
+    else = {
+        set_variable = { lok_state_dominant_ideology = 0 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^0 }
+        set_variable = { lok_state_second_ideology = 1 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^1 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^2 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 2 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^2 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^2 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 2 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^2 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^3 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 3 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^3 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^3 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 3 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^3 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^4 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 4 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^4 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^4 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 4 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^4 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^5 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 5 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^5 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^5 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 5 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^5 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^6 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 6 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^6 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^6 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 6 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^6 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^7 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 7 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^7 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^7 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 7 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^7 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^8 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 8 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^8 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^8 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 8 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^8 }
+    }
+
+    if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^9 > lok_state_dominant_share }
+        }
+        set_variable = { lok_state_second_ideology = lok_state_dominant_ideology }
+        set_variable = { lok_state_second_share = lok_state_dominant_share }
+        set_variable = { lok_state_dominant_ideology = 9 }
+        set_variable = { lok_state_dominant_share = lok_state_parties_normalized_array^9 }
+    }
+    else_if = {
+        limit = {
+            check_variable = { lok_state_parties_normalized_array^9 > lok_state_second_share }
+        }
+        set_variable = { lok_state_second_ideology = 9 }
+        set_variable = { lok_state_second_share = lok_state_parties_normalized_array^9 }
+    }
+
     add_to_variable = { lok_state_political_pie_dirty = 1 }
 }
 
@@ -173,10 +331,10 @@ LOK_rebuild_state_political_pie = {
 # ============================================================
 # Safe to remove once real state political values are initialized elsewhere.
 
-LOK_DEBUG_initialize_state_politics_v2 = {
+LOK_DEBUG_initialize_state_politics_v3 = {
     if = {
-        limit = { NOT = { has_global_flag = LOK_debug_state_politics_v2_initialized } }
-        set_global_flag = LOK_debug_state_politics_v2_initialized
+        limit = { NOT = { has_global_flag = LOK_debug_state_politics_v3_initialized } }
+        set_global_flag = LOK_debug_state_politics_v3_initialized
 
         every_state = {
             clear_array = lok_state_parties_array
