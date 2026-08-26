@@ -177,7 +177,7 @@ img.save(gfx / "LOK_parliament_launcher.png")
 # GFX
 # ============================================================
 
-write("interface/LOK_parliament_gui.gfx", r'''
+write("interface/lok_system_parliament_assets.gfx", r'''
 spriteTypes = {
     spriteType = {
         name = "GFX_LOK_parliament_seat"
@@ -211,7 +211,7 @@ spriteTypes = {
 # interface
 # ============================================================
 
-write("interface/LOK_parliament_gui.gui", r'''
+write("interface/lok_system_parliament.gui", r'''
 guiTypes = {
 
     # ========================================================

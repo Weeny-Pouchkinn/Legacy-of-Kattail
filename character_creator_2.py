@@ -98,13 +98,13 @@ def save_input():
     # Find existing tag section or prepare to create new one
     tag_header_index = None
     for i, line in enumerate(lines):
-        if line.strip().startswith(f"#{country_tag}"):
+        if line.strip() in {f"#{country_tag}", f"# {country_tag}"}:
             tag_header_index = i
             break
 
     if tag_header_index is None:
         # Insert new section before closing brace with blank line
-        lines.insert(-1, f"\n\t#{country_tag}\n")
+        lines.insert(-1, f"\n\t# {country_tag}\n")
         tag_header_index = len(lines) - 2
 
     new_entries = f"\tspriteType = {{ name = \"GFX_portrait_{country_tag}_{code_name}\" texturefile = \"gfx/leaders/{country_tag}/{country_tag}_{code_name}.tga\" }}\n"

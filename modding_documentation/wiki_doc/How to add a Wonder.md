@@ -58,7 +58,7 @@ add_to_array = { array = wonder_modifiers_values value = 0.10 }
 }
 ```
 
-3/ **Define loc and GFX** Then its just a matter of defining the picture. Go to `interface/wonder_icon.gfx` and add the proper entry with the icon for your wonder. For the loc, go to `localisation/english/wonders_l_english.yml` and add a line for `var_wonder.[WONDER ID]` and a line for `var_wonder_desc.[WONDER ID]` You need to manually specify the various variables you've used as modifiers, as shown in the example below:
+3/ **Define loc and GFX** Then its just a matter of defining the picture. Go to `interface/lok_system_wonders.gfx` and add the proper entry with the icon for your wonder. For the loc, go to `localisation/english/wonders_l_english.yml` and add a line for `var_wonder.[WONDER ID]` and a line for `var_wonder_desc.[WONDER ID]` You need to manually specify the various variables you've used as modifiers, as shown in the example below:
 
 ```
 var_wonder.1: "Grand Katown Pyramid"

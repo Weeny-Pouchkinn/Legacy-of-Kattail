@@ -88,6 +88,50 @@ Next concrete action: launch the mod and inspect country names, character
 tooltips, and political-party names in-game, then review any runtime
 localisation errors against a fresh `error.log`.
 
+### Interface ownership migration — 2026-08-26
+
+Completed:
+
+- reorganized the interface GFX libraries into country-owned, shared, and
+  system-owned files, including country splits for ideas, portraits, and
+  focus icons;
+- renamed custom GUI/GFX pairs to explicit `lok_system_*` or
+  `lok_country_*` names while preserving all internal GUI object and sprite
+  identifiers;
+- moved the former replacement-folder definitions into explicit
+  `zzz_lok_override_*` files and retained vanilla-style interface filenames;
+- updated repository generators and wonder documentation to use the new
+  ownership paths;
+- consolidated all 585 named character portraits into
+  `interface/lok_leader_portraits.gfx`, sorted into 93 country sections with
+  comments, while leaving generic species portraits separate;
+- updated `character_creator_2.py` to append to the consolidated portrait
+  file;
+- merged the remaining 28 split country GFX files into 20 canonical
+  `lok_country_<TAG>.gfx` files with commented ideas, focus-icon, modifier,
+  and estates sections;
+- checked all 60 generated GFX registry files and normalized structural
+  indentation to tabs in the 54 files that needed it, without changing active
+  definitions;
+- removed only the comment-only FRA interface files;
+- added `tools/interface_reorganization.py` and
+  `modding_documentation/interface_migration_report.md`;
+- preserved 10,943 active named GFX blocks, 10,806 unique identifiers, and
+  all 137 pre-existing duplicate identifier names;
+- passed active-block fingerprint, lexical final-definition winner, brace,
+  direct-rename, and `git diff --check` audits after formatting.
+
+Unverified:
+
+- no Hearts of Iron IV session was launched after the interface migration or
+  portrait/country-GFX consolidation;
+- runtime interface file enumeration and visual loading remain untested;
+- `generate_lok_parliament_gui.py` remains pre-existingly uncompilable at its
+  original f-string syntax error on line 1038; only its output paths changed.
+
+Next concrete action: launch the mod, inspect the affected system/country UI
+paths, and check a fresh `error.log` for interface loading errors.
+
 ### Generic Parliament — 2026-08-24
 
 Implemented a first-pass universal informational Parliament category and reusable `LOK_hold_parliament_election = yes` effect in the current `global-rework` workspace. The requested repository branch was `great-game-test`, but this worktree was already on `global-rework`; no branch switch was performed.

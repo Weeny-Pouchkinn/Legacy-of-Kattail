@@ -104,7 +104,7 @@ Shadows can be done relatiely simply in paint.net (which is what i personally re
 
 Thats everything you need for the Icon itself. Save it in the .dds format with your wonder name of choice and move on to part 2
 #### Part 2 - Implementing The Icon
-Icons are actually "Declared" in [wonder_icon.gfx](../../interface/wonder_icon.gfx). The Way you implement them is fairly simple
+Icons are actually "Declared" in [lok_system_wonders.gfx](../../interface/lok_system_wonders.gfx). The Way you implement them is fairly simple
 ```paradox_script
 #<WONDER_NAME>
 spriteType = { name = "GFX_wonder_<WONDER_ID>" texturefile = "gfx/interface/wonders/<WONDER_ICON_FILENAME>.dds" }
@@ -336,4 +336,4 @@ Wonders can be removed much easier than they are added, simply run the "remove_w
 For Removing modifiers, simply follow the same procedure as [Updating a Modifier](#adding-newupdating-modifiers-midgame) but set the value to 0
 ## Documentation Notes
 As mentioned at the start, this Documentation used markdown formatting and is maintained by yours truly, DecentNameHere. Should you as a contributor add more wonders or modifiers i ask that you either ping me on the LOK mod discord or, if you are confident in adding with the Markdown format in this file, update the tables yourselves.
-Additionally, if any further clarification is needed on how to use 
+Additionally, if any further clarification is needed on how to use

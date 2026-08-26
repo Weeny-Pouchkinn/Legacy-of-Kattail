@@ -1,4 +1,5 @@
 import os
+import re
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image
@@ -9,6 +10,18 @@ try:
     USE_DND = True
 except ImportError:
     USE_DND = False
+
+
+def insert_focus_section(content, block):
+    line_ending = "\r\n" if "\r\n" in content else "\n"
+    marker = re.search(r"(?mi)^[ \t]*# FOCUS ICONS[ \t]*\r?$", content)
+    normalized_block = block.replace("\r\n", "\n").replace("\r", "\n").replace("\n", line_ending)
+    if marker:
+        next_section = re.search(r"(?mi)^[ \t]*# [A-Z][A-Z ]*[ \t]*\r?$", content[marker.end():])
+        position = marker.end() + next_section.start() if next_section else content.rfind("}")
+        return content[:position] + line_ending + normalized_block + line_ending + content[position:]
+    position = content.rfind("}")
+    return content[:position] + line_ending + "\t# FOCUS ICONS" + line_ending + normalized_block + line_ending + content[position:]
 
 class FocusIconTool:
     def __init__(self, root):
@@ -88,7 +101,7 @@ class FocusIconTool:
             return
 
         # 3. Update the .gfx file
-        gfx_path = os.path.join("interface", "lok_national_focus_icons.gfx")
+        gfx_path = os.path.join("interface", f"lok_country_{tag}.gfx")
         if not os.path.exists(gfx_path):
             messagebox.showerror("Error", f"Could not find {gfx_path}. Make sure you run this script in the root of your mod folder.")
             return
@@ -143,8 +156,8 @@ class FocusIconTool:
 \t\tlegacy_lazy_load = no
 \t}}
 """
-            # Slice the file to insert the code immediately prior to the final bracket
-            new_content = content[:last_brace_idx] + block + content[last_brace_idx:]
+            # Keep new definitions inside the country's focus-icon section.
+            new_content = insert_focus_section(content, block)
 
             with open(gfx_path, "w", encoding="utf-8") as f:
                 f.write(new_content)

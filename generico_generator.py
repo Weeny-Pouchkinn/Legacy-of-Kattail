@@ -137,7 +137,7 @@ class PortraitManager:
             self.update_misc_portraits(country_tag, species_name, category, portrait_entries)
 
     def update_gfx_file(self, species_name, country_tag, category, idx):
-        gfx_file_path = "interface/lok_generic_species_portraits.gfx"
+        gfx_file_path = "interface/lok_shared_species_portraits.gfx"
 
         with open(gfx_file_path, "r") as file:
             lines = file.readlines()

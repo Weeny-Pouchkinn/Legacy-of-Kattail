@@ -20,9 +20,23 @@ Autocomplete Behavior:
 """
 
 import os
+import re
 import shutil
 import tkinter as tk
 from tkinter import filedialog, messagebox
+
+
+def insert_gfx_section(content, section, block):
+    """Insert a definition before the next ownership section comment."""
+    line_ending = "\r\n" if "\r\n" in content else "\n"
+    marker = re.search(rf"(?mi)^[ \t]*# {re.escape(section)}[ \t]*\r?$", content)
+    normalized_block = block.replace("\r\n", "\n").replace("\r", "\n").replace("\n", line_ending)
+    if marker:
+        next_section = re.search(r"(?mi)^[ \t]*# [A-Z][A-Z ]*[ \t]*\r?$", content[marker.end():])
+        position = marker.end() + next_section.start() if next_section else content.rfind("}")
+        return content[:position] + line_ending + normalized_block + line_ending + content[position:]
+    position = content.rfind("}")
+    return content[:position] + line_ending + f"\t# {section}" + line_ending + normalized_block + line_ending + content[position:]
 
 # ---------------------------------------------------------------------------
 # Large list of possible HOI4 modifiers (for the 'modifier =' block).
@@ -305,7 +319,7 @@ class NationalSpiritCreatorApp:
         # Filenames
         ideas_filename = f"lok_{tag}_ideas.txt"
         loc_filename   = f"{tag}_l_english.yml"
-        gfx_filename   = f"{tag}_lok_ideas.gfx"
+        gfx_filename   = f"lok_country_{tag}.gfx"
 
         # 1) Build the idea block
         lines = [f"        {tag}_{spirit_id} = {{"]
@@ -484,9 +498,9 @@ class NationalSpiritCreatorApp:
     def handle_custom_gfx(self, tag, spirit_id, pic_override):
         """
         Copy the icon to gfx/interface/ideas/<spirit_id>.ext
-        Then define/append the sprite in <tag>_lok_ideas.gfx with name = GFX_idea_<spirit_id>.
+        Then define/append the sprite in lok_country_<TAG>.gfx under the IDEAS section with name = GFX_idea_<spirit_id>.
         """
-        gfx_file   = f"{tag}_lok_ideas.gfx"
+        gfx_file   = f"lok_country_{tag}.gfx"
         gfx_path   = os.path.join(INTERFACE_DIR, gfx_file)
 
         sprite_name = f"GFX_idea_{tag}_{spirit_id}"
@@ -510,30 +524,18 @@ class NationalSpiritCreatorApp:
         if not os.path.exists(gfx_path):
             gfx_data = (
                 "spriteTypes = {\n"
+                "\t# IDEAS\n\n"
                 f"{new_sprite_def}"
+                "\n\t# FOCUS ICONS\n\n"
+                "\t# MODIFIERS\n\n"
+                "\t# ESTATES\n\n"
                 "}\n"
             )
         else:
             with open(gfx_path, "r", encoding="utf-8") as f:
                 gfx_data = f.read()
-            if "spriteTypes" not in gfx_data:
-                gfx_data += "\nspriteTypes = {\n}\n"
-
             if sprite_name not in gfx_data:
-                last_brace = gfx_data.rfind("}")
-                if last_brace == -1:
-                    gfx_data += (
-                        "\nspriteTypes = {\n"
-                        f"{new_sprite_def}"
-                        "}\n"
-                    )
-                else:
-                    gfx_data = (
-                        gfx_data[:last_brace]
-                        + "\n"
-                        + new_sprite_def
-                        + gfx_data[last_brace:]
-                    )
+                gfx_data = insert_gfx_section(gfx_data, "IDEAS", new_sprite_def)
 
         with open(gfx_path, "w", encoding="utf-8") as f:
             f.write(gfx_data)

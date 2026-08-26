@@ -18,6 +18,70 @@ Consequences: country files no longer duplicate the extracted name, character,
 or party keys. The extraction preserves all baseline key/value pairs, but the
 game still needs a runtime load check for effective duplicate-key behavior.
 
+## 2026-08-26 — Interface ownership and explicit overrides
+
+Decision: organize custom interface definitions into `lok_country_<TAG>_*`,
+`lok_shared_*`, and `lok_system_*` files; retain vanilla-style filenames for
+base interface structures; and place deliberate late replacements in
+`zzz_lok_override_*` files.
+
+Rationale: the former catch-all files obscured ownership and the
+`interface/replace/` directory did not communicate which definitions were
+intended overrides. Splitting active blocks by identifier and feature keeps
+country content maintainable while preserving the exact GFX identifiers and
+the final definition selected under lexical file ordering.
+
+Consequences: the interface tree now has 166 GFX files and 46 GUI files. All
+10,943 active GFX definition blocks and 137 pre-existing duplicate names are
+preserved. The static audit passes, but the game still needs a runtime UI and
+error-log check because actual file enumeration/loading is not available here.
+
+## 2026-08-26 — Single sorted character-portrait library
+
+Decision: keep all named character portrait definitions in
+`interface/lok_leader_portraits.gfx`, with one alphabetically ordered country
+section per tag and explicit generic/miscellaneous/template sections at the
+end. Keep `lok_shared_species_portraits.gfx` separate.
+
+Rationale: character portraits are maintained as one cross-country registry,
+while generic species placeholders are a distinct reusable asset library.
+Country comments make the registry navigable without changing any `GFX_*`
+identifier or texture path.
+
+Consequences: the country-specific portrait files are removed; the character
+creator now appends to the single canonical file. The static HEAD fingerprint
+and lexical final-definition audits still pass for all 10,943 active GFX
+definitions.
+
+## 2026-08-26 — One GFX file per country
+
+Decision: merge each country's remaining ideas, focus icons, modifiers, and
+estates GFX sources into `interface/lok_country_<TAG>.gfx`, separated by
+uppercase section comments. Country GUI files remain separate because this
+rule applies to GFX libraries only.
+
+Rationale: one country file is easier to find and maintain than several
+country-suffixed GFX files, while section comments retain the ownership
+distinction inside the file.
+
+Consequences: 28 split country GFX files became 20 country files. The updated
+focus and national-spirit tools insert into their respective commented
+sections, so future generated content preserves the layout.
+
+## 2026-08-26 — Generated GFX indentation
+
+Decision: format owned generated GFX registries by structural brace depth,
+using tabs for each nesting level, while preserving all strings, identifiers,
+comments, and definition order.
+
+Rationale: the consolidation pass retained inconsistent source indentation,
+which made the merged files difficult to read even though their active content
+was correct.
+
+Consequences: 54 generated GFX files now use consistent indentation. The
+interface audit compares whitespace-insensitive active definitions so future
+formatting does not appear as a semantic migration.
+
 ## 2026-08-26 — Canonical localisation ownership files
 
 Decision: normal English localisation is organized as one `lok_country_<TAG>` file per country, with named `lok_system_*`, `lok_shared_*`, and `lok_world_*` owners; intentional vanilla replacement keys remain under `localisation/english/replace/`.

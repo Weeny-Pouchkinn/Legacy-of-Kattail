@@ -1,5 +1,57 @@
 import os
+import re
 import shutil
+
+
+def insert_focus_section(content, block):
+    line_ending = "\r\n" if "\r\n" in content else "\n"
+    marker = re.search(r"(?mi)^[ \t]*# FOCUS ICONS[ \t]*\r?$", content)
+    normalized_block = block.replace("\r\n", "\n").replace("\r", "\n").replace("\n", line_ending)
+    if marker:
+        next_section = re.search(r"(?mi)^[ \t]*# [A-Z][A-Z ]*[ \t]*\r?$", content[marker.end():])
+        position = marker.end() + next_section.start() if next_section else content.rfind("}")
+        return content[:position] + line_ending + normalized_block + line_ending + content[position:]
+    position = content.rfind("}")
+    return content[:position] + line_ending + "\t# FOCUS ICONS" + line_ending + normalized_block + line_ending + content[position:]
+
+
+def focus_icon_block(focus_id, tag):
+    texture = f"gfx/interface/goals/{tag}/{focus_id}.tga"
+    return f'''\tSpriteType = {{
+\t\tname = "{focus_id}"
+\t\ttexturefile = "{texture}"
+\t}}
+\tSpriteType = {{
+\t\tname = "{focus_id}_shine"
+\t\ttexturefile = "{texture}"
+\t\teffectFile = "gfx/FX/buttonstate.lua"
+\t\tanimation = {{
+\t\t\tanimationmaskfile = "{texture}"
+\t\t\tanimationtexturefile = "gfx/interface/goals/shine_overlay.dds"
+\t\t\tanimationrotation = -90.0
+\t\t\tanimationlooping = no
+\t\t\tanimationtime = 0.75
+\t\t\tanimationdelay = 0
+\t\t\tanimationblendmode = "add"
+\t\t\tanimationtype = "scrolling"
+\t\t\tanimationrotationoffset = {{ x = 0.0 y = 0.0 }}
+\t\t\tanimationtexturescale = {{ x = 1.0 y = 1.0 }}
+\t\t}}
+\t\tanimation = {{
+\t\t\tanimationmaskfile = "{texture}"
+\t\t\tanimationtexturefile = "gfx/interface/goals/shine_overlay.dds"
+\t\t\tanimationrotation = 90.0
+\t\t\tanimationlooping = no
+\t\t\tanimationtime = 0.75
+\t\t\tanimationdelay = 0
+\t\t\tanimationblendmode = "add"
+\t\t\tanimationtype = "scrolling"
+\t\t\tanimationrotationoffset = {{ x = 0.0 y = 0.0 }}
+\t\t\tanimationtexturescale = {{ x = 1.0 y = 1.0 }}
+\t\t}}
+\t\tlegacy_lazy_load = no
+\t}}
+'''
 
 def main():
     focus_tree = input("Enter the focus tree name: ")
@@ -32,7 +84,7 @@ def main():
     # Set up icons and localization
     goals_path = os.path.join("gfx", "interface", "goals", tag)
     template_path = os.path.join("gfx", "interface", "goals", "TEMPLATE.tga")
-    interface_path = os.path.join("interface", "lok_national_focus_icons.gfx")
+    interface_path = os.path.join("interface", f"lok_country_{tag}.gfx")
     loc_path = os.path.join("localisation", "english", f"{tag}_l_english.yml")
 
     processed_focuses = set()
@@ -40,11 +92,6 @@ def main():
     # Read the existing interface content
     with open(interface_path, 'r') as file:
         interface_content = file.read()
-
-    # Extract the example block
-    example_start = interface_content.find("#EXAMPLE") + len("#EXAMPLE")
-    example_end = interface_content.find("#EXAMPLE", example_start)
-    example_block = interface_content[example_start:example_end]
 
     # Read the existing localization content
     with open(loc_path, 'r') as file:
@@ -60,8 +107,7 @@ def main():
 
         # Define the icon in interface
         if f"name = \"{focus_id}\"" not in interface_content:
-            new_block = example_block.replace("[FOCUS_ID]", focus_id).replace("[TAG]", tag)
-            interface_content = interface_content[:example_end] + new_block + interface_content[example_end:]
+            interface_content = insert_focus_section(interface_content, focus_icon_block(focus_id, tag))
 
         # Define the localization
         if f" {focus_id}:0 \"{focus_id}\"" not in loc_content:
