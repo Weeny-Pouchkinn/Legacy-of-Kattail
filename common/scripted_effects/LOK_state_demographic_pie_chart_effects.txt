@@ -1,0 +1,129 @@
+# Legacy of Kattail - selected-state species/culture pie chart support.
+# EXPECTED SCOPE: STATE.
+#
+# Inputs are the sparse aggregate arrays produced by LOK_rebuild_pop_caches:
+#   lok_state_species_total_ids_array / lok_state_species_total_amount_array
+#   lok_state_culture_total_ids_array / lok_state_culture_total_amount_array
+#
+# The charts deliberately preserve only PRESENT categories. No 61-entry species array and
+# no 103-entry culture array are created. Tooltip rows therefore also contain only categories
+# that actually have population in the state.
+#
+# Rendering uses 50 rotated wedge icons, like the existing political pie chart. The chart
+# arrays store sprite-frame numbers (ID + 1) and are rebuilt only when population caches are.
+
+LOK_rebuild_state_species_pie = {
+    clear_array = lok_state_species_total_normalized_array
+    clear_array = lok_state_species_pie_chart_array
+
+    set_temp_variable = { lok_demo_total = 0 }
+    set_temp_variable = { lok_demo_i = 0 }
+    while_loop_effect = {
+        limit = { check_variable = { lok_demo_i < lok_state_species_total_amount_array^num } }
+        set_temp_variable = { lok_demo_amount = lok_state_species_total_amount_array^lok_demo_i }
+        add_to_temp_variable = { lok_demo_total = lok_demo_amount }
+        add_to_temp_variable = { lok_demo_i = 1 }
+    }
+
+    if = {
+        limit = { check_variable = { lok_demo_total > 0 } }
+        set_temp_variable = { lok_demo_i = 0 }
+        set_temp_variable = { lok_demo_cumulative = 0 }
+
+        while_loop_effect = {
+            limit = { check_variable = { lok_demo_i < lok_state_species_total_amount_array^num } }
+
+            set_temp_variable = { lok_demo_norm = lok_state_species_total_amount_array^lok_demo_i }
+            divide_temp_variable = { lok_demo_norm = lok_demo_total }
+            clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_demo_norm }
+
+            add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+            set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+            multiply_temp_variable = { lok_demo_target = 50 }
+            round_temp_variable = lok_demo_target
+            clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+
+            set_temp_variable = { lok_demo_frame = lok_state_species_total_ids_array^lok_demo_i }
+            add_to_temp_variable = { lok_demo_frame = 1 }
+
+            while_loop_effect = {
+                limit = { check_variable = { lok_state_species_pie_chart_array^num < lok_demo_target } }
+                add_to_array = { array = lok_state_species_pie_chart_array value = lok_demo_frame }
+            }
+
+            add_to_temp_variable = { lok_demo_i = 1 }
+        }
+
+        # Absorb rounding error into the final present species.
+        set_temp_variable = { lok_demo_last = lok_state_species_total_ids_array^num }
+        subtract_from_temp_variable = { lok_demo_last = 1 }
+        set_temp_variable = { lok_demo_frame = lok_state_species_total_ids_array^lok_demo_last }
+        add_to_temp_variable = { lok_demo_frame = 1 }
+        while_loop_effect = {
+            limit = { check_variable = { lok_state_species_pie_chart_array^num < 50 } }
+            add_to_array = { array = lok_state_species_pie_chart_array value = lok_demo_frame }
+        }
+    }
+}
+
+LOK_rebuild_state_culture_pie = {
+    clear_array = lok_state_culture_total_normalized_array
+    clear_array = lok_state_culture_pie_chart_array
+
+    set_temp_variable = { lok_demo_total = 0 }
+    set_temp_variable = { lok_demo_i = 0 }
+    while_loop_effect = {
+        limit = { check_variable = { lok_demo_i < lok_state_culture_total_amount_array^num } }
+        set_temp_variable = { lok_demo_amount = lok_state_culture_total_amount_array^lok_demo_i }
+        add_to_temp_variable = { lok_demo_total = lok_demo_amount }
+        add_to_temp_variable = { lok_demo_i = 1 }
+    }
+
+    if = {
+        limit = { check_variable = { lok_demo_total > 0 } }
+        set_temp_variable = { lok_demo_i = 0 }
+        set_temp_variable = { lok_demo_cumulative = 0 }
+
+        while_loop_effect = {
+            limit = { check_variable = { lok_demo_i < lok_state_culture_total_amount_array^num } }
+
+            set_temp_variable = { lok_demo_norm = lok_state_culture_total_amount_array^lok_demo_i }
+            divide_temp_variable = { lok_demo_norm = lok_demo_total }
+            clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_demo_norm }
+
+            add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+            set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+            multiply_temp_variable = { lok_demo_target = 50 }
+            round_temp_variable = lok_demo_target
+            clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+
+            set_temp_variable = { lok_demo_frame = lok_state_culture_total_ids_array^lok_demo_i }
+            add_to_temp_variable = { lok_demo_frame = 1 }
+
+            while_loop_effect = {
+                limit = { check_variable = { lok_state_culture_pie_chart_array^num < lok_demo_target } }
+                add_to_array = { array = lok_state_culture_pie_chart_array value = lok_demo_frame }
+            }
+
+            add_to_temp_variable = { lok_demo_i = 1 }
+        }
+
+        # Absorb rounding error into the final present culture.
+        set_temp_variable = { lok_demo_last = lok_state_culture_total_ids_array^num }
+        subtract_from_temp_variable = { lok_demo_last = 1 }
+        set_temp_variable = { lok_demo_frame = lok_state_culture_total_ids_array^lok_demo_last }
+        add_to_temp_variable = { lok_demo_frame = 1 }
+        while_loop_effect = {
+            limit = { check_variable = { lok_state_culture_pie_chart_array^num < 50 } }
+            add_to_array = { array = lok_state_culture_pie_chart_array value = lok_demo_frame }
+        }
+    }
+}
+
+LOK_rebuild_state_demographic_pies = {
+    LOK_rebuild_state_species_pie = yes
+    LOK_rebuild_state_culture_pie = yes
+    add_to_variable = { lok_state_demographic_pie_dirty = 1 }
+}
