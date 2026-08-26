@@ -80,3 +80,28 @@ localisation definitions.
 No Hearts of Iron IV session was launched, so runtime loading and effective
 last-definition behavior for pre-existing conflicting duplicates remain
 unverified.
+
+## Country, character, and party ownership refinement
+
+The follow-up extraction on 2026-08-26 consolidated the existing world-country
+entries with the country-name and formable-name matrices found in the 279
+`country_loc` files:
+
+- `lok_world_countries_l_english.yml` now contains 5,150 unique country-name
+  entries in alphabetical key order.
+- `lok_world_characters_l_english.yml` contains 290 actual character database
+  localisation entries, including coupled descriptions, grouped by country.
+- `lok_shared_parties_l_english.yml` was renamed to
+  `lok_world_parties_l_english.yml`, which contains 3,601 party-related entries
+  grouped by country/shared ownership; `replace/lok_parties_l_english.yml` was
+  left unchanged. This includes the two generic Parliament party placeholders.
+- Extracted keys no longer remain in the country files, and the generated
+  target files have no duplicate keys. The 12 generic role/trait labels in the
+  existing shared-character file were not character-object names and remain
+  there.
+
+The exact baseline key/value audit found no missing or changed baseline pairs.
+The worktree also contains 43 additional localisation entries in a concurrent
+untracked `LOK_parliament_gui_l_english.yml`; those were not part of this
+extraction and were left untouched. One character database reference,
+`ZZZ_leader_desc`, has no localisation definition and was not fabricated.

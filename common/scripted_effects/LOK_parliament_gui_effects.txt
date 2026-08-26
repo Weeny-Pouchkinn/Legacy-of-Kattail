@@ -1,0 +1,710 @@
+# LOK Parliament GUI support effects.
+
+LOK_parliament_gui_open = {
+    set_country_flag = LOK_parliament_gui_open
+
+    if = {
+        limit = { NOT = { has_country_flag = LOK_parliament_gui_filters_initialized } }
+        set_variable = { lok_parliament_gui_show_banned = 0 }
+        set_variable = { lok_parliament_gui_show_zero = 0 }
+        set_country_flag = LOK_parliament_gui_filters_initialized
+    }
+
+    if = {
+        limit = { NOT = { has_country_flag = LOK_parliament_gui_positions_initialized } }
+        LOK_parliament_gui_init_seat_positions = yes
+    }
+
+    LOK_parliament_gui_refresh = yes
+}
+
+LOK_parliament_gui_toggle_banned = {
+    if = {
+        limit = { check_variable = { lok_parliament_gui_show_banned = 1 } }
+        set_variable = { lok_parliament_gui_show_banned = 0 }
+    }
+    else = { set_variable = { lok_parliament_gui_show_banned = 1 } }
+    LOK_parliament_gui_rebuild_party_list = yes
+    add_to_variable = { lok_parliament_gui_dirty = 1 }
+}
+
+LOK_parliament_gui_toggle_zero = {
+    if = {
+        limit = { check_variable = { lok_parliament_gui_show_zero = 1 } }
+        set_variable = { lok_parliament_gui_show_zero = 0 }
+    }
+    else = { set_variable = { lok_parliament_gui_show_zero = 1 } }
+    LOK_parliament_gui_rebuild_party_list = yes
+    add_to_variable = { lok_parliament_gui_dirty = 1 }
+}
+
+LOK_parliament_gui_refresh = {
+    LOK_parliament_gui_rebuild_party_list = yes
+    LOK_parliament_gui_refresh_seats = yes
+    add_to_variable = { lok_parliament_gui_dirty = 1 }
+}
+
+LOK_parliament_gui_rebuild_party_list = {
+    clear_array = lok_parliament_gui_party_list
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^0 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^0 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^0 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^0 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 0 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^1 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^1 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^1 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^1 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 1 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^2 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^2 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^2 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^2 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 2 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^3 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^3 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^3 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^3 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 3 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^4 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^4 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^4 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^4 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 4 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^5 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^5 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^5 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^5 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 5 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^6 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^6 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^6 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^6 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 6 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^7 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^7 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^7 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^7 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 7 }
+    }
+
+    if = {
+        limit = {
+            OR = {
+                AND = {
+                    check_variable = { pol_party_array^8 = 3 }
+                    check_variable = { lok_parliament_gui_show_banned = 1 }
+                }
+                AND = {
+                    NOT = { check_variable = { pol_party_array^8 = 3 } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^8 > 0 }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^8 = 0 }
+                            check_variable = { lok_parliament_gui_show_zero = 1 }
+                        }
+                    }
+                }
+            }
+        }
+        add_to_array = { lok_parliament_gui_party_list = 8 }
+    }
+}
+
+LOK_parliament_gui_refresh_seats = {
+    # Convert normalized party shares into cumulative thresholds out of 200 seats.
+    set_variable = { lok_parliament_gui_cum_0 = lok_parliament_party_share_array^0 }
+    set_variable = { lok_parliament_gui_cum_1 = lok_parliament_gui_cum_0 }
+    add_to_variable = { lok_parliament_gui_cum_1 = lok_parliament_party_share_array^1 }
+    set_variable = { lok_parliament_gui_cum_2 = lok_parliament_gui_cum_1 }
+    add_to_variable = { lok_parliament_gui_cum_2 = lok_parliament_party_share_array^2 }
+    set_variable = { lok_parliament_gui_cum_3 = lok_parliament_gui_cum_2 }
+    add_to_variable = { lok_parliament_gui_cum_3 = lok_parliament_party_share_array^3 }
+    set_variable = { lok_parliament_gui_cum_4 = lok_parliament_gui_cum_3 }
+    add_to_variable = { lok_parliament_gui_cum_4 = lok_parliament_party_share_array^4 }
+    set_variable = { lok_parliament_gui_cum_5 = lok_parliament_gui_cum_4 }
+    add_to_variable = { lok_parliament_gui_cum_5 = lok_parliament_party_share_array^5 }
+    set_variable = { lok_parliament_gui_cum_6 = lok_parliament_gui_cum_5 }
+    add_to_variable = { lok_parliament_gui_cum_6 = lok_parliament_party_share_array^6 }
+    set_variable = { lok_parliament_gui_cum_7 = lok_parliament_gui_cum_6 }
+    add_to_variable = { lok_parliament_gui_cum_7 = lok_parliament_party_share_array^7 }
+    multiply_variable = { lok_parliament_gui_cum_0 = 200 }
+    round_variable = lok_parliament_gui_cum_0
+    if = { limit = { check_variable = { lok_parliament_gui_cum_0 > 200 } } set_variable = { lok_parliament_gui_cum_0 = 200 } }
+    multiply_variable = { lok_parliament_gui_cum_1 = 200 }
+    round_variable = lok_parliament_gui_cum_1
+    if = { limit = { check_variable = { lok_parliament_gui_cum_1 > 200 } } set_variable = { lok_parliament_gui_cum_1 = 200 } }
+    multiply_variable = { lok_parliament_gui_cum_2 = 200 }
+    round_variable = lok_parliament_gui_cum_2
+    if = { limit = { check_variable = { lok_parliament_gui_cum_2 > 200 } } set_variable = { lok_parliament_gui_cum_2 = 200 } }
+    multiply_variable = { lok_parliament_gui_cum_3 = 200 }
+    round_variable = lok_parliament_gui_cum_3
+    if = { limit = { check_variable = { lok_parliament_gui_cum_3 > 200 } } set_variable = { lok_parliament_gui_cum_3 = 200 } }
+    multiply_variable = { lok_parliament_gui_cum_4 = 200 }
+    round_variable = lok_parliament_gui_cum_4
+    if = { limit = { check_variable = { lok_parliament_gui_cum_4 > 200 } } set_variable = { lok_parliament_gui_cum_4 = 200 } }
+    multiply_variable = { lok_parliament_gui_cum_5 = 200 }
+    round_variable = lok_parliament_gui_cum_5
+    if = { limit = { check_variable = { lok_parliament_gui_cum_5 > 200 } } set_variable = { lok_parliament_gui_cum_5 = 200 } }
+    multiply_variable = { lok_parliament_gui_cum_6 = 200 }
+    round_variable = lok_parliament_gui_cum_6
+    if = { limit = { check_variable = { lok_parliament_gui_cum_6 > 200 } } set_variable = { lok_parliament_gui_cum_6 = 200 } }
+    multiply_variable = { lok_parliament_gui_cum_7 = 200 }
+    round_variable = lok_parliament_gui_cum_7
+    if = { limit = { check_variable = { lok_parliament_gui_cum_7 > 200 } } set_variable = { lok_parliament_gui_cum_7 = 200 } }
+
+    clear_array = lok_parliament_gui_seat_frame
+    resize_array = { array = lok_parliament_gui_seat_frame value = 1 size = lok_parliament_gui_cum_0 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 2 size = lok_parliament_gui_cum_1 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 3 size = lok_parliament_gui_cum_2 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 4 size = lok_parliament_gui_cum_3 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 5 size = lok_parliament_gui_cum_4 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 6 size = lok_parliament_gui_cum_5 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 7 size = lok_parliament_gui_cum_6 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 8 size = lok_parliament_gui_cum_7 }
+    resize_array = { array = lok_parliament_gui_seat_frame value = 9 size = 200 }
+}
+
+LOK_parliament_gui_init_seat_positions = {
+    clear_array = lok_parliament_gui_seat_x
+    clear_array = lok_parliament_gui_seat_y
+
+    # Static 200-seat semicircle coordinates.
+    add_to_array = { lok_parliament_gui_seat_x = 9 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 22 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 35 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 48 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 61 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 74 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 87 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 99 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 11 }
+    add_to_array = { lok_parliament_gui_seat_y = 187 }
+    add_to_array = { lok_parliament_gui_seat_x = 24 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 37 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 50 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 63 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 77 }
+    add_to_array = { lok_parliament_gui_seat_y = 185 }
+    add_to_array = { lok_parliament_gui_seat_x = 15 }
+    add_to_array = { lok_parliament_gui_seat_y = 168 }
+    add_to_array = { lok_parliament_gui_seat_x = 90 }
+    add_to_array = { lok_parliament_gui_seat_y = 185 }
+    add_to_array = { lok_parliament_gui_seat_x = 28 }
+    add_to_array = { lok_parliament_gui_seat_y = 167 }
+    add_to_array = { lok_parliament_gui_seat_x = 41 }
+    add_to_array = { lok_parliament_gui_seat_y = 167 }
+    add_to_array = { lok_parliament_gui_seat_x = 104 }
+    add_to_array = { lok_parliament_gui_seat_y = 183 }
+    add_to_array = { lok_parliament_gui_seat_x = 55 }
+    add_to_array = { lok_parliament_gui_seat_y = 166 }
+    add_to_array = { lok_parliament_gui_seat_x = 20 }
+    add_to_array = { lok_parliament_gui_seat_y = 150 }
+    add_to_array = { lok_parliament_gui_seat_x = 69 }
+    add_to_array = { lok_parliament_gui_seat_y = 166 }
+    add_to_array = { lok_parliament_gui_seat_x = 34 }
+    add_to_array = { lok_parliament_gui_seat_y = 148 }
+    add_to_array = { lok_parliament_gui_seat_x = 83 }
+    add_to_array = { lok_parliament_gui_seat_y = 164 }
+    add_to_array = { lok_parliament_gui_seat_x = 48 }
+    add_to_array = { lok_parliament_gui_seat_y = 149 }
+    add_to_array = { lok_parliament_gui_seat_x = 97 }
+    add_to_array = { lok_parliament_gui_seat_y = 164 }
+    add_to_array = { lok_parliament_gui_seat_x = 27 }
+    add_to_array = { lok_parliament_gui_seat_y = 132 }
+    add_to_array = { lok_parliament_gui_seat_x = 63 }
+    add_to_array = { lok_parliament_gui_seat_y = 147 }
+    add_to_array = { lok_parliament_gui_seat_x = 42 }
+    add_to_array = { lok_parliament_gui_seat_y = 130 }
+    add_to_array = { lok_parliament_gui_seat_x = 77 }
+    add_to_array = { lok_parliament_gui_seat_y = 147 }
+    add_to_array = { lok_parliament_gui_seat_x = 113 }
+    add_to_array = { lok_parliament_gui_seat_y = 162 }
+    add_to_array = { lok_parliament_gui_seat_x = 56 }
+    add_to_array = { lok_parliament_gui_seat_y = 131 }
+    add_to_array = { lok_parliament_gui_seat_x = 36 }
+    add_to_array = { lok_parliament_gui_seat_y = 115 }
+    add_to_array = { lok_parliament_gui_seat_x = 93 }
+    add_to_array = { lok_parliament_gui_seat_y = 145 }
+    add_to_array = { lok_parliament_gui_seat_x = 72 }
+    add_to_array = { lok_parliament_gui_seat_y = 129 }
+    add_to_array = { lok_parliament_gui_seat_x = 52 }
+    add_to_array = { lok_parliament_gui_seat_y = 113 }
+    add_to_array = { lok_parliament_gui_seat_x = 107 }
+    add_to_array = { lok_parliament_gui_seat_y = 145 }
+    add_to_array = { lok_parliament_gui_seat_x = 87 }
+    add_to_array = { lok_parliament_gui_seat_y = 130 }
+    add_to_array = { lok_parliament_gui_seat_x = 66 }
+    add_to_array = { lok_parliament_gui_seat_y = 114 }
+    add_to_array = { lok_parliament_gui_seat_x = 46 }
+    add_to_array = { lok_parliament_gui_seat_y = 99 }
+    add_to_array = { lok_parliament_gui_seat_x = 63 }
+    add_to_array = { lok_parliament_gui_seat_y = 97 }
+    add_to_array = { lok_parliament_gui_seat_x = 84 }
+    add_to_array = { lok_parliament_gui_seat_y = 112 }
+    add_to_array = { lok_parliament_gui_seat_x = 105 }
+    add_to_array = { lok_parliament_gui_seat_y = 127 }
+    add_to_array = { lok_parliament_gui_seat_x = 126 }
+    add_to_array = { lok_parliament_gui_seat_y = 142 }
+    add_to_array = { lok_parliament_gui_seat_x = 57 }
+    add_to_array = { lok_parliament_gui_seat_y = 83 }
+    add_to_array = { lok_parliament_gui_seat_x = 78 }
+    add_to_array = { lok_parliament_gui_seat_y = 98 }
+    add_to_array = { lok_parliament_gui_seat_x = 99 }
+    add_to_array = { lok_parliament_gui_seat_y = 113 }
+    add_to_array = { lok_parliament_gui_seat_x = 121 }
+    add_to_array = { lok_parliament_gui_seat_y = 128 }
+    add_to_array = { lok_parliament_gui_seat_x = 76 }
+    add_to_array = { lok_parliament_gui_seat_y = 82 }
+    add_to_array = { lok_parliament_gui_seat_x = 97 }
+    add_to_array = { lok_parliament_gui_seat_y = 97 }
+    add_to_array = { lok_parliament_gui_seat_x = 70 }
+    add_to_array = { lok_parliament_gui_seat_y = 69 }
+    add_to_array = { lok_parliament_gui_seat_x = 92 }
+    add_to_array = { lok_parliament_gui_seat_y = 84 }
+    add_to_array = { lok_parliament_gui_seat_x = 119 }
+    add_to_array = { lok_parliament_gui_seat_y = 112 }
+    add_to_array = { lok_parliament_gui_seat_x = 114 }
+    add_to_array = { lok_parliament_gui_seat_y = 99 }
+    add_to_array = { lok_parliament_gui_seat_x = 90 }
+    add_to_array = { lok_parliament_gui_seat_y = 68 }
+    add_to_array = { lok_parliament_gui_seat_x = 84 }
+    add_to_array = { lok_parliament_gui_seat_y = 56 }
+    add_to_array = { lok_parliament_gui_seat_x = 142 }
+    add_to_array = { lok_parliament_gui_seat_y = 126 }
+    add_to_array = { lok_parliament_gui_seat_x = 113 }
+    add_to_array = { lok_parliament_gui_seat_y = 83 }
+    add_to_array = { lok_parliament_gui_seat_x = 137 }
+    add_to_array = { lok_parliament_gui_seat_y = 114 }
+    add_to_array = { lok_parliament_gui_seat_x = 107 }
+    add_to_array = { lok_parliament_gui_seat_y = 71 }
+    add_to_array = { lok_parliament_gui_seat_x = 106 }
+    add_to_array = { lok_parliament_gui_seat_y = 56 }
+    add_to_array = { lok_parliament_gui_seat_x = 100 }
+    add_to_array = { lok_parliament_gui_seat_y = 45 }
+    add_to_array = { lok_parliament_gui_seat_x = 136 }
+    add_to_array = { lok_parliament_gui_seat_y = 98 }
+    add_to_array = { lok_parliament_gui_seat_x = 130 }
+    add_to_array = { lok_parliament_gui_seat_y = 87 }
+    add_to_array = { lok_parliament_gui_seat_x = 130 }
+    add_to_array = { lok_parliament_gui_seat_y = 72 }
+    add_to_array = { lok_parliament_gui_seat_x = 123 }
+    add_to_array = { lok_parliament_gui_seat_y = 60 }
+    add_to_array = { lok_parliament_gui_seat_x = 116 }
+    add_to_array = { lok_parliament_gui_seat_y = 35 }
+    add_to_array = { lok_parliament_gui_seat_x = 123 }
+    add_to_array = { lok_parliament_gui_seat_y = 46 }
+    add_to_array = { lok_parliament_gui_seat_x = 155 }
+    add_to_array = { lok_parliament_gui_seat_y = 102 }
+    add_to_array = { lok_parliament_gui_seat_x = 161 }
+    add_to_array = { lok_parliament_gui_seat_y = 113 }
+    add_to_array = { lok_parliament_gui_seat_x = 148 }
+    add_to_array = { lok_parliament_gui_seat_y = 76 }
+    add_to_array = { lok_parliament_gui_seat_x = 155 }
+    add_to_array = { lok_parliament_gui_seat_y = 87 }
+    add_to_array = { lok_parliament_gui_seat_x = 141 }
+    add_to_array = { lok_parliament_gui_seat_y = 51 }
+    add_to_array = { lok_parliament_gui_seat_x = 148 }
+    add_to_array = { lok_parliament_gui_seat_y = 62 }
+    add_to_array = { lok_parliament_gui_seat_x = 133 }
+    add_to_array = { lok_parliament_gui_seat_y = 26 }
+    add_to_array = { lok_parliament_gui_seat_x = 140 }
+    add_to_array = { lok_parliament_gui_seat_y = 37 }
+    add_to_array = { lok_parliament_gui_seat_x = 175 }
+    add_to_array = { lok_parliament_gui_seat_y = 93 }
+    add_to_array = { lok_parliament_gui_seat_x = 167 }
+    add_to_array = { lok_parliament_gui_seat_y = 69 }
+    add_to_array = { lok_parliament_gui_seat_x = 159 }
+    add_to_array = { lok_parliament_gui_seat_y = 44 }
+    add_to_array = { lok_parliament_gui_seat_x = 151 }
+    add_to_array = { lok_parliament_gui_seat_y = 19 }
+    add_to_array = { lok_parliament_gui_seat_x = 159 }
+    add_to_array = { lok_parliament_gui_seat_y = 31 }
+    add_to_array = { lok_parliament_gui_seat_x = 167 }
+    add_to_array = { lok_parliament_gui_seat_y = 55 }
+    add_to_array = { lok_parliament_gui_seat_x = 175 }
+    add_to_array = { lok_parliament_gui_seat_y = 80 }
+    add_to_array = { lok_parliament_gui_seat_x = 183 }
+    add_to_array = { lok_parliament_gui_seat_y = 104 }
+    add_to_array = { lok_parliament_gui_seat_x = 170 }
+    add_to_array = { lok_parliament_gui_seat_y = 14 }
+    add_to_array = { lok_parliament_gui_seat_x = 178 }
+    add_to_array = { lok_parliament_gui_seat_y = 39 }
+    add_to_array = { lok_parliament_gui_seat_x = 178 }
+    add_to_array = { lok_parliament_gui_seat_y = 26 }
+    add_to_array = { lok_parliament_gui_seat_x = 187 }
+    add_to_array = { lok_parliament_gui_seat_y = 63 }
+    add_to_array = { lok_parliament_gui_seat_x = 187 }
+    add_to_array = { lok_parliament_gui_seat_y = 50 }
+    add_to_array = { lok_parliament_gui_seat_x = 196 }
+    add_to_array = { lok_parliament_gui_seat_y = 88 }
+    add_to_array = { lok_parliament_gui_seat_x = 196 }
+    add_to_array = { lok_parliament_gui_seat_y = 75 }
+    add_to_array = { lok_parliament_gui_seat_x = 188 }
+    add_to_array = { lok_parliament_gui_seat_y = 11 }
+    add_to_array = { lok_parliament_gui_seat_x = 197 }
+    add_to_array = { lok_parliament_gui_seat_y = 36 }
+    add_to_array = { lok_parliament_gui_seat_x = 197 }
+    add_to_array = { lok_parliament_gui_seat_y = 23 }
+    add_to_array = { lok_parliament_gui_seat_x = 205 }
+    add_to_array = { lok_parliament_gui_seat_y = 100 }
+    add_to_array = { lok_parliament_gui_seat_x = 207 }
+    add_to_array = { lok_parliament_gui_seat_y = 61 }
+    add_to_array = { lok_parliament_gui_seat_x = 207 }
+    add_to_array = { lok_parliament_gui_seat_y = 48 }
+    add_to_array = { lok_parliament_gui_seat_x = 207 }
+    add_to_array = { lok_parliament_gui_seat_y = 9 }
+    add_to_array = { lok_parliament_gui_seat_x = 217 }
+    add_to_array = { lok_parliament_gui_seat_y = 86 }
+    add_to_array = { lok_parliament_gui_seat_x = 217 }
+    add_to_array = { lok_parliament_gui_seat_y = 73 }
+    add_to_array = { lok_parliament_gui_seat_x = 217 }
+    add_to_array = { lok_parliament_gui_seat_y = 35 }
+    add_to_array = { lok_parliament_gui_seat_x = 217 }
+    add_to_array = { lok_parliament_gui_seat_y = 22 }
+    add_to_array = { lok_parliament_gui_seat_x = 227 }
+    add_to_array = { lok_parliament_gui_seat_y = 9 }
+    add_to_array = { lok_parliament_gui_seat_x = 227 }
+    add_to_array = { lok_parliament_gui_seat_y = 48 }
+    add_to_array = { lok_parliament_gui_seat_x = 227 }
+    add_to_array = { lok_parliament_gui_seat_y = 61 }
+    add_to_array = { lok_parliament_gui_seat_x = 229 }
+    add_to_array = { lok_parliament_gui_seat_y = 100 }
+    add_to_array = { lok_parliament_gui_seat_x = 237 }
+    add_to_array = { lok_parliament_gui_seat_y = 23 }
+    add_to_array = { lok_parliament_gui_seat_x = 237 }
+    add_to_array = { lok_parliament_gui_seat_y = 36 }
+    add_to_array = { lok_parliament_gui_seat_x = 246 }
+    add_to_array = { lok_parliament_gui_seat_y = 11 }
+    add_to_array = { lok_parliament_gui_seat_x = 238 }
+    add_to_array = { lok_parliament_gui_seat_y = 75 }
+    add_to_array = { lok_parliament_gui_seat_x = 239 }
+    add_to_array = { lok_parliament_gui_seat_y = 88 }
+    add_to_array = { lok_parliament_gui_seat_x = 248 }
+    add_to_array = { lok_parliament_gui_seat_y = 50 }
+    add_to_array = { lok_parliament_gui_seat_x = 248 }
+    add_to_array = { lok_parliament_gui_seat_y = 63 }
+    add_to_array = { lok_parliament_gui_seat_x = 256 }
+    add_to_array = { lok_parliament_gui_seat_y = 26 }
+    add_to_array = { lok_parliament_gui_seat_x = 256 }
+    add_to_array = { lok_parliament_gui_seat_y = 39 }
+    add_to_array = { lok_parliament_gui_seat_x = 265 }
+    add_to_array = { lok_parliament_gui_seat_y = 14 }
+    add_to_array = { lok_parliament_gui_seat_x = 251 }
+    add_to_array = { lok_parliament_gui_seat_y = 104 }
+    add_to_array = { lok_parliament_gui_seat_x = 259 }
+    add_to_array = { lok_parliament_gui_seat_y = 80 }
+    add_to_array = { lok_parliament_gui_seat_x = 267 }
+    add_to_array = { lok_parliament_gui_seat_y = 55 }
+    add_to_array = { lok_parliament_gui_seat_x = 275 }
+    add_to_array = { lok_parliament_gui_seat_y = 31 }
+    add_to_array = { lok_parliament_gui_seat_x = 283 }
+    add_to_array = { lok_parliament_gui_seat_y = 19 }
+    add_to_array = { lok_parliament_gui_seat_x = 275 }
+    add_to_array = { lok_parliament_gui_seat_y = 44 }
+    add_to_array = { lok_parliament_gui_seat_x = 267 }
+    add_to_array = { lok_parliament_gui_seat_y = 69 }
+    add_to_array = { lok_parliament_gui_seat_x = 260 }
+    add_to_array = { lok_parliament_gui_seat_y = 93 }
+    add_to_array = { lok_parliament_gui_seat_x = 294 }
+    add_to_array = { lok_parliament_gui_seat_y = 37 }
+    add_to_array = { lok_parliament_gui_seat_x = 301 }
+    add_to_array = { lok_parliament_gui_seat_y = 26 }
+    add_to_array = { lok_parliament_gui_seat_x = 286 }
+    add_to_array = { lok_parliament_gui_seat_y = 62 }
+    add_to_array = { lok_parliament_gui_seat_x = 293 }
+    add_to_array = { lok_parliament_gui_seat_y = 51 }
+    add_to_array = { lok_parliament_gui_seat_x = 279 }
+    add_to_array = { lok_parliament_gui_seat_y = 87 }
+    add_to_array = { lok_parliament_gui_seat_x = 286 }
+    add_to_array = { lok_parliament_gui_seat_y = 76 }
+    add_to_array = { lok_parliament_gui_seat_x = 273 }
+    add_to_array = { lok_parliament_gui_seat_y = 113 }
+    add_to_array = { lok_parliament_gui_seat_x = 279 }
+    add_to_array = { lok_parliament_gui_seat_y = 102 }
+    add_to_array = { lok_parliament_gui_seat_x = 312 }
+    add_to_array = { lok_parliament_gui_seat_y = 46 }
+    add_to_array = { lok_parliament_gui_seat_x = 318 }
+    add_to_array = { lok_parliament_gui_seat_y = 35 }
+    add_to_array = { lok_parliament_gui_seat_x = 311 }
+    add_to_array = { lok_parliament_gui_seat_y = 60 }
+    add_to_array = { lok_parliament_gui_seat_x = 305 }
+    add_to_array = { lok_parliament_gui_seat_y = 72 }
+    add_to_array = { lok_parliament_gui_seat_x = 304 }
+    add_to_array = { lok_parliament_gui_seat_y = 87 }
+    add_to_array = { lok_parliament_gui_seat_x = 298 }
+    add_to_array = { lok_parliament_gui_seat_y = 98 }
+    add_to_array = { lok_parliament_gui_seat_x = 334 }
+    add_to_array = { lok_parliament_gui_seat_y = 45 }
+    add_to_array = { lok_parliament_gui_seat_x = 328 }
+    add_to_array = { lok_parliament_gui_seat_y = 56 }
+    add_to_array = { lok_parliament_gui_seat_x = 327 }
+    add_to_array = { lok_parliament_gui_seat_y = 71 }
+    add_to_array = { lok_parliament_gui_seat_x = 297 }
+    add_to_array = { lok_parliament_gui_seat_y = 114 }
+    add_to_array = { lok_parliament_gui_seat_x = 321 }
+    add_to_array = { lok_parliament_gui_seat_y = 83 }
+    add_to_array = { lok_parliament_gui_seat_x = 292 }
+    add_to_array = { lok_parliament_gui_seat_y = 126 }
+    add_to_array = { lok_parliament_gui_seat_x = 350 }
+    add_to_array = { lok_parliament_gui_seat_y = 56 }
+    add_to_array = { lok_parliament_gui_seat_x = 344 }
+    add_to_array = { lok_parliament_gui_seat_y = 68 }
+    add_to_array = { lok_parliament_gui_seat_x = 320 }
+    add_to_array = { lok_parliament_gui_seat_y = 99 }
+    add_to_array = { lok_parliament_gui_seat_x = 315 }
+    add_to_array = { lok_parliament_gui_seat_y = 112 }
+    add_to_array = { lok_parliament_gui_seat_x = 342 }
+    add_to_array = { lok_parliament_gui_seat_y = 84 }
+    add_to_array = { lok_parliament_gui_seat_x = 364 }
+    add_to_array = { lok_parliament_gui_seat_y = 69 }
+    add_to_array = { lok_parliament_gui_seat_x = 337 }
+    add_to_array = { lok_parliament_gui_seat_y = 97 }
+    add_to_array = { lok_parliament_gui_seat_x = 358 }
+    add_to_array = { lok_parliament_gui_seat_y = 82 }
+    add_to_array = { lok_parliament_gui_seat_x = 313 }
+    add_to_array = { lok_parliament_gui_seat_y = 128 }
+    add_to_array = { lok_parliament_gui_seat_x = 335 }
+    add_to_array = { lok_parliament_gui_seat_y = 113 }
+    add_to_array = { lok_parliament_gui_seat_x = 356 }
+    add_to_array = { lok_parliament_gui_seat_y = 98 }
+    add_to_array = { lok_parliament_gui_seat_x = 377 }
+    add_to_array = { lok_parliament_gui_seat_y = 83 }
+    add_to_array = { lok_parliament_gui_seat_x = 309 }
+    add_to_array = { lok_parliament_gui_seat_y = 142 }
+    add_to_array = { lok_parliament_gui_seat_x = 329 }
+    add_to_array = { lok_parliament_gui_seat_y = 127 }
+    add_to_array = { lok_parliament_gui_seat_x = 350 }
+    add_to_array = { lok_parliament_gui_seat_y = 112 }
+    add_to_array = { lok_parliament_gui_seat_x = 371 }
+    add_to_array = { lok_parliament_gui_seat_y = 97 }
+    add_to_array = { lok_parliament_gui_seat_x = 388 }
+    add_to_array = { lok_parliament_gui_seat_y = 99 }
+    add_to_array = { lok_parliament_gui_seat_x = 368 }
+    add_to_array = { lok_parliament_gui_seat_y = 114 }
+    add_to_array = { lok_parliament_gui_seat_x = 347 }
+    add_to_array = { lok_parliament_gui_seat_y = 130 }
+    add_to_array = { lok_parliament_gui_seat_x = 327 }
+    add_to_array = { lok_parliament_gui_seat_y = 145 }
+    add_to_array = { lok_parliament_gui_seat_x = 382 }
+    add_to_array = { lok_parliament_gui_seat_y = 113 }
+    add_to_array = { lok_parliament_gui_seat_x = 362 }
+    add_to_array = { lok_parliament_gui_seat_y = 129 }
+    add_to_array = { lok_parliament_gui_seat_x = 342 }
+    add_to_array = { lok_parliament_gui_seat_y = 145 }
+    add_to_array = { lok_parliament_gui_seat_x = 399 }
+    add_to_array = { lok_parliament_gui_seat_y = 115 }
+    add_to_array = { lok_parliament_gui_seat_x = 378 }
+    add_to_array = { lok_parliament_gui_seat_y = 131 }
+    add_to_array = { lok_parliament_gui_seat_x = 321 }
+    add_to_array = { lok_parliament_gui_seat_y = 162 }
+    add_to_array = { lok_parliament_gui_seat_x = 357 }
+    add_to_array = { lok_parliament_gui_seat_y = 147 }
+    add_to_array = { lok_parliament_gui_seat_x = 392 }
+    add_to_array = { lok_parliament_gui_seat_y = 130 }
+    add_to_array = { lok_parliament_gui_seat_x = 371 }
+    add_to_array = { lok_parliament_gui_seat_y = 147 }
+    add_to_array = { lok_parliament_gui_seat_x = 407 }
+    add_to_array = { lok_parliament_gui_seat_y = 132 }
+    add_to_array = { lok_parliament_gui_seat_x = 337 }
+    add_to_array = { lok_parliament_gui_seat_y = 164 }
+    add_to_array = { lok_parliament_gui_seat_x = 386 }
+    add_to_array = { lok_parliament_gui_seat_y = 149 }
+    add_to_array = { lok_parliament_gui_seat_x = 351 }
+    add_to_array = { lok_parliament_gui_seat_y = 164 }
+    add_to_array = { lok_parliament_gui_seat_x = 400 }
+    add_to_array = { lok_parliament_gui_seat_y = 148 }
+    add_to_array = { lok_parliament_gui_seat_x = 365 }
+    add_to_array = { lok_parliament_gui_seat_y = 166 }
+    add_to_array = { lok_parliament_gui_seat_x = 414 }
+    add_to_array = { lok_parliament_gui_seat_y = 150 }
+    add_to_array = { lok_parliament_gui_seat_x = 379 }
+    add_to_array = { lok_parliament_gui_seat_y = 166 }
+    add_to_array = { lok_parliament_gui_seat_x = 330 }
+    add_to_array = { lok_parliament_gui_seat_y = 183 }
+    add_to_array = { lok_parliament_gui_seat_x = 393 }
+    add_to_array = { lok_parliament_gui_seat_y = 167 }
+    add_to_array = { lok_parliament_gui_seat_x = 406 }
+    add_to_array = { lok_parliament_gui_seat_y = 167 }
+    add_to_array = { lok_parliament_gui_seat_x = 344 }
+    add_to_array = { lok_parliament_gui_seat_y = 185 }
+    add_to_array = { lok_parliament_gui_seat_x = 420 }
+    add_to_array = { lok_parliament_gui_seat_y = 168 }
+    add_to_array = { lok_parliament_gui_seat_x = 357 }
+    add_to_array = { lok_parliament_gui_seat_y = 185 }
+    add_to_array = { lok_parliament_gui_seat_x = 371 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 384 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 397 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 410 }
+    add_to_array = { lok_parliament_gui_seat_y = 186 }
+    add_to_array = { lok_parliament_gui_seat_x = 423 }
+    add_to_array = { lok_parliament_gui_seat_y = 187 }
+    add_to_array = { lok_parliament_gui_seat_x = 335 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 348 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 360 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 373 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 386 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 399 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 412 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+    add_to_array = { lok_parliament_gui_seat_x = 425 }
+    add_to_array = { lok_parliament_gui_seat_y = 206 }
+
+    set_country_flag = LOK_parliament_gui_positions_initialized
+}

@@ -1,0 +1,67 @@
+scripted_gui = {
+    LOK_parliament_launcher_scripted_gui = {
+        context_type = player_context
+        window_name = "LOK_parliament_launcher_gui"
+        parent_window_token = top_bar
+
+        visible = {
+            has_country_flag = lok_parliament_initialized
+            NOT = { has_country_flag = LOK_parliament_gui_open }
+        }
+
+        effects = {
+            LOK_parliament_open_button_click = { LOK_parliament_gui_open = yes }
+        }
+    }
+
+    LOK_parliament_scripted_gui = {
+        context_type = player_context
+        window_name = "LOK_parliament_gui"
+        parent_window_token = top_bar
+
+        visible = { has_country_flag = LOK_parliament_gui_open }
+        dirty = lok_parliament_gui_dirty
+
+        dynamic_lists = {
+            LOK_parliament_diagram = {
+                array = lok_parliament_gui_seat_x
+                change_scope = no
+                entry_container = LOK_parliament_seat
+                index = seat_idx
+            }
+            LOK_parliament_party_list = {
+                array = lok_parliament_gui_party_list
+                value = party_idx
+                index = party_list_idx
+                change_scope = no
+                entry_container = LOK_parliament_party_entry
+            }
+        }
+
+        properties = {
+            LOK_parliament_seat_icon = {
+                x = lok_parliament_gui_seat_x^seat_idx
+                y = lok_parliament_gui_seat_y^seat_idx
+                frame = lok_parliament_gui_seat_frame^seat_idx
+            }
+        }
+
+        effects = {
+            LOK_parliament_close_button_click = {
+                clr_country_flag = LOK_parliament_gui_open
+                add_to_variable = { lok_parliament_gui_dirty = 1 }
+            }
+            LOK_show_banned_off_button_click = { LOK_parliament_gui_toggle_banned = yes }
+            LOK_show_banned_on_button_click  = { LOK_parliament_gui_toggle_banned = yes }
+            LOK_show_zero_off_button_click   = { LOK_parliament_gui_toggle_zero = yes }
+            LOK_show_zero_on_button_click    = { LOK_parliament_gui_toggle_zero = yes }
+        }
+
+        triggers = {
+            LOK_show_banned_off_button_visible = { check_variable = { lok_parliament_gui_show_banned = 0 } }
+            LOK_show_banned_on_button_visible  = { check_variable = { lok_parliament_gui_show_banned = 1 } }
+            LOK_show_zero_off_button_visible   = { check_variable = { lok_parliament_gui_show_zero = 0 } }
+            LOK_show_zero_on_button_visible    = { check_variable = { lok_parliament_gui_show_zero = 1 } }
+        }
+    }
+}

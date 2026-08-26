@@ -1,5 +1,23 @@
 # Architectural Decisions
 
+## 2026-08-26 — World ownership for country names, characters, and parties
+
+Decision: keep country and formable nation names in the alphabetically sorted
+`lok_world_countries_l_english.yml`; keep character names and their descriptions
+in `lok_world_characters_l_english.yml` grouped by character owner; and keep
+political-party names in the renamed `lok_world_parties_l_english.yml` grouped
+by country. Vanilla replacement party localisation remains under `replace/`.
+
+Rationale: these are cross-country display databases rather than country
+content, while grouping by owner makes character and party maintenance easier.
+Character ownership was derived from actual `common/characters` `name`/`desc`
+references; generic role/trait labels without character-object references were
+left in the shared-character file.
+
+Consequences: country files no longer duplicate the extracted name, character,
+or party keys. The extraction preserves all baseline key/value pairs, but the
+game still needs a runtime load check for effective duplicate-key behavior.
+
 ## 2026-08-26 — Canonical localisation ownership files
 
 Decision: normal English localisation is organized as one `lok_country_<TAG>` file per country, with named `lok_system_*`, `lok_shared_*`, and `lok_world_*` owners; intentional vanilla replacement keys remain under `localisation/english/replace/`.

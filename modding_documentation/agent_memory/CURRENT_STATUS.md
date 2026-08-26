@@ -55,6 +55,39 @@ Unverified:
 
 Next concrete action: launch the mod, confirm localisation loading and inspect the affected country/system UI paths, then review whether any duplicate definitions require an explicit project decision.
 
+### Country, character, and party localisation refinement — 2026-08-26
+
+Completed:
+
+- extracted the existing country-name/formable-name matrices from all 279
+  `localisation/english/country_loc/` files into the alphabetically sorted
+  `localisation/english/lok_world_countries_l_english.yml`;
+- extracted 290 localised character names/descriptions referenced by
+  `common/characters/` into `lok_world_characters_l_english.yml`, grouped by
+  owning country with comments;
+- renamed `lok_shared_parties_l_english.yml` to
+  `lok_world_parties_l_english.yml` and grouped its 3,601 party-related entries
+  by country/shared ownership, including the two generic Parliament party
+  placeholders; the vanilla `replace/lok_parties_l_english.yml` override
+  remains separate;
+- verified that no extracted keys remain in the country files and that all
+  three destination files have unique, ordered keys and UTF-8 BOM headers;
+- preserved every baseline key/value pair exactly. A separate concurrent
+  untracked Parliament GUI localisation file contributes 43 additional pairs
+  outside the extraction.
+
+Unverified:
+
+- no Hearts of Iron IV session was launched after this refinement;
+- `common/characters` references `ZZZ_leader_desc`, but no localisation value
+  exists for it; no placeholder was invented;
+- effective runtime last-definition behavior for pre-existing conflicting
+  duplicate keys remains untested.
+
+Next concrete action: launch the mod and inspect country names, character
+tooltips, and political-party names in-game, then review any runtime
+localisation errors against a fresh `error.log`.
+
 ### Generic Parliament — 2026-08-24
 
 Implemented a first-pass universal informational Parliament category and reusable `LOK_hold_parliament_election = yes` effect in the current `global-rework` workspace. The requested repository branch was `great-game-test`, but this worktree was already on `global-rework`; no branch switch was performed.
