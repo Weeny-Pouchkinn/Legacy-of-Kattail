@@ -1,5 +1,13 @@
 # Architectural Decisions
 
+## 2026-08-26 — Canonical localisation ownership files
+
+Decision: normal English localisation is organized as one `lok_country_<TAG>` file per country, with named `lok_system_*`, `lok_shared_*`, and `lok_world_*` owners; intentional vanilla replacement keys remain under `localisation/english/replace/`.
+
+Rationale: source-file names were not a reliable ownership model, while the underlying script object and country/system scope provide a maintainable canonical location. A staging migration preserved all parsed key/value multisets before replacement.
+
+Consequences: duplicate definitions, including conflicting ordinary/replace pairs, are reported and preserved rather than silently resolved. The new `tools/localization_migration.py` checker is the repeatable baseline/final audit path. Runtime loading and duplicate effective-order behavior still require an in-game check.
+
 ## 2026-07-29 — Signed-axis Great Game data model
 
 Decision: represent every contested state with one signed `lok_gg_influence` variable, use exactly one live game per country, store iteration arrays on the host, and mirror only UI/action/reference data to participants.

@@ -33,6 +33,28 @@ Unverified:
 
 Next concrete action: launch the declared-compatible game environment, run `event lok_debug.22`, exercise at least one complete two-sided game, then test save/reload and settlement edge cases while checking a fresh `error.log`.
 
+### English localisation ownership migration — 2026-08-26
+
+Completed the structural English localisation migration for `global-rework-2`.
+
+Completed:
+
+- split country names, parties, characters, country ideas, focus/event/decision localisation, and country-specific traits into 279 `lok_country_<TAG>_l_english.yml` files;
+- split catch-all content into named `lok_system_*`, `lok_shared_*`, and `lok_world_*` files;
+- kept vanilla overrides under `localisation/english/replace/`, normalizing their filenames to lowercase `lok_` names where needed;
+- removed empty CRA, WUW, and `replace/lok_core` localisation files;
+- preserved 59,432 parsed definitions, 50,882 unique parsed keys, all duplicate definitions, and both malformed source lines;
+- added `tools/localization_migration.py` and `modding_documentation/localisation_migration_report.md`;
+- ran BOM/header/suffix checks, the analyser, an exact baseline/final key-value comparison, and `git diff --check`.
+
+Unverified:
+
+- no Hearts of Iron IV session was launched after the migration;
+- pre-existing duplicate keys with conflicting values remain and their final in-game load-order behavior was not runtime-tested;
+- the analyser still reports 2,287 missing and 7,935 potentially unused keys, unchanged from baseline and subject to indirect-reference false positives.
+
+Next concrete action: launch the mod, confirm localisation loading and inspect the affected country/system UI paths, then review whether any duplicate definitions require an explicit project decision.
+
 ### Generic Parliament — 2026-08-24
 
 Implemented a first-pass universal informational Parliament category and reusable `LOK_hold_parliament_election = yes` effect in the current `global-rework` workspace. The requested repository branch was `great-game-test`, but this worktree was already on `global-rework`; no branch switch was performed.
