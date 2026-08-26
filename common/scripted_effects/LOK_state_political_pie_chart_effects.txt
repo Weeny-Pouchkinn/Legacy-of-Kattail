@@ -1,0 +1,249 @@
+# State political pie chart support for Legacy of Kattail.
+# Technique adapted from Yard1/HoI4-Scripted-GUI-Pie-Chart. Credit: Yard1.
+#
+# EXPECTED SCOPE: STATE
+# lok_state_parties_array contains 10 raw non-negative values:
+# 0 communism, 1 socialism, 2 social_democratic, 3 social_liberal, 4 democratic,
+# 5 social_conservative, 6 authoritarian_democratic, 7 neutrality, 8 fascism,
+# 9 apolitical.
+#
+# Call this effect whenever those values change. The original array is NOT modified.
+# A normalized 10-value array and the 50-slice render array are derived from it.
+
+LOK_rebuild_state_political_pie = {
+    clear_array = lok_state_parties_normalized_array
+    clear_array = lok_state_pie_chart_array
+
+    set_temp_variable = { lok_state_pie_total = 0 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^0 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^1 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^2 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^3 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^4 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^5 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^6 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^7 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^8 }
+    add_to_temp_variable = { lok_state_pie_total = lok_state_parties_array^9 }
+
+    if = {
+        limit = { check_variable = { lok_state_pie_total > 0 } }
+
+        set_temp_variable = { lok_state_pie_norm_0 = lok_state_parties_array^0 }
+        divide_temp_variable = { lok_state_pie_norm_0 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_0 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_0 }
+        set_temp_variable = { lok_state_pie_norm_1 = lok_state_parties_array^1 }
+        divide_temp_variable = { lok_state_pie_norm_1 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_1 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_1 }
+        set_temp_variable = { lok_state_pie_norm_2 = lok_state_parties_array^2 }
+        divide_temp_variable = { lok_state_pie_norm_2 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_2 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_2 }
+        set_temp_variable = { lok_state_pie_norm_3 = lok_state_parties_array^3 }
+        divide_temp_variable = { lok_state_pie_norm_3 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_3 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_3 }
+        set_temp_variable = { lok_state_pie_norm_4 = lok_state_parties_array^4 }
+        divide_temp_variable = { lok_state_pie_norm_4 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_4 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_4 }
+        set_temp_variable = { lok_state_pie_norm_5 = lok_state_parties_array^5 }
+        divide_temp_variable = { lok_state_pie_norm_5 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_5 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_5 }
+        set_temp_variable = { lok_state_pie_norm_6 = lok_state_parties_array^6 }
+        divide_temp_variable = { lok_state_pie_norm_6 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_6 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_6 }
+        set_temp_variable = { lok_state_pie_norm_7 = lok_state_parties_array^7 }
+        divide_temp_variable = { lok_state_pie_norm_7 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_7 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_7 }
+        set_temp_variable = { lok_state_pie_norm_8 = lok_state_parties_array^8 }
+        divide_temp_variable = { lok_state_pie_norm_8 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_8 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_8 }
+        set_temp_variable = { lok_state_pie_norm_9 = lok_state_parties_array^9 }
+        divide_temp_variable = { lok_state_pie_norm_9 = lok_state_pie_total }
+        clamp_temp_variable = { var = lok_state_pie_norm_9 min = 0 max = 1 }
+        add_to_array = { lok_state_parties_normalized_array = lok_state_pie_norm_9 }
+
+        # Successive resize_array calls paint cumulative portions of the pie.
+        set_temp_variable = { lok_state_pie_cum_0 = lok_state_pie_norm_0 }
+        multiply_temp_variable = { lok_state_pie_cum_0 = 50 }
+        round_temp_variable = lok_state_pie_cum_0
+        clamp_temp_variable = { var = lok_state_pie_cum_0 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 1 size = lok_state_pie_cum_0 }
+        set_temp_variable = { lok_state_pie_cum_1 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_1 = lok_state_pie_norm_1 }
+        multiply_temp_variable = { lok_state_pie_cum_1 = 50 }
+        round_temp_variable = lok_state_pie_cum_1
+        clamp_temp_variable = { var = lok_state_pie_cum_1 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 2 size = lok_state_pie_cum_1 }
+        set_temp_variable = { lok_state_pie_cum_2 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_2 = lok_state_pie_norm_1 }
+        add_to_temp_variable = { lok_state_pie_cum_2 = lok_state_pie_norm_2 }
+        multiply_temp_variable = { lok_state_pie_cum_2 = 50 }
+        round_temp_variable = lok_state_pie_cum_2
+        clamp_temp_variable = { var = lok_state_pie_cum_2 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 3 size = lok_state_pie_cum_2 }
+        set_temp_variable = { lok_state_pie_cum_3 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_3 = lok_state_pie_norm_1 }
+        add_to_temp_variable = { lok_state_pie_cum_3 = lok_state_pie_norm_2 }
+        add_to_temp_variable = { lok_state_pie_cum_3 = lok_state_pie_norm_3 }
+        multiply_temp_variable = { lok_state_pie_cum_3 = 50 }
+        round_temp_variable = lok_state_pie_cum_3
+        clamp_temp_variable = { var = lok_state_pie_cum_3 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 4 size = lok_state_pie_cum_3 }
+        set_temp_variable = { lok_state_pie_cum_4 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_4 = lok_state_pie_norm_1 }
+        add_to_temp_variable = { lok_state_pie_cum_4 = lok_state_pie_norm_2 }
+        add_to_temp_variable = { lok_state_pie_cum_4 = lok_state_pie_norm_3 }
+        add_to_temp_variable = { lok_state_pie_cum_4 = lok_state_pie_norm_4 }
+        multiply_temp_variable = { lok_state_pie_cum_4 = 50 }
+        round_temp_variable = lok_state_pie_cum_4
+        clamp_temp_variable = { var = lok_state_pie_cum_4 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 5 size = lok_state_pie_cum_4 }
+        set_temp_variable = { lok_state_pie_cum_5 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_5 = lok_state_pie_norm_1 }
+        add_to_temp_variable = { lok_state_pie_cum_5 = lok_state_pie_norm_2 }
+        add_to_temp_variable = { lok_state_pie_cum_5 = lok_state_pie_norm_3 }
+        add_to_temp_variable = { lok_state_pie_cum_5 = lok_state_pie_norm_4 }
+        add_to_temp_variable = { lok_state_pie_cum_5 = lok_state_pie_norm_5 }
+        multiply_temp_variable = { lok_state_pie_cum_5 = 50 }
+        round_temp_variable = lok_state_pie_cum_5
+        clamp_temp_variable = { var = lok_state_pie_cum_5 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 6 size = lok_state_pie_cum_5 }
+        set_temp_variable = { lok_state_pie_cum_6 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_6 = lok_state_pie_norm_1 }
+        add_to_temp_variable = { lok_state_pie_cum_6 = lok_state_pie_norm_2 }
+        add_to_temp_variable = { lok_state_pie_cum_6 = lok_state_pie_norm_3 }
+        add_to_temp_variable = { lok_state_pie_cum_6 = lok_state_pie_norm_4 }
+        add_to_temp_variable = { lok_state_pie_cum_6 = lok_state_pie_norm_5 }
+        add_to_temp_variable = { lok_state_pie_cum_6 = lok_state_pie_norm_6 }
+        multiply_temp_variable = { lok_state_pie_cum_6 = 50 }
+        round_temp_variable = lok_state_pie_cum_6
+        clamp_temp_variable = { var = lok_state_pie_cum_6 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 7 size = lok_state_pie_cum_6 }
+        set_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_1 }
+        add_to_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_2 }
+        add_to_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_3 }
+        add_to_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_4 }
+        add_to_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_5 }
+        add_to_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_6 }
+        add_to_temp_variable = { lok_state_pie_cum_7 = lok_state_pie_norm_7 }
+        multiply_temp_variable = { lok_state_pie_cum_7 = 50 }
+        round_temp_variable = lok_state_pie_cum_7
+        clamp_temp_variable = { var = lok_state_pie_cum_7 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 8 size = lok_state_pie_cum_7 }
+        set_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_0 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_1 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_2 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_3 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_4 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_5 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_6 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_7 }
+        add_to_temp_variable = { lok_state_pie_cum_8 = lok_state_pie_norm_8 }
+        multiply_temp_variable = { lok_state_pie_cum_8 = 50 }
+        round_temp_variable = lok_state_pie_cum_8
+        clamp_temp_variable = { var = lok_state_pie_cum_8 min = 0 max = 50 }
+        resize_array = { array = lok_state_pie_chart_array value = 9 size = lok_state_pie_cum_8 }
+
+        # Force the final slice count exactly to 50; this absorbs all rounding error.
+        resize_array = { array = lok_state_pie_chart_array value = 10 size = 50 }
+    }
+
+    else = {
+        # Undefined all-zero input: display as 100% apolitical rather than an empty chart.
+        resize_array = { array = lok_state_parties_normalized_array value = 0 size = 9 }
+        add_to_array = { lok_state_parties_normalized_array = 1 }
+        resize_array = { array = lok_state_pie_chart_array value = 10 size = 50 }
+    }
+
+    add_to_variable = { lok_state_political_pie_dirty = 1 }
+}
+
+
+# ============================================================
+# DEBUG INITIALIZER
+# ============================================================
+# Safe to remove once real state political values are initialized elsewhere.
+
+LOK_DEBUG_initialize_state_politics_v2 = {
+    if = {
+        limit = { NOT = { has_global_flag = LOK_debug_state_politics_v2_initialized } }
+        set_global_flag = LOK_debug_state_politics_v2_initialized
+
+        every_state = {
+            clear_array = lok_state_parties_array
+            resize_array = { array = lok_state_parties_array value = 0 size = 10 }
+
+                    randomize_variable = {
+                        var = lok_state_parties_array^0
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^1
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^2
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^3
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^4
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^5
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^6
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^7
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^8
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+                    randomize_variable = {
+                        var = lok_state_parties_array^9
+                        distribution = uniform
+                        min = 0
+                        max = 1
+                    }
+
+            LOK_rebuild_state_political_pie = yes
+        }
+    }
+}
