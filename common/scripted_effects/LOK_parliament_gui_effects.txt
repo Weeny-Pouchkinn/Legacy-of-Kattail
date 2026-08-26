@@ -7,6 +7,8 @@ LOK_parliament_gui_open = {
         limit = { NOT = { has_country_flag = LOK_parliament_gui_filters_initialized } }
         set_variable = { lok_parliament_gui_show_banned = 0 }
         set_variable = { lok_parliament_gui_show_zero = 0 }
+        # 0 = left-to-right, 1 = seats, 2 = opinion, 3 = opinion target
+        set_variable = { lok_parliament_gui_sort_mode = 0 }
         set_country_flag = LOK_parliament_gui_filters_initialized
     }
 
@@ -47,205 +49,265 @@ LOK_parliament_gui_refresh = {
 LOK_parliament_gui_rebuild_party_list = {
     clear_array = lok_parliament_gui_party_list
 
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^0 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^0 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^0 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^0 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 0 }
-    }
+    if = { limit = { check_variable = { lok_parliament_gui_sort_mode = 0 } } LOK_parliament_gui_sort_left_to_right = yes }
+    if = { limit = { check_variable = { lok_parliament_gui_sort_mode = 1 } } LOK_parliament_gui_sort_by_seats = yes }
+    if = { limit = { check_variable = { lok_parliament_gui_sort_mode = 2 } } LOK_parliament_gui_sort_by_opinion = yes }
+    if = { limit = { check_variable = { lok_parliament_gui_sort_mode = 3 } } LOK_parliament_gui_sort_by_target = yes }
+    if = { limit = { check_variable = { lok_parliament_gui_sort_mode = 4 } } LOK_parliament_gui_sort_by_gov = yes }
+    if = { limit = { check_variable = { lok_parliament_gui_sort_mode = 5 } } LOK_parliament_gui_sort_by_popularity = yes }
+}
 
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^1 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^1 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^1 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^1 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 1 }
-    }
 
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^2 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^2 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^2 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^2 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 2 }
-    }
+# ============================================================
+# Party list sorting
+# Numeric sorts are descending. Ties retain ideology index order.
+# The mod already uses for_loop_effect with dynamic array indexes.
+# ============================================================
+LOK_parliament_gui_set_sort_orientation = { set_variable = { lok_parliament_gui_sort_mode = 0 } LOK_parliament_gui_rebuild_party_list = yes add_to_variable = { lok_parliament_gui_dirty = 1 } }
+LOK_parliament_gui_set_sort_seats       = { set_variable = { lok_parliament_gui_sort_mode = 1 } LOK_parliament_gui_rebuild_party_list = yes add_to_variable = { lok_parliament_gui_dirty = 1 } }
+LOK_parliament_gui_set_sort_opinion     = { set_variable = { lok_parliament_gui_sort_mode = 2 } LOK_parliament_gui_rebuild_party_list = yes add_to_variable = { lok_parliament_gui_dirty = 1 } }
+LOK_parliament_gui_set_sort_target      = { set_variable = { lok_parliament_gui_sort_mode = 3 } LOK_parliament_gui_rebuild_party_list = yes add_to_variable = { lok_parliament_gui_dirty = 1 } }
+LOK_parliament_gui_set_sort_gov         = { set_variable = { lok_parliament_gui_sort_mode = 4 } LOK_parliament_gui_rebuild_party_list = yes add_to_variable = { lok_parliament_gui_dirty = 1 } }
+LOK_parliament_gui_set_sort_popularity  = { set_variable = { lok_parliament_gui_sort_mode = 5 } LOK_parliament_gui_rebuild_party_list = yes add_to_variable = { lok_parliament_gui_dirty = 1 } }
 
+# Add party sort_i only if the current filters permit it.
+# This is deliberately a scripted effect called from the two loops below.
+LOK_parliament_gui_add_sort_party_if_visible = {
     if = {
         limit = {
             OR = {
                 AND = {
-                    check_variable = { pol_party_array^3 = 3 }
+                    check_variable = { pol_party_array^sort_i = 3 }
                     check_variable = { lok_parliament_gui_show_banned = 1 }
                 }
                 AND = {
-                    NOT = { check_variable = { pol_party_array^3 = 3 } }
+                    NOT = { check_variable = { pol_party_array^sort_i = 3 } }
                     OR = {
-                        check_variable = { lok_parliament_party_share_array^3 > 0 }
+                        check_variable = { lok_parliament_party_share_array^sort_i > 0 }
                         AND = {
-                            check_variable = { lok_parliament_party_share_array^3 = 0 }
+                            check_variable = { lok_parliament_party_share_array^sort_i = 0 }
                             check_variable = { lok_parliament_gui_show_zero = 1 }
                         }
                     }
                 }
             }
         }
-        add_to_array = { lok_parliament_gui_party_list = 3 }
-    }
-
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^4 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^4 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^4 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^4 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 4 }
-    }
-
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^5 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^5 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^5 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^5 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 5 }
-    }
-
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^6 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^6 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^6 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^6 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 6 }
-    }
-
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^7 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^7 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^7 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^7 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 7 }
-    }
-
-    if = {
-        limit = {
-            OR = {
-                AND = {
-                    check_variable = { pol_party_array^8 = 3 }
-                    check_variable = { lok_parliament_gui_show_banned = 1 }
-                }
-                AND = {
-                    NOT = { check_variable = { pol_party_array^8 = 3 } }
-                    OR = {
-                        check_variable = { lok_parliament_party_share_array^8 > 0 }
-                        AND = {
-                            check_variable = { lok_parliament_party_share_array^8 = 0 }
-                            check_variable = { lok_parliament_gui_show_zero = 1 }
-                        }
-                    }
-                }
-            }
-        }
-        add_to_array = { lok_parliament_gui_party_list = 8 }
+        add_to_array = { array = lok_parliament_gui_party_list value = sort_i }
     }
 }
 
+LOK_parliament_gui_sort_left_to_right = {
+    for_loop_effect = {
+        end = 9
+        value = sort_i
+        LOK_parliament_gui_add_sort_party_if_visible = yes
+    }
+}
+
+LOK_parliament_gui_sort_by_seats = {
+    # Compute each party's rank. Rank 0 is the highest value.
+    for_loop_effect = {
+        end = 9
+        value = sort_i
+        set_variable = { lok_parliament_gui_sort_rank_array^sort_i = 0 }
+
+        for_loop_effect = {
+            end = 9
+            value = sort_j
+            if = {
+                limit = {
+                    NOT = { check_variable = { sort_i = sort_j } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_array^sort_j > lok_parliament_party_share_array^sort_i }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_array^sort_j = lok_parliament_party_share_array^sort_i }
+                            check_variable = { sort_j < sort_i }
+                        }
+                    }
+                }
+                add_to_variable = { lok_parliament_gui_sort_rank_array^sort_i = 1 }
+            }
+        }
+    }
+
+    # Emit rank 0, then 1, ... 8. Exactly one party owns each rank.
+    for_loop_effect = {
+        end = 9
+        value = sort_rank
+        for_loop_effect = {
+            end = 9
+            value = sort_i
+            if = {
+                limit = { check_variable = { lok_parliament_gui_sort_rank_array^sort_i = sort_rank } }
+                LOK_parliament_gui_add_sort_party_if_visible = yes
+            }
+        }
+    }
+}
+
+LOK_parliament_gui_sort_by_opinion = {
+    # Compute each party's rank. Rank 0 is the highest value.
+    for_loop_effect = {
+        end = 9
+        value = sort_i
+        set_variable = { lok_parliament_gui_sort_rank_array^sort_i = 0 }
+
+        for_loop_effect = {
+            end = 9
+            value = sort_j
+            if = {
+                limit = {
+                    NOT = { check_variable = { sort_i = sort_j } }
+                    OR = {
+                        check_variable = { lok_parliament_party_approval_array^sort_j > lok_parliament_party_approval_array^sort_i }
+                        AND = {
+                            check_variable = { lok_parliament_party_approval_array^sort_j = lok_parliament_party_approval_array^sort_i }
+                            check_variable = { sort_j < sort_i }
+                        }
+                    }
+                }
+                add_to_variable = { lok_parliament_gui_sort_rank_array^sort_i = 1 }
+            }
+        }
+    }
+
+    # Emit rank 0, then 1, ... 8. Exactly one party owns each rank.
+    for_loop_effect = {
+        end = 9
+        value = sort_rank
+        for_loop_effect = {
+            end = 9
+            value = sort_i
+            if = {
+                limit = { check_variable = { lok_parliament_gui_sort_rank_array^sort_i = sort_rank } }
+                LOK_parliament_gui_add_sort_party_if_visible = yes
+            }
+        }
+    }
+}
+
+LOK_parliament_gui_sort_by_target = {
+    # Compute each party's rank. Rank 0 is the highest value.
+    for_loop_effect = {
+        end = 9
+        value = sort_i
+        set_variable = { lok_parliament_gui_sort_rank_array^sort_i = 0 }
+
+        for_loop_effect = {
+            end = 9
+            value = sort_j
+            if = {
+                limit = {
+                    NOT = { check_variable = { sort_i = sort_j } }
+                    OR = {
+                        check_variable = { lok_parliament_party_approval_target_array^sort_j > lok_parliament_party_approval_target_array^sort_i }
+                        AND = {
+                            check_variable = { lok_parliament_party_approval_target_array^sort_j = lok_parliament_party_approval_target_array^sort_i }
+                            check_variable = { sort_j < sort_i }
+                        }
+                    }
+                }
+                add_to_variable = { lok_parliament_gui_sort_rank_array^sort_i = 1 }
+            }
+        }
+    }
+
+    # Emit rank 0, then 1, ... 8. Exactly one party owns each rank.
+    for_loop_effect = {
+        end = 9
+        value = sort_rank
+        for_loop_effect = {
+            end = 9
+            value = sort_i
+            if = {
+                limit = { check_variable = { lok_parliament_gui_sort_rank_array^sort_i = sort_rank } }
+                LOK_parliament_gui_add_sort_party_if_visible = yes
+            }
+        }
+    }
+}
+
+LOK_parliament_gui_sort_by_gov = {
+    # Compute each party's rank. Rank 0 is the highest value.
+    for_loop_effect = {
+        end = 9
+        value = sort_i
+        set_variable = { lok_parliament_gui_sort_rank_array^sort_i = 0 }
+
+        for_loop_effect = {
+            end = 9
+            value = sort_j
+            if = {
+                limit = {
+                    NOT = { check_variable = { sort_i = sort_j } }
+                    OR = {
+                        check_variable = { lok_parliament_party_gov_array^sort_j > lok_parliament_party_gov_array^sort_i }
+                        AND = {
+                            check_variable = { lok_parliament_party_gov_array^sort_j = lok_parliament_party_gov_array^sort_i }
+                            check_variable = { sort_j < sort_i }
+                        }
+                    }
+                }
+                add_to_variable = { lok_parliament_gui_sort_rank_array^sort_i = 1 }
+            }
+        }
+    }
+
+    # Emit rank 0, then 1, ... 8. Exactly one party owns each rank.
+    for_loop_effect = {
+        end = 9
+        value = sort_rank
+        for_loop_effect = {
+            end = 9
+            value = sort_i
+            if = {
+                limit = { check_variable = { lok_parliament_gui_sort_rank_array^sort_i = sort_rank } }
+                LOK_parliament_gui_add_sort_party_if_visible = yes
+            }
+        }
+    }
+}
+
+LOK_parliament_gui_sort_by_popularity = {
+    # Compute each party's rank. Rank 0 is the highest value.
+    for_loop_effect = {
+        end = 9
+        value = sort_i
+        set_variable = { lok_parliament_gui_sort_rank_array^sort_i = 0 }
+
+        for_loop_effect = {
+            end = 9
+            value = sort_j
+            if = {
+                limit = {
+                    NOT = { check_variable = { sort_i = sort_j } }
+                    OR = {
+                        check_variable = { lok_parliament_party_share_real_array^sort_j > lok_parliament_party_share_real_array^sort_i }
+                        AND = {
+                            check_variable = { lok_parliament_party_share_real_array^sort_j = lok_parliament_party_share_real_array^sort_i }
+                            check_variable = { sort_j < sort_i }
+                        }
+                    }
+                }
+                add_to_variable = { lok_parliament_gui_sort_rank_array^sort_i = 1 }
+            }
+        }
+    }
+
+    # Emit rank 0, then 1, ... 8. Exactly one party owns each rank.
+    for_loop_effect = {
+        end = 9
+        value = sort_rank
+        for_loop_effect = {
+            end = 9
+            value = sort_i
+            if = {
+                limit = { check_variable = { lok_parliament_gui_sort_rank_array^sort_i = sort_rank } }
+                LOK_parliament_gui_add_sort_party_if_visible = yes
+            }
+        }
+    }
+}
 LOK_parliament_gui_refresh_seats = {
     # Convert normalized party shares into cumulative thresholds out of 200 seats.
     set_variable = { lok_parliament_gui_cum_0 = lok_parliament_party_share_array^0 }
