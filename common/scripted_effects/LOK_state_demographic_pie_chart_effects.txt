@@ -1,117 +1,2004 @@
 # Legacy of Kattail - selected-state species/culture pie chart support.
 # EXPECTED SCOPE: STATE.
 #
-# AUTHORITATIVE INPUTS:
-#   lok_state_species_array : 61 share entries (0..1)
-#   lok_state_culture_array : 103 share entries (0..1)
+# IMPORTANT: The authoritative arrays are read with LITERAL indices only.
+# This intentionally mirrors the known-working political pie renderer.
+# Do not replace these blocks with dynamic array^temp_index reads / for_each_loop:
+# the demographic shares are decimals, and that path produced 1/0 truth values in-game.
 #
-# Render directly from numeric array elements via for_each_loop.
+# Inputs:
+#   lok_state_species_array (61 entries; authoritative shares)
+#   lok_state_culture_array (103 entries; authoritative shares)
+#
+# Output arrays contain 50 sprite-frame IDs. Species/culture ID N uses frame N+1.
 
 LOK_rebuild_state_species_pie = {
     clear_array = lok_state_species_pie_chart_array
     set_temp_variable = { lok_demo_total = 0 }
-
-    for_each_loop = {
-        array = lok_state_species_array
-        value = lok_demo_raw_share
-        index = lok_demo_i
-        set_temp_variable = { lok_demo_share = lok_demo_raw_share }
-        clamp_temp_variable = { var = lok_demo_share min = 0 max = 1 }
-        add_to_temp_variable = { lok_demo_total = lok_demo_share }
-    }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^0 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^1 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^2 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^3 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^4 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^5 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^6 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^7 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^8 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^9 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^10 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^11 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^12 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^13 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^14 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^15 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^16 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^17 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^18 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^19 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^20 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^21 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^22 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^23 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^24 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^25 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^26 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^27 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^28 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^29 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^30 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^31 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^32 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^33 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^34 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^35 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^36 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^37 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^38 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^39 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^40 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^41 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^42 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^43 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^44 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^45 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^46 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^47 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^48 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^49 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^50 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^51 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^52 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^53 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^54 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^55 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^56 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^57 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^58 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^59 }
+    add_to_temp_variable = { lok_demo_total = lok_state_species_array^60 }
 
     if = {
         limit = { check_variable = { lok_demo_total > 0 } }
         set_temp_variable = { lok_demo_cumulative = 0 }
-        set_temp_variable = { lok_demo_last_frame = 1 }
 
-        for_each_loop = {
-            array = lok_state_species_array
-            value = lok_demo_raw_share
-            index = lok_demo_i
+        # species ID 0
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^0 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 1 size = lok_demo_target }
 
-            set_temp_variable = { lok_demo_share = lok_demo_raw_share }
-            clamp_temp_variable = { var = lok_demo_share min = 0 max = 1 }
+        # species ID 1
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^1 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 2 size = lok_demo_target }
 
-            if = {
-                limit = { check_variable = { lok_demo_share > 0.000001 } }
-                divide_temp_variable = { lok_demo_share = lok_demo_total }
-                add_to_temp_variable = { lok_demo_cumulative = lok_demo_share }
+        # species ID 2
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^2 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 3 size = lok_demo_target }
 
-                set_temp_variable = { lok_demo_target = lok_demo_cumulative }
-                multiply_temp_variable = { lok_demo_target = 50 }
-                round_temp_variable = lok_demo_target
-                clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        # species ID 3
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^3 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 4 size = lok_demo_target }
 
-                set_temp_variable = { lok_demo_frame = lok_demo_i }
-                add_to_temp_variable = { lok_demo_frame = 1 }
-                set_temp_variable = { lok_demo_last_frame = lok_demo_frame }
+        # species ID 4
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^4 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 5 size = lok_demo_target }
 
-                while_loop_effect = {
-                    limit = { check_variable = { lok_state_species_pie_chart_array^num < lok_demo_target } }
-                    add_to_array = { array = lok_state_species_pie_chart_array value = lok_demo_frame }
-                }
-            }
-        }
+        # species ID 5
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^5 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 6 size = lok_demo_target }
 
-        while_loop_effect = {
-            limit = { check_variable = { lok_state_species_pie_chart_array^num < 50 } }
-            add_to_array = { array = lok_state_species_pie_chart_array value = lok_demo_last_frame }
-        }
+        # species ID 6
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^6 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 7 size = lok_demo_target }
+
+        # species ID 7
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^7 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 8 size = lok_demo_target }
+
+        # species ID 8
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^8 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 9 size = lok_demo_target }
+
+        # species ID 9
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^9 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 10 size = lok_demo_target }
+
+        # species ID 10
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^10 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 11 size = lok_demo_target }
+
+        # species ID 11
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^11 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 12 size = lok_demo_target }
+
+        # species ID 12
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^12 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 13 size = lok_demo_target }
+
+        # species ID 13
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^13 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 14 size = lok_demo_target }
+
+        # species ID 14
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^14 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 15 size = lok_demo_target }
+
+        # species ID 15
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^15 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 16 size = lok_demo_target }
+
+        # species ID 16
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^16 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 17 size = lok_demo_target }
+
+        # species ID 17
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^17 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 18 size = lok_demo_target }
+
+        # species ID 18
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^18 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 19 size = lok_demo_target }
+
+        # species ID 19
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^19 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 20 size = lok_demo_target }
+
+        # species ID 20
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^20 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 21 size = lok_demo_target }
+
+        # species ID 21
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^21 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 22 size = lok_demo_target }
+
+        # species ID 22
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^22 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 23 size = lok_demo_target }
+
+        # species ID 23
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^23 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 24 size = lok_demo_target }
+
+        # species ID 24
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^24 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 25 size = lok_demo_target }
+
+        # species ID 25
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^25 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 26 size = lok_demo_target }
+
+        # species ID 26
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^26 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 27 size = lok_demo_target }
+
+        # species ID 27
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^27 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 28 size = lok_demo_target }
+
+        # species ID 28
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^28 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 29 size = lok_demo_target }
+
+        # species ID 29
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^29 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 30 size = lok_demo_target }
+
+        # species ID 30
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^30 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 31 size = lok_demo_target }
+
+        # species ID 31
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^31 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 32 size = lok_demo_target }
+
+        # species ID 32
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^32 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 33 size = lok_demo_target }
+
+        # species ID 33
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^33 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 34 size = lok_demo_target }
+
+        # species ID 34
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^34 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 35 size = lok_demo_target }
+
+        # species ID 35
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^35 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 36 size = lok_demo_target }
+
+        # species ID 36
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^36 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 37 size = lok_demo_target }
+
+        # species ID 37
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^37 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 38 size = lok_demo_target }
+
+        # species ID 38
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^38 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 39 size = lok_demo_target }
+
+        # species ID 39
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^39 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 40 size = lok_demo_target }
+
+        # species ID 40
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^40 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 41 size = lok_demo_target }
+
+        # species ID 41
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^41 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 42 size = lok_demo_target }
+
+        # species ID 42
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^42 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 43 size = lok_demo_target }
+
+        # species ID 43
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^43 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 44 size = lok_demo_target }
+
+        # species ID 44
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^44 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 45 size = lok_demo_target }
+
+        # species ID 45
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^45 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 46 size = lok_demo_target }
+
+        # species ID 46
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^46 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 47 size = lok_demo_target }
+
+        # species ID 47
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^47 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 48 size = lok_demo_target }
+
+        # species ID 48
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^48 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 49 size = lok_demo_target }
+
+        # species ID 49
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^49 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 50 size = lok_demo_target }
+
+        # species ID 50
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^50 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 51 size = lok_demo_target }
+
+        # species ID 51
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^51 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 52 size = lok_demo_target }
+
+        # species ID 52
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^52 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 53 size = lok_demo_target }
+
+        # species ID 53
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^53 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 54 size = lok_demo_target }
+
+        # species ID 54
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^54 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 55 size = lok_demo_target }
+
+        # species ID 55
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^55 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 56 size = lok_demo_target }
+
+        # species ID 56
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^56 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 57 size = lok_demo_target }
+
+        # species ID 57
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^57 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 58 size = lok_demo_target }
+
+        # species ID 58
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^58 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 59 size = lok_demo_target }
+
+        # species ID 59
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^59 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 60 size = lok_demo_target }
+
+        # species ID 60
+        set_temp_variable = { lok_demo_norm = lok_state_species_array^60 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_species_pie_chart_array value = 61 size = lok_demo_target }
+
     }
 }
 
 LOK_rebuild_state_culture_pie = {
     clear_array = lok_state_culture_pie_chart_array
     set_temp_variable = { lok_demo_total = 0 }
-
-    for_each_loop = {
-        array = lok_state_culture_array
-        value = lok_demo_raw_share
-        index = lok_demo_i
-        set_temp_variable = { lok_demo_share = lok_demo_raw_share }
-        clamp_temp_variable = { var = lok_demo_share min = 0 max = 1 }
-        add_to_temp_variable = { lok_demo_total = lok_demo_share }
-    }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^0 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^1 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^2 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^3 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^4 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^5 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^6 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^7 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^8 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^9 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^10 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^11 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^12 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^13 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^14 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^15 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^16 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^17 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^18 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^19 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^20 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^21 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^22 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^23 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^24 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^25 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^26 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^27 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^28 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^29 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^30 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^31 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^32 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^33 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^34 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^35 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^36 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^37 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^38 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^39 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^40 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^41 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^42 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^43 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^44 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^45 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^46 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^47 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^48 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^49 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^50 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^51 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^52 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^53 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^54 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^55 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^56 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^57 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^58 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^59 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^60 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^61 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^62 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^63 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^64 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^65 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^66 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^67 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^68 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^69 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^70 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^71 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^72 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^73 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^74 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^75 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^76 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^77 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^78 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^79 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^80 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^81 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^82 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^83 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^84 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^85 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^86 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^87 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^88 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^89 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^90 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^91 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^92 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^93 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^94 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^95 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^96 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^97 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^98 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^99 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^100 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^101 }
+    add_to_temp_variable = { lok_demo_total = lok_state_culture_array^102 }
 
     if = {
         limit = { check_variable = { lok_demo_total > 0 } }
         set_temp_variable = { lok_demo_cumulative = 0 }
-        set_temp_variable = { lok_demo_last_frame = 1 }
 
-        for_each_loop = {
-            array = lok_state_culture_array
-            value = lok_demo_raw_share
-            index = lok_demo_i
+        # culture ID 0
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^0 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 1 size = lok_demo_target }
 
-            set_temp_variable = { lok_demo_share = lok_demo_raw_share }
-            clamp_temp_variable = { var = lok_demo_share min = 0 max = 1 }
+        # culture ID 1
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^1 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 2 size = lok_demo_target }
 
-            if = {
-                limit = { check_variable = { lok_demo_share > 0.000001 } }
-                divide_temp_variable = { lok_demo_share = lok_demo_total }
-                add_to_temp_variable = { lok_demo_cumulative = lok_demo_share }
+        # culture ID 2
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^2 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 3 size = lok_demo_target }
 
-                set_temp_variable = { lok_demo_target = lok_demo_cumulative }
-                multiply_temp_variable = { lok_demo_target = 50 }
-                round_temp_variable = lok_demo_target
-                clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        # culture ID 3
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^3 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 4 size = lok_demo_target }
 
-                set_temp_variable = { lok_demo_frame = lok_demo_i }
-                add_to_temp_variable = { lok_demo_frame = 1 }
-                set_temp_variable = { lok_demo_last_frame = lok_demo_frame }
+        # culture ID 4
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^4 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 5 size = lok_demo_target }
 
-                while_loop_effect = {
-                    limit = { check_variable = { lok_state_culture_pie_chart_array^num < lok_demo_target } }
-                    add_to_array = { array = lok_state_culture_pie_chart_array value = lok_demo_frame }
-                }
-            }
-        }
+        # culture ID 5
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^5 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 6 size = lok_demo_target }
 
-        while_loop_effect = {
-            limit = { check_variable = { lok_state_culture_pie_chart_array^num < 50 } }
-            add_to_array = { array = lok_state_culture_pie_chart_array value = lok_demo_last_frame }
-        }
+        # culture ID 6
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^6 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 7 size = lok_demo_target }
+
+        # culture ID 7
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^7 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 8 size = lok_demo_target }
+
+        # culture ID 8
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^8 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 9 size = lok_demo_target }
+
+        # culture ID 9
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^9 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 10 size = lok_demo_target }
+
+        # culture ID 10
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^10 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 11 size = lok_demo_target }
+
+        # culture ID 11
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^11 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 12 size = lok_demo_target }
+
+        # culture ID 12
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^12 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 13 size = lok_demo_target }
+
+        # culture ID 13
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^13 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 14 size = lok_demo_target }
+
+        # culture ID 14
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^14 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 15 size = lok_demo_target }
+
+        # culture ID 15
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^15 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 16 size = lok_demo_target }
+
+        # culture ID 16
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^16 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 17 size = lok_demo_target }
+
+        # culture ID 17
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^17 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 18 size = lok_demo_target }
+
+        # culture ID 18
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^18 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 19 size = lok_demo_target }
+
+        # culture ID 19
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^19 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 20 size = lok_demo_target }
+
+        # culture ID 20
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^20 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 21 size = lok_demo_target }
+
+        # culture ID 21
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^21 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 22 size = lok_demo_target }
+
+        # culture ID 22
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^22 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 23 size = lok_demo_target }
+
+        # culture ID 23
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^23 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 24 size = lok_demo_target }
+
+        # culture ID 24
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^24 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 25 size = lok_demo_target }
+
+        # culture ID 25
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^25 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 26 size = lok_demo_target }
+
+        # culture ID 26
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^26 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 27 size = lok_demo_target }
+
+        # culture ID 27
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^27 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 28 size = lok_demo_target }
+
+        # culture ID 28
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^28 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 29 size = lok_demo_target }
+
+        # culture ID 29
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^29 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 30 size = lok_demo_target }
+
+        # culture ID 30
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^30 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 31 size = lok_demo_target }
+
+        # culture ID 31
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^31 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 32 size = lok_demo_target }
+
+        # culture ID 32
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^32 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 33 size = lok_demo_target }
+
+        # culture ID 33
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^33 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 34 size = lok_demo_target }
+
+        # culture ID 34
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^34 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 35 size = lok_demo_target }
+
+        # culture ID 35
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^35 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 36 size = lok_demo_target }
+
+        # culture ID 36
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^36 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 37 size = lok_demo_target }
+
+        # culture ID 37
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^37 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 38 size = lok_demo_target }
+
+        # culture ID 38
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^38 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 39 size = lok_demo_target }
+
+        # culture ID 39
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^39 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 40 size = lok_demo_target }
+
+        # culture ID 40
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^40 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 41 size = lok_demo_target }
+
+        # culture ID 41
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^41 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 42 size = lok_demo_target }
+
+        # culture ID 42
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^42 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 43 size = lok_demo_target }
+
+        # culture ID 43
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^43 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 44 size = lok_demo_target }
+
+        # culture ID 44
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^44 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 45 size = lok_demo_target }
+
+        # culture ID 45
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^45 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 46 size = lok_demo_target }
+
+        # culture ID 46
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^46 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 47 size = lok_demo_target }
+
+        # culture ID 47
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^47 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 48 size = lok_demo_target }
+
+        # culture ID 48
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^48 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 49 size = lok_demo_target }
+
+        # culture ID 49
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^49 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 50 size = lok_demo_target }
+
+        # culture ID 50
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^50 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 51 size = lok_demo_target }
+
+        # culture ID 51
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^51 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 52 size = lok_demo_target }
+
+        # culture ID 52
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^52 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 53 size = lok_demo_target }
+
+        # culture ID 53
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^53 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 54 size = lok_demo_target }
+
+        # culture ID 54
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^54 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 55 size = lok_demo_target }
+
+        # culture ID 55
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^55 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 56 size = lok_demo_target }
+
+        # culture ID 56
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^56 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 57 size = lok_demo_target }
+
+        # culture ID 57
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^57 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 58 size = lok_demo_target }
+
+        # culture ID 58
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^58 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 59 size = lok_demo_target }
+
+        # culture ID 59
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^59 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 60 size = lok_demo_target }
+
+        # culture ID 60
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^60 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 61 size = lok_demo_target }
+
+        # culture ID 61
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^61 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 62 size = lok_demo_target }
+
+        # culture ID 62
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^62 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 63 size = lok_demo_target }
+
+        # culture ID 63
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^63 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 64 size = lok_demo_target }
+
+        # culture ID 64
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^64 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 65 size = lok_demo_target }
+
+        # culture ID 65
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^65 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 66 size = lok_demo_target }
+
+        # culture ID 66
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^66 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 67 size = lok_demo_target }
+
+        # culture ID 67
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^67 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 68 size = lok_demo_target }
+
+        # culture ID 68
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^68 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 69 size = lok_demo_target }
+
+        # culture ID 69
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^69 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 70 size = lok_demo_target }
+
+        # culture ID 70
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^70 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 71 size = lok_demo_target }
+
+        # culture ID 71
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^71 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 72 size = lok_demo_target }
+
+        # culture ID 72
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^72 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 73 size = lok_demo_target }
+
+        # culture ID 73
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^73 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 74 size = lok_demo_target }
+
+        # culture ID 74
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^74 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 75 size = lok_demo_target }
+
+        # culture ID 75
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^75 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 76 size = lok_demo_target }
+
+        # culture ID 76
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^76 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 77 size = lok_demo_target }
+
+        # culture ID 77
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^77 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 78 size = lok_demo_target }
+
+        # culture ID 78
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^78 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 79 size = lok_demo_target }
+
+        # culture ID 79
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^79 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 80 size = lok_demo_target }
+
+        # culture ID 80
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^80 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 81 size = lok_demo_target }
+
+        # culture ID 81
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^81 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 82 size = lok_demo_target }
+
+        # culture ID 82
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^82 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 83 size = lok_demo_target }
+
+        # culture ID 83
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^83 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 84 size = lok_demo_target }
+
+        # culture ID 84
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^84 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 85 size = lok_demo_target }
+
+        # culture ID 85
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^85 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 86 size = lok_demo_target }
+
+        # culture ID 86
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^86 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 87 size = lok_demo_target }
+
+        # culture ID 87
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^87 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 88 size = lok_demo_target }
+
+        # culture ID 88
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^88 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 89 size = lok_demo_target }
+
+        # culture ID 89
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^89 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 90 size = lok_demo_target }
+
+        # culture ID 90
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^90 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 91 size = lok_demo_target }
+
+        # culture ID 91
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^91 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 92 size = lok_demo_target }
+
+        # culture ID 92
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^92 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 93 size = lok_demo_target }
+
+        # culture ID 93
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^93 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 94 size = lok_demo_target }
+
+        # culture ID 94
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^94 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 95 size = lok_demo_target }
+
+        # culture ID 95
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^95 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 96 size = lok_demo_target }
+
+        # culture ID 96
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^96 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 97 size = lok_demo_target }
+
+        # culture ID 97
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^97 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 98 size = lok_demo_target }
+
+        # culture ID 98
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^98 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 99 size = lok_demo_target }
+
+        # culture ID 99
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^99 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 100 size = lok_demo_target }
+
+        # culture ID 100
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^100 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 101 size = lok_demo_target }
+
+        # culture ID 101
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^101 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 102 size = lok_demo_target }
+
+        # culture ID 102
+        set_temp_variable = { lok_demo_norm = lok_state_culture_array^102 }
+        divide_temp_variable = { lok_demo_norm = lok_demo_total }
+        clamp_temp_variable = { var = lok_demo_norm min = 0 max = 1 }
+        add_to_temp_variable = { lok_demo_cumulative = lok_demo_norm }
+        set_temp_variable = { lok_demo_target = lok_demo_cumulative }
+        multiply_temp_variable = { lok_demo_target = 50 }
+        round_temp_variable = lok_demo_target
+        clamp_temp_variable = { var = lok_demo_target min = 0 max = 50 }
+        resize_array = { array = lok_state_culture_pie_chart_array value = 103 size = lok_demo_target }
+
     }
 }
 

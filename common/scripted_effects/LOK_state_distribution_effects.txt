@@ -6,91 +6,2546 @@
 #   lok_state_culture_array  (103 entries, shares 0..1)
 #   lok_state_parties_array  (10 entries, shares 0..1)
 #
-# DERIVED CACHES (thousands of people):
-#   lok_state_species_population_k_array
-#   lok_state_culture_population_k_array
-#   lok_state_parties_population_k_array
+# DERIVED CACHES:
+#   lok_state_species_population_k_array / culture / parties
+#   sparse *_total_ids_array / *_total_normalized_array / *_total_amount_array
 #
-# Important implementation detail:
-# Numeric share arrays are traversed with for_each_loop. This avoids treating a
-# dynamically-addressed non-zero array slot as a truthy value rather than preserving
-# its exact decimal value on some engine evaluation paths.
+# IMPORTANT: cache projection uses literal array indices only. This is deliberate.
+# The previous dynamic loop projection turned non-zero decimal shares into 1 in-game,
+# which is why a 78/22 state displayed as 100% + 100% and a roughly 50/50 pie.
 
 LOK_rebuild_state_distribution_caches = {
     set_temp_variable = { lok_dist_population_k = state_population_k }
 
-    # Species ---------------------------------------------------------------
+    # ------------------------------------------------------------------------
+    # Species: normalize authoritative shares, derive exact k-population, and
+    # rebuild the sparse tooltip arrays using only literal source indices.
+    # ------------------------------------------------------------------------
     clear_array = lok_state_species_population_k_array
     resize_array = { array = lok_state_species_population_k_array value = 0 size = 61 }
     clear_array = lok_state_species_total_ids_array
     clear_array = lok_state_species_total_normalized_array
     clear_array = lok_state_species_total_amount_array
+    set_temp_variable = { lok_dist_total = 0 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^0 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^1 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^2 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^3 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^4 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^5 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^6 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^7 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^8 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^9 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^10 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^11 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^12 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^13 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^14 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^15 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^16 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^17 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^18 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^19 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^20 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^21 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^22 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^23 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^24 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^25 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^26 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^27 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^28 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^29 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^30 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^31 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^32 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^33 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^34 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^35 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^36 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^37 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^38 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^39 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^40 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^41 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^42 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^43 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^44 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^45 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^46 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^47 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^48 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^49 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^50 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^51 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^52 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^53 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^54 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^55 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^56 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^57 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^58 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^59 }
+    add_to_temp_variable = { lok_dist_total = lok_state_species_array^60 }
 
-    for_each_loop = {
-        array = lok_state_species_array
-        value = lok_dist_raw_share
-        index = lok_dist_i
-
-        set_temp_variable = { lok_dist_share = lok_dist_raw_share }
+    if = {
+        limit = { check_variable = { lok_dist_total > 0 } }
+        # species ID 0
+        set_temp_variable = { lok_dist_share = lok_state_species_array^0 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
         clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
-
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^0 = lok_dist_amount_k }
         if = {
             limit = { check_variable = { lok_dist_share > 0.000001 } }
-
-            set_temp_variable = { lok_dist_amount_k = lok_dist_share }
-            multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
-
-            add_to_variable = { lok_state_species_population_k_array^lok_dist_i = lok_dist_amount_k }
-            add_to_array = { array = lok_state_species_total_ids_array value = lok_dist_i }
+            add_to_array = { array = lok_state_species_total_ids_array value = 0 }
             add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
             add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
         }
+
+        # species ID 1
+        set_temp_variable = { lok_dist_share = lok_state_species_array^1 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^1 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 1 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 2
+        set_temp_variable = { lok_dist_share = lok_state_species_array^2 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^2 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 2 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 3
+        set_temp_variable = { lok_dist_share = lok_state_species_array^3 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^3 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 3 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 4
+        set_temp_variable = { lok_dist_share = lok_state_species_array^4 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^4 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 4 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 5
+        set_temp_variable = { lok_dist_share = lok_state_species_array^5 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^5 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 5 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 6
+        set_temp_variable = { lok_dist_share = lok_state_species_array^6 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^6 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 6 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 7
+        set_temp_variable = { lok_dist_share = lok_state_species_array^7 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^7 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 7 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 8
+        set_temp_variable = { lok_dist_share = lok_state_species_array^8 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^8 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 8 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 9
+        set_temp_variable = { lok_dist_share = lok_state_species_array^9 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^9 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 9 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 10
+        set_temp_variable = { lok_dist_share = lok_state_species_array^10 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^10 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 10 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 11
+        set_temp_variable = { lok_dist_share = lok_state_species_array^11 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^11 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 11 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 12
+        set_temp_variable = { lok_dist_share = lok_state_species_array^12 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^12 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 12 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 13
+        set_temp_variable = { lok_dist_share = lok_state_species_array^13 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^13 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 13 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 14
+        set_temp_variable = { lok_dist_share = lok_state_species_array^14 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^14 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 14 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 15
+        set_temp_variable = { lok_dist_share = lok_state_species_array^15 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^15 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 15 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 16
+        set_temp_variable = { lok_dist_share = lok_state_species_array^16 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^16 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 16 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 17
+        set_temp_variable = { lok_dist_share = lok_state_species_array^17 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^17 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 17 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 18
+        set_temp_variable = { lok_dist_share = lok_state_species_array^18 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^18 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 18 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 19
+        set_temp_variable = { lok_dist_share = lok_state_species_array^19 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^19 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 19 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 20
+        set_temp_variable = { lok_dist_share = lok_state_species_array^20 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^20 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 20 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 21
+        set_temp_variable = { lok_dist_share = lok_state_species_array^21 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^21 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 21 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 22
+        set_temp_variable = { lok_dist_share = lok_state_species_array^22 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^22 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 22 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 23
+        set_temp_variable = { lok_dist_share = lok_state_species_array^23 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^23 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 23 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 24
+        set_temp_variable = { lok_dist_share = lok_state_species_array^24 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^24 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 24 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 25
+        set_temp_variable = { lok_dist_share = lok_state_species_array^25 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^25 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 25 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 26
+        set_temp_variable = { lok_dist_share = lok_state_species_array^26 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^26 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 26 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 27
+        set_temp_variable = { lok_dist_share = lok_state_species_array^27 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^27 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 27 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 28
+        set_temp_variable = { lok_dist_share = lok_state_species_array^28 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^28 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 28 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 29
+        set_temp_variable = { lok_dist_share = lok_state_species_array^29 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^29 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 29 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 30
+        set_temp_variable = { lok_dist_share = lok_state_species_array^30 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^30 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 30 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 31
+        set_temp_variable = { lok_dist_share = lok_state_species_array^31 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^31 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 31 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 32
+        set_temp_variable = { lok_dist_share = lok_state_species_array^32 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^32 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 32 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 33
+        set_temp_variable = { lok_dist_share = lok_state_species_array^33 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^33 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 33 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 34
+        set_temp_variable = { lok_dist_share = lok_state_species_array^34 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^34 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 34 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 35
+        set_temp_variable = { lok_dist_share = lok_state_species_array^35 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^35 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 35 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 36
+        set_temp_variable = { lok_dist_share = lok_state_species_array^36 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^36 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 36 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 37
+        set_temp_variable = { lok_dist_share = lok_state_species_array^37 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^37 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 37 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 38
+        set_temp_variable = { lok_dist_share = lok_state_species_array^38 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^38 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 38 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 39
+        set_temp_variable = { lok_dist_share = lok_state_species_array^39 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^39 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 39 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 40
+        set_temp_variable = { lok_dist_share = lok_state_species_array^40 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^40 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 40 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 41
+        set_temp_variable = { lok_dist_share = lok_state_species_array^41 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^41 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 41 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 42
+        set_temp_variable = { lok_dist_share = lok_state_species_array^42 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^42 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 42 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 43
+        set_temp_variable = { lok_dist_share = lok_state_species_array^43 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^43 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 43 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 44
+        set_temp_variable = { lok_dist_share = lok_state_species_array^44 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^44 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 44 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 45
+        set_temp_variable = { lok_dist_share = lok_state_species_array^45 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^45 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 45 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 46
+        set_temp_variable = { lok_dist_share = lok_state_species_array^46 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^46 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 46 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 47
+        set_temp_variable = { lok_dist_share = lok_state_species_array^47 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^47 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 47 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 48
+        set_temp_variable = { lok_dist_share = lok_state_species_array^48 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^48 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 48 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 49
+        set_temp_variable = { lok_dist_share = lok_state_species_array^49 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^49 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 49 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 50
+        set_temp_variable = { lok_dist_share = lok_state_species_array^50 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^50 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 50 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 51
+        set_temp_variable = { lok_dist_share = lok_state_species_array^51 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^51 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 51 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 52
+        set_temp_variable = { lok_dist_share = lok_state_species_array^52 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^52 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 52 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 53
+        set_temp_variable = { lok_dist_share = lok_state_species_array^53 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^53 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 53 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 54
+        set_temp_variable = { lok_dist_share = lok_state_species_array^54 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^54 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 54 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 55
+        set_temp_variable = { lok_dist_share = lok_state_species_array^55 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^55 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 55 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 56
+        set_temp_variable = { lok_dist_share = lok_state_species_array^56 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^56 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 56 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 57
+        set_temp_variable = { lok_dist_share = lok_state_species_array^57 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^57 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 57 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 58
+        set_temp_variable = { lok_dist_share = lok_state_species_array^58 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^58 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 58 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 59
+        set_temp_variable = { lok_dist_share = lok_state_species_array^59 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^59 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 59 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # species ID 60
+        set_temp_variable = { lok_dist_share = lok_state_species_array^60 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_species_population_k_array^60 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_species_total_ids_array value = 60 }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+
     }
 
-    # Culture ---------------------------------------------------------------
+    # ------------------------------------------------------------------------
+    # Culture
+    # ------------------------------------------------------------------------
     clear_array = lok_state_culture_population_k_array
     resize_array = { array = lok_state_culture_population_k_array value = 0 size = 103 }
     clear_array = lok_state_culture_total_ids_array
     clear_array = lok_state_culture_total_normalized_array
     clear_array = lok_state_culture_total_amount_array
+    set_temp_variable = { lok_dist_total = 0 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^0 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^1 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^2 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^3 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^4 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^5 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^6 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^7 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^8 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^9 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^10 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^11 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^12 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^13 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^14 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^15 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^16 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^17 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^18 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^19 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^20 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^21 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^22 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^23 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^24 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^25 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^26 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^27 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^28 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^29 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^30 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^31 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^32 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^33 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^34 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^35 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^36 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^37 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^38 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^39 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^40 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^41 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^42 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^43 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^44 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^45 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^46 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^47 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^48 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^49 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^50 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^51 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^52 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^53 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^54 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^55 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^56 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^57 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^58 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^59 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^60 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^61 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^62 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^63 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^64 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^65 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^66 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^67 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^68 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^69 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^70 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^71 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^72 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^73 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^74 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^75 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^76 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^77 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^78 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^79 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^80 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^81 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^82 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^83 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^84 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^85 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^86 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^87 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^88 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^89 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^90 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^91 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^92 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^93 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^94 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^95 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^96 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^97 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^98 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^99 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^100 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^101 }
+    add_to_temp_variable = { lok_dist_total = lok_state_culture_array^102 }
 
-    for_each_loop = {
-        array = lok_state_culture_array
-        value = lok_dist_raw_share
-        index = lok_dist_i
-
-        set_temp_variable = { lok_dist_share = lok_dist_raw_share }
+    if = {
+        limit = { check_variable = { lok_dist_total > 0 } }
+        # culture ID 0
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^0 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
         clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
-
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^0 = lok_dist_amount_k }
         if = {
             limit = { check_variable = { lok_dist_share > 0.000001 } }
-
-            set_temp_variable = { lok_dist_amount_k = lok_dist_share }
-            multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
-
-            add_to_variable = { lok_state_culture_population_k_array^lok_dist_i = lok_dist_amount_k }
-            add_to_array = { array = lok_state_culture_total_ids_array value = lok_dist_i }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 0 }
             add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
             add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
         }
+
+        # culture ID 1
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^1 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^1 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 1 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 2
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^2 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^2 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 2 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 3
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^3 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^3 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 3 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 4
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^4 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^4 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 4 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 5
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^5 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^5 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 5 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 6
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^6 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^6 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 6 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 7
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^7 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^7 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 7 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 8
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^8 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^8 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 8 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 9
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^9 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^9 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 9 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 10
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^10 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^10 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 10 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 11
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^11 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^11 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 11 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 12
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^12 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^12 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 12 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 13
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^13 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^13 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 13 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 14
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^14 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^14 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 14 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 15
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^15 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^15 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 15 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 16
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^16 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^16 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 16 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 17
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^17 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^17 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 17 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 18
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^18 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^18 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 18 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 19
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^19 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^19 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 19 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 20
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^20 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^20 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 20 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 21
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^21 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^21 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 21 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 22
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^22 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^22 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 22 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 23
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^23 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^23 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 23 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 24
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^24 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^24 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 24 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 25
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^25 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^25 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 25 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 26
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^26 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^26 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 26 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 27
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^27 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^27 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 27 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 28
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^28 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^28 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 28 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 29
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^29 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^29 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 29 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 30
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^30 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^30 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 30 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 31
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^31 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^31 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 31 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 32
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^32 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^32 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 32 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 33
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^33 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^33 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 33 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 34
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^34 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^34 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 34 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 35
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^35 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^35 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 35 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 36
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^36 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^36 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 36 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 37
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^37 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^37 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 37 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 38
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^38 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^38 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 38 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 39
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^39 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^39 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 39 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 40
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^40 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^40 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 40 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 41
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^41 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^41 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 41 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 42
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^42 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^42 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 42 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 43
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^43 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^43 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 43 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 44
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^44 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^44 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 44 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 45
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^45 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^45 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 45 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 46
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^46 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^46 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 46 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 47
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^47 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^47 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 47 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 48
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^48 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^48 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 48 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 49
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^49 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^49 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 49 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 50
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^50 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^50 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 50 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 51
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^51 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^51 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 51 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 52
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^52 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^52 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 52 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 53
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^53 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^53 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 53 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 54
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^54 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^54 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 54 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 55
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^55 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^55 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 55 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 56
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^56 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^56 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 56 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 57
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^57 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^57 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 57 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 58
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^58 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^58 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 58 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 59
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^59 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^59 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 59 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 60
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^60 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^60 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 60 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 61
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^61 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^61 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 61 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 62
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^62 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^62 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 62 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 63
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^63 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^63 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 63 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 64
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^64 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^64 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 64 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 65
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^65 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^65 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 65 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 66
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^66 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^66 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 66 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 67
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^67 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^67 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 67 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 68
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^68 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^68 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 68 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 69
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^69 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^69 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 69 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 70
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^70 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^70 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 70 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 71
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^71 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^71 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 71 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 72
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^72 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^72 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 72 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 73
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^73 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^73 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 73 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 74
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^74 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^74 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 74 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 75
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^75 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^75 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 75 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 76
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^76 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^76 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 76 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 77
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^77 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^77 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 77 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 78
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^78 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^78 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 78 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 79
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^79 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^79 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 79 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 80
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^80 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^80 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 80 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 81
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^81 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^81 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 81 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 82
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^82 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^82 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 82 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 83
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^83 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^83 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 83 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 84
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^84 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^84 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 84 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 85
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^85 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^85 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 85 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 86
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^86 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^86 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 86 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 87
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^87 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^87 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 87 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 88
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^88 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^88 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 88 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 89
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^89 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^89 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 89 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 90
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^90 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^90 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 90 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 91
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^91 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^91 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 91 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 92
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^92 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^92 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 92 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 93
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^93 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^93 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 93 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 94
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^94 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^94 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 94 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 95
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^95 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^95 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 95 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 96
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^96 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^96 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 96 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 97
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^97 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^97 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 97 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 98
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^98 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^98 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 98 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 99
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^99 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^99 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 99 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 100
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^100 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^100 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 100 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 101
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^101 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^101 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 101 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
+        # culture ID 102
+        set_temp_variable = { lok_dist_share = lok_state_culture_array^102 }
+        divide_temp_variable = { lok_dist_share = lok_dist_total }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+        set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        set_variable = { lok_state_culture_population_k_array^102 = lok_dist_amount_k }
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+            add_to_array = { array = lok_state_culture_total_ids_array value = 102 }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+
     }
 
-    # Politics --------------------------------------------------------------
+    # ------------------------------------------------------------------------
+    # Politics. Keep the existing political renderer; it already uses literal
+    # index reads and is the known-good implementation this fix mirrors.
+    # ------------------------------------------------------------------------
     LOK_rebuild_state_political_pie = yes
 
     clear_array = lok_state_parties_population_k_array
     resize_array = { array = lok_state_parties_population_k_array value = 0 size = 10 }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^0 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^0 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^1 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^1 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^2 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^2 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^3 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^3 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^4 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^4 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^5 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^5 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^6 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^6 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^7 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^7 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^8 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^8 = lok_dist_amount_k }
+    set_temp_variable = { lok_dist_amount_k = lok_state_parties_normalized_array^9 }
+    multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+    set_variable = { lok_state_parties_population_k_array^9 = lok_dist_amount_k }
 
-    for_each_loop = {
-        array = lok_state_parties_normalized_array
-        value = lok_dist_party_share
-        index = lok_dist_i
-
-        set_temp_variable = { lok_dist_amount_k = lok_dist_party_share }
-        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
-        add_to_variable = { lok_state_parties_population_k_array^lok_dist_i = lok_dist_amount_k }
-    }
-
+    # Render species/culture directly from authoritative shares.
     LOK_rebuild_state_demographic_pies = yes
 }
 
@@ -258,3 +2713,4 @@ LOK_change_state_culture_share = {
         }
     }
 }
+
