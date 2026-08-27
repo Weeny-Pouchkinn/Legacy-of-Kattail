@@ -1,128 +1,155 @@
 LOK_update_real_popularities = {
-	set_variable = { lok_parliament_party_share_real_array^0 = party_popularity@communism }
-	set_variable = { lok_parliament_party_share_real_array^1 = party_popularity@socialism }
-	set_variable = { lok_parliament_party_share_real_array^2 = party_popularity@social_democratic }
-	set_variable = { lok_parliament_party_share_real_array^3 = party_popularity@social_liberal }
-	set_variable = { lok_parliament_party_share_real_array^4 = party_popularity@democratic }
-	set_variable = { lok_parliament_party_share_real_array^5 = party_popularity@social_conservative }
-	set_variable = { lok_parliament_party_share_real_array^6 = party_popularity@authoritarian_democratic }
-	set_variable = { lok_parliament_party_share_real_array^7 = party_popularity@neutrality }
-	set_variable = { lok_parliament_party_share_real_array^8 = party_popularity@fascism }
+    set_variable = { lok_parliament_party_share_real_array^0 = party_popularity@communism }
+    set_variable = { lok_parliament_party_share_real_array^1 = party_popularity@socialism }
+    set_variable = { lok_parliament_party_share_real_array^2 = party_popularity@social_democratic }
+    set_variable = { lok_parliament_party_share_real_array^3 = party_popularity@social_liberal }
+    set_variable = { lok_parliament_party_share_real_array^4 = party_popularity@democratic }
+    set_variable = { lok_parliament_party_share_real_array^5 = party_popularity@social_conservative }
+    set_variable = { lok_parliament_party_share_real_array^6 = party_popularity@authoritarian_democratic }
+    set_variable = { lok_parliament_party_share_real_array^7 = party_popularity@neutrality }
+    set_variable = { lok_parliament_party_share_real_array^8 = party_popularity@fascism }
 }
 
 LOK_initialize_actor_demands = {
-	#For each party, there is an array, containing numbers, that represent their demands.
-	#As a debug, socialists will want Welfare, Fascists will want war.
-	clear_array = lok_party_1_demands_array
-	add_to_array = {
-		array = ROOT.lok_party_1_demands_array
-		value = 1
-	}
-	add_to_array = {
-		array = ROOT.lok_party_1_demands_array
-		value = 2
-	}
-	#LIST OF DEMANDS
-	#1 = Welfare Increase. Increasing Welfare will permanently please this Actor. Decreasing it will displease it.
-	#2 = Bellicose. Going to war will please this Actor.
+    clear_array = lok_party_1_demands_array
+    add_to_array = { array = ROOT.lok_party_1_demands_array value = 1 }
+    add_to_array = { array = ROOT.lok_party_1_demands_array value = 2 }
+    # 1 = Welfare Increase
+    # 2 = Bellicose
 }
 
 LOK_impact_actor_demands = {
-	custom_effect_tooltip = LOK_impact_actor_demands_tt
-	LOK_initialize_actor_demands = yes
-	hidden_effect = {
-		if = {
-			limit = {
-				is_in_array = {
-					array = lok_party_1_demands_array
-					value = actor_demand_id
-				}
-			}
-			add_to_variable = { lok_parliament_party_approval_array^1 = actor_demand_approval }
-			add_to_variable = { lok_parliament_party_approval_target_array^1 = actor_demand_approval_target }
-		}
-	}
+    custom_effect_tooltip = LOK_impact_actor_demands_tt
+    LOK_initialize_actor_demands = yes
+    hidden_effect = {
+        if = {
+            limit = { is_in_array = { array = lok_party_1_demands_array value = actor_demand_id } }
+            add_to_variable = { lok_parliament_party_approval_array^1 = actor_demand_approval }
+            add_to_variable = { lok_parliament_party_approval_target_array^1 = actor_demand_approval_target }
+        }
+    }
 }
 
-
 LOK_initialize_parliament = {
-	#Done ONCE per country.
-	#Approval Target is what it will drift towards naturally, at a rate of 1% per week.
-	#By Default, it is 25%
-	#Being in a Coalition is +25%. Ruling party is +50%.
-	#This is never reset. It updates as the situation changes.
-	if = {
-		limit = { NOT = { has_country_flag = lok_parliament_initialized } }
-		for_loop_effect = {
-			end = 9
-			value = party_id
-			set_variable = { lok_parliament_party_approval_target_array^party_id = 0.25 }
-			if = {
-				limit = { check_variable = { pol_party_array^party_id = 2 } }
-				add_to_variable = { lok_parliament_party_approval_target_array^party_id = 0.25 }
-			}
-			set_variable = { lok_parliament_party_approval_array^party_id = lok_parliament_party_approval_target_array^party_id }
-		}
-		set_country_flag = lok_parliament_initialized
-	}
+    if = {
+        limit = { NOT = { has_country_flag = lok_parliament_initialized } }
+        for_loop_effect = {
+            end = 9
+            value = party_id
+            set_variable = { lok_parliament_party_approval_target_array^party_id = 0.25 }
+            if = {
+                limit = { check_variable = { pol_party_array^party_id = 2 } }
+                add_to_variable = { lok_parliament_party_approval_target_array^party_id = 0.25 }
+            }
+            set_variable = { lok_parliament_party_approval_array^party_id = lok_parliament_party_approval_target_array^party_id }
+        }
+        set_country_flag = lok_parliament_initialized
+    }
 }
 
 LOK_update_parliament_approval = {
-	#Now we just compute what share of the parties approve of the gov, by multiplying their share of seats with their approval.
-	#Approval is what the approval is at rn.
-	set_variable = { lok_parliament_government_support = 0 }
-	for_loop_effect = {
-		end = 9
-		value = party_id
-		set_variable = { lok_parliament_party_gov_array^party_id = lok_parliament_party_share_array^party_id }
-		if = {
-			limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
-			multiply_variable = { lok_parliament_party_gov_array^party_id = lok_parliament_party_approval_array^party_id }
-			add_to_variable = { lok_parliament_government_support = lok_parliament_party_gov_array^party_id }
-		}
-	}
+    set_variable = { lok_parliament_government_support = 0 }
+    for_loop_effect = {
+        end = 9
+        value = party_id
+        set_variable = { lok_parliament_party_gov_array^party_id = lok_parliament_party_share_array^party_id }
+        if = {
+            limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
+            multiply_variable = { lok_parliament_party_gov_array^party_id = lok_parliament_party_approval_array^party_id }
+            add_to_variable = { lok_parliament_government_support = lok_parliament_party_gov_array^party_id }
+        }
+        else = { set_variable = { lok_parliament_party_gov_array^party_id = 0 } }
+    }
 }
 
-LOK_hold_parliament_election = {
-	custom_effect_tooltip = LOK_hold_parliament_election_tt
-	hidden_effect = {
-		#Update parliament!
-		set_variable = { lok_parliament_party_share_array^0 = party_popularity@communism }
-		set_variable = { lok_parliament_party_share_array^1 = party_popularity@socialism }
-		set_variable = { lok_parliament_party_share_array^2 = party_popularity@social_democratic }
-		set_variable = { lok_parliament_party_share_array^3 = party_popularity@social_liberal }
-		set_variable = { lok_parliament_party_share_array^4 = party_popularity@democratic }
-		set_variable = { lok_parliament_party_share_array^5 = party_popularity@social_conservative }
-		set_variable = { lok_parliament_party_share_array^6 = party_popularity@authoritarian_democratic }
-		set_variable = { lok_parliament_party_share_array^7 = party_popularity@neutrality }
-		set_variable = { lok_parliament_party_share_array^8 = party_popularity@fascism }
+# Pure seat calculation. No event and no election-timer change.
+LOK_recalculate_parliament_seats = {
+    LOK_update_real_popularities = yes
 
-		#We determine the sum of all non-banned parties. See how it relates to 100.
-		#Like if the sum is 85, we do 100/85 = 1.18. Then we multiply the popularities by 1.18 to "fill" the gaps.
-		set_variable = { lok_parliament_party_share_non_banned = 0 }
-		for_loop_effect = {
-			end = 9
-			value = party_id
-			if = {
-				limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
-				add_to_variable = { lok_parliament_party_share_non_banned = lok_parliament_party_share_array^party_id }
-			}
-		}
-		#We determine the sum of all non-banned parties. See how it relates to 100.
-		#Like if the sum is 85, we do 100/85 = 1.18. Then we multiply the popularities by 1.18 to "fill" the gaps.
-		set_variable = { lok_parliament_party_share_multiplier = 1 }
-		divide_variable = { lok_parliament_party_share_multiplier = lok_parliament_party_share_non_banned }
-		for_loop_effect = {
-			end = 9
-			value = party_id
-			if = {
-				limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
-				multiply_variable = { lok_parliament_party_share_array^party_id = lok_parliament_party_share_multiplier }
-			}
-			else = {
-				set_variable = { lok_parliament_party_share_array^party_id = 0 }
-			}
-		}
-		LOK_update_parliament_approval = yes
-	}
+    set_variable = { lok_parliament_party_share_array^0 = party_popularity@communism }
+    set_variable = { lok_parliament_party_share_array^1 = party_popularity@socialism }
+    set_variable = { lok_parliament_party_share_array^2 = party_popularity@social_democratic }
+    set_variable = { lok_parliament_party_share_array^3 = party_popularity@social_liberal }
+    set_variable = { lok_parliament_party_share_array^4 = party_popularity@democratic }
+    set_variable = { lok_parliament_party_share_array^5 = party_popularity@social_conservative }
+    set_variable = { lok_parliament_party_share_array^6 = party_popularity@authoritarian_democratic }
+    set_variable = { lok_parliament_party_share_array^7 = party_popularity@neutrality }
+    set_variable = { lok_parliament_party_share_array^8 = party_popularity@fascism }
+
+    set_variable = { lok_parliament_party_share_non_banned = 0 }
+    for_loop_effect = {
+        end = 9
+        value = party_id
+        if = {
+            limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
+            add_to_variable = { lok_parliament_party_share_non_banned = lok_parliament_party_share_array^party_id }
+        }
+    }
+
+    if = {
+        limit = { check_variable = { lok_parliament_party_share_non_banned > 0 } }
+        set_variable = { lok_parliament_party_share_multiplier = 1 }
+        divide_variable = { lok_parliament_party_share_multiplier = lok_parliament_party_share_non_banned }
+        for_loop_effect = {
+            end = 9
+            value = party_id
+            if = {
+                limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
+                multiply_variable = { lok_parliament_party_share_array^party_id = lok_parliament_party_share_multiplier }
+            }
+            else = { set_variable = { lok_parliament_party_share_array^party_id = 0 } }
+        }
+    }
+    else = {
+        # Pathological case: every party is excluded. Keep all seat shares at zero.
+        for_loop_effect = { end = 9 value = party_id set_variable = { lok_parliament_party_share_array^party_id = 0 } }
+    }
+
+    LOK_update_parliament_approval = yes
+    LOK_recalculate_bankroll_fiscal_usage = yes
+    if = {
+        limit = { check_variable = { lok_parliament_gui_managed_party > -1 } }
+        LOK_recalculate_managed_party_action_costs = yes
+    }
+    LOK_parliament_gui_refresh = yes
+}
+
+# Removes the +5pp target bonus from every active bankroll and clears them all.
+LOK_cancel_all_party_bankrolls = {
+    for_loop_effect = {
+        end = 9
+        value = party_id
+        if = {
+            limit = { check_variable = { lok_parliament_party_bankrolled_array^party_id = 1 } }
+            add_to_variable = { lok_parliament_party_approval_target_array^party_id = -0.05 }
+            clamp_variable = { var = lok_parliament_party_approval_target_array^party_id min = 0 max = 1 }
+            set_variable = { lok_parliament_party_bankrolled_array^party_id = 0 }
+        }
+    }
+    LOK_recalculate_bankroll_fiscal_usage = yes
+}
+
+# Scheduled election: recalculates seats, cancels bankrolls, resets timer, then reports results.
+LOK_hold_parliament_election = {
+    custom_effect_tooltip = LOK_hold_parliament_election_tt
+    hidden_effect = {
+        LOK_cancel_all_party_bankrolls = yes
+        LOK_recalculate_parliament_seats = yes
+
+        if = { limit = { has_idea = lok_legislative_parliament } set_variable = { lok_parliament_weeks_until_election = 104 } }
+        else_if = { limit = { has_idea = lok_legislative_direct_democracy } set_variable = { lok_parliament_weeks_until_election = 4 } }
+        else = { set_variable = { lok_parliament_weeks_until_election = -1 } }
+
+        if = { limit = { is_ai = no } country_event = { id = LOK_parliament.1 hours = 1 } }
+    }
+}
+
+# Snap election: same seat calculation/event, but deliberately preserves the scheduled timer.
+LOK_hold_parliament_election_no_reset = {
+    custom_effect_tooltip = LOK_hold_parliament_election_no_reset_tt
+    hidden_effect = {
+        LOK_cancel_all_party_bankrolls = yes
+        LOK_recalculate_parliament_seats = yes
+        if = { limit = { is_ai = no } country_event = { id = LOK_parliament.1 hours = 1 } }
+    }
 }

@@ -1,37 +1,26 @@
 on_actions = {
-	on_ruling_party_change = {
-		effect = {
-			LOK_update_parliament_approval = yes
-		}
-	}
+    on_startup = {
+        effect = {
+            every_country = {
+                limit = { is_non_playable_country = no }
+                add_ideas = lok_legislative_parliament 
+                 LOK_initialize_legislative_mechanics = yes
+            }
+        }
+    }
 
-	on_yearly = {
-		effect = {
-			LOK_hold_parliament_election = yes
-		}
-	}
+    on_weekly = {
+        effect = { LOK_parliament_weekly_legislative_tick = yes }
+    }
 
-	on_coup_succeeded = {
-		effect = {
-			LOK_hold_parliament_election = yes
-		}
-	}
+    on_ruling_party_change = {
+        effect = { LOK_update_parliament_approval = yes }
+    }
 
-	on_civil_war_end = {
-		effect = {
-			LOK_hold_parliament_election = yes
-		}
-	}
-
-	on_puppet = {
-		effect = {
-			LOK_hold_parliament_election = yes
-		}
-	}
-
-	on_release_as_puppet = {
-		effect = {
-			LOK_hold_parliament_election = yes
-		}
-	}
+    # Structural political changes silently rebuild the composition from current popularity.
+    # Upper Councils still never receive a scheduled election event from these hooks.
+    on_coup_succeeded = { effect = { if = { limit = { LOK_has_legislative_body = yes } LOK_recalculate_parliament_seats = yes } } }
+    on_civil_war_end = { effect = { if = { limit = { LOK_has_legislative_body = yes } LOK_recalculate_parliament_seats = yes } } }
+    on_puppet = { effect = { if = { limit = { LOK_has_legislative_body = yes } LOK_recalculate_parliament_seats = yes } } }
+    on_release_as_puppet = { effect = { if = { limit = { LOK_has_legislative_body = yes } LOK_recalculate_parliament_seats = yes } } }
 }

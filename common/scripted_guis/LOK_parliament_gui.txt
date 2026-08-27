@@ -10,7 +10,10 @@ scripted_gui = {
         }
 
         effects = {
-            LOK_parliament_open_button_click = { LOK_parliament_gui_open = yes }
+            LOK_parliament_open_button_click = {
+                LOK_parliament_gui_open = yes
+                LOK_parliament_gui_initialize_action_state = yes
+            }
         }
     }
 
@@ -51,6 +54,7 @@ scripted_gui = {
                 clr_country_flag = LOK_parliament_gui_open
                 add_to_variable = { lok_parliament_gui_dirty = 1 }
             }
+
             LOK_show_banned_off_button_click  = { LOK_parliament_gui_toggle_banned = yes }
             LOK_show_banned_on_button_click   = { LOK_parliament_gui_toggle_banned = yes }
             LOK_show_zero_off_button_click    = { LOK_parliament_gui_toggle_zero = yes }
@@ -60,7 +64,17 @@ scripted_gui = {
             LOK_sort_target_button_click      = { LOK_parliament_gui_set_sort_target = yes }
             LOK_sort_popularity_button_click  = { LOK_parliament_gui_set_sort_popularity = yes }
             LOK_sort_orientation_button_click = { LOK_parliament_gui_set_sort_orientation = yes }
-            LOK_sort_gov_button_click = { LOK_parliament_gui_set_sort_gov = yes }
+            LOK_sort_gov_button_click         = { LOK_parliament_gui_set_sort_gov = yes }
+
+            LOK_party_manage_button_click = { LOK_parliament_gui_toggle_managed_party = yes }
+
+            LOK_party_concessions_button_click      = { LOK_parliament_action_political_concessions = yes }
+            LOK_party_bankroll_off_button_click     = { LOK_parliament_action_bankroll_on = yes }
+            LOK_party_bankroll_on_button_click      = { LOK_parliament_action_bankroll_off = yes }
+            LOK_party_exclude_button_click          = { LOK_parliament_action_exclude_party = yes }
+            LOK_party_reincorporate_button_click    = { LOK_parliament_action_reincorporate_party = yes }
+            LOK_global_dissolve_button_click        = { LOK_parliament_action_dissolve_assembly = yes }
+            LOK_global_emergency_powers_button_click = { LOK_parliament_action_emergency_powers = yes }
         }
 
         triggers = {
@@ -68,6 +82,48 @@ scripted_gui = {
             LOK_show_banned_on_button_visible  = { check_variable = { lok_parliament_gui_show_banned = 1 } }
             LOK_show_zero_off_button_visible   = { check_variable = { lok_parliament_gui_show_zero = 0 } }
             LOK_show_zero_on_button_visible    = { check_variable = { lok_parliament_gui_show_zero = 1 } }
+
+            # Global-management actions.
+            LOK_global_dissolve_button_visible = {
+                check_variable = { lok_parliament_gui_managed_party < 0 }
+                has_idea = lok_legislative_parliament
+            }
+            LOK_global_emergency_powers_button_visible = {
+                check_variable = { lok_parliament_gui_managed_party < 0 }
+                NOT = { has_country_flag = lok_has_emergency_powers }
+            }
+
+            # Party-management actions.
+            LOK_party_concessions_button_visible = {
+                check_variable = { lok_parliament_gui_managed_party > -1 }
+                check_variable = { lok_parliament_gui_managed_party_banned = 0 }
+            }
+            LOK_party_concessions_button_enabled = {
+                check_variable = { lok_parliament_gui_managed_party_concession_cooldown = 0 }
+            }
+
+            LOK_party_bankroll_off_button_visible = {
+                check_variable = { lok_parliament_gui_managed_party > -1 }
+                NOT = { has_idea = lok_legislative_direct_democracy }
+                check_variable = { lok_parliament_gui_managed_party_banned = 0 }
+                check_variable = { lok_parliament_gui_managed_party_bankrolled = 0 }
+            }
+            LOK_party_bankroll_on_button_visible = {
+                check_variable = { lok_parliament_gui_managed_party > -1 }
+                NOT = { has_idea = lok_legislative_direct_democracy }
+                check_variable = { lok_parliament_gui_managed_party_bankrolled = 1 }
+            }
+            LOK_party_exclude_button_visible = {
+                check_variable = { lok_parliament_gui_managed_party > -1 }
+                NOT = { has_idea = lok_legislative_direct_democracy }
+                check_variable = { lok_parliament_gui_managed_party_banned = 0 }
+                check_variable = { lok_parliament_gui_managed_party_ruling = 0 }
+            }
+            LOK_party_reincorporate_button_visible = {
+                check_variable = { lok_parliament_gui_managed_party > -1 }
+                NOT = { has_idea = lok_legislative_direct_democracy }
+                check_variable = { lok_parliament_gui_managed_party_banned = 1 }
+            }
         }
     }
 }

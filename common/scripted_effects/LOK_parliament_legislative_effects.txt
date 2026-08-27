@@ -1,0 +1,314 @@
+# ============================================================
+# Legislative body lifecycle
+# ============================================================
+LOK_initialize_legislative_mechanics = {
+    LOK_initialize_parliament = yes
+
+    if = {
+        limit = { NOT = { has_country_flag = lok_legislative_mechanics_initialized } }
+        resize_array = { array = lok_parliament_party_bankrolled_array value = 0 size = 9 }
+        resize_array = { array = lok_parliament_party_concession_cooldown_array value = 0 size = 9 }
+
+        if = { limit = { has_idea = lok_legislative_parliament } set_variable = { lok_parliament_weeks_until_election = 104 } }
+        else_if = { limit = { has_idea = lok_legislative_direct_democracy } set_variable = { lok_parliament_weeks_until_election = 4 } }
+        else = { set_variable = { lok_parliament_weeks_until_election = -1 } }
+
+        if = {
+            limit = { NOT = { has_dynamic_modifier = { modifier = lok_parliament_bankroll_dynamic_modifier } } }
+            add_dynamic_modifier = { modifier = lok_parliament_bankroll_dynamic_modifier }
+        }
+
+        set_variable = { lok_parliament_gui_managed_party = -1 }
+        set_country_flag = lok_legislative_mechanics_initialized
+        LOK_recalculate_parliament_seats = yes
+        LOK_recalculate_bankroll_fiscal_usage = yes
+    }
+}
+
+LOK_parliament_weekly_legislative_tick = {
+    if = {
+        limit = { LOK_has_legislative_body = yes }
+        LOK_initialize_legislative_mechanics = yes
+
+        # Monthly concession cooldown, represented as four weekly ticks.
+        for_loop_effect = {
+            end = 9
+            value = party_id
+            if = {
+                limit = { check_variable = { lok_parliament_party_concession_cooldown_array^party_id > 0 } }
+                subtract_from_variable = { lok_parliament_party_concession_cooldown_array^party_id = 1 }
+                clamp_variable = { var = lok_parliament_party_concession_cooldown_array^party_id min = 0 }
+            }
+        }
+
+        if = {
+            limit = {
+                OR = { has_idea = lok_legislative_parliament has_idea = lok_legislative_direct_democracy }
+                check_variable = { lok_parliament_weeks_until_election > 0 }
+            }
+            subtract_from_variable = { lok_parliament_weeks_until_election = 1 }
+        }
+
+        if = {
+            limit = {
+                OR = { has_idea = lok_legislative_parliament has_idea = lok_legislative_direct_democracy }
+                NOT = { check_variable = { lok_parliament_weeks_until_election > 0 } }
+            }
+            LOK_hold_parliament_election = yes
+        }
+
+        if = {
+            limit = { check_variable = { lok_parliament_gui_managed_party > -1 } }
+            LOK_recalculate_managed_party_action_costs = yes
+            add_to_variable = { lok_parliament_gui_dirty = 1 }
+        }
+    }
+}
+
+# ============================================================
+# Bankroll fiscal-capacity use
+# share 1.00 -> 10 FC; Upper Council halves that to 5 FC.
+# ============================================================
+LOK_recalculate_bankroll_fiscal_usage = {
+    set_variable = { lok_parliament_bankroll_fiscal_usage = 0 }
+    for_loop_effect = {
+        end = 9
+        value = party_id
+        if = {
+            limit = { check_variable = { lok_parliament_party_bankrolled_array^party_id = 1 } }
+            set_temp_variable = { lok_bankroll_party_usage = lok_parliament_party_share_array^party_id }
+            multiply_temp_variable = { lok_bankroll_party_usage = 10 }
+            if = { limit = { has_idea = lok_legislative_upper_council } multiply_temp_variable = { lok_bankroll_party_usage = 0.5 } }
+            add_to_variable = { lok_parliament_bankroll_fiscal_usage = lok_bankroll_party_usage }
+        }
+    }
+
+    if = {
+        limit = { NOT = { has_dynamic_modifier = { modifier = lok_parliament_bankroll_dynamic_modifier } } }
+        add_dynamic_modifier = { modifier = lok_parliament_bankroll_dynamic_modifier }
+    }
+    force_update_dynamic_modifier = yes
+    LOK_update_fiscal_capacity = yes
+}
+
+# ============================================================
+# GUI management state + live action costs
+# ============================================================
+LOK_parliament_gui_initialize_action_state = {
+    # Opening the GUI always begins in global-management mode.
+    set_variable = { lok_parliament_gui_managed_party = -1 }
+    LOK_recalculate_managed_party_action_costs = yes
+    add_to_variable = { lok_parliament_gui_dirty = 1 }
+}
+
+LOK_recalculate_managed_party_action_costs = {
+    set_variable = { lok_parliament_gui_managed_party_banned = 0 }
+    set_variable = { lok_parliament_gui_managed_party_ruling = 0 }
+    set_variable = { lok_parliament_gui_managed_party_bankrolled = 0 }
+    set_variable = { lok_parliament_gui_managed_party_concession_cooldown = 0 }
+
+    if = {
+        limit = { check_variable = { lok_parliament_gui_managed_party > -1 } }
+
+        if = { limit = { LOK_managed_party_is_banned = yes } set_variable = { lok_parliament_gui_managed_party_banned = 1 } }
+        if = { limit = { LOK_managed_party_is_ruling = yes } set_variable = { lok_parliament_gui_managed_party_ruling = 1 } }
+        set_variable = { lok_parliament_gui_managed_party_bankrolled = lok_parliament_party_bankrolled_array^lok_parliament_gui_managed_party }
+        set_variable = { lok_parliament_gui_managed_party_concession_cooldown = lok_parliament_party_concession_cooldown_array^lok_parliament_gui_managed_party }
+
+        # Concessions = 1 PP per percentage point of seats.
+        set_variable = { lok_parliament_gui_concessions_cost = lok_parliament_party_share_array^lok_parliament_gui_managed_party }
+        multiply_variable = { lok_parliament_gui_concessions_cost = 100 }
+        set_temp_variable = { lok_sway_cost_factor = modifier@lok_sway_party_cost }
+        add_to_temp_variable = { lok_sway_cost_factor = 1 }
+        clamp_temp_variable = { var = lok_sway_cost_factor min = 0 }
+        multiply_variable = { lok_parliament_gui_concessions_cost = lok_sway_cost_factor }
+        if = { limit = { has_idea = lok_legislative_direct_democracy } multiply_variable = { lok_parliament_gui_concessions_cost = 2 } }
+
+        # Exclusion = 5 PP per percentage point; stability loss equals the seat share itself.
+        set_variable = { lok_parliament_gui_exclude_pp_cost = lok_parliament_party_share_array^lok_parliament_gui_managed_party }
+        multiply_variable = { lok_parliament_gui_exclude_pp_cost = 500 }
+        set_variable = { lok_parliament_gui_exclude_stability_cost = lok_parliament_party_share_array^lok_parliament_gui_managed_party }
+
+        # Bankroll = 0.1 FC per percentage point = share * 10.
+        set_variable = { lok_parliament_gui_bankroll_fiscal_cost = lok_parliament_party_share_array^lok_parliament_gui_managed_party }
+        multiply_variable = { lok_parliament_gui_bankroll_fiscal_cost = 10 }
+        if = { limit = { has_idea = lok_legislative_upper_council } multiply_variable = { lok_parliament_gui_bankroll_fiscal_cost = 0.5 } }
+    }
+    else = {
+        set_variable = { lok_parliament_gui_concessions_cost = 0 }
+        set_variable = { lok_parliament_gui_exclude_pp_cost = 0 }
+        set_variable = { lok_parliament_gui_exclude_stability_cost = 0 }
+        set_variable = { lok_parliament_gui_bankroll_fiscal_cost = 0 }
+    }
+}
+
+LOK_parliament_gui_toggle_managed_party = {
+    if = {
+        limit = { check_variable = { lok_parliament_gui_managed_party = party_idx } }
+        set_variable = { lok_parliament_gui_managed_party = -1 }
+    }
+    else = { set_variable = { lok_parliament_gui_managed_party = party_idx } }
+    LOK_recalculate_managed_party_action_costs = yes
+    add_to_variable = { lok_parliament_gui_dirty = 1 }
+}
+
+# ============================================================
+# Party actions
+# ============================================================
+LOK_parliament_action_political_concessions = {
+    LOK_recalculate_managed_party_action_costs = yes
+    set_temp_variable = { lok_party_action_pp_available = political_power }
+    if = {
+        limit = {
+            check_variable = { lok_parliament_gui_managed_party > -1 }
+            NOT = { LOK_managed_party_is_banned = yes }
+            NOT = { check_variable = { lok_parliament_party_concession_cooldown_array^lok_parliament_gui_managed_party > 0 } }
+            NOT = { check_variable = { lok_party_action_pp_available < lok_parliament_gui_concessions_cost } }
+        }
+        set_temp_variable = { lok_party_action_pp_change = lok_parliament_gui_concessions_cost }
+        multiply_temp_variable = { lok_party_action_pp_change = -1 }
+        add_political_power = var:lok_party_action_pp_change
+        add_to_variable = { lok_parliament_party_approval_array^lok_parliament_gui_managed_party = 0.05 }
+        clamp_variable = { var = lok_parliament_party_approval_array^lok_parliament_gui_managed_party min = 0 max = 1 }
+        set_variable = { lok_parliament_party_concession_cooldown_array^lok_parliament_gui_managed_party = 4 }
+        LOK_update_parliament_approval = yes
+        LOK_recalculate_managed_party_action_costs = yes
+        LOK_parliament_gui_refresh = yes
+    }
+}
+
+LOK_parliament_action_bankroll_on = {
+    if = {
+        limit = {
+            check_variable = { lok_parliament_gui_managed_party > -1 }
+            NOT = { has_idea = lok_legislative_direct_democracy }
+            NOT = { LOK_managed_party_is_banned = yes }
+            check_variable = { lok_parliament_party_bankrolled_array^lok_parliament_gui_managed_party = 0 }
+        }
+        set_variable = { lok_parliament_party_bankrolled_array^lok_parliament_gui_managed_party = 1 }
+        add_to_variable = { lok_parliament_party_approval_target_array^lok_parliament_gui_managed_party = 0.05 }
+        clamp_variable = { var = lok_parliament_party_approval_target_array^lok_parliament_gui_managed_party min = 0 max = 1 }
+        LOK_recalculate_bankroll_fiscal_usage = yes
+        LOK_recalculate_managed_party_action_costs = yes
+        LOK_parliament_gui_refresh = yes
+    }
+}
+
+LOK_parliament_action_bankroll_off = {
+    if = {
+        limit = {
+            check_variable = { lok_parliament_gui_managed_party > -1 }
+            check_variable = { lok_parliament_party_bankrolled_array^lok_parliament_gui_managed_party = 1 }
+        }
+        set_variable = { lok_parliament_party_bankrolled_array^lok_parliament_gui_managed_party = 0 }
+        add_to_variable = { lok_parliament_party_approval_target_array^lok_parliament_gui_managed_party = -0.05 }
+        clamp_variable = { var = lok_parliament_party_approval_target_array^lok_parliament_gui_managed_party min = 0 max = 1 }
+        LOK_recalculate_bankroll_fiscal_usage = yes
+        LOK_recalculate_managed_party_action_costs = yes
+        LOK_parliament_gui_refresh = yes
+    }
+}
+
+# Remove one bankroll cleanly before banning that party.
+LOK_cancel_managed_party_bankroll = {
+    if = {
+        limit = { check_variable = { lok_parliament_party_bankrolled_array^lok_parliament_gui_managed_party = 1 } }
+        set_variable = { lok_parliament_party_bankrolled_array^lok_parliament_gui_managed_party = 0 }
+        add_to_variable = { lok_parliament_party_approval_target_array^lok_parliament_gui_managed_party = -0.05 }
+        clamp_variable = { var = lok_parliament_party_approval_target_array^lok_parliament_gui_managed_party min = 0 max = 1 }
+    }
+}
+
+# Redistribute the CURRENT seats of an excluded party proportionally across remaining legal parties.
+LOK_redistribute_current_parliament_seats = {
+    set_variable = { lok_parliament_party_share_non_banned = 0 }
+    for_loop_effect = {
+        end = 9
+        value = party_id
+        if = {
+            limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
+            add_to_variable = { lok_parliament_party_share_non_banned = lok_parliament_party_share_array^party_id }
+        }
+        else = { set_variable = { lok_parliament_party_share_array^party_id = 0 } }
+    }
+
+    if = {
+        limit = { check_variable = { lok_parliament_party_share_non_banned > 0 } }
+        set_temp_variable = { lok_parliament_redistribution_multiplier = 1 }
+        divide_temp_variable = { lok_parliament_redistribution_multiplier = lok_parliament_party_share_non_banned }
+        for_loop_effect = {
+            end = 9
+            value = party_id
+            if = {
+                limit = { NOT = { check_variable = { pol_party_array^party_id = 3 } } }
+                multiply_variable = { lok_parliament_party_share_array^party_id = lok_parliament_redistribution_multiplier }
+            }
+        }
+    }
+    LOK_update_parliament_approval = yes
+    LOK_recalculate_bankroll_fiscal_usage = yes
+    LOK_parliament_gui_refresh = yes
+}
+
+LOK_parliament_action_exclude_party = {
+    LOK_recalculate_managed_party_action_costs = yes
+    set_temp_variable = { lok_party_action_pp_available = political_power }
+    if = {
+        limit = {
+            check_variable = { lok_parliament_gui_managed_party > -1 }
+            NOT = { has_idea = lok_legislative_direct_democracy }
+            NOT = { LOK_managed_party_is_banned = yes }
+            NOT = { LOK_managed_party_is_ruling = yes }
+            NOT = { check_variable = { lok_party_action_pp_available < lok_parliament_gui_exclude_pp_cost } }
+        }
+        set_temp_variable = { lok_party_action_pp_change = lok_parliament_gui_exclude_pp_cost }
+        multiply_temp_variable = { lok_party_action_pp_change = -1 }
+        add_political_power = var:lok_party_action_pp_change
+
+        set_temp_variable = { lok_party_action_stability_change = lok_parliament_gui_exclude_stability_cost }
+        multiply_temp_variable = { lok_party_action_stability_change = -1 }
+        add_stability = var:lok_party_action_stability_change
+
+        LOK_cancel_managed_party_bankroll = yes
+        set_variable = { pol_party_array^lok_parliament_gui_managed_party = 3 }
+        set_variable = { lok_parliament_party_share_array^lok_parliament_gui_managed_party = 0 }
+        LOK_redistribute_current_parliament_seats = yes
+        LOK_recalculate_managed_party_action_costs = yes
+    }
+}
+
+LOK_parliament_action_reincorporate_party = {
+    if = {
+        limit = {
+            check_variable = { lok_parliament_gui_managed_party > -1 }
+            NOT = { has_idea = lok_legislative_direct_democracy }
+            LOK_managed_party_is_banned = yes
+        }
+        set_variable = { pol_party_array^lok_parliament_gui_managed_party = 1 }
+        # This is a snap election: it does not move the scheduled election date.
+        LOK_hold_parliament_election_no_reset = yes
+        LOK_recalculate_managed_party_action_costs = yes
+    }
+}
+
+# ============================================================
+# Global legislative actions
+# ============================================================
+LOK_parliament_action_dissolve_assembly = {
+    if = { limit = { has_idea = lok_legislative_parliament } LOK_hold_parliament_election_no_reset = yes }
+}
+
+LOK_parliament_action_emergency_powers = {
+    if = {
+        limit = { NOT = { has_country_flag = lok_has_emergency_powers } }
+        set_country_flag = lok_has_emergency_powers
+        for_loop_effect = {
+            end = 9
+            value = party_id
+            add_to_variable = { lok_parliament_party_approval_array^party_id = -0.05 }
+            clamp_variable = { var = lok_parliament_party_approval_array^party_id min = 0 max = 1 }
+        }
+        LOK_update_parliament_approval = yes
+        LOK_parliament_gui_refresh = yes
+    }
+}

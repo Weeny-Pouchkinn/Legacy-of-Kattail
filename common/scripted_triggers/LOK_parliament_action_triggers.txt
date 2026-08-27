@@ -1,0 +1,25 @@
+LOK_has_legislative_body = {
+    OR = {
+        has_idea = lok_legislative_parliament
+        has_idea = lok_legislative_upper_council
+        has_idea = lok_legislative_direct_democracy
+    }
+}
+
+LOK_managed_party_is_banned = {
+    check_variable = { pol_party_array^lok_parliament_gui_managed_party = 3 }
+}
+
+LOK_managed_party_is_ruling = {
+    OR = {
+        AND = { check_variable = { lok_parliament_gui_managed_party = 0 } has_government = communism }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 1 } has_government = socialism }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 2 } has_government = social_democratic }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 3 } has_government = social_liberal }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 4 } has_government = democratic }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 5 } has_government = social_conservative }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 6 } has_government = authoritarian_democratic }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 7 } has_government = neutrality }
+        AND = { check_variable = { lok_parliament_gui_managed_party = 8 } has_government = fascism }
+    }
+}
