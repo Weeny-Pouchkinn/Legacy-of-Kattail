@@ -1,0 +1,179 @@
+# Army Force Limit
+# ----------------
+# Every battalion starts at weight 1.0 via num_battalions.
+# Heavier battalion types add only their surcharge below. This makes unknown/future
+# battalion types safely fall back to weight 1.0 instead of being free.
+#
+# Penalty tuning:
+#   over-ratio = max(used - cap, 0) / cap
+#   organisation = -0.50 * over-ratio, floor -0.75
+#   movement     = -0.25 * over-ratio, floor -0.50
+
+LOK_update_army_force_limit = {
+	# --- CAP ---------------------------------------------------------------
+	# Base multiplier comes from LOK_base_modifier_definitions (= 1.0).
+	# Defence-budget ideas add their level bonus to the same custom modifier.
+	set_variable = { lok_army_force_limit_multiplier = modifier@lok_army_force_limit_factor }
+
+	# Safety fallback for newly-created countries which have not inherited the
+	# repository's base hidden idea yet. It preserves any defence-budget addition.
+	if = {
+		limit = { NOT = { has_idea = LOK_base_modifier_definitions } }
+		add_to_variable = { lok_army_force_limit_multiplier = 1 }
+	}
+
+	set_variable = { lok_army_force_limit_cap_from_civs = num_of_civilian_factories }
+	set_variable = { lok_army_force_limit_cap_from_mils = num_of_military_factories }
+	multiply_variable = { lok_army_force_limit_cap_from_civs = modifier@lok_army_force_limit_per_civilian_factory }
+	multiply_variable = { lok_army_force_limit_cap_from_mils = modifier@lok_army_force_limit_per_military_factory }
+
+	set_variable = { lok_army_force_limit_cap = lok_army_force_limit_cap_from_civs }
+	add_to_variable = { lok_army_force_limit_cap = lok_army_force_limit_cap_from_mils }
+	multiply_variable = { lok_army_force_limit_cap = lok_army_force_limit_multiplier }
+
+	# --- USAGE: universal 1.0 baseline ------------------------------------
+	set_variable = { lok_army_force_limit_used = num_battalions }
+
+	# Reused scratch variable for type surcharges.
+	set_variable = { lok_army_force_limit_type_surcharge = 0 }
+
+	# Artillery / AA / AT / rocket artillery: 1.25 total (+0.25)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@mot_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@anti_air_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@mot_anti_air_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@anti_tank_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@mot_anti_tank_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@rocket_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@mot_rocket_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@motorized_rocket_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@mechanized }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@amphibious_mechanized }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@armored_car }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@helicopter_brigade }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 0.25 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# Light armour and light walkers: 1.50 total (+0.50)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@light_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@amphibious_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@amphibious_light_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@light_sp_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@light_sp_anti_air_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@light_tank_destroyer_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@light_mech }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 0.50 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# Medium and modern armour / medium walkers: 2.00 total (+1.00)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@medium_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@amphibious_medium_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@medium_sp_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@medium_sp_anti_air_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@medium_tank_destroyer_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@modern_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@modern_sp_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@modern_sp_anti_air_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@modern_tank_destroyer_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@medium_mech }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 1.00 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# Heavy armour / heavy walkers: 2.50 total (+1.50)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@heavy_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@amphibious_heavy_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@heavy_sp_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@heavy_sp_anti_air_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@heavy_tank_destroyer_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@heavy_mech }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 1.50 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# Super-heavy armour / super-heavy walkers: 3.00 total (+2.00)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@super_heavy_armor }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@super_heavy_sp_artillery_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@super_heavy_sp_anti_air_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@super_heavy_tank_destroyer_brigade }
+	add_to_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@super_heavy_mech }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 2.00 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# Mod-specific strategic-scale battalions.
+	# Land cruiser: 4.00 total (+3.00)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@land_cruiser }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 3.00 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# Armoured blimp carrier: 5.00 total (+4.00)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@armored_blimp_carrier }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 4.00 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# Ultra-heavy armour (Riesigerkatzenpanzer): 8.00 total (+7.00)
+	set_variable = { lok_army_force_limit_type_surcharge = num_battalions_with_type@ultra_heavy_armor }
+	multiply_variable = { lok_army_force_limit_type_surcharge = 7.00 }
+	add_to_variable = { lok_army_force_limit_used = lok_army_force_limit_type_surcharge }
+
+	# --- OVER-CAP PENALTY --------------------------------------------------
+	set_variable = { lok_army_force_limit_overage = lok_army_force_limit_used }
+	subtract_from_variable = { lok_army_force_limit_overage = lok_army_force_limit_cap }
+	clamp_variable = {
+		var = lok_army_force_limit_overage
+		min = 0
+	}
+
+	set_variable = { lok_army_force_limit_over_ratio = 0 }
+	set_variable = { lok_army_force_limit_org_penalty = 0 }
+	set_variable = { lok_army_force_limit_speed_penalty = 0 }
+
+	if = {
+		limit = {
+			check_variable = { lok_army_force_limit_overage > 0 }
+			check_variable = { lok_army_force_limit_cap > 0 }
+		}
+
+		set_variable = { lok_army_force_limit_over_ratio = lok_army_force_limit_overage }
+		divide_variable = { lok_army_force_limit_over_ratio = lok_army_force_limit_cap }
+
+		set_variable = { lok_army_force_limit_org_penalty = lok_army_force_limit_over_ratio }
+		multiply_variable = { lok_army_force_limit_org_penalty = -0.50 }
+		clamp_variable = {
+			var = lok_army_force_limit_org_penalty
+			min = -0.75
+			max = 0
+		}
+
+		set_variable = { lok_army_force_limit_speed_penalty = lok_army_force_limit_over_ratio }
+		multiply_variable = { lok_army_force_limit_speed_penalty = -0.25 }
+		clamp_variable = {
+			var = lok_army_force_limit_speed_penalty
+			min = -0.50
+			max = 0
+		}
+	}
+	else_if = {
+		# A country with battalions but no military factories is maximally over cap.
+		limit = {
+			check_variable = { lok_army_force_limit_overage > 0 }
+			check_variable = { lok_army_force_limit_cap <= 0 }
+		}
+		set_variable = { lok_army_force_limit_over_ratio = 1 }
+		set_variable = { lok_army_force_limit_org_penalty = -0.75 }
+		set_variable = { lok_army_force_limit_speed_penalty = -0.50 }
+	}
+
+	# Ensure the variable-driven modifier exists and immediately refresh it.
+	if = {
+		limit = {
+			NOT = {
+				has_dynamic_modifier = {
+					modifier = lok_army_force_limit_over_cap_modifier
+				}
+			}
+		}
+		add_dynamic_modifier = {
+			modifier = lok_army_force_limit_over_cap_modifier
+		}
+	}
+	force_update_dynamic_modifier = yes
+}
