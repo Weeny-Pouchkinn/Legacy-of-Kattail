@@ -1,0 +1,22 @@
+on_actions = {
+    # Build UI caches once after state history has initialized.
+    on_startup = {
+        effect = {
+            every_state = {
+                limit = { check_variable = { lok_state_parties_array^num > 9 } }
+                LOK_rebuild_state_distribution_caches = yes
+            }
+        }
+    }
+
+    # Exact headcounts are derived caches, so refresh them periodically from current
+    # state population even when demographic shares themselves have not changed.
+    on_monthly = {
+        effect = {
+            every_state = {
+                limit = { check_variable = { lok_state_parties_array^num > 9 } }
+                LOK_rebuild_state_distribution_caches = yes
+            }
+        }
+    }
+}

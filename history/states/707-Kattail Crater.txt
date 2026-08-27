@@ -11,21 +11,23 @@ state={
 		buildings = {
 		}
 
-		# >>> LOK GENERATED POP GROUPS START >>>
-		# AUTO-GENERATED STARTING POPULATION HISTORY. EDITABLE AFTER GENERATION.
-		# One population group = the same index across the five arrays below.
-		# Fields: species / culture / politics / amount in thousands / reserved(0).
-		# This is static history data. Runtime startup code only SUMS these rows into caches.
+		# >>> LOK GENERATED STATE DISTRIBUTIONS START >>>
+		# AUTO-GENERATED STARTING STATE DISTRIBUTIONS. EDITABLE AFTER GENERATION.
+		# Array index = category ID; value = population share from 0 to 1.
 		# Generator seed 20260826; state 707; owner MON; category space; vanilla population 0.001k.
+		# Culture: 98 100.0%.
 		# Politics: Autocratic[7] 74.0%, Authoritarian Democratic[6] 26.0%.
-		# GENERATOR WARNING: no resolvable starting species/culture; arrays left empty
-		clear_array = lok_pop_species_array
-		clear_array = lok_pop_culture_array
-		clear_array = lok_pop_politics_array
-		clear_array = lok_pop_amount_array
-		clear_array = lok_pop_reserved_array
-		# No positive-population groups generated for this state.
-		# <<< LOK GENERATED POP GROUPS END <<<
+		# GENERATOR WARNING: no resolvable starting species/culture; relevant array left all-zero
+		clear_array = lok_state_species_array
+		resize_array = { array = lok_state_species_array value = 0 size = 61 }
+		clear_array = lok_state_culture_array
+		resize_array = { array = lok_state_culture_array value = 0 size = 103 }
+		add_to_variable = { lok_state_culture_array^98 = 1 }
+		clear_array = lok_state_parties_array
+		resize_array = { array = lok_state_parties_array value = 0 size = 10 }
+		add_to_variable = { lok_state_parties_array^6 = 0.259528 }
+		add_to_variable = { lok_state_parties_array^7 = 0.740472 }
+		# <<< LOK GENERATED STATE DISTRIBUTIONS END <<<
 	}
 	manpower=1
 	state_category=space

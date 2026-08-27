@@ -1,0 +1,260 @@
+# Legacy of Kattail - state demographic distribution toolkit.
+# EXPECTED SCOPE: STATE unless otherwise noted.
+#
+# AUTHORITATIVE ARRAYS:
+#   lok_state_species_array  (61 entries, shares 0..1)
+#   lok_state_culture_array  (103 entries, shares 0..1)
+#   lok_state_parties_array  (10 entries, shares 0..1)
+#
+# DERIVED CACHES (thousands of people):
+#   lok_state_species_population_k_array
+#   lok_state_culture_population_k_array
+#   lok_state_parties_population_k_array
+#
+# Important implementation detail:
+# Numeric share arrays are traversed with for_each_loop. This avoids treating a
+# dynamically-addressed non-zero array slot as a truthy value rather than preserving
+# its exact decimal value on some engine evaluation paths.
+
+LOK_rebuild_state_distribution_caches = {
+    set_temp_variable = { lok_dist_population_k = state_population_k }
+
+    # Species ---------------------------------------------------------------
+    clear_array = lok_state_species_population_k_array
+    resize_array = { array = lok_state_species_population_k_array value = 0 size = 61 }
+    clear_array = lok_state_species_total_ids_array
+    clear_array = lok_state_species_total_normalized_array
+    clear_array = lok_state_species_total_amount_array
+
+    for_each_loop = {
+        array = lok_state_species_array
+        value = lok_dist_raw_share
+        index = lok_dist_i
+
+        set_temp_variable = { lok_dist_share = lok_dist_raw_share }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+
+            set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+            multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+
+            add_to_variable = { lok_state_species_population_k_array^lok_dist_i = lok_dist_amount_k }
+            add_to_array = { array = lok_state_species_total_ids_array value = lok_dist_i }
+            add_to_array = { array = lok_state_species_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_species_total_amount_array value = lok_dist_amount_k }
+        }
+    }
+
+    # Culture ---------------------------------------------------------------
+    clear_array = lok_state_culture_population_k_array
+    resize_array = { array = lok_state_culture_population_k_array value = 0 size = 103 }
+    clear_array = lok_state_culture_total_ids_array
+    clear_array = lok_state_culture_total_normalized_array
+    clear_array = lok_state_culture_total_amount_array
+
+    for_each_loop = {
+        array = lok_state_culture_array
+        value = lok_dist_raw_share
+        index = lok_dist_i
+
+        set_temp_variable = { lok_dist_share = lok_dist_raw_share }
+        clamp_temp_variable = { var = lok_dist_share min = 0 max = 1 }
+
+        if = {
+            limit = { check_variable = { lok_dist_share > 0.000001 } }
+
+            set_temp_variable = { lok_dist_amount_k = lok_dist_share }
+            multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+
+            add_to_variable = { lok_state_culture_population_k_array^lok_dist_i = lok_dist_amount_k }
+            add_to_array = { array = lok_state_culture_total_ids_array value = lok_dist_i }
+            add_to_array = { array = lok_state_culture_total_normalized_array value = lok_dist_share }
+            add_to_array = { array = lok_state_culture_total_amount_array value = lok_dist_amount_k }
+        }
+    }
+
+    # Politics --------------------------------------------------------------
+    LOK_rebuild_state_political_pie = yes
+
+    clear_array = lok_state_parties_population_k_array
+    resize_array = { array = lok_state_parties_population_k_array value = 0 size = 10 }
+
+    for_each_loop = {
+        array = lok_state_parties_normalized_array
+        value = lok_dist_party_share
+        index = lok_dist_i
+
+        set_temp_variable = { lok_dist_amount_k = lok_dist_party_share }
+        multiply_temp_variable = { lok_dist_amount_k = lok_dist_population_k }
+        add_to_variable = { lok_state_parties_population_k_array^lok_dist_i = lok_dist_amount_k }
+    }
+
+    LOK_rebuild_state_demographic_pies = yes
+}
+
+# -----------------------------------------------------------------------------
+# PUBLIC: change one species share by a percentage-point amount.
+# Caller inputs MUST be temp variables:
+#   lok_distribution_species      = species array index (0..60)
+#   lok_distribution_share_change = signed share, e.g. 0.05 or -0.10
+# -----------------------------------------------------------------------------
+LOK_change_state_species_share = {
+    resize_array = { array = lok_state_species_array value = 0 size = 61 }
+    set_temp_variable = { lok_distribution_actual_change = 0 }
+
+    if = {
+        limit = {
+            check_variable = { lok_distribution_species > -1 }
+            check_variable = { lok_distribution_species < 61 }
+        }
+
+        # Find the target value by iterating the actual numeric array.
+        set_temp_variable = { lok_dist_old_share = 0 }
+        for_each_loop = {
+            array = lok_state_species_array
+            value = lok_dist_scan_share
+            index = lok_dist_scan_i
+            if = {
+                limit = { check_variable = { lok_dist_scan_i = lok_distribution_species } }
+                set_temp_variable = { lok_dist_old_share = lok_dist_scan_share }
+            }
+        }
+        clamp_temp_variable = { var = lok_dist_old_share min = 0 max = 1 }
+
+        set_temp_variable = { lok_dist_new_share = lok_dist_old_share }
+        add_to_temp_variable = { lok_dist_new_share = lok_distribution_share_change }
+        clamp_temp_variable = { var = lok_dist_new_share min = 0 max = 1 }
+
+        set_temp_variable = { lok_distribution_actual_change = lok_dist_new_share }
+        subtract_from_temp_variable = { lok_distribution_actual_change = lok_dist_old_share }
+
+        set_temp_variable = { lok_dist_old_rest = 1 }
+        subtract_from_temp_variable = { lok_dist_old_rest = lok_dist_old_share }
+
+        # A negative change from a 100%-homogeneous state has nowhere to go.
+        if = {
+            limit = {
+                check_variable = { lok_dist_old_rest < 0.000001 }
+                check_variable = { lok_distribution_actual_change < 0 }
+            }
+            set_temp_variable = { lok_dist_new_share = lok_dist_old_share }
+            set_temp_variable = { lok_distribution_actual_change = 0 }
+        }
+    }
+
+    custom_effect_tooltip = LOK_change_state_species_share_tt
+
+    hidden_effect = {
+        if = {
+            limit = {
+                check_variable = { lok_distribution_species > -1 }
+                check_variable = { lok_distribution_species < 61 }
+                check_variable = { lok_dist_old_rest > 0.000001 }
+            }
+
+            set_temp_variable = { lok_dist_new_rest = 1 }
+            subtract_from_temp_variable = { lok_dist_new_rest = lok_dist_new_share }
+            set_temp_variable = { lok_dist_scale = lok_dist_new_rest }
+            divide_temp_variable = { lok_dist_scale = lok_dist_old_rest }
+
+            # Scale every non-target slot in-place. Array arithmetic preserves the
+            # actual floating-point/fixed-point value instead of rebuilding it via set.
+            for_each_loop = {
+                array = lok_state_species_array
+                value = lok_dist_scan_share
+                index = lok_dist_scan_i
+                if = {
+                    limit = { NOT = { check_variable = { lok_dist_scan_i = lok_distribution_species } } }
+                    multiply_variable = { lok_state_species_array^lok_dist_scan_i = lok_dist_scale }
+                }
+            }
+
+            # Replace target without set_variable-on-array-element.
+            subtract_from_variable = { lok_state_species_array^lok_distribution_species = lok_dist_old_share }
+            add_to_variable = { lok_state_species_array^lok_distribution_species = lok_dist_new_share }
+
+            LOK_rebuild_state_distribution_caches = yes
+        }
+    }
+}
+
+# PUBLIC: same behavior for culture.
+# Inputs:
+#   lok_distribution_culture      = culture array index (0..102)
+#   lok_distribution_share_change = signed share
+LOK_change_state_culture_share = {
+    resize_array = { array = lok_state_culture_array value = 0 size = 103 }
+    set_temp_variable = { lok_distribution_actual_change = 0 }
+
+    if = {
+        limit = {
+            check_variable = { lok_distribution_culture > -1 }
+            check_variable = { lok_distribution_culture < 103 }
+        }
+
+        set_temp_variable = { lok_dist_old_share = 0 }
+        for_each_loop = {
+            array = lok_state_culture_array
+            value = lok_dist_scan_share
+            index = lok_dist_scan_i
+            if = {
+                limit = { check_variable = { lok_dist_scan_i = lok_distribution_culture } }
+                set_temp_variable = { lok_dist_old_share = lok_dist_scan_share }
+            }
+        }
+        clamp_temp_variable = { var = lok_dist_old_share min = 0 max = 1 }
+
+        set_temp_variable = { lok_dist_new_share = lok_dist_old_share }
+        add_to_temp_variable = { lok_dist_new_share = lok_distribution_share_change }
+        clamp_temp_variable = { var = lok_dist_new_share min = 0 max = 1 }
+
+        set_temp_variable = { lok_distribution_actual_change = lok_dist_new_share }
+        subtract_from_temp_variable = { lok_distribution_actual_change = lok_dist_old_share }
+
+        set_temp_variable = { lok_dist_old_rest = 1 }
+        subtract_from_temp_variable = { lok_dist_old_rest = lok_dist_old_share }
+
+        if = {
+            limit = {
+                check_variable = { lok_dist_old_rest < 0.000001 }
+                check_variable = { lok_distribution_actual_change < 0 }
+            }
+            set_temp_variable = { lok_dist_new_share = lok_dist_old_share }
+            set_temp_variable = { lok_distribution_actual_change = 0 }
+        }
+    }
+
+    custom_effect_tooltip = LOK_change_state_culture_share_tt
+
+    hidden_effect = {
+        if = {
+            limit = {
+                check_variable = { lok_distribution_culture > -1 }
+                check_variable = { lok_distribution_culture < 103 }
+                check_variable = { lok_dist_old_rest > 0.000001 }
+            }
+
+            set_temp_variable = { lok_dist_new_rest = 1 }
+            subtract_from_temp_variable = { lok_dist_new_rest = lok_dist_new_share }
+            set_temp_variable = { lok_dist_scale = lok_dist_new_rest }
+            divide_temp_variable = { lok_dist_scale = lok_dist_old_rest }
+
+            for_each_loop = {
+                array = lok_state_culture_array
+                value = lok_dist_scan_share
+                index = lok_dist_scan_i
+                if = {
+                    limit = { NOT = { check_variable = { lok_dist_scan_i = lok_distribution_culture } } }
+                    multiply_variable = { lok_state_culture_array^lok_dist_scan_i = lok_dist_scale }
+                }
+            }
+
+            subtract_from_variable = { lok_state_culture_array^lok_distribution_culture = lok_dist_old_share }
+            add_to_variable = { lok_state_culture_array^lok_distribution_culture = lok_dist_new_share }
+
+            LOK_rebuild_state_distribution_caches = yes
+        }
+    }
+}
