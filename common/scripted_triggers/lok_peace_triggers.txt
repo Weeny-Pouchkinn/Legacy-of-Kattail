@@ -1,0 +1,15 @@
+# State scope, with ROOT as the occupier: conquered land that can be released or
+# handed to a puppet. Shared so the decisions, lok_peace.1 and the state list agree.
+lok_is_releasable_conquest = {
+	is_owned_by = ROOT
+	is_controlled_by = ROOT
+	is_capital = no
+	NOT = { is_core_of = ROOT }
+	NOT = { is_claimed_by = ROOT }
+	NOT = {
+		is_in_array = {
+			array = ROOT.potential_cores_array
+			value = THIS
+		}
+	}
+}
