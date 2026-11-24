@@ -228,3 +228,32 @@ palette/tint/size to show actual flag previews. Keep picker candidates local unt
 acceptance, restore the owning modal grab on close, and leave native writers alone.
 Use a virtual canvas and small rendering batches, with bounded window-local image
 and mask caches. Do not generate thumbnail caches or new painter game-data files.
+
+## 2026-11-24: Native geography authoring
+
+State edits patch native root/history fields and existing localization owners;
+IDs/province lists are fixed. State, region and nested VP dialogs share the
+existing draft transaction/guarded Save. Supply nodes use map/supply_nodes.txt,
+not invented history fields; railways and spawn placement generation are excluded.
+Building scopes, caps/coastal requirements and facility restrictions come from
+native definitions and existing map positions. Preserve unchanged authored values
+and dated/conditional/unknown script scopes.
+
+Move entire states between strategic regions. Removal needs a destination, with
+global checks against empty regions and split/unassigned states. Keep independent
+sea provinces in place and synchronize map/paint/boundary indices after draft
+changes/Undo. Naval terrain is valid for sea provinces inside mixed regions, as
+demonstrated by existing mod files; do not require sea-only regions.
+
+Weather import copies vanilla period weather, not geography. Thirty climate
+classes with six-month hemisphere variants are Köppen-inspired editor profiles;
+their values are approximations, not observations or an implementation of the
+published classification algorithm. Permit native phenomenon weights above one.
+
+VPs are direct starting state-history province/value pairs. On VP Apply,
+consolidate exact base localization keys into existing victory_points_l_english,
+sort by displayed place name with numeric province-ID ties, preserve versions and
+inline comments, and reject conflicting base names atomically. Country-suffixed
+variants stay in their files. Keep authored names when removing a VP. Cache only
+in-memory province representative pixels, and cull zoomed labels to the viewport.
+No painter-specific game-data or disk cache files.

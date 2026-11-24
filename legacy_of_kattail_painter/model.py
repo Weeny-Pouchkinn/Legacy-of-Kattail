@@ -385,25 +385,26 @@ class World:
         self.files = sorted(p for p in set(self.files)|scripts if self.docs.snapshots.get(p, b'exists') is not None or self.docs.text(p))
 
     def _load_strategic_regions(self):
-        self.regions, self.province_regions, self.region_states = {}, {}, {}
+        regions, province_regions, region_states = {}, {}, {}
         for path in sorted((self.root / 'map/strategicregions').glob('*.txt')):
             text = self.docs.text(path.relative_to(self.root))
             region = child(parse(text), 'strategic_region')
             if region is None:
                 continue
             rid = int(scalar(text, region.children, 'id'))
-            if rid in self.regions:
+            if rid in regions:
                 raise ValueError(f'Duplicate strategic region {rid}')
             provinces = child(region.children, 'provinces')
             ids = frozenset(int(n.key) for n in provinces.children) if provinces else frozenset()
             for pid in ids:
                 if pid not in self.provinces:
                     raise ValueError(f'Strategic region {rid} references undefined province {pid}')
-                if pid in self.province_regions:
+                if pid in province_regions:
                     raise ValueError(f'Province {pid} belongs to multiple strategic regions')
-                self.province_regions[pid] = rid
-            self.regions[rid] = {'name': scalar(text, region.children, 'name'), 'provinces': ids}
-            self.region_states[rid] = frozenset(self.province_states[p] for p in ids if p in self.province_states)
+                province_regions[pid] = rid
+            regions[rid] = {'name': scalar(text, region.children, 'name'), 'provinces': ids,'path':path.relative_to(self.root).as_posix()}
+            region_states[rid] = frozenset(self.province_states[p] for p in ids if p in self.province_states)
+        self.regions, self.province_regions, self.region_states = regions, province_regions, region_states
 
     def paint_targets(self, pid, scope='State'):
         sid = self.province_states.get(pid)
@@ -683,10 +684,20 @@ class World:
                 else: rgb = colour(sid)
                 state_colors[sid] = rgb
             palette = state_colors[self._province_state_ids]
+            if layer=='Strategic regions':
+                for pid in self.provinces:
+                    rid=self.province_regions.get(pid);palette[pid]=colour('region_'+str(rid)) if rid is not None else (60,65,73)
+            elif layer=='VPs':
+                from geography_model import vp_color
+                records=self.geography_store.victory_points() if hasattr(self,'geography_store') else {}
+                maximum=max((d['value'] for d in records.values()),default=1)
+                palette[:]=(60,65,73)
+                for pid,data in records.items():
+                    if pid<len(palette):palette[pid]=vp_color(data['value'],maximum)
             if layer in {'Provinces', 'Terrain', 'Continents'}:
                 for pid, record in self.provinces.items():
                     palette[pid] = record['rgb'] if layer == 'Provinces' else colour(record['terrain' if layer == 'Terrain' else 'continent'])
-            if layer != 'Provinces': palette[~self._land_provinces] = (26, 43, 60)
+            if layer not in {'Provinces','Strategic regions'}: palette[~self._land_provinces] = (26, 43, 60)
             if 0 not in self.provinces: palette[0] = 0
             if static: self._map_palettes[layer] = palette
         height, width = self.map_ids.shape

@@ -277,6 +277,7 @@ class FixtureTests(unittest.TestCase):
         def after(delay, callback):
             key = len(jobs)+1; jobs[key] = callback; return key
         app = SimpleNamespace(world=world, zoom=1, drag_seen=set(), pick_only=False, last_painted=None,
+                              geography_picker=None, layer=Var('Culture'),
                               canvas=SimpleNamespace(canvasx=lambda x:x, canvasy=lambda y:y),
                               root=SimpleNamespace(after=after, after_cancel=lambda key: jobs.pop(key, None)),
                               brush=Var('Culture'), paint_scope=Var('State'), culture_operation=Var('Set'),

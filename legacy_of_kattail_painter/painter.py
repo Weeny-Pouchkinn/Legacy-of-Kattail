@@ -15,6 +15,8 @@ from character_ui import CharacterWorkspace, DraftDialog
 from select_ui import ChoiceBox, Choice, ChoiceIndex
 from country_model import CountryStore
 from country_ui import CountryWorkspace
+from geography_model import GeographyStore, vp_color
+from geography_ui import GeographyWorkspace
 
 
 class Painter(ttk.Frame):
@@ -24,6 +26,9 @@ class Painter(ttk.Frame):
         self.character_store = CharacterStore(world)
         self.catalog_store = MapCatalogStore(world, self.character_store)
         self.country_store = CountryStore(world,self.character_store,self.catalog_store,emblems)
+        self.geography_store = GeographyStore(world,self.character_store,self.catalog_store)
+        self.geography_picker = None
+        self._vp_seen = set()
         self.capital_picker = None
         self.world.docs.before_save = self.prepare_save
         self.current = None
@@ -108,14 +113,14 @@ class Painter(ttk.Frame):
         ttk.Button(top, text='Discard drafts', command=self.discard).pack(side='left', padx=(6, 14))
         ttk.Label(top, text='Paint:').pack(side='left')
         brush = ChoiceBox(top, state='readonly', textvariable=self.brush,
-                             values=['Inspect', 'Owner', 'Culture', 'Species', 'Wonder'], width=12)
+                             values=['Inspect', 'Owner', 'Culture', 'Species', 'Wonder', 'VPs'], width=12)
         brush.pack(side='left', padx=(5, 14))
         brush.bind('<<ComboboxSelected>>', self.brush_changed)
         ttk.Label(top, text='View:').pack(side='left')
         layers = ChoiceBox(top, state='readonly', textvariable=self.layer,
-                             values=['Owners', 'States', 'Provinces', 'Terrain', 'Continents', 'Culture', 'Species', 'Minority', 'Wonder'], width=15)
+                             values=['Owners', 'States', 'Strategic regions', 'VPs', 'Provinces', 'Terrain', 'Continents', 'Culture', 'Species', 'Minority', 'Wonder'], width=15)
         layers.pack(side='left', padx=(5, 14))
-        layers.bind('<<ComboboxSelected>>', lambda e: (self.refresh_palette(), self.refresh_map()))
+        layers.bind('<<ComboboxSelected>>', self.layer_changed)
         ttk.Button(top, text='Zoom -', command=lambda: self.change_zoom(.8)).pack(side='left')
         ttk.Button(top, text='Zoom +', command=lambda: self.change_zoom(1.25)).pack(side='left', padx=(5, 0))
         ttk.Button(top, text='Fit', command=self.fit_map).pack(side='left', padx=(5, 0))
@@ -170,13 +175,17 @@ class Painter(ttk.Frame):
         for frame, name in [(map_tab, 'Map'), (fields, 'All source fields'), (flags, 'Flag maker')]:
             self.tabs.add(frame, text=name)
         self._map_tab(map_tab)
+        self.map_tab = map_tab
         self._state_panel(self.state_tab)
         self._fields_tab(fields)
         self._flags_tab(flags)
         definitions = ttk.Frame(self.tabs)
         self.tabs.add(definitions, text='Map definitions')
         self.definitions_panel = MapDefinitions(definitions, self)
-        self.tabs.bind('<<NotebookTabChanged>>', lambda e: self.definitions_panel.refresh())
+        geography_tab = ttk.Frame(self.tabs)
+        self.tabs.add(geography_tab, text='States / regions / VPs')
+        self.geography_panel = GeographyWorkspace(geography_tab, self)
+        self.tabs.bind('<<NotebookTabChanged>>', lambda e: (self.definitions_panel.refresh(), self.geography_panel.refresh()))
         ttk.Label(self.sidebar, text='Click/drag to paint; Shift-click to pick.\nRight-drag to pan; wheel to zoom.', wraplength=400).pack(fill='x', pady=(8, 0))
         ttk.Label(self.map_workspace, textvariable=self.status, anchor='w', padding=(8, 4)).pack(fill='x')
 
@@ -199,9 +208,10 @@ class Painter(ttk.Frame):
         ChoiceBox(self.wonder_controls, textvariable=self.wonder_operation,
                   values=['Move', 'Place copies'], width=18).pack(side='left')
         edit = ttk.Frame(tab); edit.pack(fill='x', pady=4)
-        ttk.Button(edit, text='New definition', command=lambda: self.open_definition(True)).pack(side='left')
+        self.new_definition_button = ttk.Button(edit, text='New definition', command=lambda: self.open_definition(True))
+        self.new_definition_button.pack(side='left')
         ttk.Button(edit, text='Edit selected', command=self.open_definition).pack(side='left', padx=6)
-        ttk.Button(edit, text='Database', command=lambda: self.workspace.select(self.country_workspace) if self.palette_key()=='Owner' else self.tabs.select(self.definitions_panel.master)).pack(side='left')
+        ttk.Button(edit, text='Database', command=self.open_database).pack(side='left')
         self.palette_filter = ttk.Entry(tab, textvariable=self.palette_search)
         self.palette_filter.pack(fill='x', pady=6)
         self.palette_filter.bind('<KeyRelease>', lambda e: self.refresh_palette())
@@ -223,8 +233,20 @@ class Painter(ttk.Frame):
         if brush == 'Species':
             return 'Species' if self.species_part.get() == 'Majority' else 'Minority'
         if brush == 'Inspect':
-            return self.layer.get() if self.layer.get() in {'Culture', 'Species', 'Minority', 'Wonder'} else 'Owner'
+            return self.layer.get() if self.layer.get() in {'Culture', 'Species', 'Minority', 'Wonder', 'States', 'Strategic regions', 'VPs'} else 'Owner'
         return brush
+
+    def layer_changed(self, event=None):
+        if self.layer.get() == 'VPs': self.brush.set('VPs')
+        elif self.layer.get() in {'States','Strategic regions'} or self.brush.get() == 'VPs': self.brush.set('Inspect')
+        self.palette_search.set(''); self.refresh_palette(); self.refresh_map()
+
+    def open_database(self):
+        mode = self.palette_key()
+        if mode == 'Owner': self.workspace.select(self.country_workspace)
+        elif mode in {'States','Strategic regions','VPs'}:
+            self.geography_panel.kind.set(mode); self.tabs.select(self.geography_panel.master); self.geography_panel.refresh()
+        else: self.tabs.select(self.definitions_panel.master)
 
     def brush_changed(self, event=None):
         mode = self.brush.get()
@@ -238,7 +260,9 @@ class Painter(ttk.Frame):
     def refresh_palette(self):
         mode = self.palette_key()
         self.palette_title.set({'Owner': 'Countries', 'Culture': 'Cultures',
-                                'Species': 'Majority species', 'Minority': 'Minority species', 'Wonder': 'Wonders'}[mode])
+                                'Species': 'Majority species', 'Minority': 'Minority species', 'Wonder': 'Wonders',
+                                'States':'States', 'Strategic regions':'Strategic regions', 'VPs':'Victory points'}[mode])
+        self.new_definition_button.configure(state='disabled' if mode in {'States','Strategic regions'} else 'normal', text='New VP on map' if mode=='VPs' else 'New definition')
         self.species_controls.pack_forget()
         self.culture_controls.pack_forget()
         self.wonder_controls.pack_forget()
@@ -254,6 +278,13 @@ class Painter(ttk.Frame):
                        for tag in sorted(self.world.country_paths)]
         elif mode == 'Wonder':
             entries = [(0, 'No wonder (erase)', (90, 94, 100))] + [(r.key, r.name, (190, 155, 70)) for r in self.catalog_store.wonder_records().values()]
+        elif mode == 'States':
+            entries = [(sid,self.world.label(s.name),(100,150,190)) for sid,s in self.world.states.items()]
+        elif mode == 'Strategic regions':
+            entries = [(rid,self.world.label(r['name']),(100,150,190)) for rid,r in self.world.regions.items()]
+        elif mode == 'VPs':
+            records=self.geography_store.victory_points();maximum=max((r['value'] for r in records.values()),default=1)
+            entries=[(pid,f'{r["name"]} — {r["value"]} VP',vp_color(r['value'],maximum)) for pid,r in records.items()]
         else:
             colours = self.world.culture_colours if mode == 'Culture' else (
                 self.world.species_colours if mode == 'Species' else self.world.minority_colours)
@@ -279,9 +310,16 @@ class Painter(ttk.Frame):
                 self.palette.selection_set(item)
                 self.palette.see(item)
         self.paint_label.set(f'Selected {mode.lower()}: {selected}' if selected is not None else 'Select something to paint.')
+        if mode=='VPs': self.paint_label.set(f'Click any land province to add/edit a VP. Blue → red: 1–{maximum} VP. Names and values appear when zoomed in.')
 
     def open_definition(self, create=False):
         mode = self.palette_key()
+        if mode in {'States','Strategic regions','VPs'}:
+            if mode=='VPs' and create: self.geography_panel.new_vp()
+            else:
+                key=self.paint_selection.get(mode)
+                if key is not None: {'States':self.geography_panel.open_state,'Strategic regions':self.geography_panel.open_region,'VPs':self.geography_panel.open_vp}[mode](key)
+            return
         if mode=='Owner':
             self.countries_panel.open(None if create else self.paint_selection.get('Owner'))
             return
@@ -298,6 +336,7 @@ class Painter(ttk.Frame):
 
     def paint_press(self, event):
         self.drag_seen.clear()
+        self._vp_seen.clear()
         self.pick_only = bool(event.state & 1)
         self.pick(event)
 
@@ -326,6 +365,7 @@ class Painter(ttk.Frame):
         self.canvas.bind('<B3-Motion>', self.pan_map)
         self.canvas.bind('<Configure>', lambda e: self.view_moved())
         self.canvas.bind('<MouseWheel>', lambda e: self.change_zoom(1.2 if e.delta > 0 else 1/1.2))
+        self.canvas.bind('<Double-1>', self.edit_map_geography)
 
     def _state_panel(self, tab):
         # Scroll the form so every field remains reachable at the minimum window size.
@@ -344,6 +384,8 @@ class Painter(ttk.Frame):
         self.state_details = tk.StringVar(value='')
         ttk.Label(inspector, textvariable=self.state_title, font=('Segoe UI', 12, 'bold'), wraplength=380).pack(anchor='w')
         ttk.Label(inspector, textvariable=self.state_details, wraplength=380).pack(anchor='w', pady=8)
+        ttk.Button(inspector,text='Edit state',command=lambda:self.geography_panel.open_state(self.current_state)).pack(fill='x',pady=3)
+        ttk.Button(inspector,text='Edit strategic region',command=self.edit_current_region).pack(fill='x',pady=3)
         ttk.Separator(inspector).pack(fill='x', pady=8)
         ttk.Label(inspector, text='State demographics · DRAFT').pack(anchor='w')
         self.demographic_boxes = []
@@ -485,6 +527,8 @@ class Painter(ttk.Frame):
         rows=self.library.selection()
         if rows:
             path=self.library_paths.get(rows[0])
+            for sid,state in self.world.states.items():
+                if state.path==path:self.geography_panel.open_state(sid);return
             for tag,history in self.world.countries.items():
                 if history==path:self.countries_panel.open(tag);return
 
@@ -573,6 +617,7 @@ class Painter(ttk.Frame):
     def refresh_map(self):
         self.cancel_map_job()
         self.catalog_store.sync_world()
+        self.geography_store.sync_world()
         self.draw_map()
 
     def cancel_map_job(self):
@@ -632,8 +677,55 @@ class Painter(ttk.Frame):
         self._drawn_view = size, box
         self.canvas.tag_lower('map')
         self.canvas.delete('wonder')
+        self.canvas.delete('vp')
         if self.layer.get() == 'Wonder':
             self.draw_wonders()
+        elif self.layer.get() == 'VPs': self.draw_victory_points()
+
+    def draw_victory_points(self):
+        points=self.geography_store.province_points();records=self.geography_store.victory_points()
+        maximum=max((r['value'] for r in records.values()),default=1);box=self._drawn_view[1]
+        for pid,r in records.items():
+            if pid not in points:continue
+            x,y=points[pid];x*=self.zoom;y*=self.zoom
+            if not (box[0]-160<=x<=box[2]+160 and box[1]-40<=y<=box[3]+40):continue
+            colour='#%02x%02x%02x'%vp_color(r['value'],maximum);radius=3 if self.zoom<.65 else 5
+            self.canvas.create_oval(x-radius,y-radius,x+radius,y+radius,fill=colour,outline='#ffffff',tags='vp')
+            if self.zoom>=.65:
+                label=f'{r["name"]} ({r["value"]})'
+                self.canvas.create_text(x+1,y-10,text=label,fill='#10141b',anchor='s',tags='vp')
+                self.canvas.create_text(x,y-11,text=label,fill='#ffffff',anchor='s',tags='vp')
+
+    def edit_current_region(self):
+        if self.current_state is not None:
+            pid=next(iter(self.world.states[self.current_state].provinces),None)
+            self.geography_panel.open_region(self.world.province_regions.get(pid))
+
+    def edit_map_geography(self,event):
+        if self.brush.get()!='Inspect' or self.geography_picker:return
+        x,y=int(self.canvas.canvasx(event.x)/self.zoom),int(self.canvas.canvasy(event.y)/self.zoom)
+        ids=self.world.map_ids
+        if 0<=y<ids.shape[0] and 0<=x<ids.shape[1]:
+            pid=int(ids[y,x])
+            if self.layer.get()=='Strategic regions':self.geography_panel.open_region(self.world.province_regions.get(pid))
+            else:self.geography_panel.open_state(self.world.province_states.get(pid))
+        return 'break'
+
+    def begin_geography_pick(self,dialog,callback,kind,allowed=None):
+        if self.geography_picker:self.finish_geography_pick()
+        if dialog is not None:dialog.grab_release();dialog.withdraw()
+        self.geography_picker=(dialog,callback,kind,allowed)
+        self.workspace.select(self.map_workspace);self.tabs.select(self.map_tab)
+        self._geography_escape=self.root.bind('<Escape>',lambda e:self.finish_geography_pick(),add='+')
+        self._status(f'Pick a {kind} on the map. Escape cancels.')
+
+    def finish_geography_pick(self,chosen=None):
+        if not self.geography_picker:return
+        dialog,callback,kind,allowed=self.geography_picker;self.geography_picker=None
+        self.root.unbind('<Escape>',self._geography_escape)
+        if dialog is not None and dialog.winfo_exists():dialog.deiconify();dialog.lift();dialog.grab_set()
+        self._status()
+        if chosen is not None:callback(chosen)
 
     def draw_wonders(self):
         if not hasattr(self, '_state_centers'):
@@ -681,13 +773,30 @@ class Painter(ttk.Frame):
             return
         pid = int(ids[y, x])
         sid = self.world.province_states.get(pid)
-        if sid is None:
-            self._status(f'Province {pid}: no state assignment')
-            return
+        if self.geography_picker:
+            dialog,callback,kind,allowed=self.geography_picker
+            if allowed is not None and pid not in allowed:self._status('Choose a province inside the edited state');return
+            chosen=sid if kind=='state' else self.world.province_regions.get(pid) if kind=='region' else pid
+            if chosen is None or kind=='province' and (sid is None or self.world.provinces[pid]['type']!='land'):
+                self._status('Choose a land province belonging to a state');return
+            self.finish_geography_pick(chosen);return
         if getattr(self,'capital_picker',None) is not None:
+            if sid is None:self._status('Choose a state for the capital');return
             dialog=self.capital_picker;self.capital_picker=None
             self.root.unbind('<Escape>',self._capital_escape)
             dialog.receive_capital(sid);self._status('Capital state selected')
+            return
+        if self.layer.get()=='Strategic regions' and self.brush.get()=='Inspect':
+            self.paint_selection['Strategic regions']=self.world.province_regions.get(pid)
+        if self.brush.get()=='VPs':
+            if pid in self._vp_seen:return
+            self._vp_seen.add(pid)
+            if sid is not None and self.world.provinces[pid]['type']=='land':
+                if self.pick_only:self.paint_selection['VPs']=pid;self.refresh_palette()
+                else:self.geography_panel.open_vp(pid)
+            return
+        if sid is None:
+            self._status(f'Province {pid}: no state assignment')
             return
         if sid in self.drag_seen: return
         if self.pick_only or getattr(event, 'state', 0) & 1:
@@ -702,6 +811,8 @@ class Painter(ttk.Frame):
                 target = next(iter(data['culture']), None)
             elif mode == 'Wonder':
                 target = self.catalog_store.wonder_sites().get(sid, 0)
+            elif mode == 'States':target=sid
+            elif mode == 'Strategic regions':target=self.world.province_regions.get(pid)
             else:
                 target = data['species' if mode == 'Species' else 'minority']
             if target is not None:
@@ -713,6 +824,7 @@ class Painter(ttk.Frame):
             self._status(f'Picked {mode.lower()} from state {sid}')
             return
         if self.brush.get() == 'Inspect':
+            if self.layer.get()=='States':self.paint_selection['States']=sid
             self.inspect_state(sid)
             self._status(f'Province {pid}: state {sid}')
             return
@@ -882,8 +994,10 @@ class Painter(ttk.Frame):
         self._library()
         self.world.normalise_demographics()
         self.catalog_store.sync_world()
+        self.geography_store.sync_world()
         self.refresh_palette()
         self.definitions_panel.refresh()
+        self.geography_panel.refresh()
         self.populate_fields()
         self.refresh_map()
         if self.current_state:
@@ -895,6 +1009,7 @@ class Painter(ttk.Frame):
         self.flag_target_box.configure(values=[Choice('Unassigned draft','Unassigned draft')]+list(self.character_store.choices('countries')))
 
     def prepare_save(self):
+        self.geography_store.validate_save()
         self.world.normalise_demographics()
         self.character_store.prepare_save()
 

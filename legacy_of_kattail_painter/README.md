@@ -401,3 +401,61 @@ filter Stellaris masks, native imports, EU4 imports or No emblem. Arrow keys mov
 between tiles and Enter accepts. No emblem is a selectable tile. Only visible
 rows are rendered, with bounded memory caches; no disk thumbnails/data files are
 created. The ordinary entry fields still accept name/ID typing.
+
+### States, strategic regions and victory points
+
+Restart the painter. In **MAP > States / regions / VPs**, choose a database,
+search its localized names/IDs, and double-click an entry. The State setup sidebar
+also has **Edit state** and **Edit strategic region**. With the Inspect brush,
+double-click the map to edit a state; in the **Strategic regions** view this opens
+the region instead, including regions at sea. The States source library also
+opens the state editor on double-click.
+
+The state editor changes the displayed name, population, category, building-slot
+multiplier, local supplies, impassability, resources, owner/controller, cores,
+claims, culture/species and VPs. Buildings distinguish shared slots, nonshared
+state buildings and province buildings. Choose a province by name/ID search or
+on the map. Defined level limits, coastal requirements, facility groups,
+exclusive buildings and required existing facility/dam map placements are checked
+when applying. Supply nodes use `map/supply_nodes.txt`. Railway routes and map
+building spawn positions are not generated here. State/province shapes are fixed.
+
+Region membership moves **whole states**. Add an existing state to move all of its
+provinces into the region. Removing a state requires another destination region;
+an empty region or a split/unassigned state is rejected. Region indices, map
+boundaries and region painting update with Apply/Undo. Sea provinces outside
+states remain in their existing region. The region form also edits its localized
+name, native naval terrain (for sea provinces, including mixed land/sea regions),
+and weather periods, temperature ranges and phenomenon weights. Dates use the
+game's zero-based `day.month` calendar. Weights need not sum to one.
+
+**Import weather** reads a selected region from the installed vanilla game,
+optionally shifting seasons by six months and importing its naval terrain. It
+does not import province membership, IDs or names. There are 30
+[Köppen-inspired climate classes](https://www.gloh2o.org/koppen/), each with North
+and South variants. The classification reference is
+[Beck et al. (2023)](https://doi.org/10.1038/s41597-023-02549-6); preset temperatures
+and weather weights are editor approximations, not measured climate data or a
+conversion of the published dataset. Apply a preset, then edit its monthly values.
+
+Choose **View: VPs** (or **Paint: VPs**) and click any land province to add/edit its
+VP name and positive integer value. Existing points can also be removed. The map
+uses a blue-to-red gradient scaled to the largest VP, with markers and names plus
+values at zoom 0.65 and above. **New VP on map** also works from the database or
+state form. VP geometry is cached in memory; only nearby labels are drawn.
+
+Names use existing native localization owners; state attributes/buildings and
+VP values use their state histories, while region data uses
+`map/strategicregions/*.txt`. Applying a VP consolidates exact base
+`VICTORY_POINTS_<province ID>` names into the existing
+`localisation/english/victory_points_l_english.yml`, sorted alphabetically by
+displayed place name, then numeric province ID for ties. Original version markers
+and inline comments are retained. Country-specific suffixed VP variants remain
+in their original files; conflicting base names stop the operation. Removing a
+point retains its authored name. Dated/conditional histories and unrelated script
+fields remain intact.
+
+Apply stages drafts; Cancel includes nested VP edits, and Undo/Redo work across
+the native files. **Save** writes them with the existing guarded backups. No
+painter-specific game-data files, JSON catalogs or disk thumbnail caches are
+created. Validation details and limitations are in MODLOG.md.

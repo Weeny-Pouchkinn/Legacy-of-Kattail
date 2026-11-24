@@ -783,3 +783,94 @@ Validation:
 
 No live game-data write, external publication or screenshot-based visual review.
 This is a native editor UI change; no campaign behavior or map topology changed.
+
+## 2026-11-24 — Native state/region authoring and victory-point map
+
+Completed on Painter-Test. New MAP database, sidebar buttons, States library
+double-click and Inspect/map double-click open transactional native editors.
+State forms cover localized names, population/category/slot factor/local supplies/
+impassability, resources, owner/controller/cores/claims, demographics, VPs and
+shared/nonshared/province buildings. Building validation uses native definitions:
+levels and scopes, coasts, exclusive types, per-state facility groups and existing
+facility/dam spawn placements. Supply-node levels use map/supply_nodes.txt;
+railway routes and spawn placements are outside this editor.
+
+Region forms edit localized names, naval terrain and period weather, and transfer
+whole states between existing regions. Every state's provinces must all belong
+to exactly one region; empty regions are rejected. Regions may retain sea-only
+provinces after their last state is moved. Indices and boundary overlays refresh
+after Apply/Undo/Cancel. Native mixed land/sea regions already use naval terrain;
+it applies to their sea provinces and is preserved during editing.
+
+Weather import reads installed vanilla regions without importing IDs, names or
+membership. Optional six-month shifting preserves whole calendar months. Thirty
+Köppen-inspired classes have North/South profiles, each with 12 editable monthly
+periods. Classification reference: https://doi.org/10.1038/s41597-023-02549-6 and
+the authors' https://www.gloh2o.org/koppen/ project. Temperature/phenomenon weights
+are our game-editor approximations, not the paper's dataset or measured climate.
+Weather fields are nonnegative weights (not probabilities), with finite ordered
+temperature bounds and native zero-based day.month dates. Unknown period and
+weather fields/comments remain when editing existing values.
+
+VPs is a new view/brush: click a land province to create/edit its name and positive
+integer value, or remove an existing point. Province colors use a blue/red
+gradient; marker labels show names/values at zoom >= 0.65. Province representative
+pixels are computed once in memory and labels are culled to the viewport.
+Base VICTORY_POINTS_<numeric ID> localizations consolidate on VP Apply into the
+existing victory_points_l_english.yml, alphabetically by localized name, then
+numeric ID. Existing version markers, inline notes and BOM survive. Suffixed
+country-specific variants remain untouched; conflicting base names roll back the
+operation. VP removal retains authored localization. Direct starting history is
+edited; dated/conditional setup and unknown fields are preserved.
+
+Files changed:
+- legacy_of_kattail_painter/geography_model.py — native writers, validation,
+  import/presets, VP localization, geometry and synchronization.
+- legacy_of_kattail_painter/geography_ui.py — database and three modal forms.
+- legacy_of_kattail_painter/painter.py — entry points, map handoff, layers/labels,
+  save and synchronization integration; capital picking retains precedence.
+- legacy_of_kattail_painter/model.py — atomic native region-index reload with
+  source paths and region/VP map palettes, including sea-region colors.
+- legacy_of_kattail_painter/install.py — package the new modules/tests.
+- legacy_of_kattail_painter/test_geography.py — 15 new model/form checks.
+- legacy_of_kattail_painter/test_painter.py — existing drag fixture includes the
+  new map state; its behavior assertions remain unchanged.
+- legacy_of_kattail_painter/README.md and PLAN.md; project memory
+  modding_documentation/agent_memory/{CURRENT_STATUS,DECISIONS}.md.
+
+No game IDs, state/province geometry, default authored setup or painter-specific
+game-data files were created. Names/values refer to existing native name keys,
+state history building/resource fields, strategic_region/weather/period and
+VICTORY_POINTS_<ID>. Desired changes stage as drafts and use existing guarded
+Save/backups. The implementation itself did not save native data to the live mod.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  98 passed (83 existing + 15 new). Disposable fixtures cover Save/reload, BOM,
+  preserved dates/unknown scopes, building scope/caps/coasts/facility groups,
+  supply-file updates, whole-state transfer/Undo, split/unassigned/empty rejection,
+  all 30 climates in both hemispheres, vanilla month shifting, VP pairs/gradient/
+  consolidation/versions/comments/variants/conflicts, nested VP Apply/state Cancel,
+  region form Apply/Undo and country capital selection while the VP brush is set.
+- py_compile.compile(..., doraise=True), bytecode output in Temp, passed for
+  painter.py, model.py, install.py, geography_model.py, geography_ui.py,
+  test_geography.py and test_painter.py. Tracked bytecode generated by initial
+  checks was restored; no cache changes are part of this patch.
+- Native read-only audit loaded 1,902 states, 413 regions, 1,552 VPs, 31 building
+  types and 4,791 weather periods; all period values/dates validated.
+- Native alpha-zero mapped Tk probe, Save disabled: state/region/VP forms opened;
+  map pick withdrew/restored the parent and grab; minimum 1030x730 region layout
+  kept Update period and Apply region reachable; South preset generated 12 months;
+  VP zoom drew 252 viewport canvas items; database showed all 1,902 states. No Tk
+  callback errors or remaining drafts. All state, region and English-localization
+  source hashes were unchanged. Initial probes found a Tk method-name collision
+  in the state form and the incorrect sea-only terrain restriction; both were
+  fixed before the passing probe.
+- python -B tools/validate_map.py: only two established unrelated errors remain,
+  railways.txt:893 (20839–20841) and :894 (20841–19461).
+- Scoped Git whitespace/diff review passed. No game launch, CWTools validation,
+  live Save or screenshot-based visual review is claimed.
+
+Remaining: user-selected edits and their in-game checks after Save. Presets are
+editable approximations. State reshaping and railway/spawn generation remain
+outside the requested scope.

@@ -1,5 +1,29 @@
 # Current status
 
+## Native state/region editors and VP layer (2026-11-24)
+
+On Painter-Test: MAP > States / regions / VPs, sidebar/library and map
+double-click entry points now edit state names, native attributes/resources,
+shared/nonshared/province buildings, ownership and demographics. Regions move
+whole states, reject empty regions and split/unassigned states, and edit names,
+naval terrain and weather. Vanilla weather import and 30 editable Köppen-inspired
+North/South presets are available. VPs have a gradient map layer, zoomed labels,
+map placement/edit/remove and alphabetical base-name localization consolidation.
+All data uses existing native files; no painter metadata. No reshaping, railway
+route generation or map spawn generation. Restart the painter to load the UI.
+
+All 98 painter tests pass. Isolated model/form tests cover Save/reload,
+BOM/versions/comments, unknown/dated
+history, building constraints, supply nodes, whole-state transfers/Undo, presets,
+vanilla import, VP sorting/conflicts/variants and nested Cancel. Native alpha-zero
+mapped Tk checked the three forms, map handoff/grab, minimum-size weather controls,
+252 viewport VP items, all 1,902 state rows and unchanged state/region/English-loc
+source hashes. Native audit: 413 regions, 1,552 VPs and 4,791 valid weather periods.
+Map validation still has only the known railway errors at lines 893–894. No live
+Save, game launch or CWTools claim. Exact files/commands: painter/MODLOG (full path
+`legacy_of_kattail_painter/MODLOG.md`). Next action: user authoring and game checks
+after saving desired edits; no implementation blocker remains.
+
 ## Visual flag background/emblem pickers (2026-11-24)
 
 COUNTRIES > Flags arrows, entry double-clicks and Browse buttons now open visual

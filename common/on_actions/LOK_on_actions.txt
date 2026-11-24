@@ -1563,14 +1563,14 @@ on_actions = {
 						tag = DOM
 					}
 				}
-				add_ideas = specialty_nuclear
-				add_tech_bonus = {
+				if = { limit = { NOT = { has_country_flag = lok_country_attribute_defined_in_history } } add_ideas = { specialty_nuclear } }
+				if = { limit = { NOT = { has_country_flag = lok_country_attribute_defined_in_history } } add_tech_bonus = {
 					name = specialty_nuclear
 					bonus = 0
 					uses = 1000
 					ahead_reduction = 1
 					category = nuclear
-				}
+				} }
 			}
 
 			every_possible_country = {
@@ -1583,18 +1583,18 @@ on_actions = {
 						is_roqualian_releasable = yes
 					}
 				}
-				add_ideas = specialty_computing
-				add_tech_bonus = {
+				if = { limit = { NOT = { has_country_flag = lok_country_attribute_defined_in_history } } add_ideas = { specialty_computing } }
+				if = { limit = { NOT = { has_country_flag = lok_country_attribute_defined_in_history } } add_tech_bonus = {
 					name = specialty_computing
 					bonus = 0
 					uses = 1000
 					ahead_reduction = 1
 					category = computing_tech
-				}
+				} }
 			}
 
 			TAK = {
-				add_ideas = specialty_lacking_tech
+				if = { limit = { NOT = { has_country_flag = lok_country_attribute_defined_in_history } } add_ideas = { specialty_lacking_tech } }
 			}
 
 			every_possible_country = {
@@ -1605,181 +1605,181 @@ on_actions = {
 						has_idea = specialty_computing
 					}
 				}
-				add_ideas = specialty_nothing
+				if = { limit = { NOT = { has_country_flag = lok_country_attribute_defined_in_history } } add_ideas = { specialty_nothing } }
 			}
 
 			#Setup COUNTRY species
 			every_possible_country = {
-				add_ideas = var_species_0
+				if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_0 } }
 				if = {
 					limit = { is_herzlands_warlord = yes }
-					remove_ideas = var_species_0
-					add_ideas = var_species_1
+					if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } }
+					if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } }
 				}
 				if = {
 					limit = { is_roqualian_splinter = yes }
-					remove_ideas = var_species_0
-					add_ideas = var_species_3
+					if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } }
+					if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } }
 				}
 			}
 			# Countries restored from the EU4 bookmark.
-			COU = { remove_ideas = var_species_0 add_ideas = var_species_0 }
-			DAW = { remove_ideas = var_species_0 add_ideas = var_species_24 }
-			ELC = { remove_ideas = var_species_0 add_ideas = var_species_9 }
-			HIV = { remove_ideas = var_species_0 add_ideas = var_species_31 }
-			INT = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			IOS = { remove_ideas = var_species_0 add_ideas = var_species_14 }
-			LAU = { remove_ideas = var_species_0 add_ideas = var_species_0 }
-			LAK = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			MAG = { remove_ideas = var_species_0 add_ideas = var_species_30 }
-			NDF = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			SNO = { remove_ideas = var_species_0 add_ideas = var_species_0 }
-			TUN = { remove_ideas = var_species_0 add_ideas = var_species_0 }
-			URS = { remove_ideas = var_species_0 add_ideas = var_species_35 }
-			USS = { remove_ideas = var_species_0 add_ideas = var_species_35 }
-			VIV = { remove_ideas = var_species_0 add_ideas = var_species_6 }
-			VPL = { remove_ideas = var_species_0 add_ideas = var_species_31 }
-			WMD = { remove_ideas = var_species_0 add_ideas = var_species_15 }
+			COU = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_0 } } }
+			DAW = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_24 } } }
+			ELC = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_9 } } }
+			HIV = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_31 } } }
+			INT = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			IOS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_14 } } }
+			LAU = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_0 } } }
+			LAK = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			MAG = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_30 } } }
+			NDF = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			SNO = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_0 } } }
+			TUN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_0 } } }
+			URS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_35 } } }
+			USS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_35 } } }
+			VIV = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } }
+			VPL = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_31 } } }
+			WMD = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_15 } } }
 
 			#Katzens
-			KTZ = { remove_ideas = var_species_0 add_ideas = var_species_1 }
+			KTZ = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
 
-			SMI = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			FKS = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			POT = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			BSS = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			POT = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			PUR = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			PSR = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			KKN = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_7 }
+			SMI = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			FKS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			POT = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			BSS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			POT = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			PUR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			PSR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			KKN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_7 } } }
 
-			BAS = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_3 }
+			BAS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
 
-			SOB = { remove_ideas = var_species_0 add_ideas = var_species_2 }
-			NDB = { remove_ideas = var_species_0 add_ideas = var_species_2 add_ideas = var_species_1 }
+			SOB = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_2 } } }
+			NDB = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_2 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
 
-			SAR = { remove_ideas = var_species_0 add_ideas = var_species_9 }
-			FMT = { remove_ideas = var_species_0 add_ideas = var_species_9 }
+			SAR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_9 } } }
+			FMT = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_9 } } }
 
-			KTN = { remove_ideas = var_species_0 add_ideas = var_species_19 }
-			SMP = { remove_ideas = var_species_0 add_ideas = var_species_44 }
-			KAP = { remove_ideas = var_species_0 add_ideas = var_species_48 }
-			PRC = { remove_ideas = var_species_0 add_ideas = var_species_47 }
-			MUL = { remove_ideas = var_species_0 add_ideas = var_species_45 }
-			LTR = { remove_ideas = var_species_0 add_ideas = var_species_46 }
-			NFS = { remove_ideas = var_species_0 add_ideas = var_species_34 }
-
-
-			ROQ = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			TAK = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			LMB = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			PER = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			WSF = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			NRW = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			RST = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			PRO = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			KEP = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			TEN = { remove_ideas = var_species_0 add_ideas = var_species_3 add_ideas = var_species_0 }
-			KOT = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-			SLR = { remove_ideas = var_species_0 add_ideas = var_species_3 }
-
-			RQA = { remove_ideas = var_species_0 add_ideas = var_species_3 add_ideas = var_species_1 }
-			FSR = { remove_ideas = var_species_0 add_ideas = var_species_3 add_ideas = var_species_1 }
-			DOM = { remove_ideas = var_species_0 add_ideas = var_species_1 }
+			KTN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_19 } } }
+			SMP = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_44 } } }
+			KAP = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_48 } } }
+			PRC = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_47 } } }
+			MUL = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_45 } } }
+			LTR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_46 } } }
+			NFS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_34 } } }
 
 
-			PLA = { remove_ideas = var_species_0 add_ideas = var_species_33 }
+			ROQ = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			TAK = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			LMB = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			PER = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			WSF = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			NRW = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			RST = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			PRO = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			KEP = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			TEN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_0 } } }
+			KOT = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			SLR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
 
-			CRA = { remove_ideas = var_species_0 add_ideas = var_species_36 }
+			RQA = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			FSR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			DOM = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
 
-			FOD = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_7 add_ideas = var_species_24 }
-			KKN = { remove_ideas = var_species_0 add_ideas = var_species_1 }
-			EUL = { remove_ideas = var_species_0 add_ideas = var_species_7 }
-			KRO = { remove_ideas = var_species_0 add_ideas = var_species_7 }
-			NKR = { remove_ideas = var_species_0 add_ideas = var_species_7 add_ideas = var_species_24 }
+
+			PLA = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_33 } } }
+
+			CRA = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_36 } } }
+
+			FOD = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_7 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_24 } } }
+			KKN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
+			EUL = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_7 } } }
+			KRO = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_7 } } }
+			NKR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_7 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_24 } } }
 			#DAW = { remove_ideas = var_species_0 add_ideas = var_species_24 }
-			BAZ = { remove_ideas = var_species_0 add_ideas = var_species_25 }
-			YIN = { remove_ideas = var_species_0 add_ideas = var_species_24 }
+			BAZ = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_25 } } }
+			YIN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_24 } } }
 
-			ACR = { remove_ideas = var_species_0 add_ideas = var_species_7 add_ideas = var_species_24 }
+			ACR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_7 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_24 } } }
 
-			PLR = { remove_ideas = var_species_0 add_ideas = var_species_15 }
-			KAR = { remove_ideas = var_species_0 add_ideas = var_species_15 }
-			HAR = { remove_ideas = var_species_0 add_ideas = var_species_15 }
+			PLR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_15 } } }
+			KAR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_15 } } }
+			HAR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_15 } } }
 
-			DRO = { remove_ideas = var_species_0 add_ideas = var_species_26 }
-			FRO = { remove_ideas = var_species_0 add_ideas = var_species_26 }
-			ITZ = { remove_ideas = var_species_0 add_ideas = var_species_26 }
+			DRO = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_26 } } }
+			FRO = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_26 } } }
+			ITZ = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_26 } } }
 			#VAL = { remove_ideas = var_species_0 add_ideas = var_species_26 }
 
-			PUF = { remove_ideas = var_species_0 add_ideas = var_species_6 }
-			PMW = { remove_ideas = var_species_0 add_ideas = var_species_6 }
-			PMT = { remove_ideas = var_species_0 add_ideas = var_species_6 }
-			PMA = { remove_ideas = var_species_0 add_ideas = var_species_6 add_ideas = var_species_3 }
-			PMM = { remove_ideas = var_species_0 add_ideas = var_species_6 }
-			PMC = { remove_ideas = var_species_0 add_ideas = var_species_6 }
-			PMD = { remove_ideas = var_species_0 add_ideas = var_species_6 }
+			PUF = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } }
+			PMW = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } }
+			PMT = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } }
+			PMA = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			PMM = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } }
+			PMC = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } }
+			PMD = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_6 } } }
 			#VIV = { remove_ideas = var_species_0 add_ideas = var_species_6 }
 			#NDF = { remove_ideas = var_species_0 add_ideas = var_species_3 add_ideas = var_species_6 }
 
-			FOF = { remove_ideas = var_species_0 add_ideas = var_species_31 }
-			FOR = { remove_ideas = var_species_0 add_ideas = var_species_31 }
+			FOF = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_31 } } }
+			FOR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_31 } } }
 			#VPL = { remove_ideas = var_species_0 add_ideas = var_species_31 }
-			ANT = { remove_ideas = var_species_0 add_ideas = var_species_31 }
+			ANT = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_31 } } }
 
-			FRU = { remove_ideas = var_species_0 add_ideas = var_species_30 }
+			FRU = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_30 } } }
 
-			MER = { remove_ideas = var_species_0 add_ideas = var_species_29 }
-			VAS = { remove_ideas = var_species_0 add_ideas = var_species_29 }
+			MER = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_29 } } }
+			VAS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_29 } } }
 
-			SOF = { remove_ideas = var_species_0 add_ideas = var_species_32 }
+			SOF = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_32 } } }
 
-			KUS = { remove_ideas = var_species_0 add_ideas = var_species_12 }
-			VIX = { remove_ideas = var_species_0 add_ideas = var_species_12 }
+			KUS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_12 } } }
+			VIX = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_12 } } }
 
-			MCF = { remove_ideas = var_species_0 add_ideas = var_species_13 }
+			MCF = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_13 } } }
 
-			NEK = { remove_ideas = var_species_0 add_ideas = var_species_14 }
+			NEK = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_14 } } }
 			#IOS = { remove_ideas = var_species_0 add_ideas = var_species_14 }
 
-			ENO = { remove_ideas = var_species_0 add_ideas = var_species_27 }
-			TEM = { remove_ideas = var_species_0 add_ideas = var_species_27 }
+			ENO = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_27 } } }
+			TEM = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_27 } } }
 
-			BRA = { remove_ideas = var_species_0 add_ideas = var_species_10 }
+			BRA = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_10 } } }
 
-			GAL = { remove_ideas = var_species_0 add_ideas = var_species_25 }
-			KOA = { remove_ideas = var_species_0 add_ideas = var_species_25 }
-			PGN = { remove_ideas = var_species_0 add_ideas = var_species_25 }
+			GAL = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_25 } } }
+			KOA = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_25 } } }
+			PGN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_25 } } }
 
-			RQP = { remove_ideas = var_species_0 add_ideas = var_species_1 add_ideas = var_species_3 add_ideas = var_species_25 }
+			RQP = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_25 } } }
 
-			ZUS = { remove_ideas = var_species_0 add_ideas = var_species_4 }
-			UST = { remove_ideas = var_species_0 add_ideas = var_species_4 }
+			ZUS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_4 } } }
+			UST = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_4 } } }
 
 			#USS = { remove_ideas = var_species_0 add_ideas = var_species_35 }
 			#URS = { remove_ideas = var_species_0 add_ideas = var_species_35 }
 
-			NKC = { remove_ideas = var_species_0 add_ideas = var_species_5 }
+			NKC = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_5 } } }
 
-			ALK = { remove_ideas = var_species_0 add_ideas = var_species_28 add_ideas = var_species_3 }
-			CRE = { remove_ideas = var_species_0 add_ideas = var_species_28 }
-			FLE = { remove_ideas = var_species_0 add_ideas = var_species_28 }
-			FLS = { remove_ideas = var_species_0 add_ideas = var_species_28 add_ideas = var_species_2 }
-			FLM = { remove_ideas = var_species_0 add_ideas = var_species_28 add_ideas = var_species_29 }
+			ALK = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_28 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_3 } } }
+			CRE = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_28 } } }
+			FLE = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_28 } } }
+			FLS = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_28 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_2 } } }
+			FLM = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_28 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_29 } } }
 
 
-			KHA = { remove_ideas = var_species_0 add_ideas = var_species_22 }
+			KHA = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_22 } } }
 
-			FST = { remove_ideas = var_species_0 add_ideas = var_species_1 }
+			FST = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
 
-			NMI = { remove_ideas = var_species_0 add_ideas = var_species_8 add_ideas = var_species_1 }
+			NMI = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_8 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_1 } } }
 
-			SLC = { remove_ideas = var_species_0 add_ideas = var_species_49 }
-			DUR = { remove_ideas = var_species_0 add_ideas = var_species_50 }
-			UMR = { remove_ideas = var_species_0 add_ideas = var_species_57 }
-			KOL = { remove_ideas = var_species_0 add_ideas = var_species_58 }
-			IZW = { remove_ideas = var_species_0 add_ideas = var_species_59 }
-			PAN = { remove_ideas = var_species_0 add_ideas = var_species_60 }
+			SLC = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_49 } } }
+			DUR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_50 } } }
+			UMR = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_57 } } }
+			KOL = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_58 } } }
+			IZW = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_59 } } }
+			PAN = { if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } remove_ideas = { var_species_0 } } if = { limit = { NOT = { has_country_flag = lok_country_species_defined_in_history } } add_ideas = { var_species_60 } } }
 
 
 			#Setup STATE species

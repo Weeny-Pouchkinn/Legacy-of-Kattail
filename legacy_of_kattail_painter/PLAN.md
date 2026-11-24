@@ -62,3 +62,17 @@ flags/emblems and created definitions are native assets/database entries.
   keyboard selection, Cancel/accept and bounded lazy rendering; wire arrows/Browse.
 - [x] Verify fixture/native UI, lazy loading, colors, selection/grab restoration,
   unchanged source files and documentation. No new data/cache files.
+
+# 2026-11-24: States, strategic regions and victory points
+
+- [x] Audit native attributes/buildings, complete state-region membership, weather,
+  VP localization, game/vanilla sources and Köppen classification references.
+- [x] Add native state/building, region/weather and VP writers; enforce topology
+  invariants without reshaping states/provinces and preserve unrelated content.
+- [x] Add state/region dialogs, vanilla weather import and hemisphere climate
+  presets, plus a fast VP gradient layer with zoomed labels and map placement.
+- [x] Verify isolated Save/reload, limits, transfers, weather, locale sorting,
+  Undo/Cancel, native read-only UI/data and map validation; update documentation.
+
+All definitions remain in native files. No new painter data files; no live dummy
+entities, state reshaping, province geometry, adjacency or railway editing.
