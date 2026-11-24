@@ -1,5 +1,174 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-24 - Character performance and searchable localized selectors
+
+Profiled native source operations without saving drafts. The main bottleneck
+was character-localization collection: 87.6 million character-prefix comparisons
+in the measured sequence. Replaced that scan with longest-prefix lookup.
+File inventories, parsed files, localization per file, recruitment and native
+trait/ideology catalogs are cached. Derived caches invalidate by changed source
+category, including Undo/Redo, Cancel, discard, creation and deletion. Role fields
+are patched together and unchanged character identity is skipped. Bounded image
+caches retain decoded art and Tk images across unrelated stat/credit edits.
+
+Same cProfile instrumentation on this workstation (seconds, single runs;
+profiling overhead included, not a guarantee for other machines):
+
+| Operation | Before | After |
+|---|---:|---:|
+| Apply character identity | 53.463 | 0.519 |
+| Prepare character save | 29.209 | 0.199 |
+
+Actual hidden-Tk measurements, without cProfile: existing-character open 0.338 s,
+warm open 0.190 s, unchanged identity 0.0012 s, first role open 1.078 s (native
+translation/catalog load), warm role open 0.131 s, apply military stats 0.0256 s,
+refresh after edit 0.0338 s, portrait dialog 0.0904 s, small preview 0.0053 s.
+An earlier synthetic role benchmark used role zero and is not presented as a
+native military-role comparison; benchmark_characters.py now selects the actual
+military role. All benchmark changes remain memory-only drafts.
+
+Added shared ChoiceIndex/ChoiceBox/TraitChoices controls. All application
+dropdowns now accept typing and show localized `Name (ID)` when available, sorted
+alphabetically by displayed name with ID tie-breaks. Search checks both fields,
+ignores case/accents, offers fuzzy matches, and highlights the closest/exact ID
+without reordering the list. Popup lists retain typing focus and support mouse,
+arrow keys, Enter, Tab and Escape. All choices remain scrollable. Names that
+collide require selecting their distinct IDs. Trait selection is localized
+multi-select. Selected labels never become game script IDs. Country/portrait/tag
+filters, roles, ideologies, gender, slots, map modes, state species/cultures,
+owners and flag targets use the same control. Source/palette/emblem lists also
+search both names and IDs; typing in a list transfers into its search field.
+Native trait translations are read from installed English localisation only
+as a fallback to mod strings. Missing localisation retains the code. No game
+localisation, sprites, portraits, character IDs or map data changed in this task.
+
+Files changed (relative to mod root):
+
+- `legacy_of_kattail_painter/model.py`, `character_model.py`, `character_ui.py`,
+  `painter.py`, `install.py`, new `select_ui.py`, `test_selectors.py` and
+  `benchmark_characters.py`.
+- `legacy_of_kattail_painter/README.md`, `MODLOG.md`.
+- `modding_documentation/agent_memory/CURRENT_STATUS.md`, `DECISIONS.md` and
+  `plans/character-performance-selectors.md`.
+
+Identifiers: no game IDs changed. New Python controls are Choice, ChoiceIndex,
+ChoiceBox and TraitChoices. Stored values retain native IDs such as `LAU` and
+`harsh_leader`; visible labels are `Laurandar (LAU)` and
+`Harsh Leader (harsh_leader)`. No `trait_` prefix is invented for native IDs.
+
+Validation:
+
+- `python -B -m unittest discover -s legacy_of_kattail_painter -p 'test*.py'`:
+  51 tests, including typing/code mapping, fuzzy/diacritic matching, duplicate-name
+  grouping, popup keyboard/cancel, nested drafts and targeted cache invalidation.
+- `python -B legacy_of_kattail_painter/benchmark_characters.py --profile`:
+  memory-only timings and 2,795 loaded source snapshots unchanged.
+- `python -B legacy_of_kattail_painter/verify_characters.py`: original migration
+  audit still passes (2,869 paths, 1,408 original asset hashes, 51,295 authored
+  English values, 284 characters, 2,565 portrait pairs).
+- `python -B legacy_of_kattail_painter/verify_real.py --mod . --output
+  '<temporary diagnostics directory>'`: map/state draft, Undo/Redo, flags and
+  source fields pass; all 10,863 source hashes unchanged. Existing four OOB brace
+  errors remain. All 1,026 emblem/size renders pass.
+- Actual native Tk: country name/ID typing and nation/unrecruited filters,
+  localized Harsh Leader suggestions, stat edits, parent Cancel, portrait/tag
+  selection, small generation, map palette/owner/source searches, 1050x680 layout;
+  no callback exceptions and no source writes.
+- Python compilation of all eight changed/new Python files; Git diff/check/stat
+  and new-file whitespace review. No source-data migration required.
+
+Limits: initial native catalogs still require one read per launch. External
+source changes require reload and remain guarded at Save. No in-game or screenshot
+validation. Existing missing portrait references and game diagnostics are unchanged.
+
+## 2026-11-24 - Character workspace and Ministermaker
+
+Added MAP/CHARACTERS main tabs. Characters has a full-width, virtualised large
+portrait gallery sorted by localised names, nation grouping/filter and a section
+for the 12 characters without undated starting recruitment (284 total).
+Character drafts edit identity/name/description/credits, starting recruitment,
+repeated native roles, traits/stats and advanced role fields. Dated/conditional
+history and unknown fields are preserved. Portrait definitions are independent
+large/small pairs with three-character tags, credits/notes and multiple linked
+variants; native civilian/army/navy slots can choose separate pairs. New portrait
+pairs can be created and assigned from the character dialog. Cancel/Undo apply
+to nested edits; Save guards text, new files, image imports and deletions together.
+
+Generate small portrait reproduces the supplied external Ministermaker main
+`ministermaker.py`: 37x51 resize, 5-degree rotation, centred transparent 65x67
+canvas, original border at (8,1). Its exact border is bundled, SHA256
+`6a505780b8c3cd758416393c4eb0d56195d697d6a877c3a8358f47f6d9dec0f2`.
+Verified output pixels against the supplied script using a deterministic image;
+the external directory was not modified. The separate Test/ bulk variant and
+the mod's different root minister_border.png are not used by the new generator.
+The preview stages on Apply; Save writes a TGA with backups.
+
+Applied the reviewed migration: 726 large/source assets and 682 small assets
+moved to leaders/large_portraits and leaders/small_portraits, respectively.
+All 1,408 original byte hashes match. Grouped lok_leader_portraits.gfx by tag,
+preserved animation fields, updated all moved-path references, created 42
+derived small images and reused two authored small images. Consolidated native
+character strings into alphabetic tag/neutral-name sections with localised-name
+ordering and an UNASSIGNED section. All 51,295 English key/value pairs remain
+exactly preserved, including authored descriptions/tokens. UTF-8 BOM retained.
+
+Identifiers: no character IDs renamed or recruitment/roles changed. Fixed the
+conflicting CAT Elwin small sprite by using its expected `_Small` ID. Added
+large aliases `GFX_portrait_PLR_Lenagahn` and `GFX_portrait_PLR_Vesbuncchi`,
+preserving legacy spellings. New authored characters use zz_painter_characters;
+portrait notes/credits/tags/variant links use characters_painter_data.json v1.
+No state, province, region or binary map topology edits belong to this task.
+
+Backups: initial migration `backups/save_20261124_155821_493637/`; final derived
+images `backups/save_20261124_161345_640711/`. Post-move checking caught an initial
+thumbnail overwrite of two authored small files (KTZ_Kaiser_Kattail_Neither and
+PLR_Vesbuncci). Both were restored byte-for-byte from backups. The refactor now
+reuses existing small art before deriving, refuses original-asset hash changes,
+and allocates a different destination rather than overwriting unrelated files.
+This is covered by regression tests. Restore provenance is in the audit.
+
+Files: exact source paths and before/after hashes are in
+`modding_documentation/agent_memory/plans/character-refactor-audit.json`;
+`character-workspace-files.txt` in that directory adds implementation/docs paths.
+The two older root portrait tools received canonical-path updates only.
+Concurrent state-history/importer/validator work was preserved separately.
+
+Validation actually performed:
+
+- `python -B -m unittest discover -s legacy_of_kattail_painter -p 'test*.py'`:
+  42 tests pass, including lossless grouping, repeated roles, variants, recruitment,
+  exact Ministermaker pixels, Save/reload, binary rollback and absent-file Undo.
+- `python -B legacy_of_kattail_painter/verify_characters.py`: passed all 2,869
+  migration output paths/backups, 1,408 original hashes, 51,295 exact English
+  values, 284 identities/recruitments/roles, 2,565 pairs and Save idempotence.
+- `py_compile.compile(..., doraise=True)` for all 12 changed Python files:
+  passed, bytecode redirected outside the workspace.
+- `verify_real.py` after migration: 1,902 states, 198 histories, 4,191 scripts;
+  342 flat masks/1,026 renders; 10,863 source hashes unchanged by testing.
+- Actual `loc_analyzer.main()` baseline/post-migration runs with report-only
+  output redirected to temporary files: identical 2,285 missing-key sets, no
+  new missing keys. Root diagnostic file was not rewritten.
+- Hidden native Tk: both main tabs, 284-character gallery, name/nation sorting,
+  12 unrecruited, Pawtton editor, 2,565-pair gallery/tag filter, widths at 1500x900
+  and 1050x680, Generate button/previews, Apply/Save/reload and Cancel passed.
+- Git diff/check/stat review and per-file review; no relevant whitespace errors.
+- Searched 4,231 active native script files: no stale moved-asset references.
+  All 44 generated/alias sprite IDs are globally unique. Applying a character
+  without changing its primary country preserves multiple native recruitments.
+- `python -B tools/validate_map.py`: only the two previously documented railway
+  non-neighbor links at lines 893-894. No map inputs changed by this task.
+
+Removed trailing whitespace outside two regrouped localisation strings so the
+complete diff check passes; quoted values/BOM/newline style are unchanged.
+Backup: `backups/localisation_whitespace_20261124_161919_026487/`.
+
+Uncertainties: five generic large textures and ten character large sprite
+references were already unresolved in the available indexes (listed in audit).
+No replacement art or lore invented. Four pre-existing EUL/GAL/KKN/KTZ OOB brace
+errors remain. No game or CWTools validation, no screenshot inspection. Restart
+the painter to load the new tabs. Next validation is an in-game portrait/role
+check; there is no remaining editor implementation blocker.
+
 ## 2026-11-24 — Species invariant, boundaries and region scopes
 
 Equal majority/minority species automatically clears the minority to 1000.

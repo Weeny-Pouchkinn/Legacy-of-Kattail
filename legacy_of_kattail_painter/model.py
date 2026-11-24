@@ -4,6 +4,7 @@ from __future__ import annotations
 import colorsys
 import csv
 import hashlib
+import json
 import os
 import re
 from contextlib import contextmanager
@@ -122,25 +123,88 @@ class Documents:
         self.undo_stack = []
         self.redo_stack = []
         self.before_save = None
+        self.revision = 0
 
-    def text(self, relative):
+    def _path(self, relative):
         relative = str(relative).replace('\\', '/')
         path = (self.root / relative).resolve()
         if not path.is_relative_to(self.root):
             raise ValueError('Source path escapes mod root')
+        return relative, path
+
+    @staticmethod
+    def _decode(blob):
+        try:
+            return blob.decode('utf-8-sig')
+        except UnicodeDecodeError:
+            return blob.decode('cp1252')
+
+    def text(self, relative):
+        relative = str(relative).replace('\\', '/')
         if relative not in self.originals:
-            self.snapshots[relative] = path.read_bytes()
-            self.originals[relative] = read_text(path)
-        return self.drafts.get(relative, self.originals[relative])
+            relative, path = self._path(relative)
+            blob = path.read_bytes() if path.is_file() else None
+            self.snapshots[relative] = blob
+            self.originals[relative] = self._decode(blob) if blob is not None else ''
+        current = self.drafts.get(relative, self.originals[relative])
+        if current is None:
+            return ''
+        return self._decode(current) if isinstance(current, bytes) else current
+
+    def binary(self, relative):
+        relative = str(relative).replace('\\', '/')
+        if relative not in self.originals:
+            relative, path = self._path(relative)
+            self.snapshots[relative] = path.read_bytes() if path.is_file() else None
+            self.originals[relative] = self.snapshots[relative]
+        return self._blob(relative, self.drafts.get(relative, self.originals[relative]))
+
+    def _blob(self, relative, value):
+        if not isinstance(value, str):
+            return value
+        original = self.snapshots[relative]
+        if original is None:
+            return value.encode('utf-8-sig' if Path(relative).suffix == '.yml' else 'utf-8')
+        return encode_source(value, original)
+
+    @staticmethod
+    def validate_text(relative, text):
+        suffix = Path(relative).suffix.lower()
+        if suffix == '.json':
+            json.loads(text)
+        elif suffix == '.yml':
+            if 'l_english:' not in text.splitlines():
+                raise ValueError('English localisation header is missing')
+            keys = re.findall(r'^\s*([^\s:#]+):\d*\s*"', text, re.M)
+            if len(keys) != len(set(keys)):
+                raise ValueError('Duplicate localisation keys in ' + relative)
+        else:
+            parse(text)
 
     def replace(self, relative, new):
+        relative, _ = self._path(relative)
         old = self.text(relative)
-        parse(new)
+        self.validate_text(relative, new)
         if new == old:
+            return
+        previous = self.drafts.get(relative, self.originals[relative])
+        if relative not in self.drafts and self.snapshots[relative] is None:
+            previous = None
+        self.undo_stack.append((relative, previous, new))
+        self.redo_stack.clear()
+        self.drafts[relative] = new
+        self.revision += 1
+
+    def stage_bytes(self, relative, new):
+        relative, _ = self._path(relative)
+        self.binary(relative)
+        old = self.drafts.get(relative, self.originals[relative])
+        if self._blob(relative, old) == new:
             return
         self.undo_stack.append((relative, old, new))
         self.redo_stack.clear()
         self.drafts[relative] = new
+        self.revision += 1
 
     def edit(self, relative, node, new):
         source = self.text(relative)
@@ -154,6 +218,7 @@ class Documents:
             for rel, old, new in reversed(entry if isinstance(entry, list) else [entry]):
                 self.drafts[rel] = old
             self.redo_stack.append(entry)
+            self.revision += 1
 
     def redo(self):
         if self.redo_stack:
@@ -161,6 +226,7 @@ class Documents:
             for rel, old, new in entry if isinstance(entry, list) else [entry]:
                 self.drafts[rel] = new
             self.undo_stack.append(entry)
+            self.revision += 1
 
     @contextmanager
     def grouped(self):
@@ -173,6 +239,7 @@ class Documents:
             self.drafts = drafts
             del self.undo_stack[start:]
             self.redo_stack = redo
+            self.revision += 1
             raise
         else:
             records = [record for entry in self.undo_stack[start:]
@@ -181,26 +248,28 @@ class Documents:
                 self.undo_stack[start:] = [records]
 
     def reset(self):
+        self.revision += 1
         self.drafts.clear()
         self.undo_stack.clear()
         self.redo_stack.clear()
 
     @property
     def changed(self):
-        return [p for p, t in self.drafts.items() if t != self.originals[p]]
+        return [p for p, t in self.drafts.items() if self._blob(p, t) != self.snapshots[p]]
 
     def save(self):
         if self.before_save is not None:
             self.before_save()
         changes = {}
         for relative in self.changed:
-            parse(self.drafts[relative])
-            changes[relative] = (self.snapshots[relative],
-                                 encode_source(self.drafts[relative], self.snapshots[relative]))
+            if isinstance(self.drafts[relative], str):
+                self.validate_text(relative, self.drafts[relative])
+            changes[relative] = (self.snapshots[relative], self.binary(relative))
         backup = write_changes(self.root, changes)
         for relative, (_, blob) in changes.items():
+            text = isinstance(self.drafts[relative], str)
             self.snapshots[relative] = blob
-            self.originals[relative] = read_text(self.root / relative)
+            self.originals[relative] = self._decode(blob) if text and blob is not None else blob
         self.reset()
         return len(changes), backup
 
@@ -610,5 +679,6 @@ def default_paths():
         'mod': pdx / 'Hearts of Iron IV/mod/Legacy-of-Kattail',
         'painter': pdx / 'Europa Universalis IV/mod/LegacyOfKattailEU4/tools/culture_painter',
         'stellaris': Path(os.environ.get('ProgramFiles(x86)', 'C:/Program Files (x86)')) / 'Steam/steamapps/common/Stellaris',
+        'game': Path(os.environ.get('ProgramFiles(x86)', 'C:/Program Files (x86)')) / 'Steam/steamapps/common/Hearts of Iron IV',
         'giga': pdx / 'Stellaris/mod/Gigastructures',
     }

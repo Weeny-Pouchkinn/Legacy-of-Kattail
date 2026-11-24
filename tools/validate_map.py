@@ -20,6 +20,28 @@ def error(message: str) -> None:
     ERRORS.append(message)
 
 
+def state_history_count(text: str) -> int:
+    """Count direct state histories, ignoring comments, strings and dated effects."""
+    tokens = re.findall(r'#[^\r\n]*|"(?:\\.|[^"\\])*"|[{}=]|[^\s{}=#"]+', text)
+    tokens = [token for token in tokens if not token.startswith("#")]
+    depth = 0
+    state_depth = None
+    count = 0
+    for index, token in enumerate(tokens):
+        if token == "{":
+            depth += 1
+            if index >= 2 and tokens[index - 2:index] == ["state", "="] and depth == 1:
+                state_depth = depth
+        elif token == "}":
+            if depth == state_depth:
+                state_depth = None
+            depth -= 1
+        elif (token == "history" and state_depth is not None and depth == state_depth
+              and tokens[index + 1:index + 3] == ["=", "{"]):
+            count += 1
+    return count
+
+
 def definition_rows() -> dict[int, list[str]]:
     rows: dict[int, list[str]] = {}
     for line in (ROOT / "map" / "definition.csv").read_text(
@@ -144,6 +166,9 @@ def main() -> int:
                 state_membership[province_id].append(relative)
 
         text = path.read_text(encoding="utf-8-sig")
+        history_count = state_history_count(text)
+        if history_count != 1:
+            error(f"{relative} has {history_count} history blocks; expected exactly one")
         for match in re.finditer(
             r"(?m)^\s*(\d+)\s*=\s*\{([^{}]*)\}",
             text,

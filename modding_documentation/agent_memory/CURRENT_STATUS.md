@@ -1,5 +1,86 @@
 # Current status
 
+## Painter performance and localized selectors (2026-11-24)
+
+Optimized character-localization prefix matching (removed the measured 87.6
+million comparisons), targeted cache invalidation, per-file parsing/catalogs,
+batched role edits, unchanged identity and bounded decoded/Tk portrait caches.
+Profiled identity apply went from 53.463 s to about 0.52 s; save preparation
+29.209 s to about 0.20 s (profiling overhead included). Actual Tk military-stat
+apply 0.0256 s, refresh 0.0338 s, warm character/role dialogs 0.190/0.131 s.
+First role dialog still loads native names once (1.078 s measured).
+
+All dropdowns accept typing. Localized names precede IDs in parentheses;
+alphabetic name/ID ordering, both-field matching, accent/case normalization,
+fuzzy suggestions and keyboard/mouse selection share ChoiceBox. TraitChoices
+supports multiple localized traits. Country/portrait galleries, nation/tag
+filters and map/source/emblem lists use names/IDs consistently. Stored values
+remain raw native IDs. New portrait tags can still be typed directly.
+
+Validation: 51 tests, native hidden-Tk interactions with zero callback errors,
+Python compilation, original character migration audit and real-data map/tool
+checks pass; all 10,863 checked source hashes unchanged. Four pre-existing OOB
+parse errors remain. No game content or assets modified for this optimization.
+Exact files, commands and measurements: legacy_of_kattail_painter/MODLOG.md and
+plans/character-performance-selectors.md. Reproducible read-only benchmark:
+`python -B legacy_of_kattail_painter/benchmark_characters.py --profile`.
+Next: restart the painter. No remaining implementation blocker; no in-game or
+screenshot validation claimed. External source edits still require reload.
+
+## Character workspace and Ministermaker (2026-11-24)
+
+Implemented on Painter-Test: MAP retains existing painting/tools; CHARACTERS has
+localised-name/nation galleries, 284 characters (12 unrecruited), native repeated
+roles/traits/stats/recruitment and description/credits editing. Independent
+portrait library contains 2,565 large/small pairs, arbitrary three-character
+tags, additional linked variants and per-native-slot assignment; pair creation
+also works inside character editing. Drafts, nested Cancel, Undo/Redo and guarded
+Save cover new text/JSON/localisation and binary assets with backup/rollback.
+
+Applied alphabetic tag/neutral-name character localisation and portrait GFX
+organisation. All 51,295 English values and 284 character identities/recruitments/
+roles preserved. Moved 726 large/source + 682 small original assets; every byte
+hash matches. Added 42 derived small portraits, reused two authored images.
+Generate small portrait exactly matches the supplied Ministermaker main script
+(37x51, 5 degrees, centred 65x67, original border at 8,1), including pixel parity.
+An initial overwrite of two small originals was caught/restored from backups;
+the regression fix reuses existing art and guards destination collisions.
+
+Validation: 42 fixture tests, 12 Python compilations, read-only audit of 2,869
+paths/backups, repeated-Save idempotence, hidden Tk sorting/filter/layout/generator
+Apply/Save/reload/Cancel checks pass. Real-data read-only checks preserve 10,863
+hashes. Localisation analyser has identical pre/post 2,285 missing-key sets.
+Exact paths, identifiers, backups and commands: legacy_of_kattail_painter/MODLOG.md
+and plans/character-refactor-audit.json / character-workspace-files.txt.
+
+Limits: five pre-existing generic source textures and ten character sprite
+references remain unresolved in available indexes; four existing OOB parse errors
+remain. No in-game/CWTools or screenshot validation. No state/map topology work
+belongs to this change; concurrent duplicate-history cleanup is preserved below.
+Next: restart painter; verify portraits and edited roles in a fresh game.
+
+## State-history duplicate cleanup (2026-11-24)
+
+Current branch verified as Painter-Test. Audited all 1,902 state files and repaired
+46 duplicate-history files: removed 39 second ZZZ blocks and merged seven
+same-owner blocks (151, 284, 556–559, 953), preserving unique VPs/buildings/claims
+and later overlapping building values. All states now contain one history.
+Existing edits, state demographics and root data are preserved. One trailing
+space in state 557's province list was removed to pass diff validation.
+
+Validation: all state files parse; 1,856 untouched hashes match; all seven merged
+VP/building maps and 39 primary histories match originals. Four regression tests,
+Python compilation and diff checks pass. Map validator now rejects duplicates;
+its only remaining errors are the pre-existing railway links at lines 893–894.
+Importer state reader now also rejects duplicate/missing histories. No game test.
+
+Correction to the earlier EU4-import validation note below: that verifier selected
+only the first history and did not prove uniqueness. Earlier hashes/counts describe
+its snapshot; they are not a current validation after user edits and this cleanup.
+50 files have other repeated root resources/scalars, intentionally left unchanged.
+Full results/exact paths: state_history_audit/README.md, audit.json and files.txt.
+Next: in-game ownership/building check; no duplicate-history implementation blocker.
+
 ## EU4 nations in ZZZ territory (2026-11-24)
 
 Installed on Legacy-of-Kattail-Main: 39 countries receive 320 former ZZZ states;

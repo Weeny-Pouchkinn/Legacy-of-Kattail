@@ -73,8 +73,8 @@ class PortraitManager:
             return
 
         # Create necessary directories
-        leaders_folder = f"gfx/leaders/{country_tag}"
-        ministers_folder = f"gfx/interface/icons/ministers/{country_tag}"
+        leaders_folder = f"gfx/leaders/large_portraits/{country_tag}"
+        ministers_folder = f"gfx/leaders/small_portraits/{country_tag}"
         self.create_folder_if_not_exist(leaders_folder)
         self.create_folder_if_not_exist(ministers_folder)
 
@@ -105,7 +105,7 @@ class PortraitManager:
 
                 #Make small portrait
                 # Open the base image and border image
-                base_image = Image.open(f'gfx/leaders/{country_tag}/{species_name}_generic_{category}_{idx}.tga').convert('RGBA')
+                base_image = Image.open(f'gfx/leaders/large_portraits/{country_tag}/{species_name}_generic_{category}_{idx}.tga').convert('RGBA')
                 border_image = Image.open('minister_border.png').convert('RGBA')
 
                 # Resize the base image
@@ -131,7 +131,7 @@ class PortraitManager:
                 canvas.alpha_composite(border_image, (7 - 7, 2 - 2))
 
                 # Save the result
-                canvas.save(f'gfx/interface/ministers/{country_tag}/{species_name}_generic_{category}_{idx}.tga')
+                canvas.save(f'gfx/leaders/small_portraits/{country_tag}/{species_name}_generic_{category}_{idx}.tga')
 
             # After processing all portraits for the category, update the misc_portraits.txt
             self.update_misc_portraits(country_tag, species_name, category, portrait_entries)
@@ -150,9 +150,9 @@ class PortraitManager:
         sprite_type = (
             f'\t'
             f'spriteType = {{ name = "GFX_portrait_{species_name}_generic_{category}_{idx}" '
-            f'textureFile = "gfx/leaders/{country_tag}/{species_name}_generic_{category}_{idx}.tga" }}\n'
+            f'textureFile = "gfx/leaders/large_portraits/{country_tag}/{species_name}_generic_{category}_{idx}.tga" }}\n'
             f'spriteType = {{ name = "GFX_portrait_{species_name}_generic_{category}_{idx}_small" '
-            f'textureFile = "gfx/interface/ministers/{country_tag}/{species_name}_generic_{category}_{idx}.tga" }}\n'
+            f'textureFile = "gfx/leaders/small_portraits/{country_tag}/{species_name}_generic_{category}_{idx}.tga" }}\n'
         )
         lines.append(sprite_type)
 

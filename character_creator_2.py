@@ -107,8 +107,8 @@ def save_input():
         lines.insert(-1, f"\n\t#{country_tag}\n")
         tag_header_index = len(lines) - 2
 
-    new_entries = f"\tspriteType = {{ name = \"GFX_portrait_{country_tag}_{code_name}\" texturefile = \"gfx/leaders/{country_tag}/{country_tag}_{code_name}.tga\" }}\n"
-    new_entries += f"\tspriteType = {{ name = \"GFX_portrait_{country_tag}_{code_name}_Small\" texturefile = \"gfx/interface/ministers/{country_tag}/{country_tag}_{code_name}.tga\" }}\n\n"
+    new_entries = f"\tspriteType = {{ name = \"GFX_portrait_{country_tag}_{code_name}\" texturefile = \"gfx/leaders/large_portraits/{country_tag}/{country_tag}_{code_name}.tga\" }}\n"
+    new_entries += f"\tspriteType = {{ name = \"GFX_portrait_{country_tag}_{code_name}_Small\" texturefile = \"gfx/leaders/small_portraits/{country_tag}/{country_tag}_{code_name}.tga\" }}\n\n"
     
     # Insert after tag header
     lines.insert(tag_header_index + 1, new_entries)
@@ -168,11 +168,11 @@ def upload_large_image():
     img.save('large_image.tga')
     country_tag = tag_entry.get()
     code_name = code_name_entry.get()
-    os.makedirs(f'gfx/leaders/{country_tag}', exist_ok=True)
-    shutil.move('large_image.tga', f'gfx/leaders/{country_tag}/{country_tag}_{code_name}.tga')
+    os.makedirs(f'gfx/leaders/large_portraits/{country_tag}', exist_ok=True)
+    shutil.move('large_image.tga', f'gfx/leaders/large_portraits/{country_tag}/{country_tag}_{code_name}.tga')
 
     # Open the base image and border image
-    base_image = Image.open(f'gfx/leaders/{country_tag}/{country_tag}_{code_name}.tga').convert('RGBA')
+    base_image = Image.open(f'gfx/leaders/large_portraits/{country_tag}/{country_tag}_{code_name}.tga').convert('RGBA')
     border_image = Image.open('minister_border.png').convert('RGBA')
 
     # Resize the base image
@@ -198,9 +198,9 @@ def upload_large_image():
     canvas.alpha_composite(border_image, (7 - 7, 2 - 2))
 
     # Save the result
-    ministers_dir = f'gfx/interface/ministers/{country_tag}'
+    ministers_dir = f'gfx/leaders/small_portraits/{country_tag}'
     os.makedirs(ministers_dir, exist_ok=True)
-    canvas.save(f'gfx/interface/ministers/{country_tag}/{country_tag}_{code_name}.tga')
+    canvas.save(f'gfx/leaders/small_portraits/{country_tag}/{country_tag}_{code_name}.tga')
 
 def upload_small_image():
     small_image_path = filedialog.askopenfilename()
@@ -208,7 +208,7 @@ def upload_small_image():
     img.save('small_image.tga')
     country_tag = tag_entry.get()
     code_name = code_name_entry.get()
-    ministers_dir = f'gfx/interface/ministers/{country_tag}'
+    ministers_dir = f'gfx/leaders/small_portraits/{country_tag}'
     os.makedirs(ministers_dir, exist_ok=True)
     shutil.move('small_image.tga', f'{ministers_dir}/{country_tag}_{code_name}.tga')
 

@@ -111,7 +111,10 @@ def states():
     for path in sorted((ROOT / "history/states").glob("*.txt")):
         text = read(path)
         nodes = child(parse(text), "state").children
-        history = child(nodes, "history").children
+        histories = [node for node in nodes if node.key == "history"]
+        if len(histories) != 1:
+            raise ValueError(f"{path.relative_to(ROOT)} has {len(histories)} history blocks; expected exactly one")
+        history = histories[0].children
         sid = int(scalar(text, nodes, "id"))
         result[sid] = dict(path=path.relative_to(ROOT).as_posix(),
                            owner=scalar(text, history, "owner"),

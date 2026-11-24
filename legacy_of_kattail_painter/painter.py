@@ -10,12 +10,17 @@ from tkinter import ttk, messagebox, colorchooser, simpledialog, filedialog
 from PIL import Image, ImageTk
 from model import World, Emblems, FLAG_SIZES, child, default_paths, parse, scalar, value, walk
 from demographics import Setup, set_local_draft
+from character_model import CharacterStore
+from character_ui import CharacterWorkspace
+from select_ui import ChoiceBox, Choice, ChoiceIndex
 
 
 class Painter(ttk.Frame):
     def __init__(self, root, world, emblems):
         super().__init__(root)
         self.root, self.world, self.emblems = root, world, emblems
+        self.character_store = CharacterStore(world)
+        self.world.docs.before_save = self.prepare_save
         self.current = None
         self.current_state = None
         self.rows = {}
@@ -70,24 +75,32 @@ class Painter(ttk.Frame):
         for key, label in self.world.localisation.items():
             match = re.fullmatch(pattern, key)
             if match:
-                rows.append((int(match[1]), re.sub('§.', '', label)))
-        return [f'{i} · {label}' for i, label in sorted(rows)]
+                rows.append(Choice(match[1], label))
+        return sorted(rows, key=lambda c: (c.name.casefold(), c.code))
 
     def _build(self):
         # Use the same native ttk appearance and compact workspace as the EU4 painter.
-        top = ttk.Frame(self, padding=(8, 7))
+        style = ttk.Style(self.root)
+        style.configure('Workspace.TNotebook.Tab', font=('Segoe UI', 13, 'bold'), padding=(12, 7))
+        self.workspace = ttk.Notebook(self, style='Workspace.TNotebook')
+        self.workspace.pack(fill='both', expand=True)
+        self.map_workspace = ttk.Frame(self.workspace)
+        self.character_workspace = ttk.Frame(self.workspace)
+        self.workspace.add(self.map_workspace, text='MAP')
+        self.workspace.add(self.character_workspace, text='CHARACTERS')
+        top = ttk.Frame(self.map_workspace, padding=(8, 7))
         top.pack(fill='x')
         ttk.Button(top, text='Save', command=self.save).pack(side='left')
         ttk.Button(top, text='Undo', command=self.undo).pack(side='left', padx=(6, 0))
         ttk.Button(top, text='Redo', command=self.redo).pack(side='left', padx=(6, 0))
         ttk.Button(top, text='Discard drafts', command=self.discard).pack(side='left', padx=(6, 14))
         ttk.Label(top, text='Paint:').pack(side='left')
-        brush = ttk.Combobox(top, state='readonly', textvariable=self.brush,
+        brush = ChoiceBox(top, state='readonly', textvariable=self.brush,
                              values=['Inspect', 'Owner', 'Culture', 'Species'], width=12)
         brush.pack(side='left', padx=(5, 14))
         brush.bind('<<ComboboxSelected>>', self.brush_changed)
         ttk.Label(top, text='View:').pack(side='left')
-        layers = ttk.Combobox(top, state='readonly', textvariable=self.layer,
+        layers = ChoiceBox(top, state='readonly', textvariable=self.layer,
                              values=['Owners', 'States', 'Provinces', 'Terrain', 'Continents', 'Culture', 'Species', 'Minority'], width=15)
         layers.pack(side='left', padx=(5, 14))
         layers.bind('<<ComboboxSelected>>', lambda e: (self.refresh_palette(), self.refresh_map()))
@@ -95,10 +108,10 @@ class Painter(ttk.Frame):
         ttk.Button(top, text='Zoom +', command=lambda: self.change_zoom(1.25)).pack(side='left', padx=(5, 0))
         ttk.Button(top, text='Fit', command=self.fit_map).pack(side='left', padx=(5, 0))
 
-        geography = ttk.Frame(self, padding=(8, 0, 8, 7))
+        geography = ttk.Frame(self.map_workspace, padding=(8, 0, 8, 7))
         geography.pack(fill='x')
         ttk.Label(geography, text='Paint scope:').pack(side='left')
-        ttk.Combobox(geography, textvariable=self.paint_scope, values=['State', 'Strategic region'],
+        ChoiceBox(geography, textvariable=self.paint_scope, values=['State', 'Strategic region'],
                      state='readonly', width=18).pack(side='left', padx=(5, 14))
         for label, variable in [('Province boundaries', self.show_province_boundaries),
                                 ('State boundaries', self.show_state_boundaries),
@@ -106,7 +119,7 @@ class Painter(ttk.Frame):
             ttk.Checkbutton(geography, text=label, variable=variable,
                             command=self.draw_map).pack(side='left', padx=(0, 12))
 
-        split = ttk.Panedwindow(self, orient='horizontal')
+        split = ttk.Panedwindow(self.map_workspace, orient='horizontal')
         split.pack(fill='both', expand=True)
         self.sidebar = ttk.Frame(split, padding=8, width=430)
         split.add(self.sidebar, weight=0)
@@ -121,10 +134,10 @@ class Painter(ttk.Frame):
         self.sidebar_tabs.add(library, text='Sources')
         self._palette_panel(self.palette_tab)
         ttk.Label(library, text='Source library').pack(anchor='w')
-        search = ttk.Entry(library, textvariable=self.library_search)
+        search = self.library_search_entry = ttk.Entry(library, textvariable=self.library_search)
         search.pack(fill='x', pady=(6, 6))
         search.bind('<KeyRelease>', lambda e: self._library())
-        self.library_kind = ttk.Combobox(library, state='readonly', values=['Countries', 'States', 'All scripts'], width=23)
+        self.library_kind = ChoiceBox(library, state='readonly', values=['Countries', 'States', 'All scripts'], width=23)
         self.library_kind.set('Countries')
         self.library_kind.pack(fill='x')
         self.library_kind.bind('<<ComboboxSelected>>', lambda e: self._library())
@@ -136,6 +149,7 @@ class Painter(ttk.Frame):
         scroll.pack(side='right', fill='y')
         self.library.pack(side='left', fill='both', expand=True)
         self.library.bind('<<TreeviewSelect>>', self._library_select)
+        self.library.bind('<KeyPress>', lambda e: self.search_list(e, self.library_search, self.library_search_entry, self._library))
         ttk.Label(library, text=f'{len(self.world.states)} states / {len(self.world.countries)} countries\n{len(self.world.files)} script files\nSource: {self.world.root.name}', wraplength=400).pack(anchor='w', pady=(8, 0))
         self.tabs = ttk.Notebook(split)
         split.add(self.tabs, weight=1)
@@ -147,7 +161,10 @@ class Painter(ttk.Frame):
         self._fields_tab(fields)
         self._flags_tab(flags)
         ttk.Label(self.sidebar, text='Click/drag to paint; Shift-click to pick.\nRight-drag to pan; wheel to zoom.', wraplength=400).pack(fill='x', pady=(8, 0))
-        ttk.Label(self, textvariable=self.status, anchor='w', padding=(8, 4)).pack(fill='x')
+        ttk.Label(self.map_workspace, textvariable=self.status, anchor='w', padding=(8, 4)).pack(fill='x')
+
+        self.characters_panel = CharacterWorkspace(self.character_workspace, self)
+        self.workspace.bind('<<NotebookTabChanged>>', lambda e: self.characters_panel.refresh())
 
     def _palette_panel(self, tab):
         self.palette_title = tk.StringVar()
@@ -158,7 +175,7 @@ class Painter(ttk.Frame):
                             command=self.refresh_palette).pack(side='left', padx=(0, 8))
         self.culture_controls = ttk.Frame(tab)
         ttk.Label(self.culture_controls, text='Operation:').pack(side='left')
-        ttk.Combobox(self.culture_controls, textvariable=self.culture_operation,
+        ChoiceBox(self.culture_controls, textvariable=self.culture_operation,
                      values=['Set', 'Add', 'Remove'], state='readonly', width=10).pack(side='left', padx=6)
         self.palette_filter = ttk.Entry(tab, textvariable=self.palette_search)
         self.palette_filter.pack(fill='x', pady=6)
@@ -171,6 +188,7 @@ class Painter(ttk.Frame):
         scrollbar.pack(side='right', fill='y')
         self.palette.pack(side='left', fill='both', expand=True)
         self.palette.bind('<<TreeviewSelect>>', self.palette_selected)
+        self.palette.bind('<KeyPress>', lambda e: self.search_list(e, self.palette_search, self.palette_filter, self.refresh_palette))
         self.paint_label = tk.StringVar(value='Select something to paint.')
         ttk.Label(tab, textvariable=self.paint_label, wraplength=390).pack(fill='x', pady=(8, 0))
 
@@ -216,12 +234,12 @@ class Painter(ttk.Frame):
                 entries.insert(0, (1000, 'No minority', (255, 255, 255)))
         self.palette.delete(*self.palette.get_children())
         self.palette_values, self.palette_images = {}, []
-        query = self.palette_search.get().casefold()
         selected = self.paint_selection.get(mode)
-        for key, label, rgb in entries:
-            text = f'{key} · {label}'
-            if query not in text.casefold():
-                continue
+        rows = {str(key): (key, label, rgb) for key, label, rgb in entries}
+        index = ChoiceIndex(Choice(str(key), label) for key, label, _ in entries)
+        for choice in index.matching(self.palette_search.get()):
+            key, label, rgb = rows[choice.code]
+            text = choice.label
             icon = ImageTk.PhotoImage(Image.new('RGB', (16, 16), rgb))
             self.palette_images.append(icon)
             item = self.palette.insert('', 'end', text=text, image=icon)
@@ -286,16 +304,18 @@ class Painter(ttk.Frame):
         ttk.Label(inspector, textvariable=self.state_details, wraplength=380).pack(anchor='w', pady=8)
         ttk.Separator(inspector).pack(fill='x', pady=8)
         ttk.Label(inspector, text='State demographics · DRAFT').pack(anchor='w')
+        self.demographic_boxes = []
         species_choices = self.catalog(r'var_species_(\d+)')
         for label, var in [('Cultures (ordered numeric IDs)', self.culture), ('Majority species ID', self.species), ('Minority species ID (1000 = none)', self.minority)]:
             ttk.Label(inspector, text=label).pack(anchor='w', pady=(8, 0))
             if var is self.culture:
                 ttk.Entry(inspector, textvariable=var).pack(fill='x')
             else:
-                choices = species_choices + (['1000 · No minority'] if var is self.minority else [])
-                ttk.Combobox(inspector, textvariable=var, values=choices).pack(fill='x')
+                choices = species_choices + ([Choice('1000', 'No minority')] if var is self.minority else [])
+                box = ChoiceBox(inspector, textvariable=var, values=choices)
+                self.demographic_boxes.append(box); box.pack(fill='x')
         ttk.Label(inspector, text='Add a named culture').pack(anchor='w', pady=(8, 0))
-        culture_choice = ttk.Combobox(inspector, values=self.catalog(r'culture_(\d+)_name'), state='readonly')
+        culture_choice = ChoiceBox(inspector, values=self.catalog(r'culture_(\d+)_name'), state='readonly')
         culture_choice.pack(fill='x')
         culture_choice.bind('<<ComboboxSelected>>', lambda e: self.culture.set((self.culture.get() + ' ' + str(self.numeric_id(culture_choice.get()))).strip()))
         ttk.Button(inspector, text='Apply state changes', command=self.apply_demographics).pack(fill='x', pady=10)
@@ -304,7 +324,8 @@ class Painter(ttk.Frame):
         ttk.Button(inspector, text='Inspect owner history', command=self.owner_fields).pack(fill='x')
         self.owner_draft = tk.StringVar()
         ttk.Label(inspector, text='Draft owner tag').pack(anchor='w', pady=(18, 0))
-        ttk.Combobox(inspector, textvariable=self.owner_draft, values=sorted(self.world.countries)).pack(fill='x')
+        self.owner_box = ChoiceBox(inspector, textvariable=self.owner_draft, values=self.character_store.choices('countries'))
+        self.owner_box.pack(fill='x')
         ttk.Button(inspector, text='Apply owner change', command=self.apply_owner).pack(fill='x', pady=5)
 
     def _fields_tab(self, tab):
@@ -358,10 +379,11 @@ class Painter(ttk.Frame):
             ttk.Button(controls, text='Choose…', command=lambda v=var: self.choose_colour(v)).pack(side='left')
         ttk.Button(options, text='Refresh colours', command=self._flag).pack(anchor='w')
         ttk.Label(options, text=f'{len(self.emblems.sources)} flat white masks · recoloured with the emblem colour\nGold / gilded textures are never loaded.', wraplength=420, foreground='#555').pack(anchor='w', pady=10)
-        entry = ttk.Entry(options, textvariable=self.symbol_search)
+        entry = self.symbol_search_entry = ttk.Entry(options, textvariable=self.symbol_search)
         entry.pack(fill='x', pady=5)
         entry.bind('<KeyRelease>', lambda e: self._symbols())
         self.symbols = tk.Listbox(options, exportselection=False)
+        self.symbols.bind('<KeyPress>', self.search_symbol)
         self.symbols.pack(fill='both', expand=True)
         self.symbols.bind('<<ListboxSelect>>', self.select_symbol)
         ttk.Button(options, text='No emblem', command=lambda: (self.symbol.set(''), self._flag())).pack(anchor='w', pady=6)
@@ -375,25 +397,35 @@ class Painter(ttk.Frame):
         self.size_images.pack(anchor='w')
         ttk.Label(preview, text='Large 82 × 52 · Medium 41 × 26 · Small 10 × 7\nPreview enlarged up to 6 times; native sizes shown below.', wraplength=460).pack(anchor='w', pady=12)
         ttk.Label(preview, text='Country / ideology draft label').pack(anchor='w')
-        ttk.Combobox(preview, textvariable=self.flag_target, values=['Unassigned draft'] + sorted(self.world.countries)).pack(fill='x', pady=5)
+        self.flag_target_box = ChoiceBox(preview, textvariable=self.flag_target, values=[Choice('Unassigned draft', 'Unassigned draft')] + list(self.character_store.choices('countries')))
+        self.flag_target_box.pack(fill='x', pady=5)
         ttk.Button(preview, text='Keep flag in session', command=self.keep_flag).pack(anchor='w', pady=5)
         ttk.Button(preview, text='Restore selected session flag', command=self.restore_flag).pack(anchor='w')
         ttk.Label(preview, text='Flags are session prototypes. There is no image export or overwrite of existing flags in this version.', wraplength=460, foreground='#555').pack(anchor='w', pady=14)
 
+    def search_list(self, event, variable, entry, refresh):
+        if event.char and event.char.isprintable():
+            variable.set(event.char); refresh()
+            entry.focus_set(); entry.icursor('end')
+            return 'break'
+
     def _library(self):
         self.library.delete(*self.library.get_children())
-        q, kind = self.library_search.get().lower(), self.library_kind.get()
+        q, kind = self.library_search.get(), self.library_kind.get()
         self.library_paths = {}
-        if kind == 'Countries':
-            rows = [(tag + ' · ' + self.world.label(tag), path) for tag, path in sorted(self.world.countries.items())]
-        elif kind == 'States':
-            rows = [(str(sid) + ' · ' + self.world.label(s.name), s.path) for sid, s in sorted(self.world.states.items())]
-        else:
-            rows = [(p, p) for p in self.world.files]
-        for label, path in rows:
-            if q in (label + ' ' + path).lower():
-                item = self.library.insert('', 'end', text=label)
-                self.library_paths[item] = path
+        cache = getattr(self, '_library_indices', {})
+        if kind not in cache:
+            if kind == 'Countries':
+                rows = [(Choice(tag, self.world.label(tag)).label, path) for tag, path in self.world.countries.items()]
+            elif kind == 'States':
+                rows = [(Choice(str(sid), self.world.label(s.name)).label, s.path) for sid, s in self.world.states.items()]
+            else:
+                rows = [(p, p) for p in self.world.files]
+            cache[kind] = ChoiceIndex(Choice(path, label) for label, path in rows)
+            self._library_indices = cache
+        for choice in cache[kind].matching(q):
+            item = self.library.insert('', 'end', text=choice.name)
+            self.library_paths[item] = choice.code
 
     def _library_select(self, event=None):
         sel = self.library.selection()
@@ -583,6 +615,7 @@ class Painter(ttk.Frame):
         if self.current_state is None:
             return
         try:
+            for box in self.demographic_boxes: box.commit()
             cultures = [int(s) for s in self.culture.get().replace(',', ' ').split()]
             set_local_draft(self.world, self.current_state, cultures, self.numeric_id(self.species.get()), self.numeric_id(self.minority.get()))
             self.inspect_state(self.current_state, reveal=False)
@@ -594,6 +627,7 @@ class Painter(ttk.Frame):
     def apply_owner(self, reveal=True):
         if self.current_state is None:
             return
+        self.owner_box.commit()
         tag = self.owner_draft.get().upper().strip()
         try:
             self.world.set_owner_draft(self.current_state, tag)
@@ -609,22 +643,31 @@ class Painter(ttk.Frame):
             self.tabs.select(1)
 
     def owner_fields(self):
+        self.owner_box.commit()
         tag = self.owner_draft.get()
         if tag in self.world.countries:
             self.open_document(self.world.countries[tag])
             self.tabs.select(1)
 
     def _symbols(self):
-        q = self.symbol_search.get().lower()
         self.symbols.delete(0, 'end')
-        for key in sorted(self.emblems.sources):
-            if q in key.lower():
-                self.symbols.insert('end', key)
+        if not hasattr(self, '_symbol_index'):
+            self._symbol_index = ChoiceIndex(Choice(k, k.rsplit('/', 1)[-1].replace('_', ' ').title()) for k in self.emblems.sources)
+        index = self._symbol_index
+        self.symbol_keys = [choice.code for choice in index.matching(self.symbol_search.get())]
+        for key in self.symbol_keys:
+            self.symbols.insert('end', index.by_code[key].label)
+
+    def search_symbol(self, event):
+        if event.char and event.char.isprintable():
+            self.symbol_search.set(event.char); self._symbols()
+            self.symbol_search_entry.focus_set(); self.symbol_search_entry.icursor('end')
+            return 'break'
 
     def select_symbol(self, event=None):
         selection = self.symbols.curselection()
         if selection:
-            self.symbol.set(self.symbols.get(selection[0]))
+            self.symbol.set(self.symbol_keys[selection[0]])
             self._flag()
 
     def choose_colour(self, var):
@@ -666,11 +709,13 @@ class Painter(ttk.Frame):
         self.flag_canvas.create_image(0, 0, anchor='nw', image=self.preview_image)
 
     def keep_flag(self):
+        self.flag_target_box.commit()
         if self._flag():
             self.flag_drafts[self.flag_target.get()] = (self.symbol.get(), self.background.get(), self.tint.get())
             self._status('Flag kept in session; no flag file was written')
 
     def restore_flag(self):
+        self.flag_target_box.commit()
         draft = self.flag_drafts.get(self.flag_target.get())
         if draft:
             self.symbol.set(draft[0]); self.background.set(draft[1]); self.tint.set(draft[2])
@@ -683,6 +728,11 @@ class Painter(ttk.Frame):
         if self.current_state:
             self.inspect_state(self.current_state, reveal=False)
         self._status()
+        self.characters_panel.refresh()
+
+    def prepare_save(self):
+        self.world.normalise_demographics()
+        self.character_store.prepare_save()
 
     def undo(self):
         self.world.docs.undo()

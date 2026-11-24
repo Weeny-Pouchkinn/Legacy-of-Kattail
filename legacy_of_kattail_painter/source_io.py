@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from datetime import datetime
 import os
+import json
+import hashlib
 from pathlib import Path
 import tempfile
 
@@ -38,31 +40,48 @@ def atomic_bytes(path, data):
 
 
 def write_changes(root, changes, label='save'):
-    """Apply {relative: (expected original bytes, new bytes)} after full preflight."""
+    """Apply guarded writes/creates/deletes; None denotes an absent file."""
     root = Path(root).resolve()
     paths = {relative: confined(root, relative) for relative in changes}
     if len(set(paths.values())) != len(paths):
         raise ValueError('Duplicate destination in save')
     for relative, (original, _) in changes.items():
-        if paths[relative].read_bytes() != original:
+        actual = paths[relative].read_bytes() if paths[relative].is_file() else None
+        if actual != original:
             raise ValueError('File changed outside the painter; reload before saving: ' + relative)
     if not changes:
         return None
     backup = root / 'legacy_of_kattail_painter' / 'backups' / (
         label + '_' + datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
     for relative, (original, _) in changes.items():
-        target = confined(backup, relative)
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(original)
+        if original is not None:
+            target = confined(backup, relative)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(original)
+    backup.mkdir(parents=True, exist_ok=True)
+    manifest = {relative: {'before': hashlib.sha256(old).hexdigest() if old is not None else None,
+                           'after': hashlib.sha256(new).hexdigest() if new is not None else None}
+                for relative, (old, new) in changes.items()}
+    (backup / 'manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
+    (backup / 'created_files.txt').write_text(''.join(p + '\n' for p, (old, _) in changes.items() if old is None), encoding='utf-8')
     written = []
     try:
         for relative, (original, updated) in changes.items():
-            if paths[relative].read_bytes() != original:
+            actual = paths[relative].read_bytes() if paths[relative].is_file() else None
+            if actual != original:
                 raise ValueError('File changed during save: ' + relative)
-            atomic_bytes(paths[relative], updated)
+            if updated is None:
+                paths[relative].unlink()
+            else:
+                paths[relative].parent.mkdir(parents=True, exist_ok=True)
+                atomic_bytes(paths[relative], updated)
             written.append(relative)
     except Exception:
         for relative in reversed(written):
-            atomic_bytes(paths[relative], changes[relative][0])
+            original = changes[relative][0]
+            if original is None:
+                paths[relative].unlink(missing_ok=True)
+            else:
+                atomic_bytes(paths[relative], original)
         raise
     return backup

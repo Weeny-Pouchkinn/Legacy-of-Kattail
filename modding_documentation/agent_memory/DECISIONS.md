@@ -1,5 +1,55 @@
 # Decisions
 
+## 2026-11-24: Cache character data by affected files; separate labels from IDs
+**Decision:** keep file inventories/parsed files and derived character catalogs
+in memory, invalidate by actual draft category and rebuild only changed files.
+Track Undo/Redo/Cancel/reset/create/delete, retain bounded image caches keyed by
+source bytes/frame/size, batch role fields and skip unchanged identity updates.
+Use direct longest-prefix lookup for related localization keys.
+**Rationale:** measured whole-database prefix scans and global cache clears
+dominated normal character edits; image reloads were unrelated to stat changes.
+**Consequence:** no disk caches or source rewrite needed. External edits remain
+subject to reload and guarded Save; benchmark_characters.py uses unsaved drafts.
+ChoiceBox separates the displayed localized `Name (ID)` from the bound native
+code. Alphabetical lists match names and codes, with typo fallback and explicit
+selection for ambiguous names. TraitChoices stores a list of native IDs while
+displaying localized entries. Native English names supplement mod localisation
+only for display; no game identifiers or strings are renamed or generated.
+See legacy_of_kattail_painter/MODLOG.md for measurements and validation.
+
+## 2026-11-24: Native characters with an independent portrait registry
+**Decision:** keep native character IDs, repeated role blocks and undated
+country-history recruitments authoritative. Edit their localisation dynamically
+in tag/neutral-name sections, ordered by displayed character name. Multi-country
+characters retain all memberships when unchanged and group under the first tag;
+dated/conditional effects are preserved rather than simulated. Store unsupported
+editor-only credits, arbitrary portrait tags, notes and additional variant links
+in versioned characters_painter_data.json. Native civilian/army/navy slots refer
+to independent large/small sprite pairs. No public IDs are renamed for tag edits.
+**Rationale:** roles/recruitment must work in the game while a character can have
+several reusable portrait variants and credit metadata has no native field.
+**Consequences:** English BOM/authored values and existing animated sprite fields
+are preserved; gallery uses an animation's first frame. Importing static art
+explicitly replaces animation. All portrait asset moves are audited by original
+hash; missing art is reported without invented replacements. New image imports
+fit native 156x210/65x67 canvases. Ministermaker generation uses the supplied main
+script's exact 37x51 resize, 5-degree rotation and border at (8,1), with its own
+bundled original border, not the mod's different border or Test/ variant.
+Save coordinates text/new files/binary assets/deletions, preflights original
+bytes, backs up and rolls back; Cancel/Undo restore absence for new files.
+See plans/character-workspace.md and legacy_of_kattail_painter/MODLOG.md.
+
+## 2026-11-24: One authoritative history per state
+**Decision:** remove redundant second ZZZ histories while keeping each primary
+history exactly. Merge same-owner non-ZZZ histories to retain unique VPs, cores,
+claims and provincial/state buildings; keep the later value for overlapping
+building settings. Do not change unrelated duplicated resources or scalar fields.
+**Rationale:** explicit duplicate-history cleanup; ZZZ shadows are obsolete, while
+same-owner blocks sometimes contain distinct, necessary province setup.
+**Consequence:** all 1,902 states have one history. Map validator and EU4 importer
+reject duplicate/missing histories. Historical import hashes are not a current
+validation baseline after this cleanup. See state_history_audit/README.md.
+
 ## 2026-11-24: Import EU4 nations within existing ZZZ states
 **Decision:** transfer whole states by EU4 default-bookmark ownership pixels,
 excluding seas/lakes/impassable terrain and retaining uncolonised land as a vote.

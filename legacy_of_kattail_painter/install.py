@@ -8,7 +8,9 @@ import json
 from pathlib import Path
 import shutil
 
-FILES = ['painter.py', 'model.py', 'source_io.py', 'demographics.py', 'migrate_state_setup.py',
+FILES = ['painter.py', 'model.py', 'source_io.py', 'character_model.py', 'character_ui.py', 'refactor_characters.py',
+         'test_characters.py', 'test_selectors.py', 'select_ui.py', 'verify_characters.py', 'demographics.py', 'migrate_state_setup.py',
+         'small_portrait.py', 'benchmark_characters.py', 'assets/ministermaker_border.png',
          'run_painter.bat', 'requirements.txt', '.gitignore', 'README.md', 'MODLOG.md', 'PLAN.md', 'test_painter.py']
 
 
@@ -46,6 +48,7 @@ def install(mod, migration=False, package=None):
                 raise ValueError('Source/stage changed; regenerate before installing: ' + entry['path'])
     destination.mkdir(exist_ok=True)
     for name in FILES:
+        (destination / name).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(package / name, destination / name)
     if entries:
         backup = destination / ('migration_originals_' + datetime.now().strftime('%Y%m%d_%H%M%S_%f'))
