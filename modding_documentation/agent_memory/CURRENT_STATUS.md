@@ -1,5 +1,64 @@
 # Current status
 
+## EU4 nations in ZZZ territory (2026-11-24)
+
+Installed on Legacy-of-Kattail-Main: 39 countries receive 320 former ZZZ states;
+84 remain ZZZ. Reused 34 identities (12 dormant), with LRN -> LAK and NOV -> NFS;
+new tags ELC/HIV/INT/MAG/WMD. User explicitly retained all states and excluded
+Meogartha. Added missing histories/source leaders, native-sized source flags,
+source colours and country species laws. Preserved existing country history/text,
+state demographics, all map data and unrelated working edits.
+
+Validation: importer verification passes 631 game output files and 12,102 protected
+files. 320 states match originals outside owner/core changes; 234 flags pass exact
+pixel/dimension checks. 82 new localisation keys are unique and BOM/header pass.
+Localisation analyser's pre/post missing-key sets are identical (2,285); Python
+compilation and diff checks pass. Map validator still reports only the existing
+railway errors at 893-894. No CWTools executable or in-game validation.
+
+Limits: whole-state geographic approximation; WMD uses its only assigned state 331
+because its source capital does not overlap eligible land. Missing histories use
+an explicit small starting baseline; unrelated/missing OOBs become an empty OOB.
+No force/balance or mission conversion. Existing authored country names prevail.
+
+Exact paths, country mapping, source provenance, validation and recovery:
+`eu4_zzz_import/README.md`, `files.txt` and `audit.json`. Tool:
+`tools/import_zzz_from_eu4.py --verify`. Originals:
+`work/zzz-eu4-import/before/`. Next action: fresh campaign/startup-log check.
+
+## Species invariant, boundary toggles and region brushes (2026-11-24)
+
+Completed on `Legacy-of-Kattail-Main`, based on `ee25bc98`:
+
+- Equal majority/minority species now clears the minority to 1000 in shared
+  setters, load/normalisation, raw source edits and the pre-save hook. Majority
+  1000 is rejected because it denotes None, not a species. Corrected the three
+  existing equal pairs: 447 (1), 888 (44), 1040 (0). Only each minority changed;
+  originals are in legacy_of_kattail_painter/backups/save_20261124_104605_259819/.
+- Independent boundary toggles draw province/state/strategic-region lines at
+  1/2/3 screen pixels. They are off by default and cached at the current zoom.
+- State/Strategic region scope applies to culture, majority/minority and owner
+  brushes. Region membership comes from map/strategicregions, not country tags
+  or a hard-coded state list. Each regional action is grouped for undo/redo,
+  deduplicated across a drag and rolled back completely if an edit fails.
+  Split states block region painting before any changes. The current 413
+  regions have no split states or ambiguous province memberships.
+
+Validation: all 24 fixture tests and four Python compile checks pass. Exact
+boundary pixels and width after zoom, source/Save invariant, region membership,
+owner/demographic brushes, grouped undo, exclusions, split-state rejection and
+failure rollback are covered. Real-data Tk checks passed all toggles, all eight
+views, normal/minimum layouts, region 1's five-state painting/undo/redo and raw
+source auto-repair. `verify_real.py` passed 1,026 mask-size renders and 10,786
+unchanged source hashes during UI-only checks. Existing EUL/GAL/KKN/KTZ OOB brace
+errors remain. Map validator before/after has the same railway errors at 893-894;
+no map files or localisation changed. Full diff and encoding reviewed.
+
+Next action: restart the painter, select Paint scope and boundary checkboxes.
+No new implementation blocker; no in-game validation or screenshot review is
+claimed. Map memberships are startup snapshots; restart after topology edits.
+Exact changed paths and commands are in legacy_of_kattail_painter/MODLOG.md.
+
 ## Persistent state painting and demographic migration (2026-11-24)
 
 Completed on `Legacy-of-Kattail-Main`, based on `a8d83c64`. This supersedes the

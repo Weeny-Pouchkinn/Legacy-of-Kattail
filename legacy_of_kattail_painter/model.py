@@ -6,6 +6,7 @@ import csv
 import hashlib
 import os
 import re
+from contextlib import contextmanager
 from functools import lru_cache
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -120,6 +121,7 @@ class Documents:
         self.drafts = {}
         self.undo_stack = []
         self.redo_stack = []
+        self.before_save = None
 
     def text(self, relative):
         relative = str(relative).replace('\\', '/')
@@ -148,15 +150,35 @@ class Documents:
 
     def undo(self):
         if self.undo_stack:
-            rel, old, new = self.undo_stack.pop()
-            self.drafts[rel] = old
-            self.redo_stack.append((rel, old, new))
+            entry = self.undo_stack.pop()
+            for rel, old, new in reversed(entry if isinstance(entry, list) else [entry]):
+                self.drafts[rel] = old
+            self.redo_stack.append(entry)
 
     def redo(self):
         if self.redo_stack:
-            rel, old, new = self.redo_stack.pop()
-            self.drafts[rel] = new
-            self.undo_stack.append((rel, old, new))
+            entry = self.redo_stack.pop()
+            for rel, old, new in entry if isinstance(entry, list) else [entry]:
+                self.drafts[rel] = new
+            self.undo_stack.append(entry)
+
+    @contextmanager
+    def grouped(self):
+        """Make a multi-file brush action one reversible, exception-safe edit."""
+        start = len(self.undo_stack)
+        drafts, redo = dict(self.drafts), list(self.redo_stack)
+        try:
+            yield
+        except Exception:
+            self.drafts = drafts
+            del self.undo_stack[start:]
+            self.redo_stack = redo
+            raise
+        else:
+            records = [record for entry in self.undo_stack[start:]
+                       for record in (entry if isinstance(entry, list) else [entry])]
+            if len(records) > 1:
+                self.undo_stack[start:] = [records]
 
     def reset(self):
         self.drafts.clear()
@@ -168,6 +190,8 @@ class Documents:
         return [p for p, t in self.drafts.items() if t != self.originals[p]]
 
     def save(self):
+        if self.before_save is not None:
+            self.before_save()
         changes = {}
         for relative in self.changed:
             parse(self.drafts[relative])
@@ -203,6 +227,8 @@ class World:
         self.warnings = []
         self.map_ids = None
         self._state_nodes_cache = {}
+        self._boundary_cache = {}
+        self._boundary_size = None
         for folder in ['localisation/english', 'localisation/replace']:
             for f in sorted((self.root / folder).rglob('*.yml')):
                 for line in read_text(f).splitlines():
@@ -242,11 +268,111 @@ class World:
                 if len(row) >= 8 and row[0].isdigit():
                     self.provinces[int(row[0])] = {'rgb': tuple(map(int, row[1:4])),
                         'type': row[4], 'coastal': row[5], 'terrain': row[6], 'continent': row[7]}
+        self._load_strategic_regions()
         self.files = sorted(f.relative_to(self.root).as_posix()
                             for folder in ['common', 'history', 'events', 'interface', 'map', 'country_metadata']
                             for f in (self.root / folder).rglob('*')
                             if f.is_file() and f.suffix.lower() in {'.txt', '.gui', '.gfx', '.asset'})
         self._demographic_catalogs()
+        self.docs.before_save = self.normalise_demographics
+
+    def normalise_demographics(self):
+        from demographics import repair_redundant_minorities
+        return repair_redundant_minorities(self)
+
+    def _load_strategic_regions(self):
+        self.regions, self.province_regions, self.region_states = {}, {}, {}
+        for path in sorted((self.root / 'map/strategicregions').glob('*.txt')):
+            text = self.docs.text(path.relative_to(self.root))
+            region = child(parse(text), 'strategic_region')
+            if region is None:
+                continue
+            rid = int(scalar(text, region.children, 'id'))
+            if rid in self.regions:
+                raise ValueError(f'Duplicate strategic region {rid}')
+            provinces = child(region.children, 'provinces')
+            ids = frozenset(int(n.key) for n in provinces.children) if provinces else frozenset()
+            for pid in ids:
+                if pid not in self.provinces:
+                    raise ValueError(f'Strategic region {rid} references undefined province {pid}')
+                if pid in self.province_regions:
+                    raise ValueError(f'Province {pid} belongs to multiple strategic regions')
+                self.province_regions[pid] = rid
+            self.regions[rid] = {'name': scalar(text, region.children, 'name'), 'provinces': ids}
+            self.region_states[rid] = frozenset(self.province_states[p] for p in ids if p in self.province_states)
+
+    def paint_targets(self, pid, scope='State'):
+        sid = self.province_states.get(pid)
+        if sid is None:
+            return ()
+        if scope == 'State':
+            return (sid,)
+        if scope != 'Strategic region':
+            raise ValueError('Unknown paint scope: ' + scope)
+        rid = self.province_regions.get(pid)
+        if rid is None:
+            raise ValueError(f'Province {pid} has no strategic region')
+        ids = self.regions[rid]['provinces']
+        states = tuple(sorted(self.region_states[rid]))
+        for state in states:
+            if not set(self.states[state].provinces).issubset(ids):
+                raise ValueError(f'State {state} crosses strategic region {rid}; region painting would exceed its boundary')
+        return states
+
+    def set_owner_draft(self, sid, tag):
+        if tag not in self.country_paths:
+            raise ValueError('Choose a registered mod country tag')
+        state = self.states[sid]
+        text, nodes = self.state_nodes(sid)
+        history = child(nodes, 'history')
+        if history is None:
+            raise ValueError(f'State {sid} has no history block')
+        owners = [n for n in history.children if n.key == 'owner']
+        if owners:
+            self.docs.edit(state.path, owners[-1], tag)
+        else:
+            newline = '\r\n' if '\r\n' in text else '\n'
+            at = text.rfind('\n', 0, history.end - 1) + 1
+            addition = f'\t\towner = {tag}{newline}'
+            if text[at:history.end - 1].strip():
+                at = history.end - 1
+                addition = newline + addition
+            self.docs.replace(state.path, text[:at] + addition + text[at:])
+
+    def paint(self, pid, scope, mode, target, operation='Set', exclude=()):
+        from demographics import set_local_draft
+        states = tuple(s for s in self.paint_targets(pid, scope) if s not in exclude)
+        before = {s: {**self.demographics[s], 'culture': list(self.demographics[s]['culture'])} for s in states}
+        try:
+            with self.docs.grouped():
+                for sid in states:
+                    if mode == 'Owner':
+                        self.set_owner_draft(sid, target)
+                        continue
+                    data = self.demographics[sid]
+                    cultures = list(data['culture'])
+                    species, minority = data['species'], data['minority']
+                    if mode == 'Culture':
+                        if operation == 'Set':
+                            cultures = [target]
+                        elif operation == 'Add':
+                            if target not in cultures:
+                                cultures.append(target)
+                        elif operation == 'Remove':
+                            cultures = [c for c in cultures if c != target]
+                        else:
+                            raise ValueError('Unknown culture operation: ' + operation)
+                    elif mode == 'Species':
+                        species = target
+                    elif mode == 'Minority':
+                        minority = target
+                    else:
+                        raise ValueError('Unknown brush: ' + mode)
+                    set_local_draft(self, sid, cultures, species, minority)
+        except Exception:
+            self.demographics.update(before)
+            raise
+        return states
 
     def _demographic_catalogs(self):
         self.culture_colours, self.species_colours, self.minority_colours = {}, {}, {}
@@ -336,6 +462,52 @@ class World:
                 if c:
                     country_colours[n.key] = self._script_colour(t, c)
         return country_colours
+
+    def boundary_mask(self, kind, size):
+        """Crisp display-space lines: province 1 px, state 2 px, region 3 px."""
+        if kind not in {'Province', 'State', 'Strategic region'}:
+            raise ValueError('Unknown boundary type: ' + kind)
+        self.load_map()
+        if size != self._boundary_size:
+            self._boundary_cache.clear()
+            self._boundary_size = size
+        if kind in self._boundary_cache:
+            return self._boundary_cache[kind]
+        if 'ids' not in self._boundary_cache:
+            source = Image.fromarray(self.map_ids.astype(np.int32))
+            self._boundary_cache['ids'] = np.asarray(source.resize(size, Image.Resampling.NEAREST))
+        ids = self._boundary_cache['ids']
+        if kind == 'Province':
+            labels = ids
+        else:
+            lookup = np.zeros(max(self.provinces) + 1, dtype=np.int32)
+            mapping = self.province_states if kind == 'State' else self.province_regions
+            for pid, group in mapping.items():
+                lookup[pid] = group
+            labels = lookup[ids]
+        edge = np.zeros(labels.shape, dtype=bool)
+        edge[:, 1:] |= labels[:, 1:] != labels[:, :-1]
+        edge[1:, :] |= labels[1:, :] != labels[:-1, :]
+        thickness = {'Province': 1, 'State': 2, 'Strategic region': 3}[kind]
+        expanded = edge.copy()
+        for dy in range(thickness):
+            for dx in range(thickness):
+                if dy or dx:
+                    expanded[dy:, dx:] |= edge[:edge.shape[0] - dy, :edge.shape[1] - dx]
+        mask = Image.fromarray(expanded.astype(np.uint8) * 255)
+        self._boundary_cache[kind] = mask
+        return mask
+
+    def boundary_overlay(self, image, province=False, state=False, strategic=False):
+        if not any((province, state, strategic)):
+            return image
+        result = image.copy()
+        for visible, kind, colour_value in [(province, 'Province', (55, 55, 55)),
+                                            (state, 'State', (15, 15, 15)),
+                                            (strategic, 'Strategic region', (245, 245, 245))]:
+            if visible:
+                result.paste(colour_value, mask=self.boundary_mask(kind, image.size))
+        return result
 
     def map_image(self, layer='Owners'):
         self.load_map()

@@ -1,5 +1,74 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-24 — Species invariant, boundaries and region scopes
+
+Equal majority/minority species automatically clears the minority to 1000.
+This includes Diverse (0), direct state forms, paint brushes, loaded source,
+raw source edits and pre-save validation. Majority 1000 is rejected because
+it represents None. Existing identical pairs in states 447, 888 and 1040 were
+corrected with byte-preserving backups at
+`backups/save_20261124_104605_259819/`; only the three minority values changed.
+Runtime variables and game identifiers were retained; no new game IDs added.
+
+Added independent boundary checkboxes for Province (1 px), State (2 px) and
+Strategic region (3 px). Width is measured after zoom, not in source-map pixels.
+Boundaries are display-only, cached for the current zoom and off by default.
+Added State/Strategic region scope for culture, majority, minority and owner
+brushes. Scope uses the clicked province's actual region. Region changes group
+as one undo action, deduplicate a drag, and roll back on partial edit failure.
+Split states refuse regional painting before any edits; no spillover is allowed.
+The current 413 strategic regions have no split states or duplicate memberships.
+
+Validation commands from the repository root:
+
+```powershell
+python -B -m unittest discover -s legacy_of_kattail_painter -p test_painter.py -v
+# All 24 tests passed. New coverage: duplicate species (including 0), raw-source
+# save repair, region membership/ownership/demographics, one-action undo/reload,
+# drag exclusions, split states, batch rollback and exact 1/2/3-pixel boundaries.
+
+python -m py_compile legacy_of_kattail_painter/model.py legacy_of_kattail_painter/painter.py legacy_of_kattail_painter/demographics.py legacy_of_kattail_painter/test_painter.py
+# Passed; PYTHONPYCACHEPREFIX redirected bytecode outside the repository.
+
+python -B legacy_of_kattail_painter/verify_real.py --mod . --output C:\Users\elowi\AppData\Local\Temp\lok-painter-boundaries-verification
+# Passed hidden Tk controls/undo/redo/fields/flags; all 1,026 mask-size renders
+# succeeded and 10,786 source hashes stayed identical during these UI-only tests.
+# Same four pre-existing OOB brace errors: EUL/GAL/KKN/KTZ.
+
+python -B tools/validate_map.py
+# Before and after: same non-neighbor railway errors at lines 893 and 894
+# (20839/20841 and 20841/19461). Map inputs were not changed.
+
+git -c core.fsmonitor=false diff --check
+git -c core.fsmonitor=false diff --stat
+git -c core.fsmonitor=false diff
+# Whitespace passed; complete diff reviewed, including minority-only state edits.
+```
+
+Additional actual-data Tk checks passed all independent toggles and combinations,
+all eight map views, 1500x900 and 1050x680 layouts, region 1 painting exactly its
+five member states, grouped undo/redo, and raw source auto-repair. Test painting
+was not saved to the live mod. Loaded state records all satisfy the invariant.
+Scope/boundary membership is a startup snapshot: restart after topology edits.
+No game launch or screenshot inspection is claimed.
+
+Exact changed/new repository paths for this task:
+
+```text
+history/states/447-State_447.txt
+history/states/888-Mount Lisejr.txt
+history/states/1040-Timothia.txt
+legacy_of_kattail_painter/demographics.py
+legacy_of_kattail_painter/model.py
+legacy_of_kattail_painter/painter.py
+legacy_of_kattail_painter/test_painter.py
+legacy_of_kattail_painter/README.md
+legacy_of_kattail_painter/MODLOG.md
+modding_documentation/agent_memory/CURRENT_STATUS.md
+modding_documentation/agent_memory/DECISIONS.md
+modding_documentation/agent_memory/plans/painter-boundaries.md
+```
+
 ## 2026-11-24 — Persistent painting and applied state migration
 
 Implemented Save/Ctrl+S for edited text sources, byte-level external-edit guards,

@@ -32,6 +32,10 @@ class Painter(ttk.Frame):
         self.paint_selection = {}
         self.drag_seen = set()
         self.pick_only = False
+        self.paint_scope = tk.StringVar(value='State')
+        self.show_province_boundaries = tk.BooleanVar(value=False)
+        self.show_state_boundaries = tk.BooleanVar(value=False)
+        self.show_region_boundaries = tk.BooleanVar(value=False)
         self.last_painted = None
         self.background = tk.StringVar(value='#283c63')
         self.tint = tk.StringVar(value='#ffffff')
@@ -47,6 +51,7 @@ class Painter(ttk.Frame):
         root.minsize(1050, 680)
         self.pack(fill='both', expand=True)
         self._build()
+        self.world.normalise_demographics()
         self._library()
         self.refresh_palette()
         self._symbols()
@@ -89,6 +94,17 @@ class Painter(ttk.Frame):
         ttk.Button(top, text='Zoom -', command=lambda: self.change_zoom(.8)).pack(side='left')
         ttk.Button(top, text='Zoom +', command=lambda: self.change_zoom(1.25)).pack(side='left', padx=(5, 0))
         ttk.Button(top, text='Fit', command=self.fit_map).pack(side='left', padx=(5, 0))
+
+        geography = ttk.Frame(self, padding=(8, 0, 8, 7))
+        geography.pack(fill='x')
+        ttk.Label(geography, text='Paint scope:').pack(side='left')
+        ttk.Combobox(geography, textvariable=self.paint_scope, values=['State', 'Strategic region'],
+                     state='readonly', width=18).pack(side='left', padx=(5, 14))
+        for label, variable in [('Province boundaries', self.show_province_boundaries),
+                                ('State boundaries', self.show_state_boundaries),
+                                ('Strategic region boundaries', self.show_region_boundaries)]:
+            ttk.Checkbutton(geography, text=label, variable=variable,
+                            command=self.draw_map).pack(side='left', padx=(0, 12))
 
         split = ttk.Panedwindow(self, orient='horizontal')
         split.pack(fill='both', expand=True)
@@ -430,8 +446,11 @@ class Painter(ttk.Frame):
         if not sel:
             return
         try:
-            self.world.docs.edit(self.current, self.rows[sel[0]], self.field_editor.get('1.0', 'end-1c'))
+            with self.world.docs.grouped():
+                self.world.docs.edit(self.current, self.rows[sel[0]], self.field_editor.get('1.0', 'end-1c'))
+                self.world.normalise_demographics()
             self.populate_fields()
+            self.refresh_map()
             self._status('Field updated in memory')
         except ValueError as exc:
             messagebox.showerror('Invalid draft', str(exc), parent=self.root)
@@ -439,8 +458,11 @@ class Painter(ttk.Frame):
     def apply_source(self):
         if self.current:
             try:
-                self.world.docs.replace(self.current, self.source_editor.get('1.0', 'end-1c'))
+                with self.world.docs.grouped():
+                    self.world.docs.replace(self.current, self.source_editor.get('1.0', 'end-1c'))
+                    self.world.normalise_demographics()
                 self.populate_fields()
+                self.refresh_map()
                 self._status('Source updated in memory; this does not execute script effects')
             except ValueError as exc:
                 messagebox.showerror('Invalid draft', str(exc), parent=self.root)
@@ -457,8 +479,11 @@ class Painter(ttk.Frame):
             sel = self.fields.selection()
             n = self.rows.get(sel[0]) if sel else None
             at = n.end - 1 if n and n.children is not None else len(text)
-            self.world.docs.replace(self.current, text[:at] + '\n\t' + snippet + '\n' + text[at:])
+            with self.world.docs.grouped():
+                self.world.docs.replace(self.current, text[:at] + '\n\t' + snippet + '\n' + text[at:])
+                self.world.normalise_demographics()
             self.populate_fields()
+            self.refresh_map()
             self._status('Custom field added to memory')
         except ValueError as exc:
             messagebox.showerror('Invalid draft', str(exc), parent=self.root)
@@ -469,6 +494,8 @@ class Painter(ttk.Frame):
 
     def draw_map(self):
         image = self.map_source.resize((round(self.map_source.width * self.zoom), round(self.map_source.height * self.zoom)), Image.Resampling.NEAREST)
+        image = self.world.boundary_overlay(image, self.show_province_boundaries.get(),
+                                            self.show_state_boundaries.get(), self.show_region_boundaries.get())
         self.map_photo = ImageTk.PhotoImage(image)
         self.canvas.delete('map')
         self.canvas.create_image(0, 0, anchor='nw', image=self.map_photo, tags='map')
@@ -518,39 +545,20 @@ class Painter(ttk.Frame):
             self.inspect_state(sid)
             self._status(f'Province {pid}: state {sid}')
             return
-        if sid in self.drag_seen:
-            return
         mode = self.palette_key()
         target = self.paint_selection.get(mode)
         if target is None:
             self._status('Select a value in the Paint list first')
             return
         try:
-            if mode == 'Owner':
-                self.current_state = sid
-                self.owner_draft.set(target)
-                self.apply_owner(reveal=False)
-            else:
-                data = self.world.demographics[sid]
-                cultures = list(data['culture'])
-                species, minority = data['species'], data['minority']
-                if mode == 'Culture':
-                    operation = self.culture_operation.get()
-                    if operation == 'Set':
-                        cultures = [target]
-                    elif operation == 'Add' and target not in cultures:
-                        cultures.append(target)
-                    elif operation == 'Remove':
-                        cultures = [c for c in cultures if c != target]
-                elif mode == 'Species':
-                    species = target
-                else:
-                    minority = target
-                set_local_draft(self.world, sid, cultures, species, minority)
-                self.inspect_state(sid, reveal=False)
-                self.refresh_map()
-            self.drag_seen.add(sid)
-            self._status(f'Painted state {sid}: {mode.lower()} {target}')
+            affected = self.world.paint(pid, self.paint_scope.get(), mode, target,
+                                        self.culture_operation.get(), exclude=self.drag_seen)
+            if not affected:
+                return
+            self.drag_seen.update(affected)
+            self.inspect_state(sid, reveal=False)
+            self.refresh_map()
+            self._status(f'Painted {len(affected)} state(s): {mode.lower()} {target}')
         except ValueError as exc:
             messagebox.showerror('Invalid brush value', str(exc), parent=self.root)
 
@@ -577,6 +585,7 @@ class Painter(ttk.Frame):
         try:
             cultures = [int(s) for s in self.culture.get().replace(',', ' ').split()]
             set_local_draft(self.world, self.current_state, cultures, self.numeric_id(self.species.get()), self.numeric_id(self.minority.get()))
+            self.inspect_state(self.current_state, reveal=False)
             self.refresh_map()
             self._status('State demographics updated; Save writes the changes')
         except ValueError as exc:
@@ -586,22 +595,13 @@ class Painter(ttk.Frame):
         if self.current_state is None:
             return
         tag = self.owner_draft.get().upper().strip()
-        if tag not in self.world.country_paths:
-            messagebox.showerror('Unknown tag', 'Choose a registered mod country tag.', parent=self.root)
-            return
-        state = self.world.states[self.current_state]
-        t, ns = self.world.state_nodes(state.id)
-        hist = child(ns, 'history')
-        if hist is None:
-            return
-        existing = [n for n in hist.children if n.key == 'owner']
-        if existing:
-            self.world.docs.edit(state.path, existing[-1], tag)
-        else:
-            self.world.docs.replace(state.path, t[:hist.end - 1] + '\n\t\towner = ' + tag + '\n\t' + t[hist.end - 1:])
-        self.inspect_state(state.id, reveal=reveal)
-        self.refresh_map()
-        self._status('Owner draft updated; demographics remain attached to the state')
+        try:
+            self.world.set_owner_draft(self.current_state, tag)
+            self.inspect_state(self.current_state, reveal=reveal)
+            self.refresh_map()
+            self._status('Owner draft updated; demographics remain attached to the state')
+        except ValueError as exc:
+            messagebox.showerror('Invalid owner', str(exc), parent=self.root)
 
     def state_fields(self):
         if self.current_state:
@@ -677,7 +677,7 @@ class Painter(ttk.Frame):
             self._flag()
 
     def _sync(self):
-        self.world.demographics = Setup(self.world).load()
+        self.world.normalise_demographics()
         self.populate_fields()
         self.refresh_map()
         if self.current_state:
@@ -703,6 +703,7 @@ class Painter(ttk.Frame):
 
     def save(self):
         try:
+            self.world.normalise_demographics()
             setup = Setup(self.world)
             setup.load()
             if setup.selected and self.world.docs.changed:

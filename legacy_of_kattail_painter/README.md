@@ -11,8 +11,10 @@ left palette and dark map canvas.
 
 1. Choose **Culture**, **Species** or **Owner** in **Paint**.
 2. Search the **Paint** sidebar and select a named entry with its colour swatch.
-3. Click or drag over states to assign that entry. Painting always affects the
-   whole state, not individual provinces.
+3. Choose **State** or **Strategic region** in **Paint scope**, then click or
+   drag to assign that entry. State scope changes the clicked state; Strategic
+   region changes all states in the clicked region. Each regional action undoes
+   as one operation, and a state is painted only once per drag.
 4. Use **Save** or **Ctrl+S** to write edited source files. Undo/Redo apply to
    unsaved edits; saving establishes a new baseline and clears undo history.
 
@@ -20,8 +22,11 @@ Culture supports **Set**, **Add** and **Remove**. Set replaces the state's cultu
 list; Add/Remove retain other entries and their order. Existing three-culture
 states are preserved until explicitly painted or edited.
 
-Species has **Majority** and **Minority** selectors. Each changes only its own
-field. Choose **No minority** to clear the minority (runtime value `1000`).
+Species has **Majority** and **Minority** selectors. Each changes its own field;
+if the resulting species are identical, the minority is automatically cleared.
+This also repairs equal pairs loaded from source files or entered in the source
+editor, including before Save. Choose **No minority** to clear the minority
+(runtime value `1000`, which cannot be used as a majority species).
 The **Species** view shows minority-coloured diagonal stripes over the majority
 colour. Water stays water-coloured. The separate Minority view remains available.
 
@@ -30,6 +35,17 @@ multi-culture state it picks the first culture. The rest of that drag gesture
 also remains unpainted. **Inspect** opens the state form. Right-drag pans;
 the wheel and toolbar zoom; Fit frames the map. **View** changes the map overlay
 independently of the paint brush.
+
+**Province boundaries**, **State boundaries** and **Strategic region boundaries**
+can be toggled independently. Their lines are 1, 2 and 3 screen pixels wide,
+respectively, including after zooming. These display options are independent of
+the paint scope and start switched off.
+
+Culture, majority, minority and owner brushes all support both scopes. A region
+containing a state that crosses its boundary is refused before any painting,
+because state-level data cannot be split safely between regions. The current
+map has no such split states. Province/region memberships are loaded when the
+painter starts; restart after editing map topology externally.
 
 The sidebar also contains **State setup** for full ordered culture lists,
 majority/minority values and owner changes, and **Sources** for country/state

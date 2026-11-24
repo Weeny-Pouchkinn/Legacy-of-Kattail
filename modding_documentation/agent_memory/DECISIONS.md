@@ -1,5 +1,38 @@
 # Decisions
 
+## 2026-11-24: Import EU4 nations within existing ZZZ states
+**Decision:** transfer whole states by EU4 default-bookmark ownership pixels,
+excluding seas/lakes/impassable terrain and retaining uncolonised land as a vote.
+Preserve all existing state/province boundaries and exclude Meogartha, as explicitly
+confirmed by the user. Reuse LRN -> LAK and NOV -> NFS and existing dormant tags.
+**Rationale:** respect HOI4 ownership granularity and established identity without
+worldwide border changes. Keeping uncolonised pixels prevents incidental frontier
+slivers from claiming whole states.
+**Consequences:** 39 countries/320 states; 84 stay ZZZ. WMD's only imported state
+331 is its capital because the source capital does not overlap eligible territory.
+Existing country history/localisation wins over conflicting EU4 text. Missing
+histories use documented starter values; unrelated OOBs are replaced by an empty
+OOB rather than inventing armies. Exact provenance is in eu4_zzz_import/audit.json.
+
+## 2026-11-24: Species invariant and geographic brush scopes
+**Decision:** when majority equals minority, keep the majority and clear minority
+to 1000, including Diverse (0). Enforce through the shared demographic setter,
+normalised load, raw-edit handling and World document pre-save hook. Reject
+1000 as a majority ID. Repair three existing equal pairs with guarded backups.
+**Rationale:** explicitly requested rule, without changing other demographic data
+or introducing game-time polling. Existing runtime identifiers remain intact.
+**Consequence:** invalid loaded data appears repaired and is staged for Save;
+undo cannot reintroduce an equal pair into the active demographic model.
+
+**Decision:** boundaries are independent display overlays at 1/2/3 screen pixels;
+State/Strategic region is a separate paint scope. Region painting changes whole
+member states as one undo group and refuses split states before editing.
+**Rationale:** culture/species/ownership are state-level data; silently painting
+outside a selected region would violate its boundary. The current map has no
+split states, but future edits must not assume that remains true.
+**Consequence:** all four brushes share region membership and rollback logic;
+region membership and boundary geometry are snapshots loaded on painter startup.
+
 ## 2026-11-24: State histories own initial demographics
 **Decision:** initialise `state_cultures`, `species` and `minority` inside each
 state's native history effect block and remove the old startup assignment lists.

@@ -89,6 +89,124 @@ class FixtureTests(unittest.TestCase):
         self.assertEqual(text.count('# LOK PAINTER DEMOGRAPHICS BEGIN'), 1)
         self.assertEqual(Setup(self.world).load()[1]['species'], 5)
 
+    def test_equal_species_clear_minority_including_diverse_zero(self):
+        for species in (0, 1, 3):
+            set_local_draft(self.world, 1, [4, 7, 9], species, species)
+            self.assertEqual(self.world.demographics[1]['minority'], 1000)
+            self.assertEqual(Setup(self.world).load()[1]['minority'], 1000)
+        with self.assertRaisesRegex(ValueError, 'cannot be the majority'):
+            set_local_draft(self.world, 1, [4], 1000, 1000)
+
+    def test_loaded_and_raw_edited_duplicates_are_repaired_on_save(self):
+        set_local_draft(self.world, 1, [4, 7, 9], 3, 1000)
+        rel = self.world.states[1].path
+        raw = self.world.docs.text(rel).replace('minority = 1000', 'minority = 3')
+        self.world.docs.replace(rel, raw)
+        setup = Setup(self.world)
+        self.assertEqual(setup.load()[1]['minority'], 1000)
+        self.assertEqual(setup.redundant_minorities, {1})
+        count, _ = self.world.docs.save()
+        self.assertEqual(count, 1)
+        self.assertIn('minority = 1000', (self.root / rel).read_text())
+        fresh = Setup(World(self.root))
+        self.assertEqual(fresh.load()[1]['minority'], 1000)
+        self.assertFalse(fresh.redundant_minorities)
+
+    def regional_world(self):
+        with (self.root / 'map/definition.csv').open('a') as stream:
+            stream.write('3;7;8;9;land;false;plains;1\n4;10;11;12;land;false;plains;1\n')
+        path = self.root / 'history/states/one.txt'
+        path.write_bytes(path.read_bytes().replace(b'provinces = { 1 }', b'provinces = { 1 4 }'))
+        (self.root / 'history/states/three.txt').write_text(
+            'state = { id = 3 name = THREE provinces = { 3 } history = { owner = BBB } }')
+        regions = self.root / 'map/strategicregions'
+        regions.mkdir()
+        (regions / 'first.txt').write_text('strategic_region = { id = 10 name = FIRST provinces = { 1 4 2 } }')
+        (regions / 'second.txt').write_text('strategic_region = { id = 20 name = SECOND provinces = { 3 } }')
+        world = World(self.root)
+        world.demographics = Setup(world).load()
+        world.map_ids = np.tile(np.repeat(np.array([1, 4, 2, 3], dtype=np.int32), 8), (12, 1))
+        return world
+
+    def test_region_scope_paints_only_members_and_undoes_as_one_action(self):
+        world = self.regional_world()
+        before = Setup(world).load()
+        self.assertEqual(world.paint_targets(1, 'State'), (1,))
+        self.assertEqual(world.paint_targets(4, 'Strategic region'), (1, 2))
+        self.assertEqual(world.paint(1, 'Strategic region', 'Culture', 7), (1, 2))
+        self.assertEqual(world.demographics[1]['culture'], [7])
+        self.assertEqual(world.demographics[2]['culture'], [7])
+        self.assertEqual(world.demographics[3], before[3])
+        self.assertEqual(len(world.docs.undo_stack), 1)
+        world.docs.undo()
+        self.assertEqual(Setup(world).load(), before)
+        world.docs.redo()
+        self.assertEqual(Setup(world).load()[2]['culture'], [7])
+        self.assertEqual(world.paint(2, 'Strategic region', 'Culture', 7, exclude={1, 2}), ())
+        self.assertEqual(len(world.docs.undo_stack), 1)
+        self.assertEqual(world.docs.save()[0], 2)
+        self.assertEqual(Setup(World(self.root)).load()[2]['culture'], [7])
+
+    def test_region_species_brushes_enforce_invariant_per_state(self):
+        world = self.regional_world()
+        # State 1 starts with minority 9, state 2 with no minority.
+        world.paint(1, 'Strategic region', 'Species', 9)
+        self.assertEqual([world.demographics[s]['species'] for s in (1, 2)], [9, 9])
+        self.assertEqual([world.demographics[s]['minority'] for s in (1, 2)], [1000, 1000])
+        world.paint(1, 'Strategic region', 'Minority', 9)
+        self.assertEqual([world.demographics[s]['minority'] for s in (1, 2)], [1000, 1000])
+        world.paint(1, 'Strategic region', 'Minority', 3)
+        self.assertEqual([world.demographics[s]['minority'] for s in (1, 2)], [3, 3])
+        self.assertEqual(world.demographics[3]['species'], 0)
+
+    def test_region_owner_brush_and_drag_exclusion(self):
+        world = self.regional_world()
+        self.assertEqual(world.paint(1, 'Strategic region', 'Owner', 'AAA', exclude={1}), (2,))
+        for sid, expected in ((1, 'AAA'), (2, 'AAA'), (3, 'BBB')):
+            text, nodes = world.state_nodes(sid)
+            self.assertEqual(scalar(text, child(nodes, 'history').children, 'owner'), expected)
+
+    def test_region_scope_refuses_split_states_before_editing(self):
+        self.regional_world()
+        regions = self.root / 'map/strategicregions'
+        (regions / 'first.txt').write_text('strategic_region = { id = 10 name = FIRST provinces = { 1 2 } }')
+        (regions / 'second.txt').write_text('strategic_region = { id = 20 name = SECOND provinces = { 3 4 } }')
+        world = World(self.root)
+        world.demographics = Setup(world).load()
+        with self.assertRaisesRegex(ValueError, 'crosses strategic region'):
+            world.paint(1, 'Strategic region', 'Culture', 7)
+        self.assertFalse(world.docs.changed)
+        self.assertEqual(world.paint_targets(1, 'State'), (1,))
+
+    def test_region_edit_failure_rolls_back_whole_group(self):
+        world = self.regional_world()
+        apply = world.set_owner_draft
+        def fail_second(sid, tag):
+            if sid == 2:
+                raise ValueError('simulated second state failure')
+            apply(sid, tag)
+        with patch.object(world, 'set_owner_draft', side_effect=fail_second):
+            with self.assertRaisesRegex(ValueError, 'simulated second'):
+                world.paint(1, 'Strategic region', 'Owner', 'BBB')
+        self.assertFalse(world.docs.changed)
+        self.assertFalse(world.docs.undo_stack)
+
+    def test_boundary_levels_are_independent_and_keep_display_pixel_widths(self):
+        world = self.regional_world()
+        image = Image.new('RGB', (32, 12), (100, 150, 200))
+        self.assertEqual(np.flatnonzero(np.asarray(world.boundary_mask('Province', image.size))[5]).tolist(), [8, 16, 24])
+        self.assertEqual(np.flatnonzero(np.asarray(world.boundary_mask('State', image.size))[5]).tolist(), [16, 17, 24, 25])
+        self.assertEqual(np.flatnonzero(np.asarray(world.boundary_mask('Strategic region', image.size))[5]).tolist(), [24, 25, 26])
+        self.assertIs(world.boundary_overlay(image), image)
+        for flags, point, expected in [((True, False, False), (8, 5), (55, 55, 55)),
+                                       ((False, True, False), (16, 5), (15, 15, 15)),
+                                       ((False, False, True), (24, 5), (245, 245, 245))]:
+            self.assertEqual(world.boundary_overlay(image, *flags).getpixel(point), expected)
+        self.assertEqual(image.getpixel((24, 5)), (100, 150, 200))
+        for size, first in [((64, 24), 48), ((16, 6), 12)]:
+            row = np.asarray(world.boundary_mask('Strategic region', size))[size[1] // 2]
+            self.assertEqual(np.flatnonzero(row).tolist(), [first, first + 1, first + 2])
+
     def test_arbitrary_unknown_field_and_duplicates_remain_editable(self):
         rel = 'history/states/one.txt'
         original = self.world.docs.text(rel)

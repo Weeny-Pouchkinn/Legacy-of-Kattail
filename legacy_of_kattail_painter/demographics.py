@@ -39,6 +39,7 @@ class Setup:
                     self.triggers[n.key] = (t, n.children)
         self.missing_states = set()
         self.selected = []
+        self.redundant_minorities = set()
         self.text = ''
         self.cores = {}
         for sid in world.states:
@@ -148,12 +149,22 @@ class Setup:
                 if local:
                     self.data[sid] = {'culture': [], 'species': 0, 'minority': 1000}
                     self.run(t, local, sid)
+        for sid, data in self.data.items():
+            if data['species'] == 1000:
+                raise ValueError(f'State {sid}: No minority (1000) cannot be the majority species')
+            if data['minority'] == data['species']:
+                self.redundant_minorities.add(sid)
+                data['minority'] = 1000
         return self.data
 
 
 def set_local_draft(world, sid, cultures, species, minority):
     if any(c < 0 for c in cultures) or species < 0 or minority < 0:
         raise ValueError('Demographic IDs must be nonnegative')
+    if species == 1000:
+        raise ValueError('No minority (1000) cannot be the majority species')
+    if minority == species:
+        minority = 1000
     rel = world.states[sid].path
     t, ns = world.state_nodes(sid)
     hist = child(ns, 'history')
@@ -185,3 +196,14 @@ def set_local_draft(world, sid, cultures, species, minority):
         new = t[:at] + snippet + t[at:]
     world.docs.replace(rel, new)
     world.demographics[sid] = {'culture': list(cultures), 'species': species, 'minority': minority}
+
+
+def repair_redundant_minorities(world):
+    """Normalise loaded/raw-edited demographics and stage persistent repairs."""
+    setup = Setup(world)
+    world.demographics = setup.load()
+    with world.docs.grouped():
+        for sid in sorted(setup.redundant_minorities):
+            data = world.demographics[sid]
+            set_local_draft(world, sid, data['culture'], data['species'], 1000)
+    return setup.redundant_minorities
