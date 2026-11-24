@@ -10,7 +10,8 @@ import shutil
 
 FILES = ['painter.py', 'model.py', 'source_io.py', 'character_model.py', 'character_ui.py', 'refactor_characters.py',
          'test_characters.py', 'test_selectors.py', 'select_ui.py', 'verify_characters.py', 'demographics.py', 'migrate_state_setup.py',
-         'small_portrait.py', 'benchmark_characters.py', 'assets/ministermaker_border.png',
+         'small_portrait.py', 'benchmark_characters.py', 'trait_model.py', 'trait_ui.py', 'test_traits.py',
+         'country_model.py', 'country_ui.py', 'test_countries.py', 'assets/ministermaker_border.png',
          'run_painter.bat', 'requirements.txt', '.gitignore', 'README.md', 'MODLOG.md', 'PLAN.md', 'test_painter.py']
 
 

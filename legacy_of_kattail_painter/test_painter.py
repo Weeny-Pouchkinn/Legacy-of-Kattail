@@ -216,6 +216,123 @@ class FixtureTests(unittest.TestCase):
         self.world.docs.edit(rel, node, '27')
         self.assertIn('alien_energy = 12 alien_energy = 27', self.world.docs.text(rel))
 
+    def test_viewport_matches_full_nearest_render_with_stripes_and_all_layers(self):
+        from types import SimpleNamespace
+        world = self.regional_world()
+        world.culture_colours = {4: (20, 60, 90), 7: (200, 50, 30), 9: (110, 220, 80)}
+        world.species_colours = {0: (60, 70, 80), 1: (100, 150, 200)}
+        world.minority_colours = {9: (200, 50, 100)}
+        world.catalog_store = SimpleNamespace(wonder_sites=lambda: {1: 24})
+        # Include sea and unassigned pixels as well as multiple provinces of one state.
+        world.map_ids[0, ::3] = 0
+        for layer in ('Owners', 'States', 'Provinces', 'Terrain', 'Continents', 'Culture', 'Species', 'Minority', 'Wonder'):
+            full = world.map_image(layer)
+            for size in ((32, 12), (17, 7), (61, 23), (7, 5)):
+                box = (2, 1, size[0]-1, size[1]-1)
+                expected = np.asarray(full.resize(size, Image.Resampling.NEAREST).crop(box))
+                actual = np.asarray(world.map_image(layer, size, box))
+                np.testing.assert_array_equal(actual, expected, err_msg=f'{layer} {size}')
+        self.assertLessEqual(len(world._map_samples), 2)
+
+    def test_viewport_boundary_halo_matches_full_overlay_at_crop_edges(self):
+        world = self.regional_world()
+        for size in ((32, 12), (61, 23), (17, 7)):
+            for box in ((0, 0, size[0], size[1]), (size[0]//2+1, 2, size[0]-1, size[1]-1)):
+                for kind in ('Province', 'State', 'Strategic region'):
+                    expected = world.boundary_mask(kind, size).crop(box)
+                    np.testing.assert_array_equal(np.asarray(world.boundary_mask(kind, size, box)), np.asarray(expected))
+            image = Image.new('RGB', size, (100, 150, 200)); box = (3, 1, size[0]-1, size[1]-1)
+            expected = world.boundary_overlay(image, True, True, True).crop(box)
+            actual = world.boundary_overlay(image.crop(box), True, True, True, size, box)
+            np.testing.assert_array_equal(np.asarray(actual), np.asarray(expected))
+
+    def test_render_cache_follows_owner_color_demographic_undo_and_discard(self):
+        world = self.regional_world(); path = 'common/countries/colors.txt'
+        (self.root / path).parent.mkdir(parents=True, exist_ok=True)
+        (self.root / path).write_text('AAA = { color = rgb { 10 20 30 } } BBB = { color = rgb { 90 80 70 } }')
+        self.assertEqual(world.map_image('Owners').getpixel((1, 1)), (10, 20, 30))
+        with patch('model.parse', wraps=parse) as parser:
+            world.country_colours(); self.assertEqual(parser.call_count, 0)
+        world.docs.replace(path, 'AAA = { color = rgb { 40 50 60 } } BBB = { color = rgb { 90 80 70 } }')
+        self.assertEqual(world.map_image('Owners').getpixel((1, 1)), (40, 50, 60))
+        world.docs.undo(); self.assertEqual(world.map_image('Owners').getpixel((1, 1)), (10, 20, 30))
+        world.paint(1, 'State', 'Owner', 'BBB')
+        self.assertEqual(world.map_image('Owners').getpixel((1, 1)), (90, 80, 70))
+        world.docs.reset(); self.assertEqual(world.map_image('Owners').getpixel((1, 1)), (10, 20, 30))
+        world.species_colours = {0: (1, 2, 3), 1: (4, 5, 6), 9: (7, 8, 9)}; world.minority_colours = {9: (10, 11, 12)}
+        before = np.asarray(world.map_image('Species', (21, 9))).copy()
+        world.paint(1, 'State', 'Species', 9)
+        self.assertEqual(world.demographics[1]['minority'], 1000)
+        self.assertFalse(np.array_equal(np.asarray(world.map_image('Species', (21, 9))), before))
+        world.docs.undo(); world.demographics = Setup(world).load()
+        np.testing.assert_array_equal(np.asarray(world.map_image('Species', (21, 9))), before)
+
+    def test_drag_applies_all_states_then_coalesces_redraw_and_flushes_on_release(self):
+        from types import SimpleNamespace
+        from painter import Painter
+        world = self.regional_world(); jobs = {}; renders = []; inspected = []
+        class Var:
+            def __init__(self, value): self.value = value
+            def get(self): return self.value
+        def after(delay, callback):
+            key = len(jobs)+1; jobs[key] = callback; return key
+        app = SimpleNamespace(world=world, zoom=1, drag_seen=set(), pick_only=False, last_painted=None,
+                              canvas=SimpleNamespace(canvasx=lambda x:x, canvasy=lambda y:y),
+                              root=SimpleNamespace(after=after, after_cancel=lambda key: jobs.pop(key, None)),
+                              brush=Var('Culture'), paint_scope=Var('State'), culture_operation=Var('Set'),
+                              paint_selection={'Culture': 99}, palette_key=lambda:'Culture', _map_job=None,
+                              _paint_feedback=None, _status=lambda *args:None,
+                              inspect_state=lambda sid, reveal:inspected.append(sid), refresh_map=lambda:renders.append(True))
+        app.cancel_map_job = lambda:Painter.cancel_map_job(app)
+        app.schedule_map = lambda:Painter.schedule_map(app)
+        app.flush_map = lambda:Painter.flush_map(app)
+        with patch.object(world, 'paint', wraps=world.paint) as paint:
+            for x in (1, 2, 3, 17, 18, 25): Painter.pick(app, SimpleNamespace(x=x, y=1, state=0))
+            self.assertEqual(paint.call_count, 3)
+        self.assertEqual([world.demographics[s]['culture'] for s in (1, 2, 3)], [[99]]*3)
+        self.assertEqual(len(jobs), 1); self.assertEqual(renders, [])
+        Painter.paint_release(app)
+        self.assertEqual(len(renders), 1); self.assertEqual(inspected, [3]); self.assertFalse(jobs)
+        self.assertFalse(app.drag_seen); self.assertEqual(len(world.docs.undo_stack), 3)
+        world.docs.undo(); self.assertEqual(Setup(world).load()[3]['culture'], [4])
+
+    def test_validated_parse_is_reused_and_invalidates_after_undo_redo_reset(self):
+        docs = self.world.docs; path = self.world.states[1].path
+        original = docs.text(path); changed = original.replace('owner = AAA', 'owner = BBB')
+        docs.replace(path, changed)
+        with patch('model.parse', wraps=parse) as parser:
+            text, nodes = docs.parsed(path)
+            self.assertEqual(parser.call_count, 0); self.assertEqual(text, changed)
+            self.assertIs(docs.parsed(path)[1], nodes)
+        with self.assertRaises(ValueError): docs.replace(path, 'state = {')
+        self.assertEqual(docs.parsed(path)[0], changed)
+        docs.undo(); self.assertEqual(docs.parsed(path)[0], original)
+        docs.redo(); self.assertEqual(docs.parsed(path)[0], changed)
+        docs.reset(); self.assertEqual(docs.parsed(path)[0], original)
+
+    def test_wonder_batch_reuses_validated_startup_and_preserves_other_scopes(self):
+        from character_model import CharacterStore
+        from demographics import MapCatalogStore, CATALOG_PATHS
+        world = self.regional_world()
+        for key, text in {
+            'effects': 'setup_wonder_array = { preserve = yes }',
+            'dynamic': 'lok_wonder_modifier = { weekly_manpower = wonder_modifiers_values^0 }',
+            'wonder_loc': 'l_english:\n var_wonder.1:0 "Wonder"\n var_wonder_desc.1:0 "Description"\n',
+        }.items():
+            path = self.root / CATALOG_PATHS[key]; path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding='utf-8')
+        world.docs.replace(STARTUP, 'on_actions = { on_startup = { effect = { 1 = { set_variable = { wonder = 1 unrelated = 99 } setup_wonder_array = yes set_variable = { wonder_modifiers_values^0 = 10 } } } } on_weekly = { effect = { keep = yes } } }')
+        store = MapCatalogStore(world, CharacterStore(world))
+        store.paint_wonder((2, 3), 1, 'Place copies')
+        with patch('model.parse', wraps=parse) as parser:
+            self.assertEqual(store.wonder_sites(), {1: 1, 2: 1, 3: 1})
+            self.assertEqual(parser.call_count, 0)
+        store.paint_wonder((3,), 1, 'Move')
+        self.assertEqual(store.wonder_sites(), {3: 1})
+        self.assertIn('unrelated = 99', world.docs.text(STARTUP))
+        self.assertIn('on_weekly = { effect = { keep = yes } }', world.docs.text(STARTUP))
+        world.docs.undo(); self.assertEqual(store.wonder_sites(), {1: 1, 2: 1, 3: 1})
+
     def test_source_path_escape_is_rejected(self):
         with self.assertRaises(ValueError):
             self.world.docs.text('../secret.txt')

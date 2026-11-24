@@ -1,5 +1,30 @@
 # Decisions
 
+## 2026-11-24: Native trait registries and bounded commander rolls
+**Decision:** read both native/mod unit and country-leader trait databases,
+honor relative-path replacements including empty files, expose overridden
+vanilla for inspection and clone only under unique IDs. Resolve file constants
+when cloning; existing mod edits stay in their source. New traits sort into
+the family's lok_traits.txt; English names/descriptions sort into
+localisation/english/painter/traits_l_english.yml with BOM. This distinct path
+keeps the requested basename separate from the installed vanilla file.
+Character localisation collection excludes that trait-owned file.
+**Rationale:** military/country traits use different native structures; mod
+overrides and file-local constants must survive tool editing. Shared localized
+selectors show names/IDs while retaining exact native identifiers.
+**Consequences:** cached modifier catalog derives from official installed docs
+and custom modifier definitions, with native/plural/tooltip aliases and fallback
+ID-derived labels. Categories are displayed, not treated as a full scope checker.
+Roll base stats using active table bounds and literal level-up defines; retain
+level and exclude trait bonuses from the base budget. This is editor generation,
+not a full HOI4 VM. Roll generic available vanilla traits with exclusions/rank
+checks; preserve custom/status/scripted traits. Explicit and zero-weight
+has_trait incompatibilities are respected; conditional/parent-dependent traits
+are excluded conservatively. Fresh traits default to manual assignment; clones
+retain source generation rules. All changes are guarded drafts with nested
+Cancel/Undo. Existing portrait/character saves are retained; the original
+migration audit is historical and no longer matches three authored data files.
+
 ## 2026-11-24: Cache character data by affected files; separate labels from IDs
 **Decision:** keep file inventories/parsed files and derived character catalogs
 in memory, invalidate by actual draft category and rebuild only changed files.
@@ -156,3 +181,50 @@ they receive. Keeping an occupation can be reconsidered after `@LOK_FATE_RECONSI
 duplicating a puppet they already have or gaining cores on each other's land.
 **Consequence:** a surviving rump nation can only regain land through peace deals. Puppets of one
 nation under different overlords share a name.
+
+
+## 2026-11-24: Render painter viewports before coloring
+
+Decision: follow the EU4 painter's viewport/lookup-table pattern. Sample immutable
+province IDs at display coordinates before applying current per-state colors;
+retain a bounded viewport/halo cache, static palettes and source-sensitive native
+color/parse caches. Use Pillow 1-D coordinate resizing to preserve nearest-neighbor
+tie behavior exactly. Borders retain display-pixel thickness across crop edges.
+
+Apply every brush edit synchronously, and throttle only rendering, inspection and
+status feedback to a 25 ms frame queue. Release flushes the frame. Do not debounce
+away paint events, postpone source validation or change existing Undo grouping.
+All caches are session memory, with no new painter/source files. Native source
+validation remains more expensive for wonders because their startup file is large.
+
+
+## 2026-11-24: Native country authoring and authoritative history species
+
+Use normal tag/country/history/ideological-localization/TGA/idea/GFX/character
+files for country edits, with no country/flag/spirit JSON or custom data sidecars.
+New Python modules are implementation, not generated mod data. Current country
+quick-add does not touch the legacy character metadata file. Flag recipes remain
+session controls; baked flags and imported native DDS masks survive restarts.
+
+Country species and national attributes are native ideas in country history.
+Game-consumed history flags make the existing startup defaults respect explicit
+choices. Guard attribute tech bonuses as well as ideas, then clone the existing
+bonus template into a scoped tag block for the chosen attribute. This avoids
+retaining nuclear/computing bonuses from the old default. Untouched countries
+keep their existing setup; no automatic global history migration or recurring
+loops. New country files use TAG.txt; existing filenames are preserved.
+
+Preserve relative technology/equipment-variant order, unrelated history and
+conditional/dated branches. Country forms are transactions including nested
+leader/spirit/emblem dialogs. Apply groups all actions; Cancel/Undo restore native
+indexes too. All selectors use existing localized name/ID search controls.
+
+
+## 2026-11-24: Visual flag choice windows
+
+Flag background/emblem arrows open modal thumbnail galleries rather than the
+text suggestion popup; typing remains supported in entries. Use the current
+palette/tint/size to show actual flag previews. Keep picker candidates local until
+acceptance, restore the owning modal grab on close, and leave native writers alone.
+Use a virtual canvas and small rendering batches, with bounded window-local image
+and mask caches. Do not generate thumbnail caches or new painter game-data files.

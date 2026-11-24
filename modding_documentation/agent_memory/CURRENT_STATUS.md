@@ -1,5 +1,117 @@
 # Current status
 
+## Visual flag background/emblem pickers (2026-11-24)
+
+COUNTRIES > Flags arrows, entry double-clicks and Browse buttons now open visual
+thumbnail galleries with a large full-flag preview. Current colors/tint/size,
+name/code/fuzzy search, source filters, keyboard controls and Cancel/accept are
+supported. Rendering is lazy and batched; caches are bounded in memory. No new
+assets, native game IDs, data/cache files or writer changes. Restart to load it.
+
+83 tests pass, including three new Tk gallery tests over 1,004 choices. Native
+mapped Tk verified 346 emblems (35 visible thumbnails, zero failures), all 17
+backgrounds, minimum-size preview layout, arrow callbacks, selection/cancel and
+parent grab restoration. Country drafts and checked native source hashes stayed
+unchanged. Compilation/whitespace passed; no screenshot review or live Save.
+Exact files and commands: legacy_of_kattail_painter/MODLOG.md.
+
+
+## Native country editor (2026-11-24)
+
+On Painter-Test, added COUNTRIES create/edit with seven tabs: setup and capital
+map pick; live party-popularity pie; ideological name/DEF bulk copying/article
+helpers; native flag import/design with all/undefined copying; linked character
+leaders; starting techs; national spirits/modifiers and vanilla/mod icon library.
+17 recolorable flag backgrounds, independent emblem tint, existing Stellaris/EU4
+emblems and native reusable DDS mask import are available. New countries register
+native definitions/history/flags; Owner palette/library entry points and a Paint
+on map button work. No country/flag/spirit JSON/data sidecars are created.
+
+Edited country species/attributes live in country history as native ideas.
+Game-consumed lok_country_species_defined_in_history and
+lok_country_attribute_defined_in_history flags guard original startup defaults.
+Selected attributes reuse native scoped research-bonus templates; untouched tags
+keep the previous defaults. No new world loops or global history migration.
+Existing character roles/recruitments, dated/conditional setup, unknown fields,
+localization BOM and tech/equipment ordering are preserved. Forms support grouped
+Undo/Redo/Cancel and native guarded Save.
+
+Validation: 80 tests pass; compilation and scoped whitespace checks pass. All 198
+native histories load, with 273 registered tags. Native alpha-zero Tk probes
+covered all country tabs, flag/name bulk actions, emblem tint, leader/spirit
+creation, icon previews, capital pick/Escape, Apply/Cancel/Undo/Redo and new-country
+Owner painting; all 14,521 checked native file hashes stayed unchanged. A full
+20-native-file Save/reload fixture passed without a character metadata file.
+Guard probe left the other 197 country law setups unchanged. Two existing railway
+validator issues remain at lines 893-894. No game/CWTools/screenshot validation.
+
+Restart the painter, open COUNTRIES, edit or create, Apply, then Save. Full source
+paths, native destinations, references and limits: legacy_of_kattail_painter/MODLOG.md.
+Earlier unrelated working-tree changes and the separate culture/species/wonder
+catalog-authoring save/reload milestone are preserved; this does not close that
+separate follow-up.
+
+
+## Painting performance (2026-11-24)
+
+Optimized the existing MAP painter using EU4's viewport rendering pattern.
+Only visible pixels plus a pan margin are colored; geometry, static palettes,
+country colors, validated catalog parses, Tk images and wonder icons are cached.
+Brushes edit immediately; redraw/inspection/status share a 25 ms frame queue,
+flushed on release. Repeated motion in painted states skips brush work. Native
+catalog existence checks are no longer repeated per province. Undo remains as
+before, and caches are bounded and memory-only.
+
+Same-run warm redraw at 25% zoom: culture 170.44 -> 17.75 ms, species
+281.82 -> 26.27 ms, owners 251.32 -> 25.75 ms, wonder 211.37 -> 15.64 ms.
+Methodology/limits and exact changed paths are in the painter MODLOG.md.
+67 fixture tests and compilation pass. Native alpha-zero Tk probes verified all
+nine views, pixel-exact viewport/zoom/pan/boundary rendering and actual paint,
+release flush, Undo/Redo, discard and fit. All 14,521 checked native file hashes
+stayed unchanged. Map validation still reports the two existing railway links on
+lines 893-894. No engine/CWTools/screenshot review or game identifiers changed.
+
+Restart the painter to use the optimization. The separate culture/species/wonder
+catalog-authoring milestone still needs its full save/reload verification; this
+performance task verifies rendering and painting, not every authoring workflow.
+
+
+## Trait database and commander randomizers (2026-11-24)
+
+Added CHARACTERS / Trait database with General, Admiral, Political advisor and
+Other unit views. Reads installed vanilla and mod trait folders; shows origins,
+active/overridden definitions and name/ID search. Current data: 3,960 definitions,
+1,695 active, 775 searchable modifiers. Native modifier docs/custom definitions
+and English localization supply labels/categories. Vanilla is inspect/clone;
+file constants resolve on cloning. Mod definitions edit in place. New user traits
+write alphabetically to the appropriate common/unit_leader/lok_traits.txt or
+common/country_leader/lok_traits.txt and BOM English strings to
+localisation/english/painter/traits_l_english.yml. No live dummy traits created.
+
+Military role dialogs roll base skills from current level with active skill
+bounds/defines (vanilla 4 + 3*(level-1)), keep level, and roll a chosen count of
+generic vanilla traits. Add/replace modes preserve custom/status/scripted traits
+and avoid incompatible/unavailable/restricted choices. Field marshals can carry
+general traits, matching 25 existing mod cases. All rolls stay local until Apply;
+Cancel/Undo/Save guards hold across trait and localisation edits. Existing
+character/portrait edits from save_20261124_172934_590513 are preserved.
+
+Validation: 61 fixture tests, compilation, native hidden-Tk source/catalog/
+randomizer/editor checks and read-only real verification. All 10,864 current
+source hashes unchanged during checks; four pre-existing OOB brace errors remain.
+Unchanged view refresh 0.1–0.2 ms, warm role 0.110 s, skills 0.024 s, traits
+0.0044 s measured. Changed-code whitespace checks pass. Whole diff still flags
+existing common/characters/LOK_eu4_import_characters.txt:35 whitespace.
+
+Historical character migration audit is now stale after the existing save:
+portrait GFX, character metadata and English character localisation differ.
+Do not revert those authored edits or rewrite the old snapshot to claim a pass.
+No live game sources/assets written by this task; future trait files are created
+on user Save. No in-game/CWTools/screenshot validation. Exact files/commands and
+source references: legacy_of_kattail_painter/MODLOG.md and
+plans/trait-database-randomizers.md. Next: restart painter; test saved traits and
+tooltips in a fresh game. No editor implementation blocker.
+
 ## Painter performance and localized selectors (2026-11-24)
 
 Optimized character-localization prefix matching (removed the measured 87.6

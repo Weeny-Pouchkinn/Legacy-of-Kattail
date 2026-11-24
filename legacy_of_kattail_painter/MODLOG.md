@@ -1,5 +1,113 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-24 - Trait database and commander randomizers
+
+Added CHARACTERS / Trait database, grouped into Generals, Admirals, Political
+advisors and Other unit traits. Reads installed vanilla plus mod unit/country
+leader folders; shows source/status and optional overridden vanilla definitions.
+Exact relative-path replacements and empty mod files shadow vanilla. No vanilla
+files are written. Vanilla definitions are inspected or cloned under a unique
+ID; clones resolve file-local constants. Existing mod definitions edit in place.
+New definitions go into the family's existing lok_traits.txt, sorted by ID.
+Their two English strings go into the distinct relative path
+localisation/english/painter/traits_l_english.yml, sorted with UTF-8 BOM. The
+character localizer leaves those trait strings in their own file, including
+IDs sharing a character prefix. No production traits or lore were invented.
+
+The trait editor supports named/ID modifier search, localized labels, categories,
+numeric/yes-no values, add/update/remove, native modifier contexts and advanced
+body editing. Uses installed modifiers_documentation.md and native/mod custom
+modifier definitions. Handles both MODIFIER_ and MODIFIERS_ localisation keys,
+tooltip aliases and known commander-size aliases; unresolved labels are derived
+from their IDs. Nested conditions/effects and other authored fields survive edits.
+
+Military role dialogs now offer level-based skill rolls and a count/mode control
+for random vanilla traits. Skill rolls read active tables, bounds and level-up
+defines; current vanilla policy is four starting base points plus three per
+level above one (level 1–9, stats 1–10). Admiral maneuvering/coordination replace
+land planning/logistics. The current level stays unchanged; trait stat bonuses
+are not baked into the base roll. Literal mod define overrides and draft/Undo
+changes are honored; unsupported Lua expressions fail rather than guess.
+
+Random trait rolls use vanilla IDs present in the effective setup, generic
+personality/earned traits, role/rank checks and explicit incompatibilities
+(including zero-weight has_trait exclusions). Parent/conditional/country-
+restricted, status and unavailable traits are excluded from the pool. Replace
+mode replaces only eligible generic vanilla traits; Add preserves them. Custom,
+injury/status and scripted traits remain. Field marshals can carry general
+traits: 25 current mod examples include Pawtton with infantry_expert and
+skilled_staffer. Rolls remain dialog-local until Apply; Cancel/Undo/Save are
+coordinated with character/trait/localisation drafts and backup/conflict guards.
+
+Caching avoids re-reading catalogs or redrawing an unchanged trait view, including
+ordinary character stat edits. Measured hidden Tk: unchanged trait views
+0.0001–0.0002 s, trait dialog 0.125/0.157 s, warm military role 0.110 s, skill
+roll 0.024 s, trait roll 0.0044 s. One-time native catalog reads remain per launch.
+There is no game runtime iteration or on_action added.
+
+Files changed for this task (relative to mod root):
+
+- legacy_of_kattail_painter/trait_model.py (new)
+- legacy_of_kattail_painter/trait_ui.py (new)
+- legacy_of_kattail_painter/test_traits.py (new)
+- legacy_of_kattail_painter/character_model.py
+- legacy_of_kattail_painter/character_ui.py
+- legacy_of_kattail_painter/install.py
+- legacy_of_kattail_painter/README.md and MODLOG.md
+- modding_documentation/agent_memory/CURRENT_STATUS.md and DECISIONS.md
+- modding_documentation/agent_memory/plans/trait-database-randomizers.md
+
+No live common/history/localisation/GFX files were written by this task. The
+managed trait/localisation files are generated when the user creates and saves
+a trait. Existing character/portrait edits from save_20261124_172934_590513 are
+preserved. Fixed the field patcher to avoid producing new trailing whitespace
+when appending to an inline block; no existing source file was reformatted.
+
+Identifiers: new Python TraitStore, Trait, TraitWorkspace, TraitDialog and role
+randomize_skills/randomize_traits controls; no new game IDs. Future trait IDs
+are user-supplied, globally checked against vanilla/mod traits and localisation.
+No public IDs renamed. New localisation keys are the trait ID and <ID>_desc.
+
+Validation performed:
+
+- `python -B -m unittest discover -s legacy_of_kattail_painter -p 'test*.py'`:
+  61 tests; ten trait tests cover overlays/empty files, role filtering, hundreds
+  of seeded skill/trait rolls, caps/budgets, mod define drafts/Undo, incompatible
+  traits, sorted writes/BOM/tokens, constant-safe clone, duplicate IDs, cache
+  reuse, modifier UI, Apply/Cancel/Undo and fixture Save/reload.
+- Hidden Tk on current data: all four trait categories, both origins and
+  overridden filter, read-only vanilla inspection, modifier name/ID search,
+  custom-tag/role behavior, skill/trait rolls, 1050x680 workspace and zero
+  callback errors. 3,960 definitions, 1,695 active; category counts 84 generals,
+  68 admirals, 1,543 political and 22 other unit entries (shared traits overlap).
+  Catalog has 775 modifiers. No live save invoked.
+- `python -B legacy_of_kattail_painter/verify_real.py --mod . --output
+  '<temporary diagnostics directory>'`: passed read-only source/map/draft/
+  Undo/Redo/flags/field checks; all 10,864 source hashes unchanged. All 1,026
+  mask renders pass. Four existing EUL/GAL/KKN/KTZ OOB brace errors remain.
+- `python -B legacy_of_kattail_painter/verify_characters.py`: historical snapshot
+  check fails, as expected after the existing character save. Mismatches are
+  interface/lok_leader_portraits.gfx, characters_painter_data.json and
+  characters_l_english.yml. The audit snapshot was not rewritten to hide this.
+- Python compilation and new-file/scoped whitespace checks pass. Whole
+  `git diff --check` still flags existing trailing whitespace in
+  common/characters/LOK_eu4_import_characters.txt:35; left intact. Full diff/stat
+  reviewed with existing unrelated state/character work preserved.
+
+Sources: installed common/unit_leader/00_traits.txt:1–58 (native trait schema),
+common/defines/00_defines.lua:1159–1163 (level-up count/weights), installed
+common/unit_leader/*skills*.txt (bounds), modifiers_documentation.md:1797 and
+4413 plus other modifier headings/categories; mod
+common/modifier_definitions/lok_modifier_definitions.txt, local
+vanilla_folders/vanilla_common/unit_leader/00_traits.txt and
+how_to_add_a_dynamic_modifier.md. Live official wiki access returned HTTP 401;
+no third-party engine rules were used.
+
+Limits: this is a bounded editor roll, not full country/trigger/DLC simulation.
+Modifier categories are displayed; raw body validation checks structure rather
+than all engine scopes. No in-game/CWTools/screenshot validation. Restart the
+painter; native trait/tooltip verification in a fresh game remains the next check.
+
 ## 2026-11-24 - Character performance and searchable localized selectors
 
 Profiled native source operations without saving drafts. The main bottleneck
@@ -401,3 +509,277 @@ outside writable roots, so direct installation was unavailable in this session.
 Next action: install the folder; optionally apply the reviewed migration using
 the installer; run the painter. Validate the migration in a fresh offline game
 and inspect relevant logs before accepting it.
+
+
+## 2026-11-24: Painting performance
+
+User request: optimize painting, consulting the EU4 painter. Profiled native
+state brushes, inspection and redraw separately. Writes/inspection were roughly
+1-2 ms for normal brushes; full-resolution map reconstruction dominated latency.
+The wonder view also called its catalog lookup per province, repeatedly checking
+the filesystem. No game definitions/maps were changed by this task.
+
+Implementation files:
+- legacy_of_kattail_painter/model.py: optional display-size/viewport map rendering,
+  cached sampled province IDs, per-state palettes, bounded deterministic color
+  cache, static-layer palettes and source-sensitive country-color cache. Reuse
+  validated parses for catalog editing; identical replacements skip validation.
+  Viewport boundaries carry a three-pixel incoming halo to preserve thickness.
+- legacy_of_kattail_painter/painter.py: render visible canvas plus 128 px margin,
+  reuse Tk map image/item, refresh when panning/scrolling/resizing leaves that
+  margin, and cache/cull wonder icons. Paint events apply immediately, skip
+  repeated states, and coalesce only rendering/inspection into a 25 ms frame;
+  mouse release flushes pending feedback. Existing Undo grouping is preserved.
+- legacy_of_kattail_painter/demographics.py: check required native file existence
+  once per session, reuse validated draft parses, and calculate the startup
+  insertion offset from edits rather than reparsing the entire file to find it.
+- legacy_of_kattail_painter/test_painter.py: six regression tests for exact layer/
+  stripe/zoom/crop pixels, boundary halos, color/owner/demographic cache changes,
+  complete drag application and release flush, validated-parse invalidation,
+  and batched wonder placement preserving unrelated state/startup scopes.
+- Documentation: README.md, PLAN.md, and existing CURRENT_STATUS.md/DECISIONS.md.
+
+Reference inspected read-only:
+C:/Users/elowi/Documents/Paradox Interactive/Europa Universalis IV/mod/LegacyOfKattailEU4/tools/culture_painter/culture_painter.py
+Methods schedule_tree_refresh (10669), schedule_render (11003), render (11009),
+visible_box, view_moved, province_colour_lut and map_rgb. Its useful
+patterns are viewport sampling before coloring, delayed refresh and reuse of the
+Tk image. The EU4 module was not imported or modified (it can write caches).
+
+Same-process warm redraw comparison, native Tk mapped at alpha zero, 25% zoom,
+4096x3072 source, four repeats with the first discarded. The comparison loads
+the prior full-map map_image/country_colours implementations from Git into a
+scratch Python namespace; it includes the existing wonder branch. Both versions
+use the now-cached native catalog existence checks, so the wonder comparison is
+conservative; the old repeated filesystem-check penalty is excluded. No profiler
+was active in this comparison. Median full-map -> viewport redraw:
+
+| View | Before ms | After ms | Ratio |
+| --- | ---: | ---: | ---: |
+| Culture | 170.44 | 17.75 | 9.6x |
+| Species | 281.82 | 26.27 | 10.7x |
+| Owners | 251.32 | 25.75 | 9.8x |
+| Wonder | 211.37 | 15.64 | 13.5x |
+
+Separate native edit/inspect/render warm medians (ms): culture .86/.40/14.87,
+species .87/.37/23.28, owners .79/.41/23.12, wonders 37.17/.33/15.86.
+Wonder placement still validates the large native startup source; rendering is
+batched but source validation is retained. Measurements depend on hardware,
+viewport size and cache warmth and do not include the queued frame delay.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  67 passed (8.975 s on the final run).
+- python -m py_compile for model.py, painter.py, demographics.py and
+  test_painter.py, with PYTHONPYCACHEPREFIX in Temp: passed.
+- Native readonly Python/Tk probe: all nine views at zoom 1.6, panning, all three
+  boundaries separately covered by fixtures and jointly in native UI, with exact
+  comparisons against full-resolution NEAREST resize/crop. Actual UI paint,
+  queued feedback, release, Undo/Redo, discard/reset and fit passed. Tk Save was
+  disabled; all 14,521 tracked native script/localisation/map/DDS/TGA SHA-256
+  hashes remained unchanged. First attempted probe had an overly strict test
+  assumption that requesting the same pan position must queue a redraw; fixed
+  the probe to move the viewport, then completed the checks. No UI defect was
+  attributed to that assertion.
+- The fixture caught Pillow nearest-neighbor ties at a noninteger ratio; sampling
+  now resizes 1-D coordinate ramps with Pillow to match its RGB sampling exactly.
+- git -c core.fsmonitor=false diff --check for the four Python files: passed.
+  Full relevant diffs reviewed, including preserved earlier catalog-editor work.
+- python -B tools/validate_map.py: the same two existing railway errors at
+  lines 893-894 (20839/20841 and 20841/19461). Map sources were untouched.
+
+No identifiers, game variables, sprites or runtime scripts were added/renamed by
+this optimization. No new files, disk caches, native data writes, game launch,
+CWTools run or screenshot-based appearance review. This rendering/painting
+validation does not complete the separate catalog-authoring Save/reload milestone.
+
+
+## 2026-11-24: Native country authoring
+
+User request: working country create/edit, ideology popularities/pie, native
+ideological names and flags with bulk actions/DEF helpers, linked party leaders,
+starting technologies/spirits, capital map selection, stability/war support,
+laws, national attribute/species, recolorable common flag patterns and reusable
+imported emblems. Follow-up: country species belongs in country history when
+possible. Implemented on the existing Painter-Test branch without committing or
+changing live game data. Earlier unrelated working-tree changes are preserved.
+
+Tool files changed:
+- legacy_of_kattail_painter/country_model.py (new implementation module): native
+  country/ideology/technology/idea catalogs, source-preserving writers, exact
+  popularity validation, flag patterns/TGA exports, native reusable emblem import,
+  leader recruitment/promotion and country history/startup coordination.
+- legacy_of_kattail_painter/country_ui.py (new implementation module): COUNTRIES
+  workspace, seven country tabs, live popularity pie, name/flag bulk actions,
+  17 flag patterns, leader quick-add, native spirit/modifier editor and virtual
+  vanilla/mod icon browser. All selectors use shared name/ID search controls.
+- legacy_of_kattail_painter/test_countries.py (new tests): 13 country authoring
+  regressions over disposable native-schema fixtures.
+- legacy_of_kattail_painter/painter.py: workspace integration, Owner palette and
+  source-library entry points, capital map handoff/Escape, live country/name/
+  picker refresh and a route from the older session flag sketches.
+- legacy_of_kattail_painter/model.py: refresh registration/history/file indexes
+  from native drafts after create/Apply/Cancel/Undo/Redo; detect duplicate tags
+  and duplicate country history sources instead of silently choosing one.
+- legacy_of_kattail_painter/install.py: include the new tool modules/tests.
+- Existing README.md, PLAN.md, modding_documentation/agent_memory/CURRENT_STATUS.md
+  and modding_documentation/agent_memory/DECISIONS.md document the workflow.
+
+Game write destinations (on user Save only):
+- Existing common/country_tags/00_countries.txt for new tag registrations.
+- Existing registered common/countries/<file>.txt and country history filename;
+  new countries use common/countries/TAG.txt and history/countries/TAG.txt.
+  Existing colors.txt overrides are updated where present.
+- Existing localization owners for each name/DEF key; newly introduced country
+  keys go in localisation/english/countries_l_english.yml. Names retain normal
+  TAG_ideology and TAG_ideology_DEF keys plus the base TAG/TAG_DEF fallbacks.
+- Native gfx/flags[/medium|/small]/TAG[_ideology].tga, RGB, 82x52/41x26/10x7.
+- Existing common/ideas/lok_misc_ideas.txt, localisation/english/LOK_ideas_l_english.yml
+  and interface/lok_ideas.gfx for new user spirits; existing spirits edit their
+  current definition/localization owners. Icon selection preserves the old sprite
+  when unchanged; changed/new icons get a native GFX_idea_<idea_ID> registration,
+  reusing the chosen game texture and frame count.
+- Native common/characters/TAG - characters.txt and existing English character
+  localization for quick-created leaders. Existing characters gain only the
+  necessary country_leader role; other roles/portrait slots remain. Country
+  history receives recruit_character and explicit subtype-aware promote_character.
+- Native gfx/interface/flags/emblems/lok_flag_emblem_<user_stem>.dds and existing
+  interface/lok_misc_icons.gfx for reusable masks (GFX_lok_flag_emblem_<user_stem>).
+  DDS is uncompressed RGBA, not claimed to be DXT-compressed. EU4 emblem_sources
+  PNGs and existing Stellaris masks are read directly without importing EU4 code.
+- Existing common/on_actions/LOK_on_actions.txt receives native guards respecting
+  history choices. Species ideas and attribute ideas are written in country
+  history with lok_country_species_defined_in_history and
+  lok_country_attribute_defined_in_history flags. These are game-consumed flags,
+  not metadata files. The guards preserve the existing defaults for untouched
+  countries; they do not migrate every country's old setup automatically.
+  Existing attribute add_tech_bonus bodies are guarded and copied verbatim to
+  scoped tag blocks when applicable, avoiding a stale nuclear/computing bonus
+  after changing attribute. No new recurring or world-wide loops are introduced.
+
+No country, flag, emblem or spirit painter JSON/override/cache files are generated.
+There are three new Python tool/test modules, not new game-data sidecars. The
+country quick-add flow does not write the legacy character metadata JSON. The
+separate full character editor remains its existing feature/workflow.
+
+Important behavior and preservation:
+- Popularities must be finite, nonnegative and total exactly 100 (Decimal).
+- New countries default to volunteer_only/civilian_economy and a native base flag
+  in the selected map color unless a flag is supplied. Three-character uppercase
+  alphanumeric tags must start with a letter; collisions/orphan histories reject
+  before writing. No states are automatically transferred by choosing a capital.
+- Bulk undefined names preserve intentional empty authored strings; name and DEF
+  are filled independently. Missing names can inherit base values. Existing
+  intentional blank base names (e.g. placeholder countries) remain editable.
+- Bulk undefined flags preserves explicit ideology flags; new/imported/generated
+  flags always write all three sizes. Patterns/emblem colors are editable session
+  parameters; saved flags are flattened TGA files, without recipe metadata.
+- New techs enter the first unconditional block and existing techs keep their
+  positions relative to equipment variants. Dated/DLC branches and unrelated
+  history/election fields remain. Conditional setup is not simulated in the UI.
+- Spirit edits preserve on_add/conditions, nested modifier blocks and unchanged
+  nonnumeric custom_modifier_tooltip fields. New numeric effects must support
+  country scope. Reused vanilla icons have their own native sprite alias when
+  needed, so an overridden vanilla alternative can still be selected.
+- Accepted country forms flatten nested draft actions into one Undo. Cancel and
+  failed multi-file writes restore the draft set; native indexes refresh too.
+
+Primary local references inspected:
+- Installed game documentation/effects_documentation.md: add_country_leader_role
+  (line 986), promote_character (5150; subtype required for multiple roles),
+  recruit_character (5697), set_popularities (7542; exactly 100), set_technology
+  (7807). Installed path: C:/Program Files (x86)/Steam/steamapps/common/Hearts of Iron IV.
+- history/countries/LAU - EU4 import.txt and KTN - Katteneiland.txt for undated
+  country setup, repeated tech blocks and equipment-variant ordering.
+- common/ideas/_manpower.txt, _economic.txt, 00_lok_economy_laws.txt,
+  lok_attributes_ideas.txt (specialty category, line 2), lok_species_ideas.txt,
+  lok_misc_ideas.txt, interface/lok_ideas.gfx and countries_l_english.yml.
+- Existing LOK_on_actions.txt country attribute setup (1556 onward) and country
+  species setup (1611 onward); native trigger definitions for initial classifiers.
+- EU4 tools/culture_painter/culture_painter.py background renderer around 4102
+  and CountryDialog pattern list around 7909. Read-only comparison; no EU4 imports
+  or writes. Existing IZW_emblem.png, ROQ_emblem.png and TAK_emblem.png verified.
+
+Validation performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  80 tests passed in 9.332 s on the final run.
+- python -m py_compile country_model.py, country_ui.py, test_countries.py,
+  painter.py, model.py and install.py, with PYTHONPYCACHEPREFIX in Temp: passed.
+- All 198 existing country histories read without errors; 273 native tags indexed.
+- Native mapped Tk (alpha zero), with live Save disabled: country list, all seven
+  tabs, popularity/name/DEF/undefined copying, native flag import/all/undefined,
+  17-pattern design/tint/reusable emblem, map capital pick and Escape, new leader
+  recruitment/promotion, spirit authoring, 3,608 vanilla/mod icon entries and lazy
+  visible thumbnails. Whole-country Apply, one-step Undo/Redo, new-country Cancel
+  and Owner-brush selection passed. Country edits staged 43 native paths in the
+  combined UI probe; no JSON/editor-data path. All 14,521 checked native source/
+  localization/map/TGA/DDS hashes stayed unchanged. A first-display blank country
+  list was discovered and fixed with a Map/idle refresh; final check shows all
+  273 rows, and 274 after a temporary new country draft.
+- Follow-up native guard probe: changing LAU's attribute/species left all other
+  197 country law setups unchanged in the initial-setup evaluator. Verified the
+  generated scoped native attribute bonus and preservation of PTQ's authored
+  nonnumeric spirit tooltip/icon. No live Save.
+- Full disposable Save/reload through the same prepare_save/backup path: 20 native
+  files, complete ideological names/DEFs, all flag sizes, leader and portrait,
+  spirit/icon, techs, popularity, laws and capital verified after a fresh World.
+  UTF-8 BOM retained; no legacy character metadata file created. This complements
+  fixture tests for rollback/collision guards, source preservation and native
+  species/attribute startup handling.
+- Scoped git diff --check passed for tracked code; new modules/tests were checked
+  explicitly for trailing whitespace. Relevant diffs reviewed; package manifest
+  includes the new modules. No new user/lore data was installed in the live mod.
+- python -B tools/validate_map.py still reports only the existing two railway
+  jumps on lines 893-894 (20839/20841, 20841/19461). Map files were untouched.
+
+No game launch, CWTools run or screenshot-based visual review. Static/Tk checks
+are not proof of all campaign scripts/conditional history outcomes. Existing
+separate catalog-authoring follow-up from the preceding task remains separate.
+
+
+## 2026-11-24: Visual flag background and emblem selectors
+
+Replaced the flag designer's text-only arrow actions with modal image galleries,
+following the EU4 painter's FlagLibraryDialog (culture_painter.py around lines
+7476-7645; browse_flag_library around 8046). EU4 was inspected read-only, not
+imported. Existing picker entries still support typing; arrows, entry double-click
+and explicit Browse buttons open image windows.
+
+Changed files for this task:
+- legacy_of_kattail_painter/country_ui.py: FlagDesigner.browse and new
+  FlagLibraryPicker. Virtual scrolling thumbnail grid, large full-flag preview,
+  current palette/tint/size, name/code/fuzzy search, emblem source filters,
+  selected highlighting, keyboard movement, double-click/Enter/Use acceptance,
+  Cancel/Escape and restored parent modal grab. Long captions are shortened; the
+  full selected name/code is shown beside the preview (EU4 files show filenames).
+- legacy_of_kattail_painter/test_countries.py: three Tk gallery regression tests.
+- Existing README.md, PLAN.md, CURRENT_STATUS.md and DECISIONS.md updated.
+
+Thumbnails use render_flag and existing mask readers. Only visible rows plus a
+small margin render, six images per scheduled batch. Window-local LRU bounds:
+128 Tk thumbnails and 96 resized masks (maximum 384x384). Searches/scrolls cancel
+stale queued renders; closing cancels pending callbacks. Missing images show an
+unavailable tile and cannot be accepted. No game IDs, flags, source formats,
+assets, writer behavior, cache files or metadata files were added or changed.
+Selection is read-only until the user accepts; accepting updates designer controls
+and the preview, not the country flag draft until Use design is pressed.
+
+Validation:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  83 tests passed. Three new tests exercise a 1,004-choice library, lazy/bounded
+  rendering, thumbnails/tint, source/name/code search, arrow-opened modal windows,
+  Apply versus Cancel, No emblem, keyboard selection, missing-image recovery,
+  grab restoration and no premature flag application.
+- Python compilation for country_ui.py and test_countries.py with bytecode in
+  Temp passed. Scoped whitespace checks passed.
+- Native alpha-zero mapped Tk probe, live Save disabled: 346 emblem choices,
+  35 visible photos with no failed assets; all 17 backgrounds rendered; name/code
+  search, real arrow callbacks, acceptance/cancellation and parent grab restoration
+  passed. Large preview fits at 1100x760 and 800x560. Country drafts remained
+  unchanged, as did hashes of startup, miscellaneous GFX, country localisation
+  and legacy character metadata. An initial probe exposed missing grab restoration
+  when the picker was instantiated directly; the picker now restores its owner
+  on close as well as the caller doing so, and the probe passed on rerun.
+
+No live game-data write, external publication or screenshot-based visual review.
+This is a native editor UI change; no campaign behavior or map topology changed.

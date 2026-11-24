@@ -11,6 +11,8 @@ left palette and dark map canvas.
 
 The main **MAP** tab contains these map tools. **CHARACTERS** opens the
 character editor and its independent **Portrait definitions** library.
+**COUNTRIES** opens native country setup, ideological names/flags and starting
+leaders, technologies and national spirits.
 
 Dropdowns accept typing: search either the localized name or the internal ID.
 Entries display `Name (ID)` wherever a localized name exists and sort by name.
@@ -87,7 +89,8 @@ scopes or gameplay semantics. Four pre-existing OOB files (EUL/GAL/KKN/KTZ) have
 excess closing braces; raw text remains available but structured fields cannot
 be displayed until corrected.
 
-Flags remain session-only prototypes; Save does not export flag images.
+MAP > Flag maker sketches remain session-only. COUNTRIES > Flags drafts are
+written by Save as native large/medium/small TGA assets.
 Discard removes unsaved source changes and session flags. Closing warns when
 unsaved changes or session flags remain.
 
@@ -150,6 +153,9 @@ section (state histories are effect blocks), and installed
 `history/states/271-ethiopia.txt` (native `set_variable` effects in history).
 
 ## Flag maker
+
+This MAP sketchpad remains available. For persistent imports and patterned flag
+editing, use **COUNTRIES > Flags** (documented below).
 
 Choose one solid background and one optionally tinted flat Stellaris emblem.
 Background and emblem colours are independent; Refresh colours applies entered
@@ -249,3 +255,149 @@ measured run); subsequent opens reuse them. Restart to incorporate external edit
 the measured source operations using unsaved drafts and checks loaded source
 snapshots afterward. It never saves sources. Omit `--profile` for ordinary timings.
 See MODLOG.md for before/after measurements and separate actual Tk timings.
+
+## Trait database and random commander rolls
+
+Open **CHARACTERS → Trait database** for General, Admiral and Political advisor
+traits (plus other unit traits such as operative/status definitions). The reader
+loads both the installed game's and the mod's `common/unit_leader/` and
+`common/country_leader/` files. Mod file replacements, including empty files,
+are respected. Enable **Show overridden vanilla** to compare definitions that
+the mod replaces. Names/IDs are searchable and sorted by localized name; source
+files and active/overridden status remain visible.
+
+**New trait** creates a definition with the supplied ID, name, description and
+modifiers. Choose modifiers by localized name or code, enter their game-unit
+value, and use **Add / update** or **Remove**. Military modifiers normally go in
+`modifier`; the other native modifier blocks and direct trait stat bonuses are
+also available. Political modifiers go directly on the trait. The picker shows
+modifier categories; advanced nested effects, conditions, icons and special
+modifier blocks remain editable in **Other fields and conditions**. Native
+modifier documentation and both gameside/mod custom modifier definitions supply
+the catalog. Names without a known translation use a readable ID-derived label.
+
+Vanilla definitions are read-only. **Clone with new ID** copies one into the
+mod, resolving its file-local constants first. Existing mod traits edit their
+own source so existing public IDs/conditions are preserved. Added definitions go
+into `common/unit_leader/lok_traits.txt` or
+`common/country_leader/lok_traits.txt`, alphabetically by ID. Their names and
+descriptions go into `localisation/english/painter/traits_l_english.yml` with
+UTF-8 BOM and alphabetic keys. The distinct subfolder retains the requested
+basename without writing over the installed file. Empty descriptions stay empty;
+the editor invents no lore or traits. Files are created only when a new draft is
+saved. Apply/Cancel, Undo/Redo and guarded Save work as for characters.
+
+In a general/field-marshal/admiral role editor:
+
+- **Randomize skills from current level** keeps the level and rolls its four
+  base stats using active skill tables and level-up defines. With current
+  vanilla rules the budget is `4 + 3 × (level − 1)`, each stat 1–10 and overall
+  level 1–9. Land/naval fields differ. This editor policy excludes trait bonuses;
+  it does not simulate all conditional game generation weights. Unsupported Lua
+  expressions or incomplete skill tables produce an error instead of a guess.
+- **Roll traits** selects the requested count of generic vanilla trait IDs that
+  exist in the active mod setup. **Replace vanilla** replaces only eligible
+  generic traits; **Add** retains them. Both retain custom traits, injuries/status
+  and country-restricted/scripted traits. The roller avoids explicit
+  incompatibilities, unavailable parents and restricted traits. Field marshals
+  can also receive general traits. Roll results stay in the role dialog until
+  Apply and are discarded by Cancel.
+
+Fresh traits do not enter the game's automatic generation pool by default;
+clones retain the source's generation rules. Assign fresh traits to a character
+or explicitly edit their generation rules. Read-only
+vanilla files are never written. Restart the painter to load these controls.
+
+
+## Faster map painting (2026-11-24)
+
+Restart the painter to load the optimized renderer. It now colors only the
+visible viewport (with a small pan margin), samples province IDs before coloring,
+and reuses geometry, static palettes, country colors, map images and wonder icons.
+Painting applies each state immediately; map/inspector updates share a 25 ms
+frame queue, with a final flush on mouse release. Repeated motion within an
+already-painted state skips the brush. Save, state/region scope and undo retain
+their existing behavior. All caches are in memory; no cache/data files are added.
+
+In a same-run warm comparison at 25% zoom, culture redraw was 170.44 -> 17.75 ms,
+species 281.82 -> 26.27 ms, owners 251.32 -> 25.75 ms and wonders
+211.37 -> 15.64 ms. These are local redraw measurements, not guaranteed frame
+rates or total stroke times. First loading a layer/icon can take longer.
+See MODLOG.md for methodology and validation.
+
+
+## Country editor
+
+Restart the painter and open **COUNTRIES**. Select a country and choose **Edit
+selected**, or use **New country**. The Owner palette's New/Edit buttons and a
+double-click on a country in the source library also open this editor. **Paint on
+map** selects the country for the Owner brush. Creating a country registers it;
+assign its territory separately with the Owner brush.
+
+The country form has seven tabs:
+
+- **Setup**: tag, base name, map color, capital (search or **Pick on map**),
+  stability/war support in percent, mobilization and economy laws, optional
+  national economic model, national attribute and national species. New countries
+  default to `volunteer_only` and `civilian_economy`. Escape cancels a map pick.
+- **Parties & popularity**: ruling ideology and popularity values with a live pie
+  chart in the ideology colors. Values must total exactly 100%.
+- **Ideology names**: normal and DEF names for the base and each ideology. Copy to
+  all or only undefined ideology fields; duplicate normal to DEF with/without
+  `the`. Missing overrides inherit base names. Existing explicit empty strings
+  count as defined and are preserved by the undefined-only action.
+- **Flags**: import an image or use 17 editable background patterns, four colors,
+  a separately tinted emblem and emblem sizing. Use the design, then copy to all
+  ideologies or only those without an explicit flag. The three native sizes are
+  written together: 82x52, 41x26 and 10x7, as RGB TGA. Base flags remain fallback
+  flags. Saved flags are ordinary flattened images; design controls are session
+  values, not separate metadata. You can remake a pattern or import its image.
+- **Leaders**: recruited party leaders/candidates for every ideology. Quickly
+  assign an existing character or create a native character with a name,
+  description, portrait pair and subideology. Assignment explicitly promotes the
+  character. Open the linked character editor for the full roles/traits/portraits
+  interface. Existing other roles/recruitments remain unless edited there.
+- **Starting technologies**: searchable native technology IDs with levels. Edits
+  preserve original assignment positions, popup flags and conditional/dated
+  scripts. New technologies join the first unconditional technology block so
+  they precede equipment-variant creation.
+- **National spirits**: searchable starting spirits and native create/edit with
+  localized name, description, country modifiers and an icon. The icon browser
+  lists both vanilla and mod sprites (including overridden vanilla alternatives),
+  with lazy previews. Editing an existing spirit changes its shared definition.
+
+The emblem selector reuses the white Stellaris masks, existing EU4 imported
+emblems and emblems imported here. **Import reusable emblem** accepts alpha,
+white-on-dark or dark-on-light masks. Imported masks become native DDS assets
+registered in the existing miscellaneous GFX file, so they remain reusable after
+restarting; flags themselves have no external image dependency.
+
+**Apply country** stages an atomic draft. Nested leader, spirit and imported
+emblem changes belong to that draft: Cancel restores them, and an accepted form
+undoes as one action. **Save** writes the normal game files with guarded backups.
+There are no new country/flag/spirit JSON catalogs or painter-specific game-data
+files. New countries receive normal tag registrations, country definitions,
+history and flags; existing countries keep their existing source filenames.
+
+National species is stored as its native species idea in country history.
+Native history flags make startup defaults respect explicit species and
+attribute choices. Attribute research bonuses are copied from the existing
+native templates and scoped to the edited country; unchanged countries keep
+their original default setup. Unconditional starting setup is edited;
+conditional/dated game scripts are preserved and are not a full campaign
+simulation. No live-game validation is claimed. Exact files and checks: MODLOG.md.
+
+
+### Visual flag library
+
+In **COUNTRIES > Flags**, click the background or emblem arrow, double-click its
+entry, or use **Browse backgrounds / Browse emblems**. Each opens a separate
+thumbnail gallery with a larger preview of the full flag, using your current
+colors, emblem tint and size. Click a tile to preview; double-click or choose
+**Use selected** to apply. Cancel/Escape leaves the design unchanged.
+
+Search matches names and codes, including near matches. The emblem window can
+filter Stellaris masks, native imports, EU4 imports or No emblem. Arrow keys move
+between tiles and Enter accepts. No emblem is a selectable tile. Only visible
+rows are rendered, with bounded memory caches; no disk thumbnails/data files are
+created. The ordinary entry fields still accept name/ID typing.

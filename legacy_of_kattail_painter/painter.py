@@ -9,10 +9,12 @@ from tkinter import ttk, messagebox, colorchooser, simpledialog, filedialog
 
 from PIL import Image, ImageTk
 from model import World, Emblems, FLAG_SIZES, child, default_paths, parse, scalar, value, walk
-from demographics import Setup, set_local_draft
+from demographics import Setup, set_local_draft, MapCatalogStore, MapDefinition, _catalog_decimal
 from character_model import CharacterStore
-from character_ui import CharacterWorkspace
+from character_ui import CharacterWorkspace, DraftDialog
 from select_ui import ChoiceBox, Choice, ChoiceIndex
+from country_model import CountryStore
+from country_ui import CountryWorkspace
 
 
 class Painter(ttk.Frame):
@@ -20,12 +22,19 @@ class Painter(ttk.Frame):
         super().__init__(root)
         self.root, self.world, self.emblems = root, world, emblems
         self.character_store = CharacterStore(world)
+        self.catalog_store = MapCatalogStore(world, self.character_store)
+        self.country_store = CountryStore(world,self.character_store,self.catalog_store,emblems)
+        self.capital_picker = None
         self.world.docs.before_save = self.prepare_save
         self.current = None
         self.current_state = None
         self.rows = {}
         self.zoom = .25
         self.map_source = None
+        self._map_job = None
+        self._paint_feedback = None
+        self._map_item = None
+        self._drawn_view = None
         self.flag_drafts = {}
         self.flag_target = tk.StringVar(value='Unassigned draft')
         self.status = tk.StringVar()
@@ -33,6 +42,7 @@ class Painter(ttk.Frame):
         self.brush = tk.StringVar(value='Culture')
         self.species_part = tk.StringVar(value='Majority')
         self.culture_operation = tk.StringVar(value='Set')
+        self.wonder_operation = tk.StringVar(value='Move')
         self.palette_search = tk.StringVar()
         self.paint_selection = {}
         self.drag_seen = set()
@@ -88,6 +98,8 @@ class Painter(ttk.Frame):
         self.character_workspace = ttk.Frame(self.workspace)
         self.workspace.add(self.map_workspace, text='MAP')
         self.workspace.add(self.character_workspace, text='CHARACTERS')
+        self.country_workspace = ttk.Frame(self.workspace)
+        self.workspace.add(self.country_workspace, text='COUNTRIES')
         top = ttk.Frame(self.map_workspace, padding=(8, 7))
         top.pack(fill='x')
         ttk.Button(top, text='Save', command=self.save).pack(side='left')
@@ -96,12 +108,12 @@ class Painter(ttk.Frame):
         ttk.Button(top, text='Discard drafts', command=self.discard).pack(side='left', padx=(6, 14))
         ttk.Label(top, text='Paint:').pack(side='left')
         brush = ChoiceBox(top, state='readonly', textvariable=self.brush,
-                             values=['Inspect', 'Owner', 'Culture', 'Species'], width=12)
+                             values=['Inspect', 'Owner', 'Culture', 'Species', 'Wonder'], width=12)
         brush.pack(side='left', padx=(5, 14))
         brush.bind('<<ComboboxSelected>>', self.brush_changed)
         ttk.Label(top, text='View:').pack(side='left')
         layers = ChoiceBox(top, state='readonly', textvariable=self.layer,
-                             values=['Owners', 'States', 'Provinces', 'Terrain', 'Continents', 'Culture', 'Species', 'Minority'], width=15)
+                             values=['Owners', 'States', 'Provinces', 'Terrain', 'Continents', 'Culture', 'Species', 'Minority', 'Wonder'], width=15)
         layers.pack(side='left', padx=(5, 14))
         layers.bind('<<ComboboxSelected>>', lambda e: (self.refresh_palette(), self.refresh_map()))
         ttk.Button(top, text='Zoom -', command=lambda: self.change_zoom(.8)).pack(side='left')
@@ -149,6 +161,7 @@ class Painter(ttk.Frame):
         scroll.pack(side='right', fill='y')
         self.library.pack(side='left', fill='both', expand=True)
         self.library.bind('<<TreeviewSelect>>', self._library_select)
+        self.library.bind('<Double-1>',self.edit_country_library)
         self.library.bind('<KeyPress>', lambda e: self.search_list(e, self.library_search, self.library_search_entry, self._library))
         ttk.Label(library, text=f'{len(self.world.states)} states / {len(self.world.countries)} countries\n{len(self.world.files)} script files\nSource: {self.world.root.name}', wraplength=400).pack(anchor='w', pady=(8, 0))
         self.tabs = ttk.Notebook(split)
@@ -160,11 +173,16 @@ class Painter(ttk.Frame):
         self._state_panel(self.state_tab)
         self._fields_tab(fields)
         self._flags_tab(flags)
+        definitions = ttk.Frame(self.tabs)
+        self.tabs.add(definitions, text='Map definitions')
+        self.definitions_panel = MapDefinitions(definitions, self)
+        self.tabs.bind('<<NotebookTabChanged>>', lambda e: self.definitions_panel.refresh())
         ttk.Label(self.sidebar, text='Click/drag to paint; Shift-click to pick.\nRight-drag to pan; wheel to zoom.', wraplength=400).pack(fill='x', pady=(8, 0))
         ttk.Label(self.map_workspace, textvariable=self.status, anchor='w', padding=(8, 4)).pack(fill='x')
 
         self.characters_panel = CharacterWorkspace(self.character_workspace, self)
-        self.workspace.bind('<<NotebookTabChanged>>', lambda e: self.characters_panel.refresh())
+        self.countries_panel = CountryWorkspace(self.country_workspace,self)
+        self.workspace.bind('<<NotebookTabChanged>>', lambda e: (self.characters_panel.refresh(),self.countries_panel.refresh()))
 
     def _palette_panel(self, tab):
         self.palette_title = tk.StringVar()
@@ -177,6 +195,13 @@ class Painter(ttk.Frame):
         ttk.Label(self.culture_controls, text='Operation:').pack(side='left')
         ChoiceBox(self.culture_controls, textvariable=self.culture_operation,
                      values=['Set', 'Add', 'Remove'], state='readonly', width=10).pack(side='left', padx=6)
+        self.wonder_controls = ttk.Frame(tab)
+        ChoiceBox(self.wonder_controls, textvariable=self.wonder_operation,
+                  values=['Move', 'Place copies'], width=18).pack(side='left')
+        edit = ttk.Frame(tab); edit.pack(fill='x', pady=4)
+        ttk.Button(edit, text='New definition', command=lambda: self.open_definition(True)).pack(side='left')
+        ttk.Button(edit, text='Edit selected', command=self.open_definition).pack(side='left', padx=6)
+        ttk.Button(edit, text='Database', command=lambda: self.workspace.select(self.country_workspace) if self.palette_key()=='Owner' else self.tabs.select(self.definitions_panel.master)).pack(side='left')
         self.palette_filter = ttk.Entry(tab, textvariable=self.palette_search)
         self.palette_filter.pack(fill='x', pady=6)
         self.palette_filter.bind('<KeyRelease>', lambda e: self.refresh_palette())
@@ -188,6 +213,7 @@ class Painter(ttk.Frame):
         scrollbar.pack(side='right', fill='y')
         self.palette.pack(side='left', fill='both', expand=True)
         self.palette.bind('<<TreeviewSelect>>', self.palette_selected)
+        self.palette.bind('<Double-1>',lambda e:self.open_definition())
         self.palette.bind('<KeyPress>', lambda e: self.search_list(e, self.palette_search, self.palette_filter, self.refresh_palette))
         self.paint_label = tk.StringVar(value='Select something to paint.')
         ttk.Label(tab, textvariable=self.paint_label, wraplength=390).pack(fill='x', pady=(8, 0))
@@ -197,7 +223,7 @@ class Painter(ttk.Frame):
         if brush == 'Species':
             return 'Species' if self.species_part.get() == 'Majority' else 'Minority'
         if brush == 'Inspect':
-            return self.layer.get() if self.layer.get() in {'Culture', 'Species', 'Minority'} else 'Owner'
+            return self.layer.get() if self.layer.get() in {'Culture', 'Species', 'Minority', 'Wonder'} else 'Owner'
         return brush
 
     def brush_changed(self, event=None):
@@ -212,17 +238,22 @@ class Painter(ttk.Frame):
     def refresh_palette(self):
         mode = self.palette_key()
         self.palette_title.set({'Owner': 'Countries', 'Culture': 'Cultures',
-                                'Species': 'Majority species', 'Minority': 'Minority species'}[mode])
+                                'Species': 'Majority species', 'Minority': 'Minority species', 'Wonder': 'Wonders'}[mode])
         self.species_controls.pack_forget()
         self.culture_controls.pack_forget()
+        self.wonder_controls.pack_forget()
         if self.brush.get() == 'Species':
             self.species_controls.pack(fill='x', pady=(6, 0), before=self.palette_filter)
         if mode == 'Culture':
             self.culture_controls.pack(fill='x', pady=(6, 0), before=self.palette_filter)
+        if mode == 'Wonder':
+            self.wonder_controls.pack(fill='x', pady=6, before=self.palette_filter)
         if mode == 'Owner':
             colours = self.world.country_colours()
             entries = [(tag, self.world.label(tag), colours.get(tag, (128, 128, 128)))
                        for tag in sorted(self.world.country_paths)]
+        elif mode == 'Wonder':
+            entries = [(0, 'No wonder (erase)', (90, 94, 100))] + [(r.key, r.name, (190, 155, 70)) for r in self.catalog_store.wonder_records().values()]
         else:
             colours = self.world.culture_colours if mode == 'Culture' else (
                 self.world.species_colours if mode == 'Species' else self.world.minority_colours)
@@ -249,6 +280,15 @@ class Painter(ttk.Frame):
                 self.palette.see(item)
         self.paint_label.set(f'Selected {mode.lower()}: {selected}' if selected is not None else 'Select something to paint.')
 
+    def open_definition(self, create=False):
+        mode = self.palette_key()
+        if mode=='Owner':
+            self.countries_panel.open(None if create else self.paint_selection.get('Owner'))
+            return
+        kind = {'Culture': 'Cultures', 'Species': 'Species', 'Minority': 'Species', 'Wonder': 'Wonders'}.get(mode)
+        if kind:
+            self.definitions_panel.open(kind, None if create else self.paint_selection.get(mode))
+
     def palette_selected(self, event=None):
         selected = self.palette.selection()
         if selected and selected[0] in self.palette_values:
@@ -262,6 +302,7 @@ class Painter(ttk.Frame):
         self.pick(event)
 
     def paint_release(self, event=None):
+        self.flush_map()
         self.drag_seen.clear()
         self.pick_only = False
         self.last_painted = None
@@ -270,8 +311,8 @@ class Painter(ttk.Frame):
         area = ttk.Frame(tab)
         area.pack(fill='both', expand=True)
         self.canvas = tk.Canvas(area, bg='#1e1e1e', highlightthickness=0)
-        xs = ttk.Scrollbar(area, orient='horizontal', command=self.canvas.xview)
-        ys = ttk.Scrollbar(area, orient='vertical', command=self.canvas.yview)
+        xs = ttk.Scrollbar(area, orient='horizontal', command=lambda *args: self.scroll_map('x', *args))
+        ys = ttk.Scrollbar(area, orient='vertical', command=lambda *args: self.scroll_map('y', *args))
         self.canvas.configure(xscrollcommand=xs.set, yscrollcommand=ys.set)
         self.canvas.grid(row=0, column=0, sticky='nsew')
         ys.grid(row=0, column=1, sticky='ns')
@@ -282,7 +323,8 @@ class Painter(ttk.Frame):
         self.canvas.bind('<B1-Motion>', self.pick)
         self.canvas.bind('<ButtonRelease-1>', self.paint_release)
         self.canvas.bind('<Button-3>', lambda e: self.canvas.scan_mark(e.x, e.y))
-        self.canvas.bind('<B3-Motion>', lambda e: self.canvas.scan_dragto(e.x, e.y, gain=1))
+        self.canvas.bind('<B3-Motion>', self.pan_map)
+        self.canvas.bind('<Configure>', lambda e: self.view_moved())
         self.canvas.bind('<MouseWheel>', lambda e: self.change_zoom(1.2 if e.delta > 0 else 1/1.2))
 
     def _state_panel(self, tab):
@@ -401,7 +443,8 @@ class Painter(ttk.Frame):
         self.flag_target_box.pack(fill='x', pady=5)
         ttk.Button(preview, text='Keep flag in session', command=self.keep_flag).pack(anchor='w', pady=5)
         ttk.Button(preview, text='Restore selected session flag', command=self.restore_flag).pack(anchor='w')
-        ttk.Label(preview, text='Flags are session prototypes. There is no image export or overwrite of existing flags in this version.', wraplength=460, foreground='#555').pack(anchor='w', pady=14)
+        ttk.Label(preview, text='This panel keeps session sketches. Use Countries > Flags for native flag import, editable patterns, reusable emblems and ideology variants.', wraplength=460, foreground='#555').pack(anchor='w', pady=14)
+        ttk.Button(preview,text='Edit country flags',command=lambda:self.countries_panel.open(self.flag_target.get() if self.flag_target.get() in self.world.country_paths else None)).pack(anchor='w')
 
     def search_list(self, event, variable, entry, refresh):
         if event.char and event.char.isprintable():
@@ -437,6 +480,13 @@ class Painter(ttk.Frame):
                     self.inspect_state(sid)
                     break
             self.tabs.select(1)
+
+    def edit_country_library(self,event=None):
+        rows=self.library.selection()
+        if rows:
+            path=self.library_paths.get(rows[0])
+            for tag,history in self.world.countries.items():
+                if history==path:self.countries_panel.open(tag);return
 
     def open_document(self, relative):
         self.current = relative
@@ -521,25 +571,106 @@ class Painter(ttk.Frame):
             messagebox.showerror('Invalid draft', str(exc), parent=self.root)
 
     def refresh_map(self):
-        self.map_source = self.world.map_image(self.layer.get())
+        self.cancel_map_job()
+        self.catalog_store.sync_world()
         self.draw_map()
 
+    def cancel_map_job(self):
+        if self._map_job is not None:
+            self.root.after_cancel(self._map_job); self._map_job = None
+
+    def schedule_map(self):
+        # Throttle, rather than debounce: long drags still get regular frames.
+        if self._map_job is None: self._map_job = self.root.after(25, self.flush_map)
+
+    def flush_map(self):
+        pending = self._map_job is not None
+        self.cancel_map_job()
+        feedback, self._paint_feedback = self._paint_feedback, None
+        if feedback:
+            sid, detail = feedback
+            self.inspect_state(sid, reveal=False); self._status(detail)
+        if pending or feedback: self.refresh_map()
+
+    def visible_box(self, size, margin=128):
+        width, height = self.canvas.winfo_width(), self.canvas.winfo_height()
+        if width <= 1 or height <= 1: return (0, 0, *size)
+        left, top = int(self.canvas.canvasx(0)), int(self.canvas.canvasy(0))
+        x0, y0 = max(0, min(size[0]-1, left-margin)), max(0, min(size[1]-1, top-margin))
+        return x0, y0, max(x0+1, min(size[0], left+width+margin)), max(y0+1, min(size[1], top+height+margin))
+
+    def view_moved(self):
+        if self.world.map_ids is None or self._drawn_view is None: return
+        size, drawn = self._drawn_view; box = self.visible_box(size, 0)
+        if not (drawn[0] <= box[0] and drawn[1] <= box[1] and box[2] <= drawn[2] and box[3] <= drawn[3]): self.schedule_map()
+
+    def scroll_map(self, axis, *args):
+        (self.canvas.xview if axis == 'x' else self.canvas.yview)(*args); self.view_moved()
+
+    def pan_map(self, event):
+        self.canvas.scan_dragto(event.x, event.y, gain=1); self.view_moved()
+
     def draw_map(self):
-        image = self.map_source.resize((round(self.map_source.width * self.zoom), round(self.map_source.height * self.zoom)), Image.Resampling.NEAREST)
+        self.world.load_map()
+        height, width = self.world.map_ids.shape
+        size = max(1, round(width*self.zoom)), max(1, round(height*self.zoom))
+        self.canvas.configure(scrollregion=(0, 0, *size))
+        box = self.visible_box(size)
+        image = self.world.map_image(self.layer.get(), size, box)
         image = self.world.boundary_overlay(image, self.show_province_boundaries.get(),
-                                            self.show_state_boundaries.get(), self.show_region_boundaries.get())
-        self.map_photo = ImageTk.PhotoImage(image)
-        self.canvas.delete('map')
-        self.canvas.create_image(0, 0, anchor='nw', image=self.map_photo, tags='map')
+                                            self.show_state_boundaries.get(), self.show_region_boundaries.get(), size, box)
+        self.map_source = image
+        current = getattr(self, 'map_photo', None)
+        if current is not None and (current.width(), current.height()) == image.size:
+            current.paste(image)
+        else:
+            self.map_photo = ImageTk.PhotoImage(image)
+            if self._map_item is not None: self.canvas.itemconfigure(self._map_item, image=self.map_photo)
+        if self._map_item is None:
+            self._map_item = self.canvas.create_image(box[0], box[1], anchor='nw', image=self.map_photo, tags='map')
+        else: self.canvas.coords(self._map_item, box[0], box[1])
+        self._drawn_view = size, box
         self.canvas.tag_lower('map')
-        self.canvas.configure(scrollregion=(0, 0, image.width, image.height))
+        self.canvas.delete('wonder')
+        if self.layer.get() == 'Wonder':
+            self.draw_wonders()
+
+    def draw_wonders(self):
+        if not hasattr(self, '_state_centers'):
+            import numpy as np
+            ids = self.world.map_ids[::4, ::4]
+            lookup = np.zeros(max(self.world.provinces) + 1, dtype=np.int32)
+            for pid, sid in self.world.province_states.items(): lookup[pid] = sid
+            states = lookup[ids]; yy, xx = np.indices(states.shape)
+            counts = np.bincount(states.ravel())
+            xs = np.bincount(states.ravel(), weights=xx.ravel() * 4)
+            ys = np.bincount(states.ravel(), weights=yy.ravel() * 4)
+            self._state_centers = {s: (xs[s]/counts[s], ys[s]/counts[s]) for s in self.world.states if s < len(counts) and counts[s]}
+        self.wonder_photos = []
+        if not hasattr(self, '_wonder_photo_cache'): self._wonder_photo_cache = {}
+        box = self._drawn_view[1]
+        for sid, ident in self.catalog_store.wonder_sites().items():
+            if not ident or sid not in self._state_centers: continue
+            x, y = self._state_centers[sid]; x *= self.zoom; y *= self.zoom
+            if not (box[0]-44 <= x <= box[2]+44 and box[1]-30 <= y <= box[3]+30): continue
+            sprite = f'GFX_wonder_{ident}'; key = (sprite, self.character_store.image_token(sprite))
+            if key not in self._wonder_photo_cache:
+                source = self.character_store.image(sprite, (44, 30))
+                if len(self._wonder_photo_cache) >= 128: self._wonder_photo_cache.clear()
+                self._wonder_photo_cache[key] = ImageTk.PhotoImage(source) if source is not None else None
+            icon = self._wonder_photo_cache[key]
+            if icon is not None:
+                self.wonder_photos.append(icon)
+                self.canvas.create_image(x, y, image=icon, tags='wonder')
+            else: self.canvas.create_text(x, y, text=str(ident), fill='#ffe0a0', tags='wonder')
 
     def change_zoom(self, multiplier):
         self.zoom = max(.12, min(2, self.zoom * multiplier))
         self.draw_map()
 
     def fit_map(self):
-        self.zoom = min(self.canvas.winfo_width() / self.map_source.width, self.canvas.winfo_height() / self.map_source.height)
+        height, width = self.world.map_ids.shape
+        self.zoom = min(self.canvas.winfo_width() / width, self.canvas.winfo_height() / height)
         self.zoom = max(.12, self.zoom)
         self.draw_map()
 
@@ -553,6 +684,12 @@ class Painter(ttk.Frame):
         if sid is None:
             self._status(f'Province {pid}: no state assignment')
             return
+        if getattr(self,'capital_picker',None) is not None:
+            dialog=self.capital_picker;self.capital_picker=None
+            self.root.unbind('<Escape>',self._capital_escape)
+            dialog.receive_capital(sid);self._status('Capital state selected')
+            return
+        if sid in self.drag_seen: return
         if self.pick_only or getattr(event, 'state', 0) & 1:
             if self.drag_seen:
                 return
@@ -563,6 +700,8 @@ class Painter(ttk.Frame):
                 target = scalar(text, child(nodes, 'history').children, 'owner')
             elif mode == 'Culture':
                 target = next(iter(data['culture']), None)
+            elif mode == 'Wonder':
+                target = self.catalog_store.wonder_sites().get(sid, 0)
             else:
                 target = data['species' if mode == 'Species' else 'minority']
             if target is not None:
@@ -583,14 +722,15 @@ class Painter(ttk.Frame):
             self._status('Select a value in the Paint list first')
             return
         try:
+            revision = self.world.docs.revision
             affected = self.world.paint(pid, self.paint_scope.get(), mode, target,
-                                        self.culture_operation.get(), exclude=self.drag_seen)
+                                        self.wonder_operation.get() if mode == 'Wonder' else self.culture_operation.get(), exclude=self.drag_seen)
             if not affected:
                 return
             self.drag_seen.update(affected)
-            self.inspect_state(sid, reveal=False)
-            self.refresh_map()
-            self._status(f'Painted {len(affected)} state(s): {mode.lower()} {target}')
+            if self.world.docs.revision == revision: return
+            self._paint_feedback = sid, f'Painted {len(affected)} state(s): {mode.lower()} {target}'
+            self.schedule_map()
         except ValueError as exc:
             messagebox.showerror('Invalid brush value', str(exc), parent=self.root)
 
@@ -610,6 +750,18 @@ class Painter(ttk.Frame):
         self.minority.set(str(d.get('minority', 1000)))
         self.owner_draft.set(owner)
         self.flag_target.set(owner or 'Unassigned draft')
+
+    def begin_capital_pick(self,dialog):
+        self.capital_picker=dialog;self.workspace.select(self.map_workspace);self.tabs.select(0)
+        self._capital_escape=self.root.bind('<Escape>',lambda e:self.cancel_capital_pick(),add='+')
+        self._status('Select the capital state on the map; Escape returns without changing it.')
+        self.canvas.focus_set()
+
+    def cancel_capital_pick(self):
+        dialog,self.capital_picker=self.capital_picker,None
+        self.root.unbind('<Escape>',self._capital_escape)
+        if dialog is not None:dialog.receive_capital()
+        self._status()
 
     def apply_demographics(self):
         if self.current_state is None:
@@ -722,13 +874,25 @@ class Painter(ttk.Frame):
             self._flag()
 
     def _sync(self):
+        self._paint_feedback = None
+        self.world.refresh_countries()
+        self.character_store._cache.pop('choices:countries',None)
+        self.world.localisation=self.character_store.localisations()
+        self._library_indices={}
+        self._library()
         self.world.normalise_demographics()
+        self.catalog_store.sync_world()
+        self.refresh_palette()
+        self.definitions_panel.refresh()
         self.populate_fields()
         self.refresh_map()
         if self.current_state:
             self.inspect_state(self.current_state, reveal=False)
         self._status()
         self.characters_panel.refresh()
+        self.countries_panel.refresh()
+        self.owner_box.configure(values=self.character_store.choices('countries'))
+        self.flag_target_box.configure(values=[Choice('Unassigned draft','Unassigned draft')]+list(self.character_store.choices('countries')))
 
     def prepare_save(self):
         self.world.normalise_demographics()
@@ -769,7 +933,282 @@ class Painter(ttk.Frame):
         if self.world.docs.changed or self.flag_drafts:
             if not messagebox.askyesno('Discard drafts and close?', 'Discard unsaved source changes and session flags, then close?', parent=self.root):
                 return
+        self.cancel_map_job()
         self.root.destroy()
+
+
+class MapDefinitions(ttk.Frame):
+    KINDS = ('Cultures', 'Culture groups', 'Species', 'Species traits', 'Wonders')
+
+    def __init__(self, parent, app):
+        super().__init__(parent, padding=10); self.pack(fill='both', expand=True)
+        self.app = app; self.store = app.catalog_store
+        self.kind = tk.StringVar(value='Cultures'); self.query = tk.StringVar(); self.rows = {}
+        bar = ttk.Frame(self); bar.pack(fill='x')
+        box = ChoiceBox(bar, textvariable=self.kind, values=self.KINDS, width=20); box.pack(side='left')
+        box.bind('<<ComboboxSelected>>', lambda e: self.refresh())
+        ttk.Button(bar, text='New', command=lambda: self.open(self.kind.get())).pack(side='left', padx=8)
+        ttk.Button(bar, text='Edit selected', command=self.edit).pack(side='left')
+        ttk.Label(bar, text='Search name or ID:').pack(side='left', padx=(20, 6))
+        search = ttk.Entry(bar, textvariable=self.query); search.pack(side='left', fill='x', expand=True)
+        search.bind('<KeyRelease>', lambda e: self.refresh())
+        self.search = search
+        self.table = ttk.Treeview(self, columns=('detail',), show='tree headings', selectmode='browse')
+        self.table.heading('#0', text='Localized name (ID)'); self.table.heading('detail', text='Group / traits / placements')
+        self.table.column('#0', width=420); self.table.column('detail', width=500)
+        scroll = ttk.Scrollbar(self, command=self.table.yview); self.table.configure(yscrollcommand=scroll.set)
+        scroll.pack(side='right', fill='y', pady=10); self.table.pack(fill='both', expand=True, pady=10)
+        self.table.bind('<Double-1>', lambda e: self.edit()); self.table.bind('<Return>', lambda e: self.edit())
+        self.table.bind('<KeyPress>', lambda e: app.search_list(e, self.query, self.search, self.refresh))
+        ttk.Label(self, text='Apply creates a draft. Save writes the existing native definitions, localisation, triggers and GFX. Imported icons go into native gfx folders.', wraplength=1000).pack(anchor='w')
+
+    def records(self, kind=None):
+        return {'Cultures': self.store.cultures, 'Culture groups': self.store.groups,
+                'Species': self.store.species, 'Species traits': self.store.species_traits,
+                'Wonders': self.store.wonder_records}[kind or self.kind.get()]()
+
+    def refresh(self):
+        if not self.winfo_viewable(): return
+        records = self.records(); kind = self.kind.get()
+        selected = self.rows.get(next(iter(self.table.selection()), ''))
+        self.table.delete(*self.table.get_children()); self.rows = {}
+        index = ChoiceIndex(Choice(str(k), r.name) for k, r in records.items()); keys = {str(k): k for k in records}
+        groups = self.store.groups() if kind == 'Cultures' else {}
+        for choice in index.matching(self.query.get()):
+            key = keys[choice.code]; record = records[key]
+            detail = ''
+            if kind == 'Cultures': detail = Choice(str(record.group), groups[record.group].name).label if record.group in groups else 'No culture group'
+            elif kind == 'Species': detail = ', '.join(self.store.species_traits().get(t, MapDefinition(t, t)).name for t in record.traits)
+            elif kind == 'Wonders': detail = 'States: ' + ', '.join(str(s) for s, w in self.store.wonder_sites().items() if w == key)
+            item = self.table.insert('', 'end', text=choice.label, values=(detail,)); self.rows[item] = key
+            if key == selected: self.table.selection_set(item)
+
+    def edit(self):
+        selected = self.table.selection()
+        if selected: self.open(self.kind.get(), self.rows[selected[0]])
+
+    def open(self, kind, key=None):
+        records = self.records(kind)
+        if key == 0 and kind == 'Wonders': return
+        try:
+            dialog = MapDefinitionDialog(self, self.store, kind, records.get(key) if key is not None else None)
+            self.wait_window(dialog)
+            self.app._sync()
+            if dialog.result is not None:
+                mode = {'Cultures': 'Culture', 'Species': 'Species', 'Wonders': 'Wonder'}.get(kind)
+                if mode:
+                    self.app.brush.set(mode); self.app.paint_selection[mode] = dialog.result
+                    self.app.brush_changed()
+        except (ValueError, OSError) as exc: messagebox.showerror('Map definition', str(exc), parent=self)
+
+
+class MapDefinitionDialog(DraftDialog):
+    def __init__(self, parent, store, kind, record=None):
+        super().__init__(parent, store.characters, kind + ' — ' + ('Edit' if record else 'New'))
+        self.catalog = store; self.kind = kind; self.new = record is None
+        if record and kind == 'Wonders': record = store.wonder_detail(record.key)
+        self.record = record; self.geometry('1030x850'); self.minsize(850, 700)
+        records = {'Cultures': store.cultures, 'Culture groups': store.groups, 'Species': store.species,
+                   'Species traits': store.species_traits, 'Wonders': store.wonder_records}[kind]()
+        ident = record.key if record else 'lok_species__trait_modifier' if kind == 'Species traits' else max(records, default=0) + 1
+        self.ident = tk.StringVar(value=str(ident)); self.name = tk.StringVar(value=record.name if record else '')
+        self.name_color = tk.StringVar(value=record.name_color if record else '')
+        self.group = tk.StringVar(value=str(record.group) if record and record.group else '')
+        self.color = tk.StringVar(value=self.hex_color(record.color if record else None))
+        self.minor_color = tk.StringVar(value=self.hex_color(record.minority_color if record else None))
+        self.icon_path = tk.StringVar(); self.effects = dict(record.effects) if record else {}; self.percent_keys = set()
+        self.selected_traits = list(record.traits) if record else []
+        self.update_scripts = tk.BooleanVar(value=False)
+        self.tabs = ttk.Notebook(self); self.tabs.pack(fill='both', expand=True, padx=12, pady=12)
+        details = ttk.Frame(self.tabs, padding=10); self.tabs.add(details, text='Definition')
+        details.columnconfigure(1, weight=1)
+        row = 0
+        for label, variable in [('Native ID', self.ident), ('Localized name', self.name)]:
+            ttk.Label(details, text=label).grid(row=row, column=0, sticky='w', pady=5)
+            entry = ttk.Entry(details, textvariable=variable); entry.grid(row=row, column=1, sticky='ew', padx=10)
+            if row == 0 and record: entry.configure(state='disabled')
+            row += 1
+        if kind in {'Cultures', 'Species', 'Culture groups'}:
+            ttk.Label(details, text='Name color').grid(row=row, column=0, sticky='w', pady=5)
+            colors = [Choice('', 'None'), Choice('W', 'White'), Choice('R', 'Red'), Choice('G', 'Green'), Choice('B', 'Blue'),
+                      Choice('Y', 'Yellow'), Choice('C', 'Cyan'), Choice('O', 'Orange'), Choice('L', 'Grey'), Choice('H', 'Highlight')]
+            # Native mods may define additional one-character colors.
+            ChoiceBox(details, textvariable=self.name_color, values=colors, allow_custom=True).grid(row=row, column=1, sticky='ew', padx=10); row += 1
+        if kind in {'Cultures', 'Species'}:
+            for label, variable in [('Map color', self.color)] + ([('Minority stripe color', self.minor_color)] if kind == 'Species' else []):
+                ttk.Label(details, text=label).grid(row=row, column=0, sticky='w', pady=5)
+                line = ttk.Frame(details); line.grid(row=row, column=1, sticky='ew', padx=10)
+                ttk.Entry(line, textvariable=variable, width=14).pack(side='left')
+                ttk.Button(line, text='Choose color', command=lambda v=variable: self.pick_color(v)).pack(side='left', padx=8)
+                row += 1
+        if kind == 'Cultures':
+            ttk.Label(details, text='Culture group').grid(row=row, column=0, sticky='w', pady=5)
+            line = ttk.Frame(details); line.grid(row=row, column=1, sticky='ew', padx=10)
+            self.group_box = ChoiceBox(line, textvariable=self.group, values=[Choice(str(k), r.name) for k, r in store.groups().items()])
+            self.group_box.pack(side='left', fill='x', expand=True)
+            ttk.Button(line, text='New group', command=self.new_group).pack(side='left', padx=6); row += 1
+        if kind in {'Species', 'Species traits', 'Wonders'}:
+            ttk.Label(details, text='Icon').grid(row=row, column=0, sticky='w', pady=5)
+            line = ttk.Frame(details); line.grid(row=row, column=1, sticky='ew', padx=10)
+            ttk.Entry(line, textvariable=self.icon_path).pack(side='left', fill='x', expand=True)
+            ttk.Button(line, text='Import…', command=self.pick_icon).pack(side='left', padx=6)
+            self.icon_preview = ttk.Label(line); self.icon_preview.pack(side='left')
+            if record: self.preview(store.characters.image(record.sprite))
+            row += 1
+        ttk.Label(details, text='Description').grid(row=row, column=0, sticky='nw', pady=7)
+        self.description = tk.Text(details, height=6, wrap='word', undo=True)
+        self.description.grid(row=row, column=1, sticky='nsew', padx=10, pady=7)
+        self.description.insert('1.0', record.description if record else ''); details.rowconfigure(row, weight=1); row += 1
+        if kind == 'Species':
+            ttk.Label(details, text='State species traits').grid(row=row, column=0, sticky='nw', pady=7)
+            traits = ttk.Frame(details); traits.grid(row=row, column=1, sticky='ew', padx=10)
+            self.trait = tk.StringVar()
+            self.trait_box = ChoiceBox(traits, textvariable=self.trait, values=[Choice(k, r.name) for k, r in store.species_traits().items()])
+            self.trait_box.pack(fill='x')
+            line = ttk.Frame(traits); line.pack(fill='x', pady=5)
+            for text, command in [('Add', self.add_trait), ('Remove selected', self.remove_trait), ('New trait', self.new_trait), ('Edit chosen trait', self.edit_trait)]:
+                ttk.Button(line, text=text, command=command).pack(side='left', padx=(0, 5))
+            self.traits = ttk.Treeview(traits, show='tree', height=5, selectmode='browse'); self.traits.pack(fill='x'); self.refresh_traits()
+            row += 1
+        if kind == 'Wonders':
+            ttk.Checkbutton(details, text='Also update event/focus/decision scripted variants of this wonder', variable=self.update_scripts).grid(row=row, column=0, columnspan=2, sticky='w', pady=8); row += 1
+            ttk.Label(details, text='Values are regular base effects. The native script doubles them in a capital and halves them in a noncore state. Editing updates all starting placements; optional scripted variants may have intentionally different values.', wraplength=850).grid(row=row, column=0, columnspan=2, sticky='w', pady=8)
+        if kind in {'Species traits', 'Wonders'}: self.build_modifiers()
+        bottom = ttk.Frame(self, padding=12); bottom.pack(fill='x')
+        ttk.Label(bottom, text='Apply stages changes. Save writes native sources with backups.').pack(side='left')
+        ttk.Button(bottom, text='Cancel', command=self.cancel).pack(side='right')
+        ttk.Button(bottom, text='Apply definition', command=self.ok).pack(side='right', padx=8)
+
+    @staticmethod
+    def hex_color(rgb): return '#' + ''.join(f'{v:02x}' for v in (rgb or (128, 128, 128)))
+
+    def pick_color(self, variable):
+        color = colorchooser.askcolor(variable.get(), parent=self)[1]
+        if color: variable.set(color)
+
+    def preview(self, source):
+        if source is not None:
+            source = source.copy(); source.thumbnail((100, 61), Image.Resampling.LANCZOS)
+            self.photo = ImageTk.PhotoImage(source); self.icon_preview.configure(image=self.photo)
+
+    def pick_icon(self):
+        path = filedialog.askopenfilename(parent=self, title='Import native icon', filetypes=[('Images', '*.png *.dds *.tga *.bmp *.jpg *.jpeg'), ('All files', '*.*')])
+        if path:
+            try:
+                with Image.open(path) as source: self.preview(source)
+                self.icon_path.set(path)
+            except (OSError, ValueError) as exc: messagebox.showerror('Icon', str(exc), parent=self)
+
+    def new_group(self):
+        dialog = MapDefinitionDialog(self, self.catalog, 'Culture groups'); self.wait_window(dialog); self.grab_set()
+        self.group_box.configure(values=[Choice(str(k), r.name) for k, r in self.catalog.groups().items()])
+        if dialog.result is not None: self.group.set(str(dialog.result))
+
+    def refresh_traits(self):
+        self.traits.delete(*self.traits.get_children())
+        records = self.catalog.species_traits()
+        for key in sorted(self.selected_traits, key=lambda k: records[k].name.casefold()):
+            self.traits.insert('', 'end', iid=key, text=Choice(key, records[key].name).label)
+        self.trait_box.configure(values=[Choice(k, r.name) for k, r in records.items()])
+
+    def add_trait(self):
+        self.trait_box.commit(); key = self.trait.get()
+        if key in self.catalog.species_traits() and key not in self.selected_traits: self.selected_traits.append(key); self.refresh_traits()
+
+    def remove_trait(self):
+        for key in self.traits.selection(): self.selected_traits.remove(key)
+        self.refresh_traits()
+
+    def new_trait(self): self.trait_dialog()
+    def edit_trait(self):
+        self.trait_box.commit()
+        key = next(iter(self.traits.selection()), self.trait.get())
+        if key in self.catalog.species_traits(): self.trait_dialog(self.catalog.species_traits()[key])
+
+    def trait_dialog(self, record=None):
+        dialog = MapDefinitionDialog(self, self.catalog, 'Species traits', record); self.wait_window(dialog); self.grab_set()
+        if dialog.result is not None and dialog.result not in self.selected_traits: self.selected_traits.append(dialog.result)
+        self.refresh_traits()
+
+    def build_modifiers(self):
+        form = ttk.Frame(self.tabs, padding=10); self.tabs.add(form, text='State modifiers' if self.kind == 'Species traits' else 'Regular wonder effects')
+        self.modifiers = ttk.Treeview(form, columns=('value', 'format'), show='tree headings', selectmode='browse')
+        self.modifiers.heading('#0', text='Localized modifier (ID)'); self.modifiers.heading('value', text='Base value'); self.modifiers.heading('format', text='New tooltip format')
+        self.modifiers.column('#0', width=580); self.modifiers.column('value', width=100); self.modifiers.column('format', width=140)
+        scroll = ttk.Scrollbar(form, command=self.modifiers.yview); self.modifiers.configure(yscrollcommand=scroll.set)
+        scroll.pack(side='right', fill='y'); self.modifiers.pack(fill='both', expand=True)
+        line = ttk.Frame(form); line.pack(fill='x', pady=10)
+        self.modifier = tk.StringVar(); self.amount = tk.StringVar(value='0.1'); self.is_percent = tk.BooleanVar(value=True)
+        choices = list(self.catalog.characters.trait_store.modifier_choices()); known = {c.code for c in choices}
+        choices += [Choice(k, k) for k in self.effects if k not in known]
+        self.modifier_box = ChoiceBox(line, textvariable=self.modifier, values=choices, width=50); self.modifier_box.pack(side='left', fill='x', expand=True)
+        self.modifier_box.bind('<<ComboboxSelected>>', lambda e: self.modifier_help())
+        ttk.Entry(line, textvariable=self.amount, width=12).pack(side='left', padx=8)
+        ttk.Button(line, text='Add / update', command=self.add_modifier).pack(side='left')
+        ttk.Button(line, text='Remove', command=self.remove_modifier).pack(side='left', padx=8)
+        if self.kind == 'Wonders': ttk.Checkbutton(form, text='Percentage tooltip for a newly registered modifier (0.1 = 10%)', variable=self.is_percent).pack(anchor='w')
+        self.modifier_info = ttk.Label(form, text='Values use game units. Existing tooltip formats are preserved. Select a modifier to see its supported scopes.', wraplength=900); self.modifier_info.pack(anchor='w', pady=8)
+        self.modifiers.bind('<<TreeviewSelect>>', self.pick_modifier)
+        self.modifiers.bind('<KeyPress>', lambda e: self.search_modifier(e))
+        self.refresh_modifiers()
+
+    def search_modifier(self, event):
+        if event.char and event.char.isprintable():
+            self.modifier_box.focus_set(); self.modifier_box.display.set(event.char); self.modifier_box.typed(); return 'break'
+
+    def modifier_help(self):
+        info = self.catalog.characters.trait_store.modifier_catalog().get(self.modifier.get(), {})
+        self.modifier_info.configure(text='Native scopes: ' + ', '.join(sorted(info.get('categories', ()))) + '. Values use game units.')
+
+    def refresh_modifiers(self):
+        self.modifiers.delete(*self.modifiers.get_children())
+        known = self.catalog.characters.trait_store.modifier_catalog()
+        registry = self.catalog.wonder_registry() if self.kind == 'Wonders' else {}
+        for key in sorted(self.effects, key=lambda k: known.get(k, {}).get('choice', Choice(k, k)).name.casefold()):
+            choice = known.get(key, {}).get('choice', Choice(key, key))
+            fmt = 'Existing native format' if key in registry else 'Percent' if key in self.percent_keys else 'Number'
+            self.modifiers.insert('', 'end', iid=key, text=choice.label, values=(self.effects[key], fmt if self.kind == 'Wonders' else ''))
+
+    def pick_modifier(self, event=None):
+        if (keys := self.modifiers.selection()):
+            key = keys[0]; self.modifier.set(key); self.amount.set(self.effects[key]); self.is_percent.set(key in self.percent_keys); self.modifier_help()
+
+    def add_modifier(self):
+        try:
+            self.modifier_box.commit(); key = self.modifier.get()
+            if key not in self.modifier_box.index.by_code: raise ValueError('Choose a defined modifier')
+            self.effects[key] = _catalog_decimal(self.amount.get())
+            if self.is_percent.get(): self.percent_keys.add(key)
+            else: self.percent_keys.discard(key)
+            self.refresh_modifiers()
+        except ValueError as exc: messagebox.showerror('Modifier', str(exc), parent=self)
+
+    def remove_modifier(self):
+        for key in self.modifiers.selection(): self.effects.pop(key, None); self.percent_keys.discard(key)
+        self.refresh_modifiers()
+
+    def ok(self):
+        docs = self.catalog.docs
+        snapshot = (dict(docs.drafts), list(docs.undo_stack), list(docs.redo_stack))
+        try:
+            ident = self.ident.get().strip() if self.kind == 'Species traits' else int(self.ident.get())
+            name = self.name.get().strip(); desc = self.description.get('1.0', 'end-1c')
+            if self.kind in {'Cultures', 'Species', 'Culture groups'}:
+                # Commit typed choices before validating native IDs/color codes.
+                for box in self.tabs.winfo_children()[0].winfo_children():
+                    if isinstance(box, ChoiceBox): box.commit()
+            if self.kind == 'Cultures':
+                self.group_box.commit()
+                self.catalog.edit_culture(ident, name, desc, self.color.get(), self.name_color.get(), int(self.group.get()), self.new)
+            elif self.kind == 'Culture groups': self.catalog.edit_group(ident, name, desc, self.name_color.get(), self.new)
+            elif self.kind == 'Species': self.catalog.edit_species(ident, name, desc, self.color.get(), self.minor_color.get(), self.name_color.get(), self.selected_traits, self.icon_path.get() or None, self.new)
+            elif self.kind == 'Species traits': self.catalog.edit_species_trait(ident, name, desc, self.effects, self.icon_path.get() or None, self.new)
+            elif self.kind == 'Wonders': self.catalog.edit_wonder(ident, name, desc, self.effects, self.icon_path.get() or None, self.new, self.percent_keys, self.update_scripts.get())
+            self.accept(ident)
+        except (ValueError, OSError, UnicodeError, StopIteration, KeyError) as exc:
+            docs.drafts, docs.undo_stack, docs.redo_stack = snapshot; docs.revision += 1
+            self.catalog.sync_world()
+            messagebox.showerror('Invalid definition', str(exc), parent=self)
 
 
 def main():

@@ -108,6 +108,7 @@ def read_text(path):
         return data.decode('cp1252')
 
 
+@lru_cache(maxsize=8192)
 def colour(key):
     hue = int(hashlib.sha256(str(key).encode()).hexdigest()[:8], 16) / 0xffffffff
     return tuple(round(c * 255) for c in colorsys.hsv_to_rgb(hue, .48, .78))
@@ -124,6 +125,7 @@ class Documents:
         self.redo_stack = []
         self.before_save = None
         self.revision = 0
+        self._parsed = {}
 
     def _path(self, relative):
         relative = str(relative).replace('\\', '/')
@@ -179,20 +181,28 @@ class Documents:
             if len(keys) != len(set(keys)):
                 raise ValueError('Duplicate localisation keys in ' + relative)
         else:
-            parse(text)
+            return parse(text)
+
+    def parsed(self, relative):
+        relative = str(relative).replace('\\', '/')
+        text = self.text(relative); cached = self._parsed.get(relative)
+        if cached is None or cached[0] is not text:
+            cached = self._parsed[relative] = (text, parse(text))
+        return cached
 
     def replace(self, relative, new):
         relative, _ = self._path(relative)
         old = self.text(relative)
-        self.validate_text(relative, new)
         if new == old:
             return
+        parsed = self.validate_text(relative, new)
         previous = self.drafts.get(relative, self.originals[relative])
         if relative not in self.drafts and self.snapshots[relative] is None:
             previous = None
         self.undo_stack.append((relative, previous, new))
         self.redo_stack.clear()
         self.drafts[relative] = new
+        if parsed is not None: self._parsed[relative] = (new, parsed)
         self.revision += 1
 
     def stage_bytes(self, relative, new):
@@ -298,6 +308,8 @@ class World:
         self._state_nodes_cache = {}
         self._boundary_cache = {}
         self._boundary_size = None
+        self._map_samples = {}
+        self._map_palettes = {}
         for folder in ['localisation/english', 'localisation/replace']:
             for f in sorted((self.root / folder).rglob('*.yml')):
                 for line in read_text(f).splitlines():
@@ -348,6 +360,29 @@ class World:
     def normalise_demographics(self):
         from demographics import repair_redundant_minorities
         return repair_redundant_minorities(self)
+
+    def refresh_countries(self):
+        """Include native draft creations/removals after Apply, Cancel or Undo."""
+        tags = {p.relative_to(self.root).as_posix() for p in (self.root/'common/country_tags').glob('*.txt')}
+        tags.update(p for p in self.docs.originals if p.startswith('common/country_tags/') and p.endswith('.txt'))
+        paths = {}
+        for path in sorted(tags):
+            text = self.docs.text(path)
+            for n in parse(text):
+                if re.fullmatch('[A-Z0-9]{3}',n.key):
+                    if n.key in paths: raise ValueError('Duplicate country tag: '+n.key)
+                    paths[n.key] = 'common/'+value(text,n).strip('"')
+        histories = {p.relative_to(self.root).as_posix() for p in (self.root/'history/countries').glob('*.txt')}
+        histories.update(p for p in self.docs.originals if p.startswith('history/countries/') and p.endswith('.txt'))
+        countries = {}
+        for path in sorted(histories):
+            tag = Path(path).name[:3]
+            if tag in paths and self.docs.text(path):
+                if tag in countries: raise ValueError('Multiple country history files for '+tag)
+                countries[tag] = path
+        self.country_paths, self.countries = paths, countries
+        scripts = {p for p in self.docs.originals if Path(p).suffix in {'.txt','.gfx','.gui','.asset'} and p.startswith(('common/','history/','interface/'))}
+        self.files = sorted(p for p in set(self.files)|scripts if self.docs.snapshots.get(p, b'exists') is not None or self.docs.text(p))
 
     def _load_strategic_regions(self):
         self.regions, self.province_regions, self.region_states = {}, {}, {}
@@ -411,6 +446,8 @@ class World:
     def paint(self, pid, scope, mode, target, operation='Set', exclude=()):
         from demographics import set_local_draft
         states = tuple(s for s in self.paint_targets(pid, scope) if s not in exclude)
+        if mode == 'Wonder':
+            return self.catalog_store.paint_wonder(states, target, operation)
         before = {s: {**self.demographics[s], 'culture': list(self.demographics[s]['culture'])} for s in states}
         try:
             with self.docs.grouped():
@@ -516,6 +553,13 @@ class World:
         self.map_ids = np.where(valid, ids[order][positions], 0)
 
     def country_colours(self):
+        paths = list(self.country_paths.values())
+        if (self.root / 'common/countries/colors.txt').exists():
+            paths.append('common/countries/colors.txt')
+        signature = tuple(self.docs.text(p) for p in paths)
+        cached = getattr(self, '_country_colour_cache', None)
+        if cached is not None and cached[0] == signature:
+            return cached[1]
         country_colours = {}
         for tag, relative in self.country_paths.items():
             if (self.root / relative).exists():
@@ -530,21 +574,26 @@ class World:
                 c = child(n.children, 'color') if n.children else None
                 if c:
                     country_colours[n.key] = self._script_colour(t, c)
+        self._country_colour_cache = (signature, country_colours)
         return country_colours
 
-    def boundary_mask(self, kind, size):
+    def boundary_mask(self, kind, size, box=None):
         """Crisp display-space lines: province 1 px, state 2 px, region 3 px."""
         if kind not in {'Province', 'State', 'Strategic region'}:
             raise ValueError('Unknown boundary type: ' + kind)
         self.load_map()
-        if size != self._boundary_size:
+        box = box or (0, 0, *size)
+        key = (size, box)
+        if key != self._boundary_size:
             self._boundary_cache.clear()
-            self._boundary_size = size
+            self._boundary_size = key
         if kind in self._boundary_cache:
             return self._boundary_cache[kind]
         if 'ids' not in self._boundary_cache:
-            source = Image.fromarray(self.map_ids.astype(np.int32))
-            self._boundary_cache['ids'] = np.asarray(source.resize(size, Image.Resampling.NEAREST))
+            # Include the incoming edges/thickness from outside a viewport crop.
+            halo = (max(0, box[0] - 3), max(0, box[1] - 3), box[2], box[3])
+            self._boundary_cache['ids'] = self.map_sample(size, halo)[0]
+            self._boundary_cache['halo'] = halo
         ids = self._boundary_cache['ids']
         if kind == 'Province':
             labels = ids
@@ -563,11 +612,13 @@ class World:
             for dx in range(thickness):
                 if dy or dx:
                     expanded[dy:, dx:] |= edge[:edge.shape[0] - dy, :edge.shape[1] - dx]
-        mask = Image.fromarray(expanded.astype(np.uint8) * 255)
+        halo = self._boundary_cache['halo']
+        mask = Image.fromarray(expanded.astype(np.uint8) * 255).crop(
+            (box[0] - halo[0], box[1] - halo[1], box[2] - halo[0], box[3] - halo[1]))
         self._boundary_cache[kind] = mask
         return mask
 
-    def boundary_overlay(self, image, province=False, state=False, strategic=False):
+    def boundary_overlay(self, image, province=False, state=False, strategic=False, size=None, box=None):
         if not any((province, state, strategic)):
             return image
         result = image.copy()
@@ -575,52 +626,79 @@ class World:
                                             (state, 'State', (15, 15, 15)),
                                             (strategic, 'Strategic region', (245, 245, 245))]:
             if visible:
-                result.paste(colour_value, mask=self.boundary_mask(kind, image.size))
+                result.paste(colour_value, mask=self.boundary_mask(kind, size or image.size, box))
         return result
 
-    def map_image(self, layer='Owners'):
+    def map_sample(self, size, box=None):
+        """Nearest source IDs/coordinates for a display viewport, cached across edits."""
         self.load_map()
-        palette = np.zeros((max(self.provinces) + 1, 3), dtype=np.uint8)
-        minority_palette = np.zeros_like(palette)
-        has_minority = np.zeros(len(palette), dtype=bool)
-        owners = {}
-        country_colours = self.country_colours() if layer == 'Owners' else {}
-        if layer == 'Owners':
-            for sid in self.states:
-                t, nodes = self.state_nodes(sid)
-                h = child(nodes, 'history')
-                owners[sid] = scalar(t, h.children, 'owner') if h else ''
-        for pid, record in self.provinces.items():
-            sid = self.province_states.get(pid)
-            if layer == 'Provinces':
-                c = record['rgb']
-            elif layer in {'Terrain', 'Continents'}:
-                c = colour(record['terrain' if layer == 'Terrain' else 'continent'])
-            elif layer in {'Culture', 'Species', 'Minority'}:
-                data = getattr(self, 'demographics', {}).get(sid, {})
-                if layer == 'Culture':
-                    colours = [self.culture_colours.get(v, (128, 128, 128)) for v in data.get('culture', [])]
-                    c = tuple(round(sum(v) / len(colours)) for v in zip(*colours)) if colours else (128, 128, 128)
-                else:
-                    key = 'species' if layer == 'Species' else 'minority'
-                    colours = self.species_colours if layer == 'Species' else self.minority_colours
-                    c = colours.get(data.get(key), (128, 128, 128))
-                    minority = data.get('minority', 1000)
-                    if layer == 'Species' and minority != 1000 and record['type'] == 'land':
-                        minority_palette[pid] = self.minority_colours.get(minority, (128, 128, 128))
-                        has_minority[pid] = True
-            else:
-                key = owners.get(sid, '') if layer == 'Owners' else sid
-                c = country_colours.get(key, colour(key)) if key else (65, 69, 78)
-            if record['type'] != 'land' and layer != 'Provinces':
-                c = (26, 43, 60)
-            palette[pid] = c
-        pixels = palette[self.map_ids]
-        if layer == 'Species':
+        box = box or (0, 0, *size); key = (size, box)
+        if key not in self._map_samples:
             height, width = self.map_ids.shape
-            stripes = (np.arange(height)[:, None] + np.arange(width)[None, :]) % 32 < 9
-            stripes &= has_minority[self.map_ids]
-            pixels[stripes] = minority_palette[self.map_ids[stripes]]
+            # Pillow's nearest sampler has floating-point tie behavior at some
+            # ratios. Resize 1-D coordinates to match the old RGB renderer exactly.
+            xs = np.asarray(Image.fromarray(np.arange(width, dtype=np.int32)[None, :]).resize(
+                (size[0], 1), Image.Resampling.NEAREST))[0, box[0]:box[2]]
+            ys = np.asarray(Image.fromarray(np.arange(height, dtype=np.int32)[None, :]).resize(
+                (size[1], 1), Image.Resampling.NEAREST))[0, box[1]:box[3]]
+            sample = (self.map_ids[np.ix_(ys, xs)], xs, ys)
+            # One viewport plus its boundary halo; do not retain every zoom/pan.
+            if len(self._map_samples) >= 2: self._map_samples.clear()
+            self._map_samples[key] = sample
+        return self._map_samples[key]
+
+    def map_image(self, layer='Owners', size=None, box=None):
+        self.load_map()
+        if not hasattr(self, '_province_state_ids'):
+            self._province_state_ids = np.zeros(max(self.provinces) + 1, dtype=np.int32)
+            self._land_provinces = np.zeros(len(self._province_state_ids), dtype=bool)
+            for pid, record in self.provinces.items():
+                self._province_state_ids[pid] = self.province_states.get(pid, 0)
+                self._land_provinces[pid] = record['type'] == 'land'
+        static = layer in {'Provinces', 'Terrain', 'Continents', 'States'}
+        palette = self._map_palettes.get(layer) if static else None
+        if palette is None:
+            state_colors = np.empty((max(self.states, default=0) + 1, 3), dtype=np.uint8)
+            state_colors[:] = (65, 69, 78)
+            minority_colors = np.zeros_like(state_colors); has_minority = np.zeros(len(state_colors), dtype=bool)
+            country_colors = self.country_colours() if layer == 'Owners' else {}
+            sites = self.catalog_store.wonder_sites() if layer == 'Wonder' else {}
+            for sid in self.states:
+                data = getattr(self, 'demographics', {}).get(sid, {})
+                if layer == 'Owners':
+                    text, nodes = self.state_nodes(sid); history = child(nodes, 'history')
+                    tag = scalar(text, history.children, 'owner') if history else ''
+                    rgb = country_colors.get(tag) or (colour(tag) if tag else (65, 69, 78))
+                elif layer == 'Culture':
+                    colors = [self.culture_colours.get(v, (128, 128, 128)) for v in data.get('culture', [])]
+                    rgb = tuple(round(sum(v) / len(colors)) for v in zip(*colors)) if colors else (128, 128, 128)
+                elif layer in {'Species', 'Minority'}:
+                    colors = self.species_colours if layer == 'Species' else self.minority_colours
+                    rgb = colors.get(data.get('species' if layer == 'Species' else 'minority'), (128, 128, 128))
+                    minor = data.get('minority', 1000)
+                    if layer == 'Species' and minor != 1000:
+                        minority_colors[sid] = self.minority_colours.get(minor, (128, 128, 128)); has_minority[sid] = True
+                elif layer == 'Wonder':
+                    ident = sites.get(sid, 0); rgb = colour('wonder_' + str(ident)) if ident else (90, 94, 100)
+                else: rgb = colour(sid)
+                state_colors[sid] = rgb
+            palette = state_colors[self._province_state_ids]
+            if layer in {'Provinces', 'Terrain', 'Continents'}:
+                for pid, record in self.provinces.items():
+                    palette[pid] = record['rgb'] if layer == 'Provinces' else colour(record['terrain' if layer == 'Terrain' else 'continent'])
+            if layer != 'Provinces': palette[~self._land_provinces] = (26, 43, 60)
+            if 0 not in self.provinces: palette[0] = 0
+            if static: self._map_palettes[layer] = palette
+        height, width = self.map_ids.shape
+        if size is None:
+            ids = self.map_ids; xs = np.arange(width); ys = np.arange(height)
+        else: ids, xs, ys = self.map_sample(size, box)
+        pixels = palette[ids]
+        if layer == 'Species':
+            states = self._province_state_ids[ids]
+            stripes = (ys[:, None] + xs[None, :]) % 32 < 9
+            stripes &= has_minority[states] & self._land_provinces[ids]
+            pixels[stripes] = minority_colors[states[stripes]]
         return Image.fromarray(pixels)
 
     @staticmethod

@@ -70,6 +70,7 @@ def patch_field(text, parent, key, raw):
     if text[at:parent.end - 1].strip():
         at = parent.end - 1
         addition = newline + addition + indent
+        return text[:at].rstrip(' \t') + addition + text[at:]
     return text[:at] + addition + text[at:]
 
 
@@ -143,6 +144,13 @@ class CharacterStore:
         self._loc_files = {}
         self._images = OrderedDict()
         self.game_root = default_paths()['game']
+
+    @property
+    def trait_store(self):
+        if not hasattr(self, '_trait_store'):
+            from trait_model import TraitStore
+            self._trait_store = TraitStore(self)
+        return self._trait_store
 
     def sprite_entries(self, name):
         entries = self.sprites().get(name, [])
@@ -325,6 +333,7 @@ class CharacterStore:
             self.docs.replace(path, text.rstrip('\r\n') + newline + 'recruit_character = ' + key + newline)
 
     def collect_character_localisation(self):
+        from trait_model import TRAIT_LOC
         characters = self.characters()
         records = self.loc_records()
         bases = {base for c in characters.values() for base in (c.key, c.name_key, c.description_key)}
@@ -334,6 +343,9 @@ class CharacterStore:
         additions, removals = [], {}
         for key in sorted(chosen):
             entries = records[key]
+            # Trait strings have their own database even if an ID starts with a character ID.
+            if any(relative == TRAIT_LOC for relative, _, _ in entries):
+                continue
             if len({e[2] for e in entries}) > 1:
                 raise ValueError('Conflicting authored character localisation: ' + key)
             if key not in main_keys:
@@ -754,16 +766,16 @@ class CharacterStore:
     def prepare_save(self):
         self.organise_localisation()
         self.organise_gfx()
+        if hasattr(self, '_trait_store'):
+            from trait_model import TRAIT_PATHS
+            for path in TRAIT_PATHS.values():
+                if path in self.docs.drafts and self.docs.text(path):
+                    self.trait_store.organise(path)
 
     def trait_ids(self):
         if (cached := self.cached('traits')) is not None:
             return cached
-        out = set()
-        for directory in ('common/country_leader', 'common/unit_leader'):
-            for relative in self.files(directory, '.txt'):
-                for _, node in walk(self.parsed(relative)[1]):
-                    if node.key.casefold() in {'leader_traits', 'traits'} and node.children:
-                        out.update(n.key for n in node.children if n.children is not None)
+        out = {t.key for t in self.trait_store.records() if t.active}
         self._cache['traits'] = sorted(out)
         return self._cache['traits']
 

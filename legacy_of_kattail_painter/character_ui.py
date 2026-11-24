@@ -200,6 +200,9 @@ class CharacterWorkspace(ttk.Frame):
         self.characters = Gallery(self.tabs, self)
         self.portraits = Gallery(self.tabs, self, True)
         self.tabs.add(self.characters, text='Characters'); self.tabs.add(self.portraits, text='Portrait definitions')
+        from trait_ui import TraitWorkspace
+        self.traits = TraitWorkspace(self.tabs, app)
+        self.tabs.add(self.traits, text='Trait database')
         self.tabs.bind('<<NotebookTabChanged>>', lambda e: self.refresh())
 
     def refresh(self):
@@ -368,10 +371,19 @@ class RoleDialog(DraftDialog):
         choice = self.kind_box = ChoiceBox(top, textvariable=self.kind, values=[Choice(r, r.replace('_', ' ').title()) for r in ROLES], state='disabled' if role else 'normal'); choice.pack(side='left', padx=10)
         choice.bind('<<ComboboxSelected>>', lambda e: self.build_fields())
         self.form = ttk.Frame(self, padding=10); self.form.pack(fill='x')
+        self.random_actions = ttk.Frame(self, padding=(10, 0))
+        ttk.Button(self.random_actions, text='Randomize skills from current level', command=self.randomize_skills).pack(side='left')
+        self.random_count = tk.StringVar(value='3'); self.random_mode = tk.StringVar(value='Replace vanilla')
+        ttk.Label(self.random_actions, text='Vanilla traits:').pack(side='left', padx=(12, 4))
+        ttk.Spinbox(self.random_actions, from_=0, to=10, width=3, textvariable=self.random_count).pack(side='left')
+        self.random_mode_box = ChoiceBox(self.random_actions, textvariable=self.random_mode, values=['Replace vanilla', 'Add'], width=16)
+        self.random_mode_box.pack(side='left', padx=4)
+        ttk.Button(self.random_actions, text='Roll traits', command=self.randomize_traits).pack(side='left')
+        self.random_status = ttk.Label(self, wraplength=740)
         ttk.Label(self, text='Traits: type a name or ID to add; select a trait to remove').pack(anchor='w', padx=10)
         traits = block(role.children, 'traits') if role else None
         self.traits = tk.StringVar(value=' '.join(n.key for n in traits.children) if traits else '')
-        self.trait_choices = TraitChoices(self, self.traits, store.choices('traits'))
+        self.trait_choices = TraitChoices(self, self.traits, store.trait_store.choices_for_role(self.kind.get()))
         self.trait_choices.pack(fill='x', padx=10, pady=4)
         self.use_raw = tk.BooleanVar(value=False)
         ttk.Checkbutton(self, text='Also edit complete role script below (preserves unsupported/custom fields)', variable=self.use_raw).pack(anchor='w', padx=10, pady=(12, 0))
@@ -386,6 +398,15 @@ class RoleDialog(DraftDialog):
         for widget in self.form.winfo_children(): widget.destroy()
         c = self.store.characters()[self.key]; role = c.roles[self.index] if self.index is not None else None
         kind = self.kind.get()
+        from trait_model import MILITARY
+        self.trait_choices.picker.configure(values=self.store.trait_store.choices_for_role(kind))
+        self.trait_choices.refresh()
+        if kind in MILITARY:
+            self.random_actions.pack(fill='x', after=self.form)
+            self.random_status.pack(fill='x', padx=10, pady=4, after=self.random_actions)
+            self.random_status.configure(text='Rolls stay in this dialog until Apply. Custom and scripted/status traits are retained.')
+        else:
+            self.random_actions.pack_forget(); self.random_status.pack_forget()
         fields = ['ideology', 'expire', 'desc'] if kind == 'country_leader' else ['slot', 'idea_token', 'ledger', 'cost'] if kind == 'advisor' else ['desc', 'skills'] if kind == 'scientist' else ['skill', 'attack_skill', 'defense_skill', 'maneuvering_skill', 'coordination_skill'] if kind == 'navy_leader' else ['skill', 'attack_skill', 'defense_skill', 'planning_skill', 'logistics_skill']
         self.variables = {}
         self.form.columnconfigure(1, weight=1)
@@ -405,6 +426,23 @@ class RoleDialog(DraftDialog):
             ttk.Label(self.form, text=field.replace('_', ' ')).grid(row=row, column=0, sticky='w', pady=3)
             widget = ChoiceBox(self.form, textvariable=variable, values=self.store.choices('ideologies')) if field == 'ideology' else ttk.Entry(self.form, textvariable=variable)
             widget.grid(row=row, column=1, sticky='ew', padx=(12, 0), pady=3)
+
+    def randomize_skills(self):
+        try:
+            self.kind_box.commit()
+            result = self.store.trait_store.random_skills(self.kind.get(), self.variables['skill'].get())
+            for field, amount in result.items(): self.variables[field].set(str(amount))
+            self.random_status.configure(text='Current level kept. Base skills: ' + ', '.join(f'{k.replace("_skill", "")} {v}' for k, v in result.items()) + '. This base roll excludes trait bonuses.')
+        except (ValueError, KeyError) as exc: messagebox.showerror('Skills', str(exc), parent=self)
+
+    def randomize_traits(self):
+        try:
+            self.kind_box.commit(); self.random_mode_box.commit()
+            result = self.store.trait_store.random_traits(self.kind.get(), self.traits.get().split(), int(self.random_count.get()),
+                                                        replace=self.random_mode.get() == 'Replace vanilla')
+            self.traits.set(' '.join(result))
+            self.random_status.configure(text='Rolled generic vanilla traits; custom and restricted/scripted traits kept. Apply to keep this draft.')
+        except ValueError as exc: messagebox.showerror('Traits', str(exc), parent=self)
 
     def ok(self):
         try:
