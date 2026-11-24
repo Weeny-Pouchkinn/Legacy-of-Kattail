@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-11-24: Share the EU4 painter's native desktop styling
+**Decision:** use platform-default ttk controls, compact top tools and a left
+sidebar instead of the HOI4 prototype's custom dark theme and banner. Keep
+source/state sidebar tabs and map/source/flag workspace tabs for HOI4's existing
+controls. Match the EU4 map backdrop (`#1e1e1e`).
+**Rationale:** the user requested the EU4 painter's UI style; its `_build_ui` uses
+native ttk controls, an 8-pixel padded sidebar and Segoe UI section titles.
+**Consequence:** appearance follows the platform theme (verified `vista` here).
+The application remains memory-only; state forms scroll and flag previews resize
+to accommodate the wider sidebar without changing underlying flag sizes.
+
 ## 2026-11-04: Jublio system map layout
 **Decision:** add 512 rows on top, for 4096x3072. Old rows 376.. keep their content at rows 888..
 **Rationale:** the wiki caps map area at about 13,238,272 px, so this is the tallest multiple of

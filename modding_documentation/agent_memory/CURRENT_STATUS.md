@@ -1,5 +1,35 @@
 # Current status
 
+## Painter interface alignment (2026-11-24)
+
+Current branch verified as `Legacy-of-Kattail-Main`. The older sections below
+describe work on `jublio-system-backport`; their branch/validation statements are
+historical, not a verified status of the current branch.
+
+Changed `legacy_of_kattail_painter/painter.py` to follow the EU4 painter's native
+ttk light styling, compact toolbar, left sidebar and dark map canvas. State
+controls moved into a scrollable sidebar tab; map/source/flag tabs remain.
+Flag previews resize without changing native flag dimensions or mask tinting.
+No game scripts, map data, export behavior or game identifiers changed.
+
+Validation: Python compilation and all 11 existing fixture tests passed.
+`verify_real.py` exercised real-data Tk controls, demographic drafts, undo/redo,
+source filtering and flags; 1,023 renders passed and 10,786 source hashes stayed
+unchanged. Additional live Tk geometry checks passed at 1500x900 and 1050x680,
+including all tabs, all eight views, state scrolling and preview aspect ratio.
+Native `vista` theme was retained. Screenshot inspection was unavailable because
+the desktop helper required a usable `CODEX_CLI_PATH`; no screenshot review is
+claimed. No game launch was performed.
+
+`python -B tools/validate_map.py` reports railway non-neighbor links on lines
+893-894 (20839/20841 and 20841/19461), matching the earlier diagnostic notes.
+Map files were untouched. The real-data parser still reports excess closing
+braces in EUL/GAL/KKN/KTZ OOBs, already documented in the painter README.
+
+The painter folder was already untracked before this task. Next action: restart
+the painter to load the new interface and review its appearance on the user's
+display. No implementation blocker remains.
+
 ## Jublio system backport (2026-11-04)
 
 Branch `jublio-system-backport`, based on `3abc65d2`. Installed in the working tree, not committed.
