@@ -1,5 +1,84 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-24 — Persistent painting and applied state migration
+
+Implemented Save/Ctrl+S for edited text sources, byte-level external-edit guards,
+backups, atomic per-file replacement and rollback for write failures. Installed
+source_io.py and updated the optional installer. Save includes arbitrary source
+drafts; flags remain session-only. A painter .gitignore excludes backups/bytecode.
+
+The Paint sidebar now lists named cultures/species/countries with RGB swatches.
+Culture supports Set/Add/Remove; species has Majority/Minority selection plus
+No minority (1000). Click/drag changes entire states. Shift-click picks without
+painting the rest of the gesture. Inspection no longer replaces the paint palette
+during a stroke. State parsing is cached to avoid reparsing all state histories
+for every preview refresh.
+
+Colours come from LOK_culture_map_mode.txt and LOK_species_map_mode.txt. Species
+minorities render as diagonal bands; majority/minority edits preserve the other
+field. Multiple cultures blend their defined colours. Culture 102 has no source
+colour and is labelled with neutral grey. Current choices: 102 cultures, 61
+majority species, 62 minority choices including None. All assigned IDs have RGB.
+
+Applied 1,655 initial startup statements to 1,902 state histories. Removed those
+startup statements; preserved culture-group arrays, country species ideas,
+runtime containers, derived-modifier setup, later gameplay effects and all
+unrelated statements. Initial demographics including ordered three-culture
+states 894-897 match the pre-migration baseline exactly.
+
+Original 1,903 sources are backed up under
+`backups/migration_20261124_101441_420939/`. The delimited blocks preserve state
+text outside the insertion, existing closing-line indentation, BOM and newlines.
+An additional formatting backup is under `backups/save_20261124_101603_545214/`.
+
+Commands/results from the mod root:
+
+```powershell
+python -B -m unittest discover -s legacy_of_kattail_painter -p test_painter.py -v
+# Passed all 16 tests: existing parser/isolation/migration/flag checks plus
+# persistent save/reload, stale-source rejection, rollback, applied migration,
+# source BOM/newlines and exact defined-colour/stripe pixels.
+
+python -m py_compile legacy_of_kattail_painter/painter.py legacy_of_kattail_painter/model.py legacy_of_kattail_painter/demographics.py legacy_of_kattail_painter/source_io.py legacy_of_kattail_painter/migrate_state_setup.py legacy_of_kattail_painter/install.py legacy_of_kattail_painter/test_painter.py
+# Passed; PYTHONPYCACHEPREFIX redirected bytecode to temporary storage.
+
+python -B legacy_of_kattail_painter/migrate_state_setup.py --mod . --output C:\Users\elowi\AppData\Local\Temp\lok-painter-migration-20261124
+# Dry run staged 1,903 files. Reviewed all state insertions mechanically and
+# compared surviving startup AST/effect ordering against the originals.
+python -B legacy_of_kattail_painter/migrate_state_setup.py --mod . --output C:\Users\elowi\AppData\Local\Temp\lok-painter-migration-20261124 --apply
+# Applied after all source/stage hash checks. Subsequent canonical block
+# formatting preserved all original state text outside the demographic section.
+
+python -B legacy_of_kattail_painter/verify_real.py --mod . --output C:\Users\elowi\AppData\Local\Temp\lok-painter-editing-verification
+# Passed actual-data demographics, undo/redo, source filters and flag controls;
+# 1,026 mask-size renders and 10,786 unchanged hashes during unsaved UI tests.
+# Reported the same 4 pre-existing OOB parser errors (EUL/GAL/KKN/KTZ).
+
+python -B tools/validate_map.py
+# Before and after: same 2 failures, railways.txt:893 (20839/20841) and
+# :894 (20841/19461), both non-neighbor jumps. No map inputs changed.
+
+git diff --check
+git diff --stat
+git diff
+# Whitespace check passed; complete source/metadata diff reviewed. All 1,902
+# state insertions checked against original bytes and baseline demographics.
+```
+
+Additional inline Python/Tk checks passed: palette-backed culture painting,
+independent majority/minority brushes, minority clearing, Shift-pick drag
+suppression, Save/reload in disposable fixtures, actual province painting and
+undo/redo in real data without saving, all eight views, all workspace tabs and
+scrollable forms at 1500x900 and 1050x680. All migrated state definitions were
+checked for unique complete blocks and valid assigned colour IDs. No
+map/localisation/graphics files changed. Exact paths: project memory's
+plans/painter-editing-files.txt.
+
+No usable CWTools executable or screenshot helper was available. State-history
+syntax follows the local State modding reference (History section) and native
+271-ethiopia.txt variable effects. Live wiki access failed. No in-game validation
+is claimed; earlier initialisation timing needs a fresh-campaign check.
+
 ## 2026-11-24 — EU4 interface styling
 
 Replaced the forced dark `clam` theme and banner with native ttk controls,

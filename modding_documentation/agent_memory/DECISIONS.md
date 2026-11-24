@@ -1,5 +1,30 @@
 # Decisions
 
+## 2026-11-24: State histories own initial demographics
+**Decision:** initialise `state_cultures`, `species` and `minority` inside each
+state's native history effect block and remove the old startup assignment lists.
+Retain these runtime names, culture-group catalogs, country species ideas and
+later gameplay conversions. Use the delimited demographic block for editor writes.
+**Rationale:** the user requested persistent painting and state-local definitions;
+existing map modes, tooltips, focus rewards and scripted effects consume these
+containers. Removing the runtime containers would break those consumers.
+**Consequence:** new source state is independent of initial owner. Existing
+initial values are preserved, but their earlier availability requires a fresh
+campaign check. The migration is not intended to preserve existing saves.
+
+## 2026-11-24: Palette colours and persistent saves
+**Decision:** derive culture/species RGB directly from the mod's map-mode scripts,
+blend multiple culture colours arithmetically, and draw minority species in solid
+diagonal bands over the majority. Never hash demographic IDs into arbitrary hues.
+Undefined culture 102 remains selectable with a labelled neutral fallback.
+**Rationale:** the user requested actual defined colours and visible minorities;
+the game shader's grey contribution/alpha are not appropriate editor swatches.
+**Consequence:** preview colours express definitions, not exact shader output.
+Majority/minority brushes change one field at a time. Save preserves source
+encoding/newlines, rejects external changes, backs up originals, atomically
+replaces each file and rolls back written files on exceptions. This does not
+guarantee a multi-file transaction across power loss. Flags remain session-only.
+
 ## 2026-11-24: Share the EU4 painter's native desktop styling
 **Decision:** use platform-default ttk controls, compact top tools and a left
 sidebar instead of the HOI4 prototype's custom dark theme and banner. Keep

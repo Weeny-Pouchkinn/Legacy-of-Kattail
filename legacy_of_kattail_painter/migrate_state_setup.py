@@ -13,6 +13,7 @@ from pathlib import Path
 
 from model import World, child, parse, value, walk, read_text
 from demographics import STARTUP, Setup, set_local_draft, targets_demographics
+from source_io import confined, write_changes
 
 
 def digest(data):
@@ -40,9 +41,14 @@ def build(mod, output):
     # country species ideas, culture registries and runtime readers are not changed.
     text = setup.text
     for n in sorted(setup.selected, key=lambda n: n.start, reverse=True):
-        line = text.count('\n', 0, n.start) + 1
-        replacement = f'# Initial state demographics moved to history/states (original line {line}).'
-        text = text[:n.start] + replacement + text[n.end:]
+        start = text.rfind('\n', 0, n.start) + 1
+        end = text.find('\n', n.end)
+        end = len(text) if end < 0 else end + 1
+        before, after = text[start:n.start].strip(), text[n.end:end].strip()
+        if not before and (not after or after.startswith('#')):
+            text = text[:start] + text[end:]
+        else:
+            text = text[:n.start] + text[n.end:]
     world.docs.replace(STARTUP, text)
     for sid, data in sorted(baseline.items()):
         set_local_draft(world, sid, data['culture'], data['species'], data['minority'])
@@ -95,11 +101,35 @@ def build(mod, output):
     return manifest
 
 
+def apply_stage(mod, output):
+    """Apply a reviewed stage to an existing painter installation with backups."""
+    root, output = Path(mod).resolve(), Path(output).resolve()
+    manifest = json.loads((output / 'manifest.json').read_text(encoding='utf-8'))
+    if Path(manifest['mod']).resolve() != root:
+        raise ValueError('Migration stage belongs to another mod')
+    changes = {}
+    for entry in manifest['files']:
+        relative = entry['path']
+        if relative in changes:
+            raise ValueError('Duplicate migration destination: ' + relative)
+        original = confined(root, relative).read_bytes()
+        updated = confined(output / 'files', relative).read_bytes()
+        if digest(original) != entry['before_sha256'] or digest(updated) != entry['after_sha256']:
+            raise ValueError('Source/stage changed; regenerate migration: ' + relative)
+        parse(updated.decode(entry['encoding']))
+        changes[relative] = (original, updated)
+    return write_changes(root, changes, 'migration')
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--mod', required=True, type=Path)
     ap.add_argument('--output', required=True, type=Path)
+    ap.add_argument('--apply', action='store_true', help='Apply an existing reviewed stage instead of generating one')
     args = ap.parse_args()
-    result = build(args.mod, args.output)
-    print(f'Staged {len(result["files"])} files; {result["states"]} states; '
-          f'{result["removed_startup_statements"]} startup statements relocated. Input mod unchanged.')
+    if args.apply:
+        print('Applied migration; originals backed up at:', apply_stage(args.mod, args.output))
+    else:
+        result = build(args.mod, args.output)
+        print(f'Staged {len(result["files"])} files; {result["states"]} states; '
+              f'{result["removed_startup_statements"]} startup statements relocated. Input mod unchanged.')

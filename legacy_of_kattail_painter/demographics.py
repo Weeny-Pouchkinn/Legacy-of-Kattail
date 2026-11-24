@@ -161,21 +161,27 @@ def set_local_draft(world, sid, cultures, species, minority):
         raise ValueError('State has no history block')
     start_marker = '# LOK PAINTER DEMOGRAPHICS BEGIN'
     end_marker = '# LOK PAINTER DEMOGRAPHICS END'
-    snippet = '\n\t\t' + start_marker + '\n'
+    snippet = '\t\t' + start_marker + '\n'
     snippet += '\t\tclear_array = state_cultures\n'
     for c in cultures:
         snippet += f'\t\tadd_to_array = {{ array = state_cultures value = {c} }}\n'
     snippet += f'\t\tset_variable = {{ species = {species} }}\n'
     snippet += f'\t\tset_variable = {{ minority = {minority} }}\n'
-    snippet += '\t\t' + end_marker + '\n\t'
+    snippet += '\t\t' + end_marker + '\n'
+    newline = '\r\n' if '\r\n' in t else '\n'
+    snippet = snippet.replace('\n', newline)
     if start_marker in t:
-        a = t.index(start_marker)
-        a = t.rfind('\n', 0, a)
+        a = t.rfind('\n', 0, t.index(start_marker)) + 1
         b = t.index(end_marker, a) + len(end_marker)
-        b = t.find('\n', b) + 1
-        new = t[:a] + snippet.rstrip('\t') + t[b:]
+        end_line = t.find('\n', b)
+        b = len(t) if end_line < 0 else end_line + 1
+        new = t[:a] + snippet + t[b:]
     else:
-        # Append last within root history, leaving dated histories intact and distinguishable.
-        new = t[:hist.end - 1] + snippet + t[hist.end - 1:]
+        # Insert before the history closing line, preserving its existing indentation.
+        at = t.rfind('\n', 0, hist.end - 1) + 1
+        if t[at:hist.end - 1].strip():
+            at = hist.end - 1
+            snippet = newline + snippet
+        new = t[:at] + snippet + t[at:]
     world.docs.replace(rel, new)
-    world.demographics[sid] = {'culture': cultures, 'species': species, 'minority': minority}
+    world.demographics[sid] = {'culture': list(cultures), 'species': species, 'minority': minority}

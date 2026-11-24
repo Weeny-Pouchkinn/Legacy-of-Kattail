@@ -2,13 +2,16 @@
 import hashlib
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
+import numpy as np
 from PIL import Image
 
 from model import Documents, Emblems, FLAG_SIZES, World, child, parse, scalar, value, walk
 from demographics import STARTUP, Setup, set_local_draft
-from migrate_state_setup import build
+from migrate_state_setup import apply_stage, build
+import source_io
 
 
 class ParserTests(unittest.TestCase):
@@ -126,6 +129,107 @@ class FixtureTests(unittest.TestCase):
         for item in manifest['files']:
             migrated.docs.replace(item['path'], (out / 'files' / item['path']).read_text(encoding='utf-8-sig'))
         self.assertEqual(Setup(migrated).load(), self.world.demographics)
+
+    def test_save_preserves_encoding_newlines_backups_and_reloads(self):
+        path = self.root / 'history/states/one.txt'
+        original = b'\xef\xbb\xbf' + path.read_bytes()
+        path.write_bytes(original)
+        world = World(self.root)
+        world.demographics = Setup(world).load()
+        set_local_draft(world, 1, [4, 7, 9], 8, 3)
+        count, backup = world.docs.save()
+        self.assertEqual(count, 1)
+        self.assertEqual((backup / 'history/states/one.txt').read_bytes(), original)
+        saved = path.read_bytes()
+        self.assertTrue(saved.startswith(b'\xef\xbb\xbf'))
+        self.assertNotIn(b'\n', saved.replace(b'\r\n', b''))
+        self.assertEqual(Setup(World(self.root)).load()[1], {'culture': [4, 7, 9], 'species': 8, 'minority': 3})
+        self.assertFalse(world.docs.changed)
+        self.assertFalse(world.docs.undo_stack)
+        self.assertEqual(world.docs.save(), (0, None))
+        set_local_draft(world, 1, [4, 7, 9], 8, 3)
+        self.assertFalse(world.docs.changed)
+
+    def test_save_rejects_external_edit_before_any_writes(self):
+        one = self.root / 'history/states/one.txt'
+        original = one.read_bytes()
+        for sid in (1, 2):
+            set_local_draft(self.world, sid, [4], 8, 1000)
+        other = self.root / 'history/states/two.txt'
+        other.write_bytes(other.read_bytes() + b'\n# external edit')
+        with self.assertRaisesRegex(ValueError, 'outside the painter'):
+            self.world.docs.save()
+        self.assertEqual(one.read_bytes(), original)
+        self.assertIn(b'# external edit', other.read_bytes())
+        self.assertEqual(len(self.world.docs.changed), 2)
+
+    def test_save_failure_rolls_back_written_sources_and_keeps_drafts(self):
+        original = {s.path: (self.root / s.path).read_bytes() for s in self.world.states.values()}
+        for sid in (1, 2):
+            set_local_draft(self.world, sid, [4], 8, 1000)
+        atomic = source_io.atomic_bytes
+        calls = []
+        def fail_second(path, data):
+            calls.append(path)
+            if len(calls) == 2:
+                raise OSError('simulated write failure')
+            atomic(path, data)
+        with patch('source_io.atomic_bytes', side_effect=fail_second):
+            with self.assertRaisesRegex(OSError, 'simulated'):
+                self.world.docs.save()
+        self.assertEqual({p: (self.root / p).read_bytes() for p in original}, original)
+        self.assertEqual(len(self.world.docs.changed), 2)
+
+    def test_apply_migration_matches_baseline_and_rejects_reapplication(self):
+        stage = Path(self.tmp.name) / 'stage'
+        build(self.root, stage)
+        original = (self.root / STARTUP).read_bytes()
+        backup = apply_stage(self.root, stage)
+        self.assertEqual((backup / STARTUP).read_bytes(), original)
+        world = World(self.root)
+        setup = Setup(world)
+        self.assertEqual(setup.load(), self.world.demographics)
+        self.assertFalse(setup.selected)
+        with self.assertRaisesRegex(ValueError, 'Source/stage changed'):
+            apply_stage(self.root, stage)
+
+    def test_defined_colours_minority_stripes_no_minority_and_water(self):
+        folder = self.root / 'common/map_modes'
+        folder.mkdir()
+        (folder / 'LOK_culture_map_mode.txt').write_text('''
+            add_to_temp_variable = { culture_4_red = 0.4 }
+            add_to_temp_variable = { culture_4_green = 0.2 }
+            add_to_temp_variable = { culture_4_blue = 0.6 }
+            add_to_temp_variable = { culture_7_red = 0 }
+            add_to_temp_variable = { culture_7_green = 1 }
+            add_to_temp_variable = { culture_7_blue = 0 }
+        ''')
+        (folder / 'LOK_species_map_mode.txt').write_text('''scripted_map_modes = {
+            LOK_species_map_mode = {
+                bottom = { color = {
+                    if = { limit = { FROM = { check_variable = { species = 1 } } }
+                           set_temp_variable = { red = 0 } set_temp_variable = { green = 0.29 } set_temp_variable = { blue = 0.5 } }
+                } }
+                top = { color = {
+                    if = { limit = { FROM = { check_variable = { minority = 2 } } }
+                           set_temp_variable = { red = 0.8 } set_temp_variable = { green = 0.16 } set_temp_variable = { blue = 0.24 } }
+                } }
+            }
+        }''')
+        self.world._demographic_catalogs()
+        self.world.map_ids = np.ones((40, 64), dtype=np.int32)
+        self.world.map_ids[:, 32:] = 2
+        self.world.map_ids[-1, :] = 0
+        set_local_draft(self.world, 1, [4], 1, 2)
+        set_local_draft(self.world, 2, [7], 1, 1000)
+        image = self.world.map_image('Species')
+        self.assertEqual(image.getpixel((0, 0)), (204, 41, 61))
+        self.assertEqual(image.getpixel((12, 0)), (0, 74, 128))
+        self.assertEqual(image.getpixel((40, 0)), (0, 74, 128))
+        self.assertEqual(image.getpixel((0, 39)), (26, 43, 60))
+        image = self.world.map_image('Culture')
+        self.assertEqual(image.getpixel((0, 0)), (102, 51, 153))
+        self.assertEqual(image.getpixel((40, 0)), (0, 255, 0))
 
 
 class FlagTests(unittest.TestCase):

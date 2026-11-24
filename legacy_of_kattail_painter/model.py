@@ -1,4 +1,4 @@
-"""Read-only Clausewitz data access and ephemeral drafts. No source-file writers."""
+"""Clausewitz data access, editable drafts and guarded source-file saves."""
 from __future__ import annotations
 
 import colorsys
@@ -12,6 +12,7 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageColor
+from source_io import encode_source, write_changes
 
 TOKEN = re.compile(r'#[^\r\n]*|"(?:\\.|[^"\\])*"|[{}]|[<>=!]+|[^\s{}=<>!#"]+')
 OPS = {'=', '>', '<', '>=', '<=', '!=', '?='}
@@ -111,10 +112,11 @@ def colour(key):
 
 
 class Documents:
-    """The only edit store. Editing never opens a source file for writing."""
+    """Edits remain in memory until an explicit, backed-up Save."""
     def __init__(self, root):
         self.root = Path(root).resolve()
         self.originals = {}
+        self.snapshots = {}
         self.drafts = {}
         self.undo_stack = []
         self.redo_stack = []
@@ -125,6 +127,7 @@ class Documents:
         if not path.is_relative_to(self.root):
             raise ValueError('Source path escapes mod root')
         if relative not in self.originals:
+            self.snapshots[relative] = path.read_bytes()
             self.originals[relative] = read_text(path)
         return self.drafts.get(relative, self.originals[relative])
 
@@ -164,6 +167,19 @@ class Documents:
     def changed(self):
         return [p for p, t in self.drafts.items() if t != self.originals[p]]
 
+    def save(self):
+        changes = {}
+        for relative in self.changed:
+            parse(self.drafts[relative])
+            changes[relative] = (self.snapshots[relative],
+                                 encode_source(self.drafts[relative], self.snapshots[relative]))
+        backup = write_changes(self.root, changes)
+        for relative, (_, blob) in changes.items():
+            self.snapshots[relative] = blob
+            self.originals[relative] = read_text(self.root / relative)
+        self.reset()
+        return len(changes), backup
+
 
 @dataclass
 class State:
@@ -186,6 +202,7 @@ class World:
         self.localisation = {}
         self.warnings = []
         self.map_ids = None
+        self._state_nodes_cache = {}
         for folder in ['localisation/english', 'localisation/replace']:
             for f in sorted((self.root / folder).rglob('*.yml')):
                 for line in read_text(f).splitlines():
@@ -229,13 +246,63 @@ class World:
                             for folder in ['common', 'history', 'events', 'interface', 'map', 'country_metadata']
                             for f in (self.root / folder).rglob('*')
                             if f.is_file() and f.suffix.lower() in {'.txt', '.gui', '.gfx', '.asset'})
+        self._demographic_catalogs()
+
+    def _demographic_catalogs(self):
+        self.culture_colours, self.species_colours, self.minority_colours = {}, {}, {}
+        path = self.root / 'common/map_modes/LOK_culture_map_mode.txt'
+        if path.exists():
+            text = self.docs.text(path.relative_to(self.root))
+            channels = {}
+            for _, node in walk(parse(text)):
+                if node.key != 'add_to_temp_variable' or not node.children:
+                    continue
+                for component in node.children:
+                    match = re.fullmatch(r'culture_(\d+)_(red|green|blue)', component.key)
+                    if match:
+                        channels.setdefault(int(match[1]), {})[match[2]] = float(value(text, component))
+            self.culture_colours = {key: self._fraction_rgb(rgb) for key, rgb in channels.items()}
+        path = self.root / 'common/map_modes/LOK_species_map_mode.txt'
+        if path.exists():
+            text = self.docs.text(path.relative_to(self.root))
+            root = child(child(parse(text), 'scripted_map_modes').children, 'LOK_species_map_mode')
+            for part, field, palette in [('bottom', 'species', self.species_colours),
+                                         ('top', 'minority', self.minority_colours)]:
+                color = child(child(root.children, part).children, 'color')
+                for node in color.children:
+                    if node.key != 'if':
+                        continue
+                    limit = child(node.children, 'limit')
+                    ids = [int(value(text, n)) for _, n in walk([limit]) if n.key == field]
+                    rgb = {c.key: float(value(text, c)) for n in node.children
+                           if n.key == 'set_temp_variable' for c in n.children
+                           if c.key in {'red', 'green', 'blue'}}
+                    if ids and rgb:
+                        palette[ids[0]] = self._fraction_rgb(rgb)
+        self.culture_names = {int(m[1]): re.sub('§.', '', name)
+                              for key, name in self.localisation.items()
+                              if (m := re.fullmatch(r'culture_(\d+)_name', key))}
+        self.species_names = {int(m[1]): re.sub('§.', '', name)
+                              for key, name in self.localisation.items()
+                              if (m := re.fullmatch(r'var_species_(\d+)', key))}
+
+    @staticmethod
+    def _fraction_rgb(channels):
+        values = [channels[key] for key in ('red', 'green', 'blue')]
+        if any(not 0 <= v <= 1 for v in values):
+            raise ValueError('Map-mode colour component outside 0..1')
+        return tuple(round(v * 255) for v in values)
 
     def label(self, key):
         return self.localisation.get(str(key), str(key))
 
     def state_nodes(self, sid):
         t = self.docs.text(self.states[sid].path)
-        return t, child(parse(t), 'state').children
+        cached = self._state_nodes_cache.get(sid)
+        if cached is None or cached[0] != t:
+            cached = (t, child(parse(t), 'state').children)
+            self._state_nodes_cache[sid] = cached
+        return cached
 
     def load_map(self):
         if self.map_ids is not None:
@@ -253,10 +320,7 @@ class World:
         valid &= keys[order][positions] == encoded
         self.map_ids = np.where(valid, ids[order][positions], 0)
 
-    def map_image(self, layer='Owners'):
-        self.load_map()
-        palette = np.zeros((max(self.provinces) + 1, 3), dtype=np.uint8)
-        owners = {}
+    def country_colours(self):
         country_colours = {}
         for tag, relative in self.country_paths.items():
             if (self.root / relative).exists():
@@ -271,10 +335,20 @@ class World:
                 c = child(n.children, 'color') if n.children else None
                 if c:
                     country_colours[n.key] = self._script_colour(t, c)
-        for sid, state in self.states.items():
-            t, nodes = self.state_nodes(sid)
-            h = child(nodes, 'history')
-            owners[sid] = scalar(t, h.children, 'owner') if h else ''
+        return country_colours
+
+    def map_image(self, layer='Owners'):
+        self.load_map()
+        palette = np.zeros((max(self.provinces) + 1, 3), dtype=np.uint8)
+        minority_palette = np.zeros_like(palette)
+        has_minority = np.zeros(len(palette), dtype=bool)
+        owners = {}
+        country_colours = self.country_colours() if layer == 'Owners' else {}
+        if layer == 'Owners':
+            for sid in self.states:
+                t, nodes = self.state_nodes(sid)
+                h = child(nodes, 'history')
+                owners[sid] = scalar(t, h.children, 'owner') if h else ''
         for pid, record in self.provinces.items():
             sid = self.province_states.get(pid)
             if layer == 'Provinces':
@@ -283,15 +357,30 @@ class World:
                 c = colour(record['terrain' if layer == 'Terrain' else 'continent'])
             elif layer in {'Culture', 'Species', 'Minority'}:
                 data = getattr(self, 'demographics', {}).get(sid, {})
-                v = data.get(layer.lower(), [])
-                c = colour(str(v)) if v not in ([], None) else (65, 69, 78)
+                if layer == 'Culture':
+                    colours = [self.culture_colours.get(v, (128, 128, 128)) for v in data.get('culture', [])]
+                    c = tuple(round(sum(v) / len(colours)) for v in zip(*colours)) if colours else (128, 128, 128)
+                else:
+                    key = 'species' if layer == 'Species' else 'minority'
+                    colours = self.species_colours if layer == 'Species' else self.minority_colours
+                    c = colours.get(data.get(key), (128, 128, 128))
+                    minority = data.get('minority', 1000)
+                    if layer == 'Species' and minority != 1000 and record['type'] == 'land':
+                        minority_palette[pid] = self.minority_colours.get(minority, (128, 128, 128))
+                        has_minority[pid] = True
             else:
                 key = owners.get(sid, '') if layer == 'Owners' else sid
                 c = country_colours.get(key, colour(key)) if key else (65, 69, 78)
             if record['type'] != 'land' and layer != 'Provinces':
                 c = (26, 43, 60)
             palette[pid] = c
-        return Image.fromarray(palette[self.map_ids])
+        pixels = palette[self.map_ids]
+        if layer == 'Species':
+            height, width = self.map_ids.shape
+            stripes = (np.arange(height)[:, None] + np.arange(width)[None, :]) % 32 < 9
+            stripes &= has_minority[self.map_ids]
+            pixels[stripes] = minority_palette[self.map_ids[stripes]]
+        return Image.fromarray(pixels)
 
     @staticmethod
     def _script_colour(text, node):

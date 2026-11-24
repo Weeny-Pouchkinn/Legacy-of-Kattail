@@ -1,4 +1,4 @@
-"""Legacy of Kattail: read-only source browser, draft painter and tintable flag lab."""
+"""Legacy of Kattail: state painter, source editor and tintable flag lab."""
 from __future__ import annotations
 
 import argparse
@@ -24,8 +24,14 @@ class Painter(ttk.Frame):
         self.flag_drafts = {}
         self.flag_target = tk.StringVar(value='Unassigned draft')
         self.status = tk.StringVar()
-        self.layer = tk.StringVar(value='Owners')
-        self.brush = tk.StringVar(value='Inspect')
+        self.layer = tk.StringVar(value='Culture')
+        self.brush = tk.StringVar(value='Culture')
+        self.species_part = tk.StringVar(value='Majority')
+        self.culture_operation = tk.StringVar(value='Set')
+        self.palette_search = tk.StringVar()
+        self.paint_selection = {}
+        self.drag_seen = set()
+        self.pick_only = False
         self.last_painted = None
         self.background = tk.StringVar(value='#283c63')
         self.tint = tk.StringVar(value='#ffffff')
@@ -36,17 +42,19 @@ class Painter(ttk.Frame):
         self.culture = tk.StringVar()
         self.species = tk.StringVar()
         self.minority = tk.StringVar()
-        root.title('Legacy of Kattail Painter — read-only prototype')
+        root.title('Legacy of Kattail Painter')
         root.geometry('1500x900')
         root.minsize(1050, 680)
         self.pack(fill='both', expand=True)
         self._build()
         self._library()
+        self.refresh_palette()
         self._symbols()
         self._flag()
         self.refresh_map()
         root.protocol('WM_DELETE_WINDOW', self.close)
         self._status()
+        root.bind('<Control-s>', lambda e: self.save())
 
     @staticmethod
     def numeric_id(text):
@@ -64,21 +72,23 @@ class Painter(ttk.Frame):
         # Use the same native ttk appearance and compact workspace as the EU4 painter.
         top = ttk.Frame(self, padding=(8, 7))
         top.pack(fill='x')
-        ttk.Button(top, text='Undo', command=self.undo).pack(side='left')
+        ttk.Button(top, text='Save', command=self.save).pack(side='left')
+        ttk.Button(top, text='Undo', command=self.undo).pack(side='left', padx=(6, 0))
         ttk.Button(top, text='Redo', command=self.redo).pack(side='left', padx=(6, 0))
         ttk.Button(top, text='Discard drafts', command=self.discard).pack(side='left', padx=(6, 14))
         ttk.Label(top, text='Paint:').pack(side='left')
-        ttk.Combobox(top, state='readonly', textvariable=self.brush,
-                     values=['Inspect', 'Owner', 'Culture', 'Species', 'Minority'], width=12).pack(side='left', padx=(5, 14))
+        brush = ttk.Combobox(top, state='readonly', textvariable=self.brush,
+                             values=['Inspect', 'Owner', 'Culture', 'Species'], width=12)
+        brush.pack(side='left', padx=(5, 14))
+        brush.bind('<<ComboboxSelected>>', self.brush_changed)
         ttk.Label(top, text='View:').pack(side='left')
         layers = ttk.Combobox(top, state='readonly', textvariable=self.layer,
                              values=['Owners', 'States', 'Provinces', 'Terrain', 'Continents', 'Culture', 'Species', 'Minority'], width=15)
         layers.pack(side='left', padx=(5, 14))
-        layers.bind('<<ComboboxSelected>>', lambda e: self.refresh_map())
+        layers.bind('<<ComboboxSelected>>', lambda e: (self.refresh_palette(), self.refresh_map()))
         ttk.Button(top, text='Zoom -', command=lambda: self.change_zoom(.8)).pack(side='left')
         ttk.Button(top, text='Zoom +', command=lambda: self.change_zoom(1.25)).pack(side='left', padx=(5, 0))
         ttk.Button(top, text='Fit', command=self.fit_map).pack(side='left', padx=(5, 0))
-        ttk.Label(top, text='Read-only / session drafts', foreground='#555').pack(side='right')
 
         split = ttk.Panedwindow(self, orient='horizontal')
         split.pack(fill='both', expand=True)
@@ -89,8 +99,11 @@ class Painter(ttk.Frame):
         self.sidebar_tabs.pack(fill='both', expand=True, pady=(6, 0))
         library = ttk.Frame(self.sidebar_tabs, padding=(0, 6))
         self.state_tab = ttk.Frame(self.sidebar_tabs)
-        self.sidebar_tabs.add(library, text='Sources')
+        self.palette_tab = ttk.Frame(self.sidebar_tabs, padding=(0, 6))
+        self.sidebar_tabs.add(self.palette_tab, text='Paint')
         self.sidebar_tabs.add(self.state_tab, text='State setup')
+        self.sidebar_tabs.add(library, text='Sources')
+        self._palette_panel(self.palette_tab)
         ttk.Label(library, text='Source library').pack(anchor='w')
         search = ttk.Entry(library, textvariable=self.library_search)
         search.pack(fill='x', pady=(6, 6))
@@ -117,8 +130,107 @@ class Painter(ttk.Frame):
         self._state_panel(self.state_tab)
         self._fields_tab(fields)
         self._flags_tab(flags)
-        ttk.Label(self.sidebar, text='Click to inspect; drag to paint.\nRight-drag to pan; wheel to zoom.', wraplength=400).pack(fill='x', pady=(8, 0))
+        ttk.Label(self.sidebar, text='Click/drag to paint; Shift-click to pick.\nRight-drag to pan; wheel to zoom.', wraplength=400).pack(fill='x', pady=(8, 0))
         ttk.Label(self, textvariable=self.status, anchor='w', padding=(8, 4)).pack(fill='x')
+
+    def _palette_panel(self, tab):
+        self.palette_title = tk.StringVar()
+        ttk.Label(tab, textvariable=self.palette_title, font=('Segoe UI', 14, 'bold')).pack(anchor='w')
+        self.species_controls = ttk.Frame(tab)
+        for part in ('Majority', 'Minority'):
+            ttk.Radiobutton(self.species_controls, text=part, value=part, variable=self.species_part,
+                            command=self.refresh_palette).pack(side='left', padx=(0, 8))
+        self.culture_controls = ttk.Frame(tab)
+        ttk.Label(self.culture_controls, text='Operation:').pack(side='left')
+        ttk.Combobox(self.culture_controls, textvariable=self.culture_operation,
+                     values=['Set', 'Add', 'Remove'], state='readonly', width=10).pack(side='left', padx=6)
+        self.palette_filter = ttk.Entry(tab, textvariable=self.palette_search)
+        self.palette_filter.pack(fill='x', pady=6)
+        self.palette_filter.bind('<KeyRelease>', lambda e: self.refresh_palette())
+        listing = ttk.Frame(tab)
+        listing.pack(fill='both', expand=True)
+        self.palette = ttk.Treeview(listing, show='tree', selectmode='browse')
+        scrollbar = ttk.Scrollbar(listing, orient='vertical', command=self.palette.yview)
+        self.palette.configure(yscrollcommand=scrollbar.set)
+        scrollbar.pack(side='right', fill='y')
+        self.palette.pack(side='left', fill='both', expand=True)
+        self.palette.bind('<<TreeviewSelect>>', self.palette_selected)
+        self.paint_label = tk.StringVar(value='Select something to paint.')
+        ttk.Label(tab, textvariable=self.paint_label, wraplength=390).pack(fill='x', pady=(8, 0))
+
+    def palette_key(self):
+        brush = self.brush.get()
+        if brush == 'Species':
+            return 'Species' if self.species_part.get() == 'Majority' else 'Minority'
+        if brush == 'Inspect':
+            return self.layer.get() if self.layer.get() in {'Culture', 'Species', 'Minority'} else 'Owner'
+        return brush
+
+    def brush_changed(self, event=None):
+        mode = self.brush.get()
+        if mode != 'Inspect':
+            self.layer.set('Species' if mode == 'Minority' else 'Owners' if mode == 'Owner' else mode)
+        self.palette_search.set('')
+        self.sidebar_tabs.select(self.palette_tab)
+        self.refresh_palette()
+        self.refresh_map()
+
+    def refresh_palette(self):
+        mode = self.palette_key()
+        self.palette_title.set({'Owner': 'Countries', 'Culture': 'Cultures',
+                                'Species': 'Majority species', 'Minority': 'Minority species'}[mode])
+        self.species_controls.pack_forget()
+        self.culture_controls.pack_forget()
+        if self.brush.get() == 'Species':
+            self.species_controls.pack(fill='x', pady=(6, 0), before=self.palette_filter)
+        if mode == 'Culture':
+            self.culture_controls.pack(fill='x', pady=(6, 0), before=self.palette_filter)
+        if mode == 'Owner':
+            colours = self.world.country_colours()
+            entries = [(tag, self.world.label(tag), colours.get(tag, (128, 128, 128)))
+                       for tag in sorted(self.world.country_paths)]
+        else:
+            colours = self.world.culture_colours if mode == 'Culture' else (
+                self.world.species_colours if mode == 'Species' else self.world.minority_colours)
+            names = self.world.culture_names if mode == 'Culture' else self.world.species_names
+            keys = set(colours) | set(names) if mode == 'Culture' else set(colours)
+            entries = [(key, names.get(key, str(key)) + (' (no defined colour)' if key not in colours else ''),
+                        colours.get(key, (128, 128, 128))) for key in sorted(keys)]
+            if mode == 'Minority':
+                entries.insert(0, (1000, 'No minority', (255, 255, 255)))
+        self.palette.delete(*self.palette.get_children())
+        self.palette_values, self.palette_images = {}, []
+        query = self.palette_search.get().casefold()
+        selected = self.paint_selection.get(mode)
+        for key, label, rgb in entries:
+            text = f'{key} · {label}'
+            if query not in text.casefold():
+                continue
+            icon = ImageTk.PhotoImage(Image.new('RGB', (16, 16), rgb))
+            self.palette_images.append(icon)
+            item = self.palette.insert('', 'end', text=text, image=icon)
+            self.palette_values[item] = key
+            if key == selected:
+                self.palette.selection_set(item)
+                self.palette.see(item)
+        self.paint_label.set(f'Selected {mode.lower()}: {selected}' if selected is not None else 'Select something to paint.')
+
+    def palette_selected(self, event=None):
+        selected = self.palette.selection()
+        if selected and selected[0] in self.palette_values:
+            mode = self.palette_key()
+            self.paint_selection[mode] = self.palette_values[selected[0]]
+            self.paint_label.set(self.palette.item(selected[0], 'text'))
+
+    def paint_press(self, event):
+        self.drag_seen.clear()
+        self.pick_only = bool(event.state & 1)
+        self.pick(event)
+
+    def paint_release(self, event=None):
+        self.drag_seen.clear()
+        self.pick_only = False
+        self.last_painted = None
 
     def _map_tab(self, tab):
         area = ttk.Frame(tab)
@@ -132,9 +244,9 @@ class Painter(ttk.Frame):
         xs.grid(row=1, column=0, sticky='ew')
         area.rowconfigure(0, weight=1)
         area.columnconfigure(0, weight=1)
-        self.canvas.bind('<Button-1>', self.pick)
+        self.canvas.bind('<Button-1>', self.paint_press)
         self.canvas.bind('<B1-Motion>', self.pick)
-        self.canvas.bind('<ButtonRelease-1>', lambda e: setattr(self, 'last_painted', None))
+        self.canvas.bind('<ButtonRelease-1>', self.paint_release)
         self.canvas.bind('<Button-3>', lambda e: self.canvas.scan_mark(e.x, e.y))
         self.canvas.bind('<B3-Motion>', lambda e: self.canvas.scan_dragto(e.x, e.y, gain=1))
         self.canvas.bind('<MouseWheel>', lambda e: self.change_zoom(1.2 if e.delta > 0 else 1/1.2))
@@ -170,14 +282,14 @@ class Painter(ttk.Frame):
         culture_choice = ttk.Combobox(inspector, values=self.catalog(r'culture_(\d+)_name'), state='readonly')
         culture_choice.pack(fill='x')
         culture_choice.bind('<<ComboboxSelected>>', lambda e: self.culture.set((self.culture.get() + ' ' + str(self.numeric_id(culture_choice.get()))).strip()))
-        ttk.Button(inspector, text='Apply state draft', command=self.apply_demographics).pack(fill='x', pady=10)
-        ttk.Label(inspector, text='Values come from state history after migration. Before migration, startup rules are evaluated for the initial ownership setup. This is not a full game simulation.', wraplength=380, foreground='#555').pack(anchor='w')
+        ttk.Button(inspector, text='Apply state changes', command=self.apply_demographics).pack(fill='x', pady=10)
+        ttk.Label(inspector, text='Culture and species changes are stored in the state history. Use Save to write your changes.', wraplength=380, foreground='#555').pack(anchor='w')
         ttk.Button(inspector, text='Inspect every state field', command=self.state_fields).pack(fill='x', pady=(16, 5))
         ttk.Button(inspector, text='Inspect owner history', command=self.owner_fields).pack(fill='x')
         self.owner_draft = tk.StringVar()
         ttk.Label(inspector, text='Draft owner tag').pack(anchor='w', pady=(18, 0))
         ttk.Combobox(inspector, textvariable=self.owner_draft, values=sorted(self.world.countries)).pack(fill='x')
-        ttk.Button(inspector, text='Set owner in memory', command=self.apply_owner).pack(fill='x', pady=5)
+        ttk.Button(inspector, text='Apply owner change', command=self.apply_owner).pack(fill='x', pady=5)
 
     def _fields_tab(self, tab):
         self.path_label = tk.StringVar(value='Select a country, state, or script from the library')
@@ -379,35 +491,72 @@ class Painter(ttk.Frame):
             return
         pid = int(ids[y, x])
         sid = self.world.province_states.get(pid)
-        if sid:
-            if self.brush.get() != 'Inspect':
-                if sid == self.last_painted:
-                    return
-                try:
-                    mode = self.brush.get()
-                    if mode == 'Owner':
-                        self.current_state = sid
-                        self.apply_owner()
-                    else:
-                        d = self.world.demographics[sid]
-                        cultures = [int(s) for s in self.culture.get().replace(',', ' ').split()] if mode == 'Culture' else d['culture']
-                        species = self.numeric_id(self.species.get()) if mode == 'Species' else d['species']
-                        minority = self.numeric_id(self.minority.get()) if mode == 'Minority' else d['minority']
-                        set_local_draft(self.world, sid, cultures, species, minority)
-                        self.refresh_map()
-                    self.last_painted = sid
-                except ValueError as exc:
-                    self.brush.set('Inspect')
-                    messagebox.showerror('Invalid brush value', str(exc), parent=self.root)
-                    return
+        if sid is None:
+            self._status(f'Province {pid}: no state assignment')
+            return
+        if self.pick_only or getattr(event, 'state', 0) & 1:
+            if self.drag_seen:
+                return
+            mode = self.palette_key()
+            data = self.world.demographics[sid]
+            if mode == 'Owner':
+                text, nodes = self.world.state_nodes(sid)
+                target = scalar(text, child(nodes, 'history').children, 'owner')
+            elif mode == 'Culture':
+                target = next(iter(data['culture']), None)
             else:
-                self.inspect_state(sid)
-            self._status(f'Province {pid} · state {sid}')
-        else:
-            self._status(f'Province {pid} · no state assignment')
+                target = data['species' if mode == 'Species' else 'minority']
+            if target is not None:
+                self.paint_selection[mode] = target
+            self.palette_search.set('')
+            self.sidebar_tabs.select(self.palette_tab)
+            self.refresh_palette()
+            self.drag_seen.add(sid)
+            self._status(f'Picked {mode.lower()} from state {sid}')
+            return
+        if self.brush.get() == 'Inspect':
+            self.inspect_state(sid)
+            self._status(f'Province {pid}: state {sid}')
+            return
+        if sid in self.drag_seen:
+            return
+        mode = self.palette_key()
+        target = self.paint_selection.get(mode)
+        if target is None:
+            self._status('Select a value in the Paint list first')
+            return
+        try:
+            if mode == 'Owner':
+                self.current_state = sid
+                self.owner_draft.set(target)
+                self.apply_owner(reveal=False)
+            else:
+                data = self.world.demographics[sid]
+                cultures = list(data['culture'])
+                species, minority = data['species'], data['minority']
+                if mode == 'Culture':
+                    operation = self.culture_operation.get()
+                    if operation == 'Set':
+                        cultures = [target]
+                    elif operation == 'Add' and target not in cultures:
+                        cultures.append(target)
+                    elif operation == 'Remove':
+                        cultures = [c for c in cultures if c != target]
+                elif mode == 'Species':
+                    species = target
+                else:
+                    minority = target
+                set_local_draft(self.world, sid, cultures, species, minority)
+                self.inspect_state(sid, reveal=False)
+                self.refresh_map()
+            self.drag_seen.add(sid)
+            self._status(f'Painted state {sid}: {mode.lower()} {target}')
+        except ValueError as exc:
+            messagebox.showerror('Invalid brush value', str(exc), parent=self.root)
 
-    def inspect_state(self, sid):
-        self.sidebar_tabs.select(self.state_tab)
+    def inspect_state(self, sid, reveal=True):
+        if reveal:
+            self.sidebar_tabs.select(self.state_tab)
         self.current_state = sid
         s = self.world.states[sid]
         t, ns = self.world.state_nodes(sid)
@@ -429,11 +578,11 @@ class Painter(ttk.Frame):
             cultures = [int(s) for s in self.culture.get().replace(',', ' ').split()]
             set_local_draft(self.world, self.current_state, cultures, self.numeric_id(self.species.get()), self.numeric_id(self.minority.get()))
             self.refresh_map()
-            self._status('State culture, species and minority changed in memory only')
+            self._status('State demographics updated; Save writes the changes')
         except ValueError as exc:
             messagebox.showerror('Invalid demographics', str(exc), parent=self.root)
 
-    def apply_owner(self):
+    def apply_owner(self, reveal=True):
         if self.current_state is None:
             return
         tag = self.owner_draft.get().upper().strip()
@@ -450,7 +599,7 @@ class Painter(ttk.Frame):
             self.world.docs.edit(state.path, existing[-1], tag)
         else:
             self.world.docs.replace(state.path, t[:hist.end - 1] + '\n\t\towner = ' + tag + '\n\t' + t[hist.end - 1:])
-        self.inspect_state(state.id)
+        self.inspect_state(state.id, reveal=reveal)
         self.refresh_map()
         self._status('Owner draft updated; demographics remain attached to the state')
 
@@ -532,7 +681,7 @@ class Painter(ttk.Frame):
         self.populate_fields()
         self.refresh_map()
         if self.current_state:
-            self.inspect_state(self.current_state)
+            self.inspect_state(self.current_state, reveal=False)
         self._status()
 
     def undo(self):
@@ -544,17 +693,30 @@ class Painter(ttk.Frame):
         self._sync()
 
     def discard(self):
-        if messagebox.askyesno('Discard session', 'Discard all source drafts and flag drafts?', parent=self.root):
+        if messagebox.askyesno('Discard session', 'Discard all unsaved source changes and session flag drafts?', parent=self.root):
             self.world.docs.reset()
             self.flag_drafts.clear()
             self._sync()
 
     def _status(self, detail=''):
-        self.status.set(f'{len(self.world.docs.changed)} source drafts · {len(self.flag_drafts)} flag drafts · Files remain read-only' + ('  |  ' + detail if detail else ''))
+        self.status.set(f'{len(self.world.docs.changed)} unsaved files · {len(self.flag_drafts)} session flag drafts' + ('  |  ' + detail if detail else ''))
+
+    def save(self):
+        try:
+            setup = Setup(self.world)
+            setup.load()
+            if setup.selected and self.world.docs.changed:
+                raise ValueError('Move startup demographics into state histories before saving. '
+                                 'Run migrate_state_setup.py to stage and apply the migration.')
+            count, backup = self.world.docs.save()
+            self._sync()
+            self._status(f'Saved {count} files' + (f'; backups: {backup.name}' if backup else ''))
+        except (ValueError, OSError, UnicodeError) as exc:
+            messagebox.showerror('Save failed', str(exc), parent=self.root)
 
     def close(self):
         if self.world.docs.changed or self.flag_drafts:
-            if not messagebox.askyesno('Discard drafts and close?', 'This prototype has no Save. Closing discards all session edits.', parent=self.root):
+            if not messagebox.askyesno('Discard drafts and close?', 'Discard unsaved source changes and session flags, then close?', parent=self.root):
                 return
         self.root.destroy()
 

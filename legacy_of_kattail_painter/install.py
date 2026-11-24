@@ -8,8 +8,8 @@ import json
 from pathlib import Path
 import shutil
 
-FILES = ['painter.py', 'model.py', 'demographics.py', 'migrate_state_setup.py',
-         'run_painter.bat', 'requirements.txt', 'README.md', 'MODLOG.md', 'PLAN.md', 'test_painter.py']
+FILES = ['painter.py', 'model.py', 'source_io.py', 'demographics.py', 'migrate_state_setup.py',
+         'run_painter.bat', 'requirements.txt', '.gitignore', 'README.md', 'MODLOG.md', 'PLAN.md', 'test_painter.py']
 
 
 def confined(root, relative):
@@ -70,4 +70,4 @@ if __name__ == '__main__':
     parser.add_argument('--include-migration', action='store_true')
     args = parser.parse_args()
     print('Installed:', install(args.mod, args.include_migration))
-    print('Run run_painter.bat. The painter never saves to the mod.')
+    print('Run run_painter.bat. Use Save to write edited source files with backups.')

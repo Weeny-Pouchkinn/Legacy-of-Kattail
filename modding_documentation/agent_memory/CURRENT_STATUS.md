@@ -1,5 +1,53 @@
 # Current status
 
+## Persistent state painting and demographic migration (2026-11-24)
+
+Completed on `Legacy-of-Kattail-Main`, based on `a8d83c64`. This supersedes the
+read-only limitation in the earlier interface-alignment entry below.
+
+- Applied initial demographics to all 1,902 state-history files and removed
+  1,655 startup assignment statements from `common/on_actions/LOK_on_actions.txt`.
+  All original culture order/values, majority and minority values are unchanged.
+  Four three-culture states (894-897) retain all entries. Runtime `state_cultures`,
+  `species`, `minority`, global culture-group catalogs, country species ideas and
+  subsequent gameplay/derived-modifier effects are preserved.
+- Painter now supports Save/Ctrl+S, exact-byte external-edit checks, source
+  backups and rollback for write failures. Source-field drafts also save. Flags
+  remain session-only. Backups/bytecode are excluded by the painter's .gitignore.
+- Left palette lists named cultures/species/countries with defined-colour swatches.
+  Culture has Set/Add/Remove; species has independent Majority/Minority brushes
+  and No minority (1000). Species rendering overlays minority-coloured stripes.
+  Shift-click picks the assignment and suppresses painting for that gesture.
+- Actual map-mode definitions supply 101 culture colours and 61 species colours.
+  Named culture 102 (Katzenurkisch) has no defined colour; it remains selectable
+  with a labelled grey fallback. All currently assigned IDs have defined colours.
+
+Validation: 16 fixture tests pass, covering save/reload, stale-source rejection,
+rollback, BOM/newlines, migration application, exact pixels/stripes and existing
+functionality. All seven changed/new Python files compile. Full live-state checks
+prove one demographic block per state, exact initial-value equality, preserved
+BOM/newlines and identical state text outside the inserted blocks. Surviving
+startup syntax trees retain all unrelated effects and ordering.
+
+Real-data checks exercised palettes (102 cultures, 61 majority/62 minority
+choices), actual province painting, independent species fields, undo/redo,
+all eight views and normal/minimum layouts. `verify_real.py` passed 1,026 mask-size
+renders and 10,786 unchanged source hashes during UI-only checks. Four existing
+EUL/GAL/KKN/KTZ OOB brace errors remain. `git diff --check` passed. Map validation
+before and after reports the same two railway errors on lines 893-894; no map,
+localisation or binary graphics files changed. No CWTools executable was found.
+
+Original migration backups:
+`legacy_of_kattail_painter/backups/migration_20261124_101441_420939/` (all 1,903
+original sources). Exact changed paths are in `plans/painter-editing-files.txt`;
+commands/results are in the painter MODLOG.md.
+
+Next action: restart the painter and use Paint > select entry > click/drag > Save.
+Fresh-campaign engine validation of state-history initialisation remains pending;
+no game launch or screenshot inspection is claimed. Migration runs earlier than
+the removed startup assignments, so static equality does not prove timing
+equivalence with arbitrary earlier startup effects.
+
 ## Painter interface alignment (2026-11-24)
 
 Current branch verified as `Legacy-of-Kattail-Main`. The older sections below
