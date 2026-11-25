@@ -67,20 +67,27 @@ def distribute_popularities(values, remaining=False, rng=None):
     raw={key:str(v).strip() or '0' for key,v in values.items()}
     if not raw:raise ValueError('No ideologies are defined')
     decimals={key:Decimal(number(v,0)) for key,v in raw.items()}
+    # Native fixed-point values have three decimals; Python-only exact totals
+    # with six-digit shares can still be rejected by set_popularities in game.
+    if remaining:
+        from decimal import ROUND_HALF_UP
+        decimals={key:v.quantize(Decimal('.001'),rounding=ROUND_HALF_UP) for key,v in decimals.items()}
+        raw={key:format(v,'f').rstrip('0').rstrip('.') if '.' in format(v,'f') else format(v,'f') for key,v in decimals.items()}
     amounts={key:Fraction(v) for key,v in decimals.items()}
     total=sum(amounts.values())
     if remaining:
         if total>100:raise ValueError('The total exceeds 100%. Use Normalize to 100 first.')
-        weights={key:(rng or random).randint(1,1000000) for key,v in amounts.items() if not v}
+        weights={key:(rng or random).randint(1,1000000) for key,v in amounts.items() if not v and key!='gestalt'}
         budget=100-total
         if not weights:
             if budget:raise ValueError('No blank or zero ideologies remain. Clear a value or normalize to 100.')
             return raw
     else:
-        weights=amounts if total else dict.fromkeys(amounts,1)
+        weights=amounts if total else {key:1 for key in amounts if key!='gestalt'}
+        if not weights:raise ValueError('Enter a manual Gestalt percentage or define a non-Gestalt ideology')
         budget=Fraction(100)
     # Largest remainders avoid float drift and retain fine authored percentages.
-    precision=max(6,max(-v.as_tuple().exponent for v in decimals.values()))
+    precision=3
     scale=10**precision;units=int(budget*scale);weight_total=sum(weights.values())
     quotas={key:Fraction(w)*units/weight_total for key,w in weights.items()}
     allocated={key:q.numerator//q.denominator for key,q in quotas.items()}
@@ -90,6 +97,12 @@ def distribute_popularities(values, remaining=False, rng=None):
         whole,part=divmod(n,scale)
         raw[key]=(str(whole)+'.'+str(part).zfill(precision)).rstrip('0').rstrip('.')
     return raw
+
+
+def engine_popularities(values):
+    clean={key:number(v,0,100) for key,v in values.items()}
+    if sum(Decimal(v) for v in clean.values())!=100:raise ValueError('Party popularities must total exactly 100%')
+    return distribute_popularities(clean)
 
 
 def field_text(text, key, raw):
@@ -566,7 +579,7 @@ class CountryStore:
         if country.ruling not in self.ideologies(): raise ValueError('Choose a ruling ideology')
         pop = {i: number(v, 0, 100) for i, v in country.popularities.items()}
         if any(i not in self.ideologies() for i in pop): raise ValueError('Unknown ideology in popularities')
-        if sum(Decimal(v) for v in pop.values()) != 100: raise ValueError('Party popularities must total exactly 100%')
+        pop=engine_popularities(pop)
         stability = Decimal(number(country.stability, 0, 100))/100; war = Decimal(number(country.war_support, 0, 100))/100
         tech = {k: number(v, 0, 100) for k, v in country.technologies.items()}
         existing = self.read(tag) if not create else None

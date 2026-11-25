@@ -342,10 +342,12 @@ The country form has seven tabs:
   default to `volunteer_only` and `civilian_economy`. Escape cancels a map pick.
 - **Parties & popularity**: ruling ideology and popularity values with a live pie
   chart in the ideology colors. **Assign random weights to remaining ideologies**
-  fills blank/zero entries with the unused percentage, preserving positive values.
+  fills non-Gestalt blank/zero entries with the unused percentage, preserving
+  positive values at the game's 0.001% precision. Gestalt is entered manually.
   **Normalize to 100** rescales all entered weights proportionally; all-zero
-  weights become equal shares. Both update the chart and total immediately, with
-  rounding adjusted to total exactly 100%. Invalid inputs leave fields unchanged.
+  weights become equal non-Gestalt shares. Both update the chart and total
+  immediately, rounding to exactly 100%. Apply uses the same precision so values
+  still total 100 after the game reads them. Invalid inputs leave fields unchanged.
 - **Ideology names**: normal and DEF names for the base and each ideology. Copy to
   all or only undefined ideology fields; duplicate normal to DEF with/without
   `the`. Missing overrides inherit base names. Existing explicit empty strings
@@ -465,8 +467,8 @@ when entering building mode and can still be toggled off.
 
 Choose **Paint/View: Provinces > Buildings** for the same controls on individual
 provinces. Its list contains province buildings such as forts, naval bases and
-research facilities. Supply nodes use their native map file. Railway connections
-have a separate **Railways** province brush described below. Province labels
+research facilities. Supply nodes preserve their existing native source(s).
+Railway connections use **Provinces > Railways**, described below. Province labels
 also omit zeroes. State/province painting targets the clicked entity; the generic
 State/Strategic region paint-scope selector is disabled in these modes.
 
@@ -488,7 +490,7 @@ before Save, and remain correct after Save/Undo/reopen. Existing native color/UI
 overrides for the edited tag update together, including repeated tag definitions.
 Country Apply explicitly writes the entered popularity block and reads it back
 into the form. The pie legend shows exact percentages and adapts its layout to
-fit all entries; decimal popularities are retained.
+fit all entries; decimals are apportioned on the game's 0.001% grid, totaling 100%.
 
 ### States, strategic regions and victory points
 
@@ -505,8 +507,8 @@ claims, culture/species and VPs. Buildings distinguish shared slots, nonshared
 state buildings and province buildings. Choose a province by name/ID search or
 on the map. Defined level limits, coastal requirements, facility groups,
 exclusive buildings and required existing facility/dam map placements are checked
-when applying. Supply nodes use `map/supply_nodes.txt`. Railway routes are edited
-through the separate Railways brush; map building spawn positions are not
+when applying. Supply nodes use their existing state-history/map declaration(s).
+Railway routes are edited through **Provinces > Railways**; map building spawn positions are not
 generated. State/province shapes are fixed.
 
 Region membership moves **whole states**. Add an existing state to move all of its
@@ -522,12 +524,12 @@ game's zero-based `day.month` calendar. Weights need not sum to one.
 optionally shifting seasons by six months and importing its naval terrain. It
 does not import province membership, IDs or names. There are 30
 [Köppen-inspired climate classes](https://www.gloh2o.org/koppen/), each with North
-and South variants. The classification reference is
+and South variants selected automatically from location. The classification reference is
 [Beck et al. (2023)](https://doi.org/10.1038/s41597-023-02549-6); preset temperatures
 and weather weights are editor approximations, not measured climate data or a
 conversion of the published dataset. Apply a preset, then edit its monthly values.
 
-Choose **View: VPs** (or **Paint: VPs**) and click any land province to add/edit its
+Choose **Provinces > Victory points** and click any land province to add/edit its
 VP name and positive integer value. Existing points can also be removed. The map
 uses a blue-to-red gradient scaled to the largest VP, with markers and names plus
 values at zoom 0.65 and above. **New VP on map** also works from the database or
@@ -602,9 +604,12 @@ one saved configuration at a time. Saving another configuration replaces it.
 The overlay does not include another overlay.
 
 **Display numbers** controls numeric map annotations for buildings, slot capacity,
-resources, population and VPs. VP dots and names remain visible at the usual zoom;
+resources, population and VPs. VP dots remain visible at the usual zoom;
 Koppen hemisphere letters remain visible. A saved configuration also retains its
-own label setting; the current checkbox can hide numbers across both maps.
+own number setting; the current checkbox can hide numbers across both maps.
+**Display names** is independent: initially off for states and strategic regions,
+on for VPs. It remembers each family across subcategories and overlay snapshots.
+Disabling VP names leaves values visible when numbers are enabled.
 Raster labels reuse a bounded in-memory cache.
 
 ### Country totals and climate display
@@ -615,7 +620,8 @@ current starting-setup drafts of owned states and refresh when the tab is opened
 They exclude runtime production/resource modifiers and occupation calculations.
 
 In **View: Strategic regions**, check **Show Koppen presets**. Exact matches to the
-editor's 30 North/South weather profiles use their class color and an **N** or **S**
+editor's 30 geographic weather profiles (including latitude adjustments) use
+their class color and an **N** or **S**
 marker. Custom weather is gray. Matching is derived from native weather values,
 so it survives Save/reload without metadata; comments and numeric formatting do
 not affect matches. Editing profile values makes the region custom unless they
@@ -623,18 +629,23 @@ exactly match another preset. These remain game-weather approximations.
 
 To paint these profiles, choose **Paint/View: Strategic regions** and check
 **Paint Köppen** in the left sidebar. Choose a colored preset from the searchable
-left list, then click or drag over regions. **Southern hemisphere (off = North)**
-selects South when checked and North when unchecked. South shifts the seasonal
-profile by six months. Painting enables preset colors and region boundaries.
-Shift-click picks a region's preset and hemisphere; custom weather retains the
-current brush. Uncheck Paint Köppen to return to region editing/assignment.
+left list, then click or drag over regions. Hemisphere is always automatic,
+using the region's area relative to the **planet's** equator. The main planet
+occupies rows 1024-3071; its equator is **y=2048**, not the full-map center.
+**Account for latitude**, enabled initially, smoothly softens temperature seasons
+inside 10 degrees of the equator. Turning it off keeps automatic hemisphere
+selection and uses the original seasonal contrast. Rainfall wet/dry structure
+stays climate-led. No North/South selector remains in painting or region forms.
+Painting enables preset colors and region boundaries. Shift-click picks a
+region's preset; custom weather retains the current brush. Uncheck Paint Köppen to return to region editing/assignment.
 
 Painting replaces the region's complete yearly weather with 12 monthly periods,
 including explicit values for clear weather, light/heavy rain, snow, blizzards,
 arctic water, mud, sandstorms and minimum snow level. Zero values are intentional
 where a phenomenon does not fit that climate. This replaces custom weather inside
 the painted region, while keeping its name, provinces, naval terrain and other
-region fields. It also works on sea-only regions. Each region is visited once per
+region fields. It also works on main-planet sea-only regions; regions on other bodies use
+direct weather editing because their latitude is not mapped. Each region is visited once per
 stroke; Undo/Redo and guarded Save use the usual native strategic-region files.
 No painter metadata is stored. Existing regional weather changes only when painted.
 
@@ -686,7 +697,7 @@ writes the native localization formatting code only.
 
 ### Railway province painting and supply hubs
 
-Choose **Paint: Railways** or **View: Railways**. The left palette offers
+Choose **Paint: Provinces** or **View: Provinces**, then **Railways**. The left palette offers
 **No railway (erase)** and levels **1–5** (the loaded native NSupply cap).
 Province boundaries appear, and railway provinces and route lines use level
 colors. Zoom in for level numbers; Display numbers hides them.
@@ -718,14 +729,94 @@ comments, BOM and line endings are retained; no new connections are inferred by
 compaction. Preview drafts use the same compiler, and Undo/Redo/guarded Save work
 as usual. No railway metadata or graph cache files are created.
 
-**Display supply hubs** draws the native supply-hub logo at hubs from
-`map/supply_nodes.txt`, in any map mode and saved overlay configuration. It does
-not create or change hubs. The installed sprite's first frame is used.
+**Display supply hubs** draws the native supply-hub logo at starting hubs from
+both `map/supply_nodes.txt` and direct provincial `supply_node` entries in state
+history building blocks, in any map mode and saved overlay configuration. It does
+not infer hubs from VPs. Duplicate declarations produce one icon; zeros and
+later dated/conditional constructions are excluded. The installed sprite's first
+frame is used. The current mod has 1,192 distinct authored starting hubs.
 
-Existing invalid links are shown in red and preserved. Current data has two
-non-neighbor jumps plus two railway links across explicit impassable borders
-(see MODLOG.md). Newly introduced invalid links are rejected. In-game supply
-flow and actual railway behavior still require engine verification.
+Editing/removing a hub updates its existing native source(s), so history-defined
+hubs do not reappear after reopening. Both sources are synchronized when a
+province is declared in both. Newly added hubs with no prior declaration use
+`map/supply_nodes.txt`. VP values, dated history and unrelated buildings remain
+unchanged. Source comments and line endings are preserved.
+
+Existing invalid links are shown in red and preserved; new invalid links are
+rejected. The two non-neighbor jumps were repaired and map validation now passes.
+Two existing links across explicit impassable borders remain marked red (see
+MODLOG.md). In-game supply flow still requires engine verification.
 
 The earlier route/waypoint editor proposal remains in PLAN.md as a separate
 future scope; this release implements the requested province painting workflow.
+
+### Province gameplay terrain
+
+Choose **Paint: Provinces** or **View: Provinces**, then **Terrain**. The left
+palette lists the active mod's land terrain types by native localized name/color,
+including custom terrain. Click/drag paints whole provinces; Shift-click picks
+the clicked province's terrain. Right-drag pans. Undo/Redo and guarded Save work
+with the other drafts. Water terrain remains in the strategic-region editor.
+
+This sets the province's gameplay terrain in `map/definition.csv`. Graphical
+terrain, trees, elevation and province geometry are separate map assets.
+**Victory points** and **Railways** are now sibling Provinces subcategories;
+their controls, labels, overlay and supply-hub options are retained.
+
+### Equator and image export
+
+**Display equator** is visible in every map mode and starts off. It shows a
+dashed gold reference at the main planet's equator, following pan/zoom.
+**Export current view as image** saves a PNG of the visible map at current zoom,
+including labels, boundaries, supply hubs, overlay/opacity and the equator when
+enabled. It excludes toolbars and the offscreen render margin; Cancel saves nothing.
+
+Existing recognized Koppen regions were reapplied with geographic seasons while
+preserving their classes: 276 main-planet regions checked, 29 weather files
+updated (including nine hemisphere corrections). Custom/off-world weather stays
+as authored. Exact audit, sources and validation:
+`modding_documentation/agent_memory/map_labels_latitude_export/README.md`.
+
+### Native species/culture colors and optional culture groups
+
+Map colors save as native three-decimal fractions while preserving the selected
+byte RGB. Species minority duplicates update together; culture edits preserve
+blending divisors/references. The species overlay is transparent for no minority.
+Culture colors average the defined cultures without a gray seed; no-culture
+states still use gray. Altarian retains light cyan #9DFFFF, and culture 103's
+corrupt blending operands were repaired. Restart both the painter and HOI4 to
+load the corrected scripts; actual in-game Altarian rendering needs checking.
+
+Culture group now includes **No group** for new and existing cultures. It creates
+no fake group, array or trigger. Removing/adding a group updates memberships;
+authored ungrouped descriptions are preserved. Native Undo/Redo and guarded Save
+work as usual. Exact files, tests, sources and rendering limits:
+`modding_documentation/agent_memory/demographic_map_colors/README.md`.
+
+### Katzenartig Imperium elements
+
+Choose **Paint: States > Katzenartig Imperium**. **New element** creates a
+reusable object, like a culture or species; **Edit selected** changes its name,
+unique map color, immediate tooltip and delayed tooltip. The same objects are
+also in **MAP > Definitions > Katzenartig Imperium Elements** and the geography
+database. Editing one object updates every state assigned to it.
+
+Write both tooltip texts yourself. For example, the immediate text can be
+`[FROM.GetName] was part of the Schutzone Pegasien`. `[FROM.GetName]` inserts the
+hovered state's localized name. Multiline text, localization tokens and game
+formatting survive Save. The painter previews names and localization tokens;
+other dynamic game expressions remain literal in its preview. Delayed text
+appears after 650 ms in the painter.
+
+Select an element in the left palette and left-drag to assign whole states.
+Right-drag clears the assignment; **No element (erase)** is also available.
+Shift-click picks an existing assignment. Undo/Redo, guarded Save, overlays,
+state-name display and current-view PNG export apply as usual. Each state holds
+one historical element, independent of its current owner.
+
+Save writes native state-history assignments, element colors and both tooltip
+strings. Restart HOI4 and start a new campaign to load edited state history; the
+new **Katzenartig Imperium** scripted mapmode uses those assignments. Initial
+definitions and territory are empty so you can author the historical extent.
+Game rendering has not been exercised. Files, identifiers and checks:
+`modding_documentation/agent_memory/katzenartig_imperium/README.md`.

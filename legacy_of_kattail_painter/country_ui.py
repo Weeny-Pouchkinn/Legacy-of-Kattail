@@ -175,7 +175,7 @@ class CountryDialog(DraftDialog):
         self.total=tk.StringVar();ttk.Label(left,textvariable=self.total).grid(row=len(self.pop)+1,column=0,columnspan=2,sticky='w',pady=12)
         ttk.Button(left,text='Assign random weights to remaining ideologies',command=lambda:self.adjust_popularities(True)).grid(row=len(self.pop)+2,column=0,columnspan=2,sticky='ew',pady=3)
         ttk.Button(left,text='Normalize to 100',command=self.adjust_popularities).grid(row=len(self.pop)+3,column=0,columnspan=2,sticky='ew',pady=3)
-        ttk.Label(left,text='Random fills blank/zero entries using the remaining percentage. Normalize rescales all weights; all-zero weights become equal.',wraplength=410).grid(row=len(self.pop)+4,column=0,columnspan=2,sticky='w',pady=8)
+        ttk.Label(left,text='Random fills non-Gestalt blank/zero entries. Normalize rescales weights. Apply saves exact totals at 0.001% precision; Gestalt is set manually.',wraplength=410).grid(row=len(self.pop)+4,column=0,columnspan=2,sticky='w',pady=8)
         self.pie=tk.Canvas(frame,width=430,height=470,highlightthickness=0);self.pie.pack(side='left',fill='both',expand=True)
         self.pie.bind('<Configure>',lambda e:self.draw_pie());self.draw_pie()
 

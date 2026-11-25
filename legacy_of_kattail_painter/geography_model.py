@@ -121,9 +121,36 @@ def weather_periods(text,node):
     return out
 
 
-def climate_preset(code,hemisphere='North'):
+LATITUDE_TRANSITION=10.0  # Editor approximation; preserve preset contrast beyond this latitude.
+
+
+@dataclass(frozen=True)
+class PlanetFrame:
+    top:float
+    bottom:float
+
+    @property
+    def equator(self):return (self.top+self.bottom)/2
+
+    @classmethod
+    def main_world(cls,width,height):
+        # The original 2:1 planet is bottom-aligned; the solar chart was added
+        # above it. EU4 JUBLIO_SYSTEM_README.md:3-6 records 4096x2048 -> 4096x3072.
+        if width<=0 or height<width/2:raise ValueError('Map cannot contain the bottom-aligned 2:1 main planet')
+        return cls(height-width/2,height)
+
+    def latitude(self,y):
+        if not self.top<=y<=self.bottom:raise ValueError('Position is outside the main planet')
+        return 180*(self.equator-y)/(self.bottom-self.top)
+
+
+def climate_preset(code,hemisphere='North',latitude=None):
     """Köppen-inspired game profiles, not observational data or a classification algorithm."""
     if code not in CLIMATES or hemisphere not in {'North','South'}:raise ValueError('Choose a climate and hemisphere')
+    if latitude is not None:
+        latitude=float(numeric(latitude))
+        if not -90<=latitude<=90:raise ValueError('Latitude must be between -90 and 90 degrees')
+        hemisphere='North' if latitude>=0 else 'South'
     if code=='Af':cold,hot=26,28
     elif code=='Am':cold,hot=24,29
     elif code=='Aw':cold,hot=22,30
@@ -139,6 +166,13 @@ def climate_preset(code,hemisphere='North'):
         summer=(1-math.cos(2*math.pi*season/12))/2
         mean=cold+(hot-cold)*summer
         if code.startswith('C') and code.endswith('c'):mean=[2,2,4,6,8,10,13,12,9,6,4,2][season]
+        if latitude is not None and abs(latitude)<LATITUDE_TRANSITION:
+            t=abs(latitude)/LATITUDE_TRANSITION;strength=t*t*(3-2*t)
+            opposite=(season+6)%12
+            other=[2,2,4,6,8,10,13,12,9,6,4,2][opposite] if code.startswith('C') and code.endswith('c') else cold+(hot-cold)*(1-math.cos(2*math.pi*opposite/12))/2
+            # Suppress only the north/south annual component, retaining the
+            # annual mean and any semiannual structure. Rainfall is class-led.
+            mean=(mean+other)/2+strength*(mean-other)/2
         wet=.3
         if code=='Af':wet=.65
         elif code=='Am':wet=.12+.68*summer
@@ -173,7 +207,7 @@ class GeographyStore:
     def __init__(self,world,characters,catalogs):
         self.world,self.characters,self.catalogs,self.docs=world,characters,catalogs,world.docs
         self._cache={};self._region_signature=None
-        self._world_revision=-1
+        self._world_revision=-1;self._terrain_signature=None
         world.geography_store=self
 
     def cached(self,key,signature,build):
@@ -201,6 +235,49 @@ class GeographyStore:
         elif kind=='terrain':data={k:r for k,r in self.definitions('common/terrain','categories').items() if atom(r[0],r[1].children,'naval_terrain')=='yes'}
         else:data=self.buildings()
         return [Choice(k,loc.get('PRODUCTION_MATERIALS_'+k.upper(),loc.get(k,k.replace('_',' ').title()))) for k in data]
+
+    def terrain_catalog(self):
+        names=self.characters.trait_store.names();out={}
+        for key,(text,node) in self.definitions('common/terrain','categories').items():
+            color=block(node.children,'color')
+            out[key]={'name':names.get(key,key.replace('_',' ').title()),
+                      'color':self.world._script_colour(text,color) if color else (128,128,128),
+                      'water':atom(text,node.children,'is_water')=='yes' or atom(text,node.children,'naval_terrain')=='yes'}
+        return out
+
+    def province_terrain(self):
+        text=self.docs.text('map/definition.csv')
+        def build():
+            out={}
+            for line in text.splitlines():
+                fields=line.split(';')
+                if len(fields)>=8 and fields[0].isdigit():
+                    pid=int(fields[0])
+                    if pid in out:raise ValueError('Duplicate province definition')
+                    out[pid]=fields[6]
+            return out
+        return self.cached('province_terrain',text,build)
+
+    def sync_terrain(self):
+        text=self.docs.text('map/definition.csv')
+        if text is self._terrain_signature:return
+        for pid,kind in self.province_terrain().items():
+            if pid in self.world.provinces:self.world.provinces[pid]['terrain']=kind
+        self.world._map_palettes.pop('Terrain',None);self._terrain_signature=text
+
+    def set_province_terrain(self,pid,kind):
+        if pid not in self.world.province_states or self.world.provinces[pid]['type']!='land':raise ValueError('Choose a land province; naval terrain is edited in strategic regions')
+        catalog=self.terrain_catalog()
+        if kind not in catalog or catalog[kind]['water']:raise ValueError('Choose a defined land terrain')
+        path='map/definition.csv';text=self.docs.text(path);lines=text.splitlines(keepends=True);found=[]
+        for i,line in enumerate(lines):
+            fields=line.split(';')
+            if len(fields)>=8 and fields[0].isdigit() and int(fields[0])==pid:found.append((i,fields))
+        if len(found)!=1:raise ValueError('Province must have exactly one definition')
+        i,fields=found[0]
+        if fields[6]==kind:return False
+        fields[6]=kind;lines[i]=';'.join(fields);self.docs.replace(path,''.join(lines));self.sync_terrain()
+        return True
 
     def buildings(self):
         definitions=self.definitions('common/buildings','buildings');out={}
@@ -415,13 +492,26 @@ class GeographyStore:
 
     def supply_nodes(self):
         text=self.docs.text('map/supply_nodes.txt')
+        signature=(text,*(self.docs.text(s.path) for s in self.world.states.values()))
         def build():
             out={}
+            # Both native sources occur in this mod. Do not infer hubs from VPs.
+            for sid,state in self.world.states.items():
+                source,nodes=self.world.state_nodes(sid);history=block(nodes,'history')
+                for container in history.children if history else []:
+                    if container.key!='buildings' or container.children is None:continue
+                    for province in container.children:
+                        if not province.key.isdigit() or province.children is None:continue
+                        pid=int(province.key)
+                        if pid not in state.provinces:continue
+                        for n in province.children:
+                            if n.key=='supply_node' and n.children is None:out[pid]=int(numeric(value(source,n),0,True))
             for line in text.splitlines():
                 words=line.split('#',1)[0].split()
-                if len(words)>=2 and all(w.isdigit() for w in words[:2]):out[int(words[1])]=int(words[0])
-            return out
-        return self.cached('supply',text,build)
+                if len(words)>=2 and all(w.isdigit() for w in words[:2]):
+                    pid,level=int(words[1]),int(words[0]);out[pid]=max(out.get(pid,0),level)
+            return {pid:level for pid,level in out.items() if level>0}
+        return self.cached('supply',signature,build)
 
     def validate_buildings(self,sid,levels,old):
         defs=self.buildings();provinces=set(self.world.states[sid].provinces);clean={}
@@ -518,17 +608,36 @@ class GeographyStore:
                 for n in reversed([n for n in hist.children if n.key in {add,remove}]):text=text[:n.start]+text[n.end:]
                 hist=block(block(parse(text),'state').children,'history');at=hist.end-1
                 text=text[:at]+''.join(f'\n\t\t{add} = {tag}' for tag in sorted(selected))+'\n'+text[at:]
-            self.docs.replace(path,text)
-            if name!=old['name']:self.set_loc(STATE_LOC,old['name_key'],name)
             changed_supply={pid:int(levels.get((pid,'supply_node'),'0')) for pid,kind in set(levels)|set(old['buildings']) if kind=='supply_node' and levels.get((pid,kind),'0')!=old['buildings'].get((pid,kind),'0')}
             if changed_supply:
-                path='map/supply_nodes.txt';lines=self.docs.text(path).splitlines(keepends=True);out=[]
-                for line in lines:
-                    parts=line.split('#',1)[0].split()
-                    if len(parts)>=2 and parts[1].isdigit() and int(parts[1]) in changed_supply:continue
+                # Update existing history definitions as well as explicit map rows.
+                # Otherwise removing a history-only hub would resurrect it on reload.
+                history=block(block(parse(text),'state').children,'history');edits=[];history_pids=set()
+                for container in history.children if history else []:
+                    if container.key!='buildings' or container.children is None:continue
+                    for province in container.children:
+                        if not province.key.isdigit() or province.children is None:continue
+                        pid=int(province.key)
+                        for n in province.children:
+                            if n.key=='supply_node' and n.children is None and pid in changed_supply:
+                                history_pids.add(pid);edits.append((n.value_start,n.end,str(changed_supply[pid])))
+                for a,b,new in sorted(edits,reverse=True):text=text[:a]+new+text[b:]
+                supply_path='map/supply_nodes.txt';supply=self.docs.text(supply_path);out=[];map_pids=set()
+                newline='\r\n' if '\r\n' in supply else '\n'
+                for line in supply.splitlines(keepends=True):
+                    row=re.match(r'^(\s*)(\d+)([ \t]+)(\d+)(.*?)(\r?\n)?$',line)
+                    if row and int(row[4]) in changed_supply:
+                        pid=int(row[4]);map_pids.add(pid);level=changed_supply[pid]
+                        if level:line=line[:row.start(2)]+str(level)+line[row.end(2):]
+                        elif '#' in line:line=row[1]+line[line.index('#'):]
+                        else:continue
                     out.append(line)
-                text=''.join(out).rstrip()+'\n'+''.join(f'{v} {p}\n' for p,v in sorted(changed_supply.items()) if v)
-                self.docs.replace(path,text)
+                supply=''.join(out)
+                additions=''.join(f'{level} {pid}'+newline for pid,level in sorted(changed_supply.items()) if level and pid not in history_pids|map_pids)
+                if additions:supply+=('' if not supply or supply.endswith(('\n','\r')) else newline)+additions
+                self.docs.replace(supply_path,supply)
+            self.docs.replace(path,text)
+            if name!=old['name']:self.set_loc(STATE_LOC,old['name_key'],name)
 
     def region(self,rid):
         data=self.world.regions[rid];path=data['path'];text,roots=self.docs.parsed(path);node=block(roots,'strategic_region')
@@ -585,10 +694,35 @@ class GeographyStore:
             if name!=old['name']:self.set_loc(REGION_LOC,old['name_key'],name)
         self.sync_world()
 
-    def paint_climate(self,rid,code,hemisphere='North'):
+    def planet_frame(self):
+        self.world.load_map();height,width=self.world.map_ids.shape
+        return PlanetFrame.main_world(width,height)
+
+    def region_latitude(self,rid):
+        if rid not in self.world.regions:raise ValueError('Choose a defined strategic region')
+        frame=self.planet_frame();ids=self.world.map_ids
+        if frame.top!=int(frame.top):raise ValueError('Main planet extent must align with map pixels')
+        if 'latitude_areas' not in self._cache:
+            count=np.bincount(ids.ravel());planet=ids[int(frame.top):int(frame.bottom)]
+            inside=np.bincount(planet.ravel(),minlength=len(count))
+            ys=np.broadcast_to(np.arange(int(frame.top),int(frame.bottom))[:,None]+.5,planet.shape)
+            sy=np.bincount(planet.ravel(),weights=ys.ravel(),minlength=len(count))
+            self._cache['latitude_areas']=(count,inside,sy)
+        count,inside,sy=self._cache['latitude_areas'];provinces=sorted(self.world.regions[rid]['provinces'])
+        if not provinces or any(p>=len(count) or count[p]!=inside[p] for p in provinces):raise ValueError('Region extends outside the main planet; edit this body’s weather directly')
+        land=[p for p in provinces if self.world.provinces[p]['type']=='land'];sample=land or provinces
+        area=sum(inside[p] for p in sample)
+        if not area:raise ValueError('Region has no mapped area on the main planet')
+        return float(frame.latitude(sum(sy[p] for p in sample)/area))
+
+    def climate_at_region(self,rid,code,account_latitude=True):
+        latitude=self.region_latitude(rid)
+        return climate_preset(code,'South' if latitude<0 else 'North',latitude if account_latitude else None)
+
+    def paint_climate(self,rid,code,hemisphere='North',account_latitude=False):
         """Replace only a region’s weather with one complete native preset."""
         if rid not in self.world.regions:raise ValueError('Choose a defined strategic region')
-        periods=climate_preset(code,hemisphere)
+        periods=climate_preset(code,hemisphere,self.region_latitude(rid) if account_latitude else None)
         path=self.world.regions[rid]['path'];text,roots=self.docs.parsed(path);node=block(roots,'strategic_region')
         newline='\r\n' if '\r\n' in text else '\n';lines=['{']
         for period in periods:
@@ -627,7 +761,7 @@ class GeographyStore:
         return tuple(sorted(rows,key=lambda r:(r[0][1],r[0][0])))
 
     def preset_regions(self):
-        signature=tuple(self.docs.text(r['path']) for r in self.world.regions.values())
+        signature=tuple((rid,tuple(sorted(r['provinces'])),self.docs.text(r['path'])) for rid,r in self.world.regions.items())
         def build():
             if 'climate_lookup' not in self._cache:
                 self._cache['climate_lookup']={self.weather_signature(climate_preset(code,hemi)):(code,hemi) for code in CLIMATES for hemi in ('North','South')}
@@ -637,9 +771,16 @@ class GeographyStore:
                     text,roots=self.docs.parsed(data['path']);weather=block(block(roots,'strategic_region').children,'weather')
                     if weather is None or any(n.key!='period' for n in weather.children):continue
                     if any(n.key not in {'between','temperature',*WEATHER_FIELDS} or n.children is not None and n.key not in {'between','temperature'} for p in weather.children for n in p.children or []):continue
-                    match=self._cache['climate_lookup'].get(self.weather_signature(weather_periods(text,weather)))
+                    periods=weather_periods(text,weather);actual=self.weather_signature(periods)
+                    match=self._cache['climate_lookup'].get(actual)
+                    if not match and len(periods)==12:
+                        latitude=self.region_latitude(rid)
+                        if abs(latitude)<LATITUDE_TRANSITION:
+                            key=('latitude_climates',latitude)
+                            if key not in self._cache:self._cache[key]={self.weather_signature(climate_preset(code,latitude=latitude)):(code,'North' if latitude>=0 else 'South') for code in CLIMATES}
+                            match=self._cache[key].get(actual)
                     if match:out[rid]=match
-                except ValueError:continue
+                except (ValueError,OSError):continue
             return out
         return self.cached('preset_regions',signature,build)
 
@@ -743,6 +884,7 @@ class GeographyStore:
 
     def sync_world(self):
         if self._world_revision==self.docs.revision:return
+        self.sync_terrain()
         paths=self.characters.files('map/strategicregions','.txt');signature=tuple(self.docs.text(p) for p in paths)
         if self._region_signature!=signature:
             self.world._load_strategic_regions();self.world._boundary_cache.clear();self.world._boundary_size=None;self._region_signature=signature

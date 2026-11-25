@@ -18,17 +18,32 @@ import test_painter as fixtures
 
 
 class PopularityTests(unittest.TestCase):
+    def test_engine_roundtrip_totals_and_gestalt_is_manual_only(self):
+        from country_model import engine_popularities
+        from decimal import ROUND_DOWN
+        source={'a':'33.333333','b':'33.333333','c':'33.333334','gestalt':'0'}
+        self.assertNotEqual(sum(Decimal(v).quantize(Decimal('.001'),rounding=ROUND_DOWN) for v in source.values()),100)
+        fixed=engine_popularities(source)
+        self.assertEqual(sum(Decimal(v).quantize(Decimal('.001'),rounding=ROUND_DOWN) for v in fixed.values()),100)
+        self.assertTrue(all(Decimal(v).as_tuple().exponent>=-3 for v in fixed.values()))
+        for seed in range(30):
+            result=distribute_popularities({'a':'60','b':'0','c':'0','gestalt':'0'},True,random.Random(seed))
+            self.assertEqual(result['gestalt'],'0');self.assertEqual(result['a'],'60');self.assertEqual(sum(map(Decimal,result.values())),100)
+        result=distribute_popularities({'a':'20','b':'0','gestalt':'13.5'},True,random.Random(1))
+        self.assertEqual(result['gestalt'],'13.5');self.assertEqual(result['b'],'66.5')
+        self.assertEqual(distribute_popularities({'a':'0','b':'0','gestalt':'0'})['gestalt'],'0')
+
     def test_normalize_preserves_proportions_zeros_and_exact_total(self):
         for weights in [{'a':'150','b':'50','c':'0'},{'a':'1','b':'1','c':'1'},dict.fromkeys('abc','0')]:
             result=distribute_popularities(weights)
             self.assertEqual(sum(map(Decimal,result.values())),100)
             if weights['a']=='150':self.assertEqual(result,{'a':'75','b':'25','c':'0'})
-            else:self.assertLessEqual(max(map(Decimal,result.values()))-min(map(Decimal,result.values())),Decimal('.000001'))
+            else:self.assertLessEqual(max(map(Decimal,result.values()))-min(map(Decimal,result.values())),Decimal('.001'))
 
     def test_random_remaining_preserves_entered_values_and_fills_exact_remainder(self):
         original={'a':'37.25000001','b':'0','c':'','d':'0'}
         result=distribute_popularities(original,True,random.Random(42))
-        self.assertEqual(result['a'],original['a']);self.assertEqual(sum(map(Decimal,result.values())),100)
+        self.assertEqual(result['a'],'37.25');self.assertEqual(sum(map(Decimal,result.values())),100)
         self.assertTrue(all(Decimal(result[k])>0 for k in 'bcd'));self.assertGreater(len({result[k] for k in 'bcd'}),1)
         self.assertEqual(original['c'],'')
         self.assertEqual(distribute_popularities({'a':'100','b':'0'},True),{'a':'100','b':'0'})
@@ -326,12 +341,12 @@ class CountryTests(unittest.TestCase):
             d.color.set('#ab12cd');d.pop['democratic'].set('12.345678');d.pop['neutrality'].set('87.654322')
             d.ok();self.world.docs.save()
             reopened=CountryDialog(root,app,'AAA');reopened.attributes('-alpha',0);reopened.tabs.select(reopened.frames['politics']);root.update()
-            self.assertEqual(reopened.color.get(),'#ab12cd');self.assertEqual(reopened.pop['democratic'].get(),'12.345678')
+            self.assertEqual(reopened.color.get(),'#ab12cd');self.assertEqual(reopened.pop['democratic'].get(),'12.346')
             import numpy as np
             self.world.map_ids=np.array([[1,2]],dtype=np.int32)
             self.assertEqual(self.world.map_image('Owners').getpixel((0,0)),(171,18,205))
             text=[reopened.pie.itemcget(i,'text') for i in reopened.pie.find_all() if reopened.pie.type(i)=='text']
-            self.assertTrue(any('12.345678%' in t for t in text));self.assertTrue(any('87.654322%' in t for t in text));reopened.cancel()
+            self.assertTrue(any('12.346%' in t for t in text));self.assertTrue(any('87.654%' in t for t in text));reopened.cancel()
         finally:root.update_idletasks();root.destroy()
 
     def test_country_summary_uses_owned_drafted_states_and_is_read_only(self):

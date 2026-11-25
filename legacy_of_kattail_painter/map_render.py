@@ -19,6 +19,18 @@ class MapConfig:
     numbers:bool=True
     resource_highlight:int|None=None
     supply_hubs:bool=False
+    names:bool|None=None
+
+    @property
+    def name_scope(self):
+        if self.layer in {'States','State categories','Resources','Population','Katzenartig Imperium'} or self.layer=='Buildings' and self.building_scope=='State':return 'States'
+        if self.layer in {'Strategic regions','Koppen presets'}:return 'Strategic regions'
+        if self.layer=='VPs':return 'VPs'
+        return None
+
+    @property
+    def show_names(self):
+        return self.layer=='VPs' if self.names is None else self.names
 
     @property
     def label(self):
@@ -88,7 +100,9 @@ class MapRenderer:
                 x,y=points[pid];x*=zoom;y*=zoom
                 if not visible(x,y,160):continue
                 rows.append(dict(kind='vp',x=x,y=y,color=vp_color(d['value'],maximum),radius=3 if zoom<.65 else 5))
-                if zoom>=.65:text(points[pid],f'{d["name"]} ({d["value"]})' if numbers else d['name'],'vp',dy=-11,anchor='ms')
+                if zoom>=.65:
+                    label=f'{d["name"]} ({d["value"]})' if config.show_names and numbers else d['name'] if config.show_names else str(d['value']) if numbers else ''
+                    if label:text(points[pid],label,'vp',dy=-11,anchor='ms')
         elif config.layer=='Wonder':
             points=self.geo.state_points()
             for sid,ident in self.catalogs.wonder_sites().items():
@@ -102,6 +116,14 @@ class MapRenderer:
                 icon=self.icons[key]
                 if icon is not None:rows.append(dict(kind='image',x=x,y=y,image=icon))
                 elif numbers:text(points[sid],str(ident),'wonder')
+        if config.show_names and config.name_scope in {'States','Strategic regions'}:
+            states=config.name_scope=='States'
+            points=self.geo.state_points() if states else self.geo.region_points()
+            records=self.world.states if states else self.world.regions
+            loc=self.characters.localisations()
+            for ident,point in points.items():
+                key=records[ident].name if states else records[ident]['name']
+                text(point,loc.get(key,key),'state_name' if states else 'region_name',dy=-22 if states else -16)
         if config.supply_hubs:
             points=self.geo.province_points();sprite='GFX_supply_hub_icon_strip'
             key=(sprite,self.characters.image_token(sprite))
@@ -146,7 +168,15 @@ class MapRenderer:
                 icon=row['image'].convert('RGBA');image.paste(icon,(round(x-icon.width/2),round(y-icon.height/2)),icon)
         return image
 
-    def composite(self,config,overlay,opacity,size,box,zoom,numbers=True):
+    def composite(self,config,overlay,opacity,size,box,zoom,numbers=True,*,equator=False):
         image=self.render(config,size,box,zoom,numbers)
-        if overlay is None or opacity<=0:return image
-        return Image.blend(image,self.render(overlay,size,box,zoom,numbers),max(0,min(1,float(opacity))))
+        if overlay is not None and opacity>0:image=Image.blend(image,self.render(overlay,size,box,zoom,numbers),max(0,min(1,float(opacity))))
+        if equator:
+            y=round(self.geo.planet_frame().equator*zoom-box[1])
+            if -2<=y<image.height+2:
+                draw=ImageDraw.Draw(image)
+                for start in range((-(box[0]%24))-24,image.width,24):
+                    draw.line((start,y,start+14,y),fill='#171b21',width=5)
+                    draw.line((start,y,start+14,y),fill='#ffdc60',width=2)
+                tile,offset=self.text_tile('Equator','ls');image.paste(tile,(8-box[0]+offset[0],y-7+offset[1]),tile)
+        return image

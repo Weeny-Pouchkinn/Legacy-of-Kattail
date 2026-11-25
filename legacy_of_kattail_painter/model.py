@@ -650,6 +650,9 @@ class World:
             for pid, record in self.provinces.items():
                 self._province_state_ids[pid] = self.province_states.get(pid, 0)
                 self._land_provinces[pid] = record['type'] == 'land'
+        terrain_catalog={}
+        if layer=='Terrain' and hasattr(self,'geography_store'):
+            self.geography_store.sync_terrain();terrain_catalog=self.geography_store.terrain_catalog()
         static = layer in {'Provinces', 'Terrain', 'Continents', 'States'}
         palette = self._map_palettes.get(layer) if static else None
         if palette is None:
@@ -660,6 +663,8 @@ class World:
             sites = self.catalog_store.wonder_sites() if layer == 'Wonder' else {}
             categories=self.geography_store.categories() if layer=='State categories' else {}
             slots=self.geography_store.slot_summary() if layer=='State categories' else {}
+            imperium_elements=self.imperium_store.elements() if layer=='Katzenartig Imperium' else {}
+            imperium_assignments=self.imperium_store.state_assignments() if layer=='Katzenartig Imperium' else {}
             if layer in {'Resources','Population'}:
                 from geography_model import RESOURCE_COLORS
                 resource_key=resource_key or getattr(self,'resource_key','');resources=self.geography_store.population_counts() if layer=='Population' else self.geography_store.resource_counts(resource_key);resource_max=max(resources.values(),default=1);resource_color=(185,120,220) if layer=='Population' else RESOURCE_COLORS.get(resource_key,(155,195,225))
@@ -680,6 +685,8 @@ class World:
                         minority_colors[sid] = self.minority_colours.get(minor, (128, 128, 128)); has_minority[sid] = True
                 elif layer == 'Wonder':
                     ident = sites.get(sid, 0); rgb = colour('wonder_' + str(ident)) if ident else (90, 94, 100)
+                elif layer=='Katzenartig Imperium':
+                    element=imperium_elements.get(imperium_assignments.get(sid,0));rgb=element.color if element else (65,69,78)
                 elif layer=='State categories':rgb=categories.get(slots[sid]['category'],{}).get('color',(128,128,128))
                 elif layer in {'Resources','Population'}:
                     amount=resources.get(sid,0);t=.25+.75*float(amount/resource_max) if amount else 0
@@ -718,7 +725,7 @@ class World:
                     for pid,level in counts.items():palette[pid]=building_color(level,maximum)
             if layer in {'Provinces', 'Terrain', 'Continents'}:
                 for pid, record in self.provinces.items():
-                    palette[pid] = record['rgb'] if layer == 'Provinces' else colour(record['terrain' if layer == 'Terrain' else 'continent'])
+                    palette[pid] = record['rgb'] if layer == 'Provinces' else terrain_catalog.get(record['terrain'],{}).get('color',(128,128,128)) if layer=='Terrain' else colour(record['continent'])
             if layer not in {'Provinces','Strategic regions','Koppen presets'}: palette[~self._land_provinces] = (26, 43, 60)
             if 0 not in self.provinces: palette[0] = 0
             if static: self._map_palettes[layer] = palette

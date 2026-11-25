@@ -1,5 +1,27 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-25 - Katzenartig Imperium reusable elements and state mapmode
+
+Added States > Katzenartig Imperium with the same reusable definition workflow
+as cultures/species. New/Edit defines stable ID, name, unique RGB, and manually
+authored immediate/delayed tooltips. Left-drag assigns whole states, right-drag
+erases, Shift-click picks; Undo/Redo/Cancel/guarded Save preserve unrelated history.
+Both definition databases expose the objects. Editing a definition updates all
+assigned states. Hover previews substitute [FROM.GetName] and reveal long text
+after 650 ms. State names, saved overlays and PNG export reuse existing controls.
+
+Native mapmode, English localization and two scripted-localization dispatchers
+are installed; assignments use lok_katzenartig_imperium_element in base state
+history. No runtime world scan or inferred ownership/borders. Initial definitions
+and assignments stay empty; the user's Schutzone Pegasien example is not seeded.
+
+Validation: 169 painter tests pass, eight Python files compile, map validator
+passes. Real mapped Tk New/Edit/paint/erase/Undo/shared-edit/timed-hover probe
+passes with Save forbidden, no callback errors and 4,321 native hashes unchanged.
+Scoped whitespace clean; global pre-existing data whitespace remains. No engine
+or CWTools test. Exact paths, identifiers and audit: agent_memory/
+katzenartig_imperium/README.md under modding_documentation.
+
 ## 2026-11-24 - Trait database and commander randomizers
 
 Added CHARACTERS / Trait database, grouped into Generals, Admirals, Political
@@ -1364,3 +1386,158 @@ was denied; implementation uses installed/repository native sources.
 Unverified: no game launch or CWTools diagnostics. The native graph compiler is
 covered by fixtures and a current-data probe, but engine supply/movement should
 be checked after an intentional Save. Restart the painter to load the layer.
+
+## 2026-11-25: Read state-history supply hubs at VP provinces
+
+Found and fixed the missing hub source: the overlay/building count read only 46
+map/supply_nodes.txt entries. State history has 1,166 positive native provincial
+supply_node definitions; 20 overlap the map file, so the distinct union is 1,192.
+The old overlay missed 1,146 hubs, of which 1,137 share a province with a VP.
+Example: province 44 / state 651 / Stronak, history/states/651-Stronberg.txt,
+second direct history/buildings block. VP presence itself never creates a hub.
+
+The shared reader now merges both native sources, reads all direct undated
+history/buildings scopes and excludes zero/delayed/conditional definitions. Native
+sources have no conflicting levels. Duplicate presence uses the positive maximum
+and one icon; a VP without a hub stays a VP only. State source text participates
+in the cache signature, including drafts/Undo/Redo. Building counts and the hub
+map overlay consume the same result.
+
+Hub edits patch existing history fields and map entries together when both exist.
+History-only removal writes zero to the existing history field and does not
+create a new map entry. New hubs without an existing source still use supply_nodes.
+This prevents removed hubs from resurrecting on reopen. Preserve VPs, native
+building comments, map comments/newlines, later dated setup and other buildings.
+No live native history/supply/VP file was changed to fix the reader.
+
+Files: legacy_of_kattail_painter/geography_model.py, test_geography.py,
+test_railways.py, README.md and MODLOG.md; project CURRENT_STATUS.md/DECISIONS.md.
+No new native IDs; existing supply_node and VP keys remain unchanged.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p test_geography.py:
+  34 passed; mixed map/history, multiple VP/building blocks, zero/date exclusions,
+  no VP inference, source-preserving removal/re-enable, dual-source synchronization,
+  comment/CRLF preservation, grouped Undo and disposable Save/reload.
+- python -B -m unittest discover -s legacy_of_kattail_painter -p test_railways.py:
+  14 passed, including actual VP-layer icons from history hubs and removal while
+  keeping the VP visible.
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  145 passed in 25.072 seconds after the complete code patch.
+- python -m py_compile geography_model.py test_geography.py test_railways.py:
+  passed with PYTHONPYCACHEPREFIX in Temp (paths under legacy_of_kattail_painter).
+- Native read-only probe: 1,192 hubs, 1,192 logo annotations. Province 44 reads
+  correctly; removing/Undo restores its hub without changing any VPs. No drafts
+  remained and all 4,224 native hashes stayed unchanged; live Save was forbidden.
+- git diff --check/stat and implementation/test diff review passed. Map validator
+  still reports only the two known railway jumps, now lines 1308–1309 following
+  the user's railway Save. No game launch or CWTools diagnostics.
+
+The later, separately requested masked EU4 terrain import did write five map
+assets; it did not change native supply nodes, state history or VP data. Its exact
+changes, mask, tests and recovery are in agent_memory/masked_eu4_terrain_import.
+Restart the painter to load the corrected hub reader.
+
+## 2026-11-25: Province subcategories, native terrain blend/trees and popularity
+
+VPs and Railways moved into Provinces, retaining prior features. Added Provinces
+Terrain: native colored land-type palette, click/drag gameplay terrain, Shift
+pick, Undo/Redo and guarded CSV-only Save. Graphical terrain stays separate.
+
+Country Apply and random/Normalize helpers now apportion exactly 100% with at
+most three decimals, preventing fixed-point truncation deficits. Random fills
+exclude Gestalt; manual positive Gestalt remains supported. MAJ/ANS/KHO plus
+PAR/SPT/CER had matching set_popularities errors in the live log; numeric-only
+history fixes are applied. Pie readback shows the canonical saved percentages.
+
+Also refined the requested masked native map: matched height gain/harmonic
+boundary/48-pixel inward feather, matching normals and native biome colors;
+trees restricted to woodland with native forest/beech models. Audited all 580
+mask-touched land provinces against actual complete graphical terrain; corrected
+160 additional gameplay terrain fields. Selected tree cells: forest 2,107,
+jungle 540. Geometry, rivers, graphical terrain and existing railways unchanged.
+
+Validation: geography 36, railways 14, countries 30; complete painter suite 148
+passed (26.042 s); masked importer/refinement tests 11 passed. Modified Python
+compilation and git diff --check pass. Native map verification: zero exterior
+pixel changes; BMP/DDS headers/palettes/alpha preserved; 2,323 protected hashes
+unchanged. Actual mapped Tk checks: province VP/Railways/Terrain, terrain draft/
+Undo/Redo and MAJ/ANS/KHO politics pies/random; no callback errors or drafts,
+4,214 native hashes unchanged, live Save forbidden, all 1,192 hubs retained.
+Map validator retains only known railway jumps at lines 1308-1309. No engine
+launch/CWTools check; fresh campaign visual/popularity validation remains.
+
+Exact files, identifiers, commands, source locations, preview, audits/backups:
+modding_documentation/agent_memory/terrain_refinement/README.md. Popularity values:
+modding_documentation/agent_memory/popularity_precision_repair/audit.json.
+
+## 2026-11-25: Resolve the two non-neighbor railway jumps
+
+Explicit follow-up: removed only the two level-3 routes 19461-20841 and
+20839-20841. Current province 20841 has no shared land border, so there is no
+valid replacement land route. Every other link/level and the mainland connection
+remain intact; province shapes and other native files unchanged. Exact expected
+two-line deletion checked against backup; native graph probe confirms no new
+edges and all remaining levels preserved. python -B tools/validate_map.py now
+passes (21,515 provinces, 20,926 state-assigned, 413 regions, no X crossings).
+git diff --check/stat and railway diff reviewed. No game launch. Audit/recovery:
+modding_documentation/agent_memory/railway_jump_repair/README.md and audit.json.
+
+## 2026-11-25: Names, geographic Koppen seasons, equator and viewport PNG
+
+Added Display names beside Display numbers, with separate state/region/VP
+session settings, initially off/off/on. State/region heatmap categories inherit
+family settings; overlays retain their captured names. VP dots and values remain
+independent of names. Removed manual hemisphere selection from both Koppen
+painting and the region preset form. Always use geographic hemisphere from exact
+main-planet area; Account for latitude starts enabled and adds a smooth +/-10
+ degree thermal transition, preserving climate-led wet/dry seasons. Main planet
+is rows 1024..3071, equator y=2048, excluding the solar chart; source geometry and
+NASA/NOAA reasoning are documented in the feature report. Other bodies retain
+direct native weather editing rather than a made-up main-world latitude.
+
+Added global Display equator (off initially), stable across pan/zoom and drawn
+after overlays; Export current view as image saves current visible bounds as PNG,
+with labels/borders/hubs/overlay/reference line, no toolbars or overscan.
+
+Reapplied existing main-world Koppen classes: 276 evaluated, 29 weather files
+updated, including nine hemisphere corrections; custom/unrecognized profiles
+and the one recognized off-world preset unchanged. Exact guarded backup and
+hash/readback audit retained. Only weather blocks changed; 4,185 protected
+sources unchanged. Native fields/IDs/geometry/memberships preserved.
+
+Validation: geography 42, full painter 154 tests passed (29.055 s); six modified
+Python files compile. Native mapped Tk control/form/PNG checks passed; exported
+1055x733 image matched fresh viewport pixels and was inspected visually. No
+callback errors/drafts; live UI Save forbidden; 4,213 native hashes unchanged.
+All 29 native changes verified weather-only with BOM/newline style retained.
+python -B tools/validate_map.py passes; git diff checks/stat and changed diffs
+reviewed. No game launch/CWTools. Exact files/region paths, commands, sources,
+audits, preview and remaining engine check:
+modding_documentation/agent_memory/map_labels_latitude_export/README.md.
+
+## 2026-11-25: Native map colors and optional culture groups
+
+Fixed color writer corrupting culture divide operands and editing only the first
+species/minority duplicate. Only literal RGB definitions change now; every
+matching branch updates at 0.001 native precision. Restored culture 103's three
+num_cultures divisors; removed the gray seed from culture averages while keeping
+uncultured gray. Added deterministic species RGBA defaults (no minority = alpha0)
+and normalized Altarian 61 to .616/1/1, retaining selected #9DFFFF in both layers.
+
+Culture groups are optional: No group works for creation/editing, removes group
+array/trigger membership and never writes a fictitious None group. Existing
+ungrouped full descriptions are preserved unless group assignment changes.
+
+Six new regressions pass (all 256 channel values, native math/duplicates/new
+branches, optional groups, Save/reload/Undo and real Tk Apply). Full suite 160
+passed (23.998s); after final tooltip separator tweak the six focused tests and
+four-file compilation passed. Native-operation probe checked 62 majority, 62
+minority and 102 culture paths against painter palettes. Real Altarian and native
+ungrouped culture 8 UI Apply/Undo passed with live Save forbidden, no callbacks/
+drafts and 4,213 source hashes unchanged. Map validation passes. Scoped diff
+checks pass; global whitespace in retained/user data is pre-existing. Native
+staged repair backed up through source_io. No game/CWTools check: whether the
+undefined overlay caused Altarian's reported white appearance is not proven.
+Full files, source locations, audit, recovery and limits:
+modding_documentation/agent_memory/demographic_map_colors/README.md.

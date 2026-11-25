@@ -186,6 +186,20 @@ class RailwayTests(unittest.TestCase):
         self.assertEqual(crop.tobytes(),full.crop((15,5,65,55)).tobytes())
         self.assertEqual(renderer.composite(config,MapConfig('Provinces'),0,size,(0,0,*size),20).tobytes(),full.tobytes())
 
+    def test_history_defined_vp_hub_overlay_updates_when_removed(self):
+        path=self.root/'gfx/interface/hub.dds';path.parent.mkdir(parents=True)
+        Image.new('RGBA',(26,26),'yellow').save(path)
+        self.write('interface/supply.gfx','spriteTypes={spriteType={name="GFX_supply_hub_icon_strip" texturefile="gfx/interface/hub.dds"}}')
+        state='history/states/one.txt';text=self.world.docs.text(state)
+        self.world.docs.replace(state,text.replace('history={owner=AAA}','history={owner=AAA victory_points={2 5} buildings={2={supply_node=1}}}'))
+        renderer=MapRenderer(self.world,self.geo,self.characters,self.catalog);config=MapConfig('VPs',supply_hubs=True)
+        rows=renderer.annotations(config,20,(0,0,80,60))
+        self.assertEqual({r['province'] for r in rows if r.get('source')=='supply_hub'},{2,5})
+        self.assertTrue(any(r['kind']=='vp' for r in rows))
+        self.geo.change_building(2,'supply_node','Province',-1)
+        self.assertEqual({r['province'] for r in renderer.annotations(config,20,(0,0,80,60)) if r.get('source')=='supply_hub'},{5})
+        self.assertIn(2,self.geo.victory_points())
+
     def test_actual_ui_exact_delta_guard_drag_and_hub_toggle(self):
         import tkinter as tk
         from painter import Painter
@@ -193,8 +207,8 @@ class RailwayTests(unittest.TestCase):
         root.report_callback_exception=lambda typ,val,tb:errors.append(val)
         try:
             with patch('character_model.default_paths',return_value={'game':self.game}):app=Painter(root,self.world,Emblems())
-            root.deiconify();root.update();app.layer.set('Railways');app.layer_changed();root.update()
-            self.assertEqual(app.brush.get(),'Railways');self.assertEqual(set(app.palette_values.values()),set(range(6)))
+            root.deiconify();root.update();app.layer.set('Provinces');app.province_mode.set('Railways');app.layer_changed();root.update()
+            self.assertEqual(app.brush.get(),'Provinces');self.assertEqual(app.map_config().layer,'Railways');self.assertEqual(set(app.palette_values.values()),set(range(6)))
             self.assertEqual(app.paint_scope_box.cget('state'),'disabled');self.assertTrue(app.railway_existing_check.winfo_ismapped())
             app.railway_existing_check.invoke();app.railway_operation.set('Change');app.railway_amount.set('2')
             app.zoom=20;app.draw_map();root.update();e=SimpleNamespace(x=20,y=0,state=0)

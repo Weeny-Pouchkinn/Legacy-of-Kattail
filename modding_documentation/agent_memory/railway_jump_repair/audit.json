@@ -1,0 +1,34 @@
+{
+  "backup": "C:\\Users\\elowi\\Documents\\Paradox Interactive\\Hearts of Iron IV\\mod\\Legacy-of-Kattail\\legacy_of_kattail_painter\\backups\\railway_jump_repair_20261125_165642_542638",
+  "before": "c9538182f4a4c67deae5f8f890bf94fd0f7c7280fd39aaf58c6d33d634f361df",
+  "after": "2aaa96de0b31fe7dec77f349c0ec03102d2c76a3b07c641a00c68f17e91db7fe",
+  "removed": [
+    {
+      "line": 1308,
+      "route": "3 2 19461 20841"
+    },
+    {
+      "line": 1309,
+      "route": "3 2 20839 20841"
+    }
+  ],
+  "reason": "Both links terminate at 20841, which has no four-neighbor land adjacency in the current provinces.bmp. No contiguous land route exists; remove impossible island links instead of changing geometry.",
+  "other_bytes": "All other railway lines/levels/order/newlines preserved exactly.",
+  "verification": {
+    "remaining_link_levels_preserved": 5803,
+    "province_20841_land_neighbors": 0,
+    "mainland_links_preserved": [
+      [
+        19354,
+        20839
+      ],
+      [
+        19362,
+        19461
+      ]
+    ],
+    "map_validator": "python -B tools/validate_map.py passed",
+    "other_bytes": "exact expected two-line deletion verified",
+    "game_validation": "not run"
+  }
+}

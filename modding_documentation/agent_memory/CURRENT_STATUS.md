@@ -1,5 +1,144 @@
 # Current status
 
+## Katzenartig Imperium elements and mapmode (2026-11-25)
+
+Implemented States > Katzenartig Imperium with reusable, editable objects in the
+same definition database as cultures/species. Each has stable ID, unique RGB,
+name and fully manual immediate/delayed text. Left-drag assigns whole states;
+right-drag/No element erases, Shift picks. Shared edits propagate; native
+Undo/Redo/Cancel and guarded Save apply. Real hover previews show delayed text
+after 650 ms, substituting [FROM.GetName]. Names, overlay and export supported.
+
+Installed empty native scripted mapmode, two tooltip dispatchers and BOM English
+localization. Element color branches are the catalog; base-history variable
+lok_katzenartig_imperium_element is the state pointer. No historical elements or
+territory were invented; user defines the extent. No runtime world loop.
+
+Validation: 169 tests pass, eight modified/new Python files compile, map validator
+passes (21,515 provinces / 413 strategic regions). Real-mod Tk workflow passed
+with live Save forbidden and 4,321 native files unchanged; no callback errors.
+Task whitespace checks pass; global pre-existing whitespace remains. Game and
+CWTools untested. Exact files/IDs and evidence: katzenartig_imperium/README.md,
+verification.json and scaffold.json. Next engine check: author an element, paint,
+Save, restart game/new campaign and inspect color plus immediate/delayed tooltip.
+
+## Species/culture map colors and optional groups (2026-11-25)
+
+Fixed painter color writes: literal RGB operands only, every matching duplicate
+branch, nearest 0.001 native fractions. Culture 103 had three divisors overwritten
+by its RGB literals, producing over-range white; restored num_cultures operands.
+Culture averaging no longer includes a gray seed; uncultured gray preserved.
+Species mapmode now initializes RGBA in both layers, including transparent
+no-minority overlay. Altarian 61 remains #9DFFFF (.616/1/1 in both layers).
+The user's reported white Altarian appearance has not been engine-retested;
+undefined top-layer output is a plausible cause, not a confirmed diagnosis.
+
+No group supports new/existing cultures, correct array/trigger membership
+removal/restoration, and preserved authored ungrouped full descriptions. No
+native group/history/localization migration was made. Only the two native
+mapmode files were repaired with exact guarded backup; user data retained.
+
+Validation: full painter 160 tests; six focused tests after final tooltip change;
+four Python files compile. Native-operation interpreter: 62 majority, 62 minority,
+102 culture colors all match painter palettes. Real native Altarian/color and
+ungrouped culture 8 UI Apply/Undo passed, no callbacks/drafts, live UI Save
+forbidden and 4,213 native hashes unchanged. Map validator passes. Scoped task
+whitespace checks pass; global retained/user data has pre-existing whitespace.
+No game/CWTools check. Details/files/source locations/recovery:
+demographic_map_colors/README.md, audit.json, verification.json. Next: restart
+painter and HOI4 and inspect Altarian majority/minority rendering and culture 103.
+
+## Map names, geographic seasons, equator and PNG export (2026-11-25)
+
+Display names now remembers state/region/VP families (defaults off/off/on),
+independent of numbers and saved-overlay names. Removed both painting/sidebar
+and region-form North/South selectors. Hemisphere always follows exact region
+area on the bottom-aligned 2:1 main planet (rows 1024..3071, equator y=2048).
+Account for latitude starts on and controls only thermal smoothing inside
++/-10 degrees; rainfall remains climate-led. Off-world regions use direct weather
+editing, not an invented main-planet hemisphere. Display equator starts off and
+is available in every map mode; current-view PNG export includes overlays,
+labels/reference line and crops to actual visible map bounds.
+
+Per explicit user request, all 276 recognized main-planet Koppen regions were
+evaluated retaining class: 29 weather files updated, including nine hemisphere
+corrections. 247 already match at native precision. One recognized off-world EF
+region (282) and 136 custom/unrecognized regions unchanged. Only weather blocks
+changed; 4,185 protected sources remained byte-identical. Reapplication backup,
+region IDs/latitudes and exact hashes are in map_labels_latitude_export/
+reapplication.json. Earlier manual-hemisphere instructions are superseded.
+
+Validation: geography 42 tests, full painter 154 tests, modified Python compilation
+and map validation pass. Actual native mapped Tk verifies defaults/independent
+names/overlay snapshots, no hemisphere controls, latitude form, global equator
+and pixel-exact 1055x733 PNG export. Zero callback errors/drafts; live UI Save
+forbidden and 4,213 checked native hashes unchanged. Preview inspected; native
+readback verifies all reapplied profiles/classes. git diff checks pass. No game
+launch/CWTools; current weather remains an editor approximation. Full exact
+files/commands, NASA/NOAA rationale and limitations: map_labels_latitude_export/
+README.md. Next: restart painter and check changed weather in a fresh game.
+
+## Terrain blend/trees, province categories and popularity repair (2026-11-25)
+
+Applied refinement supersedes the first masked import's four-pixel height blend,
+source normals/colors and EU4 gameplay overrides. Matched relief gain 0.622101,
+harmonic correction and inward 48-pixel feather blend into native height style;
+regenerated normals/native biome colors and added native tree models. Selected
+forest tree cells: 460 -> 2,107; jungle: 0 -> 540. All 580 touched land provinces
+now match dominant complete graphical terrain; 160 additional CSV corrections.
+2,323 protected hashes and exact exterior/alpha/header/palette checks passed.
+Province geometry, graphical terrain, rivers and user's railways stayed fixed.
+
+Provinces now contains Victory points, Railways and gameplay Terrain submodes.
+VP/railway features retained; terrain paints only native definition.csv fields,
+with Shift-pick, native colors, Undo/Redo and guarded Save. Country writer/helpers
+use exact 100% totals on the 0.001 grid. Random fills never allocate Gestalt;
+manual positive Gestalt remains supported. Repaired MAJ/ANS/KHO plus PAR/SPT/CER
+(same live-log failure), changing only popularity numeric values.
+
+Validation: 148 full painter tests, 11 masked-terrain tests and compilation pass.
+Native mapped Tk checks passed all three province modes, terrain Undo/Redo and
+MAJ/ANS/KHO politics/random/pie readback: zero callbacks/drafts; 4,214 checked
+native hashes unchanged; 1,192 hubs retained. Six repaired fixed-point totals
+are exactly 100. After the user's subsequent explicit repair request, the two
+impossible routes to isolated province 20841 were removed. All other railway
+links/levels remain intact; map validation now passes. Recovery/verification:
+railway_jump_repair/README.md and audit.json. Earlier validator failures and
+protected railways hashes are historical snapshots before this authorized fix.
+git diff --check passes. No game launch/CWTools. Full file list, evidence,
+commands, audit/recovery and before/after: terrain_refinement/README.md.
+Plan: plans/terrain-blend-province-modes.md. Next: restart painter and verify a
+fresh campaign's terrain/trees and six countries' popularity pies in game.
+
+## Masked terrain import and state-history supply hubs (2026-11-25)
+
+Completed both current user requests. Supply reader now finds all 1,192 authored
+starting hubs across native state history and supply_nodes.txt. The former
+map-only overlay missed 1,146 hubs (1,137 on VP provinces). Shared building counts,
+state forms and overlay agree. Removing/re-enabling a history or dual-source hub
+patches its original source(s), preserves VPs/date blocks/comments and does not
+resurrect it on reopen. No native supply/history/VP migration was made.
+145 painter tests, 34 geography and 14 railway tests pass; compilation and native
+probe passed. All 1,192 icons render and the read-only probe left 4,224 native
+source hashes unchanged with no drafts. See painter MODLOG for exact evidence.
+
+Masked EU4 import applied five map files: terrain.bmp, heightmap.bmp, world_normal,
+colormap RGB and definition.csv terrain column. 363 existing province terrain
+classifications changed. Preserved every province shape/ID/RGB, water/coastal flag,
+state membership, city-light alpha and exterior raster pixel; 2,321 protected
+hashes verified. Rivers already matched EU4 exactly inside the mask and remain
+unchanged. 3,507 EU4 inland-water pixels that are HOI4 land retain existing assets
+and land classification to preserve coastlines. Source EU4 files were read-only.
+Five importer tests and byte/pixel readback passed; formats/headers/palettes stayed
+native. Exact selection, audit and recovery: masked_eu4_terrain_import/README.md,
+audit.json and selection.png. Plan: plans/masked-eu4-terrain-import.md.
+
+Map validator before/after still has only two old railway jumps, now at lines
+1308–1309 after the user's railway Save (not the previous 893–894). The user's
+existing railway edit was preserved. No game/CWTools validation. Next: restart
+painter, then inspect terrain/elevation/river appearance and movement in a fresh
+campaign. These remain engine checks, not pending file generation.
+
 ## Province railways and supply hub display (2026-11-25)
 
 MAP Paint/View Railways has per-province exact level/erase and left-add/right-

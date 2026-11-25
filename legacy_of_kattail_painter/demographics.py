@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 import io
 from dataclasses import dataclass, field
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
 from PIL import Image, ImageOps
 from model import child, parse, scalar, value, walk, read_text
@@ -486,10 +486,8 @@ class MapCatalogStore:
         section = block(block(mode.children, part or 'bottom').children, 'color')
         field = 'v' if kind == 'culture' else 'minority' if part == 'top' else 'species'
         branches = [n for n in section.children if n.key == 'if' and n.children]
-        target = next((n for n in branches if ident in self.checked_ids(text, n, field)), None)
-        if target:
-            raw = text[target.start:target.end]
-        else:
+        targets = [n for n in branches if ident in self.checked_ids(text, n, field)]
+        if not targets:
             if not branches: raise ValueError('No native map-color template is available')
             template = next((n for n in branches if 1 in self.checked_ids(text, n, field)), branches[0])
             old = next(iter(self.checked_ids(text, template, field)))
@@ -497,15 +495,29 @@ class MapCatalogStore:
             if kind == 'culture': raw = raw.replace(f'culture_{old}_', f'culture_{ident}_')
             edits = [(n.value_start, n.end, str(ident)) for _, n in walk(parse(raw)) if n.key == field and n.children is None and value(raw, n) == str(old)]
             for start, end, new in sorted(edits, reverse=True): raw = raw[:start] + new + raw[end:]
-        edits = []
-        for _, n in walk(parse(raw)):
-            for key, component in zip(('red', 'green', 'blue'), rgb):
-                wanted = f'culture_{ident}_{key}' if kind == 'culture' else key
-                if n.key == wanted and n.children is None:
-                    edits.append((n.value_start, n.end, format(Decimal(component) / Decimal(255), '.6f')))
-        for start, end, new in sorted(edits, reverse=True): raw = raw[:start] + new + raw[end:]
-        if target: self.replace_node(file, target, raw)
-        else: self.insert(file, section, '\t\t\t\t' + raw)
+        def recolor(raw):
+            edits=[];found=set();operation='add_to_temp_variable' if kind=='culture' else 'set_temp_variable'
+            for _,node in walk(parse(raw)):
+                if node.key!=operation:continue
+                for n in node.children or []:
+                    for key,component in zip(('red','green','blue'),rgb):
+                        wanted=f'culture_{ident}_{key}' if kind=='culture' else key
+                        if n.key==wanted and n.children is None:
+                            # Only literal definitions belong to the color picker.
+                            # Divisors/references are executable mapmode arithmetic.
+                            Decimal(value(raw,n))
+                            new=(Decimal(component)/255).quantize(Decimal('.001'),rounding=ROUND_HALF_UP)
+                            edits.append((n.value_start,n.end,format(new,'f')));found.add(key)
+            if found!={'red','green','blue'}:raise ValueError('Map-color branch needs three literal RGB definitions')
+            for start,end,new in sorted(edits,reverse=True):raw=raw[:start]+new+raw[end:]
+            return raw
+        if targets:
+            # Every matching branch executes in game; a later duplicate must not
+            # silently override the new color while the painter reads it back.
+            for target in reversed(targets):
+                raw=recolor(text[target.start:target.end]);text=text[:target.start]+raw+text[target.end:]
+            self.docs.replace(CATALOG_PATHS[file],text)
+        else:self.insert(file,section,'\t\t\t\t'+recolor(raw))
 
     def ensure_text_case(self, file, function, ident, variable, loc_key):
         from character_model import atom, block, patch_field
@@ -536,12 +548,14 @@ class MapCatalogStore:
     def edit_culture(self, ident, name, description, color, name_color, group, create=False):
         from character_model import block, patch_field
         current = self.cultures(); self.validate_id(ident, current, create, (0,))
-        if group not in self.groups(): raise ValueError('Choose an existing culture group')
+        if group is not None and group not in self.groups(): raise ValueError('Choose an existing culture group or No group')
         rgb = self.rgb(color)
         with self.docs.grouped():
             self.set_name('culture_loc', f'culture_{ident}_name', name, name_color)
             self.set_loc('culture_loc', f'culture_{ident}_desc', description)
-            self.set_loc('culture_loc', f'culture_{ident}_full', f'$culture_{ident}_name$ is part of the $culture_group_{group}_name$ $culture_group$.$culture_{ident}_desc$')
+            if create or current[ident].group!=group:
+                full=f'$culture_{ident}_name$ is part of the $culture_group_{group}_name$ $culture_group$.$culture_{ident}_desc$' if group is not None else f'$culture_{ident}_name$\n$culture_{ident}_desc$'
+                self.set_loc('culture_loc',f'culture_{ident}_full',full)
             if create or current[ident].color != rgb: self.set_map_color('culture', ident, rgb)
             text, startup = self.startup()
             members = [n for n in startup.children if n.key == 'add_to_array' and re.fullmatch(r'global.culture_group_\d+_array', scalar(text, n.children, 'array')) and scalar(text, n.children, 'value') == str(ident)]
@@ -549,11 +563,11 @@ class MapCatalogStore:
                 edits = []
                 for n in members:
                     raw = text[n.start:n.end]; root = parse(raw)[0]
-                    raw = patch_field(raw, root, 'array', f'global.culture_group_{group}_array')
+                    raw = patch_field(raw, root, 'array', f'global.culture_group_{group}_array') if group is not None else ''
                     edits.append((n.start, n.end, raw))
                 for start, end, raw in reversed(edits): text = text[:start] + raw + text[end:]
                 self.docs.replace(STARTUP, text)
-            else:
+            elif group is not None:
                 cohort = [n for n in startup.children if n.key in {'add_to_array', 'clear_array'} and 'global.culture_group_' in value(text, n)]
                 self.insert('startup', startup, f'\t\t\tadd_to_array = {{ array = global.culture_group_{group}_array value = {ident} }}', cohort[-1].end if cohort else startup.value_start + 1)
             text, roots = self.parsed('culture_triggers'); edits = []

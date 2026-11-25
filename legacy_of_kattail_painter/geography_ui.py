@@ -8,6 +8,8 @@ from character_model import inherited_localisations, atom
 from country_ui import table, buttons, choose_color
 from select_ui import Choice, ChoiceBox, ChoiceIndex
 from geography_model import CLIMATES, WEATHER_FIELDS, WeatherPeriod, climate_preset, numeric
+from imperium_model import CATALOG as IMPERIUM_CATALOG, LAYER as IMPERIUM_LAYER
+from imperium_ui import ImperiumElementDialog
 
 
 def type_search(event,entry,variable,refresh):
@@ -67,8 +69,8 @@ class GeographyWorkspace(ttk.Frame):
     def __init__(self,parent,app):
         super().__init__(parent,padding=8);self.pack(fill='both',expand=True);self.app=app;self.store=app.geography_store
         self.kind=tk.StringVar(value='States');self.query=tk.StringVar();self._signature=None
-        bar=buttons(self,[('Edit selected',self.edit),('New category',lambda:self.open_category(None)),('New VP on map',self.new_vp),('Save',app.save),('Undo',app.undo),('Redo',app.redo)])
-        box=ChoiceBox(bar,textvariable=self.kind,values=['States','State categories','Strategic regions','VPs'],width=20);box.pack(side='left',padx=8);box.bind('<<ComboboxSelected>>',lambda e:self.refresh())
+        bar=buttons(self,[('Edit selected',self.edit),('New category',lambda:self.open_category(None)),('New Imperium element',lambda:self.open_imperium_element(None)),('New VP on map',self.new_vp),('Save',app.save),('Undo',app.undo),('Redo',app.redo)])
+        box=ChoiceBox(bar,textvariable=self.kind,values=['States','State categories','Strategic regions','VPs',IMPERIUM_CATALOG],width=23);box.pack(side='left',padx=8);box.bind('<<ComboboxSelected>>',lambda e:self.refresh())
         self.search=ttk.Entry(bar,textvariable=self.query);self.search.pack(side='left',fill='x',expand=True);self.search.bind('<KeyRelease>',lambda e:self.refresh())
         self.rows=table(self,[('detail','Details',470)]);self.rows.bind('<Double-1>',lambda e:self.edit());self.rows.bind('<Return>',lambda e:self.edit())
         self.rows.bind('<KeyPress>',lambda e:type_search(e,self.search,self.query,self.refresh))
@@ -86,6 +88,10 @@ class GeographyWorkspace(ttk.Frame):
         elif kind=='Strategic regions':
             choices=[Choice(str(rid),self.app.world.label(r['name'])) for rid,r in self.app.world.regions.items()]
             details={str(rid):f'{len(self.app.world.region_states[rid])} states / {len(r["provinces"])} provinces' for rid,r in self.app.world.regions.items()}
+        elif kind==IMPERIUM_CATALOG:
+            records=self.app.imperium_store.elements();counts={}
+            for ident in self.app.imperium_store.state_assignments().values():counts[ident]=counts.get(ident,0)+1
+            choices=[Choice(str(key),d.name) for key,d in records.items()];details={str(key):f'{counts.get(key,0)} states / #%02x%02x%02x'%d.color for key,d in records.items()}
         elif kind=='State categories':
             records=self.store.categories();choices=[Choice(k,d['name']) for k,d in records.items()];details={k:f'{d["slots"]} base slots / {d["path"]}' for k,d in records.items()}
         else:
@@ -95,11 +101,13 @@ class GeographyWorkspace(ttk.Frame):
 
     def edit(self):
         if rows:=self.rows.selection():
-            key=rows[0] if self.kind.get()=='State categories' else int(rows[0]);{'States':self.open_state,'State categories':self.open_category,'Strategic regions':self.open_region,'VPs':self.open_vp}[self.kind.get()](key)
+            key=rows[0] if self.kind.get()=='State categories' else int(rows[0]);{'States':self.open_state,'State categories':self.open_category,'Strategic regions':self.open_region,'VPs':self.open_vp,IMPERIUM_CATALOG:self.open_imperium_element}[self.kind.get()](key)
 
     def open(self,dialog_type,key):
         try:
-            dialog=dialog_type(self,self.app,key);self.wait_window(dialog);self.app._sync();self.refresh()
+            dialog=dialog_type(self,self.app,key);self.wait_window(dialog)
+            if dialog_type is ImperiumElementDialog and dialog.result is not None:self.app.paint_selection[IMPERIUM_LAYER]=dialog.result
+            self.app._sync();self.refresh()
         except (ValueError,OSError,KeyError) as exc:messagebox.showerror('Geography editor',str(exc),parent=self)
 
     def open_state(self,sid):
@@ -110,6 +118,8 @@ class GeographyWorkspace(ttk.Frame):
         if pid is not None:self.open(VictoryPointDialog,pid)
 
     def open_category(self,key=None):self.open(CategoryDialog,key)
+
+    def open_imperium_element(self,key=None):self.open(ImperiumElementDialog,key)
 
     def new_vp(self):self.app.begin_geography_pick(None,lambda pid:self.open_vp(pid),'province')
 
@@ -310,9 +320,10 @@ class RegionDialog(DraftDialog):
         except ValueError as exc:messagebox.showerror('Region membership',str(exc),parent=self)
 
     def build_weather(self,frame):
-        top=ttk.Frame(frame);top.pack(fill='x');self.climate=tk.StringVar(value='Cfb');self.hemisphere=tk.StringVar(value='North')
+        top=ttk.Frame(frame);top.pack(fill='x');self.climate=tk.StringVar(value='Cfb')
         self.climate_box=ChoiceBox(top,textvariable=self.climate,values=[Choice(k,n) for k,n in CLIMATES.items()],width=38);self.climate_box.pack(side='left')
-        self.hemisphere_box=ChoiceBox(top,textvariable=self.hemisphere,values=['North','South'],width=12);self.hemisphere_box.pack(side='left',padx=6)
+        self.latitude=tk.BooleanVar(value=self.app.koppen_latitude.get() if hasattr(self.app,'koppen_latitude') else True)
+        ttk.Checkbutton(top,text='Account for latitude',variable=self.latitude).pack(side='left',padx=6)
         ttk.Button(top,text='Apply climate preset',command=self.preset).pack(side='left')
         self.vanilla=tk.StringVar();self.flip=tk.BooleanVar();self.import_terrain=tk.BooleanVar(value=False)
         line=ttk.Frame(frame);line.pack(fill='x',pady=6);ttk.Label(line,text='Vanilla region:').pack(side='left')
@@ -353,7 +364,7 @@ class RegionDialog(DraftDialog):
         self.refresh_weather()
 
     def preset(self):
-        try:self.climate_box.commit();self.hemisphere_box.commit();self.periods=climate_preset(self.climate.get(),self.hemisphere.get());self.refresh_weather()
+        try:self.climate_box.commit();self.periods=self.geo.climate_at_region(self.rid,self.climate.get(),self.latitude.get());self.refresh_weather()
         except ValueError as exc:messagebox.showerror('Climate preset',str(exc),parent=self)
 
     def import_weather(self):

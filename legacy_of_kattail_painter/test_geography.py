@@ -37,7 +37,7 @@ class GeographyTests(unittest.TestCase):
                 land_facility = { level_cap = { province_max = 1 state_max = 1 group_by = facility } spawn_point = special_project_facility_spawn }
                 air_facility = { level_cap = { province_max = 1 state_max = 1 group_by = facility } spawn_point = special_project_facility_spawn }
             }''',
-            'common/terrain/terrain.txt':'categories = { ocean = { naval_terrain = yes } plains = { } }',
+            'common/terrain/terrain.txt':'categories = { ocean = { naval_terrain = yes } plains = { color={10 20 30} } forest={color={40 120 50}} hills={color={100 90 60}} }',
             'map/supply_nodes.txt':'# keep supply comment\n1 2\n',
             'map/buildings.txt':'1;special_project_facility_spawn;1;1;1;1;0\n',
             'map/strategicregions/one.txt':'''strategic_region = { id = 1 name = REG_ONE provinces = { 1 3 4 }
@@ -62,6 +62,15 @@ class GeographyTests(unittest.TestCase):
     def edit(self,**kwargs):
         data=self.g.state(1);values={k:data[k] for k in ['name','attributes','resources','buildings']};values.update(kwargs)
         self.g.edit_state(1,**values)
+
+    def latitude_map(self):
+        from PIL import Image
+        ids=np.zeros((30,40),dtype=np.int32);ids[10:]=4
+        ids[19,:30]=1;ids[21,:5]=3;ids[20,:]=2
+        colors=np.array([self.world.provinces[p]['rgb'] for p in range(5)],dtype=np.uint8)
+        Image.fromarray(colors[ids]).save(self.root/'map/provinces.bmp')
+        self.world.map_ids=ids
+        return ids
 
     def test_state_save_reload_preserves_dates_unknown_scopes_and_geometry(self):
         original=(self.root/'history/states/one.txt').read_bytes();data=self.g.state(1)
@@ -88,10 +97,73 @@ class GeographyTests(unittest.TestCase):
         self.assertEqual(self.g.supply_nodes(),{1:1,2:1});self.assertNotIn('supply_node',self.world.docs.text('history/states/one.txt'))
         self.world.docs.undo();self.assertEqual(self.g.supply_nodes(),{2:1});self.assertEqual(self.g.state(1)['name'],'First state')
 
+    def test_hubs_read_history_buildings_with_vps_without_inferring_from_vps(self):
+        path='history/states/one.txt';text=self.world.docs.text(path)
+        text=text.replace('victory_points = { 1 3 3 2 }','''victory_points = { 1 3 3 2 }
+ buildings = { 1 = { supply_node = 1 } 3 = { supply_node = 0 } }
+ 1941.1.1 = { buildings = { 3 = { supply_node = 1 } } }''')
+        self.world.docs.replace(path,text)
+        self.assertEqual(self.g.supply_nodes(),{1:1,2:1})
+        self.assertEqual(self.g.building_counts('supply_node','Province'),{1:1,2:1})
+        self.assertEqual(self.g.state(1)['buildings'][(1,'supply_node')],'1')
+        self.assertIn(3,self.g.victory_points());self.assertNotIn(3,self.g.supply_nodes())
+        self.world.docs.replace('map/supply_nodes.txt','1 1\n1 2\n')
+        self.assertEqual(self.g.supply_nodes(),{1:1,2:1})
+        self.world.docs.undo();self.world.docs.undo();self.assertEqual(self.g.supply_nodes(),{2:1})
+
+    def test_history_hub_remove_reopen_undo_save_preserves_vps_and_later_setup(self):
+        path='history/states/one.txt';text=self.world.docs.text(path)
+        text=text.replace('victory_points = { 1 3 3 2 }','''victory_points = { 1 3 3 2 }
+ buildings = { 1 = { supply_node = 1 # keep history hub note
+ bunker = 2 } }
+ 1941.1.1 = { buildings = { 1 = { supply_node = 1 } } }''')
+        self.world.docs.replace(path,text);vps=self.g.victory_points();map_text=self.world.docs.text('map/supply_nodes.txt')
+        self.g.change_building(1,'supply_node','Province',-1)
+        self.assertEqual(self.g.supply_nodes(),{2:1});self.assertEqual(self.g.state(1)['buildings'][(1,'supply_node')],'0')
+        self.assertEqual(self.world.docs.text('map/supply_nodes.txt'),map_text)
+        self.assertIn('supply_node = 0 # keep history hub note',self.world.docs.text(path))
+        self.assertIn('1941.1.1 = { buildings = { 1 = { supply_node = 1 } } }',self.world.docs.text(path))
+        self.assertEqual(self.g.victory_points(),vps)
+        self.world.docs.undo();self.assertEqual(self.g.supply_nodes(),{1:1,2:1})
+        self.world.docs.redo();self.world.docs.save();fresh=World(self.root);c=CharacterStore(fresh);g=GeographyStore(fresh,c,MapCatalogStore(fresh,c))
+        self.assertEqual(g.supply_nodes(),{2:1});self.assertEqual(g.victory_points(),vps)
+        g.change_building(1,'supply_node','Province',1)
+        self.assertEqual(g.supply_nodes(),{1:1,2:1});self.assertNotIn('1 1',fresh.docs.text('map/supply_nodes.txt'))
+
+    def test_removing_dual_source_hub_updates_both_definitions_and_keeps_map_comments(self):
+        path='history/states/one.txt';text=self.world.docs.text(path)
+        self.world.docs.replace(path,text.replace('victory_points = { 1 3 3 2 }','victory_points = { 1 3 3 2 } buildings = { 1 = { supply_node = 1 } }'))
+        self.world.docs.replace('map/supply_nodes.txt','# retained\r\n1 1 # dual source\r\n1 2\r\n')
+        before=dict(self.world.docs.drafts);self.g.change_building(1,'supply_node','Province',-1)
+        self.assertEqual(self.g.supply_nodes(),{2:1});self.assertEqual(self.world.docs.text('map/supply_nodes.txt'),'# retained\r\n# dual source\r\n1 2\r\n')
+        self.assertEqual(self.g.state(1)['buildings'][(1,'supply_node')],'0')
+        self.world.docs.undo();self.assertEqual(self.world.docs.drafts,before)
+
     def test_state_structural_fields_and_nonfinite_values_rejected_transactionally(self):
         for attrs in [{'provinces':'2'},{'manpower':'NaN'},{'manpower':'1.2'},{'manpower':'-1'}]:
             with self.assertRaises(ValueError):self.edit(attributes=attrs)
             self.assertFalse(self.world.docs.changed)
+
+    def test_gameplay_terrain_changes_only_csv_field_colors_undo_and_save(self):
+        self.world.map_ids=np.array([[1,3,2,4]],dtype=np.int32)
+        original=self.world.docs.text('map/definition.csv');states={s.path:self.world.docs.text(s.path) for s in self.world.states.values()}
+        self.assertEqual(self.world.map_image('Terrain').getpixel((0,0)),(10,20,30))
+        self.assertTrue(self.g.set_province_terrain(1,'forest'))
+        self.assertEqual(self.g.province_terrain()[1],'forest');self.assertEqual(self.world.provinces[1]['terrain'],'forest')
+        self.assertEqual(self.world.map_image('Terrain').getpixel((0,0)),(40,120,50))
+        self.assertEqual(self.world.map_image('Terrain').getpixel((1,0)),(10,20,30))
+        for a,b in zip(original.splitlines(),self.world.docs.text('map/definition.csv').splitlines()):
+            x=a.split(';');y=b.split(';');self.assertEqual(x[:6],y[:6]);self.assertEqual(x[7:],y[7:])
+        self.assertEqual(states,{s.path:self.world.docs.text(s.path) for s in self.world.states.values()})
+        revision=self.world.docs.revision;self.assertFalse(self.g.set_province_terrain(1,'forest'));self.assertEqual(revision,self.world.docs.revision)
+        self.world.docs.undo();self.assertEqual(self.world.map_image('Terrain').getpixel((0,0)),(10,20,30))
+        self.world.docs.redo();self.assertEqual(self.world.map_image('Terrain').getpixel((0,0)),(40,120,50));self.world.docs.save()
+        fresh=World(self.root);c=CharacterStore(fresh);g=GeographyStore(fresh,c,MapCatalogStore(fresh,c))
+        self.assertEqual(g.province_terrain()[1],'forest')
+        for pid,kind in [(4,'forest'),(1,'ocean'),(1,'missing')]:
+            before=dict(fresh.docs.drafts)
+            with self.assertRaises(ValueError):g.set_province_terrain(pid,kind)
+            self.assertEqual(before,fresh.docs.drafts)
 
     def test_whole_state_transfer_preserves_seas_and_updates_paint_scope_undo(self):
         data=self.g.region(2);self.g.edit_region(2,'Combined region',data['terrain'],data['weather'],{1:2})
@@ -166,25 +238,25 @@ class GeographyTests(unittest.TestCase):
             def __init__(self,v):self.v=v
             def get(self):return self.v
             def set(self,v):self.v=v
-        messages=[];frames=[]
-        app=SimpleNamespace(world=self.world,geography_store=self.g,brush=Var('Strategic regions'),koppen_paint=Var(True),koppen_south=Var(True),region_mode=Var('Edit region'),
+        messages=[];frames=[];self.latitude_map()
+        app=SimpleNamespace(world=self.world,geography_store=self.g,brush=Var('Strategic regions'),koppen_paint=Var(True),koppen_latitude=Var(False),region_mode=Var('Edit region'),
             pick_only=False,drag_seen=set(),paint_selection={'Koppen presets':'Dfd'},palette_search=Var(''),_status=messages.append,schedule_map=lambda:frames.append(1),refresh_palette=lambda:None)
         app.building_scope=lambda:Painter.building_scope(app);app.palette_key=lambda:Painter.palette_key(app)
         event=SimpleNamespace(state=0)
         Painter.pick_geography(app,1,1,event);revision=self.world.docs.revision
         Painter.pick_geography(app,3,1,event);self.assertEqual(revision,self.world.docs.revision)
-        Painter.pick_geography(app,2,2,event);self.assertEqual(self.g.preset_regions(),{1:('Dfd','South'),2:('Dfd','South')});self.assertEqual(len(frames),2)
+        Painter.pick_geography(app,2,2,event);self.assertEqual(self.g.preset_regions(),{1:('Dfd','North'),2:('Dfd','South')});self.assertEqual(len(frames),2)
         self.world.docs.undo();self.assertNotIn(2,self.g.preset_regions());self.world.docs.redo()
-        app.drag_seen.clear();app.pick_only=True;app.paint_selection['Koppen presets']='Af';app.koppen_south.set(False);revision=self.world.docs.revision
-        Painter.pick_geography(app,1,1,event);self.assertEqual(app.paint_selection['Koppen presets'],'Dfd');self.assertTrue(app.koppen_south.get())
+        app.drag_seen.clear();app.pick_only=True;app.paint_selection['Koppen presets']='Af';revision=self.world.docs.revision
+        Painter.pick_geography(app,1,1,event);self.assertEqual(app.paint_selection['Koppen presets'],'Dfd')
         self.assertEqual(revision,self.world.docs.revision)
-        # A custom pick retains the previous brush and hemisphere.
+        # A custom pick retains the previous brush.
         self.g.edit_region(2,'Second region','',[]);app.drag_seen.clear()
         Painter.pick_geography(app,2,2,event);self.assertIn('custom weather',messages[-1]);self.assertEqual(app.paint_selection['Koppen presets'],'Dfd')
         # Region 1 becomes sea-only: weather painting must not require a state.
         r=self.g.region(2);self.g.edit_region(2,r['name'],r['terrain'],r['weather'],{1:2})
-        app.pick_only=False;app.drag_seen.clear();app.koppen_south.set(False);app.paint_selection['Koppen presets']='ET'
-        Painter.pick_geography(app,4,None,event);self.assertEqual(self.g.preset_regions()[1],('ET','North'))
+        app.pick_only=False;app.drag_seen.clear();app.paint_selection['Koppen presets']='ET'
+        Painter.pick_geography(app,4,None,event);self.assertEqual(self.g.preset_regions()[1],('ET','North' if self.g.region_latitude(1)>=0 else 'South'))
         app.koppen_paint.set(False);self.assertEqual(app.palette_key(),'Strategic regions')
 
     def test_vanilla_import_shifts_complete_month_and_does_not_import_shapes(self):
@@ -336,6 +408,94 @@ class GeographyTests(unittest.TestCase):
         records=renderer.annotations(MapConfig('Buildings',building_key='industrial_complex'),zoom,box)
         self.assertTrue(any(r.get('text')=='1/4' for r in records));self.assertFalse(any(r.get('text')=='0' for r in records))
 
+    def test_latitude_uses_bottom_planet_region_area_and_native_roundtrip(self):
+        from geography_model import PlanetFrame
+        frame=PlanetFrame.main_world(4096,3072)
+        self.assertEqual(frame.equator,2048);self.assertEqual(frame.latitude(1536),45)
+        self.assertEqual(frame.latitude(1024),90);self.assertEqual(frame.latitude(3072),-90)
+        with self.assertRaises(ValueError):frame.latitude(512)
+        with self.assertRaises(ValueError):PlanetFrame.main_world(40,10)
+        ids=self.latitude_map();lat=self.g.region_latitude(1)
+        self.assertAlmostEqual(lat,180*(20-(30*19.5+5*21.5)/35)/20)
+        self.assertGreater(lat,0);self.assertEqual(self.g.region_latitude(2),-4.5)
+        self.g.paint_climate(1,'Dfb','South',account_latitude=True)
+        self.g.paint_climate(2,'Cfb','North',account_latitude=True)
+        self.assertEqual(self.g.preset_regions(),{1:('Dfb','North'),2:('Cfb','South')})
+        self.assertEqual(self.g.weather_signature(self.g.region(1)['weather']),self.g.weather_signature(climate_preset('Dfb',latitude=lat)))
+        self.world.docs.undo();self.assertNotIn(2,self.g.preset_regions());self.world.docs.redo()
+        self.world.docs.save();fresh=World(self.root);c=CharacterStore(fresh);g=GeographyStore(fresh,c,MapCatalogStore(fresh,c))
+        self.assertEqual(g.preset_regions(),{1:('Dfb','North'),2:('Cfb','South')})
+        original=dict(self.world.docs.drafts);self.world.regions[1]['provinces']=frozenset({0,1,3,4})
+        with self.assertRaisesRegex(ValueError,'outside the main planet'):self.g.paint_climate(1,'Af',account_latitude=True)
+        self.assertEqual(original,self.world.docs.drafts)
+
+    def test_latitude_thermal_transition_keeps_wet_seasons_and_weather_complete(self):
+        from geography_model import LATITUDE_TRANSITION
+        for code in CLIMATES:
+            for lat,hemi in [(LATITUDE_TRANSITION,'North'),(-LATITUDE_TRANSITION,'South'),(80,'North'),(-80,'South')]:
+                self.assertEqual(self.g.weather_signature(climate_preset(code,latitude=lat)),self.g.weather_signature(climate_preset(code,hemi)))
+            for lat in (-.001,0,.001,-5,5):
+                periods=climate_preset(code,latitude=lat)
+                self.assertEqual(len(periods),12)
+                for p in periods:p.validate();self.assertEqual(set(p.weights),set(WEATHER_FIELDS))
+        north=climate_preset('Cfb',latitude=.001);south=climate_preset('Cfb',latitude=-.001)
+        self.assertEqual([(p.low,p.high) for p in north],[(p.low,p.high) for p in south])
+        temperatures=lambda periods:[(float(p.low)+float(p.high))/2 for p in periods]
+        base=temperatures(climate_preset('Cfb'));equatorial=temperatures(climate_preset('Cfb',latitude=0))
+        self.assertAlmostEqual(sum(base),sum(equatorial));self.assertEqual(max(equatorial)-min(equatorial),0)
+        for lat in (2,-2):
+            manual=climate_preset('Aw','North' if lat>0 else 'South');automatic=climate_preset('Aw',latitude=lat)
+            self.assertEqual([p.weights for p in manual],[p.weights for p in automatic])
+        with self.assertRaises(ValueError):climate_preset('Cfb',latitude=91)
+        with self.assertRaises(ValueError):climate_preset('Cfb',latitude='NaN')
+
+    def test_equator_is_global_camera_aligned_and_not_map_midpoint(self):
+        from map_render import MapConfig,MapRenderer
+        self.latitude_map();renderer=MapRenderer(self.world,self.g,self.c,self.g.catalogs)
+        size=(400,300);box=(0,0,*size)
+        for layer in ('Owners','States','Strategic regions','VPs','Terrain'):
+            config=MapConfig(layer,names=False,numbers=False)
+            image=renderer.composite(config,MapConfig('Provinces'),1,size,box,10,equator=True)
+            self.assertEqual(image.getpixel((10,200)),(255,220,96))
+            self.assertNotEqual(image.getpixel((10,150)),(255,220,96))
+        config=MapConfig('States',names=False,numbers=False)
+        full=renderer.composite(config,None,0,size,box,10,equator=True)
+        cropped=(37,180,355,225)
+        part=renderer.composite(config,None,0,size,cropped,10,equator=True)
+        self.assertTrue(np.array_equal(np.asarray(part),np.asarray(full.crop(cropped))))
+        above=(0,0,200,100)
+        self.assertTrue(np.array_equal(np.asarray(renderer.composite(config,None,0,size,above,10,equator=True)),np.asarray(renderer.render(config,size,above,10))))
+
+    def test_names_are_independent_of_numbers_and_overlay_snapshots(self):
+        from map_render import MapConfig,MapRenderer
+        self.world.map_ids=np.array([[1,3,2],[1,3,2]],dtype=np.int32)
+        renderer=MapRenderer(self.world,self.g,self.c,self.g.catalogs)
+        def annotations(config,numbers=True):return renderer.annotations(config,1,(0,0,300,200),numbers)
+        for layer,source,names in [('States','state_name',{'First state','Second state'}),('Strategic regions','region_name',{'First region','Second region'})]:
+            self.assertFalse(annotations(MapConfig(layer)))
+            rows=annotations(MapConfig(layer,names=True,numbers=False),False)
+            self.assertEqual({r['text'] for r in rows if r.get('source')==source},names)
+        rows=annotations(MapConfig('Population',names=True,numbers=False))
+        self.assertTrue(any(r.get('source')=='state_name' for r in rows));self.assertFalse(any(r.get('source')=='population' for r in rows))
+        self.assertTrue(any(r.get('source')=='population' for r in annotations(MapConfig('Population',names=False))))
+        vp=lambda config,numbers=True:[r['text'] for r in annotations(config,numbers) if r.get('source')=='vp']
+        self.assertEqual(set(vp(MapConfig('VPs'))),{'Beta (3)','Zulu (2)'})
+        self.assertEqual(set(vp(MapConfig('VPs',names=False))),{'3','2'})
+        self.assertEqual(set(vp(MapConfig('VPs',numbers=False))),{'Beta','Zulu'})
+        rows=annotations(MapConfig('VPs',names=False,numbers=False))
+        self.assertEqual(sum(r['kind']=='vp' for r in rows),2);self.assertFalse(any(r['kind']=='text' for r in rows))
+        overlay=MapConfig('States',names=True,numbers=False);base=MapConfig('States',names=False,numbers=False)
+        size=(300,200);box=(0,0,*size)
+        from unittest.mock import patch
+        with patch.object(self.g,'state_points',return_value={1:(60,60),2:(180,100)}):
+            self.assertTrue(np.any(np.asarray(renderer.render(base,size,box,1))!=np.asarray(renderer.composite(base,overlay,1,size,box,1))))
+        self.g.paint_climate(1,'Cfb','North')
+        rows=annotations(MapConfig('Koppen presets',names=False))
+        self.assertTrue(any(r.get('source')=='hemisphere' for r in rows));self.assertFalse(any(r.get('source')=='region_name' for r in rows))
+        self.assertTrue(any(r.get('source')=='region_name' for r in annotations(MapConfig('Koppen presets',names=True))))
+        self.assertIsNone(MapConfig('Terrain').name_scope)
+        self.assertIsNone(MapConfig('Buildings',building_scope='Province').name_scope)
+
     def test_koppen_preset_detection_survives_save_and_custom_weather_is_gray(self):
         from geography_model import KOPPEN_COLORS
         self.world.map_ids=np.array([[1,3,2,4]],dtype=np.int32)
@@ -432,6 +592,7 @@ class GeographyTests(unittest.TestCase):
 
 class GeographyFormTests(unittest.TestCase):
     write=GeographyTests.write
+    latitude_map=GeographyTests.latitude_map
 
     def setUp(self):
         GeographyTests.setUp(self)
@@ -463,13 +624,14 @@ class GeographyFormTests(unittest.TestCase):
 
     def test_region_form_preset_transfer_apply_and_undo(self):
         from geography_ui import RegionDialog
+        self.latitude_map()
         d=RegionDialog(self.tkroot,self.app,2);d.attributes('-alpha',0);self.tkroot.deiconify();self.tkroot.update()
-        d.climate.set('Cfb');d.hemisphere.set('South');d.preset();d.add_state(1);d.name.set('Changed region');d.ok()
+        self.assertFalse(hasattr(d,'hemisphere_box'));d.climate.set('Cfb');d.preset();d.add_state(1);d.name.set('Changed region');d.ok()
         self.assertFalse(d.winfo_exists());self.assertFalse(self.errors);self.assertEqual(self.world.province_regions[1],2)
         self.assertEqual(len(self.g.region(2)['weather']),12);self.assertEqual(self.g.region(2)['name'],'Changed region')
         self.world.docs.undo();self.g.sync_world();self.assertEqual(self.world.province_regions[1],1);self.assertFalse(self.world.docs.changed)
 
-    def test_koppen_paint_checkbox_palette_hemisphere_and_map_gestures(self):
+    def test_koppen_paint_checkbox_palette_geographic_seasons_and_map_gestures(self):
         from types import SimpleNamespace
         from unittest.mock import patch
         from model import Emblems
@@ -479,32 +641,118 @@ class GeographyFormTests(unittest.TestCase):
         for rel in set(CATALOG_PATHS.values()):
             if not (self.root/rel).exists():self.write(rel,'l_english:\n' if rel.endswith('.yml') else '',rel.endswith('.yml'))
         self.write(CATALOG_PATHS['species_map'],'scripted_map_modes={LOK_species_map_mode={bottom={color={}} top={color={}}}}')
-        self.world.map_ids=np.array([[1,3,2,4]],dtype=np.int32)
+        self.latitude_map()
         with patch('character_model.default_paths',return_value={'game':self.c.game_root}):app=Painter(self.tkroot,self.world,Emblems())
         self.tkroot.deiconify();self.tkroot.update()
         app.brush.set('Strategic regions');app.brush_changed();self.tkroot.update()
         app.koppen_paint_check.invoke();self.tkroot.update()
         self.assertEqual(app.palette_key(),'Koppen presets');self.assertEqual(set(app.palette_values.values()),set(CLIMATES))
-        self.assertTrue(app.koppen_south_check.winfo_ismapped());self.assertTrue(app.koppen_show.get())
+        self.assertTrue(app.koppen_latitude_check.winfo_ismapped());self.assertTrue(app.koppen_show.get());self.assertFalse(hasattr(app,'koppen_south_check'))
         self.assertEqual(app.map_config().layer,'Koppen presets');self.assertEqual(str(app.new_definition_button['state']),'disabled')
         app.palette_search.set('hot desert');app.refresh_palette();self.assertEqual(list(app.palette_values.values()),['BWh'])
         item=next(iter(app.palette_values));app.palette.selection_set(item);app.palette_selected();self.tkroot.update()
-        app.koppen_south_check.invoke();self.assertTrue(app.koppen_south.get());self.assertIn('(South)',app.paint_label.get())
-        event=SimpleNamespace(x=0,y=0,state=0)
+        app.koppen_latitude_check.invoke();self.assertFalse(app.koppen_latitude.get());self.assertIn('automatically',app.paint_label.get())
+        event=SimpleNamespace(x=10,y=190,state=0)
         # Exercise the real canvas coordinate route and release/refresh callbacks.
-        app.zoom=1;app.canvas.xview_moveto(0);app.canvas.yview_moveto(0)
+        app.zoom=10;app.draw_map();app.canvas.xview_moveto(0);app.canvas.yview_moveto(0)
         app.paint_press(event);app.paint_release();self.tkroot.update()
-        self.assertEqual(app.geography_store.preset_regions()[1],('BWh','South'))
-        self.assertEqual(app.world.map_image('Koppen presets').getpixel((0,0)),KOPPEN_COLORS['BWh'])
+        self.assertEqual(app.geography_store.preset_regions()[1],('BWh','North'))
+        self.assertEqual(app.world.map_image('Koppen presets').getpixel((1,19)),KOPPEN_COLORS['BWh'])
         app.undo();self.assertNotIn(1,app.geography_store.preset_regions());app.redo()
-        app.koppen_south_check.invoke();app.paint_selection['Koppen presets']='Af'
-        app.paint_press(SimpleNamespace(x=3,y=0,state=1));app.paint_release();self.tkroot.update()
-        self.assertEqual(app.paint_selection['Koppen presets'],'BWh');self.assertTrue(app.koppen_south.get());self.assertEqual(app.palette_search.get(),'')
+        app.koppen_latitude_check.invoke();app.paint_selection['Koppen presets']='Af'
+        app.paint_press(SimpleNamespace(x=10,y=190,state=1));app.paint_release();self.tkroot.update()
+        self.assertEqual(app.paint_selection['Koppen presets'],'BWh');self.assertEqual(app.palette_search.get(),'')
         # Disabling paint restores the region list and original edit/assignment controls.
         app.koppen_paint_check.invoke();self.tkroot.update()
         self.assertEqual(app.palette_key(),'Strategic regions');self.assertEqual(set(app.palette_values.values()),{1,2})
-        self.assertFalse(app.koppen_south_check.winfo_ismapped());self.assertFalse(self.errors)
+        self.assertFalse(app.koppen_latitude_check.winfo_ismapped());self.assertFalse(self.errors)
         app.cancel_map_job();app.destroy()
+
+    def test_province_vp_railway_terrain_categories_and_terrain_gesture(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from model import Emblems
+        from painter import Painter
+        from demographics import CATALOG_PATHS
+        for rel in set(CATALOG_PATHS.values()):
+            if not (self.root/rel).exists():self.write(rel,'l_english:\n' if rel.endswith('.yml') else '',rel.endswith('.yml'))
+        self.write(CATALOG_PATHS['species_map'],'scripted_map_modes={LOK_species_map_mode={bottom={color={}} top={color={}}}}')
+        self.world.map_ids=np.array([[1,3,2,4]],dtype=np.int32)
+        with patch('character_model.default_paths',return_value={'game':self.c.game_root}):app=Painter(self.tkroot,self.world,Emblems())
+        self.tkroot.deiconify();self.tkroot.update();app.layer.set('Provinces');app.layer_changed()
+        app.province_mode.set('VPs');app.map_mode_changed();self.tkroot.update()
+        self.assertEqual(app.brush.get(),'Provinces');self.assertEqual(app.map_config().layer,'VPs')
+        app.zoom=1;app.draw_map();self.tkroot.update()
+        with patch.object(app.geography_panel,'open_vp') as opened:
+            app.paint_press(SimpleNamespace(x=0,y=0,state=0));app.paint_release();opened.assert_called_once_with(1)
+        app.province_mode.set('Terrain');app.map_mode_changed();self.tkroot.update()
+        self.assertEqual(app.map_config().layer,'Terrain');self.assertEqual(set(app.palette_values.values()),{'plains','forest','hills'})
+        item=next(i for i,k in app.palette_values.items() if k=='forest');app.palette.selection_set(item);app.palette_selected();self.tkroot.update()
+        app.paint_press(SimpleNamespace(x=0,y=0,state=0));app.paint_release();self.assertEqual(app.geography_store.province_terrain()[1],'forest')
+        app.undo();self.assertEqual(app.geography_store.province_terrain()[1],'plains');app.redo()
+        app.paint_press(SimpleNamespace(x=0,y=0,state=1));app.paint_release();self.assertEqual(app.paint_selection['Province terrain'],'forest')
+        self.assertFalse(self.errors);app.cancel_map_job();app.destroy()
+
+    def test_display_names_checkbox_remembers_each_family_and_saves_overlay(self):
+        from unittest.mock import patch
+        from model import Emblems
+        from painter import Painter
+        from demographics import CATALOG_PATHS
+        for rel in set(CATALOG_PATHS.values()):
+            if not (self.root/rel).exists():self.write(rel,'l_english:\n' if rel.endswith('.yml') else '',rel.endswith('.yml'))
+        self.write(CATALOG_PATHS['species_map'],'scripted_map_modes={LOK_species_map_mode={bottom={color={}} top={color={}}}}')
+        self.world.map_ids=np.array([[1,3,2,4]],dtype=np.int32)
+        with patch('character_model.default_paths',return_value={'game':self.c.game_root}):app=Painter(self.tkroot,self.world,Emblems())
+        self.tkroot.deiconify();self.tkroot.update()
+        self.assertEqual(str(app.names_check['state']),'disabled')
+        for layer,expected in [('States',False),('Strategic regions',False),('VPs',True)]:
+            app.layer.set(layer);app.layer_changed();self.tkroot.update()
+            self.assertEqual(app.map_config().show_names,expected)
+            self.assertEqual(str(app.names_check['state']),'normal')
+            app.names_check.invoke();self.tkroot.update();self.assertEqual(app.map_config().show_names,not expected)
+        app.layer.set('States');app.layer_changed();self.tkroot.update();self.assertTrue(app.map_config().show_names)
+        app.save_overlay();self.assertTrue(app.overlay_config.names)
+        app.names_check.invoke();self.tkroot.update();self.assertFalse(app.map_config().names);self.assertTrue(app.overlay_config.names)
+        app.state_mode.set('Resources');app.map_mode_changed();self.tkroot.update();self.assertFalse(app.map_config().names)
+        app.layer.set('Strategic regions');app.layer_changed();app.koppen_show.set(True);app.map_mode_changed();self.tkroot.update();self.assertTrue(app.map_config().names)
+        app.layer.set('Provinces');app.province_mode.set('VPs');app.layer_changed();self.tkroot.update();self.assertFalse(app.map_config().names)
+        app.province_mode.set('Terrain');app.map_mode_changed();self.tkroot.update();self.assertEqual(str(app.names_check['state']),'disabled')
+        self.assertFalse(self.world.docs.changed);self.assertFalse(self.errors);app.cancel_map_job();app.destroy()
+
+    def test_latitude_controls_equator_and_current_view_png_export(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from PIL import Image
+        from model import Emblems
+        from painter import Painter
+        from demographics import CATALOG_PATHS
+        for rel in set(CATALOG_PATHS.values()):
+            if not (self.root/rel).exists():self.write(rel,'l_english:\n' if rel.endswith('.yml') else '',rel.endswith('.yml'))
+        self.write(CATALOG_PATHS['species_map'],'scripted_map_modes={LOK_species_map_mode={bottom={color={}} top={color={}}}}')
+        self.latitude_map()
+        with patch('character_model.default_paths',return_value={'game':self.c.game_root}):app=Painter(self.tkroot,self.world,Emblems())
+        self.tkroot.deiconify();self.tkroot.update();self.assertFalse(app.display_equator.get())
+        app.layer.set('Strategic regions');app.layer_changed();app.koppen_paint_check.invoke();self.tkroot.update()
+        self.assertTrue(app.koppen_latitude.get());self.assertFalse(hasattr(app,'koppen_south'))
+        app.paint_selection['Koppen presets']='Cfb';app.zoom=10;app.draw_map();self.tkroot.update()
+        app.paint_press(SimpleNamespace(x=10,y=190,state=0));app.paint_release();self.tkroot.update()
+        self.assertEqual(app.geography_store.preset_regions()[1],('Cfb','North'))
+        app.undo();self.assertNotIn(1,app.geography_store.preset_regions())
+        app.layer.set('States');app.layer_changed();self.tkroot.update();app.names_check.invoke();app.save_overlay();app.overlay_enabled.set(True)
+        app.layer.set('Owners');app.layer_changed();self.tkroot.update()
+        self.assertTrue(app.equator_check.winfo_ismapped());self.assertTrue(app.export_view_button.winfo_ismapped())
+        app.equator_check.invoke();self.tkroot.update();self.assertTrue(app.display_equator.get())
+        target=self.root/'view.png'
+        with patch('painter.filedialog.asksaveasfilename',return_value=str(target)):
+            app.export_view_button.invoke()
+        expected=app.current_view_image()
+        with Image.open(target) as image:
+            self.assertEqual(image.format,'PNG');self.assertEqual(image.size,expected.size)
+            self.assertTrue(np.array_equal(np.asarray(image),np.asarray(expected)))
+        self.assertLessEqual(expected.width,app.canvas.winfo_width());self.assertLessEqual(expected.height,app.canvas.winfo_height())
+        with patch('painter.filedialog.asksaveasfilename',return_value=''),patch.object(app,'current_view_image') as rendered:
+            app.export_view_button.invoke();rendered.assert_not_called()
+        self.assertFalse(self.world.docs.changed);self.assertFalse(self.errors);app.cancel_map_job();app.destroy()
 
     def test_category_form_edits_native_source_and_cancel_restores_it(self):
         from geography_ui import CategoryDialog

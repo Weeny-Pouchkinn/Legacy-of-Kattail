@@ -399,3 +399,170 @@ Consequences: neighboring endpoint displays can change; an isolated first click
 is a temporary anchor. Existing known bad links remain visible red; new ones
 are refused. Supply hub overlay reuses GFX_supply_hub_icon_strip first frame and
 native supply_nodes.txt, with no new art or gameplay scripts.
+
+## 2026-11-25: Preserve both authored starting supply-hub sources
+
+Decision: merge positive direct state-history provincial supply_node entries and
+native map/supply_nodes.txt entries for painter inspection/counts/overlay. Read all
+undated history/buildings blocks; do not infer hubs from VPs or execute dates/
+conditions. Deduplicate by province, using positive maximum where both exist.
+Current data has no conflicting levels. Keep VP setup independent.
+
+Rationale: 1,146 existing history-only hubs were invisible in the map-only reader.
+Consequences: the current authored union is 1,192 hubs. Update existing sources
+in place when editing/removing, synchronize dual declarations, preserve zeros/
+comments/dated setup and use the map file only for genuinely new declarations.
+No migration or wholesale rewrite of state histories; no hub resurrection.
+
+## 2026-11-25: Import terrain inside an exact mask without province reshaping
+
+Status: height/normal/color blending and province classification below are
+superseded by the later native-style refinement decision. Exact mask/topology
+preservation and the first-import audit remain valid.
+
+Decision: use the supplied exact black mask and identity-aligned EU4 rasters.
+Translate graphical indices semantically and gameplay types by native EU4
+province terrain overrides. Only majority-covered compatible land provinces can
+change gameplay terrain; keep IDs, RGB, coast/type/continent and membership fixed.
+Preserve target water plus EU4-inland-water/HOI4-land disagreements, all exterior
+pixels and city-light alpha. Source summer RGB and source normals accompany land
+height, with a four-pixel inward seam blend and a preserved coastal rim. Keep the
+native indexed BMP palettes and single-mip uncompressed DDS header/layout.
+
+Rationale: source/target inland lake geometry differs inside the selection, while
+the user explicitly forbids reshaping provinces. Reclassification/flooding those
+land pixels would contradict that constraint. The existing rivers already match
+source in the selection, so retain them byte-for-byte.
+Consequences: 363 province terrain classifications and four raster assets changed;
+3,507 incompatible inland-water pixels remain native HOI4 land. A dry run, exact
+staged-hash application, original-file backups and 2,321 protected-file hashes
+make this reviewable and reversible. Audit and exact selection are durable under
+masked_eu4_terrain_import; engine appearance/movement remains untested.
+
+## 2026-11-25: Native-style masked relief, trees and graphical terrain authority
+
+Decision: supersede the earlier four-pixel feather/source-normal/color copying
+and EU4 province override classification. Match surrounding native relief scale,
+correct low-frequency boundary offsets harmonically, and feather inward 48
+pixels. Regenerate native-convention normals and match native biome colormap
+colors. Preserve coast/water mismatches, exterior, alpha and all topology.
+Audit every mask-touched land province using dominant native graphical terrain
+across the complete province, retaining a tied existing type. Generate trees
+only on matching woodland graphics with existing native models/densities;
+require entire low-resolution tree footprints to fit the compatible selection.
+Rationale: the first import visibly differed from native relief and sometimes
+assigned mountain gameplay to forest graphics. Consequences: 160 additional
+CSV corrections, native-style relief/colors and 2,647 selected woodland cells
+with trees; no shape, river or topology changes. See terrain_refinement audit.
+
+## 2026-11-25: Province edit categories and gameplay-only terrain brush
+
+Decision: expose VP/Railways as Provinces subcategories and add gameplay Terrain
+beside Inspect/Buildings. Route gestures and render config through the effective
+subcategory; retain dialogs, labels, overlays, level protection and supply hubs.
+Terrain drafts patch only definition.csv field 6 and synchronize the cached
+world/palette after edits/Undo. Native terrain definitions supply types/colors.
+Rationale: align entity-level workflows with the existing state category design.
+Consequences: no graphical painting in this brush and no new game identifiers.
+
+## 2026-11-25: Popularity uses exact native precision; Gestalt stays manual
+
+Decision: canonicalize country Apply and Normalize/random remainder output using
+largest-remainder apportionment on the 0.001% grid, totaling exactly 100. Reject
+invalid totals before Apply. Random filling excludes Gestalt; manual positive
+Gestalt survives. All-zero normalization distributes among non-Gestalt entries.
+Rationale: user's live log rejects six painter-authored six-decimal blocks;
+truncation yields sub-100 native totals despite exact Python sums. Installed
+set_popularities docs explicitly allow decimals, so whole-percent rounding is
+unnecessary. Consequences: legal fractional shares remain; UI reads canonical
+saved values; MAJ/ANS/KHO/PAR/SPT/CER repaired by numeric-span edits only. Engine
+reload remains untested; see popularity_precision_repair/audit.json.
+
+## 2026-11-25: Resolve two impossible island railway jumps
+
+Decision: after explicit user request, remove only the level-3 19461-20841 and
+20839-20841 links. Current bitmap gives 20841 no land neighbor and no continuous
+land route exists; preserve geography and every other railway link/level rather
+than invent a cross-water railway. Cached province_adjacencies.csv is stale for
+these endpoints, so current bitmap/rules are authoritative. Consequences: map
+validator now passes. Previous notes preserving these two jumps are superseded.
+Recovery/verification: railway_jump_repair/README.md and audit.json.
+
+## 2026-11-25: Names per entity family and camera-faithful export
+
+Decision: independent session name choices for states/regions/VPs, initially
+false/false/true, shared across each family's subcategories. Names are immutable
+in saved overlay configs and independent of the global number switch. Hide only
+VP names when requested, retaining value/dot controls. Draw optional equator
+after compositing; export freshly rendered visible bounds without overscan/UI.
+Rationale: user wants readable optional localized names and a faithful viewport
+PNG. Consequences: no native map or identifier changes for display/export.
+
+## 2026-11-25: Geographic hemisphere replaces manual controls
+
+Decision: remove North/South selectors everywhere in Koppen painting/preset forms.
+Always phase from exact area-weighted land centroid (sea area for sea-only) on the
+main planet's bottom-aligned 2:1 projection, not the complete solar-system map.
+At current 4096x3072, planet top=1024, bottom=3072, equator=2048. Source EU4
+JUBLIO_SYSTEM_README.md:3-6 verifies original 4096x2048 extent and top extension.
+Reject off-world auto latitude; keep native weather editing there.
+
+Account for latitude starts enabled, and controls only cubic temperature-season
+smoothing inside +/-10 degrees. Preserve annually invariant/even-harmonic terms,
+Koppen class and chosen wet/dry structure; recalculate phase/freezing weather
+weights. The 10-degree width is an editor approximation. NASA energy-budget
+seasonality and NOAA ITCZ evidence justify reducing thermal contrast without
+flattening rainfall or claiming a local climate simulation. Exact generated
+profiles remain detectable after native Save/reload, without metadata.
+
+Consequences: on explicit user request, re-evaluated 276 recognized main-planet
+profiles and changed 29 weather blocks, including nine hemisphere corrections;
+custom and off-world profiles preserved. Guarded backup/readback complete.
+Sources, IDs, audit and limitations: map_labels_latitude_export/README.md.
+
+## 2026-11-25: Literal-only native demographic colors and deterministic outputs
+
+Decision: write only culture add_to_temp_variable RGB literals and species
+set_temp_variable RGB literals; preserve arithmetic references and patch every
+matching branch. Use nearest 0.001 fractions, which roundtrip all 256 channel
+values. Restore culture 103 divisors, remove gray seed from averages, retain
+explicit uncultured gray. Initialize species RGB/alpha: transparent unmatched
+minority and opaque neutral unmatched majority. Keep selected Altarian hue.
+Rationale: broad variable-name edits corrupted divisors and produced over-range
+white; duplicate minority branches could override writes. Unset top-layer output
+is unsafe but not yet proven to explain Altarian's white rendering. Consequences:
+matching palette/math tests, source-backed repair and an explicit pending engine
+check. No shader/art, IDs, assignments or colors redesigned.
+
+## 2026-11-25: Culture group is optional
+
+Decision: represent No group as None in the model and empty code in the picker.
+No startup membership/trigger is generated for it; removing an existing group
+removes those references. Changing group controls the generated full-description
+group clause; leave authored full text intact for unchanged ungrouped cultures.
+Rationale: valid existing cultures lack groups and the editor wrongly required
+an integer group. Consequences: create/edit/reassign/ungroup survives native
+Save/reload/Undo without invented group IDs or None references.
+
+## 2026-11-25: Reusable historical Imperium elements, native state assignments
+
+Decision: one optional Katzenartig Imperium element per state, independent of
+owner. Stable numeric IDs (zero unassigned) are saved in the base history variable
+lok_katzenartig_imperium_element. Native state-color branches are the definition
+catalog; English localization owns each name and both manually authored texts.
+Two scripted-localization dispatchers select text in the hovered state context,
+following the existing [FROM.GetName] convention. Names/colors/text are shared
+objects exposed alongside cultures/species; assigned states retain only the ID.
+
+Rationale: historical organization is authored geography, not current politics.
+Native files avoid parallel metadata and runtime world scans. Unique byte RGBs
+use three-decimal native fractions; unassigned gray is reserved. Source edits
+target direct undated history assignments, preserving dates/other fields. The
+painter previews immediate and 650 ms delayed tooltips. Arbitrary game dynamic
+functions remain literal in its plain-text preview; engine is authoritative.
+
+Consequences: guarded Save writes definitions/localization/state pointers together;
+editing a shared object updates all its states. No deletion or ID renumbering is
+introduced. Initial elements/territory remain empty; Schutzone Pegasien/MCF was
+an example rather than a historical assignment instruction. Game check pending;
+tests/native Tk probe passed. See katzenartig_imperium/README.md for paths/audit.
