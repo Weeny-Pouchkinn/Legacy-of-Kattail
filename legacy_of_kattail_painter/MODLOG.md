@@ -874,3 +874,493 @@ Validation actually performed:
 Remaining: user-selected edits and their in-game checks after Save. Presets are
 editable approximations. State reshaping and railway/spawn generation remain
 outside the requested scope.
+
+## 2026-11-25 — Country popularity allocation buttons
+
+COUNTRIES > Parties & popularity adds Assign random weights to remaining
+ideologies and Normalize to 100. Random allocation preserves positive entries,
+filling blank/zero entries from the remainder. Normalize rescales all nonnegative
+weights proportionally, accepting weights above 100; all-zero inputs become equal
+shares. Invalid/overfull random inputs or a remainder without eligible entries
+show guidance and leave fields unchanged. Exact rational apportionment with
+largest remainders totals precisely 100; six decimal places are used unless
+existing finer inputs require more. Traces are suspended during bulk updates so
+the pie and total redraw once. Apply/Save/Cancel retain their existing behavior.
+
+Changed: legacy_of_kattail_painter/country_model.py (distribute_popularities),
+country_ui.py (buttons and batched chart refresh), test_countries.py (four checks),
+README.md, MODLOG.md and project CURRENT_STATUS.md/DECISIONS.md. No game keys,
+country data, localization or painter-specific data files were created/changed.
+
+Validation: python -B -m unittest discover -s legacy_of_kattail_painter -p
+'test_countries.py': 20 passed. Tests cover proportional/equal normalization,
+exact decimal totals, seeded random allocation preserving inputs, invalid values,
+exhausted remainder, and invoking both real Tk buttons with chart/total refresh
+and error rollback. py_compile.compile(..., doraise=True) with output in Temp
+passed for all three changed Python files. A native alpha-zero Tk politics-panel
+probe loaded the mod's ten ideologies: both buttons were reachable at 1000x600,
+preserved the entered 35% share, refreshed the pie and returned exact 100% totals;
+no drafts were created. Scoped git diff --check passed.
+No live Save or game launch; these are editor-only form actions.
+
+## 2026-11-25 — Live colors, eight symbol layers, backgrounds and overwrite choice
+
+COUNTRIES > Flags now has live RGB swatches beside background, symbol and outline
+entries. Variable traces handle typing, paste and programmatic changes; invalid
+input clears the usable preview until corrected. Sliders and numeric inputs stay
+synchronized. Color chooser recovers from invalid text. Typed updates debounce;
+drag updates throttle, with immediate release rendering. A scrollable control area
+keeps the flag preview and Use button reachable at small country-window sizes.
+
+Add symbol creates up to eight tabs. Each owns its reusable mask, tint, size,
+position (centered by default), horizontal/vertical stretch, clockwise tilt and
+optional colored/thickness outline. Visible-pixel hit testing selects the topmost
+symbol for dragging. Later tabs composite above earlier ones. Removing a tab
+renumbers the remaining tabs; removing the last symbol clears its shape. Gallery
+previews use the full stack, replacing only the active candidate/background.
+
+Outlines use dilation of the transformed alpha mask, generated on demand. No
+outline artwork or per-symbol outline files are created. Silhouettes are computed
+at bounded resolution, with two 64-entry transform/outline caches and a 16-entry
+designer mask cache; gallery mask/photo caches retain their earlier bounds.
+Applied images remain normal flattened RGB flags written at 82x52, 41x26 and
+10x7. Layer parameters are editable in the open form and are not recoverable from
+the saved image; no painter design metadata or sidecars were introduced.
+
+The procedural background library grew from 17 to 56 patterns: additional band
+counts/proportions, diagonal bands/tricolors/stripes, plain/bordered crosses and
+saltires, chevrons/triangles, lozenges/diamonds, checkerboards, canton stripes,
+union cross, sunburst, pall, serrated hoist, ring/double border and gradients.
+Background and symbol colors remain independent.
+
+Creating an unused tag with existing native definition/history sources now raises
+CountrySourceExists before modifying drafts. The UI asks Yes/No with No as the
+default, including for empty files. No keeps the form open; Yes explicitly permits
+the form-owned setup update. Existing filenames, definition fields and unknown/
+dated history survive. Ordinary native Save performs guarded writes/backups.
+Multiple histories remain an ambiguity error; registered tags use Edit country.
+
+Files: legacy_of_kattail_painter/flag_designer.py (new reusable controls),
+country_model.py (procedural backgrounds/transforms/outlines, source preflight),
+country_ui.py (layer-aware galleries, confirmation and designer integration),
+install.py (package the module), test_countries.py (five additional checks),
+README.md, MODLOG.md, PLAN.md; modding_documentation/agent_memory/CURRENT_STATUS.md
+and DECISIONS.md. No game IDs, native authoring defaults, assets or source data
+were changed directly by this implementation.
+
+Validation actually run:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  107 passed. Five additions cover actual pasted-color events/swatch/error
+  recovery; eight tabs, sliders/input, dragging and layered galleries; outline,
+  transform and layer-order pixels; collision guard/approval/Undo/Save; and real
+  country-form confirmation decline/accept with an empty existing history file.
+  Existing tests continue checking all native sizes, lazy galleries, tint,
+  callbacks/grab restoration and country writer behavior.
+- Native alpha-zero mapped UI probe: eight actual Stellaris masks, all 56
+  backgrounds, layered background gallery and Use/Cancel passed. At country
+  size 1000x730 the designer was 530x582 with a 340px control viewport; preview
+  and Use stayed reachable. Initial/cached eight-outlined-symbol previews measured
+  163/91 ms locally, not guaranteed frame rates. Both alpha caches held 16 entries.
+  No callback errors or remaining drafts; all country history/definition/tag and
+  flag source hashes stayed unchanged. No live country Save.
+- py_compile.compile(..., doraise=True), outputs in Temp: country_model.py,
+  country_ui.py, flag_designer.py, install.py and test_countries.py passed.
+- Scoped git diff --check and diff review passed, including the new module.
+
+No in-game launch or screenshot review. Native flag export uses the existing
+writer. No implementation follow-up remains; reopening the painter loads the UI.
+
+## 2026-11-25 — Country preview/save refresh and building map painting
+
+User clarified the country color/popularity symptom is in painter maps/previews.
+Country color loading skipped definitions until they existed on disk, then could
+retain the incomplete cached result after Save. It now reads native Documents
+drafts and includes tag/path identity in the cache signature. Existing duplicate
+native color overrides and UI-color fields for the edited country update together.
+Country Apply explicitly writes popularities and reads applied values back into
+the form. The pie legend no longer rounds to six significant digits and adapts
+to fit all entries. Decimal percentages remain supported: installed game
+documentation/effects_documentation.md, set_popularities section (7542–7559),
+explicitly demonstrates 54.5/45.5.
+
+MAP Paint/View now offers States, Provinces and Strategic regions as editing
+modes. States > Buildings lists all state-scope types (shared and nonshared).
+Provinces > Buildings lists province buildings and native supply nodes, excluding
+railway routes. Selecting a building shows a pale-to-dark count heatmap with gray
+zeroes. Numeric labels exist only for positive counts, at cached pixels inside
+the state/province. Left adds one, right removes one, dragging changes each entity
+once per stroke, and counts stop at zero. Defined caps/coasts/facility placements/
+groups/exclusivity checks remain active. Errors use the status bar. Middle-drag
+pans; right-drag pans outside building mode. Appropriate borders enable on entry
+and remain user-toggleable. The unrelated generic paint-scope selector disables.
+
+State and region forms open directly from their edit modes, including sea
+regions. Region Assign states uses a destination palette and moves whole states
+on click/drag; Shift picks a region. Empty regions and split/unassigned states
+remain rejected. No reshaping or railway generation. Native state histories,
+map/supply_nodes.txt and strategic-region files are used; no data sidecars.
+
+Files changed for this work:
+- legacy_of_kattail_painter/model.py — draft-aware country colors and building
+  heatmaps; country_model.py — color/UI override synchronization and explicit
+  popularity writes; country_ui.py — applied-value readback and exact pie legend.
+- legacy_of_kattail_painter/geography_model.py — scoped choices/count caches,
+  validated add/remove, whole-state assignment and cached label locations.
+- legacy_of_kattail_painter/painter.py — mode controls/palettes, map clicks,
+  add/remove gestures, positive labels, boundaries and pan handling.
+- legacy_of_kattail_painter/test_countries.py and test_geography.py — six new
+  regression/model/map-interaction tests.
+- README.md, PLAN.md, MODLOG.md and project CURRENT_STATUS.md/DECISIONS.md.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  113 passed. New checks cover draft/new-country colors before/after Save, repeated
+  color/UI overrides, country Apply/Save/reopen with exact fractional values,
+  building counts/limits/coasts/supply nodes, once-per-stroke changes, heatmap
+  pixels, no zero labels and whole-state assignment.
+- python -B -m unittest discover -s legacy_of_kattail_painter -p
+  'test_countries.py': 28 passed again after adding an owner-map pixel assertion
+  to the save/reopen regression.
+- Native mapped alpha-zero UI probe (Save forbidden): country Apply showed
+  #123abc and exact 12.345678/87.654322 percentages; Cancel restored drafts.
+  State/province modes exposed 20/10 building choices; click dispatch increased
+  once per stroke and right-click decreased. No zero label text. All checked
+  state/region/country/color/on-action/English-loc source hashes stayed unchanged.
+- Final native control probe after border integration passed with matching
+  boundaries, disabled irrelevant paint scope and no callback errors/drafts.
+  State/province redraws measured 50.0/52.3 ms locally; positive text-item counts
+  were 2082/1158 (two items per shadowed label). These are local timings only.
+- py_compile.compile(..., doraise=True), outputs in Temp, passed for all seven
+  changed Python files. Scoped whitespace checks and diff review passed.
+- python -B tools/validate_map.py: only the known unrelated railway jumps at
+  893–894 remain (20839–20841 and 20841–19461).
+
+No live mod Save, new game IDs/data sidecars, game launch or screenshot review.
+Existing user edits were preserved. Restart the painter to load the controls.
+
+## 2026-11-25 - Categories, resources/population, overlays, summaries and climates
+
+Completed native category creation/editing/painting, shared-slot capacity checks,
+resource/population gradients and precise/arithmetic state painting, the resource
+type-count highlight, country Summary reports, shared numeric visibility,
+configuration overlays and the strategic-region climate display.
+
+Category palettes use the native category RGB; existing definitions remain in
+their original file, new definitions append to a selected existing category file,
+and new names use existing lok_misc_l_english.yml. State history category painting
+preserves other native fields. Extra category script is editable. Shared-slot
+usage excludes nonshared state and province buildings. Capacity is the static
+category slots times state/category factors, plus direct starting extra slots,
+capped by the installed numeric MAX_SHARED_SLOTS (25 in the installed game).
+Runtime country/research/conditional bonuses are excluded and labeled in the UI.
+Over capacity is red-striped; exactly full is faint yellow; labels are used/total.
+Native audit found 13 categories and 1,902 states: 1,358 free, 519 full, 25 over.
+
+Resources use the requested nine colors (plus selectable additional native types)
+and population uses purple. Precise entry edits only native resources/manpower.
+Arithmetic left-click adds/multiplies and right-click subtracts/divides, once per
+state per stroke. No negatives, nonfinite input or division by zero. Whole-person
+population rounds half-up; resource arithmetic rounds to six decimals. Positive
+resource types are distinct keys with positive last-defined scalar values.
+Highlighting uses strict > X, refreshes on threshold edits and live data changes,
+and becomes part of the saved overlay configuration.
+
+MapConfig is immutable and session-only. Both base and saved overlay use the same
+current camera and live draft data through MapRenderer; alpha 0/0.5/1 blends are
+verified. Borders, selected building/resource, threshold and number setting are
+captured, without recursively capturing an existing overlay. Input always acts on
+the active map. Numeric visibility covers all numeric map annotations; VP dots/
+names and hemisphere letters remain. Labels use bounded in-memory raster tiles
+(4096 entries/16 MiB), with a separate bounded icon cache. No disk cache/metadata.
+
+Country Summary is read-only and recomputes from currently owned starting-state
+drafts: population, civilian/military factories, dockyards and resources. Runtime
+modifiers, occupation and foreign control are not simulated. Koppen colors/N/S are
+inferred by exact canonical matching of native weather to the 30x2 generated
+profiles. Custom and unknown weather fields are gray; comments/numeric formatting
+are ignored. Existing native region 171 matches Cfb South. No climate metadata.
+Profiles remain editor approximations, not measured classification data.
+
+Palette attribution: Hylke Beck, KoppenGeiger.m RGB table, source lines 20-51
+(https://gist.github.com/pwolfram/376311e23acdc2e1f9159646051ce3f6#file-koppengeiger-m-L20-L51).
+Project/legend and attribution: https://www.gloh2o.org/koppen/ . Classification:
+Beck et al. (2023), https://doi.org/10.1038/s41597-023-02549-6 . Colors are display
+conventions; the published raster dataset was not imported into the mod.
+Static capacity reference: installed common/defines/00_defines.lua MAX_SHARED_SLOTS,
+native common/state_category/*.txt, and local wiki_doc/State modding - Hearts of
+Iron 4 Wiki.md, General attributes section (category and state slot factor).
+
+Files changed:
+- legacy_of_kattail_painter/geography_model.py and geography_ui.py: native
+  categories, arithmetic, counts/capacity, climate matching and category forms.
+- legacy_of_kattail_painter/model.py: category/scalar/climate palettes and stripes.
+- legacy_of_kattail_painter/map_render.py (new Python module): immutable session
+  configuration, viewport annotations/compositing and bounded label/icon caches.
+- legacy_of_kattail_painter/painter.py: controls, palette, map gestures and overlays.
+- legacy_of_kattail_painter/country_model.py and country_ui.py: Summary report.
+- legacy_of_kattail_painter/install.py: include map_render.py.
+- legacy_of_kattail_painter/test_geography.py and test_countries.py: seven new
+  behavioral/UI regressions; existing annotation tests now use the shared renderer.
+- README.md, PLAN.md, MODLOG.md and project CURRENT_STATUS.md/DECISIONS.md.
+No game IDs, production native data or painter data files were added by this work.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  120 passed. Coverage includes native category create/edit/paint and BOM,
+  capacity warning pixels, scalar arithmetic/clamping/divide-zero rejection,
+  strict resource-type thresholds, per-state stroke deduplication, precise input,
+  immutable overlay settings/live data/alpha pixels, numeric visibility,
+  climate matching/custom gray/Save-reload, category transactions and Summary.
+- Native mapped alpha-zero Tk probe, with live Save forbidden: all 13 categories,
+  20 state buildings and 10 resources listed; overlay snapshot held resource/
+  threshold settings across view/zoom/pan changes; climate 171 displayed S;
+  category Undo/Cancel and scalar divide-zero rejection worked. Country ANS
+  Summary showed population 8,000,000 and 10 resource rows. No callback errors,
+  no remaining drafts, and all 3,229 checked native source hashes stayed unchanged.
+- Warm native redraw averages (three draws, current viewport/labels): category
+  36.8 ms, population 28.9 ms, state buildings 35.9 ms, resources 18.4 ms.
+  Text tile cache used 2,959,548 bytes. Local measurements, not universal bounds.
+- py_compile.compile(..., doraise=True) passed for all ten changed Python
+  files with output in Temp. Scoped tracked/new-module whitespace checks passed;
+  implementation and fixture diff review completed.
+- python -B tools/validate_map.py still reports only the two known unrelated
+  railway jumps at lines 893-894: 20839-20841 and 20841-19461.
+
+No live mod Save, game launch, CWTools run or screenshot review. Restart the
+painter to load the new controls. Existing user-authored edits remain intact.
+
+## 2026-11-25 - Arithmetic precision/buildings, complete text colors and railway proposal
+
+Added Precision range (%) independently to Resources, Population, State buildings
+and Province buildings. Zero uses the exact entered nonnegative integer operand.
+Other values sample uniformly from integer points inside amount +/- percentage,
+clipping the lower endpoint at zero. Example: 50 with 10% samples 45..55 inclusive.
+Each state/province is sampled once per stroke; right-click subtracts/divides using
+the same distribution. Subtraction clamps at zero, zero division leaves the value
+unchanged, and arithmetic results round half-up to whole numbers. Resource
+arithmetic now returns integers too; precise resource entry still accepts decimals.
+
+Building arithmetic uses the existing native state writer and validators for
+scope, native level caps, coast, map placements, exclusive/group facilities and
+supply nodes. Failed targets remain unchanged. Arithmetic disabled retains +1/-1
+building gestures. Shared-slot capacity remains a separate visible warning, not
+an additional hard brush limit. Existing Undo/Redo and guarded Save remain intact.
+No random settings or sampled results are stored outside normal native values.
+
+All existing text-color selectors (cultures, culture groups, species) now derive
+choices from effective global bitmapfonts/textcolors in installed/mod interface
+GFX. Same-path mod replacements, case-sensitive B/b etc, source comment names and
+draft invalidation are respected; font-local overrides do not replace global RGB.
+Current native table: 37 codes, including the eleven gradient codes and fourteen
+mod additions. Source: interface/core.gfx, global textcolors block; installed
+interface/core.gfx supplies the vanilla baseline. Choices sort/search names and
+codes, color each row, and show an RGB swatch plus the actual edited name in that
+color. Typing/pasting codes updates preview immediately. Contrasting backgrounds
+make black/white legible. None retains default formatting; unknown authored codes
+stay preserved and visibly unknown. Saved localization still uses native codes.
+Actual game fonts can override global RGB, so this is a global-table preview.
+
+Recorded a deferred railway-editor proposal in PLAN.md, with read-only route/
+supply-node layer, overlapping-route inspection, waypoint drawing/path suggestions,
+route edits and native source-preserving writes. Proposed verification reuses
+active bitmap adjacency (including wrap), native IDs and level bounds, validates
+counts/consecutive edges and preserves unrelated baseline defects. No railway
+editor implementation, native route changes or topology edits in this task.
+
+Files changed for this work:
+- legacy_of_kattail_painter/geography_model.py: arithmetic_operand sampler,
+  change_building_amount writer and integer resource arithmetic.
+- legacy_of_kattail_painter/painter.py: four arithmetic control sets/gestures,
+  text-color selector integration and commit.
+- legacy_of_kattail_painter/demographics.py: text_colors source catalog.
+- legacy_of_kattail_painter/select_ui.py: TextColorPicker/TextColorChoiceBox.
+- legacy_of_kattail_painter/test_geography.py and test_selectors.py: sampling,
+  gestures, native limits/save/reload, catalog replacement/case/scope and preview.
+- README.md, PLAN.md, MODLOG.md and project CURRENT_STATUS.md/DECISIONS.md.
+No native game IDs, GFX/localization definitions or painter data files added.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_geography.py':
+  27 passed. Precision zero consumes no RNG; inclusive integer endpoints, narrow
+  ranges, >100% clipping, zero/invalid input, varied deterministic samples,
+  once-per-state/province gestures, division, native caps/coast, Undo and disposable
+  Save/reload are covered. Source replacement/font scope and color-cache Undo too.
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_selectors.py':
+  10 passed, including actual Tk paste/case-sensitive selection, live RGB/name
+  preview, colored popup rows, None/unknown and widget cleanup.
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  124 passed after all code changes (16.922 seconds locally).
+- Native mapped alpha-zero UI probe with live Save forbidden: precision controls
+  visible and arithmetic gestures applied in all four modes. All three Name color
+  forms exposed 37 codes plus None; h/b/B/M previews matched native RGB and name
+  editing updated the sample. Group color Apply/Undo used the native localization
+  code. No callback errors/drafts remained; 2,097 native source hashes unchanged.
+- py_compile.compile(..., doraise=True), outputs in Temp: six modified Python files
+  passed. Scoped git diff --check and implementation/fixture diff review passed.
+- python -B tools/validate_map.py: only the pre-existing non-neighbor railway jumps
+  at lines 893-894 remain (20839-20841 and 20841-19461). No game launch or CWTools.
+
+Restart the painter to load the new controls. Native files were changed only in
+Temp test fixtures; user-authored mod changes were preserved.
+
+## 2026-11-25: Paint Koppen presets on strategic regions
+
+MAP > Strategic regions now has Paint Köppen. Checking it enables the existing
+preset map colors and region boundaries, replaces the left list with all 30
+searchable colored climate classes and exposes Southern hemisphere (off = North).
+Checked uses South; unchecked uses North. The existing profiles shift South
+seasons by six months. Left-click/drag replaces each touched region's complete
+weather once per stroke. Shift-click picks both the exact preset and hemisphere;
+custom weather reports its status without changing the brush. Middle/right drag
+pan. Unchecking restores the normal region list and edit/assignment modes.
+Edit selected opens the most recently painted region; Database opens regions.
+
+The writer changes only weather inside the existing strategic-region file,
+preserving the rest of the region and source BOM/newlines. Custom fields/comments
+inside replaced weather are intentionally replaced with the complete preset.
+Sea-only regions work without a state. Repeating the same generated preset is a
+no-op. Undo/Redo and guarded Save remain native; no game identifiers, climate
+metadata, topology or existing regional weather were changed by this task.
+
+All profiles already supplied nine fields; their weights were retained. Every
+one of 60 North/South profiles is now checked for 12 complete calendar periods,
+all WEATHER_FIELDS, nonnegative values and six-month hemisphere equivalence.
+The fields are no_phenomenon, rain_light, rain_heavy, snow, blizzard, arctic_water,
+mud, sandstorm and min_snow_level. Desert/steppe storms, wet-climate rain/mud and
+cold-climate snow/blizzards/freezing are checked. Explicit zero values are valid,
+e.g. rainforest snow and sandstorms. These remain editable game approximations.
+Native field reference: map/strategicregions/1-Flusion.txt, weather/period blocks.
+
+Files changed in this task:
+- legacy_of_kattail_painter/painter.py
+- legacy_of_kattail_painter/geography_model.py
+- legacy_of_kattail_painter/test_geography.py
+- legacy_of_kattail_painter/README.md
+- legacy_of_kattail_painter/PLAN.md
+- legacy_of_kattail_painter/MODLOG.md
+- modding_documentation/agent_memory/CURRENT_STATUS.md
+- modding_documentation/agent_memory/DECISIONS.md
+Identifiers: reused Koppen presets map layer, CLIMATES, KOPPEN_COLORS and
+WEATHER_FIELDS; added only Python methods/UI state, including paint_climate,
+koppen_paint, koppen_south, koppen_paint_changed and koppen_help. No native IDs.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p test_geography.py:
+  31 passed, including actual Tk controls/canvas gestures, searchable palette,
+  field coverage, full-weather replacement, source preservation, no-op/invalid
+  values, sea-only painting, Shift-pick/custom behavior, Undo/Redo and fixture
+  Save/reload. The existing strategic-region gesture fixture gained the new
+  default-false checkbox variable.
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  128 passed in 24.081 seconds locally.
+- python -m py_compile legacy_of_kattail_painter/painter.py
+  legacy_of_kattail_painter/geography_model.py
+  legacy_of_kattail_painter/test_geography.py: passed with PYTHONPYCACHEPREFIX
+  in Temp. Direct py_compile.compile(..., doraise=True) also passed.
+- Native mapped alpha-zero Tk probe: 30 colored/filterable presets, North/South,
+  painting, Shift-pick, Undo/Redo, sea-only region 101 and restoration of normal
+  region mode passed. No callback errors or unsaved changes remained; all 4,224
+  checked native source hashes stayed unchanged. Live Save was forbidden; Save
+  was exercised only in disposable fixtures. One paint plus refresh took 452.7 ms.
+- git diff --check: existing trailing whitespace in unrelated state-history
+  changes prevents a clean global check. Scoped check of all task files passed.
+  git diff --stat and implementation/test diff were inspected; earlier user work
+  was retained. No native files were written by this task.
+- python -B tools/validate_map.py: only the previously documented railway jumps
+  at lines 893-894 remain (20839-20841 and 20841-19461).
+
+No game launch or CWTools diagnostics. Restart the painter to load these controls;
+the remaining verification is in-game weather behavior after an intentional Save.
+
+## 2026-11-25: Railway province painting, native compaction and supply hubs
+
+MAP adds Paint/View Railways with a colored 0–5 palette, individual province
+heatmap, colored route lines and optional zoomed level numbers. The native cap
+comes from game/mod NSupply.MAX_RAILWAY_LEVEL, not rail_way/province_max=1.
+Paint level sets incident links with left and erases with right. Add/remove levels
+uses Number of levels to change, clamps at 0/native max and changes each link
+once per stroke. Do not add new railways prevents all new links, including new
+connections between existing railway provinces. Shift-click picks, middle pans.
+
+Native levels belong to links; the province display is the highest touching
+level. Clicking a junction changes all touching links and may change neighboring
+provinces' displayed maximum. Start a new isolated route with two neighboring
+painted provinces; the first is a temporary anchor, with no unsupported singleton
+native route. Drag sampling includes provinces between cursor events. New links
+use bitmap orthogonal land adjacency/wrap, excluding explicit impassable borders
+and impassable state drafts. Rule caches follow state edits and Undo without
+rebuilding the bitmap graph. The user explicitly rejected routing across
+unpainted land; there is no global pathfinder or automatic hub connection.
+
+Preview and Save use deterministic maximal same-level chain compaction, splitting
+at branches and cycles into simple native paths. The graph and levels are exactly
+preserved; overlapping routes collapse to their maximum link level. Comments are
+retained as comment lines, including original inline comments; BOM/newlines use
+normal guarded Documents Save. This is compact route serialization, not a claim
+of globally optimal supply flow or minimum construction costs. Pre-existing bad
+links remain represented separately, without allowing new invalid links. No new
+native game IDs, railway metadata, graph caches, supply hubs or map topology.
+
+Display supply hubs uses the existing GFX_supply_hub_icon_strip first frame,
+26x26 maximum, at representative province pixels from native supply_nodes. It
+works with all map modes and overlay snapshots, independently of Display numbers.
+The installed supply.gfx resolves gfx/interface/mapicons/supply/
+supply_hub_icon_strip.dds. No graphic copies/placeholders were created.
+
+Files changed for this task:
+- legacy_of_kattail_painter/railway_model.py (new)
+- legacy_of_kattail_painter/test_railways.py (new)
+- legacy_of_kattail_painter/painter.py
+- legacy_of_kattail_painter/model.py
+- legacy_of_kattail_painter/map_render.py
+- legacy_of_kattail_painter/install.py
+- legacy_of_kattail_painter/README.md
+- legacy_of_kattail_painter/PLAN.md
+- legacy_of_kattail_painter/MODLOG.md
+- modding_documentation/agent_memory/CURRENT_STATUS.md
+- modding_documentation/agent_memory/DECISIONS.md
+- modding_documentation/agent_memory/plans/railway-painting.md (new)
+Identifiers: Python RailwayStore, compact_routes, Railways palette/map layer,
+railway_operation/amount/existing_only, display_supply_hubs and MapConfig.supply_hubs.
+Reuses native NSupply.MAX_RAILWAY_LEVEL and GFX_supply_hub_icon_strip. No game IDs.
+
+Validation actually performed:
+- python -B -m unittest discover -s legacy_of_kattail_painter -p test_railways.py:
+  13 passed. Native cap vs generic cap, exact/increment/decrement/saturation,
+  per-link stroke deduplication, existing-only edges/vertices, route anchors,
+  no unpainted/diagonal/sea links, wrap model/rendering, impassable borders and
+  state-draft invalidation/Undo, chain/branch/cycle compaction, overlap maximums,
+  native counts/IDs, BOM/CRLF/comments, fixture Save/reload/idempotence, external
+  conflict rejection, baseline invalid preservation, actual Tk controls/gestures,
+  drag interpolation, native logo frame, overlays and viewport crops are covered.
+- python -B -m unittest discover -s legacy_of_kattail_painter -p 'test_*.py':
+  141 passed in 25.640 seconds after all implementation changes.
+- python -m py_compile on painter.py, model.py, map_render.py, railway_model.py,
+  install.py and test_railways.py: passed with PYTHONPYCACHEPREFIX in Temp.
+- Native mapped alpha-zero UI probe, live Save forbidden: 5,595 railway links,
+  5,259 railway provinces, cap 5 and all 46 native hub logos. Existing-only upgrade,
+  graph-preserving Save preparation, Undo/Redo and overlay rendering passed; no
+  callback errors or unsaved changes remained. All 4,224 checked native hashes
+  stayed unchanged. Paint plus refresh 130.6 ms; warm redraws 39.9/44.7/40.8 ms.
+  Final native model probe after rule-cache changes retained the same graph and
+  four baseline invalid links; edit/compaction took 29.6 ms, with no live writes.
+  Saved preview inspected for route colors/province borders/native hub rendering.
+- python -B tools/validate_map.py: existing non-neighbor jumps remain only at
+  railways.txt:893 (20839–20841) and :894 (20841–19461). Native files were unchanged.
+  The new railway layer additionally identifies existing links 12662–12701 and
+  13081–13092 across explicit impassable entries in map/adjacencies.csv:39 and :32.
+  These four links are displayed red and preserved, not silently repaired.
+- Full git diff --check reports pre-existing whitespace in unrelated state-history
+  changes. Scoped task-file checks and new-file whitespace checks passed. Reviewed
+  task-baseline implementation diff, new modules/tests and final diff/stat.
+
+Sources inspected: active map railways/definitions/bitmaps/adjacencies, native
+state histories/strategic regions/supply/buildings and local province adjacency
+reference; installed common/defines/00_defines.lua:4280 (MAX_RAILWAY_LEVEL=5),
+installed interface/supply.gfx:10–13 (hub sprite/5-frame strip), installed
+map/railways.txt and effects_documentation.md/build_railway. Public wiki access
+was denied; implementation uses installed/repository native sources.
+
+Unverified: no game launch or CWTools diagnostics. The native graph compiler is
+covered by fixtures and a current-data probe, but engine supply/movement should
+be checked after an intentional Save. Restart the painter to load the layer.

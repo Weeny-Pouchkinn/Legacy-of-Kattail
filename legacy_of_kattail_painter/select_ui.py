@@ -252,6 +252,48 @@ class ChoiceBox(ttk.Frame):
             self.hide(); self.variable.trace_remove('write', self._trace)
 
 
+class TextColorChoiceBox(ChoiceBox):
+    def __init__(self,master,colors,**kwargs):
+        self.colors=colors
+        super().__init__(master,values=[Choice('','None')]+[Choice(k,d['name']) for k,d in colors.items()],allow_custom=True,**kwargs)
+
+    def show(self,query=''):
+        super().show(query)
+        if self.listbox:
+            for i,c in enumerate(self._matches):
+                rgb=self.colors.get(c.code,{}).get('color')
+                if rgb:
+                    color='#%02x%02x%02x'%rgb;contrast='#000000' if sum(a*b for a,b in zip(rgb,(.2126,.7152,.0722)))>145 else '#ffffff'
+                    self.listbox.itemconfigure(i,background=color,foreground=contrast,selectbackground=color,selectforeground=contrast)
+
+
+class TextColorPicker(ttk.Frame):
+    """Search native codes by name/ID, with live swatch and actual-name preview."""
+    def __init__(self,master,colors,textvariable,samplevariable):
+        super().__init__(master)
+        self.colors,self.variable,self.samplevariable=colors,textvariable,samplevariable
+        self.box=TextColorChoiceBox(self,colors,textvariable=textvariable);self.box.pack(fill='x')
+        line=ttk.Frame(self);line.pack(fill='x',pady=(4,0))
+        self.swatch=tk.Label(line,width=3,relief='solid',borderwidth=1);self.swatch.pack(side='left',padx=(0,6))
+        self.preview=tk.Label(line,anchor='w',padx=6,font=('Segoe UI',11,'bold'));self.preview.pack(side='left',fill='x',expand=True)
+        self._traces=[(var,var.trace_add('write',self.refresh)) for var in (textvariable,samplevariable,self.box.display)]
+        self.bind('<Destroy>',self.destroyed,add='+');self.refresh()
+
+    def commit(self):return self.box.commit()
+
+    def refresh(self,*args):
+        code=self.box.index.resolve(self.box.display.get())
+        rgb=self.colors.get(code,{}).get('color');color='#%02x%02x%02x'%rgb if rgb else '#d0d0d0'
+        self.swatch.configure(background=color)
+        background='#f4f4f4' if rgb and sum(a*b for a,b in zip(rgb,(.2126,.7152,.0722)))<100 else '#20242c'
+        sample=self.samplevariable.get() or 'Text preview'
+        self.preview.configure(text=sample if rgb else sample+' (default)' if code=='' else 'Unknown color code',foreground=color,background=background)
+
+    def destroyed(self,event):
+        if event.widget is self:
+            for var,trace in self._traces:var.trace_remove('write',trace)
+
+
 class TraitChoices(ttk.Frame):
     """Localized multi-selection, retaining only IDs in the role's variable."""
     def __init__(self, master, variable, values):

@@ -5,7 +5,7 @@ from tkinter import ttk, messagebox
 
 from character_ui import DraftDialog
 from character_model import inherited_localisations, atom
-from country_ui import table, buttons
+from country_ui import table, buttons, choose_color
 from select_ui import Choice, ChoiceBox, ChoiceIndex
 from geography_model import CLIMATES, WEATHER_FIELDS, WeatherPeriod, climate_preset, numeric
 
@@ -67,8 +67,8 @@ class GeographyWorkspace(ttk.Frame):
     def __init__(self,parent,app):
         super().__init__(parent,padding=8);self.pack(fill='both',expand=True);self.app=app;self.store=app.geography_store
         self.kind=tk.StringVar(value='States');self.query=tk.StringVar();self._signature=None
-        bar=buttons(self,[('Edit selected',self.edit),('New VP on map',self.new_vp),('Save',app.save),('Undo',app.undo),('Redo',app.redo)])
-        box=ChoiceBox(bar,textvariable=self.kind,values=['States','Strategic regions','VPs'],width=20);box.pack(side='left',padx=8);box.bind('<<ComboboxSelected>>',lambda e:self.refresh())
+        bar=buttons(self,[('Edit selected',self.edit),('New category',lambda:self.open_category(None)),('New VP on map',self.new_vp),('Save',app.save),('Undo',app.undo),('Redo',app.redo)])
+        box=ChoiceBox(bar,textvariable=self.kind,values=['States','State categories','Strategic regions','VPs'],width=20);box.pack(side='left',padx=8);box.bind('<<ComboboxSelected>>',lambda e:self.refresh())
         self.search=ttk.Entry(bar,textvariable=self.query);self.search.pack(side='left',fill='x',expand=True);self.search.bind('<KeyRelease>',lambda e:self.refresh())
         self.rows=table(self,[('detail','Details',470)]);self.rows.bind('<Double-1>',lambda e:self.edit());self.rows.bind('<Return>',lambda e:self.edit())
         self.rows.bind('<KeyPress>',lambda e:type_search(e,self.search,self.query,self.refresh))
@@ -86,14 +86,16 @@ class GeographyWorkspace(ttk.Frame):
         elif kind=='Strategic regions':
             choices=[Choice(str(rid),self.app.world.label(r['name'])) for rid,r in self.app.world.regions.items()]
             details={str(rid):f'{len(self.app.world.region_states[rid])} states / {len(r["provinces"])} provinces' for rid,r in self.app.world.regions.items()}
+        elif kind=='State categories':
+            records=self.store.categories();choices=[Choice(k,d['name']) for k,d in records.items()];details={k:f'{d["slots"]} base slots / {d["path"]}' for k,d in records.items()}
         else:
             records=self.store.victory_points();choices=[Choice(str(pid),d['name']) for pid,d in records.items()];details={str(pid):f'{d["value"]} VP — state {d["state"]}' for pid,d in records.items()}
-        for c in ChoiceIndex(choices).matching(self.query.get()):self.rows.insert('','end',iid=c.code,text=c.label,values=(details[c.code],));self.entries[c.code]=int(c.code)
+        for c in ChoiceIndex(choices).matching(self.query.get()):self.rows.insert('','end',iid=c.code,text=c.label,values=(details[c.code],));self.entries[c.code]=c.code
         if selected and self.rows.exists(selected):self.rows.selection_set(selected)
 
     def edit(self):
         if rows:=self.rows.selection():
-            key=int(rows[0]);{'States':self.open_state,'Strategic regions':self.open_region,'VPs':self.open_vp}[self.kind.get()](key)
+            key=rows[0] if self.kind.get()=='State categories' else int(rows[0]);{'States':self.open_state,'State categories':self.open_category,'Strategic regions':self.open_region,'VPs':self.open_vp}[self.kind.get()](key)
 
     def open(self,dialog_type,key):
         try:
@@ -107,7 +109,35 @@ class GeographyWorkspace(ttk.Frame):
     def open_vp(self,pid):
         if pid is not None:self.open(VictoryPointDialog,pid)
 
+    def open_category(self,key=None):self.open(CategoryDialog,key)
+
     def new_vp(self):self.app.begin_geography_pick(None,lambda pid:self.open_vp(pid),'province')
+
+
+class CategoryDialog(DraftDialog):
+    def __init__(self,parent,app,key=None):
+        data=app.geography_store.categories().get(key)
+        super().__init__(parent,app.character_store,'Edit state category' if data else 'New state category')
+        self.app,self.geo,self.new=app,app.geography_store,data is None;self.geometry('820x640');self.minsize(700,540)
+        files=self.geo.characters.files('common/state_category','.txt')
+        self.ident=tk.StringVar(value=key or '');self.name=tk.StringVar(value=data['name'] if data else '');self.slots=tk.StringVar(value=str(data['slots']) if data else '4')
+        self.color=tk.StringVar(value='#%02x%02x%02x'%(data['color'] if data else (128,128,128)));self.path=tk.StringVar(value=data['path'] if data else files[0])
+        form=ttk.Frame(self,padding=12);form.pack(fill='x');form.columnconfigure(1,weight=1)
+        for row,(label,var) in enumerate([('Category ID',self.ident),('Localized name',self.name),('Base shared building slots',self.slots),('Map color',self.color),('Native source file',self.path)]):
+            ttk.Label(form,text=label).grid(row=row,column=0,sticky='w',pady=6)
+            if var is self.path:
+                self.path_box=ChoiceBox(form,textvariable=var,values=files,state='normal' if self.new else 'disabled');widget=self.path_box
+            else:widget=ttk.Entry(form,textvariable=var,state='disabled' if var is self.ident and not self.new else 'normal')
+            widget.grid(row=row,column=1,sticky='ew',padx=8)
+            if var is self.color:ttk.Button(form,text='Choose',command=lambda:choose_color(self,self.color)).grid(row=row,column=2)
+        ttk.Label(self,text='Additional native fields (modifiers, buildings_max_level, comments). Color and slots use the fields above.',wraplength=760).pack(anchor='w',padx=12,pady=6)
+        self.extra=tk.Text(self,height=12,wrap='none');self.extra.pack(fill='both',expand=True,padx=12);self.extra.insert('1.0',data['extra'] if data else '')
+        buttons(self,[('Apply category',self.ok),('Cancel',self.cancel)])
+
+    def ok(self):
+        try:
+            self.path_box.commit();self.geo.edit_category(self.ident.get().strip(),self.name.get(),self.slots.get(),self.color.get(),self.path.get(),self.extra.get('1.0','end-1c'),self.new);self.accept(self.ident.get())
+        except (ValueError,OSError) as exc:messagebox.showerror('State category',str(exc),parent=self)
 
 
 class StateDialog(DraftDialog):

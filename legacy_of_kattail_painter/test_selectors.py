@@ -132,6 +132,19 @@ class TkChoiceTests(unittest.TestCase):
         widget.listbox.selection_set(widget.selected.index('t2')); widget.remove()
         self.assertEqual(variable.get(), 't1 t99')
 
+    def test_text_color_picker_case_sensitive_codes_paste_and_live_preview(self):
+        from select_ui import TextColorPicker
+        colors={'B':{'name':'Blue','color':(0,0,255)},'b':{'name':'Black','color':(0,0,0)},'h':{'name':'Thalothin','color':(255,255,183)}}
+        variable=tk.StringVar(value='B');sample=tk.StringVar(value='Example name');picker=TextColorPicker(self.root,colors,variable,sample);picker.pack(fill='x');self.root.update()
+        self.assertEqual(picker.preview.cget('foreground'),'#0000ff')
+        self.root.clipboard_clear();self.root.clipboard_append('b');picker.box.entry.delete(0,'end');picker.box.entry.event_generate('<<Paste>>');self.root.update()
+        self.assertEqual(picker.preview.cget('foreground'),'#000000');picker.commit();self.assertEqual(variable.get(),'b')
+        variable.set('h');sample.set('Changed name');self.assertEqual(picker.swatch.cget('background'),'#ffffb7');self.assertEqual(picker.preview.cget('text'),'Changed name')
+        picker.box.show('');self.assertEqual(picker.box.listbox.size(),4)
+        row=next(i for i,c in enumerate(picker.box._matches) if c.code=='h');self.assertEqual(picker.box.listbox.itemcget(row,'background'),'#ffffb7')
+        picker.box.display.set('Unknown');self.assertIn('Unknown',picker.preview.cget('text'));variable.set('');self.assertIn('default',picker.preview.cget('text'))
+        picker.destroy();self.root.update()
+
     def test_unchanged_identity_never_calls_editor_and_nested_cancel_restores(self):
         s = self.fixture.store
         dialog = CharacterDialog(self.root, s, 'AAA_Zed'); self.root.update()

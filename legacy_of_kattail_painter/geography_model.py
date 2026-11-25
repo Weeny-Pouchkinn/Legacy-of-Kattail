@@ -2,12 +2,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, DecimalException
+from decimal import ROUND_HALF_UP, ROUND_CEILING, ROUND_FLOOR
 from pathlib import Path
 import math
 import re
+import random
 
 import numpy as np
+from PIL import ImageColor
 
 from model import child, parse, scalar, value, walk, read_text
 from character_model import atom, block, patch_field, quote, LOC, unescape, sort_name
@@ -16,6 +19,11 @@ from select_ui import Choice
 STATE_LOC='localisation/english/state_names_l_english.yml'
 REGION_LOC='localisation/english/strategic_region_names_l_english.yml'
 VP_LOC='localisation/english/victory_points_l_english.yml'
+CATEGORY_LOC='localisation/english/lok_misc_l_english.yml'
+RESOURCE_COLORS={'steel':(135,206,250),'aluminium':(255,255,255),'aluminum':(255,255,255),'tungsten':(128,128,128),'food':(245,210,45),'fissiles':(55,185,80),'rubber':(205,205,205),'oil':(65,65,65),'supertensiles':(30,60,155),'chromium':(115,140,165)}
+# Beck et al. legend, also published in Hylke Beck's KoppenGeiger.m class table.
+KOPPEN_COLORS=dict(zip(('Af','Am','Aw','BWh','BWk','BSh','BSk','Csa','Csb','Csc','Cwa','Cwb','Cwc','Cfa','Cfb','Cfc','Dsa','Dsb','Dsc','Dsd','Dwa','Dwb','Dwc','Dwd','Dfa','Dfb','Dfc','Dfd','ET','EF'),
+    ((0,0,255),(0,120,255),(70,170,250),(255,0,0),(255,150,150),(245,165,0),(255,220,100),(255,255,0),(200,200,0),(150,150,0),(150,255,150),(100,200,100),(50,150,50),(200,255,80),(100,255,80),(50,200,0),(255,0,255),(200,0,200),(150,50,150),(150,100,150),(170,175,255),(90,120,220),(75,80,180),(50,0,135),(0,255,255),(55,200,255),(0,125,125),(0,70,95),(178,178,178),(102,102,102))))
 MONTH_DAYS=(31,28,31,30,31,30,31,31,30,31,30,31)
 WEATHER_FIELDS=('no_phenomenon','rain_light','rain_heavy','snow','blizzard','arctic_water','mud','sandstorm','min_snow_level')
 KOPPEN_SOURCE='https://doi.org/10.1038/s41597-023-02549-6'  # Classification reference; weights below are editor approximations.
@@ -35,6 +43,31 @@ def numeric(raw,minimum=None,integer=False):
     if not n.is_finite() or minimum is not None and n<minimum:raise ValueError('Enter a finite value'+(f' of at least {minimum}' if minimum is not None else ''))
     if integer and n!=n.to_integral_value():raise ValueError('Enter a whole number')
     return str(int(n)) if integer else format(n,'f')
+
+
+def arithmetic_operand(amount,precision=0,rng=None):
+    """Uniform integer operand inside the inclusive +/- percentage interval."""
+    base=Decimal(numeric(amount,0,True));percent=Decimal(numeric(precision,0))
+    if not percent:return int(base)
+    try:
+        spread=base*percent/100
+        low=int(max(Decimal(0),base-spread).to_integral_value(rounding=ROUND_CEILING))
+        high=int((base+spread).to_integral_value(rounding=ROUND_FLOOR))
+        return (rng or random).randint(low,high)
+    except DecimalException:raise ValueError('Amount or precision range is too large') from None
+
+
+def arithmetic_amount(old,amount,operation='Set',reverse=False,integer=False):
+    value=Decimal(numeric(amount,0));old=Decimal(numeric(old,0))
+    try:
+        if operation=='Set':new=value
+        elif operation=='Add':new=max(Decimal(0),old-value if reverse else old+value)
+        elif operation=='Multiply':
+            if reverse and not value:raise ValueError('Cannot divide by zero; amount unchanged')
+            new=old/value if reverse else old*value
+        else:raise ValueError('Choose Add or Multiply')
+        return new.quantize(Decimal(1) if integer else Decimal('.000001'),rounding=ROUND_HALF_UP)
+    except DecimalException:raise ValueError('Amount is too large or too precise') from None
 
 
 def patch_unique(text,parent,key,raw):
@@ -130,6 +163,12 @@ def vp_color(amount,maximum):
     return tuple(round(a+(b-a)*t) for a,b in zip((55,125,225),(250,65,40)))
 
 
+def building_color(amount,maximum):
+    if not amount:return (55,60,68)
+    t=max(0,min(1,float(amount)/max(1,float(maximum))))
+    return tuple(round(a+(b-a)*t) for a,b in zip((190,225,255),(25,80,205)))
+
+
 class GeographyStore:
     def __init__(self,world,characters,catalogs):
         self.world,self.characters,self.catalogs,self.docs=world,characters,catalogs,world.docs
@@ -173,6 +212,177 @@ class GeographyStore:
                       'group':caps.get('group_by',''),'exclusive':caps.get('exclusive_with',''),
                       'spawn':atom(text,n.children,'spawn_point',key),'network':key=='rail_way','supply':key=='supply_node'}
         return out
+
+    def categories(self):
+        files=self.characters.files('common/state_category','.txt');signature=tuple(self.docs.text(p) for p in files)
+        def build():
+            names=self.characters.trait_store.names();out={}
+            for path in files:
+                text,roots=self.docs.parsed(path)
+                for root in roots:
+                    if root.key!='state_categories' or root.children is None:continue
+                    for n in root.children:
+                        if n.children is None:continue
+                        if n.key in out:raise ValueError('Duplicate state category: '+n.key)
+                        color=block(n.children,'color');extra=text[n.value_start+1:n.end-1]
+                        for owned in reversed([c for c in n.children if c.key in {'color','local_building_slots'}]):
+                            a,b=owned.start-n.value_start-1,owned.end-n.value_start-1;extra=extra[:a]+extra[b:]
+                        out[n.key]={'key':n.key,'path':path,'name':names.get(n.key,n.key.replace('_',' ').title()),'slots':int(numeric(atom(text,n.children,'local_building_slots','0'),0,True)),
+                                    'color':self.world._script_colour(text,color) if color else (128,128,128),'extra':extra,
+                                    'factor':numeric(atom(text,n.children,'local_building_slots_factor','0'))}
+            return out
+        # Localization may change without a definition change.
+        return self.cached('categories',(signature,id(self.characters.trait_store.names())),build)
+
+    def edit_category(self,key,name,slots,color,path=None,extra=None,create=False):
+        if not re.fullmatch('[a-z][a-z0-9_]*',key):raise ValueError('Use a lowercase category ID with underscores')
+        existing=self.categories()
+        if create==(key in existing):raise ValueError('Choose an unused category ID' if create else 'Choose an existing category')
+        if not name.strip():raise ValueError('Enter a category name')
+        if create and key in self.characters.localisations() and self.characters.localisations()[key]!=name:raise ValueError('This localization key is already used; choose a unique category ID')
+        slots=numeric(slots,0,True);rgb=ImageColor.getrgb(color.strip())
+        if len(rgb)!=3:raise ValueError('Choose an RGB category color')
+        path=path if create else existing[key]['path']
+        if path not in self.characters.files('common/state_category','.txt'):raise ValueError('Choose an existing native category file')
+        if extra is not None and any(n.key in {'color','local_building_slots'} for n in parse(extra)):raise ValueError('Set color and slots in their dedicated fields')
+        with self.docs.grouped():
+            text,roots=self.docs.parsed(path);root=block(roots,'state_categories')
+            if root is None:raise ValueError('Missing state_categories container')
+            if create:
+                text=patch_field(text,root,key,'{ }')
+            root=block(parse(text),'state_categories');node=block(root.children,key)
+            if extra is not None and (create or extra!=existing[key]['extra']):
+                raw=key+' = {\n'+extra+'\n}'
+                text=text[:node.start]+raw+text[node.end:]
+            for field,raw in [('local_building_slots',slots),('color','{ '+' '.join(map(str,rgb))+' }')]:
+                node=block(block(parse(text),'state_categories').children,key);text=patch_unique(text,node,field,raw)
+            self.docs.replace(path,text)
+            if create or name!=existing[key]['name']:self.set_loc(CATEGORY_LOC,key,name)
+
+    def set_category(self,sid,key):
+        if key not in self.categories():raise ValueError('Choose a defined state category')
+        path=self.world.states[sid].path;text=self.docs.text(path)
+        self.docs.replace(path,patch_unique(text,block(parse(text),'state'),'state_category',key))
+
+    def max_shared_slots(self):
+        def build():
+            maximum=25
+            for folder in [self.characters.game_root/'common/defines',self.world.root/'common/defines']:
+                for path in sorted(folder.glob('*.lua')):
+                    source='\n'.join(line.split('--',1)[0] for line in read_text(path).splitlines())
+                    for m in re.finditer(r'\bMAX_SHARED_SLOTS\s*=\s*(\d+)\s*(?:[,;]|$)',source,re.M):maximum=int(m[1])
+            return maximum
+        return self.cached('max_slots',str(self.characters.game_root),build)
+
+    def slot_summary(self):
+        categories=self.categories();defs=self.buildings();shared={k for k,d in defs.items() if d['shared'] and not d['province']}
+        signature=(tuple(self.docs.text(s.path) for s in self.world.states.values()),tuple((k,d['slots'],d['factor']) for k,d in categories.items()),tuple(sorted(shared)),self.max_shared_slots())
+        def build():
+            out={}
+            for sid in self.world.states:
+                text,nodes=self.world.state_nodes(sid);history=block(nodes,'history');key=atom(text,nodes,'state_category');cat=categories.get(key,{'slots':0,'factor':'0'});levels={}
+                for container in history.children if history else []:
+                    if container.key=='buildings' and container.children is not None:
+                        for n in container.children:
+                            if n.key in shared and n.children is None:levels[n.key]=int(numeric(value(text,n),0,True))
+                extra=sum(Decimal(numeric(value(text,n))) for n in history.children if n.key=='add_extra_state_shared_building_slots' and n.children is None) if history else Decimal(0)
+                factor=Decimal(numeric(atom(text,nodes,'buildings_max_level_factor','1'),0))
+                capacity=max(0,min(self.max_shared_slots(),int(Decimal(cat['slots'])*factor*(1+Decimal(cat['factor']))+extra)))
+                used=sum(levels.values());out[sid]={'category':key,'used':used,'total':capacity,'status':'over' if used>capacity else 'full' if used==capacity else 'free'}
+            return out
+        return self.cached('slots',signature,build)
+
+    def resource_counts(self,kind):
+        signature=tuple(self.docs.text(s.path) for s in self.world.states.values())
+        def build():
+            out={}
+            for sid in self.world.states:
+                text,nodes=self.world.state_nodes(sid);resources=block(nodes,'resources')
+                if resources:
+                    raw=atom(text,resources.children,kind,'0');amount=Decimal(numeric(raw,0))
+                    if amount:out[sid]=amount
+            return out
+        return self.cached(('resource',kind),signature,build)
+
+    def resource_type_counts(self):
+        signature=tuple(self.docs.text(s.path) for s in self.world.states.values())
+        def build():
+            out={}
+            for sid in self.world.states:
+                text,nodes=self.world.state_nodes(sid);resources=block(nodes,'resources');types={}
+                for n in resources.children if resources else []:
+                    if n.children is None:types[n.key]=Decimal(numeric(value(text,n),0))
+                out[sid]=sum(v>0 for v in types.values())
+            return out
+        return self.cached('resource_types',signature,build)
+
+    def change_resource(self,sid,kind,amount,operation='Set',reverse=False):
+        if kind not in self.definitions('common/resources','resources'):raise ValueError('Choose a defined resource')
+        new=arithmetic_amount(self.resource_counts(kind).get(sid,0),amount,operation,reverse,integer=operation!='Set')
+        raw=format(new.normalize(),'f');path=self.world.states[sid].path;text=self.docs.text(path);root=block(parse(text),'state');resources=block(root.children,'resources')
+        if not resources and not new:return raw
+        if resources is None:text=patch_field(text,root,'resources','{ }')
+        resources=block(block(parse(text),'state').children,'resources');text=patch_unique(text,resources,kind,raw if new else None)
+        self.docs.replace(path,text);return raw
+
+    def population_counts(self):
+        signature=tuple(self.docs.text(s.path) for s in self.world.states.values())
+        def build():
+            out={}
+            for sid in self.world.states:
+                text,nodes=self.world.state_nodes(sid);amount=int(numeric(atom(text,nodes,'manpower','0'),0,True))
+                if amount:out[sid]=amount
+            return out
+        return self.cached('population',signature,build)
+
+    def change_population(self,sid,amount,operation='Set',reverse=False):
+        if operation=='Set':numeric(amount,0,True)
+        new=arithmetic_amount(self.population_counts().get(sid,0),amount,operation,reverse,True);raw=format(new,'f')
+        path=self.world.states[sid].path;text=self.docs.text(path)
+        self.docs.replace(path,patch_unique(text,block(parse(text),'state'),'manpower',raw));return raw
+
+    def building_choices(self,scope):
+        definitions=self.buildings()
+        return [c for c in self.choices('buildings') if definitions[c.code]['province']==(scope=='Province') and not definitions[c.code]['network']]
+
+    def building_counts(self,kind,scope='State'):
+        paths=[s.path for s in self.world.states.values()]
+        signature=tuple(self.docs.text(p) for p in paths)
+        if scope=='Province' and kind=='supply_node':return {p:v for p,v in self.supply_nodes().items() if v>0}
+        def build():
+            out={}
+            for sid in self.world.states:
+                text,nodes=self.world.state_nodes(sid);history=block(nodes,'history')
+                for container in history.children if history else []:
+                    if container.key!='buildings' or container.children is None:continue
+                    scopes=[(sid,container)] if scope=='State' else [(int(n.key),n) for n in container.children if n.key.isdigit() and n.children is not None]
+                    for ident,node in scopes:
+                        for n in node.children:
+                            if n.key==kind and n.children is None:out[ident]=int(numeric(value(text,n),0,True))
+            return {ident:level for ident,level in out.items() if level>0}
+        return self.cached(('building_counts',kind,scope),signature,build)
+
+    def change_building(self,ident,kind,scope,delta):
+        delta=int(numeric(delta,integer=True))
+        return self.change_building_amount(ident,kind,scope,abs(delta),'Add',delta<0)
+
+    def change_building_amount(self,ident,kind,scope,amount,operation='Add',reverse=False):
+        definitions=self.buildings()
+        if scope not in {'State','Province'} or kind not in definitions or definitions[kind]['province']!=(scope=='Province') or definitions[kind]['network']:raise ValueError('Choose a building for this scope')
+        sid=ident if scope=='State' else self.world.province_states.get(ident)
+        if sid not in self.world.states:raise ValueError('Choose a province belonging to a state')
+        old=self.state(sid);key=(None if scope=='State' else ident,kind);level=int(numeric(old['buildings'].get(key,'0'),0,True))
+        new=int(arithmetic_amount(level,numeric(amount,0,True),operation,reverse,True))
+        if new==level:return new
+        levels=dict(old['buildings'])
+        if new:levels[key]=str(new)
+        else:levels.pop(key,None)
+        self.edit_state(sid,old['name'],{},old['resources'],levels)
+        return new
+
+    def assign_state(self,sid,rid):
+        if all(self.world.province_regions.get(p)==rid for p in self.world.states[sid].provinces):return False
+        region=self.region(rid);self.edit_region(rid,region['name'],region['terrain'],region['weather'],{sid:rid});return True
 
     def set_loc(self,preferred,key,name):
         owners=list(dict.fromkeys(r[0] for r in self.characters.loc_records().get(key,()))) or [preferred]
@@ -375,6 +585,23 @@ class GeographyStore:
             if name!=old['name']:self.set_loc(REGION_LOC,old['name_key'],name)
         self.sync_world()
 
+    def paint_climate(self,rid,code,hemisphere='North'):
+        """Replace only a region’s weather with one complete native preset."""
+        if rid not in self.world.regions:raise ValueError('Choose a defined strategic region')
+        periods=climate_preset(code,hemisphere)
+        path=self.world.regions[rid]['path'];text,roots=self.docs.parsed(path);node=block(roots,'strategic_region')
+        newline='\r\n' if '\r\n' in text else '\n';lines=['{']
+        for period in periods:
+            period.validate()
+            lines.extend(['\t\tperiod = {',f'\t\t\tbetween = {{ {period.start} {period.end} }}',f'\t\t\ttemperature = {{ {period.low} {period.high} }}'])
+            lines.extend(f'\t\t\t{k} = {numeric(period.weights[k],0)}' for k in WEATHER_FIELDS)
+            lines.append('\t\t}')
+        lines.append('\t}')
+        updated=patch_unique(text,node,'weather',newline.join(lines))
+        if updated==text:return False
+        self.docs.replace(path,updated)
+        return True
+
     def vanilla_regions(self):
         def build():
             out={}
@@ -391,6 +618,30 @@ class GeographyStore:
                 a,m=calendar_date(p.start);b,n=calendar_date(p.end);last=b==MONTH_DAYS[n]-1;m=(m+6)%12;n=(n+6)%12
                 p.start=f'{min(a,MONTH_DAYS[m]-1)}.{m}';p.end=f'{MONTH_DAYS[n]-1 if last else min(b,MONTH_DAYS[n]-1)}.{n}'
         return periods,atom(text,node.children,'naval_terrain')
+
+    @staticmethod
+    def weather_signature(periods):
+        rows=[]
+        for p in periods:
+            rows.append((calendar_date(p.start),calendar_date(p.end),Decimal(numeric(p.low)),Decimal(numeric(p.high)),tuple(sorted((k,Decimal(numeric(v,0))) for k,v in p.weights.items()))))
+        return tuple(sorted(rows,key=lambda r:(r[0][1],r[0][0])))
+
+    def preset_regions(self):
+        signature=tuple(self.docs.text(r['path']) for r in self.world.regions.values())
+        def build():
+            if 'climate_lookup' not in self._cache:
+                self._cache['climate_lookup']={self.weather_signature(climate_preset(code,hemi)):(code,hemi) for code in CLIMATES for hemi in ('North','South')}
+            out={}
+            for rid,data in self.world.regions.items():
+                try:
+                    text,roots=self.docs.parsed(data['path']);weather=block(block(roots,'strategic_region').children,'weather')
+                    if weather is None or any(n.key!='period' for n in weather.children):continue
+                    if any(n.key not in {'between','temperature',*WEATHER_FIELDS} or n.children is not None and n.key not in {'between','temperature'} for p in weather.children for n in p.children or []):continue
+                    match=self._cache['climate_lookup'].get(self.weather_signature(weather_periods(text,weather)))
+                    if match:out[rid]=match
+                except ValueError:continue
+            return out
+        return self.cached('preset_regions',signature,build)
 
     def victory_points(self):
         signature=tuple(self.docs.text(s.path) for s in self.world.states.values())
@@ -468,7 +719,27 @@ class GeographyStore:
         if missing:
             ys,xs=np.nonzero(np.isin(full,list(missing)))
             for y,x in zip(ys,xs):out.setdefault(int(full[y,x]),(int(x),int(y)))
+        self._cache['province_sizes']={p:int(count[p]) if p<len(count) else 0 for p in out}
         self._cache['points']=out;return out
+
+    def state_points(self):
+        if 'state_points' not in self._cache:
+            points=self.province_points();sizes=self._cache['province_sizes'];out={}
+            for sid,state in self.world.states.items():
+                candidates=[p for p in state.provinces if p in points]
+                if candidates:out[sid]=points[max(candidates,key=lambda p:sizes.get(p,0))]
+            self._cache['state_points']=out
+        return self._cache['state_points']
+
+    def region_points(self):
+        signature=tuple((rid,r['provinces']) for rid,r in self.world.regions.items())
+        def build():
+            points=self.province_points();sizes=self._cache['province_sizes'];out={}
+            for rid,r in self.world.regions.items():
+                candidates=[p for p in r['provinces'] if p in points]
+                if candidates:out[rid]=points[max(candidates,key=lambda p:sizes.get(p,0))]
+            return out
+        return self.cached('region_points',signature,build)
 
     def sync_world(self):
         if self._world_revision==self.docs.revision:return

@@ -555,26 +555,20 @@ class World:
 
     def country_colours(self):
         paths = list(self.country_paths.values())
-        if (self.root / 'common/countries/colors.txt').exists():
-            paths.append('common/countries/colors.txt')
-        signature = tuple(self.docs.text(p) for p in paths)
+        paths.append('common/countries/colors.txt')
+        signature = (tuple(self.country_paths.items()),tuple(self.docs.text(p) for p in paths))
         cached = getattr(self, '_country_colour_cache', None)
         if cached is not None and cached[0] == signature:
             return cached[1]
         country_colours = {}
         for tag, relative in self.country_paths.items():
-            if (self.root / relative).exists():
-                t = self.docs.text(relative)
-                c = child(parse(t), 'color')
-                if c:
-                    country_colours[tag] = self._script_colour(t, c)
-        overrides = self.root / 'common/countries/colors.txt'
-        if overrides.exists():
-            t = self.docs.text('common/countries/colors.txt')
-            for n in parse(t):
-                c = child(n.children, 'color') if n.children else None
-                if c:
-                    country_colours[n.key] = self._script_colour(t, c)
+            t = self.docs.text(relative)
+            cs = [c for c in parse(t) if c.key=='color' and c.children]
+            if cs:country_colours[tag] = self._script_colour(t, cs[-1])
+        t = self.docs.text('common/countries/colors.txt')
+        for n in parse(t):
+            cs = [c for c in n.children or [] if c.key=='color' and c.children]
+            if cs:country_colours[n.key] = self._script_colour(t, cs[-1])
         self._country_colour_cache = (signature, country_colours)
         return country_colours
 
@@ -648,7 +642,7 @@ class World:
             self._map_samples[key] = sample
         return self._map_samples[key]
 
-    def map_image(self, layer='Owners', size=None, box=None):
+    def map_image(self, layer='Owners', size=None, box=None, *, building_key=None, building_scope=None, resource_key=None, slot_warnings=None, resource_highlight=None):
         self.load_map()
         if not hasattr(self, '_province_state_ids'):
             self._province_state_ids = np.zeros(max(self.provinces) + 1, dtype=np.int32)
@@ -664,6 +658,11 @@ class World:
             minority_colors = np.zeros_like(state_colors); has_minority = np.zeros(len(state_colors), dtype=bool)
             country_colors = self.country_colours() if layer == 'Owners' else {}
             sites = self.catalog_store.wonder_sites() if layer == 'Wonder' else {}
+            categories=self.geography_store.categories() if layer=='State categories' else {}
+            slots=self.geography_store.slot_summary() if layer=='State categories' else {}
+            if layer in {'Resources','Population'}:
+                from geography_model import RESOURCE_COLORS
+                resource_key=resource_key or getattr(self,'resource_key','');resources=self.geography_store.population_counts() if layer=='Population' else self.geography_store.resource_counts(resource_key);resource_max=max(resources.values(),default=1);resource_color=(185,120,220) if layer=='Population' else RESOURCE_COLORS.get(resource_key,(155,195,225))
             for sid in self.states:
                 data = getattr(self, 'demographics', {}).get(sid, {})
                 if layer == 'Owners':
@@ -681,12 +680,25 @@ class World:
                         minority_colors[sid] = self.minority_colours.get(minor, (128, 128, 128)); has_minority[sid] = True
                 elif layer == 'Wonder':
                     ident = sites.get(sid, 0); rgb = colour('wonder_' + str(ident)) if ident else (90, 94, 100)
+                elif layer=='State categories':rgb=categories.get(slots[sid]['category'],{}).get('color',(128,128,128))
+                elif layer in {'Resources','Population'}:
+                    amount=resources.get(sid,0);t=.25+.75*float(amount/resource_max) if amount else 0
+                    rgb=tuple(round(a+(b-a)*t) for a,b in zip((28,31,37),resource_color))
                 else: rgb = colour(sid)
                 state_colors[sid] = rgb
             palette = state_colors[self._province_state_ids]
             if layer=='Strategic regions':
                 for pid in self.provinces:
                     rid=self.province_regions.get(pid);palette[pid]=colour('region_'+str(rid)) if rid is not None else (60,65,73)
+            elif layer=='Koppen presets':
+                from geography_model import KOPPEN_COLORS
+                matches=self.geography_store.preset_regions();palette[:]=(128,128,128)
+                for pid,rid in self.province_regions.items():
+                    if rid in matches:palette[pid]=KOPPEN_COLORS[matches[rid][0]]
+            elif layer=='Railways':
+                from railway_model import railway_color
+                palette[:]=railway_color(0)
+                for pid,level in self.railway_store.levels().items():palette[pid]=railway_color(level,self.railway_store.max_level())
             elif layer=='VPs':
                 from geography_model import vp_color
                 records=self.geography_store.victory_points() if hasattr(self,'geography_store') else {}
@@ -694,10 +706,20 @@ class World:
                 palette[:]=(60,65,73)
                 for pid,data in records.items():
                     if pid<len(palette):palette[pid]=vp_color(data['value'],maximum)
+            elif layer=='Buildings':
+                from geography_model import building_color
+                scope=building_scope or getattr(self,'building_scope','State');kind=building_key if building_key is not None else getattr(self,'building_key','')
+                counts=self.geography_store.building_counts(kind,scope);maximum=max(counts.values(),default=1)
+                if scope=='State':
+                    for sid in self.states:state_colors[sid]=building_color(counts.get(sid,0),maximum)
+                    palette=state_colors[self._province_state_ids]
+                else:
+                    palette[:]=building_color(0,maximum)
+                    for pid,level in counts.items():palette[pid]=building_color(level,maximum)
             if layer in {'Provinces', 'Terrain', 'Continents'}:
                 for pid, record in self.provinces.items():
                     palette[pid] = record['rgb'] if layer == 'Provinces' else colour(record['terrain' if layer == 'Terrain' else 'continent'])
-            if layer not in {'Provinces','Strategic regions'}: palette[~self._land_provinces] = (26, 43, 60)
+            if layer not in {'Provinces','Strategic regions','Koppen presets'}: palette[~self._land_provinces] = (26, 43, 60)
             if 0 not in self.provinces: palette[0] = 0
             if static: self._map_palettes[layer] = palette
         height, width = self.map_ids.shape
@@ -710,6 +732,19 @@ class World:
             stripes = (ys[:, None] + xs[None, :]) % 32 < 9
             stripes &= has_minority[states] & self._land_provinces[ids]
             pixels[stripes] = minority_colors[states[stripes]]
+        warnings=slot_warnings if slot_warnings is not None else layer=='State categories' or layer=='Buildings' and (building_scope or getattr(self,'building_scope','State'))=='State'
+        if warnings:
+            summary=self.geography_store.slot_summary();status=np.zeros(max(self.states,default=0)+1,dtype=np.uint8)
+            for sid,d in summary.items():status[sid]=2 if d['status']=='over' else 1 if d['status']=='full' else 0
+            kinds=status[self._province_state_ids[ids]];bands=(ys[:,None]+xs[None,:])%24<7
+            for key,tint,alpha in [(2,(255,40,40),.65),(1,(255,220,60),.22)]:
+                mask=bands&(kinds==key)&self._land_provinces[ids]
+                pixels[mask]=np.rint(pixels[mask]*(1-alpha)+np.array(tint)*alpha).astype(np.uint8)
+        if layer=='Resources' and resource_highlight is not None:
+            counts=self.geography_store.resource_type_counts();marked=np.zeros(max(self.states,default=0)+1,dtype=bool)
+            for sid,amount in counts.items():marked[sid]=amount>resource_highlight
+            mask=marked[self._province_state_ids[ids]]&self._land_provinces[ids]&((ys[:,None]+xs[None,:])%24<7)
+            pixels[mask]=np.rint(pixels[mask]*.35+np.array((255,40,40))*.65).astype(np.uint8)
         return Image.fromarray(pixels)
 
     @staticmethod

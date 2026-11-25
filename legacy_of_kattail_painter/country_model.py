@@ -3,11 +3,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
+from fractions import Fraction
+from functools import lru_cache
 import io
+import math
 from pathlib import Path
 import re
+import random
 
-from PIL import Image, ImageColor, ImageDraw, ImageOps
+from PIL import Image, ImageColor, ImageDraw, ImageOps, ImageFilter
 
 from model import FLAG_SIZES, child, parse, value, scalar, walk, read_text
 from character_model import atom, block, quote, LOC, unescape, inherited_sprites
@@ -25,7 +29,16 @@ ATTRIBUTE_HISTORY_FLAG = 'lok_country_attribute_defined_in_history'
 PATTERNS = ('Solid', 'Horizontal bicolor', 'Vertical bicolor', 'Horizontal tricolor',
             'Vertical tricolor', 'Horizontal 1:2:1', 'Vertical 1:2:1', 'Diagonal down',
             'Diagonal up', 'Quartered', 'Cross', 'Nordic cross', 'Saltire', 'Chevron',
-            'Canton', 'Border', 'Central disk')
+            'Canton', 'Border', 'Central disk',
+            'Horizontal four-color', 'Vertical four-color', 'Horizontal five stripes', 'Vertical five stripes',
+            'Horizontal seven stripes', 'Vertical seven stripes', 'Horizontal nine stripes', 'Vertical nine stripes',
+            'Horizontal 1:1:2', 'Vertical 1:1:2', 'Diagonal tricolor down', 'Diagonal tricolor up',
+            'Diagonal band down', 'Diagonal band up', 'Plain cross', 'Plain Nordic cross', 'Bordered saltire',
+            'Chevron tricolor', 'Double chevron', 'Hoist triangle', 'Fly triangle',
+            'Triangle with bicolor', 'Triangle with tricolor', 'Lozenge', 'Diagonal quarters',
+            'Checkerboard', 'Small checkerboard', 'Stripes with canton', 'Union cross',
+            'Sunburst', 'Pall', 'Serrated hoist', 'Rising diagonal stripes', 'Falling diagonal stripes',
+            'Central ring', 'Double border', 'Nested diamonds', 'Horizontal gradient', 'Vertical gradient')
 
 
 def copy_ideology_names(names,source,ideologies,undefined=False):
@@ -41,11 +54,42 @@ def definite_name(text,article=False):
 
 
 def number(raw, low=None, high=None):
+    low=Decimal(str(low)) if low is not None else None;high=Decimal(str(high)) if high is not None else None
     try: n = Decimal(str(raw))
     except InvalidOperation: raise ValueError('Enter a numeric value') from None
     if not n.is_finite() or low is not None and n < low or high is not None and n > high:
         raise ValueError(f'Value must be between {low} and {high}' if low is not None and high is not None else 'Value must be finite')
     return format(n, 'f')
+
+
+def distribute_popularities(values, remaining=False, rng=None):
+    """Fill unset percentages or rescale weights, with an exact total of 100."""
+    raw={key:str(v).strip() or '0' for key,v in values.items()}
+    if not raw:raise ValueError('No ideologies are defined')
+    decimals={key:Decimal(number(v,0)) for key,v in raw.items()}
+    amounts={key:Fraction(v) for key,v in decimals.items()}
+    total=sum(amounts.values())
+    if remaining:
+        if total>100:raise ValueError('The total exceeds 100%. Use Normalize to 100 first.')
+        weights={key:(rng or random).randint(1,1000000) for key,v in amounts.items() if not v}
+        budget=100-total
+        if not weights:
+            if budget:raise ValueError('No blank or zero ideologies remain. Clear a value or normalize to 100.')
+            return raw
+    else:
+        weights=amounts if total else dict.fromkeys(amounts,1)
+        budget=Fraction(100)
+    # Largest remainders avoid float drift and retain fine authored percentages.
+    precision=max(6,max(-v.as_tuple().exponent for v in decimals.values()))
+    scale=10**precision;units=int(budget*scale);weight_total=sum(weights.values())
+    quotas={key:Fraction(w)*units/weight_total for key,w in weights.items()}
+    allocated={key:q.numerator//q.denominator for key,q in quotas.items()}
+    order=sorted(weights,key=lambda key:quotas[key]-allocated[key],reverse=True)
+    for key in order[:units-sum(allocated.values())]:allocated[key]+=1
+    for key,n in allocated.items():
+        whole,part=divmod(n,scale)
+        raw[key]=(str(whole)+'.'+str(part).zfill(precision)).rstrip('0').rstrip('.')
+    return raw
 
 
 def field_text(text, key, raw):
@@ -70,9 +114,49 @@ def patch_root_block(text, key, fields):
     return text
 
 
-def render_flag(pattern, colors, mask=None, tint='#ffffff', size=(82, 52), scale=.75, offset=(.5, .5)):
+def flag_rgb(raw):
+    rgb=ImageColor.getrgb(str(raw).strip())
+    if len(rgb)!=3:raise ValueError('Use an RGB color, for example #283c63')
+    return rgb
+
+
+@lru_cache(maxsize=64)
+def _symbol_mask(data,source_size,canvas_size,scale,offset,stretch,angle):
+    w,h=canvas_size;mask=Image.frombytes('L',source_size,data)
+    ratio=h*scale/max(mask.size)
+    mask=mask.resize((max(1,round(mask.width*ratio*stretch[0])),max(1,round(mask.height*ratio*stretch[1]))),Image.Resampling.LANCZOS)
+    if angle:mask=mask.rotate(-angle,Image.Resampling.BICUBIC,expand=True)
+    alpha=Image.new('L',(w,h));alpha.paste(mask,(round(w*offset[0]-mask.width/2),round(h*offset[1]-mask.height/2)))
+    return alpha
+
+
+@lru_cache(maxsize=64)
+def _outline_mask(data,canvas_size,thickness):
+    """Bounded in-memory dilation of the transformed silhouette, including holes."""
+    w,h=canvas_size;alpha=Image.frombytes('L',canvas_size,data)
+    radius=max(1,round(thickness*h/52))
+    return alpha.filter(ImageFilter.MaxFilter(radius*2+1))
+
+
+def symbol_alpha(symbol,size=(82,52)):
+    mask=symbol.get('mask')
+    if mask is None:return Image.new('L',size)
+    mask=mask.convert('L');mask.thumbnail((256,256),Image.Resampling.LANCZOS)
+    scale=float(number(symbol.get('scale',.65),.05,1.5))
+    offset=tuple(float(number(symbol.get(k,.5),-.5,1.5)) for k in ('x','y'))
+    stretch=tuple(float(number(symbol.get(k,1),.1,3)) for k in ('stretch_x','stretch_y'))
+    angle=float(number(symbol.get('angle',0),-180,180))
+    canvas=(max(1,round(size[0]*208/size[1])),208)
+    alpha=_symbol_mask(mask.tobytes(),mask.size,canvas,scale,offset,stretch,angle)
+    return alpha if alpha.size==size else alpha.resize(size,Image.Resampling.LANCZOS)
+
+
+def render_flag(pattern, colors, mask=None, tint='#ffffff', size=(82, 52), scale=.75, offset=(.5, .5), outline_width=0, outline_color='#000000', symbols=None):
     if pattern not in PATTERNS: raise ValueError('Choose a defined flag pattern')
-    colors = [ImageColor.getrgb(c) for c in colors]
+    colors = [flag_rgb(c) for c in colors]
+    if not colors:raise ValueError('Choose at least one background color')
+    tint=flag_rgb(tint);outline_color=flag_rgb(outline_color)
+    outline_width=float(number(outline_width,0,8))
     colors += [colors[-1]] * max(0, 4-len(colors))
     width, height = size; factor = 4; w, h = width*factor, height*factor
     out = Image.new('RGB', (w, h), colors[0]); d = ImageDraw.Draw(out)
@@ -99,10 +183,94 @@ def render_flag(pattern, colors, mask=None, tint='#ffffff', size=(82, 52), scale
         b = h//10; d.rectangle((b, b, w-b-1, h-b-1), fill=colors[1])
     elif pattern == 'Central disk':
         r = h*.35; d.ellipse((w/2-r, h/2-r, w/2+r, h/2+r), fill=colors[1])
-    if mask is not None:
-        mask = mask.convert('L'); box = max(1, round(h * float(scale))); ratio = box/max(mask.size)
-        mask = mask.resize((max(1, round(mask.width*ratio)), max(1, round(mask.height*ratio))), Image.Resampling.LANCZOS)
-        out.paste(ImageColor.getrgb(tint), (round(w*offset[0]-mask.width/2), round(h*offset[1]-mask.height/2)), mask)
+    elif pattern.startswith(('Horizontal ','Vertical ')) and pattern.split(' ',1)[1] in {'four-color','five stripes','seven stripes','nine stripes','1:1:2'}:
+        vertical=pattern.startswith('Vertical');kind=pattern.split(' ',1)[1];length=w if vertical else h
+        if kind=='1:1:2':bands=[0,1,2];weights=[1,1,2]
+        elif kind=='four-color':bands=list(range(4));weights=[1]*4
+        else:
+            count={'five stripes':5,'seven stripes':7,'nine stripes':9}[kind];bands=[i%2 for i in range(count)];weights=[1]*count
+        at=0
+        for i,index in enumerate(bands):
+            end=round(length*sum(weights[:i+1])/sum(weights));d.rectangle((at,0,end-1,h) if vertical else (0,at,w,end-1),fill=colors[index]);at=end
+    elif pattern.startswith('Diagonal tricolor'):
+        for i in range(3):
+            # Parallel diagonal strips, clipped by the flag canvas.
+            lo=-w+i*2*w/3;hi=-w+(i+1)*2*w/3
+            points=[(lo,0),(hi,0),(hi+w,h),(lo+w,h)]
+            if pattern.endswith('up'):points=[(x,h-y) for x,y in points]
+            d.polygon(points,fill=colors[i])
+    elif pattern.startswith('Diagonal band'):
+        coords=(0,0,w,h) if pattern.endswith('down') else (0,h,w,0)
+        d.line(coords,fill=colors[1],width=max(1,h//3));d.line(coords,fill=colors[2],width=max(1,h//5))
+    elif pattern in {'Plain cross','Plain Nordic cross'}:
+        x=round(w*(.35 if 'Nordic' in pattern else .5));band=max(1,h//5)
+        d.rectangle((x-band//2,0,x+band//2,h),fill=colors[1]);d.rectangle((0,h//2-band//2,w,h//2+band//2),fill=colors[1])
+    elif pattern in {'Bordered saltire','Union cross'}:
+        for color,width in [(colors[1],max(1,h//4)),(colors[2],max(1,h//9))]:
+            d.line((0,0,w,h),fill=color,width=width);d.line((0,h,w,0),fill=color,width=width)
+        if pattern=='Union cross':
+            for color,band in [(colors[1],max(1,h//3)),(colors[3],max(1,h//6))]:
+                d.rectangle((w//2-band//2,0,w//2+band//2,h),fill=color);d.rectangle((0,h//2-band//2,w,h//2+band//2),fill=color)
+    elif pattern in {'Chevron tricolor','Double chevron'}:
+        if pattern=='Chevron tricolor':d.rectangle((0,h//2,w,h),fill=colors[1]);d.polygon([(0,0),(w*.5,h/2),(0,h)],fill=colors[2])
+        else:
+            d.polygon([(0,0),(w*.6,h/2),(0,h)],fill=colors[1]);d.polygon([(0,0),(w*.35,h/2),(0,h)],fill=colors[2])
+    elif pattern in {'Hoist triangle','Fly triangle','Triangle with bicolor','Triangle with tricolor'}:
+        color=colors[1]
+        if 'bicolor' in pattern:d.rectangle((0,h//2,w,h),fill=colors[1]);color=colors[2]
+        elif 'tricolor' in pattern:
+            d.rectangle((0,h//3,w,h*2//3),fill=colors[1]);d.rectangle((0,h*2//3,w,h),fill=colors[2]);color=colors[3]
+        points=[(w,0),(w*.55,h/2),(w,h)] if pattern=='Fly triangle' else [(0,0),(w*.45,h/2),(0,h)]
+        d.polygon(points,fill=color)
+    elif pattern in {'Lozenge','Nested diamonds'}:
+        for fraction,color in ([(.95,colors[1]),(.68,colors[2]),(.4,colors[3])] if pattern=='Nested diamonds' else [(.85,colors[1])]):
+            d.polygon([(w/2,h*(1-fraction)/2),(w*(1+fraction)/2,h/2),(w/2,h*(1+fraction)/2),(w*(1-fraction)/2,h/2)],fill=color)
+    elif pattern=='Diagonal quarters':
+        for color,points in zip(colors,[[(0,0),(w,0),(w/2,h/2)],[(w,0),(w,h),(w/2,h/2)],[(w,h),(0,h),(w/2,h/2)],[(0,h),(0,0),(w/2,h/2)]]):d.polygon(points,fill=color)
+    elif pattern in {'Checkerboard','Small checkerboard'}:
+        cols,rows=(8,6) if pattern=='Small checkerboard' else (4,4)
+        for y in range(rows):
+            for x in range(cols):d.rectangle((round(x*w/cols),round(y*h/rows),round((x+1)*w/cols)-1,round((y+1)*h/rows)-1),fill=colors[(x+y)%2])
+    elif pattern=='Stripes with canton':
+        for i in range(7):d.rectangle((0,round(i*h/7),w,round((i+1)*h/7)-1),fill=colors[i%2])
+        d.rectangle((0,0,w*.45,h*4/7),fill=colors[2])
+    elif pattern=='Sunburst':
+        for i in range(16):
+            angles=[i*math.tau/16,(i+1)*math.tau/16]
+            d.polygon([(w/2,h/2),*[(w/2+2*w*math.cos(a),h/2+2*w*math.sin(a)) for a in angles]],fill=colors[i%4])
+    elif pattern=='Pall':
+        d.polygon([(0,0),(w,0),(w,h/2),(w*.45,h/2)],fill=colors[1]);d.polygon([(0,h),(w,h),(w,h/2),(w*.45,h/2)],fill=colors[2])
+        d.line((0,0,w*.45,h/2,w,h/2),fill=colors[3],width=max(1,h//7));d.line((0,h,w*.45,h/2),fill=colors[3],width=max(1,h//7))
+    elif pattern=='Serrated hoist':
+        points=[(0,0),(w*.28,0)]
+        for i in range(10):points.append((w*(.4 if i%2 else .28),h*(i+1)/10))
+        d.polygon([*points,(0,h)],fill=colors[1])
+    elif pattern in {'Rising diagonal stripes','Falling diagonal stripes'}:
+        for i in range(-7,8):
+            lo=i*w/5;hi=(i+1)*w/5;points=[(lo,0),(hi,0),(hi+w,h),(lo+w,h)]
+            if pattern.startswith('Rising'):points=[(x,h-y) for x,y in points]
+            d.polygon(points,fill=colors[i%2])
+    elif pattern=='Central ring':
+        for radius,color in [(h*.36,colors[1]),(h*.25,colors[0])]:d.ellipse((w/2-radius,h/2-radius,w/2+radius,h/2+radius),fill=color)
+    elif pattern=='Double border':
+        for inset,color in [(h*.06,colors[1]),(h*.13,colors[2]),(h*.2,colors[3])]:d.rectangle((inset,inset,w-inset-1,h-inset-1),fill=color)
+    elif pattern in {'Horizontal gradient','Vertical gradient'}:
+        vertical=pattern.startswith('Vertical');length=h if vertical else w
+        for i in range(length):
+            t=i/max(1,length-1)*3;index=min(2,int(t));blend=t-index
+            color=tuple(round(a+(b-a)*blend) for a,b in zip(colors[index],colors[index+1]))
+            d.line((0,i,w,i) if vertical else (i,0,i,h),fill=color)
+    if symbols is None:symbols=[dict(mask=mask,tint=tint,scale=scale,x=offset[0],y=offset[1],outline_width=outline_width,outline_color=outline_color)]
+    if len(symbols)>8:raise ValueError('Use at most eight symbols')
+    for symbol in symbols:
+        if symbol.get('mask') is None:continue
+        color=symbol.get('tint','#ffffff');color=flag_rgb(color) if isinstance(color,str) else color
+        edge=float(number(symbol.get('outline_width',0),0,8));edge_color=symbol.get('outline_color','#000000');edge_color=flag_rgb(edge_color) if isinstance(edge_color,str) else edge_color
+        alpha=symbol_alpha(symbol,(max(1,round(w*208/h)),208))
+        if edge:
+            outline=_outline_mask(alpha.tobytes(),alpha.size,edge)
+            out.paste(edge_color,(0,0),outline.resize((w,h),Image.Resampling.LANCZOS))
+        out.paste(color,(0,0),alpha.resize((w,h),Image.Resampling.LANCZOS))
     return out.resize(size, Image.Resampling.LANCZOS)
 
 
@@ -122,6 +290,12 @@ class Country:
     names: dict = field(default_factory=dict)
 
 
+class CountrySourceExists(ValueError):
+    def __init__(self,paths):
+        self.paths=tuple(paths)
+        super().__init__('Country sources already exist: '+', '.join(self.paths))
+
+
 class CountryStore:
     def __init__(self, world, characters, catalogs, emblems=None):
         self.world, self.characters, self.catalogs, self.docs = world, characters, catalogs, world.docs
@@ -131,6 +305,29 @@ class CountryStore:
         cached = self._cache.get(key)
         if cached is None or cached[0] != signature: cached = self._cache[key] = (signature, build())
         return cached[1]
+
+    def summary(self,tag):
+        signature=(tag,tuple(self.docs.text(s.path) for s in self.world.states.values()))
+        def build():
+            out={'states':0,'population':0,'factories':{'industrial_complex':0,'arms_factory':0,'dockyard':0},'resources':{}}
+            if not re.fullmatch('[A-Z][A-Z0-9]{2}',tag):return out
+            for sid in self.world.states:
+                text,nodes=self.world.state_nodes(sid);history=block(nodes,'history')
+                if history is None or atom(text,history.children,'owner')!=tag:continue
+                out['states']+=1;out['population']+=Decimal(number(atom(text,nodes,'manpower','0'),0))
+                resources=block(nodes,'resources')
+                state_resources={}
+                for n in resources.children if resources else []:
+                    if n.children is None:state_resources[n.key]=Decimal(number(value(text,n),0))
+                for key,amount in state_resources.items():out['resources'][key]=out['resources'].get(key,Decimal(0))+amount
+                levels={}
+                for container in history.children:
+                    if container.key=='buildings' and container.children is not None:
+                        for n in container.children:
+                            if n.key in out['factories'] and n.children is None:levels[n.key]=int(Decimal(number(value(text,n),0)))
+                for kind,amount in levels.items():out['factories'][kind]+=amount
+            return out
+        return self.cached(('summary',tag),signature,build)
 
     def ideologies(self):
         files = self.characters.files('common/ideologies', '.txt')
@@ -360,7 +557,7 @@ class CountryStore:
             at=cohort[-1].end;addition=f'\n\t\t\t{tag} = {{ if = {{ limit = {{ has_country_flag = {ATTRIBUTE_HISTORY_FLAG} has_idea = {key} }} '+templates[key]+' } }\n'
             self.docs.replace(STARTUP,text[:at]+addition+text[at:])
 
-    def apply(self, country, color, names, flags=None, create=False):
+    def apply(self, country, color, names, flags=None, create=False, overwrite=False):
         tag = country.tag
         if not re.fullmatch(r'[A-Z][A-Z0-9]{2}', tag): raise ValueError('Use a three-character uppercase country tag, starting with a letter')
         if create == (tag in self.world.country_paths): raise ValueError('Choose a new unused tag' if create else 'Choose an existing country')
@@ -385,29 +582,44 @@ class CountryStore:
             if not key and category!='economy_laws':raise ValueError('Choose a defined '+category+' law')
             if key and (key not in definitions or definitions[key][0] != category): raise ValueError('Choose a defined '+category+' law')
         if any(k not in definitions and (not existing or k not in existing.ideas) for k in country.ideas): raise ValueError('Choose defined national spirits')
-        rgb = ImageColor.getrgb(color) if isinstance(color, str) else tuple(color)
+        rgb = flag_rgb(color) if isinstance(color, str) else tuple(color)
         if len(rgb) != 3: raise ValueError('Choose an RGB map color')
+        history=f'history/countries/{tag}.txt';definition=f'common/countries/{tag}.txt'
+        if create:
+            histories=[p for p in self.characters.files('history/countries','.txt') if Path(p).name[:3]==tag and self.docs.binary(p) is not None]
+            if len(histories)>1:raise ValueError('Multiple history files use this tag; choose one source before creating the country: '+', '.join(histories))
+            if histories:history=histories[0]
+            conflicts=[p for p in (definition,history) if self.docs.binary(p) is not None]
+            if conflicts and not overwrite:raise CountrySourceExists(conflicts)
         with self.docs.grouped():
             if create:
-                if any(Path(p).name[:3]==tag and self.docs.text(p) for p in self.characters.files('history/countries','.txt')):
-                    raise ValueError('An existing history source already uses this tag')
-                for path in (f'common/countries/{tag}.txt', f'history/countries/{tag}.txt'):
-                    if self.docs.binary(path) is not None: raise ValueError('A source already exists: '+path)
                 text = self.docs.text(TAGS); self.docs.replace(TAGS, text.rstrip()+f'\n{tag} = "countries/{tag}.txt"\n')
-                self.docs.replace(f'common/countries/{tag}.txt', 'graphical_culture = western_european_gfx\ngraphical_culture_2d = western_european_2d\n')
-                country.path = f'history/countries/{tag}.txt'
+                if not self.docs.text(definition).strip():self.docs.replace(definition, 'graphical_culture = western_european_gfx\ngraphical_culture_2d = western_european_2d\n')
+                country.path = history
             definition = self.world.country_paths.get(tag, f'common/countries/{tag}.txt')
             self.docs.replace(definition, field_text(self.docs.text(definition), 'color', 'rgb { '+' '.join(map(str,rgb))+' }'))
+            # Keep existing UI-color fields in sync with the single country color.
+            text=self.docs.text(definition)
+            if any(n.key=='color_ui' for n in parse(text)):self.docs.replace(definition,field_text(text,'color_ui','rgb { '+' '.join(map(str,rgb))+' }'))
             # colors.txt is the authoritative override where an entry already exists.
-            colors = 'common/countries/colors.txt'; text = self.docs.text(colors); node = child(parse(text), tag)
-            if node and node.children:
+            colors = 'common/countries/colors.txt'; text = self.docs.text(colors)
+            if any(n.key==tag and n.children for n in parse(text)):
                 from character_model import patch_field
-                self.docs.replace(colors, patch_field(text, node, 'color', 'rgb { '+' '.join(map(str,rgb))+' }'))
+                raw='rgb { '+' '.join(map(str,rgb))+' }'
+                for node in reversed([n for n in parse(text) if n.key==tag and n.children]):
+                    snippet=text[node.start:node.end]
+                    for key in ('color','color_ui'):
+                        root=parse(snippet)[0]
+                        if key=='color' or any(n.key==key for n in root.children):
+                            for n in reversed([n for n in root.children if n.key==key]):snippet=snippet[:n.value_start]+raw+snippet[n.end:]
+                            if not any(n.key==key for n in root.children):snippet=patch_field(snippet,parse(snippet)[0],key,raw)
+                    text=text[:node.start]+snippet+text[node.end:]
+                self.docs.replace(colors,text)
             text = self.docs.text(country.path)
             for key, raw in [('capital',str(country.capital)),('set_stability',format(stability,'f')),('set_war_support',format(war,'f'))]: text = field_text(text,key,raw)
             text = patch_root_block(text,'set_politics',{'ruling_party':country.ruling})
             raw = '{\n'+''.join(f'\t{i} = {pop.get(i,"0")}\n' for i in self.ideologies())+'}'
-            if create or not existing or pop != existing.popularities: text = field_text(text,'set_popularities',raw)
+            text = field_text(text,'set_popularities',raw)
             if create or tech != existing.technologies:
                 text=self.rewrite_technologies(text,tech)
             if create or country.ideas != existing.ideas:

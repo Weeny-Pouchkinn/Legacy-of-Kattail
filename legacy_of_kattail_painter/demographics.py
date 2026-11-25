@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from PIL import Image, ImageOps
-from model import child, parse, scalar, value, walk
+from model import child, parse, scalar, value, walk, read_text
 
 STARTUP = 'common/on_actions/LOK_on_actions.txt'
 
@@ -319,6 +319,34 @@ class MapCatalogStore:
         old = self.localisations(file).get(key, '')
         if self.name_parts(old) == (name, color): return
         self.set_loc(file, key, ('\u00a7' + color + name + '\u00a7!') if color else name)
+
+    def text_colors(self):
+        """Effective global localization colors; font-local overrides stay scoped."""
+        root=self.characters.game_root
+        vanilla=self._cache.get('text_color_vanilla')
+        if vanilla is None or vanilla[0]!=root:
+            vanilla=(root,{p.relative_to(root).as_posix():read_text(p) for p in sorted((root/'interface').rglob('*.gfx'))})
+            self._cache['text_color_vanilla']=vanilla
+        sources=dict(vanilla[1])
+        sources.update((p,self.docs.text(p)) for p in self.characters.files('interface','.gfx'))
+        signature=tuple(sorted(sources.items()))
+        old=self._cache.get('text_colors')
+        if old is not None and old[0]==signature:return old[1]
+        out={}
+        for path,text in signature:
+            if 'textcolors' not in text:continue
+            for root_node in parse(text):
+                containers=[root_node] if root_node.key=='textcolors' else [n for n in root_node.children or [] if n.key=='textcolors'] if root_node.key=='bitmapfonts' else []
+                for container in containers:
+                    for n in container.children or []:
+                        if len(n.key)!=1 or n.key=='!' or n.children is None:continue
+                        parts=[float(c.key) for c in n.children]
+                        if len(parts)!=3:continue
+                        rgb=tuple(max(0,min(255,round(v))) for v in parts)
+                        line=text[n.end:].split('\n',1)[0];comment=line.partition('#')[2].split('{',1)[0].split('(',1)[0].strip()
+                        out[n.key]={'name':' '.join(comment.split()) or 'Text color '+n.key,'color':rgb,'path':path}
+        self._cache['text_colors']=(signature,out)
+        return out
 
     def replace_node(self, file, node, raw):
         text = self.text(file)

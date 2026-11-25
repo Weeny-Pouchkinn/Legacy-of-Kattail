@@ -341,13 +341,17 @@ The country form has seven tabs:
   national economic model, national attribute and national species. New countries
   default to `volunteer_only` and `civilian_economy`. Escape cancels a map pick.
 - **Parties & popularity**: ruling ideology and popularity values with a live pie
-  chart in the ideology colors. Values must total exactly 100%.
+  chart in the ideology colors. **Assign random weights to remaining ideologies**
+  fills blank/zero entries with the unused percentage, preserving positive values.
+  **Normalize to 100** rescales all entered weights proportionally; all-zero
+  weights become equal shares. Both update the chart and total immediately, with
+  rounding adjusted to total exactly 100%. Invalid inputs leave fields unchanged.
 - **Ideology names**: normal and DEF names for the base and each ideology. Copy to
   all or only undefined ideology fields; duplicate normal to DEF with/without
   `the`. Missing overrides inherit base names. Existing explicit empty strings
   count as defined and are preserved by the undefined-only action.
-- **Flags**: import an image or use 17 editable background patterns, four colors,
-  a separately tinted emblem and emblem sizing. Use the design, then copy to all
+- **Flags**: import an image or use 56 editable background patterns, four colors,
+  and up to eight independently transformed symbol layers. Use the design, then copy to all
   ideologies or only those without an explicit flag. The three native sizes are
   written together: 82x52, 41x26 and 10x7, as RGB TGA. Base flags remain fallback
   flags. Saved flags are ordinary flattened images; design controls are session
@@ -393,7 +397,7 @@ simulation. No live-game validation is claimed. Exact files and checks: MODLOG.m
 In **COUNTRIES > Flags**, click the background or emblem arrow, double-click its
 entry, or use **Browse backgrounds / Browse emblems**. Each opens a separate
 thumbnail gallery with a larger preview of the full flag, using your current
-colors, emblem tint and size. Click a tile to preview; double-click or choose
+colors and the full symbol stack (including tint, transforms and outlines). Click a tile to preview; double-click or choose
 **Use selected** to apply. Cancel/Escape leaves the design unchanged.
 
 Search matches names and codes, including near matches. The emblem window can
@@ -401,6 +405,90 @@ filter Stellaris masks, native imports, EU4 imports or No emblem. Arrow keys mov
 between tiles and Enter accepts. No emblem is a selectable tile. Only visible
 rows are rendered, with bounded memory caches; no disk thumbnails/data files are
 created. The ordinary entry fields still accept name/ID typing.
+
+### Layered flag designer
+
+In **COUNTRIES > Flags**, background, symbol and outline colors have live swatches
+next to their entries. Typing, pasting, choosing a color or changing a numeric
+value automatically updates the preview; invalid/incomplete input shows an error
+and disables **Use design**, then recovers when corrected. RGB hex values may
+include surrounding whitespace. Choose also works after invalid color input.
+
+**Add symbol** creates a tab, up to **Symbol 8**. Each tab independently selects a
+reusable emblem, symbol/outline color, outline enable/thickness, size, horizontal/
+vertical position, horizontal/vertical stretch and clockwise tilt. Every numeric
+setting has a slider and editable value. New symbols start centered at `(0.5,
+0.5)`; size is relative to flag height, stretches are multipliers, and outline
+thickness is measured in pixels of the native 82x52 flag. Later tabs render above
+earlier ones. Click a visible symbol in the preview to select it, then drag to
+move it; sliders/inputs follow. Removing a symbol renumbers tabs; removing the
+last symbol clears it. Controls scroll while the live preview stays available.
+
+Outlines are generated from transformed masks, including around holes. No
+per-emblem outline assets are generated. Decoded masks, transformed silhouettes
+and outlines use bounded memory caches; dragging refreshes at intervals rather
+than waiting for motion to stop. Symbol/background galleries preview the entire
+current composition, changing only the selected background or active symbol.
+
+The background library now has **56 patterns** (39 added): four-color bands,
+five/seven/nine stripes, asymmetric bands, diagonal tricolors/bands/stripes,
+plain/bordered crosses and saltires, chevrons/triangles, lozenges/diamonds,
+checkerboards, stripes with canton, union cross, sunburst, pall, serrated hoist,
+rings/borders and four-color gradients, alongside the previous patterns.
+
+**Use design** stages a flattened image for the selected ideology; existing bulk
+copy and native large/medium/small TGA Save still apply. Layer controls stay
+editable while the country form is open. Saved flat images do not retain a layer
+layout to reconstruct after reopening; there are no painter-specific design files.
+
+When creating an unused tag whose country definition/history file already exists
+(including an empty history), Apply asks whether to overwrite its setup. **No**
+keeps the form open without source changes; **Yes** reuses the existing filename,
+patches the form-owned setup and preserves unrelated/dated scripts. Save uses the
+usual guarded backups. Multiple conflicting history files still need one clear
+source; this action does not silently pick or delete one.
+
+### State/province building map painting
+
+Choose **Paint: States** (or **View: States**), then **Buildings** in the left
+bar. The searchable palette lists **all state-scope buildings**, including both
+shared-slot factories/refineries and nonshared infrastructure, anti-air, air bases,
+radar and modded state buildings. Selecting a building changes the map to its
+counts: gray means none, with pale-to-dark blue for increasing levels. Positive
+counts appear on each state; **zero counts never have labels**.
+
+**Left-click adds one; right-click removes one.** Dragging changes each state
+once per stroke. Counts cannot fall below zero. Defined caps, coastal rules,
+exclusive building types and native placement restrictions remain enforced;
+blocked changes are explained in the status bar. Matching boundaries turn on
+when entering building mode and can still be toggled off.
+
+Choose **Paint/View: Provinces > Buildings** for the same controls on individual
+provinces. Its list contains province buildings such as forts, naval bases and
+research facilities. Supply nodes use their native map file. Railway connections
+have a separate **Railways** province brush described below. Province labels
+also omit zeroes. State/province painting targets the clicked entity; the generic
+State/Strategic region paint-scope selector is disabled in these modes.
+
+**Middle-drag always pans.** Right-drag pans outside building mode; in building
+mode it removes levels. Shift-click in building mode reports the current count
+without changing it. The existing Edit selected button opens the current state's
+full form. Undo/Redo and Apply/Save use the normal native draft pipeline.
+
+In **States > Edit state**, click a state directly to open its form. In
+**Strategic regions > Edit region**, click any region (including sea) to edit it.
+For **Strategic regions > Assign states**, select a destination region in the left
+list and click/drag states to transfer every one of their provinces together.
+Shift-click picks a region. Empty regions or split/unassigned states are rejected;
+state/province shapes are unchanged. **Provinces > Inspect** keeps the original
+province-color map available.
+
+Country color previews now include newly created draft definitions immediately,
+before Save, and remain correct after Save/Undo/reopen. Existing native color/UI
+overrides for the edited tag update together, including repeated tag definitions.
+Country Apply explicitly writes the entered popularity block and reads it back
+into the form. The pie legend shows exact percentages and adapts its layout to
+fit all entries; decimal popularities are retained.
 
 ### States, strategic regions and victory points
 
@@ -417,8 +505,9 @@ claims, culture/species and VPs. Buildings distinguish shared slots, nonshared
 state buildings and province buildings. Choose a province by name/ID search or
 on the map. Defined level limits, coastal requirements, facility groups,
 exclusive buildings and required existing facility/dam map placements are checked
-when applying. Supply nodes use `map/supply_nodes.txt`. Railway routes and map
-building spawn positions are not generated here. State/province shapes are fixed.
+when applying. Supply nodes use `map/supply_nodes.txt`. Railway routes are edited
+through the separate Railways brush; map building spawn positions are not
+generated. State/province shapes are fixed.
 
 Region membership moves **whole states**. Add an existing state to move all of its
 provinces into the region. Removing a state requires another destination region;
@@ -459,3 +548,184 @@ Apply stages drafts; Cancel includes nested VP edits, and Undo/Redo work across
 the native files. **Save** writes them with the existing guarded backups. No
 painter-specific game-data files, JSON catalogs or disk thumbnail caches are
 created. Validation details and limitations are in MODLOG.md.
+
+### State categories, resources and population
+
+In MAP, choose **View: States**, then the sidebar's **State category**,
+**Resources** or **Population** option. Category and resource lists show localized
+names, native IDs and color swatches; typing in the palette search matches both.
+
+State category lists the native category colors. Click/drag to paint; Shift-click
+picks a state's category. **New definition**, **Edit selected**, or the database's
+**New category** edit native category names, colors, base shared slots and extra
+script fields. Existing categories keep their original file. New categories are
+appended to a selected existing `common/state_category/*.txt`; new names use the
+existing `localisation/english/lok_misc_l_english.yml` unless already owned elsewhere.
+
+Category and state-building views mark **over capacity with red stripes**, and
+**exactly full with faint yellow stripes**. Category labels show used/total shared
+slots, including `0/4`; building labels never display a standalone zero. Only
+state buildings marked `shares_slots = yes` consume these slots. Capacity is the
+static category/state-file value: category slots and category slot factor, state
+`buildings_max_level_factor`, direct starting extra shared slots and the installed
+numeric `MAX_SHARED_SLOTS` cap. Runtime country ideas, research and scripted effects
+are not simulated. This is a starting-setup check, not an in-game capacity forecast.
+
+Resources use a gradient of the selected resource's amount. Steel is light blue,
+aluminium white, tungsten gray, food yellow, fissiles green, rubber light gray,
+oil dark gray, supertensiles dark blue and chromium gray-blue. Other native types
+remain selectable with a pale blue fallback. Population uses a purple gradient.
+Zero amounts have no number labels.
+
+Click a state to enter a precise amount. With **Enable arithmetic editor**, choose
+**Add** or **Multiply** and enter a value: left-click adds/multiplies; right-click
+subtracts/divides. Dragging changes each state once per stroke. Subtraction stops
+at zero; division by zero leaves the amount unchanged and reports the error.
+Arithmetic operands must be nonnegative whole numbers. Arithmetic results for
+resources, population and buildings round to integers, with halves rounded up.
+Precise resource entry still supports decimals. Middle-drag pans; Shift-click reports the amount.
+
+In Resources, enable **Highlight states with > [number] resource types**. It adds
+red stripes when the state has strictly more than that many distinct resource
+types with positive amounts. For example, 3 highlights states with 4 or more
+positive types; zero entries do not count. Changing/pasting the threshold refreshes
+the view, and changing resources updates the check immediately.
+
+### Map overlays and numeric labels
+
+**Save for Overlay** captures the current map configuration: layer, selected
+building/resource, boundaries, numeric label setting and resource-type threshold.
+Switch to another map mode, check **Enable Overlay**, then adjust **Opacity**.
+The saved configuration uses live draft data and follows the current zoom/pan;
+map clicks still edit the active mode. It stays in memory for the session, with
+one saved configuration at a time. Saving another configuration replaces it.
+The overlay does not include another overlay.
+
+**Display numbers** controls numeric map annotations for buildings, slot capacity,
+resources, population and VPs. VP dots and names remain visible at the usual zoom;
+Koppen hemisphere letters remain visible. A saved configuration also retains its
+own label setting; the current checkbox can hide numbers across both maps.
+Raster labels reuse a bounded in-memory cache.
+
+### Country totals and climate display
+
+Every country editor has a read-only **Summary** tab: population, civilian and
+military factories, dockyards, combined totals and all resources. Totals use the
+current starting-setup drafts of owned states and refresh when the tab is opened.
+They exclude runtime production/resource modifiers and occupation calculations.
+
+In **View: Strategic regions**, check **Show Koppen presets**. Exact matches to the
+editor's 30 North/South weather profiles use their class color and an **N** or **S**
+marker. Custom weather is gray. Matching is derived from native weather values,
+so it survives Save/reload without metadata; comments and numeric formatting do
+not affect matches. Editing profile values makes the region custom unless they
+exactly match another preset. These remain game-weather approximations.
+
+To paint these profiles, choose **Paint/View: Strategic regions** and check
+**Paint Köppen** in the left sidebar. Choose a colored preset from the searchable
+left list, then click or drag over regions. **Southern hemisphere (off = North)**
+selects South when checked and North when unchecked. South shifts the seasonal
+profile by six months. Painting enables preset colors and region boundaries.
+Shift-click picks a region's preset and hemisphere; custom weather retains the
+current brush. Uncheck Paint Köppen to return to region editing/assignment.
+
+Painting replaces the region's complete yearly weather with 12 monthly periods,
+including explicit values for clear weather, light/heavy rain, snow, blizzards,
+arctic water, mud, sandstorms and minimum snow level. Zero values are intentional
+where a phenomenon does not fit that climate. This replaces custom weather inside
+the painted region, while keeping its name, provinces, naval terrain and other
+region fields. It also works on sea-only regions. Each region is visited once per
+stroke; Undo/Redo and guarded Save use the usual native strategic-region files.
+No painter metadata is stored. Existing regional weather changes only when painted.
+
+The class palette follows the RGB table in Hylke Beck's `KoppenGeiger.m`,
+[lines 20-51 of the published source mirror](https://gist.github.com/pwolfram/376311e23acdc2e1f9159646051ce3f6#file-koppengeiger-m-L20-L51).
+See the [authors' project and attribution](https://www.gloh2o.org/koppen/) and
+[Beck et al. (2023)](https://doi.org/10.1038/s41597-023-02549-6).
+All edits still use native game definitions/history/localization. No new painter
+metadata or game-data sidecars are created.
+
+### Arithmetic precision and building levels
+
+Resources, Population, State buildings and Province buildings each have their own
+**Enable arithmetic editor**, **Add/Multiply**, amount and **Precision range (%)**.
+With arithmetic enabled, left-click adds/multiplies and right-click subtracts/
+divides. With building arithmetic disabled, clicks retain the original +1/-1.
+Building level/placement/coast/facility limits remain enforced; a rejected change
+leaves that target unchanged and reports why in the status bar. Shared-slot red/
+yellow capacity warnings remain visible.
+
+Precision defaults to **0%**, which uses the exact entered integer. At **10%**, an
+amount of **50** draws a uniform random integer from **45 through 55**, inclusive,
+for each target once per stroke. The sampled number is the addition/subtraction
+amount or multiplication/division factor, not the final result. For ranges with
+fractional endpoints, only integers inside the interval are eligible. Ranges
+extending below zero start at zero. Negative/nonfinite ranges and negative or
+fractional arithmetic operands are rejected. Reverse multiplication with a sampled
+zero leaves the value unchanged, just like any other division by zero. Results
+round half-up to whole numbers and subtraction stops at zero. These controls do
+not change precise-entry dialogs or save any painter metadata.
+
+### Complete text-color choices
+
+The culture, culture-group and species **Name color** selectors now read global
+`bitmapfonts/textcolors` definitions from the installed game and mod interface
+GFX files, with native same-path replacements and case-sensitive codes. The
+current mod exposes **37** colors, including gradient codes and the species/
+ideology additions in `interface/core.gfx`. New native definitions appear after
+reloading the painter; draft edits to known interface sources also invalidate the
+catalog. Font-local overrides are not merged into the global RGB table.
+
+Choices are searchable by name/code, sorted alphabetically and shown with their
+actual RGB background. The editor also shows a color square and a live preview of
+the entered name in that color, including while typing/pasting a code. Black and
+white previews use contrasting backgrounds. **None** keeps native default styling;
+unknown existing codes are retained and marked as unknown rather than assigned a
+made-up color. Actual game fonts may override global RGB values. Saving still
+writes the native localization formatting code only.
+
+### Railway province painting and supply hubs
+
+Choose **Paint: Railways** or **View: Railways**. The left palette offers
+**No railway (erase)** and levels **1–5** (the loaded native NSupply cap).
+Province boundaries appear, and railway provinces and route lines use level
+colors. Zoom in for level numbers; Display numbers hides them.
+
+- **Paint level:** left-click/drag paints the selected level; right-click/drag erases.
+- **Add/remove levels:** left adds and right subtracts **Number of levels to change**.
+  Levels stop at zero and the native maximum. Each link changes once per stroke.
+- **Do not add new railways:** changes only existing links, so mass upgrades and
+  downgrades never create a new connection or put a railway in a bare province.
+- **Shift-click:** picks the highest level touching that province. Middle-drag pans.
+
+The native file stores links between provinces, rather than a separate building
+level per province. A province click changes all its touching railway links;
+colors/numbers report the highest touching level. A junction can therefore touch
+several different levels. Changing one link also affects its other endpoint.
+
+To start a route on bare land, click/drag a first province and then a neighboring
+province. A lone first point is a temporary anchor until a link can be formed;
+it is not a saved isolated railway. Neighboring existing railway provinces can
+join the painted province. Drag sampling includes intervening provinces under
+the cursor stroke. The brush never searches for a route across unpainted land.
+New links require actual land adjacency, including horizontal map wrap, and
+respect explicit impassable borders and draft state impassability.
+
+**Save** recomputes continuous same-level native paths from the links in
+`map/railways.txt`. It preserves the exact network/levels, deduplicates overlapping
+links using their highest level and joins simple chains. Branches, cycles,
+comments, BOM and line endings are retained; no new connections are inferred by
+compaction. Preview drafts use the same compiler, and Undo/Redo/guarded Save work
+as usual. No railway metadata or graph cache files are created.
+
+**Display supply hubs** draws the native supply-hub logo at hubs from
+`map/supply_nodes.txt`, in any map mode and saved overlay configuration. It does
+not create or change hubs. The installed sprite's first frame is used.
+
+Existing invalid links are shown in red and preserved. Current data has two
+non-neighbor jumps plus two railway links across explicit impassable borders
+(see MODLOG.md). Newly introduced invalid links are rejected. In-game supply
+flow and actual railway behavior still require engine verification.
+
+The earlier route/waypoint editor proposal remains in PLAN.md as a separate
+future scope; this release implements the requested province painting workflow.

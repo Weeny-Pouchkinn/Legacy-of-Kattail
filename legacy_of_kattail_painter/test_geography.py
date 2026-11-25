@@ -8,7 +8,7 @@ import test_painter as fixtures
 from model import World, parse, child, value
 from character_model import CharacterStore
 from demographics import MapCatalogStore, Setup
-from geography_model import GeographyStore, CLIMATES, MONTH_DAYS, WeatherPeriod, climate_preset, VP_LOC, STATE_LOC, REGION_LOC, vp_color
+from geography_model import GeographyStore, CLIMATES, MONTH_DAYS, WeatherPeriod, climate_preset, VP_LOC, STATE_LOC, REGION_LOC, vp_color, WEATHER_FIELDS
 
 
 class GeographyTests(unittest.TestCase):
@@ -119,8 +119,73 @@ class GeographyTests(unittest.TestCase):
             north=climate_preset(code,'North');south=climate_preset(code,'South')
             self.assertEqual(len(north),12)
             for m,(n,s) in enumerate(zip(north,south)):
+                self.assertEqual(set(n.weights),set(WEATHER_FIELDS));self.assertEqual(set(s.weights),set(WEATHER_FIELDS))
+                n.validate();s.validate()
                 self.assertEqual(n.start,f'0.{m}');self.assertEqual(n.end,f'{MONTH_DAYS[m]-1}.{m}');parse(n.script());parse(s.script())
                 self.assertEqual((s.low,s.high,s.weights),(north[(m+6)%12].low,north[(m+6)%12].high,north[(m+6)%12].weights))
+
+    def test_preset_weather_fields_have_climate_appropriate_values(self):
+        for code in ('BWh','BWk','BSh','BSk'):
+            self.assertTrue(all(float(p.weights['sandstorm'])>0 for p in climate_preset(code)))
+        for code in ('Af','Cfb'):
+            self.assertTrue(any(float(p.weights['rain_light'])>0 and float(p.weights['rain_heavy'])>0 and float(p.weights['mud'])>0 for p in climate_preset(code)))
+        for code in ('Dfd','ET','EF'):
+            self.assertTrue(any(all(float(p.weights[k])>0 for k in ('snow','blizzard','arctic_water','min_snow_level')) for p in climate_preset(code)))
+        self.assertTrue(all(p.weights['sandstorm']=='0.000' and p.weights['snow']=='0.000' for p in climate_preset('Af')))
+
+    def test_paint_climate_replaces_all_weather_only_undo_redo_and_save(self):
+        path=self.world.regions[1]['path'];original=self.world.docs.text(path)
+        # Include a native BOM/CRLF source and unknown custom weather fields.
+        (self.root/path).write_bytes(('\ufeff'+original.replace('\n','\r\n')).encode('utf-8'))
+        self.world=World(self.root);self.c=CharacterStore(self.world)
+        self.g=GeographyStore(self.world,self.c,MapCatalogStore(self.world,self.c))
+        self.world.docs.before_save=self.g.validate_save
+        original=self.world.docs.text(path);node=child(parse(original)[0].children,'weather')
+        outside=(original[:node.start],original[node.end:])
+        self.assertTrue(self.g.paint_climate(1,'BWh','South'));painted=self.world.docs.text(path)
+        weather=child(parse(painted)[0].children,'weather')
+        self.assertEqual((painted[:weather.start],painted[weather.end:]),outside)
+        self.assertNotIn('mystery = 7',painted);self.assertNotIn('custom_weight',painted)
+        self.assertNotIn('\n',painted.replace('\r\n',''))
+        self.assertEqual(self.g.preset_regions()[1],('BWh','South'))
+        revision=self.world.docs.revision;self.assertFalse(self.g.paint_climate(1,'BWh','South'));self.assertEqual(revision,self.world.docs.revision)
+        for rid,code,hemi in [(999,'Af','North'),(1,'bad','North'),(1,'Af','bad')]:
+            with self.assertRaises(ValueError):self.g.paint_climate(rid,code,hemi)
+            self.assertEqual(painted,self.world.docs.text(path))
+        self.world.docs.undo();self.assertEqual(original,self.world.docs.text(path));self.assertNotIn(1,self.g.preset_regions())
+        self.world.docs.redo();self.assertEqual(painted,self.world.docs.text(path));self.world.docs.save()
+        blob=(self.root/path).read_bytes();self.assertTrue(blob.startswith(b'\xef\xbb\xbf'))
+        self.assertNotIn(b'\n',blob.replace(b'\r\n',b''))
+        fresh=World(self.root);c=CharacterStore(fresh);g=GeographyStore(fresh,c,MapCatalogStore(fresh,c))
+        self.assertEqual(g.preset_regions()[1],('BWh','South'));self.assertEqual(fresh.regions[1]['provinces'],{1,3,4})
+
+    def test_koppen_brush_drag_pick_custom_and_sea_region(self):
+        from types import SimpleNamespace
+        from painter import Painter
+        class Var:
+            def __init__(self,v):self.v=v
+            def get(self):return self.v
+            def set(self,v):self.v=v
+        messages=[];frames=[]
+        app=SimpleNamespace(world=self.world,geography_store=self.g,brush=Var('Strategic regions'),koppen_paint=Var(True),koppen_south=Var(True),region_mode=Var('Edit region'),
+            pick_only=False,drag_seen=set(),paint_selection={'Koppen presets':'Dfd'},palette_search=Var(''),_status=messages.append,schedule_map=lambda:frames.append(1),refresh_palette=lambda:None)
+        app.building_scope=lambda:Painter.building_scope(app);app.palette_key=lambda:Painter.palette_key(app)
+        event=SimpleNamespace(state=0)
+        Painter.pick_geography(app,1,1,event);revision=self.world.docs.revision
+        Painter.pick_geography(app,3,1,event);self.assertEqual(revision,self.world.docs.revision)
+        Painter.pick_geography(app,2,2,event);self.assertEqual(self.g.preset_regions(),{1:('Dfd','South'),2:('Dfd','South')});self.assertEqual(len(frames),2)
+        self.world.docs.undo();self.assertNotIn(2,self.g.preset_regions());self.world.docs.redo()
+        app.drag_seen.clear();app.pick_only=True;app.paint_selection['Koppen presets']='Af';app.koppen_south.set(False);revision=self.world.docs.revision
+        Painter.pick_geography(app,1,1,event);self.assertEqual(app.paint_selection['Koppen presets'],'Dfd');self.assertTrue(app.koppen_south.get())
+        self.assertEqual(revision,self.world.docs.revision)
+        # A custom pick retains the previous brush and hemisphere.
+        self.g.edit_region(2,'Second region','',[]);app.drag_seen.clear()
+        Painter.pick_geography(app,2,2,event);self.assertIn('custom weather',messages[-1]);self.assertEqual(app.paint_selection['Koppen presets'],'Dfd')
+        # Region 1 becomes sea-only: weather painting must not require a state.
+        r=self.g.region(2);self.g.edit_region(2,r['name'],r['terrain'],r['weather'],{1:2})
+        app.pick_only=False;app.drag_seen.clear();app.koppen_south.set(False);app.paint_selection['Koppen presets']='ET'
+        Painter.pick_geography(app,4,None,event);self.assertEqual(self.g.preset_regions()[1],('ET','North'))
+        app.koppen_paint.set(False);self.assertEqual(app.palette_key(),'Strategic regions')
 
     def test_vanilla_import_shifts_complete_month_and_does_not_import_shapes(self):
         path=self.c.game_root/'map/strategicregions/vanilla.txt';path.parent.mkdir(parents=True)
@@ -165,6 +230,206 @@ class GeographyTests(unittest.TestCase):
         Painter.pick(app,SimpleNamespace(x=0,y=0,state=0));self.assertEqual(received,[1]);self.assertIsNone(app.capital_picker)
 
 
+    def test_state_building_paint_includes_nonshared_counts_limits_save_and_undo(self):
+        self.assertEqual({c.code for c in self.g.building_choices('State')},{'infrastructure','industrial_complex'})
+        self.assertEqual(self.g.building_counts('infrastructure'),{1:2})
+        self.assertEqual(self.g.change_building(1,'infrastructure','State',1),3)
+        self.world.docs.undo();self.assertEqual(self.g.building_counts('infrastructure'),{1:2})
+        self.world.docs.redo();self.world.docs.save()
+        w=World(self.root);c=CharacterStore(w);g=GeographyStore(w,c,MapCatalogStore(w,c))
+        self.assertEqual(g.building_counts('infrastructure'),{1:3});g.change_building(1,'infrastructure','State',2)
+        with self.assertRaises(ValueError):g.change_building(1,'infrastructure','State',1)
+        self.assertIn('1940.1.1 = { victory_points = { 1 99 } buildings = { infrastructure = 4 } }',w.docs.text(w.states[1].path))
+
+    def test_province_paint_scope_caps_coast_supply_and_zero_floor(self):
+        self.assertNotIn('rail_way',{c.code for c in self.g.building_choices('Province')})
+        self.assertEqual(self.g.building_counts('bunker','Province'),{1:2})
+        self.g.change_building(3,'bunker','Province',1);self.assertEqual(self.g.building_counts('bunker','Province'),{1:2,3:1})
+        self.g.change_building(3,'bunker','Province',-1);self.g.change_building(3,'bunker','Province',-1)
+        self.assertNotIn(3,self.g.building_counts('bunker','Province'))
+        with self.assertRaises(ValueError):self.g.change_building(3,'naval_base','Province',1)
+        with self.assertRaises(ValueError):self.g.change_building(1,'infrastructure','Province',1)
+        self.g.change_building(3,'supply_node','Province',1);self.assertEqual(self.g.building_counts('supply_node','Province'),{2:1,3:1})
+        self.g.change_building(3,'supply_node','Province',-1);self.assertEqual(self.g.supply_nodes(),{2:1})
+
+    def test_building_map_gestures_scope_heatmap_and_no_zero_labels(self):
+        from types import SimpleNamespace
+        from painter import Painter
+        from geography_model import building_color
+        class Var:
+            def __init__(self,v):self.v=v
+            def get(self):return self.v
+            def set(self,v):self.v=v
+        app=SimpleNamespace(world=self.world,geography_store=self.g,brush=Var('States'),state_mode=Var('Buildings'),province_mode=Var('Buildings'),region_mode=Var('Assign states'),koppen_paint=Var(False),pick_only=False,drag_seen=set(),_building_delta=1,
+            paint_selection={'State buildings':'infrastructure','Province buildings':'bunker','Strategic regions':2},scalar_modes={},_status=lambda *a:None,schedule_map=lambda:None,current_state=None,_paint_feedback=None)
+        app.palette_key=lambda:Painter.palette_key(app);app.building_scope=lambda:Painter.building_scope(app);app.scalar_enabled=lambda:Painter.scalar_enabled(app)
+        e=SimpleNamespace(state=0)
+        Painter.pick_geography(app,1,1,e);Painter.pick_geography(app,3,1,e)
+        self.assertEqual(self.g.building_counts('infrastructure'),{1:3})
+        app.drag_seen.clear();app._building_delta=-1;Painter.pick_geography(app,1,1,e);self.assertEqual(self.g.building_counts('infrastructure'),{1:2})
+        app.brush.set('Provinces');app.drag_seen.clear();app._building_delta=1
+        Painter.pick_geography(app,3,1,e);Painter.pick_geography(app,1,1,e);self.assertEqual(self.g.building_counts('bunker','Province'),{1:3,3:1})
+        self.world.map_ids=np.array([[1,3,2],[1,3,2]],dtype=np.int32);self.world.building_scope='Province';self.world.building_key='bunker'
+        image=np.asarray(self.world.map_image('Buildings'));self.assertEqual(tuple(image[0,0]),building_color(3,3));self.assertEqual(tuple(image[0,1]),building_color(1,3));self.assertEqual(tuple(image[0,2]),building_color(0,3))
+        from map_render import MapRenderer,MapConfig
+        renderer=MapRenderer(self.world,self.g,self.c,self.g.catalogs)
+        labels=renderer.annotations(MapConfig('Buildings',building_key='bunker',building_scope='Province'),1,(0,0,3,2));self.assertTrue(labels);self.assertFalse(any(r.get('text')=='0' for r in labels))
+        app.brush.set('States');self.g.change_building(1,'infrastructure','State',-2)
+        labels=renderer.annotations(MapConfig('Buildings',building_key='infrastructure'),1,(0,0,3,2));self.assertFalse(any(r.get('source')=='building' for r in labels))
+        app.brush.set('Strategic regions');app.drag_seen.clear();Painter.pick_geography(app,1,1,e)
+        self.assertEqual(self.world.regions[2]['provinces'],{1,2,3});self.assertEqual(self.world.states[1].provinces,[1,3])
+
+
+    def test_category_edit_create_paint_and_slot_warning_colors(self):
+        from geography_model import CATEGORY_LOC
+        self.write(CATEGORY_LOC,'l_english:\n',True)
+        self.g.edit_category('town','My town',4,'#123456',extra='\n# keep extra\nbuildings_max_level = { air_base = 2 }\n')
+        self.assertEqual(self.g.categories()['town']['color'],(18,52,86));self.assertEqual(self.g.slot_summary()[1]['used'],1)
+        self.world.map_ids=np.array([[1,3,2],[1,3,2]],dtype=np.int32)
+        free=self.world.map_image('State categories').getpixel((0,0));self.assertEqual(free,(18,52,86))
+        self.g.change_building(1,'industrial_complex','State',3);self.assertEqual(self.g.slot_summary()[1]['status'],'full')
+        full=self.world.map_image('State categories').getpixel((0,0));self.assertNotEqual(full,free)
+        self.g.change_building(1,'industrial_complex','State',1);self.assertEqual(self.g.slot_summary()[1]['status'],'over')
+        over=self.world.map_image('State categories').getpixel((0,0));self.assertGreater(over[0],full[0])
+        path=self.g.categories()['town']['path'];self.g.edit_category('new_city','New city',8,'#abcdef',path,create=True);self.g.set_category(1,'new_city')
+        self.assertEqual(self.g.slot_summary()[1]['total'],8);self.assertIn('keep extra',self.world.docs.text(path))
+        with self.assertRaises(ValueError):self.g.edit_category('new_city','Duplicate',3,'#ffffff',path,create=True)
+        self.world.docs.save();fresh=World(self.root);c=CharacterStore(fresh);g=GeographyStore(fresh,c,MapCatalogStore(fresh,c))
+        self.assertEqual(g.categories()['new_city']['name'],'New city');self.assertEqual(g.slot_summary()[1]['category'],'new_city')
+        self.assertTrue((self.root/CATEGORY_LOC).read_bytes().startswith(b'\xef\xbb\xbf'))
+
+    def test_resource_population_arithmetic_limits_and_strict_type_highlight(self):
+        from decimal import Decimal
+        self.g.change_resource(1,'oil',4,'Add');self.g.change_resource(1,'oil',2,'Multiply');self.assertEqual(self.g.resource_counts('oil')[1],8)
+        self.g.change_resource(1,'oil',2,'Multiply',True);self.assertEqual(self.g.resource_counts('oil')[1],4)
+        snapshot=dict(self.world.docs.drafts)
+        with self.assertRaises(ValueError):self.g.change_resource(1,'oil',0,'Multiply',True)
+        self.assertEqual(snapshot,self.world.docs.drafts)
+        self.g.change_resource(1,'oil',5);self.g.change_resource(1,'oil',2,'Multiply',True);self.assertEqual(self.g.resource_counts('oil')[1],3)
+        self.assertEqual(self.g.resource_type_counts()[1],2)
+        self.world.map_ids=np.array([[1,3,2]],dtype=np.int32)
+        normal=self.world.map_image('Resources',resource_key='steel',resource_highlight=2).getpixel((0,0))
+        marked=self.world.map_image('Resources',resource_key='steel',resource_highlight=1).getpixel((0,0));self.assertGreater(marked[0],normal[0])
+        self.g.change_resource(1,'oil',100,'Add',True);self.assertNotIn(1,self.g.resource_counts('oil'));self.assertEqual(self.g.resource_type_counts()[1],1)
+        self.g.change_population(1,'101');self.g.change_population(1,'.5','Multiply');self.assertEqual(self.g.population_counts()[1],51)
+        self.g.change_population(1,1000,'Add',True);self.assertNotIn(1,self.g.population_counts())
+        with self.assertRaises(ValueError):self.g.change_population(1,0,'Multiply',True)
+        with self.assertRaises(ValueError):self.g.change_population(1,'1.5')
+        self.world.docs.save();self.assertEqual(Decimal(self.g.state(1)['attributes']['manpower']),0)
+
+    def test_overlay_compositing_snapshots_live_data_and_number_visibility(self):
+        from map_render import MapConfig,MapRenderer
+        from PIL import Image
+        from dataclasses import FrozenInstanceError
+        self.world.map_ids=np.array([[1,3,2],[1,3,2]],dtype=np.int32)
+        renderer=MapRenderer(self.world,self.g,self.c,self.g.catalogs);size=(300,200);box=(0,0,*size);zoom=100
+        base=MapConfig('Resources',resource_key='steel',numbers=False);overlay=MapConfig('Population',numbers=False)
+        a=renderer.render(base,size,box,zoom,False);b=renderer.render(overlay,size,box,zoom,False)
+        self.assertEqual(renderer.composite(base,overlay,0,size,box,zoom,False).tobytes(),a.tobytes())
+        self.assertEqual(renderer.composite(base,overlay,1,size,box,zoom,False).tobytes(),b.tobytes())
+        self.assertEqual(renderer.composite(base,overlay,.5,size,box,zoom,False).tobytes(),Image.blend(a,b,.5).tobytes())
+        with self.assertRaises(FrozenInstanceError):overlay.layer='Owners'
+        self.g.change_population(1,400);self.g.change_population(2,200)
+        self.assertNotEqual(renderer.render(overlay,size,box,zoom,False).tobytes(),b.tobytes())
+        config=MapConfig('State categories')
+        self.assertTrue(renderer.annotations(config,zoom,box));self.assertEqual(renderer.annotations(config,zoom,box,False),[])
+        records=renderer.annotations(MapConfig('Buildings',building_key='industrial_complex'),zoom,box)
+        self.assertTrue(any(r.get('text')=='1/4' for r in records));self.assertFalse(any(r.get('text')=='0' for r in records))
+
+    def test_koppen_preset_detection_survives_save_and_custom_weather_is_gray(self):
+        from geography_model import KOPPEN_COLORS
+        self.world.map_ids=np.array([[1,3,2,4]],dtype=np.int32)
+        r=self.g.region(2);self.g.edit_region(2,r['name'],'',climate_preset('Cfb','South'))
+        self.assertEqual(self.g.preset_regions()[2],('Cfb','South'))
+        self.assertEqual(self.world.map_image('Koppen presets').getpixel((2,0)),KOPPEN_COLORS['Cfb'])
+        self.world.docs.save();w=World(self.root);c=CharacterStore(w);g=GeographyStore(w,c,MapCatalogStore(w,c));self.assertEqual(g.preset_regions()[2],('Cfb','South'))
+        r=g.region(2);r['weather'][0].low='123';r['weather'][0].high='124';g.edit_region(2,r['name'],'',r['weather']);self.assertNotIn(2,g.preset_regions())
+        w.map_ids=self.world.map_ids;self.assertEqual(w.map_image('Koppen presets').getpixel((2,0)),(128,128,128))
+
+    def test_scalar_map_gestures_deduplicate_states_and_precise_editor(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from painter import Painter
+        class Var:
+            def __init__(self,v):self.v=v
+            def get(self):return self.v
+            def set(self,v):self.v=v
+        variables=lambda:{'enabled':Var(True),'operation':Var('Add'),'amount':Var('4'),'precision':Var('0')}
+        messages=[];app=SimpleNamespace(world=self.world,geography_store=self.g,brush=Var('States'),state_mode=Var('Resources'),pick_only=False,drag_seen=set(),_building_delta=1,
+            paint_selection={'Resources':'oil'},scalar_modes={'Resources':variables(),'Population':variables()},_status=messages.append,schedule_map=lambda:None,current_state=None,root=None)
+        app.palette_key=lambda:Painter.palette_key(app);app.building_scope=lambda:Painter.building_scope(app);app.paint_scalar=lambda *a:Painter.paint_scalar(app,*a)
+        e=SimpleNamespace(state=0);Painter.pick_geography(app,1,1,e);Painter.pick_geography(app,3,1,e);self.assertEqual(self.g.resource_counts('oil')[1],4)
+        app.drag_seen.clear();app._building_delta=-1;Painter.pick_geography(app,1,1,e);self.assertNotIn(1,self.g.resource_counts('oil'))
+        app.scalar_modes['Resources']['operation'].set('Multiply');app.scalar_modes['Resources']['amount'].set('0');app.drag_seen.clear();before=dict(self.world.docs.drafts)
+        Painter.pick_geography(app,1,1,e);self.assertEqual(before,self.world.docs.drafts);self.assertIn('zero',messages[-1])
+        app.state_mode.set('Population');app._building_delta=1;app.drag_seen.clear();app.scalar_modes['Population']['enabled'].set(False)
+        with patch('painter.simpledialog.askstring',return_value='321') as ask:Painter.pick_geography(app,1,1,e);Painter.pick_geography(app,3,1,e);ask.assert_called_once()
+        self.assertEqual(self.g.population_counts()[1],321)
+
+    def test_precision_range_integer_bounds_exact_zero_and_invalid_input(self):
+        import random
+        from unittest.mock import Mock
+        from geography_model import arithmetic_operand
+        rng=Mock();self.assertEqual(arithmetic_operand(50,0,rng),50);rng.randint.assert_not_called()
+        for base,precision,bounds in [(50,10,(45,55)),(3,10,(3,3)),(50,200,(0,150)),(0,100,(0,0)),(200,'2.5',(195,205))]:
+            rng.randint.return_value=bounds[0];self.assertEqual(arithmetic_operand(base,precision,rng),bounds[0]);rng.randint.assert_called_with(*bounds)
+            rng.randint.return_value=bounds[1];self.assertEqual(arithmetic_operand(base,precision,rng),bounds[1])
+        source=random.Random(42);values={arithmetic_operand(50,10,source) for _ in range(500)}
+        self.assertEqual(values,set(range(45,56)))
+        for amount,precision in [(-1,10),(50,-1),('1.5',0),(50,'NaN'),('bad',10),(50,'Infinity')]:
+            with self.subTest(amount=amount,precision=precision),self.assertRaises(ValueError):arithmetic_operand(amount,precision)
+
+    def test_text_color_catalog_native_replacements_case_and_global_scope(self):
+        catalog=self.g.catalogs;game=self.c.game_root/'interface';game.mkdir()
+        (game/'core.gfx').write_text('bitmapfonts={textcolors={V={1 2 3}}}')
+        (game/'extra.gfx').write_text('bitmapfonts={textcolors={X={4 5 6} # Extra vanilla\n}}')
+        self.write('interface/core.gfx','''bitmapfonts={textcolors={
+            B={0 0 255} # Blue
+            b={0 0 0} # Black
+            h={255 255 183} # Thalothin colour
+            0={203 0 203} # Gradient Step 0 - purple
+        } bitmapfont={name=test textcolors={B={90 80 70}}}}''')
+        colors=catalog.text_colors();self.assertEqual(set(colors),{'B','b','h','0','X'})
+        self.assertEqual(colors['B']['color'],(0,0,255));self.assertEqual(colors['b']['color'],(0,0,0));self.assertEqual(colors['h']['name'],'Thalothin colour')
+        self.world.docs.replace('interface/core.gfx',self.world.docs.text('interface/core.gfx').replace('255 255 183','200 201 202'))
+        self.assertEqual(catalog.text_colors()['h']['color'],(200,201,202));self.world.docs.undo();self.assertEqual(catalog.text_colors()['h']['color'],(255,255,183))
+
+    def test_random_arithmetic_gestures_per_state_and_province_keep_limits(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from painter import Painter
+        class Var:
+            def __init__(self,v):self.v=v
+            def get(self):return self.v
+            def set(self,v):self.v=v
+        modes={k:{'enabled':Var(True),'operation':Var('Add'),'amount':Var('50'),'precision':Var('10')} for k in ('Resources','Population','State buildings','Province buildings')}
+        messages=[];app=SimpleNamespace(world=self.world,geography_store=self.g,brush=Var('States'),state_mode=Var('Resources'),province_mode=Var('Buildings'),pick_only=False,drag_seen=set(),_building_delta=1,
+            paint_selection={'Resources':'steel','State buildings':'industrial_complex','Province buildings':'bunker'},scalar_modes=modes,_status=messages.append,schedule_map=lambda:None,current_state=None)
+        app.palette_key=lambda:Painter.palette_key(app);app.building_scope=lambda:Painter.building_scope(app);app.scalar_enabled=lambda:Painter.scalar_enabled(app);app.paint_scalar=lambda *a:Painter.paint_scalar(app,*a)
+        event=SimpleNamespace(state=0)
+        with patch('painter.arithmetic_operand',side_effect=[45,55]) as roll:
+            Painter.pick_geography(app,1,1,event);Painter.pick_geography(app,3,1,event);Painter.pick_geography(app,2,2,event)
+            self.assertEqual(roll.call_count,2);self.assertEqual(self.g.resource_counts('steel'),{1:47,2:55})
+        app.state_mode.set('Population');app.drag_seen.clear()
+        with patch('painter.arithmetic_operand',return_value=55):Painter.pick_geography(app,1,1,event)
+        self.assertEqual(self.g.population_counts()[1],255)
+        for brush,mode,ident,scope in [('States','State buildings',1,'State'),('Provinces','Province buildings',1,'Province')]:
+            app.brush.set(brush);app.state_mode.set('Buildings');variables=modes[mode];variables['amount'].set('3');variables['precision'].set('0');app._building_delta=1;app.drag_seen.clear()
+            kind=app.paint_selection[mode];initial=self.g.building_counts(kind,scope)[ident]
+            Painter.pick_geography(app,1,1,event);Painter.pick_geography(app,3 if scope=='State' else 1,1,event)
+            self.assertEqual(self.g.building_counts(kind,scope)[ident],initial+3)
+            variables['operation'].set('Multiply');variables['amount'].set('2');app.drag_seen.clear();Painter.pick_geography(app,1,1,event)
+            self.assertEqual(self.g.building_counts(kind,scope)[ident],(initial+3)*2)
+            app._building_delta=-1;app.drag_seen.clear();Painter.pick_geography(app,1,1,event);self.assertEqual(self.g.building_counts(kind,scope)[ident],initial+3)
+            variables['amount'].set('0');app.drag_seen.clear();before=dict(self.world.docs.drafts);Painter.pick_geography(app,1,1,event);self.assertEqual(before,self.world.docs.drafts);self.assertIn('zero',messages[-1])
+            variables['amount'].set('50');app._building_delta=1;app.drag_seen.clear();Painter.pick_geography(app,1,1,event);self.assertEqual(before,self.world.docs.drafts);self.assertIn('maximum',messages[-1])
+        self.g.change_building_amount(1,'bunker','Province',2,'Multiply',True);self.assertEqual(self.g.building_counts('bunker','Province')[1],3)
+        with self.assertRaises(ValueError):self.g.change_building_amount(3,'naval_base','Province',1)
+        self.world.docs.undo();self.assertEqual(self.g.building_counts('bunker','Province')[1],5)
+        self.world.docs.redo();self.world.docs.save();fresh=World(self.root);c=CharacterStore(fresh);g=GeographyStore(fresh,c,MapCatalogStore(fresh,c))
+        self.assertEqual(g.building_counts('bunker','Province')[1],3);self.assertEqual(g.building_counts('industrial_complex')[1],4)
+
+
 class GeographyFormTests(unittest.TestCase):
     write=GeographyTests.write
 
@@ -203,6 +468,54 @@ class GeographyFormTests(unittest.TestCase):
         self.assertFalse(d.winfo_exists());self.assertFalse(self.errors);self.assertEqual(self.world.province_regions[1],2)
         self.assertEqual(len(self.g.region(2)['weather']),12);self.assertEqual(self.g.region(2)['name'],'Changed region')
         self.world.docs.undo();self.g.sync_world();self.assertEqual(self.world.province_regions[1],1);self.assertFalse(self.world.docs.changed)
+
+    def test_koppen_paint_checkbox_palette_hemisphere_and_map_gestures(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from model import Emblems
+        from painter import Painter
+        from demographics import CATALOG_PATHS
+        from geography_model import KOPPEN_COLORS
+        for rel in set(CATALOG_PATHS.values()):
+            if not (self.root/rel).exists():self.write(rel,'l_english:\n' if rel.endswith('.yml') else '',rel.endswith('.yml'))
+        self.write(CATALOG_PATHS['species_map'],'scripted_map_modes={LOK_species_map_mode={bottom={color={}} top={color={}}}}')
+        self.world.map_ids=np.array([[1,3,2,4]],dtype=np.int32)
+        with patch('character_model.default_paths',return_value={'game':self.c.game_root}):app=Painter(self.tkroot,self.world,Emblems())
+        self.tkroot.deiconify();self.tkroot.update()
+        app.brush.set('Strategic regions');app.brush_changed();self.tkroot.update()
+        app.koppen_paint_check.invoke();self.tkroot.update()
+        self.assertEqual(app.palette_key(),'Koppen presets');self.assertEqual(set(app.palette_values.values()),set(CLIMATES))
+        self.assertTrue(app.koppen_south_check.winfo_ismapped());self.assertTrue(app.koppen_show.get())
+        self.assertEqual(app.map_config().layer,'Koppen presets');self.assertEqual(str(app.new_definition_button['state']),'disabled')
+        app.palette_search.set('hot desert');app.refresh_palette();self.assertEqual(list(app.palette_values.values()),['BWh'])
+        item=next(iter(app.palette_values));app.palette.selection_set(item);app.palette_selected();self.tkroot.update()
+        app.koppen_south_check.invoke();self.assertTrue(app.koppen_south.get());self.assertIn('(South)',app.paint_label.get())
+        event=SimpleNamespace(x=0,y=0,state=0)
+        # Exercise the real canvas coordinate route and release/refresh callbacks.
+        app.zoom=1;app.canvas.xview_moveto(0);app.canvas.yview_moveto(0)
+        app.paint_press(event);app.paint_release();self.tkroot.update()
+        self.assertEqual(app.geography_store.preset_regions()[1],('BWh','South'))
+        self.assertEqual(app.world.map_image('Koppen presets').getpixel((0,0)),KOPPEN_COLORS['BWh'])
+        app.undo();self.assertNotIn(1,app.geography_store.preset_regions());app.redo()
+        app.koppen_south_check.invoke();app.paint_selection['Koppen presets']='Af'
+        app.paint_press(SimpleNamespace(x=3,y=0,state=1));app.paint_release();self.tkroot.update()
+        self.assertEqual(app.paint_selection['Koppen presets'],'BWh');self.assertTrue(app.koppen_south.get());self.assertEqual(app.palette_search.get(),'')
+        # Disabling paint restores the region list and original edit/assignment controls.
+        app.koppen_paint_check.invoke();self.tkroot.update()
+        self.assertEqual(app.palette_key(),'Strategic regions');self.assertEqual(set(app.palette_values.values()),{1,2})
+        self.assertFalse(app.koppen_south_check.winfo_ismapped());self.assertFalse(self.errors)
+        app.cancel_map_job();app.destroy()
+
+    def test_category_form_edits_native_source_and_cancel_restores_it(self):
+        from geography_ui import CategoryDialog
+        from geography_model import CATEGORY_LOC
+        self.write(CATEGORY_LOC,'l_english:\n',True)
+        d=CategoryDialog(self.tkroot,self.app,'town');d.attributes('-alpha',0);d.slots.set('6');d.color.set('#ff0088');d.ok()
+        self.assertEqual(self.g.categories()['town']['slots'],6)
+        self.world.docs.undo();self.assertEqual(self.g.categories()['town']['slots'],4)
+        d=CategoryDialog(self.tkroot,self.app,'town');d.attributes('-alpha',0);d.slots.set('99');d.cancel();self.assertEqual(self.g.categories()['town']['slots'],4)
+        d=CategoryDialog(self.tkroot,self.app,None);d.attributes('-alpha',0);d.ident.set('test');d.name.set('Test');d.ok()
+        self.assertIn('test',self.g.categories())
 
 
 if __name__=='__main__':unittest.main()

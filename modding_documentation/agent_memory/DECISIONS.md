@@ -1,5 +1,58 @@
 # Decisions
 
+## 2026-11-25: Discrete arithmetic variation and native text-color discovery
+**Decision:** Precision range is a percentage around a nonnegative integer
+operand, sampled uniformly from ceil(lower)..floor(upper), clipping lower at zero.
+Zero percent consumes no randomness and uses the exact operand. Sample once per
+target per stroke across resources, population and state/province buildings;
+right-click uses the same distribution for subtraction/division. Round arithmetic
+results half-up to integers, including resources, while retaining decimal precise
+resource entry. Reject zero division without resampling. Reuse native building
+validators instead of bypassing level/placement/coast rules for bulk arithmetic.
+**Rationale:** the user requested integer random amounts and multipliers plus the
+same arithmetic editor for both building scopes. Existing ordinary +/-1 gestures
+remain available when disabled. Precision is session UI state only.
+
+**Decision:** obtain all global text colors from effective native/mod interface
+GFX sources, with case-sensitive codes, native file replacement and draft-aware
+caching. Use source comments for names, exclude font-local RGB overrides from the
+global catalog, and keep custom unknown authored codes visibly unknown. Shared
+picker colors rows and previews the actual edited name plus swatch, including on
+paste. Persist only the normal localization color code; no new catalog data file.
+**Consequence:** new native colors require no hardcoded UI list update; actual
+in-game font overrides may differ from the global-table preview.
+
+Railway editing remains deferred. The requested proposal in painter PLAN.md uses
+source-preserving native routes, active bitmap adjacency and staged verification;
+no automatic editing of existing railway defects was authorized in this task.
+
+## 2026-11-25: Native starting-setup checks and live session overlays
+**Decision:** derive category colors/capacity, resource amounts/types, population,
+country totals and climate identity from native definitions and current drafts.
+Create categories inside an existing category file and reuse native localization
+owners, falling back to existing lok_misc_l_english.yml for new category names.
+Count only state buildings with shares_slots=yes. Static capacity includes
+category/state factors and direct starting extra slots, capped by numeric native
+MAX_SHARED_SLOTS; exclude runtime country/research/conditional effects and label
+this limitation. Full and over-capacity warnings are view styling, not paint caps.
+**Rationale:** the painter edits starting files; it is not a game script runtime.
+Native data remains authoritative, with no persistent painter-only metadata.
+**Consequences:** scalar edits validate finite nonnegative amounts, clamp
+subtraction, reject zero division, round resource arithmetic to six decimals and
+population half-up to whole people. Resource-type warning is strict count > X,
+counting distinct positive entries. Country reports sum owned starting states.
+Koppen identity requires exact canonical weather matches to the editor's profiles;
+custom weather stays gray. North/South and class are reconstructed after reload.
+
+**Decision:** freeze one MapConfig for a session overlay and render both layers
+through the same current-camera raster pipeline, including borders and labels.
+Snapshot settings, not data or camera; keep input on the active map. Global
+Display numbers can hide numeric annotations on both layers, retaining VP names
+and N/S markers. Reuse bounded in-memory label tiles/icons for fast redraws.
+**Consequences:** live edits and Undo are visible in overlays; overlays disappear
+on restart. No UI/session configuration sidecar is written. The installer includes
+the shared map_render.py module. README/MODLOG contain palette attribution.
+
 ## 2026-11-24: Native trait registries and bounded commander rolls
 **Decision:** read both native/mod unit and country-leader trait databases,
 honor relative-path replacements including empty files, expose overridden
@@ -257,3 +310,92 @@ inline comments, and reject conflicting base names atomically. Country-suffixed
 variants stay in their files. Keep authored names when removing a VP. Cache only
 in-memory province representative pixels, and cull zoomed labels to the viewport.
 No painter-specific game-data or disk cache files.
+
+## 2026-11-25: Country popularity allocation
+
+Treat blank/zero popularity as remaining ideologies; preserve entered positive
+values and randomly divide only the unallocated part of 100. Reject overfull
+totals or a positive remainder without eligible entries, with guidance to
+normalize/clear a value. Normalize rescales nonnegative weights (including those
+above 100) proportionally; all-zero weights become equal shares. Use exact
+fractions and largest remainders at six decimal places or existing finer input
+precision, so generated percentages total 100 without float drift. Update form
+fields in one batch and redraw the pie once. Keep the native Apply/Save flow.
+
+## 2026-11-25: Multi-symbol flags and country-create source reuse
+
+Keep up to eight symbol layers in the country form, with independent live colors,
+mask/size/position/stretch/rotation and procedural mask-dilation outlines. Hit-test
+the transformed masks from top to bottom when dragging. Native flag images stay
+flattened; do not add persistent layer/design data files. Cache bounded decoded
+masks and transformed/outline alpha planes in memory. Debounce typing, throttle
+drag updates, and disable Use for invalid inputs. Galleries use the complete stack
+and change only their background or active symbol candidate.
+
+Country-create source collisions raise a typed preflight exception with native
+paths, before mutations. Ask once with No as default; approval explicitly permits
+form-owned setup replacement, reusing the existing history filename and preserving
+unknown/dated script and definition fields. Declining leaves the form and drafts
+intact. Keep ordinary guarded Save/backups; reject ambiguous multiple histories
+rather than deleting or silently choosing a source. Registered tags continue to
+be edited through the existing country editor.
+
+## 2026-11-25: Building map paint scopes and country preview readback
+
+State building mode includes every native state-scope type, not only shared-slot
+types. Province mode includes province buildings and supply nodes, excluding
+railway routes. Use the native state writer and supply file, with existing caps,
+coast/placement/exclusivity/group validation. Left adds one, right removes one,
+one change per entity per stroke; middle pans. Gray represents zero, and numeric
+labels exist only for positive counts. Use cached native building indices and
+representative actual province pixels for viewport-cropped state/province labels.
+State shapes remain immutable; strategic-region painting only moves whole states.
+
+Read country colors from Documents drafts even before files exist on disk; include
+tag/path identity in color cache signatures. Patch all existing native overrides
+and UI colors for the edited tag to match the form's single color. Apply writes
+the form's popularity block explicitly, then reloads applied values for the pie
+and color preview. Display exact decimal percentages and fit the chart legend;
+the installed effects_documentation.md set_popularities example uses 54.5/45.5,
+so do not impose integer-only values to address a preview issue.
+
+## 2026-11-25: Paint complete native climate profiles per region
+
+Decision: Paint Köppen uses the existing strategic-region native weather profiles,
+colored preset palette and exact-weather matching. The South checkbox shifts the
+seasonal profile six months; unchecked means North. Replace complete weather
+when painting (including custom weather fields), retain every other region field,
+and support sea-only regions. Shift-pick takes both profile and hemisphere; no
+metadata persists. Keep each region as an ordinary reversible native-file edit.
+
+Rationale: the requested climate brush must set all weather values coherently,
+recognize its own results after Save/reload and leave geography untouched. Existing
+profiles already include all nine weather fields, including explicit zeros, so
+retain the established approximations and enforce completeness with regressions.
+Consequences: custom weather is replaced only on painted regions; unpainted
+regions and preset tuning are unchanged. See painter MODLOG for validation.
+
+## 2026-11-25: Railway province brushes edit a native link graph
+
+Decision: model railway levels as native undirected province links. Clicking a
+province sets/increments/decrements all touching links; its displayed level is
+the maximum touching level. Deduplicate edges per stroke. Existing-only blocks
+new edges as well as new vertices. New routes use adjacent painted anchors and
+neighboring existing railways; no paths cross unpainted land, per user clarification.
+
+Save compacts equal-level chains into simple native paths while retaining every
+link/level. Collapse overlapping native links to their maximum level, retain
+comments/BOM/newlines and preserve known original invalid links separately.
+Use actual orthogonal bitmap/wrap adjacency and native impassable border/state
+rules; update rules for drafts/Undo while retaining immutable geometry. Level cap
+is NSupply.MAX_RAILWAY_LEVEL, not the generic rail_way building cap. No railway
+metadata, singleton routes, global pathfinder or implicit hub creation.
+
+Rationale: engine data describes links, so independent province-level numbers
+cannot be saved faithfully at mixed-level junctions. Link-based gestures and
+explicit maximum labels provide native roundtrips. Deterministic chain compaction
+is an exact graph serialization, not a supply-flow optimization claim.
+Consequences: neighboring endpoint displays can change; an isolated first click
+is a temporary anchor. Existing known bad links remain visible red; new ones
+are refused. Supply hub overlay reuses GFX_supply_hub_icon_strip first frame and
+native supply_nodes.txt, with no new art or gameplay scripts.

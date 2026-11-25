@@ -10,9 +10,10 @@ from PIL import Image, ImageTk
 
 from character_model import atom, block
 from character_ui import DraftDialog, CharacterDialog
-from country_model import Country, PATTERNS, render_flag, number, copy_ideology_names, definite_name
+from country_model import Country, CountrySourceExists, PATTERNS, render_flag, number, copy_ideology_names, definite_name, distribute_popularities, flag_rgb
 from model import parse, value, child
 from select_ui import Choice, ChoiceBox, ChoiceIndex
+from flag_designer import FlagDesigner
 
 
 def buttons(parent, entries):
@@ -22,7 +23,9 @@ def buttons(parent, entries):
 
 
 def choose_color(parent,variable):
-    selected=colorchooser.askcolor(variable.get(),parent=parent)[1]
+    try:initial='#%02x%02x%02x'%flag_rgb(variable.get())
+    except ValueError:initial='#ffffff'
+    selected=colorchooser.askcolor(initial,parent=parent)[1]
     if selected:variable.set(selected)
 
 
@@ -93,9 +96,9 @@ class CountryDialog(DraftDialog):
         self.ruling=tk.StringVar(value=self.data.ruling);self.laws={k:tk.StringVar(value=self.data.laws.get(k,'')) for k in ('mobilization_laws','economy','economy_laws','specialty','species')}
         self.tabs=ttk.Notebook(self);self.tabs.pack(fill='both',expand=True,padx=10,pady=10)
         self.frames={}
-        for key,label in [('setup','Setup'),('politics','Parties & popularity'),('names','Ideology names'),('flags','Flags'),('leaders','Leaders'),('tech','Starting technologies'),('spirits','National spirits')]:
+        for key,label in [('setup','Setup'),('summary','Summary'),('politics','Parties & popularity'),('names','Ideology names'),('flags','Flags'),('leaders','Leaders'),('tech','Starting technologies'),('spirits','National spirits')]:
             frame=ttk.Frame(self.tabs,padding=10);self.tabs.add(frame,text=label);self.frames[key]=frame
-        self.build_setup();self.build_politics();self.build_names();self.build_flags();self.build_leaders();self.build_tech();self.build_spirits()
+        self.build_setup();self.build_summary();self.build_politics();self.build_names();self.build_flags();self.build_leaders();self.build_tech();self.build_spirits()
         self.tabs.bind('<<NotebookTabChanged>>',self.tab_changed)
         bottom=ttk.Frame(self,padding=10);bottom.pack(fill='x')
         ttk.Label(bottom,text='Apply stages native sources. Save in the main window writes them with backups.').pack(side='left')
@@ -139,6 +142,26 @@ class CountryDialog(DraftDialog):
         if sid is not None:self.capital.set(str(sid))
         self.deiconify();self.lift();self.grab_set()
 
+    def build_summary(self):
+        frame=self.frames['summary'];self.summary_title=tk.StringVar();ttk.Label(frame,textvariable=self.summary_title,font=('Segoe UI',13,'bold')).pack(anchor='w',pady=8)
+        self.summary_population=tk.StringVar();ttk.Label(frame,textvariable=self.summary_population).pack(anchor='w',pady=8)
+        self.summary_factories=table(frame,[('total','Total',150)],height=5)
+        ttk.Label(frame,text='Resources').pack(anchor='w',pady=(12,5));self.summary_resources=table(frame,[('total','Total',150)],height=10)
+        ttk.Label(frame,text='Read-only totals of owned states in the current starting-setup drafts. Runtime effects and foreign-controlled factories are not simulated.',wraplength=1000).pack(anchor='w',pady=8)
+
+    def refresh_summary(self):
+        tag=self.tag.get().strip();data=self.countries.summary(tag);names=self.store.trait_store.names()
+        self.summary_title.set(f'{self.base_name.get() or tag} ({tag}) — {data["states"]} owned states')
+        self.summary_population.set(f'Population: {int(data["population"]):,}')
+        self.summary_factories.delete(*self.summary_factories.get_children())
+        for kind,amount in data['factories'].items():self.summary_factories.insert('','end',text=Choice(kind,names.get(kind,kind.replace('_',' ').title())).label,values=(f'{amount:,}',))
+        self.summary_factories.insert('','end',text='Civilian + military factories',values=(f'{data["factories"]["industrial_complex"]+data["factories"]["arms_factory"]:,}',))
+        self.summary_factories.insert('','end',text='Factories + dockyards',values=(f'{sum(data["factories"].values()):,}',))
+        self.summary_resources.delete(*self.summary_resources.get_children())
+        keys=set(data['resources'])|set(self.countries.definitions('common/resources','resources'))
+        for c in ChoiceIndex(Choice(k,names.get('PRODUCTION_MATERIALS_'+k.upper(),names.get(k,k.replace('_',' ').title()))) for k in keys).choices:
+            self.summary_resources.insert('','end',text=c.label,values=(format(Decimal(data['resources'].get(c.code,0)).normalize(),'f'),))
+
     def build_politics(self):
         frame=self.frames['politics'];left=ttk.Frame(frame);left.pack(side='left',fill='y',padx=(0,25))
         ttk.Label(left,text='Ruling ideology').grid(row=0,column=0,sticky='w',pady=8)
@@ -150,17 +173,31 @@ class CountryDialog(DraftDialog):
             entry=ttk.Entry(left,textvariable=variable,width=12);entry.grid(row=row,column=1,sticky='w',padx=10)
             variable.trace_add('write',lambda *args:self.draw_pie())
         self.total=tk.StringVar();ttk.Label(left,textvariable=self.total).grid(row=len(self.pop)+1,column=0,columnspan=2,sticky='w',pady=12)
+        ttk.Button(left,text='Assign random weights to remaining ideologies',command=lambda:self.adjust_popularities(True)).grid(row=len(self.pop)+2,column=0,columnspan=2,sticky='ew',pady=3)
+        ttk.Button(left,text='Normalize to 100',command=self.adjust_popularities).grid(row=len(self.pop)+3,column=0,columnspan=2,sticky='ew',pady=3)
+        ttk.Label(left,text='Random fills blank/zero entries using the remaining percentage. Normalize rescales all weights; all-zero weights become equal.',wraplength=410).grid(row=len(self.pop)+4,column=0,columnspan=2,sticky='w',pady=8)
         self.pie=tk.Canvas(frame,width=430,height=470,highlightthickness=0);self.pie.pack(side='left',fill='both',expand=True)
         self.pie.bind('<Configure>',lambda e:self.draw_pie());self.draw_pie()
 
+    def adjust_popularities(self,remaining=False):
+        try:values=distribute_popularities({i:v.get() for i,v in self.pop.items()},remaining)
+        except ValueError as exc:messagebox.showerror('Party popularity',str(exc),parent=self);return
+        self._updating_pop=True
+        try:
+            for i,v in values.items():self.pop[i].set(v)
+        finally:self._updating_pop=False
+        self.draw_pie()
+
     def draw_pie(self):
-        if not hasattr(self,'pie'):return
+        if not hasattr(self,'pie') or getattr(self,'_updating_pop',False):return
         self.pie.delete('all')
         try:
             precise={i:Decimal(number(v.get(),0,100)) for i,v in self.pop.items()};exact=sum(precise.values())
             values={i:float(v) for i,v in precise.items()};total=float(exact);self.total.set('Total: '+format(exact.normalize(),'f')+'% (must equal 100%)')
         except ValueError:self.total.set('Enter popularity values between 0 and 100.');return
-        width=max(400,self.pie.winfo_width());diameter=min(310,width-40);box=(20,20,20+diameter,20+diameter);start=90
+        width=self.pie.winfo_width() if self.pie.winfo_width()>1 else 430
+        height=self.pie.winfo_height() if self.pie.winfo_height()>1 else 470
+        diameter=max(90,min(310,width-40,height-sum(bool(v) for v in values.values())*21-65));box=(20,20,20+diameter,20+diameter);start=90
         names={c.code:c.name for c in self.ideology_choices()}
         for i,v in values.items():
             if not v or not total:continue
@@ -168,7 +205,7 @@ class CountryDialog(DraftDialog):
             if extent>=359.999:self.pie.create_oval(*box,fill=color,outline='white')
             else:self.pie.create_arc(*box,start=start,extent=-extent,fill=color,outline='white');start-=extent
         for n,(i,v) in enumerate((i,v) for i,v in values.items() if v):
-            y=diameter+46+n*21;color=self.hex(self.countries.ideologies()[i]['color']);self.pie.create_rectangle(20,y-5,32,y+7,fill=color,outline='');self.pie.create_text(40,y+1,anchor='w',text=f'{names[i]}: {v:g}%')
+            y=diameter+46+n*21;color=self.hex(self.countries.ideologies()[i]['color']);self.pie.create_rectangle(20,y-5,32,y+7,fill=color,outline='');self.pie.create_text(40,y+1,anchor='w',text=f'{names[i]}: {format(precise[i].normalize(),"f")}%')
 
     def build_names(self):
         frame=self.frames['names'];self.names_table=table(frame,[('name','Normal name',300),('def','Definite name',300)],height=11)
@@ -346,6 +383,7 @@ class CountryDialog(DraftDialog):
 
     def tab_changed(self,event=None):
         if not hasattr(self,'leader_rows'):return
+        if self.tabs.select()==str(self.frames['summary']):self.refresh_summary()
         if self.tabs.select()==str(self.frames['leaders']) and not self.leaders_loaded:self.refresh_leaders()
         if self.tabs.select()==str(self.frames['names']):
             if (self.names['']['name'] or '')!=self.base_name.get():self.names['']['name']=self.base_name.get();self.refresh_names();self.names_table.selection_set('base');self.load_name()
@@ -358,79 +396,31 @@ class CountryDialog(DraftDialog):
         return self.data
 
     def apply_country(self):
-        self.countries.apply(self.collect(),self.color.get(),self.names,self.flags,self.new)
+        data=self.collect()
+        try:self.countries.apply(data,self.color.get(),self.names,self.flags,self.new)
+        except CountrySourceExists as exc:
+            if not messagebox.askyesno('Overwrite country sources?',
+                'These country files already exist:\n\n'+'\n'.join(exc.paths)+'\n\nOverwrite their country setup with the values in this form? Unrelated and dated script is preserved. Changes remain drafts until Save, which creates backups.',parent=self,default='no'):return False
+            self.countries.apply(data,self.color.get(),self.names,self.flags,self.new,overwrite=True)
         self.new=False;self.tag_entry.configure(state='disabled')
+        applied=self.countries.read(data.tag)
+        self._updating_pop=True
+        try:
+            for ideology,var in self.pop.items():var.set(applied.popularities.get(ideology,'0'))
+        finally:self._updating_pop=False
+        self.color.set(self.hex(self.app.world.country_colours().get(data.tag,(70,120,180))))
+        self.draw_pie()
+        return True
 
     def ensure_country(self):
         if not self.new:return True
-        try:self.apply_country();return True
+        try:return self.apply_country()
         except (ValueError,OSError,InvalidOperation) as exc:messagebox.showerror('Country setup',str(exc),parent=self);return False
 
     def ok(self):
-        try:self.apply_country();self.accept(self.tag.get())
+        try:
+            if self.apply_country():self.accept(self.tag.get())
         except (ValueError,OSError,InvalidOperation,KeyError) as exc:messagebox.showerror('Country',str(exc),parent=self)
-
-
-class FlagDesigner(ttk.Frame):
-    def __init__(self,parent,store,on_use):
-        super().__init__(parent,padding=(0,8));self.store=store;self.on_use=on_use
-        self.pattern=tk.StringVar(value='Horizontal tricolor');self.colors=[tk.StringVar(value=c) for c in ('#283c63','#ffffff','#b33232','#e9c45c')]
-        self.tint=tk.StringVar(value='#ffffff');self.emblem=tk.StringVar();self.mask_mode=tk.StringVar(value='Alpha');self.scale=tk.StringVar(value='.65')
-        row=ttk.Frame(self);row.pack(fill='x')
-        self.pattern_box=ChoiceBox(row,textvariable=self.pattern,values=PATTERNS);self.pattern_box.pack(side='left',fill='x',expand=True);self.pattern_box.bind('<<ComboboxSelected>>',lambda e:self.preview())
-        self.pattern_box.arrow.configure(command=lambda:self.browse('background'))
-        self.pattern_box.entry.bind('<Double-1>',lambda e:self.browse('background'))
-        ttk.Button(row,text='Browse backgrounds…',command=lambda:self.browse('background')).pack(side='left',padx=(6,0))
-        for i,var in enumerate([*self.colors,self.tint]):
-            line=ttk.Frame(self);line.pack(fill='x',pady=3);ttk.Label(line,text=f'Color {i+1}' if i<4 else 'Emblem color',width=14).pack(side='left')
-            entry=ttk.Entry(line,textvariable=var,width=15);entry.pack(side='left');entry.bind('<Return>',lambda e:self.preview())
-            ttk.Button(line,text='Choose',command=lambda v=var:self.color_pick(v)).pack(side='left',padx=6)
-        ttk.Label(self,text='Reusable emblem (search name or code)').pack(anchor='w',pady=(8,3))
-        row=ttk.Frame(self);row.pack(fill='x')
-        self.emblem_box=ChoiceBox(row,textvariable=self.emblem,values=store.emblem_choices());self.emblem_box.pack(side='left',fill='x',expand=True);self.emblem_box.bind('<<ComboboxSelected>>',lambda e:self.preview())
-        self.emblem_box.arrow.configure(command=lambda:self.browse('emblem'))
-        self.emblem_box.entry.bind('<Double-1>',lambda e:self.browse('emblem'))
-        ttk.Button(row,text='Browse emblems…',command=lambda:self.browse('emblem')).pack(side='left',padx=(6,0))
-        line=ttk.Frame(self);line.pack(fill='x',pady=5);ChoiceBox(line,textvariable=self.mask_mode,values=['Alpha','White on dark','Dark on light'],width=18).pack(side='left')
-        ttk.Button(line,text='Import reusable emblem…',command=self.import_emblem).pack(side='left',padx=6)
-        line=ttk.Frame(self);line.pack(fill='x',pady=5);ttk.Label(line,text='Emblem height (fraction)').pack(side='left');ttk.Entry(line,textvariable=self.scale,width=8).pack(side='left',padx=8)
-        self.image=ttk.Label(self);self.image.pack(pady=6)
-        buttons(self,[('Preview design',self.preview),('Use design for selected ideology',self.use)])
-        self.preview()
-
-    def color_pick(self,var):choose_color(self,var);self.preview()
-
-    def browse(self,kind):
-        previous=self.grab_current()
-        self.pattern_box.hide();self.emblem_box.hide()
-        try:
-            self.pattern_box.commit();self.emblem_box.commit()
-            dialog=FlagLibraryPicker(self,kind);self.wait_window(dialog)
-            if dialog.result is not None:
-                (self.pattern if kind=='background' else self.emblem).set(dialog.result)
-                self.preview()
-        except (ValueError,OSError) as exc:messagebox.showerror('Flag library',str(exc),parent=self)
-        finally:
-            if previous is not None and previous.winfo_exists():previous.grab_set()
-
-    def render(self):
-        self.pattern_box.commit();self.emblem_box.commit();scale=float(number(self.scale.get(),Decimal('.05'),Decimal('1.5')))
-        return render_flag(self.pattern.get(),[v.get() for v in self.colors],self.store.emblem_mask(self.emblem.get()),self.tint.get(),(328,208),scale)
-
-    def preview(self):
-        try:
-            image=self.render();self.photo=ImageTk.PhotoImage(image.resize((246,156),Image.Resampling.LANCZOS));self.image.configure(image=self.photo,text='');self.latest=image;return True
-        except (ValueError,OSError,KeyError) as exc:self.image.configure(text=str(exc),image='');return False
-
-    def use(self):
-        if self.preview():self.on_use(self.latest.copy())
-
-    def import_emblem(self):
-        path=filedialog.askopenfilename(parent=self,title='Import reusable emblem',filetypes=[('Images','*.png *.dds *.tga *.bmp'),('All files','*.*')])
-        if path:
-            try:
-                key=self.store.import_emblem(path,self.mask_mode.get());self.emblem_box.configure(values=self.store.emblem_choices());self.emblem.set(key);self.preview()
-            except (ValueError,OSError) as exc:messagebox.showerror('Emblem',str(exc),parent=self)
 
 
 class FlagLibraryPicker(tk.Toplevel):
@@ -444,11 +434,13 @@ class FlagLibraryPicker(tk.Toplevel):
         colors=[v.get() for v in designer.colors];tint=designer.tint.get()
         scale=float(number(designer.scale.get(),Decimal('.05'),Decimal('1.5')))
         render_flag(designer.pattern.get(),colors,None,tint,(1,1),scale)
+        symbols=designer.symbol_specs(skip_index=designer.active_symbol_index() if kind=='emblem' else None)
         previous=designer.grab_current()
         super().__init__(designer)
         self._previous_grab=previous
         self.designer,self.kind=designer,kind;self.result=None
         self.colors,self.tint,self.scale=colors,tint,scale
+        self.symbols,self.active=symbols,designer.active_symbol_index()
         self.pattern=designer.pattern.get();self.emblem=designer.emblem.get()
         self.selected=self.pattern if kind=='background' else self.emblem
         choices=[Choice(p,p) for p in PATTERNS] if kind=='background' else designer.store.emblem_choices()
@@ -510,8 +502,9 @@ class FlagLibraryPicker(tk.Toplevel):
 
     def flag_image(self,code,size):
         pattern=code if self.kind=='background' else self.pattern
-        emblem=self.emblem if self.kind=='background' else code
-        return render_flag(pattern,self.colors,self.mask(emblem),self.tint,size,self.scale)
+        symbols=[dict(s) for s in self.symbols]
+        if self.kind=='emblem':symbols[self.active]['mask']=self.mask(code)
+        return render_flag(pattern,self.colors,size=size,symbols=symbols)
 
     def schedule_search(self,event=None):
         if event is not None and event.keysym in {'Return','Escape','Up','Down','Left','Right'}:return

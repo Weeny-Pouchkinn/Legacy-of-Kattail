@@ -1,5 +1,152 @@
 # Current status
 
+## Province railways and supply hub display (2026-11-25)
+
+MAP Paint/View Railways has per-province exact level/erase and left-add/right-
+subtract gestures with amount, native cap and Do not add new railways protection.
+Railway levels are native links: a province click changes touching links and its
+display reports the highest level. New routes need neighboring painted points;
+no routing through unpainted land, as explicitly clarified by the user. Preview/
+Save compact equal-level links into simple native paths without changing the
+network. No metadata, new hubs or native live-file changes were made.
+
+Display supply hubs uses the existing native hub sprite in all modes/overlays.
+141 full tests and 13 railway tests passed, including actual Tk gestures, source
+preservation, guarded fixture Save/reload, topology/rule cache changes and Undo.
+Compilation/scoped whitespace passed; global whitespace remains pre-existing.
+Native UI: 5,595 links/5,259 railway provinces, all 46 hub icons, 4,224 source hashes
+unchanged, no callbacks/remaining changes. Warm redraws about 40–45 ms.
+
+Known blockers in data, preserved: map validator's two old non-neighbor jumps
+(20839–20841, 20841–19461), plus two existing links across explicit impassable
+borders (12662–12701 and 13081–13092; adjacencies.csv lines 39/32). New bad links
+are rejected. No engine/CWTools check. Next: restart painter; verify resulting
+supply/railway behavior in game after an intentional Save. See painter MODLOG and
+plans/railway-painting.md. Older deferred-route proposal is now partly superseded.
+
+## Koppen preset painting (2026-11-25)
+
+MAP > Strategic regions has Paint Köppen, a searchable colored left preset list,
+and Southern hemisphere (off = North). Click/drag writes complete 12-month native
+weather profiles per touched region, including sea-only regions. Shift-click picks
+the exact preset and hemisphere; custom weather keeps the current brush. Disabling
+restores region edit/assignment. Each preset explicitly includes all nine native
+weather fields, with climate-appropriate zeros; existing weights were retained.
+Weather painting replaces custom weather but preserves all other region fields.
+No climate metadata, game IDs or live native source changes in this task.
+
+31 geography tests and 128 full-suite tests passed; Python compilation and scoped
+whitespace checks passed. Native mapped Tk probe passed with live Save forbidden:
+4,224 source hashes unchanged, no callback errors or unsaved changes. Fixture
+Save/reload, source BOM/CRLF, Undo/Redo and all 60 profiles were verified. Global
+whitespace check has pre-existing state-history issues; map validator has only
+the known railway jumps at lines 893-894. No game launch/CWTools. Next: restart
+the painter; in-game weather still needs checking after an intentional Save.
+Details and exact paths/commands: legacy_of_kattail_painter/MODLOG.md.
+
+## Arithmetic precision, building arithmetic and native text colors (2026-11-25)
+
+Resources/population and both state/province building heatmaps now share per-mode
+arithmetic controls and Precision range (%). Zero is exact; positive ranges draw
+uniform nonnegative integer operands inside the inclusive percentage interval,
+once per target per stroke. Reverse gestures subtract/divide sampled operands;
+zero division is rejected and integer results round half-up. Resource arithmetic
+now also returns whole numbers; precise resource entry retains decimal support.
+Normal building clicks remain +/-1 when arithmetic is disabled. Native level,
+coast/facility/scope checks still apply, with unchanged targets on failure.
+
+All existing Name color selectors (cultures/groups/species) now discover native
+and mod global textcolors, respecting file replacement and case-sensitive IDs.
+The current effective table contains 37 codes. Searchable colored rows, swatches
+and live name previews update with typing/paste and selection. Preview uses global
+RGB, excluding font-local overrides. No color metadata or native GFX changes.
+
+Focused geography and selector suites passed (27 and 10 tests). Native alpha-zero
+UI checked all four arithmetic modes, all three color forms with 37 choices,
+preview changes, group color Apply/Undo and no callback errors/drafts. All 2,097
+checked native source hashes stayed unchanged; live Save was forbidden. Final full suite: 124 tests passed; compilation and whitespace checks passed.
+Map validator retains only the two known railway errors; see painter MODLOG. Deferred railway editor proposal
+is in legacy_of_kattail_painter/PLAN.md; no railway implementation in this task.
+
+## Categories, resources/population, overlays and summaries (2026-11-25)
+
+States now offer native category create/edit/paint with native color swatches,
+shared-slot used/total labels, red over-capacity and faint yellow full stripes.
+Capacity is explicitly a static category/state-file check before runtime country
+modifiers. Resource/population gradients support precise entry and per-state
+Add/Multiply gestures (right-click subtract/divide), clamp at zero and reject
+zero division. Population rounds half-up to whole people. Resource colors match
+the requested palette. Resources can stripe states whose distinct positive type
+count is strictly greater than the entered threshold, including in saved overlays.
+
+Save for Overlay stores one immutable session configuration, rendered against
+live drafts at the current camera; opacity and Display numbers affect the shared
+raster renderer. Number labels reuse bounded text tiles (16 MiB/4096 entries).
+COUNTRIES Summary reports current owned-state starting population/factories/
+resources without edits. Strategic regions can color exact native weather matches
+to the editor's 30x2 Koppen-inspired presets, with N/S markers and custom gray.
+Matching does not store metadata. Category writers use existing native files.
+
+120 tests passed, including fixture Save/reload, real form transactions, strict
+resource-type thresholds and arithmetic/overlay edge cases. Native alpha-zero
+Tk probes passed across 13 categories, 20 state buildings, 10 resources, climate
+matching, country Summary, Undo and Cancel. 3,229 native source hashes stayed
+unchanged; no drafts remained and Save was disabled. Warm redraws measured
+36.8 ms category, 28.9 ms population, 35.9 ms buildings and 18.4 ms resources on
+this machine. Map validation still has only the existing railway errors 893-894.
+No live Save/game launch. See painter README/MODLOG for scope and checks.
+
+## Country preview/save consistency and building map modes (2026-11-25)
+
+MAP Paint/View now includes States, Provinces and Strategic regions. States and
+Provinces have building submodes with scope-filtered localized palettes, count
+heatmaps, positive-only numeric labels and left/right add/remove drag strokes.
+All 20 native state-scope building types are listed (shared and nonshared), plus
+10 province types; railway routes stay separate. Caps/coasts/placement/group rules
+use the existing native state writer. Middle-drag pans. State/region forms open
+directly from their map modes; region assignment transfers whole states.
+
+Country color reading now includes draft-only native files and tag/path cache
+signatures. Existing duplicate color overrides and UI-color fields synchronize
+for the edited country. Apply always writes the entered popularities and refreshes
+form/preview from the applied native values. Pie legend percentages are exact and
+its layout accommodates all entries. Decimal percentages remain supported by the
+installed effects documentation; no integer-only conversion was introduced.
+
+113 full tests pass; 28 country tests passed again after adding an owner-map pixel
+assertion. Native UI checked country Apply/Cancel/readback, 20/10 building lists,
+once-per-stroke increments/decrements, no zero labels, region controls, matching
+boundaries and disabled irrelevant paint scope. Final building redraws were about
+50–52 ms locally. Native source hashes stayed unchanged and probes left no drafts.
+Compilation and whitespace passed. Map validator still reports only the known
+railway errors at 893–894. No live Save or game launch; details in painter MODLOG.
+
+## Layered flags and country overwrite confirmation (2026-11-25)
+
+COUNTRIES > Flags now has live color swatches/paste updates and up to eight symbol
+tabs, independent colors/outlines/size/position/stretch/tilt, numeric/slider input
+and hit-tested preview dragging. There are 56 backgrounds (39 added). Galleries
+preview the full stack, outlines are procedural, and caches stay in memory.
+Saved native flag images remain flattened; no persistent layer metadata files.
+Unused-tag creation with existing definition/history sources now asks Yes/No,
+including empty files; approval reuses filenames/preserves unrelated history and
+stages guarded Save. Declining changes no drafts and leaves the form open.
+
+107 painter tests passed. Native mapped alpha-zero UI checked eight actual masks,
+all 56 patterns, layered galleries, 1000x730 country layout and Cancel. Cached
+eight-symbol preview measured about 91 ms locally. Country/tag/flag source hashes
+and drafts stayed unchanged. Python compilation and scoped whitespace checks
+passed. No live Save or game launch. Details: legacy_of_kattail_painter/MODLOG.md.
+
+## Country popularity helpers (2026-11-25)
+
+COUNTRIES > Parties & popularity now has random allocation to remaining blank/zero
+ideologies (preserving positive entries) and proportional Normalize to 100.
+All-zero weights normalize to equal shares. Exact apportionment avoids rounding
+drift; both actions update fields and pie together and use existing Apply/Save.
+Twenty country tests pass, including four new arithmetic/actual-button tests.
+No native data or identifiers changed. Details: painter MODLOG.md.
+
 ## Native state/region editors and VP layer (2026-11-24)
 
 On Painter-Test: MAP > States / regions / VPs, sidebar/library and map

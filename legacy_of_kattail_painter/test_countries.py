@@ -1,18 +1,68 @@
 """Country authoring tests write only to disposable native-schema fixtures."""
 from copy import deepcopy
+from decimal import Decimal
+import random
 import io
 from pathlib import Path
 import tempfile
 import unittest
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 from model import World, parse, value, child, FLAG_SIZES
 from character_model import CharacterStore, atom, block, METADATA
 from demographics import MapCatalogStore, STARTUP
-from country_model import (CountryStore, Country, render_flag, PATTERNS, SPECIES_HISTORY_FLAG, ATTRIBUTE_HISTORY_FLAG,
-                           copy_ideology_names, definite_name, COUNTRY_LOC, IDEA_LOC, IDEAS)
+from country_model import (CountryStore, Country, CountrySourceExists, render_flag, symbol_alpha, PATTERNS, SPECIES_HISTORY_FLAG, ATTRIBUTE_HISTORY_FLAG,
+                           copy_ideology_names, definite_name, distribute_popularities, COUNTRY_LOC, IDEA_LOC, IDEAS)
 import test_painter as fixtures
+
+
+class PopularityTests(unittest.TestCase):
+    def test_normalize_preserves_proportions_zeros_and_exact_total(self):
+        for weights in [{'a':'150','b':'50','c':'0'},{'a':'1','b':'1','c':'1'},dict.fromkeys('abc','0')]:
+            result=distribute_popularities(weights)
+            self.assertEqual(sum(map(Decimal,result.values())),100)
+            if weights['a']=='150':self.assertEqual(result,{'a':'75','b':'25','c':'0'})
+            else:self.assertLessEqual(max(map(Decimal,result.values()))-min(map(Decimal,result.values())),Decimal('.000001'))
+
+    def test_random_remaining_preserves_entered_values_and_fills_exact_remainder(self):
+        original={'a':'37.25000001','b':'0','c':'','d':'0'}
+        result=distribute_popularities(original,True,random.Random(42))
+        self.assertEqual(result['a'],original['a']);self.assertEqual(sum(map(Decimal,result.values())),100)
+        self.assertTrue(all(Decimal(result[k])>0 for k in 'bcd'));self.assertGreater(len({result[k] for k in 'bcd'}),1)
+        self.assertEqual(original['c'],'')
+        self.assertEqual(distribute_popularities({'a':'100','b':'0'},True),{'a':'100','b':'0'})
+
+    def test_invalid_inputs_and_exhausted_remaining_entries(self):
+        for values,remaining in [({'a':'NaN'},False),({'a':'-1'},False),({'a':'bad'},True),({'a':'80','b':'30','c':'0'},True),({'a':'20','b':'30'},True)]:
+            with self.subTest(values=values),self.assertRaises(ValueError):distribute_popularities(values,remaining)
+
+    def test_real_buttons_update_fields_and_pie_together(self):
+        import tkinter as tk
+        from tkinter import ttk
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from country_ui import CountryDialog
+        from select_ui import Choice
+        root=tk.Tk();root.withdraw();root.attributes('-alpha',0)
+        try:
+            dialog=CountryDialog.__new__(CountryDialog);tk.Toplevel.__init__(dialog,root);dialog.attributes('-alpha',0)
+            frame=ttk.Frame(dialog);frame.pack(fill='both',expand=True);dialog.frames={'politics':frame};dialog.boxes=[]
+            dialog.ruling=tk.StringVar(value='a');dialog.data=SimpleNamespace(popularities={'a':'40','b':'0','c':'0'})
+            dialog.ideology_choices=lambda:[Choice(k,k.upper()) for k in 'abc']
+            dialog.countries=SimpleNamespace(ideologies=lambda:{k:{'color':rgb} for k,rgb in zip('abc',[(255,0,0),(0,255,0),(0,0,255)])})
+            dialog.build_politics();root.deiconify();root.update()
+            left=frame.winfo_children()[0];actions={w.cget('text'):w for w in left.winfo_children() if isinstance(w,ttk.Button)}
+            actions['Assign random weights to remaining ideologies'].invoke()
+            self.assertEqual(dialog.pop['a'].get(),'40');self.assertEqual(sum(Decimal(v.get()) for v in dialog.pop.values()),100)
+            self.assertTrue(dialog.pie.find_all());self.assertIn('Total: 100%',dialog.total.get())
+            for v in dialog.pop.values():v.set('1')
+            actions['Normalize to 100'].invoke();self.assertEqual(sum(Decimal(v.get()) for v in dialog.pop.values()),100)
+            self.assertIn('Total: 100%',dialog.total.get())
+            dialog.pop['a'].set('bad');before={k:v.get() for k,v in dialog.pop.items()}
+            with patch('country_ui.messagebox.showerror') as error:actions['Normalize to 100'].invoke();error.assert_called_once()
+            self.assertEqual(before,{k:v.get() for k,v in dialog.pop.items()})
+        finally:root.update_idletasks();root.destroy()
 
 
 class CountryTests(unittest.TestCase):
@@ -202,6 +252,107 @@ class CountryTests(unittest.TestCase):
         self.assertEqual(self.store.names('AAA')['']['def'],'')
 
 
+    def test_create_collision_confirmation_guard_accept_save_and_undo(self):
+        history='history/countries/CCC - Existing.txt';definition='common/countries/CCC.txt'
+        (self.root/history).write_text('capital = 2\nunknown = { keep = yes }\n1940.1.1 = { set_stability = .8 }\n')
+        (self.root/definition).write_text('graphical_culture = custom_gfx\nunknown = yes\n')
+        d=Country('CCC','','Gamma',capital='1',ruling='neutrality',popularities={'neutrality':'100'},names={'':{'name':'Gamma','def':'Gamma'}})
+        with self.assertRaises(CountrySourceExists) as caught:self.store.apply(d,'#123456',d.names,create=True)
+        self.assertEqual(set(caught.exception.paths),{history,definition});self.assertFalse(self.world.docs.changed)
+        self.store.apply(d,'#123456',d.names,create=True,overwrite=True)
+        self.assertEqual(d.path,history);self.assertIn('unknown = { keep = yes }',self.world.docs.text(history));self.assertIn('1940.1.1',self.world.docs.text(history))
+        self.assertIn('custom_gfx',self.world.docs.text(definition));self.assertNotIn('history/countries/CCC.txt',self.world.docs.changed)
+        self.world.docs.undo();self.world.refresh_countries();self.assertFalse(self.world.docs.changed);self.assertNotIn('CCC',self.world.country_paths)
+        self.world.docs.redo();self.world.refresh_countries();self.world.docs.save()
+        self.assertIn('capital = 1',(self.root/history).read_text());self.assertFalse((self.root/'history/countries/CCC.txt').exists())
+
+    def test_empty_country_source_prompts_and_decline_keeps_form_open(self):
+        import tkinter as tk
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from country_ui import CountryDialog
+        path=self.root/'history/countries/CCC.txt';path.write_bytes(b'')
+        root=tk.Tk();root.withdraw();root.attributes('-alpha',0)
+        try:
+            app=SimpleNamespace(world=self.world,country_store=self.store,character_store=self.characters)
+            d=CountryDialog(root,app);d.attributes('-alpha',0);d.tag.set('CCC');d.base_name.set('Gamma');d.capital.set('1')
+            root.deiconify();root.update()
+            with patch('country_ui.messagebox.askyesno',return_value=False) as ask:d.ok();ask.assert_called_once()
+            self.assertTrue(d.winfo_exists());self.assertTrue(d.new);self.assertFalse(self.world.docs.changed);self.assertEqual(path.read_bytes(),b'')
+            with patch('country_ui.messagebox.askyesno',return_value=True) as ask:d.ok();ask.assert_called_once()
+            self.assertFalse(d.winfo_exists());self.assertIn('CCC',self.world.country_paths);self.assertEqual(path.read_bytes(),b'')
+        finally:root.update_idletasks();root.destroy()
+
+    def test_symbol_outline_transforms_and_layer_order(self):
+        mask=Image.new('L',(20,40),255)
+        a={'mask':mask,'tint':'#ff0000','scale':.5};b={**a,'tint':'#00ff00','scale':.25}
+        image=render_flag('Solid',['#000000'],symbols=[a,b]);self.assertEqual(image.getpixel((41,26)),(0,255,0))
+        outlined=render_flag('Solid',['#000000'],symbols=[{**a,'outline_width':2,'outline_color':'#0000ff'}])
+        self.assertEqual(outlined.getpixel((41,26)),(255,0,0));self.assertGreater(sum(b>100 and r<30 for r,g,b in outlined.getdata()),30)
+        wider=symbol_alpha({**a,'stretch_x':2});normal=symbol_alpha(a);rotated=symbol_alpha({**a,'angle':90})
+        box=normal.getbbox();wide=wider.getbbox();rot=rotated.getbbox();self.assertGreater(wide[2]-wide[0],box[2]-box[0]);self.assertGreater(rot[2]-rot[0],rot[3]-rot[1])
+        shifted=symbol_alpha({**a,'x':.8,'y':.2}).getbbox();self.assertGreater(shifted[0],box[0]);self.assertLess(shifted[1],box[1])
+        self.assertIsNotNone(symbol_alpha({**a,'scale':.05,'stretch_x':.1}).getbbox())
+        with self.assertRaises(ValueError):render_flag('Solid',['#000000'],symbols=[a]*9)
+
+    def test_new_country_color_preview_before_and_after_save(self):
+        self.world.country_colours()
+        d=Country('CCC','','Gamma',capital='1',ruling='neutrality',popularities={'neutrality':'100'},names={'':{'name':'Gamma','def':'Gamma'}})
+        self.store.apply(d,'#123456',d.names,create=True)
+        self.assertEqual(self.world.country_colours()['CCC'],(18,52,86))
+        self.world.docs.save();self.assertEqual(self.world.country_colours()['CCC'],(18,52,86))
+        self.assertEqual(World(self.root).country_colours()['CCC'],(18,52,86))
+
+    def test_duplicate_color_overrides_and_ui_colors_follow_form(self):
+        p=self.root/'common/countries/colors.txt'
+        p.write_text('AAA={color=rgb{1 2 3} color_ui=rgb{3 2 1} keep=yes}\nBBB={color=rgb{4 5 6}}\nAAA={color=rgb{7 8 9} color_ui=rgb{9 8 7}}')
+        self.world.country_colours();d=self.store.read('AAA');self.store.apply(d,'#123456',d.names)
+        self.assertEqual(self.world.country_colours()['AAA'],(18,52,86))
+        text=self.world.docs.text('common/countries/colors.txt')
+        for root in parse(text):
+            if root.key=='AAA':
+                for n in root.children:
+                    if n.key in {'color','color_ui'}:self.assertEqual([c.key for c in n.children],['18','52','86'])
+        self.assertIn('keep=yes',text);self.assertIn('BBB={color=rgb{4 5 6}}',text)
+
+    def test_country_form_color_popularity_save_reopen_and_exact_legend(self):
+        import tkinter as tk
+        from types import SimpleNamespace
+        from country_ui import CountryDialog
+        root=tk.Tk();root.withdraw();root.attributes('-alpha',0)
+        try:
+            app=SimpleNamespace(world=self.world,country_store=self.store,character_store=self.characters)
+            d=CountryDialog(root,app,'AAA');d.attributes('-alpha',0);root.deiconify();root.update()
+            d.color.set('#ab12cd');d.pop['democratic'].set('12.345678');d.pop['neutrality'].set('87.654322')
+            d.ok();self.world.docs.save()
+            reopened=CountryDialog(root,app,'AAA');reopened.attributes('-alpha',0);reopened.tabs.select(reopened.frames['politics']);root.update()
+            self.assertEqual(reopened.color.get(),'#ab12cd');self.assertEqual(reopened.pop['democratic'].get(),'12.345678')
+            import numpy as np
+            self.world.map_ids=np.array([[1,2]],dtype=np.int32)
+            self.assertEqual(self.world.map_image('Owners').getpixel((0,0)),(171,18,205))
+            text=[reopened.pie.itemcget(i,'text') for i in reopened.pie.find_all() if reopened.pie.type(i)=='text']
+            self.assertTrue(any('12.345678%' in t for t in text));self.assertTrue(any('87.654322%' in t for t in text));reopened.cancel()
+        finally:root.update_idletasks();root.destroy()
+
+    def test_country_summary_uses_owned_drafted_states_and_is_read_only(self):
+        import tkinter as tk
+        from types import SimpleNamespace
+        from country_ui import CountryDialog
+        for sid,pop,oil,civs in [(1,100,5,3),(2,50,4,2)]:
+            path=self.world.states[sid].path;text=self.world.docs.text(path)
+            text=text.replace('state = {',f'state = {{ manpower = {pop} resources = {{ oil = {oil} }}',1)
+            text=text.replace('history = {',f'history = {{ buildings = {{ industrial_complex = {civs} arms_factory = 2 dockyard = 1 }}',1);self.world.docs.replace(path,text)
+        summary=self.store.summary('AAA');self.assertEqual(summary['population'],100);self.assertEqual(summary['resources']['oil'],5);self.assertEqual(summary['factories']['industrial_complex'],3)
+        self.world.set_owner_draft(2,'AAA');summary=self.store.summary('AAA');self.assertEqual(summary['population'],150);self.assertEqual(summary['states'],2);self.assertEqual(summary['resources']['oil'],9)
+        root=tk.Tk();root.withdraw();root.attributes('-alpha',0)
+        try:
+            d=CountryDialog(root,SimpleNamespace(world=self.world,country_store=self.store,character_store=self.characters),'AAA');d.attributes('-alpha',0)
+            before=dict(self.world.docs.drafts);root.deiconify();d.tabs.select(d.frames['summary']);root.update()
+            self.assertIn('150',d.summary_population.get());self.assertEqual(before,self.world.docs.drafts)
+            self.assertEqual(len(d.summary_factories.get_children()),5);d.cancel()
+        finally:root.update_idletasks();root.destroy()
+
+
 class FlagGalleryTests(unittest.TestCase):
     def setUp(self):
         import tkinter as tk
@@ -272,6 +423,34 @@ class FlagGalleryTests(unittest.TestCase):
         choose('mask:plantoid_0004',True);self.designer.emblem_box.arrow.invoke();self.assertEqual(self.designer.emblem.get(),'mask:plantoid_0004')
         choose('',True);self.designer.emblem_box.arrow.invoke();self.assertEqual(self.designer.emblem.get(),'')
         self.assertFalse(failures);self.assertFalse(self.applied);self.assertIsNone(self.root.grab_current())
+
+    def test_pasted_colors_swatches_and_invalid_recovery_are_live(self):
+        self.designer.pattern.set('Solid');self.pump()
+        var,swatch,entry=self.designer.color_controls[0]
+        self.root.clipboard_clear();self.root.clipboard_append(' #12ab34 ');entry.delete(0,'end');entry.event_generate('<<Paste>>');self.pump(.2)
+        self.assertEqual(swatch.cget('background'),'#12ab34');self.assertEqual(self.designer.latest.getpixel((0,0)),(18,171,52))
+        var.set('#not-a-color');self.pump();self.assertIsNone(self.designer.latest);self.assertEqual(str(self.designer.use_button.cget('state')),'disabled')
+        var.set('#ff00aa');self.pump();self.assertEqual(self.designer.latest.getpixel((0,0)),(255,0,170));self.assertEqual(str(self.designer.use_button.cget('state')),'normal')
+        self.assertFalse(self.applied)
+
+    def test_eight_symbol_tabs_sliders_drag_and_gallery_composite(self):
+        from types import SimpleNamespace
+        from country_ui import FlagLibraryPicker
+        d=self.designer;d.emblem.set('mask:plantoid_0000');d.tint.set('#ff0000');d.symbols[0]['x'].set('.25')
+        d.add_button.invoke();d.emblem.set('mask:plantoid_0001');d.tint.set('#00ff00');layer=d.symbols[1];layer['x'].set('.75');layer['outline'].set(True);layer['outline_color'].set('#0000ff')
+        layer['numeric']['angle'][0].set(45);self.pump();self.assertAlmostEqual(float(layer['angle'].get()),45)
+        layer['angle'].set('90');self.assertAlmostEqual(layer['numeric']['angle'][0].get(),90)
+        layer['angle'].set('0');self.pump();origin=d._preview_origin
+        start=SimpleNamespace(x=origin[0]+246*.75,y=origin[1]+156*.5);d.drag_start(start)
+        self.assertIsNotNone(d._drag);d.drag_move(SimpleNamespace(x=start.x-25,y=start.y+15));d.drag_end()
+        self.assertLess(float(layer['x'].get()),.75);self.assertGreater(float(layer['y'].get()),.5)
+        self.assertEqual(d.symbols[0]['x'].get(),'.25');self.assertEqual(d.symbols[0]['tint'].get(),'#ff0000')
+        picker=FlagLibraryPicker(d,'background');self.pump();direct=d.render().resize((82,52),Image.Resampling.LANCZOS)
+        preview=picker.flag_image(d.pattern.get(),(82,52));self.assertLess(sum(ImageChops.difference(direct,preview).convert('L').getdata())/(82*52),3);picker.destroy()
+        for i in range(8):d.add_button.invoke()
+        self.assertEqual(len(d.symbols),8);self.assertEqual(str(d.add_button.cget('state')),'disabled')
+        d.remove_symbol();self.assertEqual(len(d.symbols),7);self.assertEqual(str(d.add_button.cget('state')),'normal')
+        d.use();self.assertEqual(len(self.applied),1);self.assertEqual(self.applied[0].size,(328,208))
 
     def test_source_filters_keyboard_and_missing_asset_recovery(self):
         from country_ui import FlagLibraryPicker
