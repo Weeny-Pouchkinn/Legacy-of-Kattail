@@ -1318,7 +1318,7 @@ class Painter(ttk.Frame):
         self.geography_store.validate_save()
         self.imperium_store.validate_save()
         self.railway_store.prepare_save()
-        self.world.normalise_demographics()
+        self.world.prepare_save()
         self.character_store.prepare_save()
 
     def undo(self):

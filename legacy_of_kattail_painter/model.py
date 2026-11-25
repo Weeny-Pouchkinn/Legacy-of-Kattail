@@ -175,7 +175,7 @@ class Documents:
         if suffix == '.json':
             json.loads(text)
         elif suffix == '.yml':
-            if 'l_english:' not in text.splitlines():
+            if not text.splitlines() or text.splitlines()[0] != 'l_english:':
                 raise ValueError('English localisation header is missing')
             keys = re.findall(r'^\s*([^\s:#]+):\d*\s*"', text, re.M)
             if len(keys) != len(set(keys)):
@@ -267,9 +267,36 @@ class Documents:
     def changed(self):
         return [p for p, t in self.drafts.items() if self._blob(p, t) != self.snapshots[p]]
 
+    def validate_localisation_changes(self):
+        changed = {p for p in self.changed if p.startswith('localisation/') and p.endswith('.yml')}
+        if not changed:
+            return
+        paths = {p.relative_to(self.root).as_posix() for p in (self.root/'localisation').rglob('*.yml')}
+        paths.update(p for p in self.drafts if p.startswith('localisation/') and p.endswith('.yml'))
+        seen = {}
+        for path in sorted(paths):
+            if path in changed:
+                source = self.text(path)
+            else:
+                if not (self.root/path).is_file():
+                    continue
+                source = self._decode((self.root/path).read_bytes())
+            if not source or source.splitlines()[0] != 'l_english:':
+                continue
+            if path in changed and not self.binary(path).startswith(b'\xef\xbb\xbf'):
+                raise ValueError('English localisation must have a UTF-8 BOM: ' + path)
+            # The engine deliberately permits overrides in its replace layer.
+            layer = 'replace' if 'replace' in Path(path).parts else 'base'
+            for key in re.findall(r'^\s*([^\s:#]+):\d*\s*"', source, re.M):
+                previous = seen.get((layer, key))
+                if previous and (path in changed or previous in changed):
+                    raise ValueError(f'Duplicate localisation key {key}: {previous} and {path}. Edit the existing definition.')
+                seen[layer, key] = path
+
     def save(self):
         if self.before_save is not None:
             self.before_save()
+        self.validate_localisation_changes()
         changes = {}
         for relative in self.changed:
             if isinstance(self.drafts[relative], str):
@@ -355,7 +382,49 @@ class World:
                             for f in (self.root / folder).rglob('*')
                             if f.is_file() and f.suffix.lower() in {'.txt', '.gui', '.gfx', '.asset'})
         self._demographic_catalogs()
-        self.docs.before_save = self.normalise_demographics
+        self.docs.before_save = self.prepare_save
+
+    def validate_capitals(self):
+        """Reject newly invalid capitals after owner painting or country edits."""
+        affected = set()
+        for path in self.docs.changed:
+            if not path.startswith(('history/states/', 'history/countries/')):
+                continue
+            before = self.docs.snapshots[path]
+            old = self.docs._decode(before) if before is not None else ''
+            new = self.docs.text(path)
+            if path.startswith('history/states/'):
+                def owner(source):
+                    state = child(parse(source), 'state')
+                    history = child(state.children, 'history') if state else None
+                    return scalar(source, history.children, 'owner') if history else ''
+                old_owner, new_owner = owner(old), owner(new)
+                if old_owner != new_owner:
+                    affected.update((old_owner, new_owner))
+            elif scalar(old, parse(old), 'capital') != scalar(new, parse(new), 'capital'):
+                affected.add(Path(path).name[:3])
+        if not affected:
+            return
+        self.refresh_countries()
+        owned = {tag: set() for tag in affected}
+        for sid in self.states:
+            source, nodes = self.state_nodes(sid)
+            history = child(nodes, 'history')
+            tag = scalar(source, history.children, 'owner') if history else ''
+            if tag in owned:
+                owned[tag].add(sid)
+        for tag in sorted(owned):
+            states = owned[tag]
+            if not states or tag not in self.countries:
+                continue  # Dormant/releasable countries may retain a nominal capital.
+            source = self.docs.text(self.countries[tag])
+            capital = scalar(source, parse(source), 'capital')
+            if capital.isdigit() and int(capital) not in states:
+                raise ValueError(f'{tag} no longer owns capital state {capital}. Choose an owned capital in Countries before saving.')
+
+    def prepare_save(self):
+        self.validate_capitals()
+        self.normalise_demographics()
 
     def normalise_demographics(self):
         from demographics import repair_redundant_minorities

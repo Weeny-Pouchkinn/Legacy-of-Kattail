@@ -2414,22 +2414,48 @@ add_to_array = { array = global.culture_group_1_array value = 1 }
 						NOT = { tag = KAR }
 						check_variable = { num_battalions < 1 }
 					}
-					division_template = {
-						name = "Standard Infantry"
-						is_locked = no
-						regiments = {
-							motorized = { x = 0 y = 0 }
-							motorized = { x = 0 y = 1 }
-							motorized = { x = 0 y = 2 }
-							motorized = { x = 0 y = 3 }
-							motorized = { x = 1 y = 0 }
-							motorized = { x = 1 y = 1 }
-							motorized = { x = 1 y = 2 }
-							motorized = { x = 1 y = 3 }
+					# Keep the motorized/support template only when its equipment is unlocked.
+					# Basic infantry equipment is active in the native equipment database.
+					if = {
+						limit = {
+							has_tech = motorised_infantry
+							has_tech = gw_artillery
+							has_tech = tech_support
+							has_tech = tech_engineers
 						}
-						support = {
-							artillery = { x = 0 y = 0 }
-							engineer = { x = 0 y = 1 }
+						division_template = {
+							name = "Standard Infantry"
+							is_locked = no
+							regiments = {
+								motorized = { x = 0 y = 0 }
+								motorized = { x = 0 y = 1 }
+								motorized = { x = 0 y = 2 }
+								motorized = { x = 0 y = 3 }
+								motorized = { x = 1 y = 0 }
+								motorized = { x = 1 y = 1 }
+								motorized = { x = 1 y = 2 }
+								motorized = { x = 1 y = 3 }
+							}
+							support = {
+								artillery = { x = 0 y = 0 }
+								engineer = { x = 0 y = 1 }
+							}
+						}
+					}
+					else = {
+						division_template = {
+							name = "Standard Infantry"
+							is_locked = no
+							regiments = {
+								infantry = { x = 0 y = 0 }
+								infantry = { x = 0 y = 1 }
+								infantry = { x = 0 y = 2 }
+								infantry = { x = 0 y = 3 }
+								infantry = { x = 1 y = 0 }
+								infantry = { x = 1 y = 1 }
+								infantry = { x = 1 y = 2 }
+								infantry = { x = 1 y = 3 }
+							}
 						}
 					}
 					every_controlled_state = {

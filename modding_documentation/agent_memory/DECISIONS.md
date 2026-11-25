@@ -566,3 +566,32 @@ editing a shared object updates all its states. No deletion or ID renumbering is
 introduced. Initial elements/territory remain empty; Schutzone Pegasien/MCF was
 an example rather than a historical assignment instruction. Game check pending;
 tests/native Tk probe passed. See katzenartig_imperium/README.md for paths/audit.
+
+## 2026-11-25: Conservative startup repairs and editor preflight
+
+Decision: retain current borders and accepted neutral/friendly deployments;
+relocate only the 64 logged enemy deployments. Choose owned capitals using
+existing VP then population. Use basic infantry for the existing startup army
+generator when its motorized/support technology requirements are unmet; grant
+no new tech and keep division/battalion counts. Give the 21 overfilled states
+53 explicit local shared slots rather than deleting factories or changing a
+category globally. Reuse authored generic names and existing scientist art as
+native default fallbacks instead of inventing national lore.
+
+Canonical VP localisation remains in victory_points files; current Jublio
+state/region names remain in the Jublio file. Preserve all shadowed authored
+alternatives verbatim as comments and keep intentional replace-layer overrides.
+Write 32-bit RGBA flags with unchanged RGB. Detect horizontal-wrap X crossings;
+resolve the two observed junctions with two existing-color pixels.
+
+Painter Save now rejects newly foreign capitals for active countries and new
+cross-file localisation collisions, while retaining dormant capitals, grouped
+edits/Undo, BOM/header safeguards and intentional replace-layer semantics.
+Port only missing current-version GUI blocks and their sprite dependencies,
+including the core.gfx circle sprite. No descriptor/replace_path changes.
+
+Rationale: errors came from mismatched ownership, equipment availability,
+incomplete inherited GUI contracts and missing fallbacks, not a need for new
+territory or content. Consequences and evidence: error_log_repair_20261125/
+README.md, verification.json and files.txt. The external Workshop warnings are
+not mod-owned errors and are not repaired by modifying this repository.

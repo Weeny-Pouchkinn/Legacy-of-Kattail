@@ -669,7 +669,7 @@ class CountryStore:
     def write_flag(self, tag, ideology, image):
         if not re.fullmatch('[A-Z][A-Z0-9]{2}',tag) or ideology and ideology not in self.ideologies(): raise ValueError('Choose a native tag/ideology')
         for size, dimensions in FLAG_SIZES.items():
-            out=io.BytesIO(); image.convert('RGB').resize(dimensions,Image.Resampling.LANCZOS).save(out,format='TGA')
+            out=io.BytesIO(); image.convert('RGB').resize(dimensions,Image.Resampling.LANCZOS).convert('RGBA').save(out,format='TGA')
             self.docs.stage_bytes(self.flag_path(tag,ideology,size),out.getvalue())
 
     def leaders(self, tag):

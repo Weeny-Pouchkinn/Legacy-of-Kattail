@@ -1541,3 +1541,23 @@ staged repair backed up through source_io. No game/CWTools check: whether the
 undefined overlay caused Altarian's reported white appearance is not proven.
 Full files, source locations, audit, recovery and limits:
 modding_documentation/agent_memory/demographic_map_colors/README.md.
+
+## 2026-11-25: Startup-error repairs and painter safeguards
+
+Country/flag Save and the EU4 importer now export 32-bit RGBA TGA, preserving
+pixels/dimensions. Owner/source/country edits cannot save a newly foreign capital
+for an active country; dormant nominal capitals remain supported. The actual
+Painter prepare_save callback invokes the same World guard. Cross-file English
+localisation checks honor replace-layer overrides, fresh external edits and
+Undo of file creation; BOM and the first-line header are protected.
+
+The malformed armored OOB opening was fixed in generate_oobs.py and the four
+affected generated files. Native game repairs cover old GUI contracts and
+sprite dependencies, two wrap-seam crossings, enemy deployments/capitals,
+startup equipment availability, fallback names/portraits, shared slots,
+localisation collisions and orphaned optional music. Existing culture/species/
+Imperium assignments and authored text remain intact.
+
+Thirteen focused save/format regressions accompany the existing suite. Full
+verification, engine-log evidence, exact paths/IDs and recovery manifests:
+../modding_documentation/agent_memory/error_log_repair_20261125/README.md.

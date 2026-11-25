@@ -1,5 +1,36 @@
 # Current status
 
+## Current error-log audit and repair plan (2026-11-25)
+
+Analysis only on actual branch Painter-Test, HEAD a5958d259. Inspected the fresh
+local logs/error.log (22:17:30 UTC), installed HOI4 1.20.0.0.8873, companion
+text.log and current sources. Classified all 1,526 timestamped records / 1,528
+physical lines into 16 families. No game content or descriptor changes.
+
+Major findings: outdated GUI contracts (including two undefined windows),
+startup army templates requiring unavailable equipment, missing random name and
+scientist portrait pools, ownership/capital/deployment mismatches, 21 overfilled
+states, 198 distinct 24-bit flag files and orphaned Sabaton playlists. text.log
+expands one collision warning into 3,542 duplicate keys (2,599 differing values).
+Six Workshop descriptor warnings belong outside this repository.
+
+Correction to earlier map-validation confidence: the current validator passes,
+but its X-crossing scan omits horizontal wrap. Independent current-bitmap scan
+finds two seam crossings matching the fresh log's x=4095 region. Earlier
+validator pass statements describe the checks actually performed, not proof of
+seam correctness. Imperium's earlier empty-scaffold statement is historical:
+current user-authored definitions/assignments were observed and preserved.
+
+Validation: read-only classification/count reconciliation, source/reference
+checks, flag-header checks, current-state parsing and python -B
+tools/validate_map.py (exit 0, qualified by verified seam gap). No game launch,
+CWTools or implementation tests. Full ordered plan, exact sources/paths,
+acceptance checks and open design decisions: plans/current-error-log-fix-plan.md.
+Complete message/key/path inventory and source hashes:
+error_log_audit_20261125/inventory.json. All repair milestones remain pending.
+Next action: patch the five GUI overrides against installed 1.20, isolate the
+inherited ROM scripted GUI, and verify those interfaces in a fresh campaign.
+
 ## Katzenartig Imperium elements and mapmode (2026-11-25)
 
 Implemented States > Katzenartig Imperium with reusable, editable objects in the

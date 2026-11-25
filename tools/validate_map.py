@@ -20,6 +20,20 @@ def error(message: str) -> None:
     ERRORS.append(message)
 
 
+def x_crossing_coordinates(packed: np.ndarray) -> list[tuple[int, int]]:
+    """Return top-left image coordinates, including the horizontal wrap seam."""
+    top_left, bottom_left = packed[:-1], packed[1:]
+    top_right = np.roll(top_left, -1, axis=1)
+    bottom_right = np.roll(bottom_left, -1, axis=1)
+    crossings = (
+        (top_left != top_right) & (top_left != bottom_left)
+        & (top_left != bottom_right) & (top_right != bottom_left)
+        & (top_right != bottom_right) & (bottom_left != bottom_right)
+    )
+    ys, xs = np.nonzero(crossings)
+    return [(int(x), int(y)) for x, y in zip(xs, ys)]
+
+
 def state_history_count(text: str) -> int:
     """Count direct state histories, ignoring comments, strings and dated effects."""
     tokens = re.findall(r'#[^\r\n]*|"(?:\\.|[^"\\])*"|[{}=]|[^\s{}=#"]+', text)
@@ -101,23 +115,10 @@ def main() -> int:
     if missing_pixels:
         error(f"{len(missing_pixels)} province definitions have no bitmap pixels")
 
-    quads = np.stack(
-        (
-            packed[:-1, :-1],
-            packed[:-1, 1:],
-            packed[1:, :-1],
-            packed[1:, 1:],
-        ),
-        axis=2,
-    )
-    ordered = np.sort(quads, axis=2)
-    x_crossings = (
-        (ordered[:, :, 0] != ordered[:, :, 1])
-        & (ordered[:, :, 1] != ordered[:, :, 2])
-        & (ordered[:, :, 2] != ordered[:, :, 3])
-    )
-    if np.any(x_crossings):
-        error(f"{int(np.sum(x_crossings))} invalid X crossings remain")
+    crossings = x_crossing_coordinates(packed)
+    if crossings:
+        error(f"{len(crossings)} invalid X crossings remain "
+              f"(top-left image coordinates): {crossings[:20]}")
 
     adjacency: set[tuple[int, int]] = set()
     for left, right in (

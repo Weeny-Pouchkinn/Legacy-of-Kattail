@@ -165,7 +165,9 @@ class CountryTests(unittest.TestCase):
         self.world.docs.redo();self.world.refresh_countries();self.assertIn('CCC',self.world.countries)
         for group in ('','democratic'):
             for size,dimensions in FLAG_SIZES.items():
-                with Image.open(io.BytesIO(self.world.docs.binary(self.store.flag_path('CCC',group,size)))) as image:self.assertEqual(image.size,dimensions);self.assertEqual(image.mode,'RGB')
+                with Image.open(io.BytesIO(self.world.docs.binary(self.store.flag_path('CCC',group,size)))) as image:
+                    self.assertEqual(image.size,dimensions);self.assertEqual(image.mode,'RGBA')
+                    self.assertEqual(image.getchannel('A').getextrema(),(255,255))
         self.world.docs.save();loaded=World(self.root);chars=CharacterStore(loaded);chars.game_root=self.game;store=CountryStore(loaded,chars,MapCatalogStore(loaded,chars))
         self.assertEqual(store.read('CCC').capital,'2');self.assertEqual(store.read('CCC').laws['species'],'var_species_1');self.assertEqual(chars.localisations()['CCC_DEF'],'Gamma')
         self.assertTrue((self.root/COUNTRY_LOC).read_bytes().startswith(b'\xef\xbb\xbf'))

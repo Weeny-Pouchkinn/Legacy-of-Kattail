@@ -403,7 +403,7 @@ def plan(eu4):
                 if path.exists():
                     INPUTS[path] = path.read_bytes()
                 out = io.BytesIO()
-                flag.resize(size, Image.Resampling.LANCZOS).save(out, format="TGA")
+                flag.convert("RGBA").resize(size, Image.Resampling.LANCZOS).save(out, format="TGA")
                 if INPUTS.get(path) != out.getvalue():
                     outputs[relative] = out.getvalue()
         if history_new:

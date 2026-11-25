@@ -164,7 +164,7 @@ for tag, filepath, content in targets:
         
     for i in range(arm_c):
         loc = get_loc(all_provs)
-        out_lines.append(f'\tdivision = "{i+1}st {adj_name} Armored" location = {loc} division_template = "{arm_name}" }}')
+        out_lines.append(f'\tdivision = {{ name = "{i+1}st {adj_name} Armored" location = {loc} division_template = "{arm_name}" }}')
         
     out_lines.append('}')
     
