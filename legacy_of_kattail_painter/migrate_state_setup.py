@@ -52,6 +52,7 @@ def build(mod, output):
     world.docs.replace(STARTUP, text)
     for sid, data in sorted(baseline.items()):
         set_local_draft(world, sid, data['culture'], data['species'], data['minority'])
+    world.docs.format_script_drafts()
     # Replay only remaining startup initializers plus the new authoritative state files.
     replay = Setup(world)
     after = replay.load()

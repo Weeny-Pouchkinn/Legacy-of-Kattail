@@ -134,6 +134,7 @@ def prepare(world):
             if fingerprint(world.docs.binary(moved['to'])) != moved['sha256']:
                 raise ValueError('Refactor overwrote original portrait art: ' + moved['to'])
         audit['localisation_keys_preserved'] = len(original_loc)
+        world.docs.format_script_drafts()
         audit['files'] = {p: {'before': fingerprint(world.docs.snapshots[p]), 'after': fingerprint(world.docs.binary(p))}
                           for p in world.docs.changed}
     return store, audit

@@ -1,5 +1,46 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-26 - Native script layout audit and existing-output repair
+
+Audited 41 painter Python sources and direct CLI exporters. Shared Save now
+formats changed structured containers after all span-based edits: actual tabs
+per brace depth, multiline complex definitions/modifiers/bonuses, readable short
+inline parameters/lists. Field insertion uses syntax depth. CLI migration,
+character refactor and Koppen reapply include layout before output/audit hashes.
+Non-Clausewitz/line-oriented formats keep their own writers. Exact token streams
+including comments, quoted strings, values and order are invariant.
+
+Repaired 180 proven painter-output files with guarded backups and independent
+structure checks; second dry run proposes zero changes. Unresolved historical
+records are not used to claim ownership. No semantic content changed. All 211
+tests pass; 11 Python files compile; map validation passes before/after. Existing
+and new spirit native UI Apply/Undo probes pass with Save forbidden and 4,325
+native hashes unchanged. Game/CWTools not run. Global whitespace check still
+reports inherited untouched portrait carriage returns. Exact paths, backup and
+validation: modding_documentation/agent_memory/painter_script_formatting/README.md.
+## 2026-11-26 - National-spirit research and equipment bonus editors
+
+Spirit editor now has separate Modifiers, Research bonuses and Equipment bonuses
+tabs. Search research categories, equipment IDs/types and equipment stats; add,
+update or remove values. Equipment instant/default setting loads existing flags,
+defaults to immediate for new targets, and preserves explicit user choices.
+Native documentation says default/no affects newly created equipment variants.
+
+Catalogs follow effective mod/vanilla file overlays, including empty overrides
+and replace_path. Current installation: 139 research categories, 393 equipment
+IDs/types and 57 equipment stats, including module stats; metadata fields are
+excluded. Existing unsupported/variable values remain unchanged unless edited.
+Source writer patches only changed scalar leaves, including repeated bonus
+blocks, and preserves other fields/comments/nested data. Older API calls leave
+both bonus families untouched. Native writes share spirit Apply/Undo/Save.
+
+Validation: seven focused regressions and all 204 painter tests pass; four Python
+files compile. Real mapped AUR spirit UI loading/search/Add/Apply/Undo/Cancel
+passed with live Save forbidden, no callback errors and 4,324 native sources
+unchanged. No live spirits or game objects seeded. Game/CWTools untested.
+Details/paths/sources: modding_documentation/agent_memory/
+spirit_research_equipment_bonuses/README.md and verification.json.
+
 ## 2026-11-26 - Complete vanilla modifier catalog and spirit filtering
 
 Fixed national spirits hiding/rejecting army/air/production modifiers: engine

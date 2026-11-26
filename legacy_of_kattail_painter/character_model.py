@@ -63,8 +63,8 @@ def patch_field(text, parent, key, raw):
         n = found[-1]
         return text[:n.value_start] + raw + text[n.end:]
     newline = '\r\n' if '\r\n' in text else '\n'
-    line = text[text.rfind('\n', 0, parent.start) + 1:parent.start]
-    indent = line if not line.strip() else '\t'
+    from script_format import indentation
+    indent = '\t' * indentation(text,parent.start)
     at = text.rfind('\n', 0, parent.end - 1) + 1
     addition = indent + '\t' + key + ' = ' + raw + newline
     if text[at:parent.end - 1].strip():

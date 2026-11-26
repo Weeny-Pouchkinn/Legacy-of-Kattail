@@ -14,7 +14,8 @@ FILES = ['painter.py', 'model.py', 'source_io.py', 'character_model.py', 'charac
          'country_model.py', 'country_ui.py', 'flag_designer.py', 'map_render.py', 'railway_model.py', 'test_railways.py', 'test_countries.py', 'geography_model.py', 'geography_ui.py', 'test_geography.py', 'assets/ministermaker_border.png',
          'run_painter.bat', 'requirements.txt', '.gitignore', 'README.md', 'MODLOG.md', 'PLAN.md', 'test_painter.py', 'test_demographic_colors.py',
          'imperium_model.py', 'imperium_ui.py', 'test_imperium.py',
-         'generic_portrait_model.py', 'generic_portrait_ui.py', 'test_generic_portraits.py']
+         'generic_portrait_model.py', 'generic_portrait_ui.py', 'test_generic_portraits.py', 'test_spirit_bonuses.py',
+         'script_format.py', 'test_script_format.py']
 
 
 def confined(root, relative):

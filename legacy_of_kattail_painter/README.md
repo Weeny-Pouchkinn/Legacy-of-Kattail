@@ -290,6 +290,24 @@ remain in their proper editor. Documented Boolean modifiers accept `yes`/`no`;
 numeric modifiers use finite game-unit numbers. Counts, sources and validation:
 `modding_documentation/agent_memory/vanilla_modifier_catalog/README.md`.
 
+National-spirit editing now has **Modifiers**, **Research bonuses** and
+**Equipment bonuses** tabs. Research bonuses choose a searchable technology
+category and a native bonus value (for example, `0.1` for 10%). Equipment bonuses
+choose an equipment ID/type, equipment stat and value; negative `build_cost_ic`
+reduces cost. Use **Add / update** or select a row and **Remove**.
+
+Equipment **When to apply** offers **Immediately** (`instant = yes`), **New
+variants only** (`instant = no`) and **Native default** (omitted, also new
+variants). New equipment entries start with Immediately selected. Existing
+values and omitted flags load as authored; the chosen setting applies to all
+stat bonuses for that equipment target. Changing a stat keeps the other stats.
+
+Apply stages native `research_bonus` and `equipment_bonus` blocks in the spirit's
+own file. Existing repeated blocks, untouched variable values, comments and
+unrelated conditions/effects are retained. Cancel discards the dialog's changes;
+Undo/Redo and guarded Save work as usual. See exact files, sources and checks in
+`modding_documentation/agent_memory/spirit_research_equipment_bonuses/README.md`.
+
 Vanilla definitions are read-only. **Clone with new ID** copies one into the
 mod, resolving its file-local constants first. Existing mod traits edit their
 own source so existing public IDs/conditions are preserved. Added definitions go
@@ -876,3 +894,15 @@ loads. Country tags and pool changes share the normal guarded Save workflow.
 The existing special-group sprite references were corrected to their registered
 names. Details, sources and validation limits:
 `modding_documentation/agent_memory/generic_portrait_groups/README.md`.
+
+### Generated script layout
+
+Save uses tabs for actual nesting and expands complex definitions, modifiers,
+research bonuses and equipment bonuses into readable blocks. Short parameter
+blocks and province lists retain compact native layouts. Only edited structured
+containers are formatted; unedited neighbors keep their source layout. The
+formatter checks that every token and comment is unchanged before writing.
+
+Historical painter output has also been repaired where native Save backups prove
+which containers the painter edited. Exact paths, backups, audit and validation:
+`modding_documentation/agent_memory/painter_script_formatting/README.md`.

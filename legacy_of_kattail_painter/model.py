@@ -296,6 +296,7 @@ class Documents:
     def save(self):
         if self.before_save is not None:
             self.before_save()
+        self.format_script_drafts()
         self.validate_localisation_changes()
         changes = {}
         for relative in self.changed:
@@ -309,6 +310,19 @@ class Documents:
             self.originals[relative] = self._decode(blob) if text and blob is not None else blob
         self.reset()
         return len(changes), backup
+
+    def format_script_drafts(self):
+        # Format at the operation boundary, never between span-based primitive
+        # edits: those may still hold nodes from the pre-edit source.
+        from script_format import format_changes,script_path
+        for relative in list(self.changed):
+            if not script_path(relative) or self.drafts[relative] is None:continue
+            original=self.snapshots[relative]
+            before=self._decode(original) if original is not None else ''
+            current=self.text(relative);formatted=format_changes(relative,before,current)
+            if formatted==current:continue
+            if isinstance(self.drafts[relative],str):self.replace(relative,formatted)
+            else:self.stage_bytes(relative,encode_source(formatted,self.drafts[relative]))
 
 
 @dataclass

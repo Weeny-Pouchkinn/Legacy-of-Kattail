@@ -11,6 +11,7 @@ from pathlib import Path
 from model import World, value, parse
 from character_model import CharacterStore, CHAR_LOC, PORTRAIT_GFX, atom, block
 from small_portrait import BORDER_PATH
+from script_format import tokens
 
 
 def verify(root):
@@ -29,7 +30,7 @@ def verify(root):
         assert sha((root / moved['to']).read_bytes()) == moved['sha256'], moved['to']
     world = World(root); store = CharacterStore(world)
     current_loc = {k: records[-1][2] for k, records in store.loc_records().items()}
-    current_characters = {k: (c.name, c.countries, [(n.key, value(c.text, n)) for n in c.roles])
+    current_characters = {k: (c.name, c.countries, [(n.key, tokens(value(c.text, n))) for n in c.roles])
                           for k, c in store.characters().items()}
     assert len(current_characters) == audit['characters']
     assert len(store.portraits()) == audit['portrait_pairs']
@@ -40,6 +41,7 @@ def verify(root):
     assert len(names) == len(set(names)), 'Duplicate main portrait sprite ID'
     assert 'noOfFrames' in text, 'Animated sprite fields lost'
     store.prepare_save()
+    world.docs.format_script_drafts()
     assert not world.docs.changed, 'Non-idempotent organisation'
     # Reconstruct only our pre-migration files in memory. No current source is written.
     for relative, hashes in audit['files'].items():
@@ -48,7 +50,7 @@ def verify(root):
     before = CharacterStore(world)
     original_loc = {k: records[-1][2] for k, records in before.loc_records().items()}
     assert original_loc == current_loc, 'Authored localisation values or keys changed'
-    original_characters = {k: (c.name, c.countries, [(n.key, value(c.text, n)) for n in c.roles])
+    original_characters = {k: (c.name, c.countries, [(n.key, tokens(value(c.text, n))) for n in c.roles])
                            for k, c in before.characters().items()}
     assert original_characters == current_characters, 'Native identities/recruitment/roles changed'
     return {'characters': len(current_characters), 'portrait_pairs': audit['portrait_pairs'],

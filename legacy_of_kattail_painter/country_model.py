@@ -395,6 +395,113 @@ class CountryStore:
     def ideas(self): return self.definitions('common/ideas', 'ideas')
     def technologies(self): return self.definitions('common/technologies', 'technologies')
 
+    def spirit_bonus_catalog(self):
+        folders=('common/technology_tags','common/units/equipment')
+        descriptor=self.docs.text('descriptor.mod')
+        replaced=[value(descriptor,n).strip('"').rstrip('/') for n in parse(descriptor) if n.key=='replace_path']
+        sources=[]
+        for folder in folders:
+            mods={p for p in self.characters.files(folder,'.txt') if self.docs.binary(p) is not None}
+            if not any(folder==p or folder.startswith(p+'/') for p in replaced):
+                for path in sorted((self.characters.game_root/folder).rglob('*.txt')):
+                    relative=path.relative_to(self.characters.game_root).as_posix()
+                    if relative not in mods:sources.append((relative,read_text(path)))
+            sources.extend((p,self.docs.text(p)) for p in sorted(mods))
+        def build():
+            research=set();equipment=set();stats=set()
+            metadata={'year','priority','visual_level','air_map_icon_frame','interface_overview_category_index',
+                      'default_carrier_composition_weight','max_military_factories','railway_gun_attack_range_index_in_define'}
+            for path,text in sources:
+                for root in parse(text):
+                    if root.key=='technology_categories':
+                        research.update(n.key for n in root.children or [] if not n.op)
+                    elif root.key=='equipments':
+                        for item in root.children or []:
+                            if item.children is None:continue
+                            equipment.add(item.key)
+                            for field in item.children:
+                                if field.key=='type':equipment.update([value(text,field).strip('"')] if field.children is None else [n.key for n in field.children if not n.op])
+                            for field in item.children:
+                                if field.children is not None or field.key in metadata:continue
+                                try:number(value(text,field))
+                                except ValueError:continue
+                                stats.add(field.key)
+                    elif root.key=='equipment_modules':
+                        for item in root.children or []:
+                            for section in item.children or []:
+                                if section.key not in {'add_stats','multiply_stats'}:continue
+                                stats.update(n.key for n in section.children or [] if n.children is None)
+            return {'research':research,'equipment':equipment,'stats':stats}
+        return self.cached('spirit_bonus_catalog',tuple(sources),build)
+
+    def bonus_choices(self,kind):
+        names=self.characters.trait_store.names();keys=self.spirit_bonus_catalog()[kind]
+        def label(key):
+            candidates=[key]+['STAT_'+group+'_'+key.upper() for group in ('COMMON','ARMY','AIR','NAVY')]
+            return next((names[c] for c in candidates if c in names),key.replace('_',' ').title())
+        return tuple(Choice(key,label(key)) for key in sorted(keys))
+
+    def spirit_bonuses(self,key):
+        research={};equipment={}
+        if key is None:return research,equipment
+        _,_,text,node=self.ideas()[key]
+        for section in node.children:
+            if section.key=='research_bonus':
+                research.update((n.key,value(text,n)) for n in section.children or [] if n.children is None)
+            elif section.key=='equipment_bonus':
+                for eq in section.children or []:
+                    if eq.children is None:continue
+                    fields={n.key:value(text,n) for n in eq.children if n.children is None}
+                    if fields:equipment.setdefault(eq.key,{}).update(fields)
+        return research,equipment
+
+    def validate_spirit_bonuses(self,research,equipment,previous):
+        if research is None and equipment is None:return None,None
+        catalog=self.spirit_bonus_catalog();old_research,old_equipment=previous
+        if research is not None:
+            research=dict(research)
+            for key,raw in research.items():
+                if key not in catalog['research'] and key not in old_research:raise ValueError('Choose a defined research category')
+                if raw!=old_research.get(key):research[key]=number(raw)
+        if equipment is not None:
+            equipment={key:dict(fields) for key,fields in equipment.items()}
+            for key,fields in equipment.items():
+                if key not in catalog['equipment'] and key not in old_equipment:raise ValueError('Choose a defined equipment type')
+                old=old_equipment.get(key,{})
+                for stat,raw in fields.items():
+                    if raw==old.get(stat):continue
+                    if stat=='instant':
+                        if raw not in {'yes','no'}:raise ValueError('Instant must be yes or no')
+                    else:
+                        if stat not in catalog['stats'] and stat not in old:raise ValueError('Choose a defined equipment stat')
+                        fields[stat]=number(raw)
+        return research,equipment
+
+    @staticmethod
+    def patch_spirit_bonus(text,kind,before,after):
+        """Patch only changed scalar leaves, including repeated native blocks."""
+        from character_model import patch_field
+        if after is None:return text
+        flatten=lambda data:{(eq,stat):raw for eq,fields in data.items() for stat,raw in fields.items()} if kind=='equipment_bonus' else {(key,):raw for key,raw in data.items()}
+        old,new=flatten(before),flatten(after)
+        for path in sorted(old.keys()|new.keys()):
+            if path in old and path in new and old[path]==new[path]:continue
+            root=parse(text)[0];sections=[n for n in root.children if n.key==kind and n.children is not None]
+            parents=sections if kind=='research_bonus' else [n for section in sections for n in section.children if n.key==path[0] and n.children is not None]
+            leaves=[n for parent in parents for n in parent.children if n.key==path[-1] and n.children is None]
+            if leaves:
+                for n in reversed(leaves):
+                    text=text[:n.value_start]+new[path]+text[n.end:] if path in new else text[:n.start]+text[n.end:]
+            elif path in new:
+                if parents:text=patch_field(text,parents[-1],path[-1],new[path])
+                else:
+                    raw='{\n\t\t\t\t'+path[-1]+' = '+new[path]+'\n\t\t\t}'
+                    if kind=='equipment_bonus' and sections:text=patch_field(text,sections[-1],path[0],raw)
+                    else:
+                        if kind=='equipment_bonus':raw='{\n\t\t\t'+path[0]+' = '+raw+'\n\t\t}'
+                        text=patch_field(text,root,kind,raw)
+        return text
+
     def choices(self, kind):
         loc = self.characters.trait_store.names()
         if kind == 'technologies': keys = self.technologies()
@@ -747,7 +854,7 @@ class CountryStore:
                 return ImageOps.contain(image,size,Image.Resampling.LANCZOS)
         return self.cached(('icon',key),token,build)
 
-    def edit_spirit(self,key,name,description,icon,effects,create=False):
+    def edit_spirit(self,key,name,description,icon,effects,create=False,research_bonuses=None,equipment_bonuses=None):
         from character_model import patch_field
         if not re.fullmatch('[A-Za-z][A-Za-z0-9_]*',key):raise ValueError('Use letters, digits and underscores for the spirit ID')
         ideas=self.ideas()
@@ -764,6 +871,8 @@ class CountryStore:
         if any(k not in known and previous.get(k)!=v for k,v in effects.items()):raise ValueError('Choose defined modifiers')
         if any(known.get(k,{}).get('trait_stat') and previous.get(k)!=v for k,v in effects.items()):
             raise ValueError('Trait skill bonuses belong on military traits')
+        old_bonuses=self.spirit_bonuses(None if create else key)
+        research_bonuses,equipment_bonuses=self.validate_spirit_bonuses(research_bonuses,equipment_bonuses,old_bonuses)
         if icon not in self.icon_catalog():raise ValueError('Choose a registered national spirit icon')
         old_icon=''
         if not create:
@@ -793,7 +902,12 @@ class CountryStore:
             wrapped='modifier = '+body;mn=parse(wrapped)[0]
             for n in reversed([n for n in mn.children if n.children is None and n.key not in effects]):wrapped=wrapped[:n.start]+wrapped[n.end:]
             for k,v in effects.items():wrapped=patch_field(wrapped,parse(wrapped)[0],k,v)
-            text=patch_field(text,node,'modifier',value(wrapped,parse(wrapped)[0]));self.docs.replace(path,text)
+            text=patch_field(text,node,'modifier',value(wrapped,parse(wrapped)[0]))
+            node=next(n for _,n in walk(parse(text)) if n.key==key and n.children is not None)
+            raw='spirit = '+value(text,node)
+            raw=self.patch_spirit_bonus(raw,'research_bonus',old_bonuses[0],research_bonuses)
+            raw=self.patch_spirit_bonus(raw,'equipment_bonus',old_bonuses[1],equipment_bonuses)
+            text=text[:node.value_start]+value(raw,parse(raw)[0])+text[node.end:];self.docs.replace(path,text)
             self.set_loc(IDEA_LOC,key,name);self.set_loc(IDEA_LOC,key+'_desc',description)
 
     def import_emblem(self,path,mode='Alpha'):

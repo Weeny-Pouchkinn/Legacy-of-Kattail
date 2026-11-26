@@ -1,5 +1,97 @@
 # Current status
 
+## AI competence reconnaissance and proposal (2026-11-26)
+
+Planning only on verified branch `Painter-Test`; no gameplay changes. Proposal:
+`plans/ai-competence-proposal.md`. Verified legacy-vs-NSB priority mismatches,
+WWII calendar checks, universal motorized infantry targets, a requested mobile
+role without a dedicated target group, commented plane/naval design AI and
+existing doctrine Force Concentration hooks. Ordinary terrain widths are twice
+the vanilla guide values; mechanized consumes 50 AT equipment per battalion.
+No modern-tank technology equipment unlock found in active research; proposal
+uses existing light/medium/heavy families and excludes `modern_armor`.
+
+Compared online template advice with current units/equipment/tech/OOBs and
+installed 1.20.1 primary AI docs. Read-only parser inventory found no unknown
+module/category tokens in tank AI prescriptions, including repeated module
+containers. All 30 local proposal links resolve; task-scoped whitespace checks
+pass. Global diff check reports pre-existing portrait whitespace warnings.
+No game, observer campaign, CWTools or balance test performed; numbers are
+proposed benchmarks. Descriptor remains supported 1.17.* / version 1.15.*.
+Next, if implementation is requested: repair selection/progression and prove
+small-country/AUR field upgrades before expanding military profiles. Modular
+aircraft AI remains coupled to designer-restoration feasibility.
+
+## Painter script formatting audit and repair (2026-11-26)
+
+Audited 41 painter Python sources plus direct generation gateways. Native Save
+now formats only changed Clausewitz containers with actual nesting tabs and
+expanded complex definitions. Small inline parameters/lists retain nearby
+native style. Shared field insertion uses syntax depth rather than line column.
+Formatting runs after span-based edits, before guarded native writes and CLI
+output hashes. Earlier claims of exact source-layout preservation are superseded
+for edited containers only; tokens, comments, order and unedited scopes remain.
+
+Applied whitespace-only repair to 180 native files using 63 Save manifests as
+provenance. Exact token/comment streams and ordered structures match before and
+after for every file. Backup: legacy_of_kattail_painter/backups/
+painter_script_formatting_20261126_172635_615366. Of 3,307 provenance records,
+3,269 resolve; 38 lack sufficient byte witnesses and are not used for ownership.
+Second dry run: zero changes. No gameplay values, IDs or localisation changed.
+
+Validation: all 211 tests pass; 11 Python files compile; map validator passes
+before and after. Real existing/new spirit dialog Apply/Undo checks passed,
+Save forbidden, zero callbacks and 4,325 native source hashes unchanged.
+Scoped diff whitespace checks pass. Global diff check retains 933 inherited
+portrait carriage-return warnings; untouched portrait areas were not normalized.
+No game/CWTools test. Full exact paths, audit, proof and limits:
+painter_script_formatting/README.md. Next: restart painter to load formatter.
+## National-spirit research and equipment bonuses (2026-11-26)
+
+Spirit dialog now has Modifiers / Research bonuses / Equipment bonuses tabs.
+Search/add/update/remove research-category bonuses and equipment stat bonuses,
+with explicit immediate/new-variant/native-default instant mode. New equipment
+targets default to immediate; existing flags and omitted defaults load unchanged.
+Effective catalogs currently provide 139 categories, 393 equipment IDs/type
+tokens, and 57 stats from equipment/module definitions, excluding metadata.
+
+Writer edits only changed scalar leaves across repeated native bonus blocks,
+preserving comments, unknown/nested fields and untouched variables. Optional
+None API inputs preserve their entire family. Apply/Cancel/Undo/Redo/Save remain
+atomic. No live game content or localisation changed.
+
+Validation: seven focused tests and full 204-test suite pass; four Python files
+compile. Real AUR_one_aircraft_rule_all mapped dialog load/search/Add/Apply/Undo/
+Cancel passed with live Save forbidden, no callbacks, 4,324 native hashes
+unchanged. Scoped whitespace/diff checks pass. Game and CWTools not run. Exact
+files/IDs/native syntax sources/limits: spirit_research_equipment_bonuses/
+README.md and verification.json. Next: restart painter and exercise saved bonus
+effects in a fresh campaign.
+
+## Air/naval designer reconnaissance and plan (2026-11-26)
+
+Planning only; no game content changed. Inspected branch is `Painter-Test`.
+Older branch statements below remain historical. Detailed evidence, proposed
+reskins, milestones and validation gates: `plans/air-navy-designer-restoration.md`.
+
+Verified 86 aircraft and 95 naval modules remain. Designer research tabs are
+hidden, BBA research and generic plane/naval AI templates are commented out,
+and all nine naval archetypes lack slot blocks. Existing aircraft and naval
+localisation already establishes jets, nuclear ramjets and railgun warships.
+
+Proposed approach: freeze current module IDs, prove one existing fighter and
+frigate, then restore research/default fits/GUI/AI with existing components.
+Cruiser equipment says screen while its sub-unit says capital; intended behavior
+needs engine verification. Nuclear engine names alone cannot supply endurance;
+fixed special equipment remains the initial fallback. No architecture has been
+implemented or validated in game. Installed references are 1.20.1, while the
+unchanged descriptor declares supported 1.17.* / version 1.15.*.
+
+Validation: read-only source/reference searches and comment-aware module/tech
+inventory; Git diff checks and local Markdown-link checks. Live wiki pages
+returned 401. No CWTools/game launch, localisation or map edits. Next concrete
+action, if implementation is requested: milestone 1 on the intended branch.
+
 ## Vanilla modifier catalog and national-spirit picker (2026-11-26)
 
 Fixed the spirit picker/save check treating tooltip categories as scope rules:

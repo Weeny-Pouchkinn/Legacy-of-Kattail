@@ -754,13 +754,105 @@ class SpiritDialog(DraftDialog):
         self.icon_preview=ttk.Label(form);self.icon_preview.grid(row=3,column=2,padx=5)
         self.icon.trace_add('write',lambda *args:self.preview_icon());self.preview_icon()
         ttk.Label(form,text='Description').grid(row=3,column=0,sticky='nw',pady=5);self.desc=tk.Text(form,height=4,wrap='word');self.desc.grid(row=3,column=1,sticky='ew',padx=8);self.desc.insert('1.0',description)
-        self.rows=table(self,[('value','Value (game units)',170)])
-        line=ttk.Frame(self,padding=10);line.pack(fill='x');self.modifier=tk.StringVar();self.amount=tk.StringVar(value='.1')
+        self.research_bonuses,self.equipment_bonuses=store.spirit_bonuses(key)
+        self.bonus_tabs=ttk.Notebook(self);self.bonus_tabs.pack(fill='both',expand=True,padx=10,pady=8)
+        modifier_tab=ttk.Frame(self.bonus_tabs);research_tab=ttk.Frame(self.bonus_tabs);equipment_tab=ttk.Frame(self.bonus_tabs)
+        for frame,label in [(modifier_tab,'Modifiers'),(research_tab,'Research bonuses'),(equipment_tab,'Equipment bonuses')]:self.bonus_tabs.add(frame,text=label)
+        self.rows=table(modifier_tab,[('value','Value (game units)',170)])
+        line=ttk.Frame(modifier_tab,padding=10);line.pack(fill='x');self.modifier=tk.StringVar();self.amount=tk.StringVar(value='.1')
         self.modifier_box=ChoiceBox(line,textvariable=self.modifier,values=store.characters.trait_store.spirit_modifier_choices());self.modifier_box.pack(side='left',fill='x',expand=True)
         ttk.Entry(line,textvariable=self.amount,width=12).pack(side='left',padx=6);ttk.Button(line,text='Add / update',command=self.add_modifier).pack(side='left');ttk.Button(line,text='Remove',command=self.remove_modifier).pack(side='left',padx=6)
         self.rows.bind('<<TreeviewSelect>>',self.pick_modifier);self.rows.bind('<KeyPress>',lambda e:CountryDialog.type_choice(e,self.modifier_box))
-        ttk.Label(self,text='Modifier values use game units (usually 0.1 = 10%; Boolean modifiers also accept yes/no). Existing conditions, on-add effects and nested modifier blocks are preserved.',wraplength=950,padding=10).pack(anchor='w')
+        ttk.Label(modifier_tab,text='Modifier values use game units (usually 0.1 = 10%; Boolean modifiers also accept yes/no). Existing conditions, on-add effects and nested modifier blocks are preserved.',wraplength=950,padding=10).pack(anchor='w')
+        self.build_bonus_tabs(research_tab,equipment_tab)
         buttons(self,[('Apply spirit',self.ok),('Cancel',self.cancel)]);self.refresh()
+
+    def build_bonus_tabs(self,research_tab,equipment_tab):
+        self.research_key=tk.StringVar();self.research_amount=tk.StringVar(value='.1')
+        self.research_rows=table(research_tab,[('value','Research bonus (game units)',180)])
+        self.research_rows.bind('<<TreeviewSelect>>',self.pick_research_bonus)
+        line=ttk.Frame(research_tab,padding=10);line.pack(fill='x')
+        choices=list(self.countries.bonus_choices('research'));known={c.code for c in choices}
+        choices.extend(Choice(k,k) for k in self.research_bonuses if k not in known)
+        self.research_box=ChoiceBox(line,textvariable=self.research_key,values=choices);self.research_box.pack(side='left',fill='x',expand=True)
+        ttk.Entry(line,textvariable=self.research_amount,width=12).pack(side='left',padx=6)
+        ttk.Button(line,text='Add / update',command=self.add_research_bonus).pack(side='left');ttk.Button(line,text='Remove',command=self.remove_research_bonus).pack(side='left',padx=6)
+        ttk.Label(research_tab,text='Choose a technology category. Use native values: 0.1 gives a 10% research bonus.',padding=10,wraplength=950).pack(anchor='w')
+        self.equipment_key=tk.StringVar();self.equipment_stat=tk.StringVar();self.equipment_amount=tk.StringVar(value='.1');self.equipment_instant=tk.StringVar(value='yes')
+        self.equipment_rows=table(equipment_tab,[('stat','Equipment stat',260),('value','Bonus (game units)',130),('instant','Apply immediately',140)])
+        self.equipment_rows.bind('<<TreeviewSelect>>',self.pick_equipment_bonus)
+        line=ttk.Frame(equipment_tab,padding=10);line.pack(fill='x')
+        choices=list(self.countries.bonus_choices('equipment'));known={c.code for c in choices}
+        choices.extend(Choice(k,k) for k in self.equipment_bonuses if k not in known)
+        self.equipment_box=ChoiceBox(line,textvariable=self.equipment_key,values=choices,width=40);self.equipment_box.pack(side='left',fill='x',expand=True)
+        choices=list(self.countries.bonus_choices('stats'));known={c.code for c in choices}
+        existing={stat for fields in self.equipment_bonuses.values() for stat in fields if stat!='instant'}
+        choices.extend(Choice(k,k) for k in existing if k not in known)
+        self.equipment_stat_box=ChoiceBox(line,textvariable=self.equipment_stat,values=choices,width=30);self.equipment_stat_box.pack(side='left',fill='x',expand=True,padx=6)
+        ttk.Entry(line,textvariable=self.equipment_amount,width=10).pack(side='left')
+        line=ttk.Frame(equipment_tab,padding=(10,0,10,4));line.pack(fill='x')
+        ttk.Label(line,text='When to apply:').pack(side='left',padx=(0,6))
+        self.instant_box=ChoiceBox(line,textvariable=self.equipment_instant,values=[Choice('','Native default (new variants)'),Choice('yes','Immediately'),Choice('no','New variants only')],width=32);self.instant_box.pack(side='left')
+        ttk.Button(line,text='Add / update',command=self.add_equipment_bonus).pack(side='left',padx=6);ttk.Button(line,text='Remove',command=self.remove_equipment_bonus).pack(side='left')
+        self._equipment_target=None;self.equipment_key.trace_add('write',lambda *args:self.load_equipment_instant())
+        ttk.Label(equipment_tab,text='Choose equipment and a stat. Values use native game units; negative build_cost_ic reduces cost. Without instant, bonuses apply when a new equipment variant is created.',padding=10,wraplength=950).pack(anchor='w')
+        self.refresh_bonus_tables()
+
+    def refresh_bonus_tables(self):
+        self.research_rows.delete(*self.research_rows.get_children())
+        for key,raw in sorted(self.research_bonuses.items()):
+            choice=self.research_box.index.by_code.get(key,Choice(key,key))
+            self.research_rows.insert('','end',iid=key,text=choice.label,values=(raw,))
+        self.equipment_rows.delete(*self.equipment_rows.get_children());self.equipment_row_keys={}
+        for eq,fields in sorted(self.equipment_bonuses.items()):
+            for stat,raw in sorted(fields.items()):
+                if stat=='instant':continue
+                key=str(len(self.equipment_row_keys));self.equipment_row_keys[key]=(eq,stat)
+                choice=self.equipment_box.index.by_code.get(eq,Choice(eq,eq));stat_choice=self.equipment_stat_box.index.by_code.get(stat,Choice(stat,stat))
+                self.equipment_rows.insert('','end',iid=key,text=choice.label,values=(stat_choice.label,raw,fields.get('instant','Default')))
+
+    def pick_research_bonus(self,event=None):
+        if rows:=self.research_rows.selection():
+            self.research_key.set(rows[0]);self.research_amount.set(self.research_bonuses[rows[0]])
+
+    def add_research_bonus(self):
+        try:
+            self.research_box.commit();key=self.research_key.get()
+            if key not in self.research_box.index.by_code:raise ValueError('Choose a research category')
+            self.research_bonuses[key]=number(self.research_amount.get());self.refresh_bonus_tables()
+        except ValueError as exc:messagebox.showerror('Research bonus',str(exc),parent=self)
+
+    def remove_research_bonus(self):
+        for key in self.research_rows.selection():self.research_bonuses.pop(key,None)
+        self.refresh_bonus_tables()
+
+    def load_equipment_instant(self,force=False):
+        target=self.equipment_key.get()
+        if not force and target==self._equipment_target:return
+        self._equipment_target=target;fields=self.equipment_bonuses.get(target)
+        self.equipment_instant.set(fields.get('instant','') if fields is not None else 'yes')
+
+    def pick_equipment_bonus(self,event=None):
+        if rows:=self.equipment_rows.selection():
+            eq,stat=self.equipment_row_keys[rows[0]];self.equipment_key.set(eq);self.equipment_stat.set(stat)
+            self.equipment_amount.set(self.equipment_bonuses[eq][stat]);self.load_equipment_instant(force=True)
+
+    def add_equipment_bonus(self):
+        try:
+            for box in (self.equipment_box,self.equipment_stat_box,self.instant_box):box.commit()
+            eq,stat=self.equipment_key.get(),self.equipment_stat.get()
+            if eq not in self.equipment_box.index.by_code or stat not in self.equipment_stat_box.index.by_code:raise ValueError('Choose equipment and a stat')
+            amount=number(self.equipment_amount.get());fields=dict(self.equipment_bonuses.get(eq,{}));fields[stat]=amount
+            if self.equipment_instant.get():fields['instant']=self.equipment_instant.get()
+            else:fields.pop('instant',None)
+            self.equipment_bonuses[eq]=fields;self.refresh_bonus_tables()
+        except ValueError as exc:messagebox.showerror('Equipment bonus',str(exc),parent=self)
+
+    def remove_equipment_bonus(self):
+        for row in self.equipment_rows.selection():
+            eq,stat=self.equipment_row_keys[row];fields=self.equipment_bonuses[eq];fields.pop(stat,None)
+            if not any(k!='instant' for k in fields):self.equipment_bonuses.pop(eq)
+        self.refresh_bonus_tables()
 
     def refresh(self):
         self.rows.delete(*self.rows.get_children());catalog=self.countries.characters.trait_store.modifier_catalog()
@@ -792,5 +884,5 @@ class SpiritDialog(DraftDialog):
 
     def ok(self):
         try:
-            self.icon_box.commit();self.countries.edit_spirit(self.key.get(),self.name.get(),self.desc.get('1.0','end-1c'),self.icon.get(),self.effects,self.new);self.accept(self.key.get())
+            self.icon_box.commit();self.countries.edit_spirit(self.key.get(),self.name.get(),self.desc.get('1.0','end-1c'),self.icon.get(),self.effects,self.new,research_bonuses=self.research_bonuses,equipment_bonuses=self.equipment_bonuses);self.accept(self.key.get())
         except (ValueError,OSError,KeyError) as exc:messagebox.showerror('Spirit',str(exc),parent=self)

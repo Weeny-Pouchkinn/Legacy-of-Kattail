@@ -1,5 +1,32 @@
 # Decisions
 
+## 2026-11-26: AI proposal scope and evidence boundary
+
+User request is reconnaissance/proposal, including online template research;
+no AI implementation is authorized by this task. Exclude the vanilla modern
+tank family. Preserve the existing light/medium/heavy families, whose authored
+labels include IFV/MBT/Siegebreaker; do not silently rename them to reconcile
+the terminology. Proposed profiles connect research, production, equipment,
+templates, field upgrades and native Force Concentration. Values are untested
+balancing candidates. Fixed-aircraft improvements can precede designer work;
+modular AI fits depend on the separate designer feasibility proof. Do not import
+Expert AI as an overhaul-compatible dependency or introduce world-scan pulses.
+Evidence, proposed milestones and acceptance gates: `plans/ai-competence-proposal.md`.
+
+## 2026-11-26: Air/naval designer planning scope
+
+User constraint: investigate restoration using existing components through
+renaming/reskinning; do not implement during reconnaissance. Freeze the mod's
+86 aircraft and 95 naval module IDs rather than importing the installed game's
+larger catalogue. Keep descriptor and compatibility declarations unchanged.
+
+The plan recommends a fighter/frigate feasibility proof before broader wiring,
+with current equipment IDs preferred. This is a proposal, not an implemented
+architecture. Preserve existing special vessels/aircraft as fixed exceptions
+until equivalent modular behavior is proven. Nuclear endurance and the conflicting
+cruiser screen/capital definitions must not be silently invented or normalized.
+Evidence and alternatives: `plans/air-navy-designer-restoration.md`.
+
 ## 2026-11-25: Discrete arithmetic variation and native text-color discovery
 **Decision:** Precision range is a percentage around a nonnegative integer
 operand, sampled uniformly from ceil(lower)..floor(upper), clipping lower at zero.
@@ -646,3 +673,43 @@ to shared editors, including parameterized building/equipment/resource families.
 Catalog presence does not prove a particular modifier has an effect in every
 script context. Full coverage/native UI audit in vanilla_modifier_catalog/;
 no live idea/trait or game definition was changed, and no engine test claimed.
+
+## 2026-11-26: Native spirit bonus families and targeted leaf edits
+
+Decision: expose research_bonus and equipment_bonus separately from ordinary
+modifier fields, using actual technology_categories, active equipment IDs/type
+tokens and equipment/module stat definitions. Respect same-file overrides, empty
+mod files and replace_path when building catalogs. Do not offer MIO-only group
+IDs as equipment targets without proof of support in this idea field.
+
+Read all repeated base bonus blocks for the form. On Apply, patch only changed
+scalar values across matching duplicates; removals delete only owned leaves.
+Retain comments, unrelated/nested content and unchanged variables, leaving valid
+empty containers when necessary. API None preserves a bonus family entirely.
+Use native fractional game units with finite-number validation, no implicit
+percentage conversion or invented research/equipment/stat IDs.
+
+Instant is per equipment target: new targets default yes; existing yes/no/omitted
+flags are preserved until edited. Native default/no applies on new equipment
+variant creation, while yes applies immediately (installed effect docs).
+Consequences: source-preserving national-spirit authoring with existing guarded
+Apply/Cancel/Undo/Save semantics; no live data migration. Tests/native mapped UI
+passed; in-game effects untested. See spirit_research_equipment_bonuses/README.md.
+
+## 2026-11-26: Painter layout at final write boundaries and proven-output repair
+
+Decision: format changed structured script containers centrally at Documents.save
+and direct CLI generation boundaries. Never format between primitive span-based
+patches: their parsed offsets still refer to earlier text. Inserting a missing
+field uses real syntax depth even when the parent begins halfway along a line.
+Complex objects/bodies expand; short native parameter blocks and lists can stay
+inline. Unedited containers are excluded. Lexer tokens including comments must
+remain byte-identical strings in the same order, with a successful parse.
+
+Exclude line-oriented map records, CSV, JSON, Lua, localisation and binary assets.
+Their formats use their own writers. Preserve BOM/encoding and newline family.
+Do not globally reformat handwritten sources. Existing-output repair selects
+scopes from hash-proven Save before/after records, then checks both exact tokens
+and independent ordered structure and uses guarded backups. Missing provenance
+is reported, never inferred. Existing malformed carriage returns outside selected
+scopes remain. Full evidence: painter_script_formatting/README.md.

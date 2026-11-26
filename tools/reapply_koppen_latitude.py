@@ -42,6 +42,7 @@ def run(root,audit_path,apply=False):
         if changed:geo.paint_climate(rid,code,account_latitude=True)
         rows.append({'region':rid,'code':code,'before_hemisphere':old_hemi,'hemisphere':'South' if latitude<0 else 'North',
                      'latitude':latitude,'temperature_smoothed':abs(latitude)<LATITUDE_TRANSITION,'changed':changed})
+    world.docs.format_script_drafts()
     changes={p:((root/p).read_bytes(),encode_source(text,(root/p).read_bytes())) for p,text in world.docs.drafts.items()}
     changes={p:pair for p,pair in changes.items() if pair[0]!=pair[1]}
     files={p:{'before':sha(a),'after':sha(b)} for p,(a,b) in changes.items()}
