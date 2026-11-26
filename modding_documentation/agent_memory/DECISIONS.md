@@ -595,3 +595,54 @@ incomplete inherited GUI contracts and missing fallbacks, not a need for new
 territory or content. Consequences and evidence: error_log_repair_20261125/
 README.md, verification.json and files.txt. The external Workshop warnings are
 not mod-owned errors and are not repaired by modifying this repository.
+
+## 2026-11-26: Generic portrait group identity and vacant templates
+
+Decision: use existing LOK_portraits Species_<ID> and special section headers as
+group IDs, preserving all reserved 0..100 slots and dynamically labeling numeric
+IDs from species localization. Native country blocks are authoritative. A sparse,
+draft-managed generic_portrait_groups.json retains pool templates for groups with
+no country, avoiding fake tags or unknown native schema. Existing canonical
+role/gender defaults are fixed independently of editable Species_0 pools/art.
+
+Species creation allocates the same ID in the same grouped draft transaction.
+Missing registrations beyond 100 reference verified existing placeholder files.
+Imports create separate TGAs, large 156x210 and small 65x67 using the existing
+Ministermaker routine; existing sprites are updated in place, new ones use a
+dedicated generic upload GFX file. Never overwrite a shared placeholder texture.
+
+Country Setup stores the selected group by moving that tag's native portrait
+block into the chosen section, removing prior definitions across portrait files.
+New-country UI suggests its national species until overridden. Existing choices
+and external/native pools are preserved unless explicitly changed; None in the
+model preserves them, empty string deliberately clears country-specific pools.
+Pool membership edits target that role/gender in each country, retaining other
+fields/comments. No runtime iteration, game localization or species/tag migration.
+
+Coupled repair: native special groups used inverted sprite prefixes. Change only
+the 1,120 bad references to the already registered names, with exact guarded
+backup and existing large/small texture verification. Preserve inherited CRCRLF
+bytes despite Git whitespace diagnostics. Native UI and tests passed; game
+rendering remains untested. See generic_portrait_groups/README.md and audits.
+
+## 2026-11-26: Engine modifier categories are tooltip groups, not scope gates
+
+Decision: build the shared modifier catalog from complete installed engine
+documentation, expanding each parameterized heading using its Modified types.
+Keep exact case, isolate category metadata per section and union repeated
+template entries. Retain vanilla/custom modifier-definition overlays, localized
+labels with readable fallback, and display precision/Boolean type metadata.
+Do not write redundant game definitions for built-in engine modifiers.
+
+Remove the category=country whitelist from spirit selection and save validation.
+The installed modifier-definition documentation explicitly describes category
+filtering as tooltip behavior; actual vanilla country ideas use army-tagged
+army_core_defence_factor. Exclude only synthetic military trait stat bonuses and
+weights from the spirit chooser, maintaining their proper trait context. Allow
+documented yes/no values; numeric values remain finite native game units.
+
+Consequences: all 4,528 documented vanilla IDs and custom definitions are visible
+to shared editors, including parameterized building/equipment/resource families.
+Catalog presence does not prove a particular modifier has an effect in every
+script context. Full coverage/native UI audit in vanilla_modifier_catalog/;
+no live idea/trait or game definition was changed, and no engine test claimed.

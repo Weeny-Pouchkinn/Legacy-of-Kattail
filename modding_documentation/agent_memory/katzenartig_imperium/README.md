@@ -1,5 +1,22 @@
 # Katzenartig Imperium elements and mapmode - 2026-11-25
 
+## Color policy update - 2026-11-26
+
+Per user request, duplicate element colors are now allowed, including the
+unassigned gray. Removed both Apply and Save uniqueness restrictions and changed
+the dialog label to Map color. IDs, assignments and tooltip text remain distinct;
+color is display data only. Earlier unique/reserved-color statements below are
+historical and superseded by this update. No live definitions or states changed.
+
+Changed `legacy_of_kattail_painter/imperium_model.py`, `imperium_ui.py`,
+`test_imperium.py`, `README.md`, `MODLOG.md`, this report and
+`modding_documentation/agent_memory/CURRENT_STATUS.md`.
+Validation: the three Python files compile; `python -B -m unittest discover -s
+legacy_of_kattail_painter -p 'test_imperium.py'` passes all 10 tests. Regression
+checks duplicate-color creation, distinct state pointers/tooltips after
+Save/reload, and editing to unassigned gray without erasing the assignment.
+Scoped diff/whitespace reviewed. No engine test; no engine script change.
+
 Implemented a reusable object catalog under States > Katzenartig Imperium,
 also exposed in MAP > Definitions alongside cultures/species, and in the geography
 database. Objects have stable numeric ID, name, unique RGB and independently

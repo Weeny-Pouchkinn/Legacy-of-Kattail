@@ -301,6 +301,7 @@ class Country:
     ideas: set = field(default_factory=set)
     laws: dict = field(default_factory=dict)
     names: dict = field(default_factory=dict)
+    portrait_group: str | None = None
 
 
 class CountrySourceExists(ValueError):
@@ -479,7 +480,8 @@ class CountryStore:
         laws.setdefault('specialty', 'specialty_nothing'); laws.setdefault('species', 'var_species_0')
         def pct(key): return format(Decimal(atom(text, roots, key, '.5'))*100, 'f')
         return Country(tag, path, self.characters.neutral_name(tag), atom(text, roots, 'capital'), pct('set_stability'), pct('set_war_support'), ruling, popularities,
-                       technologies, {k for k in ideas if k not in definitions or definitions[k][0] in {'country', 'hidden_ideas'}}, laws, self.names(tag))
+                       technologies, {k for k in ideas if k not in definitions or definitions[k][0] in {'country', 'hidden_ideas'}}, laws, self.names(tag),
+                       self.characters.generic_portraits.group_for_country(tag))
 
     def write_names(self, tag, names):
         for ideology, fields in names.items():
@@ -651,6 +653,8 @@ class CountryStore:
             self.docs.replace(country.path,text)
             if create and names[''].get('def') is None:names['']['def']=names['']['name']
             self.write_names(tag,names)
+            if country.portrait_group is not None:
+                self.characters.generic_portraits.assign_country(tag,country.portrait_group)
             for ideology, image in (flags or {}).items(): self.write_flag(tag,ideology,image)
             if create and '' not in (flags or {}): self.write_flag(tag,'',Image.new('RGB',(82,52),rgb))
             self.world.refresh_countries()
@@ -756,10 +760,10 @@ class CountryStore:
             _,_,source,node=ideas[key];modifier=block(node.children,'modifier')
             previous={n.key:value(source,n) for n in modifier.children if n.children is None} if modifier else {}
         known=self.characters.trait_store.modifier_catalog()
-        effects={k:(v if previous.get(k)==v else number(v)) for k,v in effects.items()}
+        effects={k:(v if previous.get(k)==v else self.characters.trait_store.modifier_value(k,v)) for k,v in effects.items()}
         if any(k not in known and previous.get(k)!=v for k,v in effects.items()):raise ValueError('Choose defined modifiers')
-        if any(k in known and known[k]['categories'] and 'country' not in known[k]['categories'] and previous.get(k)!=v for k,v in effects.items()):
-            raise ValueError('Choose country-scope modifiers for national spirits')
+        if any(known.get(k,{}).get('trait_stat') and previous.get(k)!=v for k,v in effects.items()):
+            raise ValueError('Trait skill bonuses belong on military traits')
         if icon not in self.icon_catalog():raise ValueError('Choose a registered national spirit icon')
         old_icon=''
         if not create:

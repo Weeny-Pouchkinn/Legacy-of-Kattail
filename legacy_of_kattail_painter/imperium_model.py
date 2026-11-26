@@ -123,7 +123,6 @@ class ImperiumStore:
         if not name.strip():raise ValueError('Enter an element name')
         rgb=self.catalogs.rgb(color.strip() if isinstance(color,str) else color)
         if any(not isinstance(c,int) or isinstance(c,bool) for c in rgb):raise ValueError('Element RGB channels must be whole byte values')
-        if rgb==UNASSIGNED or any(r.color==rgb for key,r in records.items() if key!=ident):raise ValueError('Choose a unique element color; the unassigned gray is reserved')
         if create and any(loc_key(ident,s) in self.characters.loc_records() for s in ('name','tooltip','tooltip_delayed')):raise ValueError('That element ID already has localization; choose an unused ID')
         with self.docs.grouped():
             self.bootstrap();text,section=self.color_section()
@@ -196,8 +195,7 @@ class ImperiumStore:
         self.docs.replace(path,updated);return True
 
     def validate_save(self):
-        elements=self.elements();colors=[e.color for e in elements.values()]
-        if len(set(colors))!=len(colors) or UNASSIGNED in colors:raise ValueError('Imperium elements need unique colors distinct from unassigned gray')
+        elements=self.elements()
         for sid,ident in self.state_assignments().items():
             if ident and ident not in elements:raise ValueError(f'State {sid} references undefined Imperium element {ident}')
         if elements:

@@ -25,7 +25,7 @@ class ImperiumTests(unittest.TestCase):
         values=dict(name='Schutzone Pegasien',color='#e68a21',immediate='[FROM.GetName] was part of the Schutzone Pegasien',delayed='Long text\nAuthored "details" and $tokens$.')
         values.update(kw);self.store.edit_element(ident,create=True,**values)
 
-    def test_reusable_objects_have_manual_text_native_dispatch_and_unique_colors(self):
+    def test_reusable_objects_have_manual_text_native_dispatch_and_editable_colors(self):
         self.element();self.element(2,name='Second element',color='#1944af',immediate='Exact second text',delayed='')
         self.assertEqual(set(self.store.elements()),{1,2});self.assertEqual(self.store.elements()[1].color,(230,138,33))
         self.store.paint_state(1,1);self.store.paint_state(2,1)
@@ -68,9 +68,9 @@ class ImperiumTests(unittest.TestCase):
         self.assertEqual(fresh.hover_text(1)[0],'First state was part of the Schutzone Pegasien');fresh.validate_save()
         fresh.paint_state(1,0);self.assertEqual(fresh.state_assignments(),{1:0})
 
-    def test_definition_failures_are_atomic_and_no_id_or_color_collisions(self):
+    def test_definition_failures_are_atomic_and_no_id_collisions(self):
         self.element();before=dict(self.world.docs.drafts)
-        for ident,kw in [(1,{}),(2,{'color':'#e68a21'}),(2,{'color':'#41454e'}),(0,{'color':'#123456'}),(2,{'name':'  ','color':'#123456'})]:
+        for ident,kw in [(1,{}),(0,{'color':'#123456'}),(2,{'name':'  ','color':'#123456'})]:
             with self.assertRaises(ValueError):self.element(ident,**kw)
             self.assertEqual(self.world.docs.drafts,before)
         self.world.docs.replace(TEXT_PATH,'defined_text={name=wrong text={localization_key=missing}}');before=dict(self.world.docs.drafts)
@@ -92,6 +92,20 @@ class ImperiumTests(unittest.TestCase):
         self.store.paint_state(1,0);self.assertIn('value=0',self.world.docs.text(path))
         other=self.world.states[2].path;self.world.docs.replace(other,'state={id=2 name=TWO provinces={2}}')
         self.store.paint_state(2,1);self.assertEqual(self.store.state_assignments()[2],1)
+
+    def test_shared_colors_and_unassigned_gray_save_reload_without_merging_elements(self):
+        self.element();self.element(2,color='#e68a21',immediate='Second [FROM.GetName]')
+        self.store.paint_state(1,1);self.store.paint_state(2,2)
+        self.store.validate_save();self.world.docs.save()
+        w=World(self.root);c=CharacterStore(w);store=ImperiumStore(w,c,MapCatalogStore(w,c))
+        self.assertEqual(store.state_assignments(),{1:1,2:2})
+        self.assertEqual(store.elements()[1].color,store.elements()[2].color)
+        self.assertNotEqual(store.hover_text(1),store.hover_text(2))
+        store.edit_element(2,'Second','#41454e','Second [FROM.GetName]','')
+        store.validate_save();w.docs.save()
+        fresh=World(self.root);chars=CharacterStore(fresh);reloaded=ImperiumStore(fresh,chars,MapCatalogStore(fresh,chars))
+        self.assertEqual(reloaded.elements()[2].color,UNASSIGNED)
+        self.assertEqual(reloaded.state_assignments(),{1:1,2:2})
 
 
 class ImperiumFormTests(unittest.TestCase):

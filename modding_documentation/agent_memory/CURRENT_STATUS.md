@@ -1,5 +1,77 @@
 # Current status
 
+## Vanilla modifier catalog and national-spirit picker (2026-11-26)
+
+Fixed the spirit picker/save check treating tooltip categories as scope rules:
+army_core_defence_factor and other army/air/production modifiers are available.
+Only synthetic military trait stat fields stay excluded from spirit lists.
+Shared catalog now expands the engine documentation's actual Modified types,
+preserving case, section boundaries, duplicate-template category unions and
+custom overrides. Carries precision and Boolean metadata; spirits accept yes/no
+for Boolean modifiers. Wonder help correctly labels categories.
+
+Independent audit: 722 fixed + 3,806 parameterized vanilla IDs = 4,528, all present
+in catalog and spirit picker. Total catalog 4,581 / spirit choices 4,569 including
+custom definitions, excluding 12 military stat fields only from spirit choices.
+Validation: 197 tests pass, six Python files compile; real native spirit exact-ID
+search/Add/Apply/Undo and trait picker/Cancel passed with Save forbidden, zero
+callbacks and 4,324 native hashes unchanged. No live game content edits. Game
+effects/CWTools untested; wiki returned 401 and searches had no results, so
+installed primary documentation was authoritative. Full paths, primary lines,
+coverage and proof: vanilla_modifier_catalog/README.md, coverage.json,
+verification.json. Next: restart painter to load the rebuilt shared catalog.
+
+## Flag symbol picker / Small checkerboard (2026-11-26)
+
+Fixed pre-modal validation in FlagLibraryPicker: 1x1 render collapsed eight
+checkerboard columns into inverted rectangles, producing the screenshot's x1/x0
+error. Uses existing THUMB (144x92) now. No symbol geometry or game data changed.
+Mapped two-symbol checkerboard/Small-checkerboard gallery regression passes,
+including green 2x-stretched second symbol, background/symbol acceptance and
+grab cleanup. All 31 country/flag tests pass; two Python files compile; all 56
+backgrounds render at validation size. Exact files/details: painter MODLOG entry
+"Symbol picker with small checkerboard background". No engine test needed for
+the UI; no engine verification claimed.
+
+## Imperium shared colors (2026-11-26)
+
+Removed Imperium color uniqueness/reserved-gray restrictions from Apply and
+Save; the dialog now says Map color. Distinct elements/states may share any
+valid RGB while retaining their IDs and tooltips. Earlier uniqueness notes are
+superseded. No native data changed. Three Python files compile and all 10 focused
+Imperium tests pass, including duplicate/gray Save/reload with distinct pointers.
+Details and exact files: katzenartig_imperium/README.md (color policy update).
+
+## Generic Portrait Groups and country/species integration (2026-11-26)
+
+Added Characters > Generic Portrait Groups: 101 reserved species slots and both
+special groups. Altarian labels Species_61 dynamically and retains placeholders.
+Role/ideology/gender pool editor supports upload/add/replace/remove with 156x210
+large and automatically generated 65x67 Ministermaker small TGAs, previews,
+atomic drafts/Cancel/Undo/Save. Shared pool changes update group countries while
+preserving their unrelated fields. Vacant pool templates persist only when
+needed in legacy_of_kattail_painter/generic_portrait_groups.json; native blocks win.
+
+Species creation automatically allocates its matching slot, including placeholder
+registrations beyond 100. Fixed native default layout is independent of editable
+Species_0. Country Setup selects a group, suggests national species for new tags,
+preserves explicit overrides, and moves native tag pools without duplication.
+
+Coupled native repair: corrected 140 Amphibian + 980 Roqualian sprite references
+to the existing registered names; all 38 referenced large/small pairs verified.
+151 country blocks and original bytes otherwise unchanged. No live species,
+country membership, history, localization or image content changed for this task.
+
+Validation: 192 tests pass including 10 new; nine Python files compile. Actual
+native mapped UI probe passes, live Save forbidden, no callbacks; 4,328 native
+sources unchanged by probe. All 103 groups' large sprite references resolve.
+Scoped code/new source whitespace checks pass. Global diff --check flags 416
+changed portrait lines with inherited CRCRLF; before/after byte-only prefix
+comparison proves no added line-ending damage. No game/CWTools test. Exact files,
+sources, audit/recovery: generic_portrait_groups/README.md, native_repair.json,
+verification.json. Next: restart painter, choose/upload a pool and country group,
+Save and verify generated leaders/scientists/operatives in a fresh campaign.
+
 ## Current error-log audit and repair plan (2026-11-25)
 
 Analysis only on actual branch Painter-Test, HEAD a5958d259. Inspected the fresh

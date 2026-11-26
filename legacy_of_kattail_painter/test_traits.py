@@ -8,7 +8,7 @@ import unittest
 import test_characters as character_tests
 from character_model import CharacterStore, atom
 from character_ui import RoleDialog
-from trait_model import TRAIT_LOC, TRAIT_PATHS
+from trait_model import TRAIT_LOC, TRAIT_PATHS, documented_modifiers
 from trait_ui import TraitDialog
 from model import World, parse, value
 
@@ -142,6 +142,51 @@ NAVY_LEADER_LEVEL_UP_STAT_WEIGHTS = {5,5,5,5},''')
         self.assertEqual(catalog['lok_bonus']['choice'].label, 'Custom Bonus (lok_bonus)')
         self.characters.edit_role('AAA_Zed', 1, 'country_leader', {'ideology': 'updated'}, [])
         self.assertIs(self.traits.modifier_catalog(), catalog)
+
+    def test_documented_modifier_templates_categories_case_and_formats(self):
+        text='''## Table of Content
+## army_core_defence_factor
+* Number with 1 decimal places
+* **Categories**: army, defensive
+##  <span id="production_speed__factor"></span>production_speed_<Building>_factor
+* **Description**: Construction speed.
+* Number with 2 decimal places
+* **Categories**: country
+* **Modified types**: arms_factory, industrial_complex
+##  <span id="production_speed__factor"></span>production_speed_<Building>_factor
+* **Categories**: war_production
+* **Modified types**: arms_factory
+## <span id="_cost"></span><Operation>_cost
+* **Categories**: intelligence_agency
+* **Modified types**: FRA_coup_in_central_africa
+## Modifiers for scope state
+* **Categories**: state
+## can_guarantee_other_ideologies
+* Boolean
+* **Categories**: country
+'''
+        info=documented_modifiers(text.replace('\n','\r\n'))
+        self.assertEqual(set(info),{'army_core_defence_factor','production_speed_arms_factory_factor','production_speed_industrial_complex_factor','FRA_coup_in_central_africa_cost','can_guarantee_other_ideologies'})
+        self.assertEqual(info['army_core_defence_factor']['categories'],{'army','defensive'})
+        self.assertEqual(info['production_speed_arms_factory_factor']['categories'],{'country','war_production'})
+        self.assertEqual(info['production_speed_industrial_complex_factor']['precision'],2)
+        self.assertEqual(info['production_speed_industrial_complex_factor']['description'],'Construction speed.')
+        self.assertEqual(info['FRA_coup_in_central_africa_cost']['categories'],{'intelligence_agency'})
+        self.assertEqual(info['can_guarantee_other_ideologies']['value_type'],'yes_no')
+
+    def test_spirit_choices_use_categories_as_tooltip_tags_and_retain_custom_overrides(self):
+        doc=self.base/'documentation/modifiers_documentation.md'
+        doc.write_text(doc.read_text()+'\n## army_core_defence_factor\n* **Categories**: army, defensive\n## <span id="_cost"></span><Operation>_cost\n* **Categories**: intelligence_agency\n* **Modified types**: FRA_example\n## can_guarantee_other_ideologies\n* Boolean\n* **Categories**: country\n')
+        self.characters.set_loc('MODIFIERS_ARMY_CORE_DEFENCE_FACTOR','Core defense')
+        directory=self.root/'common/modifier_definitions';directory.mkdir()
+        (directory/'native.txt').write_text('army_core_defence_factor={category=army category=defensive value_type=percentage}')
+        choices={c.code:c for c in self.traits.spirit_modifier_choices()}
+        self.assertIn('army_attack_factor',choices);self.assertIn('army_core_defence_factor',choices)
+        self.assertIn('FRA_example_cost',choices);self.assertNotIn('attack_skill',choices)
+        self.assertEqual(choices['army_core_defence_factor'].name,'Core defense')
+        self.assertEqual(self.traits.modifier_catalog()['army_core_defence_factor']['source'],'Mod modifier definition')
+        self.assertEqual(self.traits.modifier_value('can_guarantee_other_ideologies','yes'),'yes')
+        with self.assertRaises(ValueError):self.traits.modifier_value('army_attack_factor','yes')
 
 
 class TraitTkTests(unittest.TestCase):

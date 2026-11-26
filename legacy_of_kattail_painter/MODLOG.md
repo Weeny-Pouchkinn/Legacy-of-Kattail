@@ -1,5 +1,84 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-26 - Complete vanilla modifier catalog and spirit filtering
+
+Fixed national spirits hiding/rejecting army/air/production modifiers: engine
+modifier categories are tooltip filters, not country-idea scope permissions.
+army_core_defence_factor now appears as Division Defense on core territory and
+can be applied. Synthetic military trait skill/stat-weight fields stay separate.
+
+Catalog parser now expands all supplied parameterized Modified types entries,
+isolates each documentation section's categories, preserves uppercase IDs and
+merges duplicate templates. Carries display precision and Boolean metadata;
+spirits accept documented yes/no as well as numeric game units. Custom mod and
+vanilla definition overlays remain, including nested vanilla definition files.
+All shared consumers receive the complete catalog; wonder help says categories.
+
+Independent installed-documentation audit: all 4,528 vanilla IDs present in both
+catalog and spirit picker (722 fixed + 3,806 generated from 42 template sections).
+Total 4,581 with custom definitions and 12 military stat fields; spirit list
+4,569. No built-in game definitions or live content were written. Detailed
+coverage, files, primary sources and actual checks:
+modding_documentation/agent_memory/vanilla_modifier_catalog/README.md.
+
+## 2026-11-26 - Symbol picker with small checkerboard background
+
+Fixed the Flag library error "x1 must be greater than or equal to x0" when
+opening symbol/background selection over Small checkerboard. The picker validated
+the current background by rendering at 1x1; its supersampled 4px width could not
+represent eight checkerboard columns. Validation now uses the existing 144x92
+thumbnail dimensions, retaining validation before the modal window opens.
+
+Changed country_ui.py and test_countries.py in legacy_of_kattail_painter, plus
+this MODLOG and agent_memory/CURRENT_STATUS.md under modding_documentation.
+No identifiers or game data changed. The mapped Tk regression opens and accepts
+both galleries over both checkerboards with two symbols, preserving the green
+second symbol's 2x horizontal stretch and the first symbol, and releases grabs.
+Validation: python -B -m unittest discover -s legacy_of_kattail_painter -p
+'test_countries.py' passes all 31 tests; both changed Python files compile;
+all 56 backgrounds render at the picker validation size. Scoped diff/whitespace
+checks pass. No game test; this is a painter UI fix.
+
+## 2026-11-26 - Imperium shared colors
+
+Imperium elements can share a color, including unassigned gray. Removed Apply
+and Save color uniqueness checks; IDs, state assignments and tooltips stay
+independent. Dialog label is Map color. Ten focused tests pass, including
+duplicate/gray Save/reload; three changed Python files compile. No native data
+was changed or game test performed.
+
+## 2026-11-26 - Generic Portrait Groups, species allocation and country picker
+
+Added CHARACTERS > Generic Portrait Groups for all 101 reserved species slots,
+plus Amphibian/Roqualian. Species names dynamically label IDs, including Altarian
+61. Edit political ideology/gender and army/navy/operative/scientist gender pools;
+add/replace uploads automatically create large and Ministermaker small TGAs.
+Shared art updates countries; pool membership edits preserve unrelated per-tag
+fields. Placeholders are never overwritten. Vacant pools persist in a small
+draft-managed template catalog; native country blocks remain authoritative.
+
+Species creation allocates its same-ID slot in the same Undo/Save operation.
+Beyond 100, missing sprites register existing placeholder files. Defaults do
+not depend on editable Species_0 art/pools. Country Setup now chooses a portrait
+group, suggests the national species for new countries, and supports deliberate
+override or native default. Apply adds the tag to its group, removing prior
+country pools across portrait files without duplicate tag definitions.
+
+Fixed 1,120 special-group portrait references: amphibian_species/roqualian_species
+were reversed relative to the existing species_amphibian/species_roqualian sprite
+registrations. Verified all 38 large sprites and matching small textures. Only
+those prefixes changed in the live portrait file; 151 country blocks and all
+original bytes otherwise retained. Existing Altarian placeholders/group retained;
+no live country selection or new species was invented.
+
+Validation: 192 tests pass (10 new), nine Python files compile; actual mapped
+native Characters/group/country forms and generated previews/Cancel passed with
+Save forbidden, no callbacks and 4,328 native sources unchanged by the probe.
+Scoped code whitespace is clean. Global Git whitespace check flags the portrait
+file's inherited CRCRLF endings on changed lines; exact byte comparison proves
+the original line endings were retained. No game/CWTools test. Full files, IDs,
+backup and audit: modding_documentation/agent_memory/generic_portrait_groups/.
+
 ## 2026-11-25 - Katzenartig Imperium reusable elements and state mapmode
 
 Added States > Katzenartig Imperium with the same reusable definition workflow

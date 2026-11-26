@@ -200,6 +200,9 @@ class CharacterWorkspace(ttk.Frame):
         self.characters = Gallery(self.tabs, self)
         self.portraits = Gallery(self.tabs, self, True)
         self.tabs.add(self.characters, text='Characters'); self.tabs.add(self.portraits, text='Portrait definitions')
+        from generic_portrait_ui import GenericPortraitWorkspace
+        self.generic_portraits = GenericPortraitWorkspace(self.tabs, app)
+        self.tabs.add(self.generic_portraits, text='Generic Portrait Groups')
         from trait_ui import TraitWorkspace
         self.traits = TraitWorkspace(self.tabs, app)
         self.tabs.add(self.traits, text='Trait database')

@@ -888,6 +888,7 @@ class MapCatalogStore:
                 edits.append((node.start, node.end, raw))
             for start, end, raw in sorted(edits, reverse=True): text = text[:start] + raw + text[end:]
             self.docs.replace(CATALOG_PATHS['species_triggers'], text)
+            if create: self.characters.generic_portraits.ensure_species(ident)
             for function, variable, key in [('GetSpecies', 'species', f'var_species_{ident}'), ('GetSpeciesDesc', 'species', f'var_species_{ident}_desc'),
                                              ('GetMinority', 'minority', f'var_species_{ident}'), ('GetMinorityDesc', 'minority', f'var_minority_desc.{ident}'),
                                              ('GetSpeciesTemp', 'species_temp', f'var_species_{ident}')]:

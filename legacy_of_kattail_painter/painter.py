@@ -1582,7 +1582,7 @@ class MapDefinitionDialog(DraftDialog):
 
     def modifier_help(self):
         info = self.catalog.characters.trait_store.modifier_catalog().get(self.modifier.get(), {})
-        self.modifier_info.configure(text='Native scopes: ' + ', '.join(sorted(info.get('categories', ()))) + '. Values use game units.')
+        self.modifier_info.configure(text='Modifier categories: ' + ', '.join(sorted(info.get('categories', ()))) + '. Values use game units.')
 
     def refresh_modifiers(self):
         self.modifiers.delete(*self.modifiers.get_children())

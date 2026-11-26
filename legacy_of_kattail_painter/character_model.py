@@ -146,6 +146,13 @@ class CharacterStore:
         self.game_root = default_paths()['game']
 
     @property
+    def generic_portraits(self):
+        if not hasattr(self, '_generic_portraits'):
+            from generic_portrait_model import GenericPortraitStore
+            self._generic_portraits = GenericPortraitStore(self)
+        return self._generic_portraits
+
+    @property
     def trait_store(self):
         if not hasattr(self, '_trait_store'):
             from trait_model import TraitStore

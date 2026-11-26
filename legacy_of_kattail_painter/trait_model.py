@@ -71,6 +71,41 @@ def _number(raw):
     return format(number, 'f')
 
 
+def documented_modifiers(text):
+    """Expand the engine's static entries and supplied parameterized type lists.
+
+    Categories control tooltip filtering, not which script scopes may add a
+    modifier (see common/modifier_definitions/modifier_definitions.txt).
+    """
+    result = {}
+    sections = list(re.finditer(r'^##[ \t]+([^\r\n]+)', text, re.M))
+    for index, section in enumerate(sections):
+        heading = re.sub(r'<span\b[^>]*>\s*</span>', '', section[1]).strip()
+        body = text[section.end():sections[index+1].start() if index+1 < len(sections) else len(text)]
+        category = re.search(r'\*\*Categories\*\*:[ \t]*([^\r\n]+)', body)
+        categories = {c.strip() for c in category[1].split(',')} if category else set()
+        description = re.search(r'\*\*Description\*\*:[ \t]*([^\r\n]+)', body)
+        boolean = bool(re.search(r'^\*[ \t]+Boolean[ \t]*\r?$',body,re.M))
+        precision = re.search(r'^\*[ \t]+Number with (\d+) decimal places',body,re.M)
+        parameter = re.search(r'<[A-Za-z][A-Za-z0-9_]*>', heading)
+        if parameter and re.fullmatch(r'[A-Za-z0-9_]*<[A-Za-z][A-Za-z0-9_]*>[A-Za-z0-9_]*', heading):
+            types = re.search(r'\*\*Modified types\*\*:[ \t]*([^\r\n]+)', body)
+            keys = [heading.replace(parameter[0],t.strip()) for t in types[1].split(',')] if types else []
+        elif re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', heading):
+            keys = [heading]
+        else:
+            continue
+        for key in keys:
+            if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', key): continue
+            entry = result.setdefault(key, {'categories': set(), 'source': 'Game modifier documentation'})
+            entry['categories'].update(categories)
+            entry['value_type'] = 'yes_no' if boolean else 'number'
+            if precision: entry['precision'] = int(precision[1])
+            if parameter: entry['template'] = heading
+            if description: entry['description'] = description[1].strip()
+    return result
+
+
 class TraitStore:
     def __init__(self, characters):
         self.characters, self.docs = characters, characters.docs
@@ -165,26 +200,22 @@ class TraitStore:
         info = {}
         path = self.characters.game_root / 'documentation/modifiers_documentation.md'
         if path.is_file():
-            current = None
-            for line in read_text(path).splitlines():
-                if (m := re.fullmatch(r'## ([a-z][a-z0-9_]+)', line)):
-                    current = m[1]; info.setdefault(current, {'categories': set(), 'source': 'Game modifier documentation'})
-                elif current and '**Categories**:' in line:
-                    info[current]['categories'].update(s.strip() for s in line.split('**Categories**:', 1)[1].split(','))
+            info.update(documented_modifiers(read_text(path)))
         for directory, origin in [(self.characters.game_root / 'common/modifier_definitions', 'Vanilla modifier definition'),
                                   (self.characters.world.root / 'common/modifier_definitions', 'Mod modifier definition')]:
             files = (self.characters.files('common/modifier_definitions', '.txt') if origin.startswith('Mod ') else
-                     [p.as_posix() for p in directory.glob('*.txt')])
+                     [p.as_posix() for p in sorted(directory.rglob('*.txt'))])
             for filename in files:
                 text, roots = self.characters.parsed(filename) if origin.startswith('Mod ') else (read_text(Path(filename)), None)
                 for node in roots if roots is not None else parse(text):
                     if node.children is None: continue
                     categories = {value(text, n).strip('"') for n in node.children if n.key == 'category'}
-                    info[node.key] = {'categories': categories, 'source': origin}
+                    info[node.key] = {'categories': categories, 'source': origin,
+                                      'value_type': atom(text,node.children,'value_type','number')}
         # Native unit-trait stat bonuses belong directly on a trait, not in its modifier block.
         for field in set(sum((list(v) for v in STAT_FIELDS.values()), [])):
-            info.setdefault(field, {'categories': {'unit_leader'}, 'source': 'Unit trait stat bonus'})
-            info.setdefault(field + '_factor', {'categories': {'unit_leader'}, 'source': 'Unit trait stat weight'})
+            info.setdefault(field, {'categories': {'unit_leader'}, 'source': 'Unit trait stat bonus', 'trait_stat': True})
+            info.setdefault(field + '_factor', {'categories': {'unit_leader'}, 'source': 'Unit trait stat weight', 'trait_stat': True})
         loc = self.names()
         for key, entry in info.items():
             aliases = {'max_commander_army_size': 'MODIFIER_ARMY_LEADER_MAX_ARMY_SIZE',
@@ -202,6 +233,15 @@ class TraitStore:
 
     def modifier_choices(self):
         return tuple(sorted((v['choice'] for v in self.modifier_catalog().values()), key=lambda c: (sort_name(c.name), c.code)))
+
+    def spirit_modifier_choices(self):
+        return tuple(sorted((v['choice'] for v in self.modifier_catalog().values() if not v.get('trait_stat')), key=lambda c: (sort_name(c.name), c.code)))
+
+    def modifier_value(self, key, raw):
+        text = str(raw).strip()
+        if text in {'yes','no'} and self.modifier_catalog().get(key,{}).get('value_type') != 'yes_no':
+            raise ValueError('Use a finite number for this modifier')
+        return _number(text)
 
     def modifier_rows(self, trait):
         catalog = self.modifier_catalog(); rows = []

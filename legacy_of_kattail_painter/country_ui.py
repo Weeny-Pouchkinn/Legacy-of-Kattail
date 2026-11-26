@@ -94,6 +94,8 @@ class CountryDialog(DraftDialog):
         self.color=tk.StringVar(value=self.hex(app.world.country_colours().get(tag,(70,120,180))))
         self.capital=tk.StringVar(value=self.data.capital);self.stability=tk.StringVar(value=self.data.stability);self.war=tk.StringVar(value=self.data.war_support)
         self.ruling=tk.StringVar(value=self.data.ruling);self.laws={k:tk.StringVar(value=self.data.laws.get(k,'')) for k in ('mobilization_laws','economy','economy_laws','specialty','species')}
+        self.portrait_group=tk.StringVar(value=self.data.portrait_group if self.data.portrait_group is not None else '__keep__')
+        self.auto_portrait_group=self.new
         self.tabs=ttk.Notebook(self);self.tabs.pack(fill='both',expand=True,padx=10,pady=10)
         self.frames={}
         for key,label in [('setup','Setup'),('summary','Summary'),('politics','Parties & popularity'),('names','Ideology names'),('flags','Flags'),('leaders','Leaders'),('tech','Starting technologies'),('spirits','National spirits')]:
@@ -133,7 +135,26 @@ class CountryDialog(DraftDialog):
             values=list(self.countries.choices(category))
             if category=='economy_laws':values.insert(0,Choice('','Unspecified'))
             box=ChoiceBox(frame,textvariable=variable,values=values);box.grid(row=row,column=1,sticky='ew',padx=10);self.boxes.append(box)
-        ttk.Label(frame,text='Capital selection does not change state ownership. Use the Owner brush to assign territory to a new country.',wraplength=1000).grid(row=len(entries)+len(self.laws),column=0,columnspan=2,sticky='w',pady=15)
+        row=len(entries)+len(self.laws)
+        ttk.Label(frame,text='Generic portrait group').grid(row=row,column=0,sticky='w',pady=9)
+        line=ttk.Frame(frame);line.grid(row=row,column=1,sticky='ew',padx=10)
+        groups=self.store.generic_portraits.groups()
+        values=[Choice('__keep__','Keep existing / native default'),Choice('','Default (remove country-specific pools)')]+[Choice(k,g.name) for k,g in groups.items()]
+        self.portrait_group_box=ChoiceBox(line,textvariable=self.portrait_group,values=values)
+        self.portrait_group_box.pack(side='left',fill='x',expand=True);self.boxes.append(self.portrait_group_box)
+        self.portrait_group_box.bind('<<ComboboxSelected>>',lambda e:setattr(self,'auto_portrait_group',False))
+        ttk.Button(line,text='Use national species',command=self.use_species_portraits).pack(side='left',padx=6)
+        self.laws['species'].trace_add('write',lambda *args:self.suggest_species_portraits())
+        self.suggest_species_portraits()
+        ttk.Label(frame,text='Capital selection does not change state ownership. Use the Owner brush to assign territory to a new country.',wraplength=1000).grid(row=row+1,column=0,columnspan=2,sticky='w',pady=15)
+
+    def suggest_species_portraits(self):
+        if self.auto_portrait_group:
+            key='Species_'+self.laws['species'].get().removeprefix('var_species_')
+            if key in self.store.generic_portraits.groups():self.portrait_group.set(key)
+
+    def use_species_portraits(self):
+        self.auto_portrait_group=True;self.suggest_species_portraits()
 
     def pick_capital(self):
         self.grab_release();self.withdraw();self.app.begin_capital_pick(self)
@@ -393,6 +414,7 @@ class CountryDialog(DraftDialog):
         if (self.names['']['name'] or '')!=self.base_name.get():self.names['']['name']=self.base_name.get()
         self.data.tag=self.tag.get().strip();self.data.capital=self.capital.get();self.data.stability=self.stability.get();self.data.war_support=self.war.get();self.data.ruling=self.ruling.get()
         self.data.popularities={i:v.get() for i,v in self.pop.items()};self.data.technologies=dict(self.tech_values);self.data.ideas=set(self.spirit_values);self.data.laws={k:v.get() for k,v in self.laws.items()}
+        self.data.portrait_group=None if self.portrait_group.get()=='__keep__' else self.portrait_group.get()
         return self.data
 
     def apply_country(self):
@@ -433,7 +455,8 @@ class FlagLibraryPicker(tk.Toplevel):
         # Validate colors before creating a modal window, avoiding stranded grabs.
         colors=[v.get() for v in designer.colors];tint=designer.tint.get()
         scale=float(number(designer.scale.get(),Decimal('.05'),Decimal('1.5')))
-        render_flag(designer.pattern.get(),colors,None,tint,(1,1),scale)
+        # A 1x1 probe collapses small checkerboard cells into inverted rectangles.
+        render_flag(designer.pattern.get(),colors,None,tint,self.THUMB,scale)
         symbols=designer.symbol_specs(skip_index=designer.active_symbol_index() if kind=='emblem' else None)
         previous=designer.grab_current()
         super().__init__(designer)
@@ -733,11 +756,10 @@ class SpiritDialog(DraftDialog):
         ttk.Label(form,text='Description').grid(row=3,column=0,sticky='nw',pady=5);self.desc=tk.Text(form,height=4,wrap='word');self.desc.grid(row=3,column=1,sticky='ew',padx=8);self.desc.insert('1.0',description)
         self.rows=table(self,[('value','Value (game units)',170)])
         line=ttk.Frame(self,padding=10);line.pack(fill='x');self.modifier=tk.StringVar();self.amount=tk.StringVar(value='.1')
-        catalog=store.characters.trait_store.modifier_catalog()
-        self.modifier_box=ChoiceBox(line,textvariable=self.modifier,values=[v['choice'] for v in catalog.values() if not v['categories'] or 'country' in v['categories']]);self.modifier_box.pack(side='left',fill='x',expand=True)
+        self.modifier_box=ChoiceBox(line,textvariable=self.modifier,values=store.characters.trait_store.spirit_modifier_choices());self.modifier_box.pack(side='left',fill='x',expand=True)
         ttk.Entry(line,textvariable=self.amount,width=12).pack(side='left',padx=6);ttk.Button(line,text='Add / update',command=self.add_modifier).pack(side='left');ttk.Button(line,text='Remove',command=self.remove_modifier).pack(side='left',padx=6)
         self.rows.bind('<<TreeviewSelect>>',self.pick_modifier);self.rows.bind('<KeyPress>',lambda e:CountryDialog.type_choice(e,self.modifier_box))
-        ttk.Label(self,text='Country modifiers use game units (usually 0.1 = 10%). Existing conditions, on-add effects and nested modifier blocks are preserved.',wraplength=950,padding=10).pack(anchor='w')
+        ttk.Label(self,text='Modifier values use game units (usually 0.1 = 10%; Boolean modifiers also accept yes/no). Existing conditions, on-add effects and nested modifier blocks are preserved.',wraplength=950,padding=10).pack(anchor='w')
         buttons(self,[('Apply spirit',self.ok),('Cancel',self.cancel)]);self.refresh()
 
     def refresh(self):
@@ -754,7 +776,7 @@ class SpiritDialog(DraftDialog):
         try:
             self.modifier_box.commit();key=self.modifier.get()
             if key not in self.countries.characters.trait_store.modifier_catalog():raise ValueError('Choose a defined modifier')
-            self.effects[key]=number(self.amount.get());self.refresh()
+            self.effects[key]=self.countries.characters.trait_store.modifier_value(key,self.amount.get());self.refresh()
         except ValueError as exc:messagebox.showerror('Modifier',str(exc),parent=self)
 
     def remove_modifier(self):

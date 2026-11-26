@@ -276,6 +276,20 @@ modifier blocks remain editable in **Other fields and conditions**. Native
 modifier documentation and both gameside/mod custom modifier definitions supply
 the catalog. Names without a known translation use a readable ID-derived label.
 
+The shared modifier catalog includes every fixed ID and parameterized type
+listed in the installed game's `documentation/modifiers_documentation.md`.
+Building, equipment, doctrine, resource, operation and other parameterized names
+expand from the documentation's actual **Modified types** lists, retaining case.
+The current installation supplies 4,528 vanilla IDs (722 fixed, 3,806 expanded),
+plus registered custom definitions and separate military trait stat fields.
+
+National spirits expose ordinary modifiers across all tooltip categories,
+including `army_core_defence_factor`. Categories such as army/defensive describe
+tooltip grouping, not a country-idea whitelist. Military trait stat bonuses
+remain in their proper editor. Documented Boolean modifiers accept `yes`/`no`;
+numeric modifiers use finite game-unit numbers. Counts, sources and validation:
+`modding_documentation/agent_memory/vanilla_modifier_catalog/README.md`.
+
 Vanilla definitions are read-only. **Clone with new ID** copies one into the
 mod, resolving its file-local constants first. Existing mod traits edit their
 own source so existing public IDs/conditions are preserved. Added definitions go
@@ -797,7 +811,7 @@ work as usual. Exact files, tests, sources and rendering limits:
 
 Choose **Paint: States > Katzenartig Imperium**. **New element** creates a
 reusable object, like a culture or species; **Edit selected** changes its name,
-unique map color, immediate tooltip and delayed tooltip. The same objects are
+map color, immediate tooltip and delayed tooltip. Colors may be shared. The same objects are
 also in **MAP > Definitions > Katzenartig Imperium Elements** and the geography
 database. Editing one object updates every state assigned to it.
 
@@ -820,3 +834,45 @@ new **Katzenartig Imperium** scripted mapmode uses those assignments. Initial
 definitions and territory are empty so you can author the historical extent.
 Game rendering has not been exercised. Files, identifiers and checks:
 `modding_documentation/agent_memory/katzenartig_imperium/README.md`.
+
+### Generic Portrait Groups
+
+Open **CHARACTERS > Generic Portrait Groups**. The list follows the commented
+groups in `portraits/LOK_portraits.txt`, including empty **Species_0..100** slots
+and **Amphibian_Species / Roqualian_Species**. Species names label their numeric
+slots automatically; Altarian is **Species_61**. Double-click a group to edit.
+
+Choose a role/ideology/gender pool, then **Add images to pool**, **Replace selected
+image**, or **Remove from this pool**. Political portraits have separate ideology
+and gender pools; army, navy, operative and scientist pools have both genders.
+An absent ideology/gender pool can be enabled by adding images. Enabled pools
+retain at least one image. Imports fit large portraits to 156 x 210 pixels and
+automatically generate 65 x 67 small portraits using the existing Ministermaker
+transformation. The selected large/small pair previews beside the pool.
+
+Replacing a sprite updates all its uses, including other roles that share it.
+Removing a portrait only removes its membership in that pool. Original shared
+placeholder textures are preserved; imports use separate group-owned files.
+**Apply group** retains drafts; **Cancel** restores the dialog's source/image
+changes. Main **Save** writes with backups; Undo/Redo includes the images.
+
+New species automatically receive their matching reserved group. Existing art
+is retained; IDs beyond the reserved range get new registrations using the
+existing placeholder files. Editing Species_0 does not alter other vacant
+species slots or their placeholder art.
+
+In **COUNTRIES > New/Edit country > Setup**, choose **Generic portrait group**.
+New countries initially follow their national species until you choose a group
+manually; **Use national species** restores that suggestion. Existing countries
+retain their current group. **Keep existing / native default** preserves sources
+outside this group catalog; **Default (remove country-specific pools)** removes
+the country's explicit pools. Apply adds its tag under the chosen group and
+removes its old country-specific pool, including those in other portrait files.
+
+Unassigned group pool edits are retained in the draft-managed
+`generic_portrait_groups.json` template catalog beside the painter. Once a
+country uses the group, its native portrait block contains the pools the game
+loads. Country tags and pool changes share the normal guarded Save workflow.
+The existing special-group sprite references were corrected to their registered
+names. Details, sources and validation limits:
+`modding_documentation/agent_memory/generic_portrait_groups/README.md`.

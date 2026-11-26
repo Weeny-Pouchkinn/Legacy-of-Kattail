@@ -17,7 +17,7 @@ class ImperiumElementDialog(DraftDialog):
         self.color=tk.StringVar(value='#%02x%02x%02x'%(record.color if record else colour('imperium_'+str(next_id))))
         self.geometry('870x730');self.minsize(700,600)
         form=ttk.Frame(self,padding=12);form.pack(fill='x');form.columnconfigure(1,weight=1)
-        for row,(label,var) in enumerate([('Element ID',self.ident),('Name',self.name),('Unique map color',self.color)]):
+        for row,(label,var) in enumerate([('Element ID',self.ident),('Name',self.name),('Map color',self.color)]):
             ttk.Label(form,text=label).grid(row=row,column=0,sticky='w',pady=6)
             ttk.Entry(form,textvariable=var,state='disabled' if var is self.ident and record else 'normal').grid(row=row,column=1,sticky='ew',padx=8)
             if var is self.color:ttk.Button(form,text='Choose color',command=lambda:choose_color(self,self.color)).grid(row=row,column=2)

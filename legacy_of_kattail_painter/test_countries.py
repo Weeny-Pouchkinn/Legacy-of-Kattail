@@ -241,6 +241,34 @@ class CountryTests(unittest.TestCase):
         flag=render_flag('Solid',['#000000'],mask,'#00ff00')
         self.assertEqual(flag.getpixel((41,26)),(0,255,0));self.assertFalse(any('painter' in p or p.endswith('.json') for p in self.world.docs.changed))
 
+    def test_spirit_picker_includes_army_and_generated_modifiers_and_saves_them(self):
+        import tkinter as tk
+        from unittest.mock import patch
+        from country_ui import SpiritDialog
+        directory=self.game/'documentation';directory.mkdir()
+        (directory/'modifiers_documentation.md').write_text('## army_core_defence_factor\n* **Categories**: army, defensive\n## <span id="production_speed__factor"></span>production_speed_<Building>_factor\n* **Categories**: country\n* **Modified types**: arms_factory\n## can_guarantee_other_ideologies\n* Boolean\n* **Categories**: country\n')
+        root=tk.Tk();root.attributes('-alpha',0);errors=[];root.report_callback_exception=lambda *exc:errors.append(exc)
+        try:
+            with patch('country_ui.messagebox.showerror',side_effect=AssertionError('Unexpected spirit editor error')):
+                dialog=SpiritDialog(root,self.store,'old_spirit');root.update()
+                dialog.modifier_box.show('army_core_defence_factor')
+                self.assertTrue(any('army_core_defence_factor' in label for label in dialog.modifier_box.listbox.get(0,'end')))
+                dialog.modifier_box.choose();self.assertEqual(dialog.modifier.get(),'army_core_defence_factor')
+                dialog.amount.set('.1');dialog.add_modifier()
+                dialog.modifier_box.set('production_speed_arms_factory_factor');dialog.amount.set('.2');dialog.add_modifier()
+                dialog.modifier_box.set('can_guarantee_other_ideologies');dialog.amount.set('yes');dialog.add_modifier()
+                self.assertNotIn('attack_skill',dialog.modifier_box.index.by_code)
+                dialog.ok();root.update();self.assertFalse(dialog.winfo_exists())
+            text=self.world.docs.text(IDEAS);self.assertIn('army_core_defence_factor = 0.1',text)
+            self.assertIn('production_speed_arms_factory_factor = 0.2',text);self.assertIn('can_guarantee_other_ideologies = yes',text)
+            self.assertIn('on_add = { preserve = yes }',text)
+            with self.assertRaisesRegex(ValueError,'military traits'):
+                self.store.edit_spirit('old_spirit','Old','', 'GFX_idea_native',{'attack_skill':'1'})
+            self.world.docs.save();fresh=World(self.root);chars=CharacterStore(fresh);chars.game_root=self.game
+            store=CountryStore(fresh,chars,MapCatalogStore(fresh,chars));self.assertIn('army_core_defence_factor = 0.1',store.ideas()['old_spirit'][2])
+            self.assertFalse(errors)
+        finally:root.destroy()
+
     def test_background_patterns_keep_geometry_and_all_native_flag_sizes(self):
         for pattern in PATTERNS:
             for size in FLAG_SIZES.values():self.assertEqual(render_flag(pattern,['#ff0000','#00ff00','#0000ff','#ffffff'],size=size).size,size)
@@ -449,6 +477,32 @@ class FlagGalleryTests(unittest.TestCase):
         var.set('#not-a-color');self.pump();self.assertIsNone(self.designer.latest);self.assertEqual(str(self.designer.use_button.cget('state')),'disabled')
         var.set('#ff00aa');self.pump();self.assertEqual(self.designer.latest.getpixel((0,0)),(255,0,170));self.assertEqual(str(self.designer.use_button.cget('state')),'normal')
         self.assertFalse(self.applied)
+
+    def test_checkerboard_symbol_selection_with_stretched_second_symbol(self):
+        from country_ui import FlagLibraryPicker
+        from unittest.mock import patch
+        d=self.designer;d.emblem.set('mask:plantoid_0000');d.add_symbol()
+        d.tint.set('#008040');d.symbols[1]['stretch_x'].set('2');failures=[]
+        for pattern in ('Checkerboard','Small checkerboard'):
+            d.pattern.set(pattern);self.pump()
+            for kind in ('emblem','background'):
+                def choose(kind=kind,pattern=pattern):
+                    picker=None
+                    try:
+                        picker=next(w for w in d.winfo_children() if isinstance(w,FlagLibraryPicker))
+                        picker.select('mask:plantoid_0004' if kind=='emblem' else pattern);picker.accept()
+                    except Exception as exc:failures.append(exc)
+                    finally:
+                        if picker is not None and picker.winfo_exists():picker.destroy()
+                self.root.after(90,choose)
+                with patch('flag_designer.messagebox.showerror',side_effect=AssertionError('Unexpected flag-library error')):
+                    d.browse(kind)
+                self.assertEqual(d.pattern.get(),pattern)
+                self.assertEqual(d.emblem.get(),'mask:plantoid_0004')
+                self.assertEqual(d.symbols[0]['emblem'].get(),'mask:plantoid_0000')
+                self.assertEqual(d.tint.get(),'#008040');self.assertEqual(d.symbols[1]['stretch_x'].get(),'2')
+                self.assertIsNotNone(d.latest);self.assertIsNone(self.root.grab_current())
+        self.assertFalse(failures);self.assertFalse(self.applied)
 
     def test_eight_symbol_tabs_sliders_drag_and_gallery_composite(self):
         from types import SimpleNamespace
