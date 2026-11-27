@@ -31,7 +31,7 @@ GUI_BINDINGS = {
         'guiTypes': ('repair_order_window', 'repair_order_entry'),
         'count_container': ('repair_order_open_button',),
         'start_construction_entry': ('repair_order_number_window',),
-        'production_building_line_entry': ('repair_order_number_window',),
+        'production_building_line_entry': ('repair_order_number_window', 'pin_icon'),
         'production_railway_gun_repair_entry': ('repair_order_number_window',),
     },
     'countrydiplomacyview.gui': {

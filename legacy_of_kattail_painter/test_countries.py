@@ -234,6 +234,54 @@ class CountryTests(unittest.TestCase):
         d=self.store.read('AAA');d.ideas={'AAA_added'};self.store.apply(d,'#123456',d.names)
         self.assertEqual(self.store.read('AAA').ideas,{'AAA_added'})
 
+    def test_spirit_icon_pickers_exclude_minister_images_but_preserve_existing_assignment(self):
+        import tkinter as tk
+        from unittest.mock import patch
+        from country_ui import SpiritDialog,IconPicker
+        entries={
+            'minister':'GFX/Interface/Ministers/AAA/One.tga',
+            'leader':r'gfx\leaders\small_portraits\AAA\One.tga',
+            'portrait':'gfx/interface/ideas/portrait_person_small.dds',
+            'advisor_alias':'gfx/interface/ideas/idea_generic_political_advisor_europe_1.dds',
+            'plain_minister':'gfx/interface/ideas/otherwise_unclassified.dds',
+            'large_minister':'gfx/interface/ideas/unclassified_large.dds',
+            'german_advisors':'gfx/interface/ideas/german_advisors.dds',
+        }
+        sprites=''.join('spriteType={name="GFX_idea_'+key+'" texturefile="'+path+'"}' for key,path in entries.items())
+        original=self.world.docs.text('interface/lok_ideas.gfx')
+        self.world.docs.replace('interface/lok_ideas.gfx',original.replace('spriteTypes = {','spriteTypes = { '+sprites,1))
+        for key,size in [('plain_minister',(65,67)),('large_minister',(156,210)),('german_advisors',(60,68))]:
+            path=self.root/entries[key];path.parent.mkdir(parents=True,exist_ok=True);Image.new('RGBA',size,'red').save(path)
+        native=self.game/'interface/vanilla_ideas.gfx'
+        native.write_text(native.read_text().replace('spriteTypes = {','spriteTypes = { '+sprites,1))
+        text=self.world.docs.text(IDEAS).replace('picture = native','picture = plain_minister')
+        self.world.docs.replace(IDEAS,text);self.world.docs.save()
+        hidden={'GFX_idea_'+k for k in entries if k!='german_advisors'}
+        hidden|={'vanilla:'+key for key in hidden}
+        catalog=self.store.spirit_icon_catalog()
+        self.assertTrue(hidden.isdisjoint(catalog));self.assertTrue(hidden<=self.store.icon_catalog().keys())
+        self.assertTrue({'GFX_idea_native','vanilla:GFX_idea_native','GFX_idea_german_advisors'}<=catalog.keys())
+        self.assertIsNotNone(self.store.icon_image('GFX_idea_plain_minister'))
+        root=tk.Tk();root.attributes('-alpha',0);errors=[];root.report_callback_exception=lambda *exc:errors.append(exc)
+        try:
+            with patch('country_ui.messagebox.showerror',side_effect=AssertionError('Unexpected icon picker error')):
+                dialog=SpiritDialog(root,self.store,'old_spirit');root.update()
+                self.assertEqual(dialog.icon.get(),'GFX_idea_plain_minister')
+                self.assertTrue(hidden.isdisjoint(dialog.icon_box.index.by_code))
+                picker=IconPicker(dialog,self.store);root.update()
+                self.assertTrue(hidden.isdisjoint(picker.tree.get_children()))
+                picker.query.set('minister');picker.refresh();self.assertEqual(picker.tree.get_children(),())
+                picker.cancel();dialog.grab_set();dialog.ok();root.update()
+            _,_,text,node=self.store.ideas()['old_spirit']
+            self.assertEqual(atom(text,node.children,'picture'),'plain_minister')
+            self.assertNotIn('interface/lok_ideas.gfx',self.world.docs.changed);self.assertFalse(errors)
+        finally:root.update_idletasks();root.destroy()
+        # A replaced draft image changes eligibility without re-registering its sprite.
+        blob=io.BytesIO();Image.new('RGBA',(60,60),'blue').save(blob,format='DDS')
+        self.world.docs.stage_bytes(entries['plain_minister'],blob.getvalue())
+        self.assertIn('GFX_idea_plain_minister',self.store.spirit_icon_catalog())
+        self.world.docs.undo();self.assertNotIn('GFX_idea_plain_minister',self.store.spirit_icon_catalog())
+
     def test_imported_emblem_is_native_reusable_and_tintable(self):
         source=Path(self.fixture.tmp.name)/'Source Emblem.png';image=Image.new('RGBA',(20,20),(255,255,255,0));image.paste((255,255,255,255),(7,3,13,17));image.save(source)
         key=self.store.import_emblem(source);mask=self.store.emblem_mask(key)

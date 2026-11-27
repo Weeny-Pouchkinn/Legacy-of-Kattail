@@ -545,7 +545,7 @@ class GeographyStore:
             if any(r['exclusive']==kind and any(int(v)>0 and k==other for (_,k),v in clean.items()) for other,r in defs.items()) and any(int(v)>0 and k==kind for (_,k),v in clean.items()):raise ValueError('Mutually exclusive state buildings are both present')
         return clean
 
-    def edit_state(self,sid,name,attributes,resources,buildings,owner=None,controller=None,cores=None,claims=None):
+    def edit_state(self,sid,name,attributes,resources,buildings,owner=None,controller=None,cores=None,claims=None,transfer_cores=True):
         old=self.state(sid);path=self.world.states[sid].path
         if not name.strip():raise ValueError('Enter a state name')
         allowed=set(old['attributes'])|{'manpower','state_category','buildings_max_level_factor','local_supplies','impassable'}
@@ -601,6 +601,7 @@ class GeographyStore:
                         else:target=container
                         text=patch_field(text,target,kind,regular[(pid,kind)])
             for field_name,chosen in [('owner',owner),('controller',controller)]:
+                if field_name=='owner' and chosen:continue
                 if chosen is not None and chosen!=old[field_name]:text=patch_unique(text,block(block(parse(text),'state').children,'history'),field_name,chosen or None)
             for selected,previous,add,remove in [(cores,old['cores'],'add_core_of','remove_core_of'),(claims,old['claims'],'add_claim_by','remove_claim_by')]:
                 if selected is None or set(selected)==previous:continue
@@ -637,6 +638,7 @@ class GeographyStore:
                 if additions:supply+=('' if not supply or supply.endswith(('\n','\r')) else newline)+additions
                 self.docs.replace(supply_path,supply)
             self.docs.replace(path,text)
+            if owner and owner!=old['owner']:self.world.set_owner_draft(sid,owner,transfer_cores)
             if name!=old['name']:self.set_loc(STATE_LOC,old['name_key'],name)
 
     def region(self,rid):

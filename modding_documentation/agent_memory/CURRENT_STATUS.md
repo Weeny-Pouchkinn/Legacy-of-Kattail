@@ -1,8 +1,192 @@
 # Current status
 
+## Live painter progress recovered and closed (2026-11-27)
+
+Recovered 14 pending file changes via native Save save_20261127_180401_868855;
+user then closed painter, independently verified by zero remaining windows.
+Resolved stale icon-file snapshots using guarded temporary restoration of the
+exact expected sources, without disabling the conflict guard or discarding data.
+Archived raw session/baselines and 16 verified final files; reapplied flat paths
+for all three saved EaW icons, including newly saved colonial_troops.tga.
+All non-path session files and image bytes are unchanged. Scripts/loc validate.
+ZIP CRC and every final-file hash pass. No code changes or engine launch.
+
+Recovery: legacy_of_kattail_painter/backups/session_recovery_20261127_180150_909272/
+PainterProgressRecovery_20261127.zip. Exact sources, user-assisted Save/close,
+backup paths and validation: session_progress_recovery_20261127.md. Current mod
+already contains the recovered progress; reopen painter normally to continue.
+
+## Flat EaW icon paths and own-image import (2026-11-27)
+
+User explicitly superseded the earlier hash/source-subfolder runtime layout.
+EaW imports now use gfx/interface/ideas/eaw/<filename>. Different art with the
+same name gets a readable _2/_3 suffix; identical bytes reuse the existing file.
+Catalog IDs still retain source-relative paths. Reopened flat sprites recover
+original attribution from the existing per-spirit credit records, with unique
+library-name fallback; no extra metadata catalog is required. Original EaW credit
+paths, badges/source filters and deduplication remain intact.
+
+Audited/applied two current saved textures: CTL_axes.tga and deserttribes.dds.
+Updated interface/lok_ideas.gfx and credit Mod texture lines; deleted superseded
+native files and empty hash/country folders. Images match their old SHA-256
+exactly; original library and EaW credit source paths are unchanged. Backup:
+legacy_of_kattail_painter/backups/eaw_flat_paths_20261127_174759_248434.
+Second audit: zero changes. All unrelated user edits were retained.
+
+Both spirit dialog and gallery now have Import icon actions for own PNG/JPEG/
+DDS/TGA/BMP/WebP files. Preserve aspect/alpha on a transparent 60x68 DDS canvas
+under gfx/interface/ideas/custom/<readable filename>. Custom registry sprites
+use GFX_idea_lok_custom_icon_<stem>; normal spirit aliases retain GFX_idea_<ID>.
+Own imports use the Mod source, remain selectable and share preview, grouped
+Apply/Undo/Redo/Cancel/Save, collision protection and guarded backups. No live
+custom spirit/icon was seeded by validation.
+
+Validation: 230 tests pass; six Python files compile. Eight EaW and three own-
+import integration tests cover flat paths/provenance/credits, missing library,
+collisions/reuse, guarded migration/idempotence, source fitting/alpha and both
+actual Tk import/Cancel/Apply/Undo/Save paths. Native existing-spirit/gallery
+import/preview/Cancel passes with Save forbidden, zero callbacks and 4,226 source
+hashes unchanged. Diff checks pass; no game launch. Exact files/proof/limits:
+eaw_flat_paths/README.md. Restart painter before saving more icons, so the running
+old process no longer creates the superseded paths.
+
+## Owner-core audit and Cores/Claims painter (2026-11-27)
+
+Applied 167 missing owner cores across 38 countries. All 1,898 non-excluded owned
+base-history states now have their owner's core. SIL demilitarized Katown states
+34/36/44/45 retain KTW cores and remain byte-identical. Third-party cores, claims,
+ownership, dated history, comments and all non-owner-core tokens are preserved.
+Guarded backup: legacy_of_kattail_painter/backups/
+owner_core_audit_20261127_164250_453011. Second audit proposes zero changes.
+
+Owners has Ownership and Cores/Claims categories. Transfer Cores defaults on:
+ownership reassignment adds the new owner's core and removes only the previous
+owner's core. Same-owner strokes are no-ops. Off leaves cores/claims unchanged.
+Shared by brush, state editor,
+inspector owner action and native field/source edits. Independent Cores/Claims
+shows selected-country cores green, claims yellow (core takes priority), and
+blue ownership stripes, including gray owned non-core/non-claim states. All
+registered tags are listed, including landless tags. Left/right add/remove cores;
+Shift-left/right add/remove claims; middle-drag pans. State/region brush scopes,
+Undo/Redo/Save, overlays and current-view export share the existing paths.
+
+User explicitly supersedes the earlier capital-ownership guard: edited capitals
+must reference a defined state but may be outside ownership, even when the
+country owns other land. No capital or territory is reassigned automatically.
+
+Validation: 224 tests pass (seven new core integration tests); 10 Python files
+compile; map validator passes before/after (21,515 provinces, 20,926 assigned,
+413 regions, no X crossings). Native UI/model/Undo probe passes using verified
+landless AAA, with Save forbidden, no callbacks and 4,225 unchanged source hashes.
+KTW owns land and was not used as the landless fixture. Diff checks pass. No
+engine launch. Exact files, paths/hashes/proof and limits: core_audit/README.md.
+Next: restart painter to load controls; inspect new state history in a fresh game.
+
+## EaW national-spirit assets and credit records (2026-11-27)
+
+Painter now reads the supplied assets/eaw_ideas tree: 3,398 DDS/TGA images,
+all decoded successfully; five PSD working files excluded. Minister filtering
+leaves 2,219 selectable EaW images (4,420 combined choices). Gallery has Mod /
+Vanilla / EaW source checkboxes, remembered for the session and reflected in
+the dropdown. The user's eaw sun.png was copied exactly to assets/eaw_sun.png;
+its lower-left UI margin is separate from the source/game icon.
+
+Actual Apply imports exact asset bytes to gfx/interface/ideas/eaw/<hash>/<path>,
+registers the existing GFX_idea_<spirit> convention and stages an EaW Credits.txt
+entry with original gfx\interface\ideas path and national-spirit ID/name.
+Credits and images share atomic Undo/Redo/Cancel/Save; identical uses deduplicate.
+Existing human notes/BOM/newlines are retained. Runtime path retains EaW origin
+and original source path after reload, without requiring the library then.
+Installer copies the library and credits; no live spirits/assets were seeded.
+
+Validation: all 217 tests pass; four Python files compile; native existing spirit
+and gallery filter/search/select/preview/Cancel passed with Save forbidden,
+zero callbacks and 4,226 native hashes unchanged. Native image import/credit
+Save/reload is exercised in disposable fixtures. Global diff --check passes.
+No game launch. Exact paths, source evidence and remaining limits:
+eaw_spirit_assets/README.md and verification.json. Next: restart painter; Apply
+then Save actual choices to record their usage in the credits file.
+
+## National-spirit icon picker excludes minister portraits (2026-11-27)
+
+Both searchable dropdown and gallery use CountryStore.spirit_icon_catalog.
+Portrait paths/names and standard small/large portrait dimensions are excluded,
+including texture aliases and plain-named vanilla ministers. Header dimensions
+are cached per texture and image draft. Full icon registry still loads/previews
+and preserves existing assignments. No native assets changed.
+
+Native catalog audit: 3,617 registered, 2,201 selectable, 1,416 excluded; known
+mod/vanilla ministers removed and genuine spirit icons retained. All 212 tests
+pass, including mapped Tk picker/Apply and image replacement/Undo regressions;
+three Python files compile; diff --check passes. No engine launch needed for this
+painter-only change; none claimed. Exact files/sources/limits:
+spirit_icon_picker.md. Next: restart painter to load the filtered choices.
+
+## Land-AI live-log parser and construction pin repair (2026-11-26)
+
+Source fixes applied on Painter-Test; fresh-campaign engine confirmation pending.
+The first actual post-change log exposed nine failed AI-role entries, 90 tag
+parser errors and 1,967 role-none messages after the introduced empty blocked_for
+lists. Replaced them with nonempty PLR/HAR/KAR exclusions, all valid tags already
+excluded by target eligibility. Roles/compositions/priorities/upgrade links and
+land balance changes are preserved. The prior static pass missed this loader
+hazard; the validator now rejects empty/ambiguous lists and the real failing file.
+
+Restored exact installed-vanilla production_building_line_entry.pin_icon,
+addressing 12 GUI errors; existing sprite/tooltip are verified. Startup checks
+now require the widget. Land checks pass 24 targets/2,080 scenarios, nine filters
+and four negative fixtures; source-boundary checks prove only the pin changed
+in the GUI. Both modified Python validators compile. Original log rejection
+test reports the known 9 missing-role / 1,967 role-none / 12 pin failures.
+
+Evidence, exact paths and commands: plans/land-ai-implementation.md, first live-log
+repair section. Pre-fix sources/log are in ignored backups/land_ai_error_fix_20261126.
+Six external Workshop descriptor warnings are untouched; 21 invalid-order and
+20 dropped-command warnings need fresh-log assessment before assigning causality.
+Next: user restarts, starts fresh, opens Construction and advances roughly a week;
+inspect the new log (optional validate_land_ai.py --error-log PATH). No live
+clearance is claimed until that log exists.
+
+## Land AI, 1.5x ordinary frontage and mechanized equipment (2026-11-26)
+
+The validation record in this entry predates the first live-log repair above.
+
+Implemented on `Painter-Test`; gameplay balance and engine behavior remain
+unverified. Exact files, IDs, native references, commands and limits:
+`plans/land-ai-implementation.md`. Supersedes the land-only planning restriction
+and pre-change width/mechanized findings in the reconnaissance entry below.
+
+Ordinary terrain is 1.5x installed vanilla (including extra directions); custom
+terrain/map assets unchanged. Regular mechanized no longer consumes 50 AT.
+Generic infantry is foot infantry with 12/18/20-width stages. Added explicit
+mobile/assault roles, 20-width starters, 30-width medium/mechanized armor and
+a gated 35-width alternative. Garrison/suppression/specialist templates are
+affordable and staged; 24 targets total. New country-scope predicates/policies
+exclude Paluush/non-playable countries and add no recurring scripted scans.
+
+Economies below 10 military factories do not request an expensive land arm;
+armor-oriented regional economies (10-29) aim for 2 or 4 equipped divisions;
+industrial economies sustain armor/mobile forces with guarded mechanization.
+Native weights are objectives, not hard training-queue caps. Added replacement/
+upgrade-reserve floors, rifle-shortage prioritization and land research bootstrap.
+Tank design XP follows force eligibility/inherited armor; basic medium fits
+gain radio/three-man turret/medium-gun candidates. Modern-family fits disabled.
+Corrected land calendar switch to 104 and neutralized conflicting expensive
+doctrine role contributions. Aircraft/naval policy effects and sources preserved.
+
+Validation: land validator passes 24 targets / 2,080 scenarios plus reference,
+organization, reserve, module, terrain, encoding and source-boundary checks.
+Map validator passes (21,515 provinces / 413 regions); startup validator passes
+(56,544 localization keys/layers / 159 modern and 53 basic equipment contexts).
+Python compilation and task diff/whitespace checks pass. No CWTools CLI found;
+no game/observer campaign run. Baseline was initially clean Git HEAD; six native
+files modified, two added, all 4,355 other original native files unchanged.
+Next: fresh-campaign checks of field upgrades, 2/4 regional demand transitions,
+production/queue behavior and AIFC at 104/108. Aircraft remain deferred.
+
 ## AI competence reconnaissance and proposal (2026-11-26)
 
-Planning only on verified branch `Painter-Test`; no gameplay changes. Proposal:
+Historical reconnaissance before the implementation entry above. Proposal:
 `plans/ai-competence-proposal.md`. Verified legacy-vs-NSB priority mismatches,
 WWII calendar checks, universal motorized infantry targets, a requested mobile
 role without a dedicated target group, commented plane/naval design AI and

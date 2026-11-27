@@ -53,7 +53,10 @@ build_up_power_plants = {
 
 keep_logistics_buffer = {
 	enable = {
-		always = yes
+		OR = {
+			lok_ai_land_industrial_economy = yes
+			NOT = { lok_ai_land_conventional_country = yes }
+		}
 	}
 
 	ai_strategy = {
@@ -66,12 +69,14 @@ keep_logistics_buffer = {
 		value = 500
 	}
 
-	abort = { always = no }
+	abort_when_not_enabled = yes
 }
 
 herzland_warlord_prep_for_krieg = {
 	enable = {
 		is_herzlands_warlord = yes
+		lok_ai_land_regular_economy = yes
+		lok_ai_land_recruitment_ready = yes
 	}
 
 	ai_strategy = {
@@ -79,7 +84,7 @@ herzland_warlord_prep_for_krieg = {
 		value = 30
 	}
 
-	abort = { always = no }
+	abort_when_not_enabled = yes
 }
 
 
@@ -99,7 +104,7 @@ default_unit_production = {
 	ai_strategy = {
 		type = role_ratio
 		id = mountaineers
-		value = 4
+		value = 0
 	}
 
 	ai_strategy = {
@@ -111,7 +116,7 @@ default_unit_production = {
 	ai_strategy = {
 		type = role_ratio
 		id = armor
-		value = 2
+		value = 0
 	}
 
 	ai_strategy = {
@@ -659,13 +664,10 @@ build_patrol_bombers = {
 
 default_garrison_production = {
 	enable = {
-		ai_wants_divisions >  12 #Massively decreasing the amount of garrison and suppression the AI wants
-		is_major = yes
+		lok_ai_land_industrial_economy = yes
+		ai_wants_divisions > 12
 	}
-	abort = {
-		ai_wants_divisions < 13 #Massively decreasing the amount of garrison and suppression the AI wants
-		is_major = no
-	}
+	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = role_ratio
@@ -683,11 +685,11 @@ default_garrison_production = {
 
 default_mountaineers_production = {
 	enable = {
-		ai_wants_divisions > 11 #Decreasing the amount of mountaineers the AI wants
+		lok_ai_land_regular_economy = yes
+		ai_wants_divisions > 11
+		has_tech = tech_mountaineers
 	}
-	abort = {
-		ai_wants_divisions < 12 #Decreasing the amount of mountaineers the AI wants
-	}
+	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = role_ratio
@@ -720,47 +722,43 @@ default_mountaineers_production = {
 
 default_mobile_production = {
 	enable = {
-		ai_wants_divisions > 11
+		lok_ai_land_industrial_economy = yes
 		has_tech = motorised_infantry
 	}
-	abort = {
-		ai_wants_divisions < 12
-	}
+	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = role_ratio
 		id = mobile
-		value = 2
+		value = 8
 	}
 }
 
 default_armored_production = {
 	enable = {
-		ai_wants_divisions > 49
+		lok_ai_land_industrial_economy = yes
+		lok_ai_land_has_armor = yes
 	}
-	abort = {
-		ai_wants_divisions < 50
-	}
+	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = role_ratio
 		id = armor
-		value = 2
+		value = 12
 	}
 }
 
 highered_armored_production = {
 	enable = {
-		num_of_military_factories > 69
+		lok_ai_land_large_industrial_economy = yes
+		lok_ai_land_has_armor = yes
 	}
-	abort = {
-		num_of_military_factories < 70
-	}
+	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = role_ratio
 		id = armor
-		value = 5
+		value = 6
 	}
 }
 
@@ -1107,16 +1105,15 @@ default_market_convoy_purchases = {
 
 DEFAULT_early_template_design = {
 	enable = {
-		date < 1940.1.1
+		lok_ai_land_conventional_country = yes
+		date < 104.1.1
 	}
-	abort = {
-		date > 1940.1.1
-	}
+	abort_when_not_enabled = yes
 
 	ai_strategy = {
 		type = template_prio
 		id = motorized
-		value = 10
+		value = 0
 	}
 
 	ai_strategy = {
@@ -1128,13 +1125,13 @@ DEFAULT_early_template_design = {
 	ai_strategy = {
 		type = template_prio
 		id = light_armor
-		value = 50
+		value = 10
 	}
 
 	ai_strategy = {
 		type = template_prio
 		id = medium_armor
-		value = -10
+		value = 20
 	}
 
 	ai_strategy = {
@@ -1158,7 +1155,8 @@ DEFAULT_early_template_design = {
 
 DEFAULT_midlate_template_design = {
 	enable = {
-		date > 1940.1.1
+		lok_ai_land_conventional_country = yes
+		NOT = { date < 104.1.1 }
 	}
 	abort_when_not_enabled = yes
 
@@ -1188,12 +1186,6 @@ DEFAULT_midlate_template_design = {
 
 	ai_strategy = {
 		type = template_prio
-		id = modern_armor
-		value = 50
-	}
-
-	ai_strategy = {
-		type = template_prio
 		id = heavy_armor
 		value = 10
 	}
@@ -1207,7 +1199,7 @@ DEFAULT_midlate_template_design = {
 	ai_strategy = {
 		type = template_prio
 		id = infantry
-		value = 10
+		value = 60
 	}
 }
 
@@ -1468,15 +1460,15 @@ minors_dont_spy = {
 
 default_produce_some_trucks_for_buffer = {
 	enable = {
-		num_of_military_factories > 12
+		lok_ai_land_industrial_economy = yes
 		has_tech = tech_trucks
-		has_equipment = { motorized_equipment < 3000 }
+		has_equipment = { motorized_equipment < 1200 }
 	}
 	abort_when_not_enabled = yes
 
 	ai_strategy = {
-		type = equipment_production_min_factories
-		id = motorized
+		type = equipment_production_min_factories_archetype
+		id = motorized_equipment
 		value = 1
 	}
 }

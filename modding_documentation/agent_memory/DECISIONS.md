@@ -1,6 +1,50 @@
 # Decisions
 
+## 2026-11-26: Nonempty country lists in AI-template entries
+
+The live engine misread the nine introduced empty blocked_for lists as tag-token
+streams continuing through the subsequent role/upgrade_prio fields. Use the
+verified, already-ineligible Paluush tags PLR/HAR/KAR as explicit nonempty
+exclusions. Keep this rule scoped to AI-template country filters; do not assume
+all Clausewitz empty blocks or the separate equipment-design loader are broken.
+
+Validator must reject empty/ambiguous filters even when generic parsing succeeds,
+validate tag atoms/role presence and exercise the real pre-fix source. Loader
+contracts cannot be inferred from balanced braces alone. Keep template balance
+and public IDs intact during this repair. Require the missing construction pin
+widget in startup regression checks. Source fixes and passing static checks do
+not establish fresh-run engine clearance; document and inspect the next log.
+
+## 2026-11-26: Land AI implementation and economic force development
+
+User authorized land implementation, ordinary frontage at 1.5x vanilla, removing
+regular mechanized AT equipment, foot-based generic infantry and capacity-based
+armor/mobile forces; aircraft explicitly deferred. This supersedes the earlier
+reconnaissance-only restriction for land content.
+
+Use native template succession and strategy enable/abort reevaluation. Keep
+country eligibility/technology/readiness predicates shared; avoid flags or new
+global pulses. Use file-local @ constants for undocumented legacy AI numeric
+fields rather than assuming script_constants support. Ordinary terrain uses
+1.5x both frontage fields; custom terrain with no vanilla baseline is preserved.
+
+Choose conventional small (<10 military factories), regional (10-29), industrial
+(30+) and large industrial (70+) behavior. Regional armor specialization follows
+doctrine, inherited forces or medium technology/20+ factories, with native
+strength-aware 2/4 division objectives. Recruitment demand stays stable while
+queues consume equipment; readiness guards apply to field conversion. Reserve
+production floors exceed conversion thresholds to prevent bootstrap deadlock.
+Tank XP eligibility preserves inherited armor development for small countries.
+
+Preserve original role/target IDs, add mobile and assault role owners, and keep
+vanilla modern armor excluded. Existing air/naval effects in mixed strategy
+files remain equivalent. Static checks establish references/selection boundaries,
+not gameplay competence or exact queue caps. Implementation details, evidence and
+remaining engine acceptance: `plans/land-ai-implementation.md`.
+
 ## 2026-11-26: AI proposal scope and evidence boundary
+
+Historical scope, superseded for land by the implementation decision above.
 
 User request is reconnaissance/proposal, including online template research;
 no AI implementation is authorized by this task. Exclude the vanilla modern
@@ -713,3 +757,76 @@ scopes from hash-proven Save before/after records, then checks both exact tokens
 and independent ordered structure and uses guarded backups. Missing provenance
 is reported, never inferred. Existing malformed carriage returns outside selected
 scopes remain. Full evidence: painter_script_formatting/README.md.
+
+## 2026-11-27: EaW assets stay source-separated; imports and credits are atomic
+
+Use relative-path external catalog IDs eaw:<path> for the user-supplied DDS/TGA
+library, keeping duplicate basenames distinct. Apply copies only selected art
+into gfx/interface/ideas/eaw/<content hash>/<original relative path>; preserve
+original bytes/format/dimensions. Never replace a conflicting existing image.
+The destination preserves source identity and origin without an extra metadata
+catalog or a dependency on the library after Save.
+
+Draw the user's sun in a separate UI preview margin. Badge pixels never enter
+asset import or engine textures. Keep source filters as session view preferences.
+Use normal grouped draft edits for the import, sprite/idea/localisation and
+plain-text credit record. Apply records actual use; browsing or cancelling a
+selection does not create false credits. Stage credits as encoded bytes because
+they are prose, not Clausewitz script; retain human notes/BOM/newlines. Deduplicate
+identical asset/use/destination records, retaining history of distinct uses.
+The source library is scanned once per painter store/session; restart to discover
+new source files. Full validation and engine limits: eaw_spirit_assets/README.md.
+
+## 2026-11-27: Base-history cores/claims, explicit owner transfer and nominal capitals
+
+Read immediate state-history add/remove core/claim operations in source order,
+without applying dated history. Target edits clear only that tag's immediate
+operations and insert the requested membership once; comments and dated blocks
+remain. Default owner reassignment removes only the previous owner's core and
+adds the new owner's, retaining third-party cores and all claims. The shared
+Transfer Cores flag disables that behavior across all normal and raw ownership
+editor paths. Explicit state core-list edits occur before transfer reconciliation
+when both owner and memberships are edited together.
+
+Same-owner assignment is a no-op, so broad owner strokes preserve deliberate
+non-core ownership, including the four Katown exceptions.
+
+The one-time audit only adds missing owner cores and preserves SIL-owned DMZ
+states 34/36/44/45 exactly. It does not impose that exception on future deliberate
+painting. Prove all other script tokens/comments/order unchanged and exactly one
+owner membership added; use guarded backups. Do not remove competing cores to
+satisfy an owner-core invariant.
+
+Store selected country in immutable MapConfig for Cores/Claims so overlays and
+exports retain the selected tag. Core green takes priority over claim yellow;
+blue map-space stripes indicate ownership independently of either membership.
+All registered tags are selectable, including those without states/history.
+
+The user's explicit nominal-capital request replaces the older ownership guard.
+Only newly edited capital IDs must exist; foreign nominal capitals are allowed
+whether a country is landless or owns other states. Never move capitals or assign
+territory implicitly. Engine handling remains untested. Proof: core_audit/README.md.
+
+## 2026-11-27: Readable flat EaW paths and intentional own-icon imports
+
+The user's explicit filename request supersedes the earlier hash/subpath policy.
+Use gfx/interface/ideas/eaw/<source filename>, preserving image bytes. Reuse
+identical art and use readable _2/_3 suffixes for different contents, never silently
+overwriting other spirits' art. Keep catalog IDs source-relative; recover original
+source paths from the existing per-texture/per-spirit EaW Credits records. This
+retains attribution after reload and after removing the source library without
+introducing another metadata file. Unknown source provenance is not fabricated.
+
+Migration changes only active texture path literals and credit Mod texture lines;
+original EaW source paths and human notes remain. Stage exact copies/references
+before deleting old files with guarded rollback/backups. Remove only empty
+superseded native directories. Historical backups remain unchanged.
+
+Own images get a transparent 60x68 DDS canvas with aspect-preserving fitting and
+readable custom/<filename> paths. Register reusable GFX_idea_lok_custom_icon_<stem>
+Mod sprites; spirit aliases retain their existing naming convention. Deliberate
+custom imports bypass generic minister filename/dimension heuristics. Group the
+asset/registration/idea changes for Undo/Cancel/Save. No EaW attribution is assigned
+to own-image imports. Known EaW library files selected through the file chooser
+retain their EaW identity and use the corresponding source filter/credit path.
+Proof and untested engine behavior: eaw_flat_paths/README.md.

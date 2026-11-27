@@ -13,6 +13,11 @@ generic_light_tanks = {
 
 	priority = {
 		factor = 1000
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 
 	great_war_tank_default = {
@@ -298,6 +303,11 @@ generic_light_tank_destroyers = {
 			}
 			factor = 15
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	light_tank_destroyer_1 = {
 		priority = {
@@ -419,6 +429,11 @@ generic_light_tank_artillery = {
 
 	priority = {
 		factor = 500
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	light_tank_artillery_1 = {
 		priority = {
@@ -575,6 +590,11 @@ generic_light_tank_anti_air = {
 				has_tech = fighter2
 			}
 			factor = 3
+		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
 		}
 	}
 	light_tank_anti_air_1 = {
@@ -733,6 +753,11 @@ generic_medium_tanks = {
 			num_of_factories < 50
 			factor = 0.5
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 
 	basic_medium_tank_default = {
@@ -751,17 +776,19 @@ generic_medium_tanks = {
 			modules = {
 				main_armament_slot = {
 					any_of = {
+						tank_medium_cannon_2
+						tank_medium_cannon
 						tank_close_support_gun
 						tank_small_cannon_2
 						tank_high_velocity_cannon
 						tank_small_cannon
 					}
 				}
-				turret_type_slot = tank_medium_two_man_tank_turret
+				turret_type_slot = tank_medium_three_man_tank_turret
 				suspension_type_slot = tank_bogie_suspension
 				armor_type_slot = tank_riveted_armor
 				engine_type_slot = tank_gasoline_engine
-				special_type_slot_1 = empty
+				special_type_slot_1 = tank_radio_1
 				special_type_slot_2 = empty
 				special_type_slot_3 = empty
 				special_type_slot_4 = empty
@@ -785,6 +812,10 @@ generic_medium_tanks = {
 		}
 
 		allowed_modules = {
+			tank_medium_cannon_2
+			tank_medium_cannon
+			tank_medium_three_man_tank_turret
+			tank_radio_1
 
 			tank_small_cannon
 			tank_small_cannon_2
@@ -885,7 +916,7 @@ generic_medium_tanks = {
 			match_value = 4000
 			type = medium_tank_chassis_3
 			modules = {
-				main_armament_slot = { any_of = { tank_high_velocity_cannon_2 tank_medium_cannon_2 } }
+				main_armament_slot = { any_of = { tank_medium_cannon_2 tank_high_velocity_cannon_2 } }
 				turret_type_slot = tank_medium_three_man_tank_turret
 				suspension_type_slot = tank_torsion_bar_suspension
 				armor_type_slot = tank_welded_armor
@@ -980,6 +1011,11 @@ generic_medium_tank_destroyer = {
 				has_tech = basic_heavy_tank_chassis
 			}
 			factor = 3
+		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
 		}
 	}
 	medium_tank_destroyer_1 = {
@@ -1176,6 +1212,11 @@ generic_medium_tank_artillery = {
 
 	priority = {
 		factor = 500
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	medium_tank_artillery_1 = {
 		priority = {
@@ -1333,6 +1374,11 @@ generic_medium_tank_anti_air = {
 			}
 			factor = 3
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	medium_tank_anti_air_1 = {
 		priority = {
@@ -1486,6 +1532,11 @@ generic_heavy_tanks = {
 		modifier = {
 			num_of_factories < 50
 			factor = 0
+		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
 		}
 	}
 
@@ -1747,6 +1798,11 @@ generic_heavy_tank_destroyer = {
 			}
 			factor = 3
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	heavy_tank_destroyer_1 = {
 		priority = {
@@ -1946,6 +2002,11 @@ generic_heavy_tank_artillery = {
 
 	priority = {
 		factor = 500
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	heavy_tank_artillery_1 = {
 		priority = {
@@ -2104,6 +2165,11 @@ generic_heavy_tank_anti_air = {
 			}
 			factor = 3
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	heavy_tank_anti_air_1 = {
 		priority = {
@@ -2258,6 +2324,11 @@ generic_super_heavy_tanks = {
 			num_of_factories < 100
 			factor = 0
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 
 	basic_super_heavy_tank_default = {
@@ -2353,9 +2424,17 @@ generic_modern_tanks = {
 			num_of_factories < 100
 			factor = 0
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 
 	basic_modern_tank_default = {
+		# This family has no active research progression in Legacy of Kattail.
+		enable = { always = no }
+
 		priority = {
 			factor = 10
 		}
@@ -2441,9 +2520,17 @@ generic_modern_tank_destroyer = {
 			num_of_factories < 100
 			factor = 0
 		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 
 	basic_modern_tank_destroyer_default = {
+		# This family has no active research progression in Legacy of Kattail.
+		enable = { always = no }
+
 		priority = {
 			factor = 10
 
@@ -2526,6 +2613,11 @@ generic_amphibious_tanks = {
 
 	priority = {
 		factor = 20
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 
 	basic_amphibious_tank_default = {
@@ -2601,6 +2693,11 @@ generic_land_cruiser_tanks = {
 		modifier = {
 			num_of_factories < 100
 			factor = 0
+		}
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
 		}
 	}
 
@@ -2690,7 +2787,14 @@ generic_land_cruiser_tanks = {
 generic_infantry_walkers = {
 	category = land
 	roles = { land_light_tank }
-	priority = { factor = 250 }
+	priority = {
+		factor = 250
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
+	}
 	basic_infantry_walker_default = {
 		priority = { factor = 10 }
 		history = yes
@@ -2720,7 +2824,14 @@ generic_infantry_walkers = {
 generic_battle_walkers = {
 	category = land
 	roles = { land_medium_tank }
-	priority = { factor = 200 }
+	priority = {
+		factor = 200
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
+	}
 	basic_battle_walker_default = {
 		priority = { factor = 10 }
 		history = yes
@@ -2753,6 +2864,11 @@ generic_siegebreaker_walkers = {
 	priority = {
 		factor = 100
 		modifier = { num_of_factories < 50 factor = 0 }
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	basic_siegebreaker_walker_default = {
 		priority = { factor = 10 }
@@ -2786,6 +2902,11 @@ generic_cruiser_walkers = {
 	priority = {
 		factor = 50
 		modifier = { num_of_factories < 100 factor = 0 }
+		# Match design XP spending to the land-force profile or inherited armor.
+		modifier = {
+			factor = 0
+			NOT = { lok_ai_land_can_design_armor = yes }
+		}
 	}
 	basic_cruiser_walker_default = {
 		priority = { factor = 10 }

@@ -1,0 +1,199 @@
+# Country-scope land AI predicates. No pulses, flags or saved variables.
+# File-local constants: these legacy AI/trigger numeric fields do not document
+# script_constants support. Keep shared thresholds here rather than in callers.
+@regional_factory_floor = 9
+@regional_expanded_floor = 19
+@industrial_factory_floor = 29
+@main_armor_factory_floor = 49
+@mechanized_factory_floor = 69
+@assault_armor_factory_floor = 99
+@recruit_rifle_reserve = 1000
+@recruit_support_reserve = 100
+@recruit_manpower_reserve = 15000
+@upgrade_rifle_reserve = 1200
+@upgrade_support_reserve = 150
+@upgrade_artillery_reserve = 36
+@upgrade_aa_reserve = 40
+@upgrade_truck_reserve = 600
+@upgrade_tank_reserve = 400
+@upgrade_mechanized_reserve = 400
+@upgrade_spg_reserve = 100
+@upgrade_exoskeleton_reserve = 400
+
+lok_ai_land_conventional_country = {
+	NOT = { is_paluush_state = yes }
+	NOT = { is_non_playable_country = yes }
+}
+
+lok_ai_land_regular_economy = {
+	lok_ai_land_conventional_country = yes
+	num_of_military_factories > @regional_factory_floor
+}
+
+lok_ai_land_regional_economy = {
+	lok_ai_land_regular_economy = yes
+	NOT = { num_of_military_factories > @industrial_factory_floor }
+}
+
+lok_ai_land_industrial_economy = {
+	lok_ai_land_conventional_country = yes
+	num_of_military_factories > @industrial_factory_floor
+}
+
+lok_ai_land_large_industrial_economy = {
+	lok_ai_land_industrial_economy = yes
+	num_of_military_factories > @mechanized_factory_floor
+}
+
+lok_ai_land_has_light_armor = {
+	OR = {
+		has_tech = basic_light_tank
+		has_tech = basic_light_tank_chassis
+	}
+}
+
+lok_ai_land_has_medium_armor = {
+	OR = {
+		has_tech = basic_medium_tank
+		has_tech = basic_medium_tank_chassis
+	}
+}
+
+lok_ai_land_has_improved_medium_armor = {
+	OR = {
+		has_tech = improved_medium_tank
+		has_tech = improved_medium_tank_chassis
+	}
+}
+
+lok_ai_land_has_armor = {
+	OR = {
+		lok_ai_land_has_light_armor = yes
+		lok_ai_land_has_medium_armor = yes
+	}
+	has_tech = motorised_infantry
+}
+
+# A regional power specializes if it inherited armor, chose mobile warfare,
+# or has at least twenty military factories and researched medium armor.
+lok_ai_land_regional_armor_country = {
+	lok_ai_land_regional_economy = yes
+	lok_ai_land_has_armor = yes
+	OR = {
+		has_doctrine = new_mobile_warfare
+		has_army_size = { size > 0 type = armor }
+		AND = {
+			num_of_military_factories > @regional_expanded_floor
+			lok_ai_land_has_medium_armor = yes
+		}
+	}
+}
+
+lok_ai_land_expanded_regional_armor_country = {
+	lok_ai_land_regional_armor_country = yes
+	num_of_military_factories > @regional_expanded_floor
+}
+
+lok_ai_land_armor_country = {
+	lok_ai_land_conventional_country = yes
+	lok_ai_land_has_armor = yes
+	OR = {
+		lok_ai_land_regional_armor_country = yes
+		lok_ai_land_industrial_economy = yes
+	}
+}
+
+lok_ai_land_wants_armor_research = {
+	lok_ai_land_regular_economy = yes
+	OR = {
+		lok_ai_land_industrial_economy = yes
+		has_doctrine = new_mobile_warfare
+		has_army_size = { size > 0 type = armor }
+		num_of_military_factories > @regional_expanded_floor
+	}
+}
+
+# Retain equipment development for inherited armor, even when a small country
+# cannot afford to expand it. Other small countries save their design XP.
+lok_ai_land_can_design_armor = {
+	OR = {
+		lok_ai_land_armor_country = yes
+		has_army_size = { size > 0 type = armor }
+	}
+}
+
+lok_ai_land_main_armor_country = {
+	lok_ai_land_armor_country = yes
+	lok_ai_land_industrial_economy = yes
+	num_of_military_factories > @main_armor_factory_floor
+	lok_ai_land_has_improved_medium_armor = yes
+	date > 104.1.1
+}
+
+lok_ai_land_mechanized_armor_country = {
+	lok_ai_land_main_armor_country = yes
+	lok_ai_land_large_industrial_economy = yes
+	has_tech = mechanised_infantry
+	has_tech = tech_logistics_company
+}
+
+lok_ai_land_assault_armor_country = {
+	lok_ai_land_mechanized_armor_country = yes
+	num_of_military_factories > @assault_armor_factory_floor
+	date > 108.1.1
+	has_tech = artillery1
+	OR = {
+		has_tech = improved_medium_art
+		has_tech = improved_medium_tank_chassis
+	}
+}
+
+lok_ai_land_recruitment_ready = {
+	has_manpower > @recruit_manpower_reserve
+	has_equipment = { infantry_equipment > @recruit_rifle_reserve }
+	OR = {
+		NOT = { has_tech = tech_engineers }
+		has_equipment = { support_equipment > @recruit_support_reserve }
+	}
+}
+
+lok_ai_land_infantry_upgrade_ready = {
+	has_manpower > @recruit_manpower_reserve
+	has_equipment = { infantry_equipment > @upgrade_rifle_reserve }
+	has_equipment = { support_equipment > @upgrade_support_reserve }
+	has_equipment = { artillery_equipment > @upgrade_artillery_reserve }
+	OR = {
+		NOT = { has_tech = interwar_antiair }
+		has_equipment = { anti_air_equipment > @upgrade_aa_reserve }
+	}
+}
+
+lok_ai_land_mobile_upgrade_ready = {
+	lok_ai_land_infantry_upgrade_ready = yes
+	has_equipment = { motorized_equipment > @upgrade_truck_reserve }
+}
+
+lok_ai_land_medium_upgrade_ready = {
+	lok_ai_land_mobile_upgrade_ready = yes
+	has_equipment = { medium_tank_chassis > @upgrade_tank_reserve }
+}
+
+lok_ai_land_light_upgrade_ready = {
+	lok_ai_land_mobile_upgrade_ready = yes
+	has_equipment = { light_tank_chassis > @upgrade_tank_reserve }
+}
+
+lok_ai_land_mechanized_upgrade_ready = {
+	lok_ai_land_medium_upgrade_ready = yes
+	has_equipment = { mechanized_equipment > @upgrade_mechanized_reserve }
+}
+
+lok_ai_land_assault_armor_upgrade_ready = {
+	lok_ai_land_mechanized_upgrade_ready = yes
+	has_equipment = { medium_tank_artillery_chassis > @upgrade_spg_reserve }
+}
+
+lok_ai_land_power_upgrade_ready = {
+	lok_ai_land_infantry_upgrade_ready = yes
+	has_equipment = { exoskeleton_equipment > @upgrade_exoskeleton_reserve }
+}

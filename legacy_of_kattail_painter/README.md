@@ -402,7 +402,9 @@ The country form has seven tabs:
 - **National spirits**: searchable starting spirits and native create/edit with
   localized name, description, country modifiers and an icon. The icon browser
   lists both vanilla and mod sprites (including overridden vanilla alternatives),
-  with lazy previews. Editing an existing spirit changes its shared definition.
+  with lazy previews. Minister/character portraits are excluded from both icon
+  pickers; existing assignments remain intact. Editing an existing spirit
+  changes its shared definition.
 
 The emblem selector reuses the white Stellaris masks, existing EU4 imported
 emblems and emblems imported here. **Import reusable emblem** accepts alpha,
@@ -906,3 +908,73 @@ formatter checks that every token and comment is unchanged before writing.
 Historical painter output has also been repaired where native Save backups prove
 which containers the painter edited. Exact paths, backups, audit and validation:
 `modding_documentation/agent_memory/painter_script_formatting/README.md`.
+
+### EaW national-spirit icons and credits
+
+The spirit icon browser includes **Mod**, **Vanilla** and **EaW** source
+checkboxes. Search includes the source and asset path; filter choices also apply
+to the dropdown and are remembered until the painter restarts. EaW images have
+the supplied sun badge at the lower left beside their previews. The badge is
+painter-only and never becomes part of the game texture.
+
+Put source DDS/TGA images anywhere under `assets/eaw_ideas/`, preserving folders.
+Restart the painter after adding files. PSD working files and minister portraits
+are excluded. Applying an EaW icon stages an exact native game-texture copy;
+**Save** writes it along with the spirit and sprite definition. Original source
+files stay intact. Applied icons retain their EaW attribution after reopening.
+
+Apply also records the asset filename, its original EaW `gfx\interface\ideas`
+path, the spirit ID/name and the imported texture path in
+`credits/EaW Credits.txt`. This is a draft until Save; Undo and enclosing Cancel
+also restore credits. Repeating the same use does not duplicate its credit.
+Source images do not need to remain installed once their imported copies are
+saved. Full files/validation: `modding_documentation/agent_memory/eaw_spirit_assets/README.md`.
+
+### Owners: Ownership and Cores/Claims
+
+Choose **Owners** in View, or **Owner** in Paint. The left panel has
+**Ownership** and **Cores/Claims** categories. **Transfer Cores** is enabled by
+default: giving a state to a country adds its core and removes the previous
+owner's core. Other countries' cores and every claim remain. Same-owner strokes
+are no-ops, including on the four Katown exceptions. Turn it off to
+change ownership without changing memberships. The same option is available in
+the state editor and also governs inspector/native-source ownership changes.
+
+In **Cores/Claims**, select any country, including one that owns no states.
+Its cores are green and claims yellow; cores take color precedence when both
+exist. Blue stripes show its owned states, independently of cores or claims.
+
+| Gesture | Edit |
+| --- | --- |
+| Left-click/drag | Add selected country's core |
+| Shift-left-click/drag | Add its claim |
+| Right-click/drag | Remove its core |
+| Shift-right-click/drag | Remove its claim |
+
+Middle-drag pans. These edits retain ownership. State and strategic-region
+scopes, Undo/Redo, Save, saved overlays and current-view PNG export work normally.
+Countries may retain a defined capital outside their territory; the painter does
+not automatically transfer that state or relocate the capital.
+
+The initial core audit added 167 missing owner cores; SIL's demilitarized Katown
+states 34/36/44/45 were preserved. Exact files/backups/validation:
+`modding_documentation/agent_memory/core_audit/README.md`.
+
+### Flat EaW paths and importing your own spirit icons
+
+Saved EaW textures now use `gfx/interface/ideas/eaw/<filename>`, for example
+`eaw/CTL_axes.tga`, with no hash or country folders. Original EaW paths stay in
+`credits/EaW Credits.txt`; only the imported destination is flattened. Reopening
+an imported icon retains its EaW badge/source. Different art with an occupied
+filename gets a readable `_2` suffix; identical files are reused.
+
+Choose **Import icon…** in the national-spirit editor or icon browser to select
+PNG, JPEG, DDS, TGA, BMP or WebP art. The painter fits it to a transparent 60×68
+canvas while preserving aspect ratio, shows the preview and stores a DDS under
+`gfx/interface/ideas/custom/`. It appears under **Mod**, and the browser enables
+that source automatically. The source image stays untouched. Apply stages the
+spirit; Cancel and Undo include its imported art. **Save** writes the draft with
+normal conflict checks/backups. Imported custom art is reusable by other spirits.
+
+Restart the painter after this update. Exact migration, files and validation:
+`modding_documentation/agent_memory/eaw_flat_paths/README.md`.

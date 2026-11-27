@@ -32,14 +32,13 @@ class StartupSaveTests(unittest.TestCase):
         path.write_text(path.read_text().replace('owner = BBB', 'owner = AAA'))
         self.world = World(self.root)
 
-    def test_owner_brush_cannot_save_a_foreign_capital(self):
+    def test_owner_brush_saves_with_a_nominal_foreign_capital(self):
         self.two_states_for_aaa()
         path = self.root/'history/states/one.txt'
-        before = path.read_bytes()
         self.world.set_owner_draft(1, 'BBB')
-        with self.assertRaisesRegex(ValueError, 'AAA no longer owns capital state 1'):
-            self.world.docs.save()
-        self.assertEqual(path.read_bytes(), before)
+        self.world.docs.save()
+        self.assertEqual(World(self.root).states[1].owner,'BBB')
+        self.assertEqual((self.root/'history/countries/AAA.txt').read_text(),'capital = 1\n')
 
     def test_capital_can_be_reassigned_in_the_same_transaction(self):
         self.two_states_for_aaa()
@@ -51,13 +50,14 @@ class StartupSaveTests(unittest.TestCase):
         self.assertEqual(loaded.states[1].owner, 'BBB')
         self.assertEqual(loaded.states[2].owner, 'AAA')
 
-    def test_raw_country_edit_cannot_save_a_foreign_capital(self):
+    def test_raw_country_edit_allows_foreign_but_rejects_undefined_capitals(self):
         self.world.docs.replace('history/countries/AAA.txt', 'capital = 2\n')
-        with self.assertRaisesRegex(ValueError, 'owned capital'):
-            self.world.docs.save()
-        self.assertEqual((self.root/'history/countries/AAA.txt').read_text(), 'capital = 1\n')
+        self.world.docs.save()
+        self.world.docs.replace('history/countries/AAA.txt','capital = 9999\n')
+        with self.assertRaisesRegex(ValueError,'defined capital'):self.world.docs.save()
+        self.assertEqual((self.root/'history/countries/AAA.txt').read_text(),'capital = 2\n')
 
-    def test_painter_save_hook_runs_the_capital_guard(self):
+    def test_painter_save_hook_preserves_defined_nominal_capitals(self):
         from painter import Painter
         self.two_states_for_aaa()
         self.world.set_owner_draft(1, 'BBB')
@@ -67,8 +67,8 @@ class StartupSaveTests(unittest.TestCase):
             imperium_store=SimpleNamespace(validate_save=noop),
             railway_store=SimpleNamespace(prepare_save=noop),
             character_store=SimpleNamespace(prepare_save=noop))
-        with self.assertRaisesRegex(ValueError, 'owned capital'):
-            Painter.prepare_save(app)
+        Painter.prepare_save(app)
+        self.assertEqual(self.world.docs.text('history/countries/AAA.txt').strip(),'capital = 1')
 
     def test_dormant_country_may_keep_a_nominal_capital(self):
         self.world.set_owner_draft(1, 'BBB')

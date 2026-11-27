@@ -15,7 +15,7 @@ FILES = ['painter.py', 'model.py', 'source_io.py', 'character_model.py', 'charac
          'run_painter.bat', 'requirements.txt', '.gitignore', 'README.md', 'MODLOG.md', 'PLAN.md', 'test_painter.py', 'test_demographic_colors.py',
          'imperium_model.py', 'imperium_ui.py', 'test_imperium.py',
          'generic_portrait_model.py', 'generic_portrait_ui.py', 'test_generic_portraits.py', 'test_spirit_bonuses.py',
-         'script_format.py', 'test_script_format.py']
+         'script_format.py', 'test_script_format.py', 'assets/eaw_sun.png', 'test_eaw_icons.py', 'test_cores.py', 'test_spirit_icon_import.py']
 
 
 def confined(root, relative):
@@ -37,7 +37,11 @@ def install(mod, migration=False, package=None):
         raise ValueError('Choose the mod root containing descriptor.mod')
     if destination.exists() and (not destination.is_dir() or any(destination.iterdir())):
         raise ValueError('Painter folder is not empty; preserve or rename it before installing')
-    for name in FILES:
+    files=list(FILES)
+    for folder in ('assets/eaw_ideas','credits'):
+        for path in sorted((package/folder).rglob('*')):
+            if path.is_file():files.append(confined(package,path).relative_to(package).as_posix())
+    for name in files:
         if not (package / name).is_file():
             raise ValueError('Missing package file: ' + name)
     entries = []
@@ -51,7 +55,7 @@ def install(mod, migration=False, package=None):
             if sha(path) != entry['before_sha256'] or sha(staged) != entry['after_sha256']:
                 raise ValueError('Source/stage changed; regenerate before installing: ' + entry['path'])
     destination.mkdir(exist_ok=True)
-    for name in FILES:
+    for name in files:
         (destination / name).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(package / name, destination / name)
     if entries:

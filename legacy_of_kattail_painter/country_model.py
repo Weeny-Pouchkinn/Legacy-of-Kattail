@@ -14,18 +14,51 @@ import random
 from PIL import Image, ImageColor, ImageDraw, ImageOps, ImageFilter
 
 from model import FLAG_SIZES, child, parse, value, scalar, walk, read_text
-from character_model import atom, block, quote, LOC, unescape, inherited_sprites
+from character_model import atom, block, quote, LOC, unescape, inherited_sprites, LARGE_SIZE, SMALL_SIZE
 from select_ui import Choice
 from demographics import STARTUP
+from source_io import encode_source
 
 COUNTRY_LOC = 'localisation/english/countries_l_english.yml'
 IDEA_LOC = 'localisation/english/LOK_ideas_l_english.yml'
 IDEAS = 'common/ideas/lok_misc_ideas.txt'
 IDEA_GFX = 'interface/lok_ideas.gfx'
+EAW_IDEAS = 'legacy_of_kattail_painter/assets/eaw_ideas'
+EAW_TEXTURES = 'gfx/interface/ideas/eaw'
+EAW_CREDITS = 'legacy_of_kattail_painter/credits/EaW Credits.txt'
+CUSTOM_IDEAS = 'gfx/interface/ideas/custom'
+SPIRIT_ICON_SIZE = (60,68)
 EMBLEM_GFX = 'interface/lok_misc_icons.gfx'
 TAGS = 'common/country_tags/00_countries.txt'
 SPECIES_HISTORY_FLAG = 'lok_country_species_defined_in_history'
 ATTRIBUTE_HISTORY_FLAG = 'lok_country_attribute_defined_in_history'
+
+
+def flat_icon_destination(folder,asset,blob,read):
+    """Readable runtime names; identical art shares a file, different art never overwrites it."""
+    name=Path(asset).name;stem=Path(name).stem;suffix=Path(name).suffix;number=1
+    while True:
+        destination=folder+'/'+(name if number==1 else f'{stem}_{number}{suffix}')
+        existing=read(destination)
+        if existing is None or existing==blob:return destination
+        number+=1
+
+
+def flat_eaw_destination(asset,blob,read):
+    return flat_icon_destination(EAW_TEXTURES,asset,blob,read)
+
+
+def eaw_credit_sources(text):
+    """Original paths survive flat runtime filenames in the existing human-readable credits."""
+    result={}
+    pattern=r'^EaW path: ([^\r\n]+)\r?\nUsed for: National spirit ([A-Za-z0-9_]+) [^\r\n]*\r?\nMod texture: ([^\r\n]+)\r?$'
+    for match in re.finditer(pattern,text,re.M):
+        source=match[1].replace('\\','/');texture=match[3].replace('\\','/').strip()
+        prefix='gfx/interface/ideas/'
+        if source.startswith(prefix):result[(texture.casefold(),match[2])]=source[len(prefix):]
+    return result
+
+
 PATTERNS = ('Solid', 'Horizontal bicolor', 'Vertical bicolor', 'Horizontal tricolor',
             'Vertical tricolor', 'Horizontal 1:2:1', 'Vertical 1:2:1', 'Diagonal down',
             'Diagonal up', 'Quartered', 'Cross', 'Nordic cross', 'Saltire', 'Chevron',
@@ -828,17 +861,46 @@ class CountryStore:
             # Explicit promotion avoids relying on recruitment order; other roles/recruitments remain.
             text += f'\npromote_character = {{ character = {key} ideology = {subtype} }}\n';self.docs.replace(path,text)
 
+    def eaw_icon_catalog(self):
+        def build():
+            root=self.docs.root/EAW_IDEAS;out={}
+            for path in sorted(root.rglob('*')):
+                if path.suffix.lower() not in {'.dds','.tga'} or not path.is_file():continue
+                if not path.resolve().is_relative_to(root.resolve()):continue
+                relative=path.relative_to(root).as_posix();code='eaw:'+relative
+                out[code]={'texture':EAW_IDEAS+'/'+relative,'origin':'EaW','eaw_asset':relative,'frames':'1',
+                           'choice':Choice(code,'EaW: '+str(Path(relative).with_suffix('')).replace('_',' '))}
+            return out
+        return self.cached('eaw_icons',str(self.docs.root),build)
+
     def icon_catalog(self):
         mod=self.characters.sprites(); vanilla=inherited_sprites(str(self.characters.game_root))
-        loc=self.characters.trait_store.names();signature=(id(mod),id(vanilla),id(loc))
+        eaw=self.eaw_icon_catalog()
+        credits=self.docs.text(EAW_CREDITS)
+        loc=self.characters.trait_store.names();signature=(id(mod),id(vanilla),id(loc),id(eaw),credits)
         def build():
-            out={}
+            out={};provenance=eaw_credit_sources(credits);library={}
+            for row in eaw.values():library.setdefault(Path(row['eaw_asset']).name.casefold(),set()).add(row['eaw_asset'])
             for source,entries in [('Vanilla',vanilla),('Mod',mod)]:
                 for key,rows in entries.items():
                     if not key.startswith('GFX_idea_') or not rows:continue
                     row=rows[0]; short=key.removeprefix('GFX_idea_')
                     code='vanilla:'+key if source=='Vanilla' else key
-                    out[code]={**row,'origin':source,'choice':Choice(code,loc.get(short,short.replace('_',' ').title()))}
+                    origin=source;extra={}
+                    prefix=EAW_TEXTURES+'/'
+                    texture=row['texture'].replace('\\','/')
+                    if source=='Mod' and texture.startswith(prefix):
+                        origin='EaW';relative=texture[len(prefix):]
+                        original=provenance.get((texture.casefold(),short))
+                        if original is None and '/' in relative:
+                            first,rest=relative.split('/',1)
+                            original=rest if re.fullmatch('[0-9a-fA-F]{16,64}',first) else relative
+                        if original is None:
+                            candidates={asset for (path,_),asset in provenance.items() if path==texture.casefold()} or library.get(Path(texture).name.casefold(),set())
+                            if len(candidates)==1:original=next(iter(candidates))
+                        extra['eaw_asset']=original
+                    out[code]={**row,**extra,'origin':origin,'choice':Choice(code,loc.get(short,short.replace('_',' ').title()))}
+            out.update(eaw)
             return out
         return self.cached('icons',signature,build)
 
@@ -849,10 +911,84 @@ class CountryStore:
         token=(key,id(blob),size)
         def build():
             with Image.open(io.BytesIO(blob)) as opened:
-                image=opened.convert('RGBA');frames=int(atom(entry['text'],entry['node'].children,'noOfFrames','1'))
+                image=opened.convert('RGBA');frames=int(entry['frames'] if 'frames' in entry else atom(entry['text'],entry['node'].children,'noOfFrames','1'))
                 if frames>1:image=image.crop((0,0,image.width//frames,image.height))
                 return ImageOps.contain(image,size,Image.Resampling.LANCZOS)
         return self.cached(('icon',key),token,build)
+
+    def spirit_icon_catalog(self):
+        # Portrait sprites also use GFX_idea_. Filter by the image, so aliases
+        # cannot reintroduce minister art; retain the full registry for existing
+        # assignments, previews and native validation.
+        catalog=self.icon_catalog()
+        def portrait_size(texture):
+            def read_size():
+                source=self.docs.root/texture
+                if not source.is_file():source=self.characters.game_root/texture
+                if texture in self.docs.drafts:source=io.BytesIO(self.docs.binary(texture) or b'')
+                try:
+                    with Image.open(source) as image:return image.size in {SMALL_SIZE,LARGE_SIZE}
+                except (OSError,ValueError):return False
+            return self.cached(('spirit_portrait_size',texture),id(self.docs.drafts.get(texture)),read_size)
+        def build():
+            out={}
+            for key,row in catalog.items():
+                if row['texture'].replace('\\','/').startswith(CUSTOM_IDEAS+'/'):
+                    out[key]=row;continue  # Deliberate user imports are selectable even when named portrait_*.
+                parts=tuple(p for p in row['texture'].replace('\\','/').casefold().split('/') if p)
+                if any(p in {'leaders','ministers','portraits','small_portraits','large_portraits'} for p in parts[:-1]):continue
+                name=parts[-1] if parts else ''
+                if name.startswith(('portrait_','idea_portrait_')) or re.match(r'^(?:idea_)?generic_political_advisor_',name):continue
+                # Old vanilla ministers also live in ideas/ under plain names
+                # (e.g. idea_hjalmar_schacht.dds). Check header dimensions only;
+                # do not decode thousands of textures or alter source snapshots.
+                texture=row['texture'].replace('\\','/')
+                if portrait_size(texture):continue
+                out[key]=row
+            return out
+        signature=(id(catalog),tuple((p,id(b)) for p,b in self.docs.drafts.items() if p.startswith('gfx/')))
+        return self.cached('spirit_icons',signature,build)
+
+    def import_spirit_icon(self,source):
+        source=Path(source)
+        library=(self.docs.root/EAW_IDEAS).resolve()
+        if source.resolve().is_relative_to(library):
+            key='eaw:'+source.resolve().relative_to(library).as_posix()
+            if key not in self.spirit_icon_catalog():raise ValueError('Choose a national-spirit asset from the EaW library; restart to refresh newly added files')
+            return key  # Known EaW art retains its attribution even through the file chooser.
+        stem=re.sub('[^A-Za-z0-9_]+','_',source.stem).strip('_') or 'custom_icon'
+        with Image.open(source) as opened:
+            fitted=ImageOps.contain(opened.convert('RGBA'),SPIRIT_ICON_SIZE,Image.Resampling.LANCZOS)
+            image=Image.new('RGBA',SPIRIT_ICON_SIZE)
+            image.alpha_composite(fitted,((image.width-fitted.width)//2,(image.height-fitted.height)//2))
+            output=io.BytesIO();image.save(output,format='DDS');blob=output.getvalue()
+        destination=flat_icon_destination(CUSTOM_IDEAS,stem+'.dds',blob,self.docs.binary)
+        base='GFX_idea_lok_custom_icon_'+Path(destination).stem;sprite=base;number=2
+        registered=self.characters.sprites()
+        while sprite in registered and any(row['texture']!=destination for row in registered[sprite]):
+            sprite=base+'_'+str(number);number+=1
+        with self.docs.grouped():
+            self.docs.stage_bytes(destination,blob);self.catalogs.put_sprite(IDEA_GFX,sprite,destination)
+        return sprite
+
+    def import_spirit_texture(self,entry):
+        if 'frames' not in entry:return entry['texture']
+        blob=self.docs.binary(entry['texture'])
+        if blob is None:raise ValueError('EaW source asset is missing: '+entry['texture'])
+        with Image.open(io.BytesIO(blob)) as image:image.verify()
+        destination=flat_eaw_destination(entry['eaw_asset'],blob,self.docs.binary)
+        self.docs.stage_bytes(destination,blob)
+        return destination
+
+    def credit_spirit_icon(self,entry,key,name,texture):
+        if entry['origin']!='EaW' or not entry.get('eaw_asset'):return
+        asset=entry['eaw_asset'];source='gfx\\interface\\ideas\\'+asset.replace('/','\\')
+        usage='National spirit '+key+' ('+' '.join(name.splitlines())+')'
+        record='Asset: '+Path(asset).name+'\nEaW path: '+source+'\nUsed for: '+usage+'\nMod texture: '+texture+'\n'
+        original=self.docs.binary(EAW_CREDITS) or b'';text=self.docs._decode(original)
+        if record in text.replace('\r\n','\n'):return
+        updated=text.rstrip()+'\n\n'+record if text.strip() else 'EaW Credits\n\n'+record
+        self.docs.stage_bytes(EAW_CREDITS,encode_source(updated,original))
 
     def edit_spirit(self,key,name,description,icon,effects,create=False,research_bonuses=None,equipment_bonuses=None):
         from character_model import patch_field
@@ -879,14 +1015,20 @@ class CountryStore:
             _,_,source,node=ideas[key];old_icon='GFX_idea_'+atom(source,node.children,'picture',key)
             if old_icon not in self.icon_catalog():old_icon='vanilla:'+old_icon
         change_icon=create or icon!=old_icon
+        selected=self.icon_catalog()[icon]
+        if change_icon and selected['origin']=='EaW' and not selected.get('eaw_asset'):
+            raise ValueError('Choose the original EaW library asset so its source can be credited')
         with self.docs.grouped():
             if change_icon:
-                entry=self.icon_catalog()[icon]; sprite='GFX_idea_'+key
-                self.catalogs.put_sprite('interface/lok_ideas.gfx',sprite,entry['texture'])
-                frames=atom(entry['text'],entry['node'].children,'noOfFrames','1')
+                entry=selected; sprite='GFX_idea_'+key
+                texture=self.import_spirit_texture(entry)
+                self.catalogs.put_sprite('interface/lok_ideas.gfx',sprite,texture)
+                frames=entry['frames'] if 'frames' in entry else atom(entry['text'],entry['node'].children,'noOfFrames','1')
                 entry=self.characters.sprites()[sprite][0];text=self.docs.text(entry['path']);node=entry['node']
                 if frames!='1' or atom(text,node.children,'noOfFrames'):
                     self.docs.replace(entry['path'],patch_field(text,node,'noOfFrames',frames))
+            else:texture=selected['texture']
+            self.credit_spirit_icon(selected,key,name,texture)
             path=IDEAS if create else ideas[key][1];text=self.docs.text(path);root=block(parse(text),'ideas')
             if root is None:raise ValueError('Existing native ideas file is missing its ideas block')
             if create:

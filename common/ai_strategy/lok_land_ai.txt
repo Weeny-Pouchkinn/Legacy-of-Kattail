@@ -1,0 +1,621 @@
+# Land-only policies. role_ratio contributions stack with default/doctrines;
+# expensive land roles are centralized here and in the guarded default policies.
+# Native strategy reevaluation handles transitions; no scripted recurring scan.
+@regional_starter_goal = 2
+@regional_expanded_goal = 4
+@regional_armor_weight = 18
+@regional_expanded_armor_weight = 12
+@regional_mobile_weight = 4
+@assault_infantry_weight = 6
+@power_infantry_weight = 4
+@rifle_crisis_reserve = 1000
+@rifle_upgrade_buffer = 1800
+@support_upgrade_buffer = 250
+@artillery_upgrade_buffer = 100
+@aa_upgrade_buffer = 100
+@regional_tank_reserve = 500
+@industrial_tank_reserve = 1000
+@regional_truck_reserve = 1200
+@assault_spg_reserve = 200
+@power_infantry_reserve = 600
+@research_core_weight = 35
+@research_support_weight = 25
+@research_motor_weight = 30
+@research_armor_weight = 50
+@research_mechanized_weight = 40
+@research_power_weight = 20
+@industrial_concentration_bonus = 10
+
+lok_ai_land_small_logistics_buffer = {
+	enable = {
+		lok_ai_land_conventional_country = yes
+		NOT = { lok_ai_land_regular_economy = yes }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = min_wanted_supply_trains
+		value = 5
+	}
+	ai_strategy = {
+		type = min_wanted_supply_trucks
+		value = 100
+	}
+}
+
+lok_ai_land_regional_logistics_buffer = {
+	enable = { lok_ai_land_regional_economy = yes }
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = min_wanted_supply_trains
+		value = 10
+	}
+	ai_strategy = {
+		type = min_wanted_supply_trucks
+		value = 300
+	}
+}
+
+# These are equipped-force objectives, not hard caps on divisions in training.
+# has_army_size accounts for strength, so empty tank divisions do not fulfill it.
+# Keep demand stable while the queue consumes equipment; reserves gate field
+# conversion, not recruitment weights, to avoid cancelling partly equipped units.
+lok_ai_land_regional_starter_armor = {
+	enable = {
+		lok_ai_land_regional_armor_country = yes
+		has_army_size = { size < @regional_starter_goal type = armor }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = role_ratio
+		id = armor
+		value = @regional_armor_weight
+	}
+}
+
+lok_ai_land_regional_expanded_armor = {
+	enable = {
+		lok_ai_land_expanded_regional_armor_country = yes
+		NOT = { has_army_size = { size < @regional_starter_goal type = armor } }
+		has_army_size = { size < @regional_expanded_goal type = armor }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = role_ratio
+		id = armor
+		value = @regional_expanded_armor_weight
+	}
+}
+
+lok_ai_land_regional_mobile_escorts = {
+	enable = {
+		lok_ai_land_regional_armor_country = yes
+		has_army_size = { size > 0 type = armor }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = role_ratio
+		id = mobile
+		value = @regional_mobile_weight
+	}
+}
+
+# Countries without an armored specialization can still build a limited
+# artillery-supported assault arm while ordinary infantry holds the line.
+lok_ai_land_infantry_assault_force = {
+	enable = {
+		lok_ai_land_regular_economy = yes
+		NOT = { lok_ai_land_armor_country = yes }
+		has_tech = gw_artillery
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = role_ratio
+		id = infantry_assault
+		value = @assault_infantry_weight
+	}
+}
+
+lok_ai_land_power_infantry_force = {
+	enable = {
+		lok_ai_land_large_industrial_economy = yes
+		has_tech = exoskeleton_1
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = role_ratio
+		id = infantry_assault
+		value = @power_infantry_weight
+	}
+}
+
+# Production floors are deliberately small; normal equipment needs still set
+# the main budget. Specific archetypes prevent an armored-car line from meeting
+# a truck requirement or an unrelated armored vehicle from meeting the tank floor.
+lok_ai_land_rifle_production_floor = {
+	enable = {
+		lok_ai_land_conventional_country = yes
+		num_of_military_factories > 0
+		OR = {
+			AND = {
+				lok_ai_land_regular_economy = yes
+				has_equipment = { infantry_equipment < @rifle_upgrade_buffer }
+			}
+			AND = {
+				NOT = { lok_ai_land_regular_economy = yes }
+				has_equipment = { infantry_equipment < @rifle_crisis_reserve }
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = infantry_equipment
+		value = 1
+	}
+}
+
+lok_ai_land_support_reserves = {
+	enable = {
+		lok_ai_land_regular_economy = yes
+		has_tech = tech_support
+		has_equipment = { support_equipment < @support_upgrade_buffer }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = support_equipment
+		value = 1
+	}
+}
+
+lok_ai_land_artillery_reserves = {
+	enable = {
+		lok_ai_land_regular_economy = yes
+		has_tech = gw_artillery
+		has_equipment = { artillery_equipment < @artillery_upgrade_buffer }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = artillery_equipment
+		value = 1
+	}
+}
+
+lok_ai_land_aa_reserves = {
+	enable = {
+		lok_ai_land_regular_economy = yes
+		has_tech = interwar_antiair
+		has_equipment = { anti_air_equipment < @aa_upgrade_buffer }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = anti_air_equipment
+		value = 1
+	}
+}
+
+lok_ai_land_rifle_shortage = {
+	enable = {
+		lok_ai_land_conventional_country = yes
+		has_equipment = { infantry_equipment < @rifle_crisis_reserve }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_factor
+		id = infantry
+		value = 60
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = armor
+		value = -30
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = mechanized
+		value = -30
+	}
+}
+
+lok_ai_land_regional_trucks = {
+	enable = {
+		lok_ai_land_regional_armor_country = yes
+		has_tech = tech_trucks
+		has_equipment = { motorized_equipment < @regional_truck_reserve }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = motorized_equipment
+		value = 1
+	}
+}
+
+lok_ai_land_regional_medium_production = {
+	enable = {
+		lok_ai_land_regional_armor_country = yes
+		lok_ai_land_has_medium_armor = yes
+		OR = {
+			has_equipment = { medium_tank_chassis < @regional_tank_reserve }
+			has_war = yes
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = medium_tank_chassis
+		value = 1
+	}
+}
+
+lok_ai_land_regional_light_production = {
+	enable = {
+		lok_ai_land_regional_armor_country = yes
+		NOT = { lok_ai_land_has_medium_armor = yes }
+		lok_ai_land_has_light_armor = yes
+		OR = {
+			has_equipment = { light_tank_chassis < @regional_tank_reserve }
+			has_war = yes
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = light_tank_chassis
+		value = 1
+	}
+}
+
+lok_ai_land_industrial_medium_production = {
+	enable = {
+		lok_ai_land_industrial_economy = yes
+		lok_ai_land_has_medium_armor = yes
+		OR = {
+			has_equipment = { medium_tank_chassis < @industrial_tank_reserve }
+			has_war = yes
+		}
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = medium_tank_chassis
+		value = 2
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = armor
+		value = 25
+	}
+}
+
+lok_ai_land_industrial_light_production = {
+	enable = {
+		lok_ai_land_industrial_economy = yes
+		NOT = { lok_ai_land_has_medium_armor = yes }
+		lok_ai_land_has_light_armor = yes
+		has_equipment = { light_tank_chassis < @industrial_tank_reserve }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = light_tank_chassis
+		value = 2
+	}
+}
+
+lok_ai_land_industrial_armor_reserves = {
+	enable = {
+		lok_ai_land_industrial_economy = yes
+		lok_ai_land_has_medium_armor = yes
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_surplus_management
+		id = medium_tank_chassis
+		value = 3
+	}
+}
+
+lok_ai_land_mechanized_escorts = {
+	enable = {
+		lok_ai_land_mechanized_armor_country = yes
+		has_equipment = { mechanized_equipment < @industrial_tank_reserve }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = mechanized_equipment
+		value = 2
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = mechanized
+		value = 20
+	}
+}
+
+lok_ai_land_armored_concentration = {
+	enable = {
+		lok_ai_land_industrial_economy = yes
+		has_army_size = { size > 1 type = armor }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = force_concentration_factor
+		value = @industrial_concentration_bonus
+	}
+}
+
+# Build the reserve required by the field-upgrade predicates even before an
+# existing division demands these new equipment families.
+lok_ai_land_assault_spg_reserves = {
+	enable = {
+		lok_ai_land_assault_armor_country = yes
+		has_equipment = { medium_tank_artillery_chassis < @assault_spg_reserve }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = medium_tank_artillery_chassis
+		value = 1
+	}
+}
+
+lok_ai_land_power_infantry_reserves = {
+	enable = {
+		lok_ai_land_large_industrial_economy = yes
+		has_tech = exoskeleton_1
+		has_equipment = { exoskeleton_equipment < @power_infantry_reserve }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = equipment_production_min_factories_archetype
+		id = exoskeleton_equipment
+		value = 1
+	}
+}
+
+# Technology scores supplement existing ai_will_do/prerequisites. They do not
+# force unresearched or project-locked equipment into templates or stockpiles.
+lok_ai_land_core_research = {
+	enable = { lok_ai_land_conventional_country = yes }
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = research_weight_factor
+		id = infantry_weapons1
+		value = @research_core_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = infantry_weapons2
+		value = @research_core_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = advanced_infantry_weapons
+		value = @research_core_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = infantry_weapons_4
+		value = @research_core_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = infantry_weapons_5
+		value = @research_core_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = support_weapons
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = support_weapons2
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = support_weapons3
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = support_weapons4
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = support_weapons5
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = support_weapons6
+		value = @research_support_weight
+	}
+}
+
+lok_ai_land_support_research = {
+	enable = { lok_ai_land_regular_economy = yes }
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_engineers
+		value = @research_core_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_engineers2
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_engineers3
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = gw_artillery
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = interwar_artillery
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = artillery1
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = artillery2
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = interwar_antiair
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = antiair2
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = antiair4
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_trucks
+		value = @research_motor_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = motorised_infantry
+		value = @research_motor_weight
+	}
+}
+
+lok_ai_land_nsb_armor_research = {
+	enable = {
+		lok_ai_land_wants_armor_research = yes
+		has_dlc = "No Step Back"
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = research_weight_factor
+		id = basic_medium_tank_chassis
+		value = @research_armor_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = improved_medium_tank_chassis
+		value = @research_armor_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = advanced_medium_tank_chassis
+		value = @research_armor_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = armor_tech_1
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = engine_tech_1
+		value = @research_support_weight
+	}
+}
+
+lok_ai_land_legacy_armor_research = {
+	enable = {
+		lok_ai_land_wants_armor_research = yes
+		NOT = { has_dlc = "No Step Back" }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = research_weight_factor
+		id = basic_medium_tank
+		value = @research_armor_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = improved_medium_tank
+		value = @research_armor_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = advanced_medium_tank
+		value = @research_armor_weight
+	}
+}
+
+lok_ai_land_industrial_support_research = {
+	enable = { lok_ai_land_industrial_economy = yes }
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_logistics_company
+		value = @research_core_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_maintenance_company
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_engineers4
+		value = @research_support_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = tech_logistics_company2
+		value = @research_support_weight
+	}
+}
+
+lok_ai_land_advanced_escort_research = {
+	enable = { lok_ai_land_large_industrial_economy = yes }
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = research_weight_factor
+		id = mechanised_infantry
+		value = @research_mechanized_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = mechanised_infantry2
+		value = @research_mechanized_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = mechanised_infantry3
+		value = @research_mechanized_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = mechanised_infantry4
+		value = @research_mechanized_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = exoskeleton_1
+		value = @research_power_weight
+	}
+	ai_strategy = {
+		type = research_weight_factor
+		id = exoskeleton_2
+		value = @research_power_weight
+	}
+}

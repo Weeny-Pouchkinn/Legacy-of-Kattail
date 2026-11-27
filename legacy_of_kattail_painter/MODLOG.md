@@ -1,5 +1,96 @@
 # MODLOG — Legacy of Kattail painter
 
+## 2026-11-27 - Flat EaW filenames and own spirit-icon imports
+
+Replaced hash/country-subfolder runtime paths with eaw/<filename>. Keep original
+source identity in the existing human-readable credits; recover by texture and
+spirit ID after reload. Same-byte imports reuse files; different art uses _2/_3.
+Migrated two saved textures and every active path literal/credit destination,
+backed up old bytes/references, removed obsolete files and empty directories.
+Both images are byte-identical; second audit has no changes. Original credit
+source paths and source library are retained. New layout supersedes the earlier
+content-directory decision.
+
+Spirit editor and gallery now offer Import icon for own images. Fit to transparent
+60x68 DDS without stretching, store readable custom/<filename> paths, register a
+reusable Mod icon, preview and apply normally. Own imports, aliases and spirit
+edits share grouped Undo/Redo, Cancel, Save, conflict guards and backups.
+
+Validation: 230 tests pass, six Python files compile. Flat migration and import
+fixtures cover provenance without a library, collisions, exact bytes, guarded
+writes, idempotence, alpha/aspect, UI/filter activation and Save/reload. Real
+native spirit/gallery custom imports and Cancel pass, Save forbidden, zero
+callbacks and 4,226 native hashes unchanged. No game launch. Full evidence/files:
+modding_documentation/agent_memory/eaw_flat_paths/README.md.
+
+## 2026-11-27 - Owner-core audit, transfers and Cores/Claims view
+
+Added 167 missing owner cores in 38 countries, preserving the four SIL/KTW
+Katown exceptions (34/36/44/45) byte-for-byte. Audit is additive and retains
+third-party cores, claims, dated setup and other state content. Exact non-owner-
+core token/comment equality, guarded hashes, backups and readback checked; second
+pass changes nothing.
+
+Owners now has Ownership / Cores/Claims categories. Transfer Cores defaults on
+and applies to owner brushes, state editing, inspector and native source/field
+owner changes; removes only the previous owner's core, adds the new owner's.
+Disabled leaves core/claim sets intact. Cores/Claims lists every registered tag,
+including landless nations. Green cores, yellow claims, blue ownership stripes;
+core color takes precedence when both memberships exist. Left/right add/remove
+cores; Shift-left/right add/remove claims. Middle-drag pans. Undo/Redo, Save,
+overlay country snapshots, viewport cropping and PNG export remain integrated.
+Defined nominal capitals outside ownership may be saved, as explicitly requested;
+invalid capital IDs remain blocked. No automatic capital/ownership migration.
+
+Validation: 224 tests pass, 10 Python files compile, map checks pass before/after;
+real native UI/Undo with landless AAA passes, Save forbidden, zero callbacks and
+4,225 native hashes unchanged. All repair/exception hashes rechecked. No game
+launch. Full files and evidence: modding_documentation/agent_memory/core_audit/README.md.
+
+## 2026-11-27 - EaW spirit assets, attribution, source filters and credits
+
+National-spirit catalog recursively reads DDS/TGA files from assets/eaw_ideas.
+Both search dropdown and gallery share the minister exclusion rules. Gallery has
+Mod / Vanilla / EaW checkboxes; choices persist for the session and synchronize
+back to the dropdown. A copy of the user's sun badge appears in a separate
+lower-left preview margin. It never modifies source or exported texture pixels.
+
+Applying an EaW icon stages an exact native gfx/interface/ideas/eaw/<hash>/<path>
+copy and sprite registration. Origin and original relative path survive reload.
+Append asset filename, original gfx\interface\ideas\<path>, national-spirit
+ID/name and destination to credits/EaW Credits.txt. Credits share atomic Apply,
+Undo/Redo, enclosing Cancel, guarded Save and backups. Repeated identical uses
+are deduplicated; existing human notes/encoding/newlines remain. Missing sources
+and conflicting destinations fail atomically. Installer retains library, badge
+and credits hierarchy. The credits file starts with a header and no fake uses.
+
+Validation: 217 tests pass, four Python files compile, all 3,398 DDS/TGA source
+images decode (five PSD working files are excluded). Native catalog has 2,219
+selectable EaW assets and 4,420 total choices. Native Tk filter/search/select/
+preview/Cancel passed with Save forbidden, no callback errors and 4,226 native
+hashes unchanged. Diff checks pass; game not launched. Exact files, proof and
+limits: modding_documentation/agent_memory/eaw_spirit_assets/README.md.
+
+## 2026-11-27 - Exclude minister portraits from national-spirit icon pickers
+
+Both the sprite dropdown and Browse all icons gallery now use a filtered
+spirit-icon catalog. Exclude dedicated minister/leader/portrait directories,
+portrait and generic-political-advisor filenames, and the existing standard
+65x67 small / 156x210 large portrait dimensions. This also excludes plain-named
+old vanilla minister images and texture aliases. Case/slash differences are
+normalized. Read image headers only and cache sizes per texture/draft version.
+Full registration/preview/validation catalogs retain existing assignments.
+
+Native audit: 3,617 registered entries -> 2,201 picker entries, 1,416 excluded;
+KVK/KTZ minister pictures and vanilla Hjalmar Schacht/generic advisor entries
+excluded, MCF_Grand_Airforce and german_advisors spirit art retained. No native
+sources/drafts changed. Regression exercises mod/vanilla aliases, plain-named
+portraits, real Tk dropdown/gallery/search/Apply, existing icon preservation,
+image-draft invalidation and Undo. All 212 tests pass; three Python files compile;
+git diff --check passes. No game assets changed; game not launched.
+Exact files, classification limits and sources:
+modding_documentation/agent_memory/spirit_icon_picker.md.
+
 ## 2026-11-26 - Native script layout audit and existing-output repair
 
 Audited 41 painter Python sources and direct CLI exporters. Shared Save now

@@ -56,6 +56,7 @@ class Painter(ttk.Frame):
         self.brush = tk.StringVar(value='Culture')
         self.species_part = tk.StringVar(value='Majority')
         self.state_mode=tk.StringVar(value='Edit state');self.province_mode=tk.StringVar(value='Inspect');self.region_mode=tk.StringVar(value='Edit region')
+        self.owner_mode=tk.StringVar(value='Ownership');self.transfer_cores=tk.BooleanVar(value=True)
         self._building_delta=1
         self.scalar_modes={k:{'enabled':tk.BooleanVar(value=False),'operation':tk.StringVar(value='Add'),'amount':tk.StringVar(value='1'),'precision':tk.StringVar(value='0')} for k in ('Resources','Population','State buildings','Province buildings')}
         self.resource_highlight=tk.BooleanVar(value=False);self.resource_threshold=tk.StringVar(value='3');self.koppen_show=tk.BooleanVar(value=False)
@@ -240,9 +241,11 @@ class Painter(ttk.Frame):
                   values=['Move', 'Place copies'], width=18).pack(side='left')
         edit = ttk.Frame(tab); edit.pack(fill='x', pady=4)
         self.geography_controls={}
-        for mode,var,options in [('States',self.state_mode,('Edit state','Buildings','State category','Resources','Population',IMPERIUM_LAYER)),('Provinces',self.province_mode,('Inspect','Buildings','VPs','Railways','Terrain')),('Strategic regions',self.region_mode,('Edit region','Assign states'))]:
+        for mode,var,options in [('Owner',self.owner_mode,('Ownership','Cores/Claims')),('States',self.state_mode,('Edit state','Buildings','State category','Resources','Population',IMPERIUM_LAYER)),('Provinces',self.province_mode,('Inspect','Buildings','VPs','Railways','Terrain')),('Strategic regions',self.region_mode,('Edit region','Assign states'))]:
             frame=ttk.Frame(tab);self.geography_controls[mode]=frame
             for i,option in enumerate(options):ttk.Radiobutton(frame,text='Victory points' if option=='VPs' else option,value=option,variable=var,command=self.map_mode_changed).grid(row=i//2,column=i%2,sticky='w',padx=(0,8),pady=2)
+        self.transfer_cores_check=ttk.Checkbutton(self.geography_controls['Owner'],text='Transfer Cores',variable=self.transfer_cores,command=self.refresh_palette)
+        self.transfer_cores_check.grid(row=1,column=0,columnspan=2,sticky='w',pady=4)
         ttk.Checkbutton(self.geography_controls['Strategic regions'],text='Show Köppen presets',variable=self.koppen_show,command=self.map_mode_changed).grid(row=1,column=0,columnspan=2,sticky='w',pady=5)
         self.koppen_paint_check=ttk.Checkbutton(self.geography_controls['Strategic regions'],text='Paint Köppen',variable=self.koppen_paint,command=self.koppen_paint_changed)
         self.koppen_paint_check.grid(row=2,column=0,columnspan=2,sticky='w',pady=2)
@@ -292,6 +295,7 @@ class Painter(ttk.Frame):
 
     def palette_key(self):
         brush = self.brush.get()
+        if brush=='Owner':return 'Cores/Claims' if self.owner_mode.get()=='Cores/Claims' else 'Owner'
         if brush=='Strategic regions' and self.koppen_paint.get():return 'Koppen presets'
         if brush=='States':return {'Buildings':'State buildings','State category':'State categories','Resources':'Resources','Population':'Population',IMPERIUM_LAYER:IMPERIUM_LAYER}.get(self.state_mode.get(),'States')
         if brush=='Provinces':return {'Buildings':'Province buildings','VPs':'VPs','Railways':'Railways','Terrain':'Province terrain'}.get(self.province_mode.get(),'Owner')
@@ -304,9 +308,10 @@ class Painter(ttk.Frame):
     def layer_changed(self, event=None):
         if self.layer.get() in {'VPs','Railways','Terrain'}:
             self.province_mode.set(self.layer.get());self.layer.set('Provinces')
-        if self.layer.get() in {'States','Provinces','Strategic regions','VPs','Railways'}:self.brush.set(self.layer.get())
-        elif self.brush.get() in {'States','Provinces','Strategic regions','VPs','Railways'}:self.brush.set('Inspect')
-        if self.brush.get() in {'States','Provinces','Strategic regions','VPs','Railways'}:self.sidebar_tabs.select(self.palette_tab)
+        if self.layer.get()=='Owners':self.brush.set('Owner')
+        elif self.layer.get() in {'States','Provinces','Strategic regions','VPs','Railways'}:self.brush.set(self.layer.get())
+        elif self.brush.get() in {'Owner','States','Provinces','Strategic regions','VPs','Railways'}:self.brush.set('Inspect')
+        if self.brush.get() in {'Owner','States','Provinces','Strategic regions','VPs','Railways'}:self.sidebar_tabs.select(self.palette_tab)
         self._rail_anchor=None;self._rail_last_pixel=None
         self.palette_search.set(''); self.refresh_palette(); self.refresh_map()
 
@@ -333,6 +338,7 @@ class Painter(ttk.Frame):
         mode=self.palette_key();scope=self.building_scope();layer='Buildings' if scope else 'Terrain' if mode=='Province terrain' else mode if mode in {'State categories','Resources','Population','VPs','Railways',IMPERIUM_LAYER} else 'Koppen presets' if self.layer.get()=='Strategic regions' and (self.koppen_show.get() or mode=='Koppen presets') else self.layer.get()
         threshold=int(numeric(self.resource_threshold.get(),0,True)) if layer=='Resources' and self.resource_highlight.get() else None
         config=MapConfig(layer,building_key=self.paint_selection.get(mode,'') if scope else '',building_scope=scope or 'State',resource_key=self.paint_selection.get('Resources',''),province_borders=self.show_province_boundaries.get() or mode in {'Railways','Province terrain'},state_borders=self.show_state_boundaries.get(),region_borders=self.show_region_boundaries.get(),numbers=self.display_numbers.get(),resource_highlight=threshold,supply_hubs=self.display_supply_hubs.get())
+        if mode=='Cores/Claims':config=replace(config,layer='Cores/Claims',country_tag=self.paint_selection.get(mode,''))
         return replace(config,names=self.display_names.get(config.name_scope,self._no_names).get())
 
     def save_overlay(self):
@@ -353,7 +359,7 @@ class Painter(ttk.Frame):
         if mode=='Province terrain':self._status('Select a native terrain in the left palette, then paint land provinces');return
         if mode=='Railways':self._status('Railways are edited per province on the map; Save compacts their native routes');return
         if mode == 'Koppen presets':mode='Strategic regions'
-        if mode == 'Owner': self.workspace.select(self.country_workspace)
+        if mode in {'Owner','Cores/Claims'}: self.workspace.select(self.country_workspace)
         elif mode in {'States','Strategic regions','VPs','State buildings','Province buildings','State categories','Resources','Population'}:
             if mode in {'Resources','Population'}:mode='States'
             if 'buildings' in mode:mode='States'
@@ -373,7 +379,7 @@ class Painter(ttk.Frame):
     def refresh_palette(self):
         mode = self.palette_key()
         self.paint_scope_box.configure(state='disabled' if self.brush.get() in {'States','Provinces','Strategic regions','VPs','Railways'} else 'normal')
-        self.palette_title.set({'Owner': 'Countries', 'Culture': 'Cultures',
+        self.palette_title.set({'Owner': 'Countries','Cores/Claims':'Countries: cores and claims', 'Culture': 'Cultures',
                                 'Species': 'Majority species', 'Minority': 'Minority species', 'Wonder': 'Wonders',
                                 'States':'States', 'Strategic regions':'Strategic regions', 'Koppen presets':'Köppen presets', 'Railways':'Railway levels', 'Province terrain':'Province terrain', 'VPs':'Victory points','State buildings':'State buildings','Province buildings':'Province buildings','State categories':'State categories','Resources':'Resources','Population':'Population',IMPERIUM_LAYER:IMPERIUM_CATALOG}[mode])
         self.new_definition_button.configure(state='disabled' if mode in {'States','Strategic regions','State buildings','Province buildings'} else 'normal', text='New VP on map' if mode=='VPs' else 'New element' if mode==IMPERIUM_LAYER else 'New definition')
@@ -385,6 +391,7 @@ class Painter(ttk.Frame):
         for frame in self.scalar_controls.values():frame.pack_forget()
         for frame in self.geography_controls.values():frame.pack_forget()
         if self.brush.get() in self.geography_controls:self.geography_controls[self.brush.get()].pack(fill='x',pady=6,before=self.palette_filter)
+        self.transfer_cores_check.configure(state='normal' if mode=='Owner' else 'disabled')
         if mode in self.scalar_controls:self.scalar_controls[mode].pack(fill='x',pady=6,before=self.palette_filter)
         if mode=='Koppen presets':self.koppen_controls.pack(fill='x',pady=4,before=self.palette_filter)
         if mode=='Railways':self.railway_controls.pack(fill='x',pady=4,before=self.palette_filter)
@@ -407,7 +414,7 @@ class Painter(ttk.Frame):
             scope='State' if mode=='State buildings' else 'Province';choices=self.geography_store.building_choices(scope)
             entries=[(c.code,c.name,(80,135,215)) for c in choices]
             if self.paint_selection.get(mode) not in {c.code for c in choices} and choices:self.paint_selection[mode]=ChoiceIndex(choices).choices[0].code
-        elif mode == 'Owner':
+        elif mode in {'Owner','Cores/Claims'}:
             colours = self.world.country_colours()
             entries = [(tag, self.world.label(tag), colours.get(tag, (128, 128, 128)))
                        for tag in sorted(self.world.country_paths)]
@@ -455,6 +462,8 @@ class Painter(ttk.Frame):
         elif mode=='Railways':self.railway_help()
         elif mode==IMPERIUM_LAYER:self.paint_label.set('Create or edit an element, select it here, then paint whole states. Right-click erases; Shift-click picks. Hover to preview your immediate and delayed tooltip texts.')
         elif mode=='Province terrain':self.paint_label.set('Click/drag to paint native province gameplay terrain. Shift-click picks a terrain. This edits definition.csv only; graphical terrain, elevation, geometry and ownership stay unchanged.')
+        elif mode=='Cores/Claims':self.core_claim_help()
+        elif mode=='Owner':self.paint_label.set('Ownership painting adds the new owner\'s core and removes the previous owner\'s core. Other cores/claims are retained.' if self.transfer_cores.get() else 'Ownership painting leaves all cores and claims unchanged.')
         elif self.brush.get()=='Strategic regions':self.paint_label.set('Click a region to edit it.' if self.region_mode.get()=='Edit region' else 'Select a region, then click/drag whole states into it. Shift-click picks a region.')
         if mode=='VPs': self.paint_label.set(f'Click any land province to add/edit a VP. Blue → red: 1–{maximum} VP. Names and values appear when zoomed in.')
 
@@ -496,8 +505,8 @@ class Painter(ttk.Frame):
                 key=self.paint_selection.get(mode)
                 if key is not None: {'States':self.geography_panel.open_state,'Strategic regions':self.geography_panel.open_region,'VPs':self.geography_panel.open_vp}[mode](key)
             return
-        if mode=='Owner':
-            self.countries_panel.open(None if create else self.paint_selection.get('Owner'))
+        if mode in {'Owner','Cores/Claims'}:
+            self.countries_panel.open(None if create else self.paint_selection.get(mode))
             return
         kind = {'Culture': 'Cultures', 'Species': 'Species', 'Minority': 'Species', 'Wonder': 'Wonders'}.get(mode)
         if kind:
@@ -513,8 +522,9 @@ class Painter(ttk.Frame):
             if mode in {'State buildings','Province buildings'}:
                 self.building_help()
                 if previous!=self.paint_selection[mode]:self.refresh_map()
-            elif mode in {'State categories','Resources','Population',IMPERIUM_LAYER}:
+            elif mode in {'State categories','Resources','Population',IMPERIUM_LAYER,'Cores/Claims'}:
                 if previous!=self.paint_selection[mode]:self.refresh_map()
+                if mode=='Cores/Claims':self.core_claim_help()
             elif mode=='Koppen presets':self.koppen_help()
             elif mode=='Railways':self.railway_help()
             elif mode=='Province terrain':self.paint_label.set('Click/drag to paint '+str(self.paint_selection[mode])+'. Shift-click picks; only native gameplay terrain changes.')
@@ -536,12 +546,12 @@ class Painter(ttk.Frame):
         self._rail_last_pixel=None
 
     def right_press(self,event):
-        if (self.building_scope() or self.scalar_enabled() or self.palette_key() in {'Railways',IMPERIUM_LAYER}) and not self.geography_picker and self.capital_picker is None:
+        if (self.building_scope() or self.scalar_enabled() or self.palette_key() in {'Railways',IMPERIUM_LAYER,'Cores/Claims'}) and not self.geography_picker and self.capital_picker is None:
             self.drag_seen.clear();self._rail_seen_edges.clear();self._rail_last_pixel=None;self._building_delta=-1;self.pick_only=False;self.pick(event)
         else:self.canvas.scan_mark(event.x,event.y)
 
     def right_motion(self,event):
-        if (self.building_scope() or self.scalar_enabled() or self.palette_key() in {'Railways',IMPERIUM_LAYER}) and self._building_delta==-1:self.pick(event)
+        if (self.building_scope() or self.scalar_enabled() or self.palette_key() in {'Railways',IMPERIUM_LAYER,'Cores/Claims'}) and self._building_delta==-1:self.pick(event)
         else:self.pan_map(event)
 
     def scalar_enabled(self):
@@ -771,14 +781,24 @@ class Painter(ttk.Frame):
             self.field_editor.delete('1.0', 'end')
             self.field_editor.insert('1.0', value(self.world.docs.text(self.current), self.rows[sel[0]]))
 
+    def edit_current_source(self,edit):
+        with self.world.docs.grouped():
+            sid=next((sid for sid,state in self.world.states.items() if state.path==self.current),None)
+            previous=self.world.state_relations(sid)['owner'] if sid is not None else ''
+            edit()
+            if sid is not None:
+                owner=self.world.state_relations(sid)['owner']
+                if owner and owner!=previous:
+                    self.world.set_owner_draft(sid,owner,False)
+                    if self.transfer_cores.get():self.world.transfer_owner_cores(sid,previous,owner)
+            self.world.normalise_demographics()
+
     def apply_field(self):
         sel = self.fields.selection()
         if not sel:
             return
         try:
-            with self.world.docs.grouped():
-                self.world.docs.edit(self.current, self.rows[sel[0]], self.field_editor.get('1.0', 'end-1c'))
-                self.world.normalise_demographics()
+            self.edit_current_source(lambda:self.world.docs.edit(self.current,self.rows[sel[0]],self.field_editor.get('1.0','end-1c')))
             self.populate_fields()
             self.refresh_map()
             self._status('Field updated in memory')
@@ -788,9 +808,7 @@ class Painter(ttk.Frame):
     def apply_source(self):
         if self.current:
             try:
-                with self.world.docs.grouped():
-                    self.world.docs.replace(self.current, self.source_editor.get('1.0', 'end-1c'))
-                    self.world.normalise_demographics()
+                self.edit_current_source(lambda:self.world.docs.replace(self.current,self.source_editor.get('1.0','end-1c')))
                 self.populate_fields()
                 self.refresh_map()
                 self._status('Source updated in memory; this does not execute script effects')
@@ -809,9 +827,7 @@ class Painter(ttk.Frame):
             sel = self.fields.selection()
             n = self.rows.get(sel[0]) if sel else None
             at = n.end - 1 if n and n.children is not None else len(text)
-            with self.world.docs.grouped():
-                self.world.docs.replace(self.current, text[:at] + '\n\t' + snippet + '\n' + text[at:])
-                self.world.normalise_demographics()
+            self.edit_current_source(lambda:self.world.docs.replace(self.current,text[:at]+'\n\t'+snippet+'\n'+text[at:]))
             self.populate_fields()
             self.refresh_map()
             self._status('Custom field added to memory')
@@ -981,6 +997,8 @@ class Painter(ttk.Frame):
             self._status(f'Province {pid}: no state assignment')
             return
         if sid in self.drag_seen: return
+        if self.brush.get()=='Owner' and self.palette_key()=='Cores/Claims':
+            self.paint_core_claim(pid,sid,event);return
         if self.pick_only or getattr(event, 'state', 0) & 1:
             if self.drag_seen:
                 return
@@ -1018,7 +1036,7 @@ class Painter(ttk.Frame):
         try:
             revision = self.world.docs.revision
             affected = self.world.paint(pid, self.paint_scope.get(), mode, target,
-                                        self.wonder_operation.get() if mode == 'Wonder' else self.culture_operation.get(), exclude=self.drag_seen)
+                                        self.wonder_operation.get() if mode == 'Wonder' else self.culture_operation.get(), exclude=self.drag_seen,transfer_cores=self.transfer_cores.get())
             if not affected:
                 return
             self.drag_seen.update(affected)
@@ -1027,6 +1045,24 @@ class Painter(ttk.Frame):
             self.schedule_map()
         except ValueError as exc:
             messagebox.showerror('Invalid brush value', str(exc), parent=self.root)
+
+    def core_claim_help(self):
+        self.paint_label.set('Green: cores; yellow: claims (cores take priority); blue stripes: owned. Left adds a core; Shift-left adds a claim. Right removes a core; Shift-right removes a claim. Middle-drag pans. Landless countries are included.')
+
+    def paint_core_claim(self,pid,sid,event):
+        tag=self.paint_selection.get('Cores/Claims')
+        if tag is None:self._status('Select a country in the Paint list first');return
+        kind='Claim' if getattr(event,'state',0)&1 else 'Core'
+        operation='Remove' if self._building_delta<0 else 'Add'
+        try:
+            revision=self.world.docs.revision
+            affected=self.world.paint(pid,self.paint_scope.get(),kind,tag,operation,exclude=self.drag_seen)
+            self.drag_seen.update(affected)
+            if revision!=self.world.docs.revision:
+                self._paint_feedback=sid,f'{operation} {kind.lower()}: {tag}, {len(affected)} state(s)'
+                self.schedule_map()
+            self.core_claim_help()
+        except ValueError as exc:messagebox.showerror('Cores/Claims',str(exc),parent=self.root)
 
     def pick_railway(self,x,y,event):
         shift=self.pick_only or bool(getattr(event,'state',0)&1)
@@ -1199,7 +1235,7 @@ class Painter(ttk.Frame):
         self.owner_box.commit()
         tag = self.owner_draft.get().upper().strip()
         try:
-            self.world.set_owner_draft(self.current_state, tag)
+            self.world.set_owner_draft(self.current_state,tag,self.transfer_cores.get())
             self.inspect_state(self.current_state, reveal=reveal)
             self.refresh_map()
             self._status('Owner draft updated; demographics remain attached to the state')

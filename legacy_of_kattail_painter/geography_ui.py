@@ -192,6 +192,8 @@ class StateDialog(DraftDialog):
         choices=[Choice(tag,self.app.character_store.neutral_name(tag)) for tag in self.app.world.country_paths];self.owner=tk.StringVar(value=self.data['owner']);self.controller=tk.StringVar(value=self.data['controller'])
         for label,var in [('Owner',self.owner),('Controller (blank = owner)',self.controller)]:
             line=ttk.Frame(frame);line.pack(fill='x',pady=6);ttk.Label(line,text=label,width=30).pack(side='left');box=ChoiceBox(line,textvariable=var,values=[Choice('','Unspecified')]+choices);box.pack(side='left',fill='x',expand=True);self.boxes.append(box)
+        self.transfer_cores=getattr(self.app,'transfer_cores',None) or tk.BooleanVar(value=True)
+        ttk.Checkbutton(frame,text='Transfer Cores',variable=self.transfer_cores).pack(anchor='w')
         split=ttk.Panedwindow(frame,orient='horizontal');split.pack(fill='both',expand=True,pady=10)
         core=ttk.LabelFrame(split,text='Cores',padding=6);claim=ttk.LabelFrame(split,text='Claims',padding=6);split.add(core,weight=1);split.add(claim,weight=1)
         self.cores=TagSetEditor(core,self.data['cores'],choices);self.claims=TagSetEditor(claim,self.data['claims'],choices)
@@ -259,7 +261,7 @@ class StateDialog(DraftDialog):
         try:
             for box in self.boxes:box.commit()
             with docs.grouped():
-                self.geo.edit_state(self.sid,self.name.get(),{k:v.get() for k,v in self.attribute_values.items()},self.resources.values,self.building_values,self.owner.get(),self.controller.get(),self.cores.values,self.claims.values)
+                self.geo.edit_state(self.sid,self.name.get(),{k:v.get() for k,v in self.attribute_values.items()},self.resources.values,self.building_values,self.owner.get(),self.controller.get(),self.cores.values,self.claims.values,transfer_cores=self.transfer_cores.get())
                 cultures=[int(x) for x in self.cultures.get().replace(',',' ').split()];species=int(self.species.get());minority=int(self.minority.get())
                 old=self.app.world.demographics[self.sid]
                 if (cultures,species,minority)!=(old['culture'],old['species'],old['minority']):

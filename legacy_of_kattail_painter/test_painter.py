@@ -181,10 +181,10 @@ class FixtureTests(unittest.TestCase):
     def test_region_edit_failure_rolls_back_whole_group(self):
         world = self.regional_world()
         apply = world.set_owner_draft
-        def fail_second(sid, tag):
+        def fail_second(sid, tag, transfer_cores=True):
             if sid == 2:
                 raise ValueError('simulated second state failure')
-            apply(sid, tag)
+            apply(sid,tag,transfer_cores)
         with patch.object(world, 'set_owner_draft', side_effect=fail_second):
             with self.assertRaisesRegex(ValueError, 'simulated second'):
                 world.paint(1, 'Strategic region', 'Owner', 'BBB')
@@ -280,7 +280,7 @@ class FixtureTests(unittest.TestCase):
                               geography_picker=None, layer=Var('Culture'),
                               canvas=SimpleNamespace(canvasx=lambda x:x, canvasy=lambda y:y),
                               root=SimpleNamespace(after=after, after_cancel=lambda key: jobs.pop(key, None)),
-                              brush=Var('Culture'), paint_scope=Var('State'), culture_operation=Var('Set'),
+                              brush=Var('Culture'), paint_scope=Var('State'), culture_operation=Var('Set'),transfer_cores=Var(True),
                               paint_selection={'Culture': 99}, palette_key=lambda:'Culture', _map_job=None,
                               _paint_feedback=None, _status=lambda *args:None,
                               inspect_state=lambda sid, reveal:inspected.append(sid), refresh_map=lambda:renders.append(True))

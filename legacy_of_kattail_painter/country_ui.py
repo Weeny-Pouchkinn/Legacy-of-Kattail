@@ -2,11 +2,12 @@
 from copy import deepcopy
 from collections import OrderedDict
 from decimal import Decimal, InvalidOperation
+from functools import lru_cache
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog, colorchooser
 
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageOps
 
 from character_model import atom, block
 from character_ui import DraftDialog, CharacterDialog
@@ -20,6 +21,41 @@ def buttons(parent, entries):
     bar=ttk.Frame(parent);bar.pack(fill='x',pady=6)
     for text, command in entries:ttk.Button(bar,text=text,command=command).pack(side='left',padx=(0,6))
     return bar
+
+
+@lru_cache(maxsize=4)
+def eaw_badge(size):
+    with Image.open(Path(__file__).parent/'assets/eaw_sun.png') as image:
+        return ImageOps.contain(image.convert('RGBA'),(size,size),Image.Resampling.LANCZOS)
+
+
+def spirit_icon_preview(store,key,size=(40,40)):
+    """UI-only attribution in a separate margin, never in the game texture."""
+    image=store.icon_image(key,size)
+    if image is None:return None
+    badge_size=16;gap=4;left=badge_size+gap
+    preview=Image.new('RGBA',(size[0]+left,size[1]+gap))
+    preview.alpha_composite(image,(left+(size[0]-image.width)//2,0))
+    if store.icon_catalog()[key]['origin']=='EaW':
+        preview.alpha_composite(eaw_badge(badge_size),(0,preview.height-badge_size))
+    return preview
+
+
+def spirit_icon_choices(store):
+    sources=getattr(store,'spirit_icon_sources',{})
+    return [row['choice'] for row in store.spirit_icon_catalog().values() if sources.get(row['origin'],True)]
+
+
+def import_spirit_icon(parent,store):
+    source=filedialog.askopenfilename(parent=parent,title='Import national spirit icon',
+        filetypes=[('Icon images','*.png *.jpg *.jpeg *.dds *.tga *.bmp *.webp'),('All files','*.*')])
+    if not source:return None
+    try:
+        key=store.import_spirit_icon(source)
+        origin=store.icon_catalog()[key]['origin']
+        store.spirit_icon_sources={**getattr(store,'spirit_icon_sources',{}),origin:True}
+        return key
+    except (ValueError,OSError) as exc:messagebox.showerror('Import icon',str(exc),parent=parent)
 
 
 def choose_color(parent,variable):
@@ -686,24 +722,42 @@ class LeaderDialog(DraftDialog):
 
 class IconPicker(DraftDialog):
     def __init__(self,parent,store):
-        super().__init__(parent,store.characters,'Vanilla and mod national spirit icons');self.country_store=store
+        super().__init__(parent,store.characters,'National spirit icons: mod, vanilla and EaW');self.country_store=store
         self.geometry('900x700');self.query=tk.StringVar();self.photos={};self._job=None
         bar=ttk.Frame(self,padding=10);bar.pack(fill='x');ttk.Label(bar,text='Search name / sprite / source:').pack(side='left')
         search=ttk.Entry(bar,textvariable=self.query);search.pack(side='left',fill='x',expand=True,padx=8);search.bind('<KeyRelease>',lambda e:self.refresh())
-        ttk.Style(self).configure('CountryIcons.Treeview',rowheight=44)
+        filters=ttk.Frame(self,padding=(10,0,10,6));filters.pack(fill='x');self.sources={};self.source_checks={}
+        for source in ('Mod','Vanilla','EaW'):
+            self.sources[source]=tk.BooleanVar(value=getattr(store,'spirit_icon_sources',{}).get(source,True))
+            button=ttk.Checkbutton(filters,text=source,variable=self.sources[source],command=self.filter_sources)
+            button.pack(side='left',padx=(0,12));self.source_checks[source]=button
+        self.count=tk.StringVar();ttk.Label(filters,textvariable=self.count).pack(side='right')
+        ttk.Style(self).configure('CountryIcons.Treeview',rowheight=48)
         self.tree=table(self,[('origin','Source',100),('texture','Texture',340)]);self.tree.configure(style='CountryIcons.Treeview')
         self.tree.bind('<Double-1>',lambda e:self.ok());self.tree.bind('<Configure>',lambda e:self.schedule_images())
         self.tree.bind('<MouseWheel>',lambda e:self.schedule_images(),add='+')
         self.search=search;self.tree.bind('<KeyPress>',self.type_search)
         original=self.tree.cget('yscrollcommand');self.tree.configure(yscrollcommand=lambda a,b:(self.tk.call(original,a,b),self.schedule_images()))
-        buttons(self,[('Use selected icon',self.ok),('Cancel',self.cancel)]);self.refresh()
+        buttons(self,[('Import icon…',self.import_icon),('Use selected icon',self.ok),('Cancel',self.cancel)]);self.refresh()
+
+    def import_icon(self):
+        key=import_spirit_icon(self,self.country_store)
+        if key is not None:
+            self.sources[self.country_store.icon_catalog()[key]['origin']].set(True);self.query.set('');self.refresh()
+            self.tree.selection_set(key);self.tree.see(key);self.schedule_images()
 
     def refresh(self):
-        self.tree.delete(*self.tree.get_children());self.photos={};catalog=self.country_store.icon_catalog()
+        self.tree.delete(*self.tree.get_children());self.photos={};catalog=self.country_store.spirit_icon_catalog()
+        catalog={k:v for k,v in catalog.items() if self.sources[v['origin']].get()}
         index=ChoiceIndex(Choice(k,v['choice'].name+' '+v['origin']) for k,v in catalog.items())
         for choice in index.matching(self.query.get()):
             item=catalog[choice.code];self.tree.insert('','end',iid=choice.code,text=item['choice'].label,values=(item['origin'],item['texture']))
+        self.count.set(str(len(self.tree.get_children()))+' icons')
         self.schedule_images()
+
+    def filter_sources(self):
+        self.country_store.spirit_icon_sources={source:variable.get() for source,variable in self.sources.items()}
+        self.refresh()
 
     def schedule_images(self):
         if self._job is None:self._job=self.after(35,self.load_images)
@@ -722,7 +776,7 @@ class IconPicker(DraftDialog):
             if not key or key in seen:continue
             seen.add(key)
             if key not in self.photos:
-                image=self.country_store.icon_image(key)
+                image=spirit_icon_preview(self.country_store,key)
                 if image is not None:self.photos[key]=ImageTk.PhotoImage(image);self.tree.item(key,image=self.photos[key])
         if len(self.photos)>160:
             for key in list(self.photos):
@@ -746,8 +800,9 @@ class SpiritDialog(DraftDialog):
         for row,(label,var) in enumerate([('Native spirit ID',self.key),('Localized name',self.name),('Icon sprite',self.icon)]):
             ttk.Label(form,text=label).grid(row=row,column=0,sticky='w',pady=5)
             if var is self.icon:
-                box=ChoiceBox(form,textvariable=var,values=[v['choice'] for v in store.icon_catalog().values()]);box.grid(row=row,column=1,sticky='ew',padx=8);self.icon_box=box
+                box=ChoiceBox(form,textvariable=var,values=spirit_icon_choices(store));box.grid(row=row,column=1,sticky='ew',padx=8);self.icon_box=box
                 ttk.Button(form,text='Browse all icons…',command=self.pick_icon).grid(row=row,column=2)
+                ttk.Button(form,text='Import icon…',command=self.import_icon).grid(row=row,column=3,padx=(6,0))
             else:
                 entry=ttk.Entry(form,textvariable=var);entry.grid(row=row,column=1,sticky='ew',padx=8)
                 if var is self.key and not self.new:entry.configure(state='disabled')
@@ -860,7 +915,7 @@ class SpiritDialog(DraftDialog):
 
     def preview_icon(self):
         if self.icon.get() in self.countries.icon_catalog():
-            image=self.countries.icon_image(self.icon.get(),(64,64))
+            image=spirit_icon_preview(self.countries,self.icon.get(),(64,64))
             if image is not None:self.photo=ImageTk.PhotoImage(image);self.icon_preview.configure(image=self.photo);return
         self.icon_preview.configure(image='')
 
@@ -880,7 +935,13 @@ class SpiritDialog(DraftDialog):
 
     def pick_icon(self):
         dialog=IconPicker(self,self.countries);self.wait_window(dialog);self.grab_set()
+        self.icon_box.configure(values=spirit_icon_choices(self.countries))
         if dialog.result:self.icon.set(dialog.result)
+
+    def import_icon(self):
+        key=import_spirit_icon(self,self.countries)
+        if key is not None:
+            self.icon_box.configure(values=spirit_icon_choices(self.countries));self.icon.set(key)
 
     def ok(self):
         try:

@@ -1,7 +1,10 @@
 # AI competence and force-development proposal
 
 Date: 2026-11-26. Inspected branch: `Painter-Test`.
-Status: reconnaissance and proposal complete; implementation not requested or performed.
+Status: historical reconnaissance and proposal. The subsequent authorized land
+implementation is recorded in [land-ai-implementation.md](land-ai-implementation.md).
+Its 1.5x ordinary widths, mechanized AT removal and actual AI rules supersede the
+pre-change findings below. Aircraft implementation remains explicitly deferred.
 
 ## Recommendation
 
@@ -348,7 +351,9 @@ Do not declare success from a clean main menu or a larger division count. [R14]
 
 ## Local evidence index
 
-Line numbers refer to files inspected on 2026-11-26; links are relative to this plan.
+Line numbers refer to the pre-implementation files inspected on 2026-11-26;
+they are historical positions, not current line locations. Links are relative
+to this plan. Use the implementation record for current behavior.
 
 - **R1:** [Generic AI templates](../../../common/ai_templates/generic.txt), lines 1-49, 126-200, 232-383 and the active role declarations through 559.
 - **R2:** [Default AI strategies](../../../common/ai_strategy/default.txt), lines 54-70 (buffers), 86-214 and 360-466 (production), 721-765 (mobile/armor demand), 1108-1212 (calendar/template preference).

@@ -399,42 +399,15 @@ class World:
         self.docs.before_save = self.prepare_save
 
     def validate_capitals(self):
-        """Reject newly invalid capitals after owner painting or country edits."""
-        affected = set()
+        """Edited capitals must exist; ownership is not required for nominal seats."""
         for path in self.docs.changed:
-            if not path.startswith(('history/states/', 'history/countries/')):
-                continue
+            if not path.startswith('history/countries/'):continue
             before = self.docs.snapshots[path]
             old = self.docs._decode(before) if before is not None else ''
             new = self.docs.text(path)
-            if path.startswith('history/states/'):
-                def owner(source):
-                    state = child(parse(source), 'state')
-                    history = child(state.children, 'history') if state else None
-                    return scalar(source, history.children, 'owner') if history else ''
-                old_owner, new_owner = owner(old), owner(new)
-                if old_owner != new_owner:
-                    affected.update((old_owner, new_owner))
-            elif scalar(old, parse(old), 'capital') != scalar(new, parse(new), 'capital'):
-                affected.add(Path(path).name[:3])
-        if not affected:
-            return
-        self.refresh_countries()
-        owned = {tag: set() for tag in affected}
-        for sid in self.states:
-            source, nodes = self.state_nodes(sid)
-            history = child(nodes, 'history')
-            tag = scalar(source, history.children, 'owner') if history else ''
-            if tag in owned:
-                owned[tag].add(sid)
-        for tag in sorted(owned):
-            states = owned[tag]
-            if not states or tag not in self.countries:
-                continue  # Dormant/releasable countries may retain a nominal capital.
-            source = self.docs.text(self.countries[tag])
-            capital = scalar(source, parse(source), 'capital')
-            if capital.isdigit() and int(capital) not in states:
-                raise ValueError(f'{tag} no longer owns capital state {capital}. Choose an owned capital in Countries before saving.')
+            capital=scalar(new,parse(new),'capital')
+            if capital!=scalar(old,parse(old),'capital') and (not capital.isdigit() or int(capital) not in self.states):
+                raise ValueError(f'{Path(path).name[:3]}: choose a defined capital state')
 
     def prepare_save(self):
         self.validate_capitals()
@@ -507,7 +480,53 @@ class World:
                 raise ValueError(f'State {state} crosses strategic region {rid}; region painting would exceed its boundary')
         return states
 
-    def set_owner_draft(self, sid, tag):
+    def state_relations(self,sid):
+        text,nodes=self.state_nodes(sid);history=child(nodes,'history')
+        result={'owner':'','cores':set(),'claims':set()}
+        if history is None:return result
+        for node in history.children:
+            if node.children is not None:continue
+            tag=value(text,node).strip('"')
+            if node.key=='owner':result['owner']=tag
+            elif node.key in {'add_core_of','remove_core_of','add_claim_by','remove_claim_by'}:
+                pool=result['cores' if 'core' in node.key else 'claims']
+                if node.key.startswith('add_'):pool.add(tag)
+                else:pool.discard(tag)
+        return result
+
+    def set_relation_draft(self,sid,tag,kind,present=True):
+        if tag not in self.country_paths:raise ValueError('Choose a registered mod country tag')
+        if kind not in {'core','claim'}:raise ValueError('Choose core or claim')
+        if (tag in self.state_relations(sid)[kind+'s'])==present:return
+        from script_format import indentation
+        add,remove=('add_core_of','remove_core_of') if kind=='core' else ('add_claim_by','remove_claim_by')
+        text,nodes=self.state_nodes(sid);history=child(nodes,'history')
+        if history is None:raise ValueError(f'State {sid} has no history block')
+        for node in reversed(history.children):
+            if node.key in {add,remove} and node.children is None and value(text,node).strip('"')==tag:
+                text=text[:node.start]+text[node.end:]
+        if present:
+            history=child(child(parse(text),'state').children,'history')
+            newline='\r\n' if '\r\n' in text else '\n';indent='\t'*indentation(text,history.start)
+            at=text.rfind('\n',0,history.end-1)+1
+            if text[at:history.end-1].strip():at=history.end-1;addition=newline+indent+'\t'+add+' = '+tag+newline+indent
+            else:addition=indent+'\t'+add+' = '+tag+newline
+            text=text[:at]+addition+text[at:]
+        self.docs.replace(self.states[sid].path,text)
+
+    def set_owner_draft(self,sid,tag,transfer_cores=True):
+        with self.docs.grouped():
+            previous=self.state_relations(sid)['owner']
+            self._set_owner_field(sid,tag)
+            if transfer_cores:self.transfer_owner_cores(sid,previous,tag)
+
+    def transfer_owner_cores(self,sid,previous,tag):
+        if previous==tag:return
+        with self.docs.grouped():
+            if previous and previous!=tag:self.set_relation_draft(sid,previous,'core',False)
+            self.set_relation_draft(sid,tag,'core',True)
+
+    def _set_owner_field(self, sid, tag):
         if tag not in self.country_paths:
             raise ValueError('Choose a registered mod country tag')
         state = self.states[sid]
@@ -527,7 +546,7 @@ class World:
                 addition = newline + addition
             self.docs.replace(state.path, text[:at] + addition + text[at:])
 
-    def paint(self, pid, scope, mode, target, operation='Set', exclude=()):
+    def paint(self, pid, scope, mode, target, operation='Set', exclude=(),transfer_cores=True):
         from demographics import set_local_draft
         states = tuple(s for s in self.paint_targets(pid, scope) if s not in exclude)
         if mode == 'Wonder':
@@ -537,7 +556,11 @@ class World:
             with self.docs.grouped():
                 for sid in states:
                     if mode == 'Owner':
-                        self.set_owner_draft(sid, target)
+                        self.set_owner_draft(sid,target,transfer_cores)
+                        continue
+                    if mode in {'Core','Claim'}:
+                        if operation not in {'Add','Remove'}:raise ValueError('Choose Add or Remove')
+                        self.set_relation_draft(sid,target,mode.lower(),operation=='Add')
                         continue
                     data = self.demographics[sid]
                     cultures = list(data['culture'])
@@ -725,7 +748,7 @@ class World:
             self._map_samples[key] = sample
         return self._map_samples[key]
 
-    def map_image(self, layer='Owners', size=None, box=None, *, building_key=None, building_scope=None, resource_key=None, slot_warnings=None, resource_highlight=None):
+    def map_image(self, layer='Owners', size=None, box=None, *, building_key=None, building_scope=None, resource_key=None, slot_warnings=None, resource_highlight=None,country_tag=''):
         self.load_map()
         if not hasattr(self, '_province_state_ids'):
             self._province_state_ids = np.zeros(max(self.provinces) + 1, dtype=np.int32)
@@ -741,6 +764,7 @@ class World:
         if palette is None:
             state_colors = np.empty((max(self.states, default=0) + 1, 3), dtype=np.uint8)
             state_colors[:] = (65, 69, 78)
+            owned_states=np.zeros(len(state_colors),dtype=bool)
             minority_colors = np.zeros_like(state_colors); has_minority = np.zeros(len(state_colors), dtype=bool)
             country_colors = self.country_colours() if layer == 'Owners' else {}
             sites = self.catalog_store.wonder_sites() if layer == 'Wonder' else {}
@@ -757,6 +781,10 @@ class World:
                     text, nodes = self.state_nodes(sid); history = child(nodes, 'history')
                     tag = scalar(text, history.children, 'owner') if history else ''
                     rgb = country_colors.get(tag) or (colour(tag) if tag else (65, 69, 78))
+                elif layer=='Cores/Claims':
+                    relations=self.state_relations(sid)
+                    rgb=(55,180,90) if country_tag in relations['cores'] else (240,205,55) if country_tag in relations['claims'] else (65,69,78)
+                    owned_states[sid]=bool(country_tag) and relations['owner']==country_tag
                 elif layer == 'Culture':
                     colors = [self.culture_colours.get(v, (128, 128, 128)) for v in data.get('culture', [])]
                     rgb = tuple(round(sum(v) / len(colors)) for v in zip(*colors)) if colors else (128, 128, 128)
@@ -817,6 +845,10 @@ class World:
             ids = self.map_ids; xs = np.arange(width); ys = np.arange(height)
         else: ids, xs, ys = self.map_sample(size, box)
         pixels = palette[ids]
+        if layer=='Cores/Claims':
+            stripes=(ys[:,None]+xs[None,:])%32<9
+            stripes &= owned_states[self._province_state_ids[ids]] & self._land_provinces[ids]
+            pixels[stripes]=(55,125,245)
         if layer == 'Species':
             states = self._province_state_ids[ids]
             stripes = (ys[:, None] + xs[None, :]) % 32 < 9

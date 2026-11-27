@@ -20,10 +20,11 @@ class MapConfig:
     resource_highlight:int|None=None
     supply_hubs:bool=False
     names:bool|None=None
+    country_tag:str=''
 
     @property
     def name_scope(self):
-        if self.layer in {'States','State categories','Resources','Population','Katzenartig Imperium'} or self.layer=='Buildings' and self.building_scope=='State':return 'States'
+        if self.layer in {'States','State categories','Resources','Population','Katzenartig Imperium','Cores/Claims'} or self.layer=='Buildings' and self.building_scope=='State':return 'States'
         if self.layer in {'Strategic regions','Koppen presets'}:return 'Strategic regions'
         if self.layer=='VPs':return 'VPs'
         return None
@@ -34,6 +35,7 @@ class MapConfig:
 
     @property
     def label(self):
+        if self.layer=='Cores/Claims':return 'Cores/Claims: '+self.country_tag
         if self.layer=='Buildings':return f'{self.building_scope} buildings: {self.building_key}'
         if self.layer=='Resources':return 'Resources: '+self.resource_key
         return self.layer
@@ -154,7 +156,7 @@ class MapRenderer:
                 draw.line(coords,fill=(255,40,40) if (a,b) in invalid else railway_color(level,store.max_level()),width=3)
 
     def render(self,config,size,box,zoom,numbers=True):
-        image=self.world.map_image(config.layer,size,box,building_key=config.building_key,building_scope=config.building_scope,resource_key=config.resource_key,resource_highlight=config.resource_highlight)
+        image=self.world.map_image(config.layer,size,box,building_key=config.building_key,building_scope=config.building_scope,resource_key=config.resource_key,resource_highlight=config.resource_highlight,country_tag=config.country_tag)
         image=self.world.boundary_overlay(image,config.province_borders,config.state_borders,config.region_borders,size,box)
         if config.layer=='Railways':self.railway_lines(image,box,zoom)
         draw=ImageDraw.Draw(image)
