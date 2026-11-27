@@ -748,7 +748,7 @@ class World:
             self._map_samples[key] = sample
         return self._map_samples[key]
 
-    def map_image(self, layer='Owners', size=None, box=None, *, building_key=None, building_scope=None, resource_key=None, slot_warnings=None, resource_highlight=None,country_tag=''):
+    def map_image(self, layer='Owners', size=None, box=None, *, building_key=None, building_scope=None, resource_key=None, slot_warnings=None, resource_highlight=None,country_tag='',state_preview=(),state_target=None):
         self.load_map()
         if not hasattr(self, '_province_state_ids'):
             self._province_state_ids = np.zeros(max(self.provinces) + 1, dtype=np.int32)
@@ -840,6 +840,10 @@ class World:
             if layer not in {'Provinces','Strategic regions','Koppen presets'}: palette[~self._land_provinces] = (26, 43, 60)
             if 0 not in self.provinces: palette[0] = 0
             if static: self._map_palettes[layer] = palette
+        if layer=='States' and state_preview and state_target in self.states:
+            palette=palette.copy()
+            for pid in state_preview:
+                if pid in self.province_states:palette[pid]=colour(state_target)
         height, width = self.map_ids.shape
         if size is None:
             ids = self.map_ids; xs = np.arange(width); ys = np.arange(height)

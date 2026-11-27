@@ -1,5 +1,45 @@
 # Decisions
 
+## 2026-11-27: Edit starting diplomacy at original declaration sources
+
+Use source-aware country/general-history and startup discovery, with explicit
+country direction, date/condition context and reachable shared-effect visibility.
+Never flatten conditional declarations or claim to simulate the engine. Shared
+functions/dynamic targets require source editing; known faction-loop instances
+can be isolated by tag guards inside their original loop, preserving other
+members and ROOT/PREV. Missing literal targets remain visible and repairable.
+
+New subjects belong at the beginning of their own history, before politics,
+using explicit overlord scope and preserving wars/subjects. Faction creation
+precedes memberships. Native catalogs respect replace_path; keep create_faction
+for the mod's existing compatibility syntax despite newer installed-game API.
+Country-dialog Cancel and normal Documents Undo/Save govern all diplomacy edits.
+No automatic migration of geopolitical setup. See country_diplomacy_editor.md.
+
+## 2026-11-27: Atomic whole-province state boundaries and conserved estimates
+
+Boundary strokes snapshot all affected profiles and apply once at release, with
+one grouped Undo and exception rollback. Rebuild state membership/index/caches
+from staged history so new states and Undo/Redo work through the existing save
+path. Assigned province IDs are invariant; donors retain land, lake memberships
+survive, and each affected state is wholly in one strategic region. Province
+VP/building payload follows its province at base/direct dated history scopes.
+New states inherit politics/category/infrastructure/demographics/Imperium; no
+speculative rewrite of events/focus/state references is made.
+
+Population/resources default on; industry off. Largest-remainder apportionment
+conserves source totals, with integer population/buildings and existing resource
+precision. Population uses pixel area/terrain plus 10 × mean province area × VP;
+resources area; shared-slot industry province count plus 2 × VP, coastal-only
+receivers where required. These are editor heuristics, not empirical estimates.
+
+User explicitly requires a valid airbase placement, not level one. Preserve
+airbase history levels and create no artificial airbase. Generate affected model
+slots from effective show_on_map/spawn_points and real province/height geometry;
+ports need adjacent ocean, manual landmarks remain physical. Static correctness
+is verified; proprietary Nudge behavior and engine appearance are unverified.
+See state_boundary_editor.md for exact paths, formulas and validation.
+
 ## 2026-11-26: Nonempty country lists in AI-template entries
 
 The live engine misread the nine introduced empty blocked_for lists as tag-token

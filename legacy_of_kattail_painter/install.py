@@ -15,7 +15,9 @@ FILES = ['painter.py', 'model.py', 'source_io.py', 'character_model.py', 'charac
          'run_painter.bat', 'requirements.txt', '.gitignore', 'README.md', 'MODLOG.md', 'PLAN.md', 'test_painter.py', 'test_demographic_colors.py',
          'imperium_model.py', 'imperium_ui.py', 'test_imperium.py',
          'generic_portrait_model.py', 'generic_portrait_ui.py', 'test_generic_portraits.py', 'test_spirit_bonuses.py',
-         'script_format.py', 'test_script_format.py', 'assets/eaw_sun.png', 'test_eaw_icons.py', 'test_cores.py', 'test_spirit_icon_import.py']
+         'script_format.py', 'test_script_format.py', 'assets/eaw_sun.png', 'test_eaw_icons.py', 'test_cores.py', 'test_spirit_icon_import.py',
+         'state_boundary_model.py','state_boundary_ui.py','state_positions.py','test_state_boundaries.py',
+         'diplomacy_model.py','diplomacy_ui.py','test_diplomacy.py']
 
 
 def confined(root, relative):

@@ -886,6 +886,7 @@ class GeographyStore:
 
     def sync_world(self):
         if self._world_revision==self.docs.revision:return
+        if hasattr(self.world,'state_boundary_store'):self.world.state_boundary_store.sync_world()
         self.sync_terrain()
         paths=self.characters.files('map/strategicregions','.txt');signature=tuple(self.docs.text(p) for p in paths)
         if self._region_signature!=signature:
@@ -899,3 +900,4 @@ class GeographyStore:
     def validate_save(self):
         self.sync_world()
         if self.world.regions:self.validate_region_membership()
+        if hasattr(self.world,'state_boundary_store'):self.world.state_boundary_store.validate_save()

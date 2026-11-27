@@ -21,6 +21,8 @@ class MapConfig:
     supply_hubs:bool=False
     names:bool|None=None
     country_tag:str=''
+    state_preview:tuple=()
+    state_target:int|None=None
 
     @property
     def name_scope(self):
@@ -156,7 +158,7 @@ class MapRenderer:
                 draw.line(coords,fill=(255,40,40) if (a,b) in invalid else railway_color(level,store.max_level()),width=3)
 
     def render(self,config,size,box,zoom,numbers=True):
-        image=self.world.map_image(config.layer,size,box,building_key=config.building_key,building_scope=config.building_scope,resource_key=config.resource_key,resource_highlight=config.resource_highlight,country_tag=config.country_tag)
+        image=self.world.map_image(config.layer,size,box,building_key=config.building_key,building_scope=config.building_scope,resource_key=config.resource_key,resource_highlight=config.resource_highlight,country_tag=config.country_tag,state_preview=config.state_preview,state_target=config.state_target)
         image=self.world.boundary_overlay(image,config.province_borders,config.state_borders,config.region_borders,size,box)
         if config.layer=='Railways':self.railway_lines(image,box,zoom)
         draw=ImageDraw.Draw(image)

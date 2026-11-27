@@ -15,6 +15,7 @@ from country_model import Country, CountrySourceExists, PATTERNS, render_flag, n
 from model import parse, value, child
 from select_ui import Choice, ChoiceBox, ChoiceIndex
 from flag_designer import FlagDesigner
+from diplomacy_ui import DiplomacyPanel
 
 
 def buttons(parent, entries):
@@ -134,9 +135,10 @@ class CountryDialog(DraftDialog):
         self.auto_portrait_group=self.new
         self.tabs=ttk.Notebook(self);self.tabs.pack(fill='both',expand=True,padx=10,pady=10)
         self.frames={}
-        for key,label in [('setup','Setup'),('summary','Summary'),('politics','Parties & popularity'),('names','Ideology names'),('flags','Flags'),('leaders','Leaders'),('tech','Starting technologies'),('spirits','National spirits')]:
+        for key,label in [('setup','Setup'),('summary','Summary'),('diplomacy','Diplomacy'),('politics','Parties & popularity'),('names','Ideology names'),('flags','Flags'),('leaders','Leaders'),('tech','Starting technologies'),('spirits','National spirits')]:
             frame=ttk.Frame(self.tabs,padding=10);self.tabs.add(frame,text=label);self.frames[key]=frame
         self.build_setup();self.build_summary();self.build_politics();self.build_names();self.build_flags();self.build_leaders();self.build_tech();self.build_spirits()
+        self.diplomacy_panel=DiplomacyPanel(self.frames['diplomacy'],self)
         self.tabs.bind('<<NotebookTabChanged>>',self.tab_changed)
         bottom=ttk.Frame(self,padding=10);bottom.pack(fill='x')
         ttk.Label(bottom,text='Apply stages native sources. Save in the main window writes them with backups.').pack(side='left')
@@ -440,6 +442,7 @@ class CountryDialog(DraftDialog):
 
     def tab_changed(self,event=None):
         if not hasattr(self,'leader_rows'):return
+        if self.tabs.select()==str(self.frames['diplomacy']):self.diplomacy_panel.refresh()
         if self.tabs.select()==str(self.frames['summary']):self.refresh_summary()
         if self.tabs.select()==str(self.frames['leaders']) and not self.leaders_loaded:self.refresh_leaders()
         if self.tabs.select()==str(self.frames['names']):

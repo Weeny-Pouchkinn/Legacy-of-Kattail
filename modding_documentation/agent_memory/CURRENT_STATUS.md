@@ -1,5 +1,48 @@
 # Current status
 
+## Country diplomacy editor (2026-11-27)
+
+Countries > Edit selected > Diplomacy now reads incoming/outgoing native
+faction, subject, war, guarantee, military access, non-aggression and market
+access declarations. Add/Edit/Remove use normal drafts/Undo/Save; parent Cancel
+rolls back nested edits. Custom autonomy levels, freedom, war goals, landless
+country pickers, source lines/conditions/dates and all-country search supported.
+Faction-loop wars can be changed for one member via in-loop tag guards. New
+subject setup precedes subject politics and preserves wars/subordinate subjects.
+Dynamic/shared-script declarations are displayed with source-edit status;
+conditions/runtime events are not simulated. Unknown literal tags are flagged.
+
+Nine new tests and full suite 249 pass; six Python files compile. Native read/
+staged/Undo/UI probe found 77 declarations, 16 autonomy levels, 10 war goals;
+isolated DAW war removal and CAT->ANS subject setup worked. Real EUL tab shows
+six applicable declarations; no callback errors or residual drafts. All 212
+native country-history hashes stayed unchanged. No game launch or live relation
+saves. Exact files, identifiers, source lines and commands:
+country_diplomacy_editor.md. Next check: chosen edit in a fresh game.
+
+## State boundary editing and creation (2026-11-27)
+
+Added States > State boundaries with destination palette, province preview/brush,
+atomic release, New state/seed picker, Undo/Redo/Save and three estimates:
+population/resources on, industry off. Moves native base/dated VP/building payload,
+enforces retained land/single strategic region and conserves estimated totals.
+New states inherit politics/category/infrastructure/demographics/Imperium and
+legacy supply-area membership. Province geometry/IDs and networks remain intact.
+Native lake memberships are retained; automatic models stay on land.
+
+Airbase correction: only a valid model placement is required. Actual airbase
+levels stay unchanged and new states receive no artificial airbase building.
+Affected model/spawn slots regenerate from native definitions/pixels/heights and
+ocean adjacency, preserving safe manual placements. This is not the proprietary
+Nudge implementation; engine visual validation remains outstanding.
+
+Full suite 240 tests passes; compile and production map validator pass. Disposable
+native split/expansion also passes map validator; 1908 source file hashes remain
+unchanged. Native UI opens new category/all 1902 states with zero callback errors
+or drafts. No production states created or moved, no game launch. Exact changed
+files, formulas, identifiers and commands: state_boundary_editor.md. Next action:
+edit/save a chosen boundary in painter, load in HOI4 and inspect model placement.
+
 ## Live painter progress recovered and closed (2026-11-27)
 
 Recovered 14 pending file changes via native Save save_20261127_180401_868855;
