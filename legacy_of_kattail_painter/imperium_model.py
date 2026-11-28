@@ -64,6 +64,7 @@ class ImperiumStore:
     def __init__(self,world,characters,catalogs):
         self.world,self.characters,self.catalogs,self.docs=world,characters,catalogs,world.docs
         self._elements_revision=-1;self._elements={};self._assignment_signature=None;self._assignments={}
+        self._elements_signature=None;self._assignment_files={}
         world.imperium_store=self
 
     def bootstrap(self):
@@ -84,8 +85,9 @@ class ImperiumStore:
         return [int(value(text,n)) for _,n in walk([limit]) if n.key==VARIABLE and n.children is None and n.op=='=' and value(text,n).isdigit()] if limit else []
 
     def elements(self):
-        if self._elements_revision==self.docs.revision:return self._elements
-        out={};loc=self.characters.localisations()
+        loc=self.characters.localisations();signature=(self.docs.text(MAP_PATH),loc)
+        if self._elements_signature==signature:return self._elements
+        out={}
         if self.docs.text(MAP_PATH).strip():
             text,section=self.color_section()
             for node in section.children:
@@ -97,7 +99,7 @@ class ImperiumStore:
                 if set(channels)!={'red','green','blue'}:raise ValueError('Imperium elements require three literal color channels')
                 ident=ids[0];color=self.world._fraction_rgb(channels)
                 out[ident]=ImperiumElement(ident,loc.get(loc_key(ident,'name'),f'Element {ident}'),color,loc.get(loc_key(ident,'tooltip'),''),loc.get(loc_key(ident,'tooltip_delayed'),''))
-        self._elements=out;self._elements_revision=self.docs.revision
+        self._elements=out;self._elements_revision=self.docs.revision;self._elements_signature=signature
         return out
 
     def _set_loc(self,key,text):
@@ -168,12 +170,16 @@ class ImperiumStore:
         if signature==self._assignment_signature:return self._assignments
         result={}
         for sid,state in self.world.states.items():
-            text,nodes=self.world.state_nodes(sid)
-            for history in (n for n in nodes if n.key=='history' and n.children is not None):
-                for n in self.value_nodes(history,text):
-                    raw=value(text,n)
-                    if not raw.isdigit() or int(raw)>MAX_ID:raise ValueError(f'State {sid} has an invalid Imperium element ID')
-                    result[sid]=int(raw)
+            text=self.docs.text(state.path);cached=self._assignment_files.get(sid)
+            if cached is None or cached[:2]!=(state.path,text):
+                text,nodes=self.world.state_nodes(sid);ident=None
+                for history in (n for n in nodes if n.key=='history' and n.children is not None):
+                    for n in self.value_nodes(history,text):
+                        raw=value(text,n)
+                        if not raw.isdigit() or int(raw)>MAX_ID:raise ValueError(f'State {sid} has an invalid Imperium element ID')
+                        ident=int(raw)
+                cached=self._assignment_files[sid]=(state.path,text,ident)
+            if cached[2] is not None:result[sid]=cached[2]
         self._assignment_signature=signature;self._assignments=result
         return result
 

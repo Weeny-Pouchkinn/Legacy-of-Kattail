@@ -123,7 +123,7 @@ class StateBoundaryStore:
         self.world,self.geo,self.catalogs,self.docs=world,geo,catalogs,world.docs
         self.paths={state.path for state in world.states.values()}
         self.original_provinces=frozenset(world.province_states)
-        self.positions=StatePositions(world,geo);self._revision=-1;world.state_boundary_store=self
+        self.positions=StatePositions(world,geo);self._revision=-1;self._state_files={};world.state_boundary_store=self
 
     def sync_world(self,force=False):
         if not force and self._revision==self.docs.revision:return
@@ -132,10 +132,15 @@ class StateBoundaryStore:
         for path in sorted(paths):
             text=self.docs.text(path)
             if not text.strip():continue
-            root=block(parse(text),'state')
-            if root is None:raise ValueError('Missing state block in '+path)
-            sid=int(atom(text,root.children,'id'));history=block(root.children,'history');provinces=block(root.children,'provinces')
-            members=[int(n.key) for n in provinces.children] if provinces else []
+            cached=self._state_files.get(path)
+            if cached is None or cached[0]!=text:
+                _,nodes=self.docs.parsed(path);root=block(nodes,'state')
+                if root is None:raise ValueError('Missing state block in '+path)
+                sid=int(atom(text,root.children,'id'));history=block(root.children,'history');provinces=block(root.children,'provinces')
+                members=[int(n.key) for n in provinces.children] if provinces else []
+                state=State(sid,path,atom(text,root.children,'name'),atom(text,history.children,'owner') if history else '',members)
+                cached=self._state_files[path]=(text,state)
+            state=cached[1];sid=state.id;members=state.provinces
             if sid in states:raise ValueError('Duplicate state ID '+str(sid))
             if not members:raise ValueError(f'State {sid} must retain at least one province')
             for pid in members:
@@ -144,7 +149,7 @@ class StateBoundaryStore:
                 # intact even though the brush only transfers land provinces.
                 if pid not in self.world.provinces:raise ValueError(f'Province {pid} is undefined')
                 inverse[pid]=sid
-            states[sid]=State(sid,path,atom(text,root.children,'name'),atom(text,history.children,'owner') if history else '',members)
+            states[sid]=state
         if frozenset(inverse)!=self.original_provinces:raise ValueError('Every original state province must remain assigned exactly once')
         changed=inverse!=self.world.province_states or states.keys()!=self.world.states.keys()
         self.world.states=states;self.world.province_states=inverse

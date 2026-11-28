@@ -65,6 +65,7 @@ class StartupSaveTests(unittest.TestCase):
         app = SimpleNamespace(
             world=self.world, geography_store=SimpleNamespace(validate_save=noop),
             imperium_store=SimpleNamespace(validate_save=noop),
+            land_oob_store=SimpleNamespace(validate_save=noop),
             railway_store=SimpleNamespace(prepare_save=noop),
             character_store=SimpleNamespace(prepare_save=noop))
         Painter.prepare_save(app)

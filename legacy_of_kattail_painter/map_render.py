@@ -23,6 +23,9 @@ class MapConfig:
     country_tag:str=''
     state_preview:tuple=()
     state_target:int|None=None
+    oob_template:str=''
+    oob_global:bool=False
+    oob_source:str=''
 
     @property
     def name_scope(self):
@@ -37,6 +40,7 @@ class MapConfig:
 
     @property
     def label(self):
+        if self.layer=='Land OOB':return 'Land OOB: '+('Global' if self.oob_global else self.country_tag+' / '+(self.oob_template or 'All templates'))
         if self.layer=='Cores/Claims':return 'Cores/Claims: '+self.country_tag
         if self.layer=='Buildings':return f'{self.building_scope} buildings: {self.building_key}'
         if self.layer=='Resources':return 'Resources: '+self.resource_key
@@ -73,7 +77,11 @@ class MapRenderer:
         def text(point,label,source,dy=0,anchor='mm'):
             x,y=point;x*=zoom;y=y*zoom+dy
             if visible(x,y):rows.append(dict(kind='text',x=x,y=y,text=label,source=source,anchor=anchor))
-        if config.layer=='Railways' and numbers and zoom>=.45:
+        if config.layer=='Land OOB' and numbers:
+            points=self.geo.province_points()
+            for pid,count in self.world.land_oob_store.counts(config.country_tag,config.oob_template,config.oob_global,config.oob_source).items():
+                if pid in points:text(points[pid],str(count),'land_oob')
+        elif config.layer=='Railways' and numbers and zoom>=.45:
             points=self.geo.province_points()
             for pid,level in self.world.railway_store.levels().items():
                 if pid in points:text(points[pid],str(level),'railway',dy=-10)
@@ -158,7 +166,7 @@ class MapRenderer:
                 draw.line(coords,fill=(255,40,40) if (a,b) in invalid else railway_color(level,store.max_level()),width=3)
 
     def render(self,config,size,box,zoom,numbers=True):
-        image=self.world.map_image(config.layer,size,box,building_key=config.building_key,building_scope=config.building_scope,resource_key=config.resource_key,resource_highlight=config.resource_highlight,country_tag=config.country_tag,state_preview=config.state_preview,state_target=config.state_target)
+        image=self.world.map_image(config.layer,size,box,building_key=config.building_key,building_scope=config.building_scope,resource_key=config.resource_key,resource_highlight=config.resource_highlight,country_tag=config.country_tag,state_preview=config.state_preview,state_target=config.state_target,oob_template=config.oob_template,oob_global=config.oob_global,oob_source=config.oob_source)
         image=self.world.boundary_overlay(image,config.province_borders,config.state_borders,config.region_borders,size,box)
         if config.layer=='Railways':self.railway_lines(image,box,zoom)
         draw=ImageDraw.Draw(image)

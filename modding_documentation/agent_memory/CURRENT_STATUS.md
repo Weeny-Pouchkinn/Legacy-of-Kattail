@@ -1,5 +1,45 @@
 # Current status
 
+## Land OOB editor and placeholder retirement (2026-11-27)
+
+Added Land OOB view/brush with country/source/template palette, per-province
+counts/gradients, global all-nation totals, placement/removal, template grid
+create/edit/copy/rename and division list/province name editing. Short names are
+native comments; new units get ordinal + state + short name. Existing names,
+unknown fields, navy/air/instant effects remain. Shared sources copy privately
+before edits; new references/files use normal grouped drafts/Undo/Save safeguards.
+Primary/global views count undated OOBs; conditional/date variants selectable.
+
+User additionally ordered removal of the placeholder family: removed its links
+in 19 country histories, deleted both land/air files, retired generator special
+case; guarded 22-file backup remove_legacy_oob_20261127_230536_514574. No replacement
+army invented, no unrelated user state edits altered. All 263 remaining country
+OOB references resolve. Exact files/hashes/semantics: land_oob_editor.md.
+
+Nine new tests/full suite 267 pass; nine Python files compile, map validator and
+61-file manifest pass. Native inventory: 144 primary references, 317 templates,
+1939 divisions, 139 subunits. Draft AUR->AKR copy/place/name/Undo and actual native
+mapmode/global UI pass with no drafts/source writes. Optimization holds in final
+benchmark: 31-39 ms Imperium strokes, 6 ms search, 3.69 s first idea scan. No game
+launch. Next check: chosen real edit in a fresh campaign. Save/restart painter.
+
+## Painter optimization (2026-11-27)
+
+Optimized incremental state/Imperium refresh, reused startup parses, idea catalog
+enumeration/header checks, prefix-only native idea sprites, bounded thumbnail
+LRU, cached/debounced idea search, shared selector normalization/fuzzy pruning,
+and equipment/research source reads. Undo/Redo/Cancel/import invalidation retained;
+Save conflict checks unchanged. User continued native Imperium/state edits during
+profiling; no native sources were written by the benchmark or this patch.
+
+Comparable profiled timings: Imperium stroke mean .605 -> .046 s; idea search
+.394 -> .007 s; first catalog 10.64 -> 5.47 s, same 4429 selectable icons. Final
+unprofiled strokes 29-38 ms, search 5 ms, first catalog 3.55 s. World loading and
+warm frames remain roughly unchanged. Nine new regressions and full suite 258
+pass; eleven Python files compile, manifest and map validator pass. Benchmarks
+use actual Tk/native data and never Save. Exact files, timings/caveats and source
+checks: painter_optimization.md. Restart painter after saving ongoing work.
+
 ## Country diplomacy editor (2026-11-27)
 
 Countries > Edit selected > Diplomacy now reads incoming/outgoing native

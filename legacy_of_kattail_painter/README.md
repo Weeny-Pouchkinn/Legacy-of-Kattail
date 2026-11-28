@@ -4,6 +4,62 @@ Run `run_painter.bat` with Python 3.10+ and the packages in `requirements.txt`.
 Install dependencies if necessary with `python -m pip install -r requirements.txt`.
 The launcher disables bytecode generation.
 
+Painting refreshes reuse unchanged state/region parses and Imperium definitions.
+Idea searches reuse their search index, debounce typing and load visible
+thumbnails; the thumbnail cache is limited to 256 images. The first asset scan
+still reads the asset library. Vanilla catalogs are cached for the session;
+restart after changing installed game files or adding assets outside the painter.
+Normal imports, draft edits, Undo/Redo and Cancel refresh their affected data.
+
+For a repeatable, no-Save performance check, run
+`python -B legacy_of_kattail_painter/benchmark_painter.py --profile` from the mod
+root. It uses temporary UI windows and in-memory edits, reports timings and
+external source changes, then closes its test windows. Save current work and
+restart the painter to load code updates.
+
+## Land OOB
+
+Choose **Land OOB** in the map view, then choose a country and a template in
+the left palette. The map colours provinces by the number of that template's
+divisions and displays the counts. **All templates** shows that country's total;
+**Global view** shows all nations and all templates and disables placement.
+
+- Left-click/drag places the entered number of divisions once per province.
+- Right-click/drag removes that number of the selected template's divisions.
+- Shift-click picks a template already present for the selected country.
+- **Edit division names** makes a province click open every division there.
+  Select a row and Apply name, Generate name, or remove that individual division.
+- **Division list** opens the country's complete list (all countries in Global
+  view). Done accepts its edits; Cancel rolls them back.
+
+**New template** and **Edit definition** open the combat/support cell lists. Set
+a battalion type, column and row; support companies use their own section.
+The native designer dimensions, slot collisions, column groups and support types
+are validated. **Copy template** copies a template and its extra native fields
+from another country without copying its divisions. A template rename updates
+its deployed divisions' template references while retaining their unit names.
+
+Every editable template has a **Shortened name**. New placements are named
+`1st [state name] [shortened template name]`, `2nd ...`, etc.; numbering is scoped
+to the country's selected template and skips already-used numeric prefixes.
+Existing templates initially use their full name as the short-name fallback;
+set a shorter label in their editor. Existing authored/game-ordered division
+names are preserved until explicitly overridden or regenerated. Short names are
+stored in native comments, never unsupported game fields.
+
+Shared OOBs are copied to a private country file before the first edit, preserving
+other countries. Countries without an OOB get a native reference when their first
+template is created/copied. Source selection exposes conditional/dated variants;
+Global view uses primary undated land OOBs, not a simulation of DLC or future
+event loads. Divisions can be placed on any assigned land province; province
+ownership is not changed. Air/naval units, production effects and extra fields
+inside the file are retained. Save uses existing formatting, conflict checks and
+backups; Undo/Redo includes reference/file creation.
+
+The obsolete shared placeholder OOB family and its 19 country-history references
+were removed at the user's request. Those countries have no placeholder army;
+use this editor to give them their own deployments.
+
 ## Editing state boundaries
 
 Choose **States > State boundaries**, select a destination state in the left

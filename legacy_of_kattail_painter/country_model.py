@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from collections import OrderedDict
 from decimal import Decimal, InvalidOperation
 from fractions import Fraction
 from functools import lru_cache
 import io
 import math
+import os
+import struct
 from pathlib import Path
 import re
 import random
@@ -32,6 +35,32 @@ EMBLEM_GFX = 'interface/lok_misc_icons.gfx'
 TAGS = 'common/country_tags/00_countries.txt'
 SPECIES_HISTORY_FLAG = 'lok_country_species_defined_in_history'
 ATTRIBUTE_HISTORY_FLAG = 'lok_country_attribute_defined_in_history'
+
+
+def asset_files(root):
+    """Walk assets without resolving every file or following escaping links."""
+    resolved=root.resolve();pending=[root]
+    while pending:
+        folder=pending.pop()
+        with os.scandir(folder) as entries:
+            for entry in entries:
+                if entry.is_dir(follow_symlinks=False):
+                    path=Path(entry.path)
+                    if path.resolve().is_relative_to(resolved):pending.append(path)
+                elif entry.is_file(follow_symlinks=False) and Path(entry.name).suffix.lower() in {'.dds','.tga'}:
+                    yield Path(entry.path)
+
+
+def image_dimensions(source,suffix):
+    """Inspect fixed DDS/TGA headers; use Pillow for other image formats."""
+    with (open(source,'rb') if isinstance(source,(str,Path)) else source) as stream:
+        header=stream.read(32)
+        if header[:4]==b'DDS ' and len(header)>=20:
+            height,width=struct.unpack_from('<II',header,12);return width,height
+        if suffix.casefold()=='.tga' and len(header)>=18:
+            return struct.unpack_from('<HH',header,12)
+        stream.seek(0)
+        with Image.open(stream) as image:return image.size
 
 
 def flat_icon_destination(folder,asset,blob,read):
@@ -346,7 +375,7 @@ class CountrySourceExists(ValueError):
 class CountryStore:
     def __init__(self, world, characters, catalogs, emblems=None):
         self.world, self.characters, self.catalogs, self.docs = world, characters, catalogs, world.docs
-        self.emblems = emblems; self._cache = {}
+        self.emblems = emblems; self._cache = {};self._native_bonus_sources={};self._icon_previews=OrderedDict()
 
     def cached(self, key, signature, build):
         cached = self._cache.get(key)
@@ -436,9 +465,11 @@ class CountryStore:
         for folder in folders:
             mods={p for p in self.characters.files(folder,'.txt') if self.docs.binary(p) is not None}
             if not any(folder==p or folder.startswith(p+'/') for p in replaced):
-                for path in sorted((self.characters.game_root/folder).rglob('*.txt')):
-                    relative=path.relative_to(self.characters.game_root).as_posix()
-                    if relative not in mods:sources.append((relative,read_text(path)))
+                native_key=(str(self.characters.game_root),folder)
+                if native_key not in self._native_bonus_sources:
+                    self._native_bonus_sources[native_key]=[(path.relative_to(self.characters.game_root).as_posix(),read_text(path))
+                        for path in sorted((self.characters.game_root/folder).rglob('*.txt'))]
+                sources.extend((relative,text) for relative,text in self._native_bonus_sources[native_key] if relative not in mods)
             sources.extend((p,self.docs.text(p)) for p in sorted(mods))
         def build():
             research=set();equipment=set();stats=set()
@@ -864,9 +895,7 @@ class CountryStore:
     def eaw_icon_catalog(self):
         def build():
             root=self.docs.root/EAW_IDEAS;out={}
-            for path in sorted(root.rglob('*')):
-                if path.suffix.lower() not in {'.dds','.tga'} or not path.is_file():continue
-                if not path.resolve().is_relative_to(root.resolve()):continue
+            for path in sorted(asset_files(root)) if root.is_dir() else []:
                 relative=path.relative_to(root).as_posix();code='eaw:'+relative
                 out[code]={'texture':EAW_IDEAS+'/'+relative,'origin':'EaW','eaw_asset':relative,'frames':'1',
                            'choice':Choice(code,'EaW: '+str(Path(relative).with_suffix('')).replace('_',' '))}
@@ -874,10 +903,10 @@ class CountryStore:
         return self.cached('eaw_icons',str(self.docs.root),build)
 
     def icon_catalog(self):
-        mod=self.characters.sprites(); vanilla=inherited_sprites(str(self.characters.game_root))
+        mod=self.characters.sprites(); vanilla=inherited_sprites(str(self.characters.game_root),'GFX_idea_')
         eaw=self.eaw_icon_catalog()
         credits=self.docs.text(EAW_CREDITS)
-        loc=self.characters.trait_store.names();signature=(id(mod),id(vanilla),id(loc),id(eaw),credits)
+        loc=self.characters.trait_store.names();signature=(mod,vanilla,loc,eaw,credits)
         def build():
             out={};provenance=eaw_credit_sources(credits);library={}
             for row in eaw.values():library.setdefault(Path(row['eaw_asset']).name.casefold(),set()).add(row['eaw_asset'])
@@ -906,15 +935,22 @@ class CountryStore:
 
     def icon_image(self, key, size=(40,40)):
         entry=self.icon_catalog()[key]; texture=entry['texture'];blob=self.docs.binary(texture)
-        if blob is None and (self.characters.game_root/texture).is_file():blob=(self.characters.game_root/texture).read_bytes()
-        if blob is None:return None
-        token=(key,id(blob),size)
+        frames=int(entry['frames'] if 'frames' in entry else atom(entry['text'],entry['node'].children,'noOfFrames','1'))
+        token=(key,texture,blob,size,str(self.characters.game_root),frames)
+        if token in self._icon_previews:
+            self._icon_previews.move_to_end(token);return self._icon_previews[token]
         def build():
-            with Image.open(io.BytesIO(blob)) as opened:
-                image=opened.convert('RGBA');frames=int(entry['frames'] if 'frames' in entry else atom(entry['text'],entry['node'].children,'noOfFrames','1'))
+            source=blob
+            if source is None:
+                try:source=(self.characters.game_root/texture).read_bytes()
+                except FileNotFoundError:return None
+            with Image.open(io.BytesIO(source)) as opened:
+                image=opened.convert('RGBA')
                 if frames>1:image=image.crop((0,0,image.width//frames,image.height))
                 return ImageOps.contain(image,size,Image.Resampling.LANCZOS)
-        return self.cached(('icon',key),token,build)
+        result=build();self._icon_previews[token]=result
+        while len(self._icon_previews)>256:self._icon_previews.popitem(last=False)
+        return result
 
     def spirit_icon_catalog(self):
         # Portrait sprites also use GFX_idea_. Filter by the image, so aliases
@@ -927,7 +963,7 @@ class CountryStore:
                 if not source.is_file():source=self.characters.game_root/texture
                 if texture in self.docs.drafts:source=io.BytesIO(self.docs.binary(texture) or b'')
                 try:
-                    with Image.open(source) as image:return image.size in {SMALL_SIZE,LARGE_SIZE}
+                    return image_dimensions(source,Path(texture).suffix) in {SMALL_SIZE,LARGE_SIZE}
                 except (OSError,ValueError):return False
             return self.cached(('spirit_portrait_size',texture),id(self.docs.drafts.get(texture)),read_size)
         def build():

@@ -891,10 +891,12 @@ class GeographyStore:
         paths=self.characters.files('map/strategicregions','.txt');signature=tuple(self.docs.text(p) for p in paths)
         if self._region_signature!=signature:
             self.world._load_strategic_regions();self.world._boundary_cache.clear();self.world._boundary_size=None;self._region_signature=signature
-        for sid,s in self.world.states.items():
-            text,nodes=self.world.state_nodes(sid)
-            if {int(n.key) for n in block(nodes,'provinces').children}!=set(s.provinces):raise ValueError('State reshaping is not enabled')
-            s.name=atom(text,nodes,'name',s.name);hist=block(nodes,'history');s.owner=atom(text,hist.children,'owner') if hist else ''
+        # The boundary store already rebuilt/validated current state records.
+        if not hasattr(self.world,'state_boundary_store'):
+            for sid,s in self.world.states.items():
+                text,nodes=self.world.state_nodes(sid)
+                if {int(n.key) for n in block(nodes,'provinces').children}!=set(s.provinces):raise ValueError('State reshaping is not enabled')
+                s.name=atom(text,nodes,'name',s.name);hist=block(nodes,'history');s.owner=atom(text,hist.children,'owner') if hist else ''
         self._world_revision=self.docs.revision
 
     def validate_save(self):

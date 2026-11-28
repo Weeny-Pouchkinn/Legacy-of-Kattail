@@ -726,9 +726,9 @@ class LeaderDialog(DraftDialog):
 class IconPicker(DraftDialog):
     def __init__(self,parent,store):
         super().__init__(parent,store.characters,'National spirit icons: mod, vanilla and EaW');self.country_store=store
-        self.geometry('900x700');self.query=tk.StringVar();self.photos={};self._job=None
+        self.geometry('900x700');self.query=tk.StringVar();self.photos={};self._job=None;self._search_job=None;self._index_signature=None
         bar=ttk.Frame(self,padding=10);bar.pack(fill='x');ttk.Label(bar,text='Search name / sprite / source:').pack(side='left')
-        search=ttk.Entry(bar,textvariable=self.query);search.pack(side='left',fill='x',expand=True,padx=8);search.bind('<KeyRelease>',lambda e:self.refresh())
+        search=ttk.Entry(bar,textvariable=self.query);search.pack(side='left',fill='x',expand=True,padx=8);search.bind('<KeyRelease>',self.schedule_search)
         filters=ttk.Frame(self,padding=(10,0,10,6));filters.pack(fill='x');self.sources={};self.source_checks={}
         for source in ('Mod','Vanilla','EaW'):
             self.sources[source]=tk.BooleanVar(value=getattr(store,'spirit_icon_sources',{}).get(source,True))
@@ -750,10 +750,15 @@ class IconPicker(DraftDialog):
             self.tree.selection_set(key);self.tree.see(key);self.schedule_images()
 
     def refresh(self):
+        if self._search_job is not None:self.after_cancel(self._search_job);self._search_job=None
         self.tree.delete(*self.tree.get_children());self.photos={};catalog=self.country_store.spirit_icon_catalog()
-        catalog={k:v for k,v in catalog.items() if self.sources[v['origin']].get()}
-        index=ChoiceIndex(Choice(k,v['choice'].name+' '+v['origin']) for k,v in catalog.items())
-        for choice in index.matching(self.query.get()):
+        signature=(id(catalog),tuple((source,var.get()) for source,var in self.sources.items()))
+        if signature!=self._index_signature:
+            self._filtered_catalog={k:v for k,v in catalog.items() if self.sources[v['origin']].get()}
+            self._search_index=ChoiceIndex(Choice(k,v['choice'].name+' '+v['origin']) for k,v in self._filtered_catalog.items())
+            self._index_signature=signature
+        catalog=self._filtered_catalog
+        for choice in self._search_index.matching(self.query.get()):
             item=catalog[choice.code];self.tree.insert('','end',iid=choice.code,text=item['choice'].label,values=(item['origin'],item['texture']))
         self.count.set(str(len(self.tree.get_children()))+' icons')
         self.schedule_images()
@@ -765,11 +770,16 @@ class IconPicker(DraftDialog):
     def schedule_images(self):
         if self._job is None:self._job=self.after(35,self.load_images)
 
+    def schedule_search(self,event=None):
+        if self._search_job is not None:self.after_cancel(self._search_job)
+        self._search_job=self.after(80,self.refresh)
+
     def type_search(self,event):
-        if event.char and event.char.isprintable():self.query.set(event.char);self.search.focus_set();self.search.icursor('end');self.refresh();return 'break'
+        if event.char and event.char.isprintable():self.query.set(event.char);self.search.focus_set();self.search.icursor('end');self.schedule_search();return 'break'
 
     def destroy(self):
         if self._job is not None:self.after_cancel(self._job);self._job=None
+        if self._search_job is not None:self.after_cancel(self._search_job);self._search_job=None
         super().destroy()
 
     def load_images(self):

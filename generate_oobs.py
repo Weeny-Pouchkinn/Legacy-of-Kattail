@@ -83,15 +83,8 @@ for filename in os.listdir(countries_dir):
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    has_oob = False
-    is_ktz = False
-    for m in re.finditer(r'\b(?:set_)?oob\s*=\s*"([^"]+)"', content):
-        has_oob = True
-        if m.group(1) == 'KTZ_1936':
-            is_ktz = True
-            break
-            
-    if not has_oob or is_ktz or tag in ['KKN', 'EUL']:
+    has_oob = bool(re.search(r'\b(?:set_)?oob\s*=\s*"([^"]+)"', content))
+    if not has_oob or tag in ['KKN', 'EUL']:
         targets.append((tag, filepath, content))
 
 print(f'Found {len(targets)} target nations.')

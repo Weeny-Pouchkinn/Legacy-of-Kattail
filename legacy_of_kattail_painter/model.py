@@ -369,8 +369,8 @@ class World:
         for f in sorted((self.root / 'history/states').glob('*.txt')):
             relative = f.relative_to(self.root).as_posix()
             try:
-                t = self.docs.text(relative)
-                n = child(parse(t), 'state')
+                t,roots = self.docs.parsed(relative)
+                n = child(roots, 'state')
                 if n is None:
                     continue
                 sid = int(scalar(t, n.children, 'id'))
@@ -381,6 +381,7 @@ class World:
                 ids = [int(v.key) for v in prov.children] if prov else []
                 self.states[sid] = State(sid, relative, scalar(t, n.children, 'name'),
                                          scalar(t, hist.children, 'owner') if hist else '', ids)
+                self._state_nodes_cache[sid]=(t,n.children)
                 for pid in ids:
                     self.province_states[pid] = sid
             except (ValueError, OSError) as exc:
@@ -443,8 +444,8 @@ class World:
     def _load_strategic_regions(self):
         regions, province_regions, region_states = {}, {}, {}
         for path in sorted((self.root / 'map/strategicregions').glob('*.txt')):
-            text = self.docs.text(path.relative_to(self.root))
-            region = child(parse(text), 'strategic_region')
+            text,nodes = self.docs.parsed(path.relative_to(self.root))
+            region = child(nodes, 'strategic_region')
             if region is None:
                 continue
             rid = int(scalar(text, region.children, 'id'))
@@ -748,7 +749,7 @@ class World:
             self._map_samples[key] = sample
         return self._map_samples[key]
 
-    def map_image(self, layer='Owners', size=None, box=None, *, building_key=None, building_scope=None, resource_key=None, slot_warnings=None, resource_highlight=None,country_tag='',state_preview=(),state_target=None):
+    def map_image(self, layer='Owners', size=None, box=None, *, building_key=None, building_scope=None, resource_key=None, slot_warnings=None, resource_highlight=None,country_tag='',state_preview=(),state_target=None,oob_template='',oob_global=False,oob_source=''):
         self.load_map()
         if not hasattr(self, '_province_state_ids'):
             self._province_state_ids = np.zeros(max(self.provinces) + 1, dtype=np.int32)
@@ -834,6 +835,12 @@ class World:
                 else:
                     palette[:]=building_color(0,maximum)
                     for pid,level in counts.items():palette[pid]=building_color(level,maximum)
+            elif layer=='Land OOB':
+                from geography_model import building_color
+                counts=self.land_oob_store.counts(country_tag,oob_template,oob_global,oob_source);maximum=max(counts.values(),default=1)
+                palette[:]=building_color(0,maximum)
+                for pid,count in counts.items():
+                    if 0<=pid<len(palette):palette[pid]=building_color(count,maximum)
             if layer in {'Provinces', 'Terrain', 'Continents'}:
                 for pid, record in self.provinces.items():
                     palette[pid] = record['rgb'] if layer == 'Provinces' else terrain_catalog.get(record['terrain'],{}).get('color',(128,128,128)) if layer=='Terrain' else colour(record['continent'])

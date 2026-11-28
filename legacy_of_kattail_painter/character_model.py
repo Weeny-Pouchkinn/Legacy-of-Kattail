@@ -74,11 +74,12 @@ def patch_field(text, parent, key, raw):
     return text[:at] + addition + text[at:]
 
 
-@lru_cache(maxsize=2)
-def inherited_sprites(game_root):
+@lru_cache(maxsize=4)
+def inherited_sprites(game_root,prefix=None):
     out = {}
     for path in sorted((Path(game_root) / 'interface').glob('*.gfx')):
         text = read_text(path)
+        if prefix is not None and prefix not in text:continue
         try:
             nodes = list(walk(parse(text)))
         except ValueError:
@@ -86,7 +87,7 @@ def inherited_sprites(game_root):
         for _, node in nodes:
             if node.key.casefold() in {'spritetype', 'frameanimatedspritetype'}:
                 name = atom(text, node.children, 'name')
-                if name:
+                if name and (prefix is None or name.startswith(prefix)):
                     out.setdefault(name, []).append({'path': path.name, 'node': node, 'text': text,
                                                      'texture': atom(text, node.children, 'texturefile'), 'inherited': True})
     return out

@@ -1,6 +1,7 @@
 """Searchable, localized choices. Display labels never become script IDs."""
 from dataclasses import dataclass
 from difflib import SequenceMatcher
+from functools import lru_cache
 import re
 import tkinter as tk
 from tkinter import ttk
@@ -8,6 +9,11 @@ import unicodedata
 
 
 def normalized(text):
+    return _normalized(str(text))
+
+
+@lru_cache(maxsize=32768)
+def _normalized(text):
     text = re.sub('[\x15§].', '', str(text))
     return ''.join(c for c in unicodedata.normalize('NFKD', text).casefold()
                    if not unicodedata.combining(c))
@@ -61,8 +67,13 @@ class ChoiceIndex:
             # Narrow before fuzzy matching; every comparison still checks both names.
             candidates = [(c, name, code) for c, name, code in self.search
                           if query[0] in name or query[0] in code]
-            scored = [(max(SequenceMatcher(None, query, name).ratio(),
-                           SequenceMatcher(None, query, code).ratio()), c) for c, name, code in candidates]
+            def score(text):
+                match=SequenceMatcher(None,query,text)
+                # These are upper bounds: pruning cannot change any result
+                # accepted by the existing 0.45 similarity threshold.
+                if match.real_quick_ratio()<.45 or match.quick_ratio()<.45:return 0
+                return match.ratio()
+            scored = [(max(score(name),score(code)),c) for c,name,code in candidates]
             direct = [c for score, c in sorted(scored, key=lambda row: -row[0]) if score >= .45][:12]
             direct.sort(key=lambda c: (normalized(c.name), normalized(c.code)))
         return direct[:limit] if limit else direct

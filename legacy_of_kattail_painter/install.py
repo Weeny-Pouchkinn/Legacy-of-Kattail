@@ -17,7 +17,8 @@ FILES = ['painter.py', 'model.py', 'source_io.py', 'character_model.py', 'charac
          'generic_portrait_model.py', 'generic_portrait_ui.py', 'test_generic_portraits.py', 'test_spirit_bonuses.py',
          'script_format.py', 'test_script_format.py', 'assets/eaw_sun.png', 'test_eaw_icons.py', 'test_cores.py', 'test_spirit_icon_import.py',
          'state_boundary_model.py','state_boundary_ui.py','state_positions.py','test_state_boundaries.py',
-         'diplomacy_model.py','diplomacy_ui.py','test_diplomacy.py']
+         'diplomacy_model.py','diplomacy_ui.py','test_diplomacy.py','benchmark_painter.py','test_performance.py',
+         'land_oob_model.py','land_oob_ui.py','test_land_oob.py']
 
 
 def confined(root, relative):

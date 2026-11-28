@@ -1,5 +1,38 @@
 # Decisions
 
+## 2026-11-27: Source-backed Land OOB with private shared-file edits
+
+Read country oob/set_oob/load_oob declarations and retain source/date/conditional
+context. Primary undated OOBs drive global totals; explicitly selected variants
+remain editable without pretending to simulate DLC/event execution. Shared OOBs
+must clone privately and rewrite only the selected country's reference before
+editing; never mutate every country through a shared placeholder or empty OOB.
+
+Store template short names in native comments, avoiding unsupported fields. New
+division names use per-country/template ordinal, current state label and short
+name; existing names stay unchanged. Manual name overrides remove ordered-name
+blocks. Preserve extra template/unit fields, cell attributes/comments and other
+OOB roots. Validate native designer bounds/groups and assigned-land placements;
+retain normal Documents/Save conflict protection and tab formatting.
+
+User explicitly retired the old placeholder family. Its 19 histories/two files
+and generator special case were changed with guarded 22-file backup; do not
+recreate an army automatically. Exact paths and validation: land_oob_editor.md.
+
+## 2026-11-27: Optimize changed dependencies rather than skip validation
+
+Reuse parsed state/region sources and incrementally extract state/Imperium
+records, retaining all membership/reference checks. Cache element/catalog
+dependencies strongly, not just disposable object IDs. Restrict idea-sprite
+discovery before parsing unrelated native files; inspect DDS/TGA dimensions from
+headers and enumerate EaW files using directory metadata without following
+escaping links. Limit preview images to 256 and normalized selector strings to
+32768; preserve exact fuzzy matches using safe upper-bound pruning. Native
+equipment/research files are immutable per-session caches; mod drafts/Undo stay
+live. Do not relax Save conflicts or introduce native content changes for speed.
+Measure using no-Save native UI benchmarks; disclose profiler/cache/data changes.
+Actual timings and nine new regression checks: painter_optimization.md.
+
 ## 2026-11-27: Edit starting diplomacy at original declaration sources
 
 Use source-aware country/general-history and startup discovery, with explicit
